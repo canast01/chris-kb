@@ -8353,76 +8353,162 @@ SnapMirror hardening: restricting intercluster LIF firewall policy to replicatio
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>address,role<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>intercluster
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check there are no data LIFs on the same subnet as the intercluster LIF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Vserver     Lif                    Role            Status       Network            Current      Current Is
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                                                                 Address            Node         Port    Home
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>----------- ---------------------- --------------- ------------ ------------------ ------------ ------- ----
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cluster-01  ic-node01-e0e          intercluster    up/up        10.0.1.101/24      node01       e0e     true
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cluster-01  ic-node02-e0f          intercluster    up/up        10.0.1.102/24      node02       e0f     true
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Vserver     Lif                    Address         Role
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>----------- ---------------------- --------------- ---------------
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cluster-01  node01_mgmt            192.168.1.50    mgmt
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>cluster-01  node01_data01          192.168.2.100   data
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>cluster-01  node02_data01          192.168.2.101   data
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>cluster-01  node02_mgmt            192.168.1.51    mgmt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "e0e" is not a valid port on node01</code></strong> — Verify the physical port exists on the node using <code>network port show -node &lt;node01&gt;</code>.
+<strong><code>Error: Address 10.0.1.101 is already in use</code></strong> — Confirm the IP address is not assigned to another LIF or device on the network.
+<strong><code>Error: Intercluster LIF cannot be created on a port already hosting a data LIF</code></strong> — Use a dedicated physical port that is not currently assigned to any data or management LIF.</p>
+</div>
 <h3 id="restrict-peer-cluster-access">Restrict Peer Cluster Access<a class="headerlink" href="#restrict-peer-cluster-access" title="Permanent link">&para;</a></h3>
 <p>On the external firewall or network ACL, restrict TCP 11104 and 11105 to the specific intercluster LIF IP pairs only:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example firewall rule (pseudocode — implement in your firewall platform)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>eq<span class="w"> </span><span class="m">11104</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>eq<span class="w"> </span><span class="m">11105</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>established
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>deny<span class="w"> </span>tcp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">11104</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>deny<span class="w"> </span>tcp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">11105</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example firewall rule (pseudocode — implement in your firewall platform)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>eq<span class="w"> </span><span class="m">11104</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>eq<span class="w"> </span><span class="m">11105</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>permit<span class="w"> </span>tcp<span class="w"> </span>&lt;dst-ic-lif-ip&gt;/32<span class="w"> </span>&lt;src-ic-lif-ip&gt;/32<span class="w"> </span>established
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>deny<span class="w"> </span>tcp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">11104</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>deny<span class="w"> </span>tcp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">11105</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: invalid syntax near '&lt;src-ic-lif-ip&gt;'</code></strong> — Replace angle-bracket placeholders with actual IP addresses (e.g., 192.168.1.10) before applying the rule.
+<strong><code>error: rule conflict detected on ports 11104/11105</code></strong> — Ensure deny rules are placed after permit rules, or consolidate overlapping rules to avoid ambiguous evaluation order.</p>
+</div>
 <hr />
 <h2 id="rbac-restricting-break-and-resync-operations">RBAC: Restricting Break and Resync Operations<a class="headerlink" href="#rbac-restricting-break-and-resync-operations" title="Permanent link">&para;</a></h2>
 <p><code>snapmirror break</code> and <code>snapmirror resync</code> are the most operationally critical commands — they change replication direction and data accessibility. Restrict these to named DR administrators and audit every use.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a DR admin role with break and resync access</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-role<span class="w"> </span>dr-admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror break&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror resync&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror abort&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror initialize&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume mount&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Create a standard operator role with no break or resync access</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># No break or resync in this role</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Verify roles are correct</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>dr-admin
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a DR admin role with break and resync access</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-role<span class="w"> </span>dr-admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror break&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror resync&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror abort&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror initialize&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume mount&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Create a standard operator role with no break or resync access</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># No break or resync in this role</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Verify roles are correct</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>dr-admin
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(no output — command completes silently)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>(no output — command completes silently)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>(no output — command completes silently)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>(no output — command completes silently)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(no output — command completes silently)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>(no output — command completes silently)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>(no output — command completes silently)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>(no output — command completes silently)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>(no output — command completes silently)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>(no output — command completes silently)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>(no output — command completes silently)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>(no output — command completes silently)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Role                 Vserver          Command                       Access
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>-------------------- ---------------- ----------------------------- ------
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>dr-admin             cluster-prod     DEFAULT                       none
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>dr-admin             cluster-prod     snapmirror show               readonly
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>dr-admin             cluster-prod     snapmirror update             all
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>dr-admin             cluster-prod     snapmirror break              all
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>dr-admin             cluster-prod     snapmirror resync             all
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>dr-admin             cluster-prod     snapmirror quiesce            all
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>dr-admin             cluster-prod     snapmirror abort              all
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>dr-admin             cluster-prod     snapmirror initialize         all
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>dr-admin             cluster-prod     volume show                   readonly
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>dr-admin             cluster-prod     volume mount                  all
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>snapmirror-operator  cluster-prod     DEFAULT                       none
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>snapmirror-operator  cluster-prod     snapmirror show               readonly
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>snapmirror-operator  cluster-prod     snapmirror update             all
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>snapmirror-operator  cluster-prod     snapmirror quiesce            all
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "dr-admin" already exists.</code></strong> — Delete the existing role with <code>security login role delete -role dr-admin -vserver &lt;cluster-name&gt;</code> before recreating it.
+<strong><code>Error: Invalid vserver "&lt;cluster-name&gt;"</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name from <code>cluster show</code> output.
+<strong><code>Error: Unknown command "snapmirror break"</code></strong> — Verify the SnapMirror license is installed with <code>system license show</code> and the command syntax matches your ONTAP version.</p>
+</div>
 <hr />
 <h2 id="ems-alerting-for-replication-events">EMS Alerting for Replication Events<a class="headerlink" href="#ems-alerting-for-replication-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a notification destination for SnapMirror alerts (email)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-name<span class="w"> </span>snapmirror-alerts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-mail<span class="w"> </span>storage-team@corp.local
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Create an EMS filter for SnapMirror error and warning events</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>warning
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>error
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>critical
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Attach filter to the notification destination</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span>-destinations<span class="w"> </span>snapmirror-alerts
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Verify EMS notification configuration</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>event<span class="w"> </span>notification<span class="w"> </span>show
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a notification destination for SnapMirror alerts (email)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-name<span class="w"> </span>snapmirror-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-mail<span class="w"> </span>storage-team@corp.local
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Create an EMS filter for SnapMirror error and warning events</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>warning
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>error
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>critical
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Attach filter to the notification destination</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>-destinations<span class="w"> </span>snapmirror-alerts
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Verify EMS notification configuration</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>event<span class="w"> </span>notification<span class="w"> </span>show
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Notification destination &quot;snapmirror-alerts&quot; created successfully.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Filter &quot;snapmirror-events&quot; created successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Rule added to filter &quot;snapmirror-events&quot;.
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Rule added to filter &quot;snapmirror-events&quot;.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Rule added to filter &quot;snapmirror-events&quot;.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Notification &quot;snapmirror-events&quot; created successfully.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Filter Name                  Destinations
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>---------------------------- ----------------------------------------
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>snapmirror-events            snapmirror-alerts
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Destination Name             Type    Address
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>---------------------------- -------- --------------------------------
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>snapmirror-alerts            mail    storage-team@corp.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Notification destination "snapmirror-alerts" already exists</code></strong> — Delete the existing destination with <code>event notification destination delete -name snapmirror-alerts</code> before recreating it.
+<strong><code>Error: Invalid email address "storage-team@corp.local"</code></strong> — Verify the email address is valid and the mail server is configured with <code>system services smtp show</code>.
+<strong><code>Error: Filter "snapmirror-events" already exists</code></strong> — Remove the existing filter using <code>event filter delete -filter-name snapmirror-events</code> before creating a new one.</p>
+</div>
 <hr />
 <h2 id="annual-review-tasks">Annual Review Tasks<a class="headerlink" href="#annual-review-tasks" title="Permanent link">&para;</a></h2>
 <table>
@@ -8492,7 +8578,7 @@ SnapMirror hardening: restricting intercluster LIF firewall policy to replicatio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

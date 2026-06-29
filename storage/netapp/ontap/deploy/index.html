@@ -8547,38 +8547,71 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="c1"># Run a basic write test:</span>
 <a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdb<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>10.10.20.20:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>10.10.20.21:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.10.20.10,3260] (multiple)
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>Login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.10.20.10,3260] successful.
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>sda                 8:0    0 100G  0 disk 
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>sdb                 8:16   0 500G  0 disk 
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>sdc                 8:32   0 500G  0 disk 
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>100+0 records in
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>100+0 records out
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>104857600 bytes (105 MB, 100 MiB) copied, 2.847 s, 36.8 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Verify the NetApp iSCSI service is running on 10.10.20.10 and the portal IP is correct.
+<strong><code>iscsiadm: Cannot login to portal</code></strong> — Check network connectivity to the target portal and ensure iSCSI initiator name is registered on the NetApp array.
+<strong><code>dd: failed to open '/dev/sdb': No such file or device</code></strong> — Confirm the iSCSI login succeeded and the block device appeared with <code>lsblk</code> before attempting the write test.</p>
+</div>
 <h3 id="nfs-mount-test">NFS Mount Test<a class="headerlink" href="#nfs-mount-test" title="Permanent link">&para;</a></h3>
 <p>From a Linux host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Show available exports:</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">10</span>.10.20.10
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Mount the NFS export:</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">nfsvers</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.20.10:/data01<span class="w"> </span>/mnt/test
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># Write and read test:</span>
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/test/testfile<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>md5sum<span class="w"> </span>/mnt/test/testfile
-</code></pre></div>
-<h3 id="snapmirror-lag-check">SnapMirror Lag Check<a class="headerlink" href="#snapmirror-lag-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a># Confirm lag is within RPO on all relationships:
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>snapmirror show -fields lag-time,mirror-state,relationship-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Show available exports:</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">10</span>.10.20.10
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a># All relationships must show:
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>#   Mirror State: Snapmirrored
-<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>#   Relationship Status: Idle
-<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>#   Lag Time: within defined RPO
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Mount the NFS export:</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">nfsvers</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.20.10:/data01<span class="w"> </span>/mnt/test
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># Write and read test:</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/test/testfile<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>md5sum<span class="w"> </span>/mnt/test/testfile
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Export list for 10.10.20.10:
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>/data01                                    10.0.0.0/8
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>/data02                                    10.0.0.0/8
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>/backup                                    10.0.0.0/8
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>100+0 records in
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>100+0 records out
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>104857600 bytes (105 MB, 100 MiB) copied, 2.847 s, 36.8 MB/s
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>5d41402abc4b2a76b9719d911017c592  /mnt/test/testfile
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: access denied by server while mounting 10.10.20.10:/data01</code></strong> — Verify the client IP is in the NFS export policy on the NetApp filer and check firewall rules between client and storage.
+<strong><code>showmount: RPC: Unable to receive; errno = No route to host</code></strong> — Confirm network connectivity to 10.10.20.10 and that the NFS service is running on the NetApp controller.
+<strong><code>dd: failed to open '/mnt/test/testfile' for writing: Read-only file system</code></strong> — Remount the NFS export without the <code>ro</code> option or check NetApp volume permissions and export policy write settings.</p>
+</div>
+<h3 id="snapmirror-lag-check">SnapMirror Lag Check<a class="headerlink" href="#snapmirror-lag-check" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a># Confirm lag is within RPO on all relationships:
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>snapmirror show -fields lag-time,mirror-state,relationship-status
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a># All relationships must show:
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>#   Mirror State: Snapmirrored
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>#   Relationship Status: Idle
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>#   Lag Time: within defined RPO
 </code></pre></div>
 <h3 id="autosupport-validation">AutoSupport Validation<a class="headerlink" href="#autosupport-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a># Send a test AutoSupport message:
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment complete — validation test&quot;
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a># Check delivery status:
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>autosupport history show -node * -type test
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a># Log in to https://activeiq.netapp.com and confirm:
-<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a># - Both nodes appear in the system inventory
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a># - No critical risks are flagged
-<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a># - AutoSupport history shows the test message received
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a># Send a test AutoSupport message:
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment complete — validation test&quot;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a># Check delivery status:
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>autosupport history show -node * -type test
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a># Log in to https://activeiq.netapp.com and confirm:
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a># - Both nodes appear in the system inventory
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a># - No critical risks are flagged
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a># - AutoSupport history shows the test message received
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8627,7 +8660,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

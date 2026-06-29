@@ -9118,13 +9118,73 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Confirm hostname</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>The authenticity of host &#39;esxi-01.example.com (192.168.1.45)&#39; can&#39;t be established.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ECDSA key fingerprint is SHA256:aBcD1234eFgH5678iJkL9012mNoPqRsT3456uVwXyZ.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Warning: Permanently added &#39;esxi-01.example.com,192.168.1.45&#39; (ECDSA) to /etc/ssh/known_hosts.
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>root@esxi-01.example.com&#39;s password:
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>root@esxi-01:~]
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>NTP Configured for:
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   Server: ntp1.example.com
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   Server: ntp2.example.com
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>NTP Enabled: true
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>NTP Sync State: synchronized
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Remote Clock Stratum: 2
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Reference Clock ID: 0x9f6e0a0a
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Synchronized: true
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Offset: -0.002 ms
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Frequency: 0.000 ppm
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Jitter: 0.156 ms
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Hostname: esxi-01.example.com
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>Domain Name: example.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname esxi-01.example.com: Name or service not known</code></strong> — Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45).
+<strong><code>Error: NTP set failed: Unable to set NTP servers</code></strong> — Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host.
+<strong><code>Error: NTP stats not available</code></strong> — Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command.</p>
+</div>
 <h3 id="verify-connectivity">Verify Connectivity<a class="headerlink" href="#verify-connectivity" title="Permanent link">&para;</a></h3>
 <p>From a management workstation:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>esxi-01.example.com
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nslookup<span class="w"> </span>esxi-01.example.com<span class="w">    </span><span class="c1"># Forward DNS</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nslookup<span class="w"> </span>&lt;esxi-management-ip&gt;<span class="w">   </span><span class="c1"># Reverse DNS</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ssh<span class="w"> </span>root@esxi-01.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ping<span class="w"> </span>esxi-01.example.com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nslookup<span class="w"> </span>esxi-01.example.com<span class="w">    </span><span class="c1"># Forward DNS</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nslookup<span class="w"> </span>&lt;esxi-management-ip&gt;<span class="w">   </span><span class="c1"># Reverse DNS</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ssh<span class="w"> </span>root@esxi-01.example.com
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PING esxi-01.example.com (192.168.1.45) 56(84) bytes of data.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=2 ttl=64 time=1.98 ms
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=3 ttl=64 time=2.11 ms
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>^C
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>--- esxi-01.example.com statistics ---
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rtt min/avg/max/stddev = 1.98/2.14/2.34/0.15 ms
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Server:     192.168.1.10
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Address:    192.168.1.10#53
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Name:   esxi-01.example.com
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Address: 192.168.1.45
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Server:     192.168.1.10
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Address:    192.168.1.10#53
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>45.1.168.192.in-addr.arpa   name = esxi-01.example.com.
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>The authenticity of host &#39;esxi-01.example.com (192.168.1.45)&#39; can&#39;t be established.
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdE.
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>Warning: Permanently added &#39;esxi-01.example.com,192.168.1.45&#39; (ECDSA) to /root/.ssh/known_hosts.
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>root@esxi-01.example.com&#39;s password:
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: esxi-01.example.com: Name or service not known</code></strong> — Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts.
+<strong><code>nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname</code></strong> — Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname.
+<strong><code>ssh: connect to host esxi-01.example.com port 22: Connection refused</code></strong> — Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable.</p>
+</div>
 <p>Repeat for every host. All must have working forward and reverse DNS before vCenter deployment.</p>
 <hr />
 <h2 id="phase-3-vcenter-deployment-and-initial-configuration">Phase 3 — vCenter Deployment and Initial Configuration<a class="headerlink" href="#phase-3-vcenter-deployment-and-initial-configuration" title="Permanent link">&para;</a></h2>
@@ -9146,28 +9206,47 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 <li>Accept host thumbprints, enter root credentials for each host.</li>
 </ol>
 <h3 id="license-assignment">License Assignment<a class="headerlink" href="#license-assignment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client → Administration → Licenses → Add License Key
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>→ assign vSphere + vSAN licenses to cluster and hosts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSphere Client → Administration → Licenses → Add License Key
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ assign vSphere + vSAN licenses to cluster and hosts
 </code></pre></div>
 <h3 id="configure-vcenter-ntp">Configure vCenter NTP<a class="headerlink" href="#configure-vcenter-ntp" title="Permanent link">&para;</a></h3>
 <p>vCenter and all ESXi hosts must be synchronised to the same NTP source. Drift &gt; 500 ms causes vSAN health warnings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify vCenter NTP from VCSA shell (SSH as root)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Reference time must match ESXi hosts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify vCenter NTP from VCSA shell (SSH as root)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Reference time must match ESXi hosts</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Reference ID    : 91.189.89.198 (ntp.ubuntu.com)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Stratum         : 2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Ref time (UTC)  : Wed Nov 15 14:32:18 2023
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>System time     : 0.000000123 seconds fast of NTP time
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Latest offset   : +0.000156 sec
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>RMS offset      : 0.000089 sec
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Frequency       : -12.456 ppm slow
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Residual freq   : +0.002 ppm
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Skew            : 0.087 ppm
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Root delay      : 0.031456 sec
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Root dispersion : 0.015234 sec
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Update interval : 64.2 sec
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Leap status     : Normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure the chronyd service is running with <code>systemctl start chronyd</code> on the VCSA.
+<strong><code>Stratum         : 16</code></strong> — The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in <code>/etc/chrony.conf</code>.</p>
+</div>
 <hr />
 <h2 id="phase-4-dvswitch-and-vsan-network-setup">Phase 4 — dvSwitch and vSAN Network Setup<a class="headerlink" href="#phase-4-dvswitch-and-vsan-network-setup" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All hosts have a vSAN vmkernel with MTU 9000 confirmed end-to-end to all peers.</p>
 <h3 id="create-the-distributed-virtual-switch">Create the Distributed Virtual Switch<a class="headerlink" href="#create-the-distributed-virtual-switch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSphere Client → Datacenter → Actions → Distributed Switch → New Distributed Switch
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ Name: vDS-Prod
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>→ Version: match ESXi version
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>→ Uplinks: 2 (one per physical NIC used for vSAN/vMotion)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>→ Default port group: delete (create named groups below)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vSphere Client → Datacenter → Actions → Distributed Switch → New Distributed Switch
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Name: vDS-Prod
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>→ Version: match ESXi version
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>→ Uplinks: 2 (one per physical NIC used for vSAN/vMotion)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>→ Default port group: delete (create named groups below)
 </code></pre></div>
 <p>Add all hosts to the dvSwitch and assign physical uplinks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dvSwitch → Actions → Add and Manage Hosts
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ Add hosts → assign vmnic2 to Uplink 1, vmnic3 to Uplink 2 (adjust for your hardware)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dvSwitch → Actions → Add and Manage Hosts
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ Add hosts → assign vmnic2 to Uplink 1, vmnic3 to Uplink 2 (adjust for your hardware)
 </code></pre></div>
 <h3 id="create-port-groups">Create Port Groups<a class="headerlink" href="#create-port-groups" title="Permanent link">&para;</a></h3>
 <table>
@@ -9204,49 +9283,82 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 <h3 id="create-the-vsan-vmkernel-on-each-host">Create the vSAN VMkernel on Each Host<a class="headerlink" href="#create-the-vsan-vmkernel-on-each-host" title="Permanent link">&para;</a></h3>
 <p><strong>From vSphere Client:</strong></p>
 <p>For each host: Host → Configure → Networking → VMkernel adapters → Add Networking</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>→ Select: Existing distributed port group → PG-vSAN
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ Enable: vSAN traffic service tag
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>→ IP: static, e.g. 192.168.100.1x/24 (per host)
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>→ MTU: 9000
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>→ Select: Existing distributed port group → PG-vSAN
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>→ Enable: vSAN traffic service tag
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>→ IP: static, e.g. 192.168.100.1x/24 (per host)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>→ MTU: 9000
 </code></pre></div>
 <p>Or via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">$hosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$dvs</span> <span class="p">=</span> <span class="nb">Get-VDSwitch</span> <span class="s2">&quot;vDS-Prod&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$pg</span> <span class="p">=</span> <span class="nb">Get-VDPortgroup</span> <span class="s2">&quot;PG-vSAN&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$hosts</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nv">$hostNum</span> <span class="p">=</span> <span class="no">[int]</span><span class="p">(</span><span class="nv">$h</span><span class="p">.</span><span class="n">Name</span> <span class="o">-replace</span> <span class="s2">&quot;.*-0*&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">New-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-VirtualSwitch</span> <span class="nv">$dvs</span> <span class="p">`</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">-PortGroup</span> <span class="nv">$pg</span> <span class="n">-IP</span> <span class="s2">&quot;192.168.100.$hostNum&quot;</span> <span class="n">-SubnetMask</span> <span class="s2">&quot;255.255.255.0&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">-Mtu</span> <span class="n">9000</span> <span class="n">-VsanTrafficEnabled</span> <span class="nv">$true</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">$hosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$dvs</span> <span class="p">=</span> <span class="nb">Get-VDSwitch</span> <span class="s2">&quot;vDS-Prod&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">$pg</span> <span class="p">=</span> <span class="nb">Get-VDPortgroup</span> <span class="s2">&quot;PG-vSAN&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$hosts</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="nv">$hostNum</span> <span class="p">=</span> <span class="no">[int]</span><span class="p">(</span><span class="nv">$h</span><span class="p">.</span><span class="n">Name</span> <span class="o">-replace</span> <span class="s2">&quot;.*-0*&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="nb">New-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-VirtualSwitch</span> <span class="nv">$dvs</span> <span class="p">`</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="n">-PortGroup</span> <span class="nv">$pg</span> <span class="n">-IP</span> <span class="s2">&quot;192.168.100.$hostNum&quot;</span> <span class="n">-SubnetMask</span> <span class="s2">&quot;255.255.255.0&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        <span class="n">-Mtu</span> <span class="n">9000</span> <span class="n">-VsanTrafficEnabled</span> <span class="nv">$true</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="verify-mtu-end-to-end">Verify MTU End-to-End<a class="headerlink" href="#verify-mtu-end-to-end" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From each host — test to every other vSAN vmk IP in the cluster</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Replace IPs with your vSAN VMkernel addresses</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.12
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.13
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.14
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># 0% packet loss on all tests = MTU correct end-to-end</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># From each host — test to every other vSAN vmk IP in the cluster</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Replace IPs with your vSAN VMkernel addresses</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.12
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.13
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.14
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># 0% packet loss on all tests = MTU correct end-to-end</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>PING 192.168.100.12 (192.168.100.12): 56 data bytes
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>64 bytes from 192.168.100.12: icmp_seq=0 ttl=64 time=0.542 ms
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>64 bytes from 192.168.100.12: icmp_seq=1 ttl=64 time=0.518 ms
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>64 bytes from 192.168.100.12: icmp_seq=2 ttl=64 time=0.531 ms
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>64 bytes from 192.168.100.12: icmp_seq=3 ttl=64 time=0.525 ms
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>--- 192.168.100.12 statistics ---
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>round-trip min/avg/max = 0.518/0.529/0.542 ms
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>PING 192.168.100.13 (192.168.100.13): 56 data bytes
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>64 bytes from 192.168.100.13: icmp_seq=0 ttl=64 time=1.247 ms
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>64 bytes from 192.168.100.13: icmp_seq=1 ttl=64 time=1.263 ms
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>64 bytes from 192.168.100.13: icmp_seq=2 ttl=64 time=1.251 ms
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>64 bytes from 192.168.100.13: icmp_seq=3 ttl=64 time=1.255 ms
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>--- 192.168.100.13 statistics ---
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>round-trip min/avg/max = 1.247/1.254/1.263 ms
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>PING 192.168.100.14 (192.168.100.14): 56 data bytes
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>64 bytes from 192.168.100.14: icmp_seq=0 ttl=64 time=0.789 ms
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>64 bytes from 192.168.100.14: icmp_seq=1 ttl=64 time=0.801 ms
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>64 bytes from 192.168.100.14: icmp_seq=2 ttl=64 time=0.795 ms
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>64 bytes from 192.168.100.14: icmp_seq=3 ttl=64 time=0.798 ms
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>--- 192.168.100.14 statistics ---
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>round-trip min/avg/max = 0.789/0.796/0.801 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host</code></strong> — Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked.
+<strong><code>Unknown interface vmk2</code></strong> — Confirm vmk2 exists on this host with <code>esxcli network ip interface list</code> and use the correct VMkernel interface name.
+<strong><code>4 packets transmitted, 0 packets received, 100% packet loss</code></strong> — Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip</p>
+</div>
 <p>Any packet loss means MTU 9000 is not configured somewhere in the path (switch port, trunk, uplink). Fix before enabling vSAN.</p>
 <h3 id="configure-nioc-if-sharing-nics">Configure NIOC (If Sharing NICs)<a class="headerlink" href="#configure-nioc-if-sharing-nics" title="Permanent link">&para;</a></h3>
 <p>If vSAN, vMotion, and VM traffic share the same uplinks, configure Network I/O Control:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dvSwitch → Configure → Network I/O Control → Enable
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>→ System Traffic → vSAN: set reservation to 50% (minimum)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>→ System Traffic → vMotion: set reservation to 25%
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>dvSwitch → Configure → Network I/O Control → Enable
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>→ System Traffic → vSAN: set reservation to 50% (minimum)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>→ System Traffic → vMotion: set reservation to 25%
 </code></pre></div>
 <hr />
 <h2 id="phase-5-vsan-cluster-enablement">Phase 5 — vSAN Cluster Enablement<a class="headerlink" href="#phase-5-vsan-cluster-enablement" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> vSAN enabled, disk groups claimed on all hosts, storage policies created, and Skyline Health showing all green.</p>
 <h3 id="enable-vsan-on-the-cluster">Enable vSAN on the Cluster<a class="headerlink" href="#enable-vsan-on-the-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>From vSphere Client:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Cluster → Configure → vSAN → Services → Configure
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Select: Single site cluster (or 2-node / Stretched)
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Deduplication and Compression: disable for now (enable after validation)
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>→ Encryption: disable for now (enable after validation)
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>→ Allow reduced redundancy: leave unchecked
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>→ Next → claim disks
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Cluster → Configure → vSAN → Services → Configure
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>→ Select: Single site cluster (or 2-node / Stretched)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>→ Deduplication and Compression: disable for now (enable after validation)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>→ Encryption: disable for now (enable after validation)
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>→ Allow reduced redundancy: leave unchecked
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>→ Next → claim disks
 </code></pre></div>
 <h3 id="claim-disks-osa">Claim Disks (OSA)<a class="headerlink" href="#claim-disks-osa" title="Permanent link">&para;</a></h3>
 <p>On the Disk Claim screen, vSAN presents eligible disks per host:</p>
@@ -9255,59 +9367,94 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 <li><strong>Capacity tier:</strong> assign remaining eligible devices. Up to 7 per disk group.</li>
 </ul>
 <p>Best practice: one disk group per host with all eligible disks. Multiple disk groups per host are supported but add management complexity.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify disk groups created on each host</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Group UUID|Is SSD|Health&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify disk groups created on each host</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Group UUID|Is SSD|Health&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1d
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Is SSD: true
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Health: Healthy
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1e
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Is SSD: true
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Health: Healthy
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1f
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Is SSD: true
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Health: Healthy
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace vsan storage list</code></strong> — Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter.
+<strong><code>(empty output)</code></strong> — Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point.</p>
+</div>
 <h3 id="verify-vsan-cluster-formation">Verify vSAN Cluster Formation<a class="headerlink" href="#verify-vsan-cluster-formation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Confirm all hosts are cluster members</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># All hosts should appear in the member list; one is Master</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Run initial health check</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># All tests should PASS</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Confirm all hosts are cluster members</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># All hosts should appear in the member list; one is Master</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Run initial health check</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># All tests should PASS</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Cluster UUID: 52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Cluster Master: esx-prod-01.lab.local
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Member UUIDs:
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b (esx-prod-01.lab.local)
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  63e5b9g2-8d3f-5g4b-0c2b-9f4e3d2g6b0c (esx-prod-02.lab.local)
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  74f6c0h3-9e4g-6h5c-1d3c-0g5f4e3h7c1d (esx-prod-03.lab.local)
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Cluster Health Status: HEALTHY
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Test Results:
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  Cluster: PASS
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  Physical disk: PASS
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  Memory: PASS
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  Network: PASS
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  Connectivity: PASS
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Cluster UUID: &lt;unknown&gt;</code></strong> — Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with <code>esxcli vsan cluster new</code>.
+<strong><code>Cluster Health Status: DEGRADED</code></strong> — Check individual host health with <code>esxcli vsan health host get</code> and verify network connectivity between cluster members.</p>
+</div>
 <p><strong>From vSphere Client:</strong>
 Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before proceeding.</p>
 <h3 id="create-storage-policies">Create Storage Policies<a class="headerlink" href="#create-storage-policies" title="Permanent link">&para;</a></h3>
 <p>Create the standard policy set before provisioning any VMs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c"># FTT=1 RAID-5 (4+ nodes) — general workloads</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-T2-FTT1-RAID5&quot;</span> <span class="p">`</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">),</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-5&quot;</span><span class="p">)</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="p">)</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="p">)</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c"># FTT=2 RAID-6 (6+ nodes) — Tier-1 databases</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-T1-FTT2-RAID6&quot;</span> <span class="p">`</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">2</span><span class="p">),</span>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-6&quot;</span><span class="p">)</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        <span class="p">)</span>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>    <span class="p">)</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="c"># FTT=1 RAID-1 (3 nodes minimum) — dev/test</span>
-<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-DEV-FTT1-RAID1&quot;</span> <span class="p">`</span>
-<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
-<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">),</span>
-<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-1&quot;</span><span class="p">)</span>
-<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>        <span class="p">)</span>
-<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>    <span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c"># FTT=1 RAID-5 (4+ nodes) — general workloads</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-T2-FTT1-RAID5&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">),</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-5&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>        <span class="p">)</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="p">)</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c"># FTT=2 RAID-6 (6+ nodes) — Tier-1 databases</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-T1-FTT2-RAID6&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">2</span><span class="p">),</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-6&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>        <span class="p">)</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>    <span class="p">)</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="c"># FTT=1 RAID-1 (3 nodes minimum) — dev/test</span>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-DEV-FTT1-RAID1&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">),</span>
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.replicaPreference&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;RAID-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>        <span class="p">)</span>
+<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>    <span class="p">)</span>
 </code></pre></div>
 <h3 id="enable-vsan-performance-service">Enable vSAN Performance Service<a class="headerlink" href="#enable-vsan-performance-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Cluster → Configure → vSAN → Services → Performance Service → Enable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Cluster → Configure → vSAN → Services → Performance Service → Enable
 </code></pre></div>
 <p>Without this, performance metrics are not collected and the Performance view in Monitor is empty.</p>
 <hr />
@@ -9373,29 +9520,81 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 <h2 id="phase-7-end-to-end-validation">Phase 7 — End-to-End Validation<a class="headerlink" href="#phase-7-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks in this phase pass. Sign off on the deployment and hand to operations.</p>
 <h3 id="skyline-health-all-green">Skyline Health — All Green<a class="headerlink" href="#skyline-health-all-green" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Cluster → Monitor → vSAN → Skyline Health
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>→ All categories must show green
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>→ Resolve every warning before sign-off
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Cluster → Monitor → vSAN → Skyline Health
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>→ All categories must show green
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>→ Resolve every warning before sign-off
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># CLI equivalent</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>PASS
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Expected: no output (all tests pass)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># CLI equivalent</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>PASS
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># Expected: no output (all tests pass)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to the specified host. The session is not authenticated.</code></strong> — Authenticate to the ESXi host or vCenter using <code>esxcli -s &lt;host&gt; -u &lt;user&gt; -p &lt;password&gt;</code> before running vsan commands.
+<strong><code>Error: Unknown command or namespace 'vsan'.</code></strong> — Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli.</p>
+</div>
 <h3 id="storage-policy-compliance">Storage Policy Compliance<a class="headerlink" href="#storage-policy-compliance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># No VMs should be non-compliant</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span> <span class="p">}</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c"># Expected: no output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c"># No VMs should be non-compliant</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span> <span class="p">}</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c"># Expected: no output</span>
 </code></pre></div>
 <h3 id="disk-group-verification">Disk Group Verification<a class="headerlink" href="#disk-group-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># All disk groups healthy, all hosts member of cluster</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Group|Health|State&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># All disk groups healthy, all hosts member of cluster</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Group|Health|State&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Cluster UUID: 52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4b
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Cluster Health: Healthy
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Cluster Status: Running
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Member Count: 4
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Disk Format Version: 13
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Disk Group: Group 1 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4c)
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>Health: Healthy
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>State: Enabled
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>Disk Group: Group 2 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4d)
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>Health: Healthy
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>State: Enabled
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>Disk Group: Group 3 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4e)
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>Health: Healthy
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>State: Enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VSAN Cluster is not enabled on this host</code></strong> — Enable vSAN on the host through vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.
+<strong><code>Unknown command or namespace vsan</code></strong> — Install or enable the vSAN license and ensure the vSAN VIB is installed with <code>esxcli software vib list | grep vsan</code>.</p>
+</div>
 <h3 id="mtu-verification-final-check">MTU Verification (Final Check)<a class="headerlink" href="#mtu-verification-final-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># From every host to every other host</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;all-other-vsan-vmk-ips&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># 0% loss on all tests</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># From every host to every other host</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;all-other-vsan-vmk-ips&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="c1"># 0% loss on all tests</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>PING 192.168.100.11 (192.168.100.11): 56 data bytes
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>64 bytes from 192.168.100.11: icmp_seq=0 ttl=64 time=1.234 ms
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>64 bytes from 192.168.100.11: icmp_seq=1 ttl=64 time=1.156 ms
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>64 bytes from 192.168.100.11: icmp_seq=2 ttl=64 time=1.289 ms
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>64 bytes from 192.168.100.11: icmp_seq=3 ttl=64 time=1.198 ms
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>--- 192.168.100.11 statistics ---
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>round-trip min/avg/max = 1.156/1.219/1.289 ms
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>PING 192.168.100.12 (192.168.100.12): 56 data bytes
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>64 bytes from 192.168.100.12: icmp_seq=0 ttl=64 time=2.045 ms
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>64 bytes from 192.168.100.12: icmp_seq=1 ttl=64 time=1.987 ms
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>64 bytes from 192.168.100.12: icmp_seq=2 ttl=64 time=2.134 ms
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>64 bytes from 192.168.100.12: icmp_seq=3 ttl=64 time=2.056 ms
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>--- 192.168.100.12 statistics ---
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>round-trip min/avg/max = 1.987/2.055/2.134 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss</code></strong> — Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts.
+<strong><code>Unknown host 192.168.100.11</code></strong> — Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network.
+<strong><code>Cannot find device vmk2</code></strong> — Ensure vmk2 exists on this host by running <code>esxcli network ip interface list</code> and create it if missing.</p>
+</div>
 <h3 id="deploy-a-test-vm">Deploy a Test VM<a class="headerlink" href="#deploy-a-test-vm" title="Permanent link">&para;</a></h3>
 <p>Provision a test VM on the vSAN datastore using the standard storage policy:</p>
 <ol>
@@ -9416,18 +9615,20 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 <li>Exit maintenance mode.</li>
 <li>Confirm resync completes and all objects return to Healthy.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Monitor during simulated failure</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug object list | grep -v Healthy | wc -l&quot;</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># Count should return to 0 after host exits maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Monitor during simulated failure</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug object list | grep -v Healthy | wc -l&quot;</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="c1"># Count should return to 0 after host exits maintenance</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Every 10.0s: esxcli vsan debug object list | grep -v Healthy | wc -l
 </code></pre></div>
 <h3 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h3>
 <p>Run a baseline I/O test to capture initial performance figures:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># Enable performance service (if not already)</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c"># Run from vCenter → Cluster → Monitor → vSAN → Performance</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c"># Record: read latency, write latency, IOPS at idle</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c"># Optional: run HCIBench for a full load test</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c"># Deploy HCIBench OVA → configure test profile → run → export report</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c"># Enable performance service (if not already)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c"># Run from vCenter → Cluster → Monitor → vSAN → Performance</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c"># Record: read latency, write latency, IOPS at idle</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c"># Optional: run HCIBench for a full load test</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c"># Deploy HCIBench OVA → configure test profile → run → export report</span>
 </code></pre></div>
 <p>Store the baseline numbers in a runbook. They become the reference for future troubleshooting.</p>
 <h3 id="final-sign-off-checklist">Final Sign-Off Checklist<a class="headerlink" href="#final-sign-off-checklist" title="Permanent link">&para;</a></h3>
@@ -9483,7 +9684,7 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

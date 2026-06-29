@@ -8333,6 +8333,16 @@ Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Sof
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purecli<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>version
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># or in GUI: System → Software</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Version           Controller Model
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>array-prod-01                 6.4.2.1234        FA-m70
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>array-prod-02                 6.4.2.1234        FA-m70
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>array-dr-01                   6.3.8.998         FA-x70r2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purecli: command not found</code></strong> — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
+<strong><code>Error: Unable to connect to array. Connection refused</code></strong> — Verify the array management IP is reachable and purecli credentials are configured in ~/.purerc or via environment variables.</p>
+</div>
 <h2 id="drive-replacement">Drive Replacement<a class="headerlink" href="#drive-replacement" title="Permanent link">&para;</a></h2>
 <p>Drives are monitored by Pure1 and replaced proactively before failure:</p>
 <ul>
@@ -8341,10 +8351,27 @@ Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Sof
 <li>Parity rebuild begins automatically</li>
 <li>No host impact during rebuild</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check drive health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purecli<span class="w"> </span>drive<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purecli<span class="w"> </span>drive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=healthy&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check drive health</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purecli<span class="w"> </span>drive<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purecli<span class="w"> </span>drive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=healthy&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                Serial              Capacity  Status    Temperature
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>drive.0             SN-PUR-2847-A1K9    1.92TB    healthy   28°C
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>drive.1             SN-PUR-2848-B2L7    1.92TB    healthy   29°C
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>drive.2             SN-PUR-2849-C3M5    1.92TB    healthy   27°C
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>drive.3             SN-PUR-2850-D4N6    1.92TB    healthy   30°C
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>drive.4             SN-PUR-2851-E5P2    1.92TB    healthy   28°C
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>drive.5             SN-PUR-2852-F6Q8    1.92TB    degraded  45°C
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>drive.6             SN-PUR-2853-G7R3    1.92TB    healthy   29°C
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name                Serial              Capacity  Status    Temperature
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>drive.5             SN-PUR-2852-F6Q8    1.92TB    degraded  45°C
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purecli: command not found</code></strong> — Verify the Pure Storage CLI is installed and the PATH includes its bin directory, or use the full path to the purecli executable.
+<strong><code>Error: Authentication failed. Invalid credentials.</code></strong> — Ensure your Pure Storage array credentials are configured in ~/.purerc or set PURE_API_TOKEN environment variable with a valid token.</p>
+</div>
 <h2 id="controller-refresh-evergreenforever">Controller Refresh (Evergreen//Forever)<a class="headerlink" href="#controller-refresh-evergreenforever" title="Permanent link">&para;</a></h2>
 <p>Under Evergreen//Forever, controllers are refreshed when new generations are available:
 - Customer purchases new controller shelf
@@ -8411,7 +8438,7 @@ Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Sof
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

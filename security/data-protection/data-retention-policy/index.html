@@ -7205,6 +7205,14 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>endscript
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'</code></strong> — Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use <code>dos2unix /etc/logrotate.d/syslog</code> to fix.
+<strong><code>error: stat of /var/log/syslog failed: No such file or directory</code></strong> — Create the syslog file before applying logrotate rules with <code>touch /var/log/syslog &amp;&amp; chown syslog:adm /var/log/syslog &amp;&amp; chmod 640 /var/log/syslog</code>.
+<strong><code>error: error executing postrotate script for /var/log/syslog</code></strong> — Verify that <code>/usr/lib/rsyslog/rsyslog-rotate</code> exists and is executable with <code>ls -la /usr/lib/rsyslog/rsyslog-rotate &amp;&amp; chmod +x /usr/lib/rsyslog/rsyslog-rotate</code>.</p>
+</div>
 <p>Remote forwarding to SIEM is required; local rotation is a buffer for connectivity loss.</p>
 <hr />
 <h2 id="legal-hold-process">Legal Hold Process<a class="headerlink" href="#legal-hold-process" title="Permanent link">&para;</a></h2>
@@ -7221,17 +7229,17 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 <li><strong>Hold register updated</strong> — Entry created in GRC system: matter reference, custodians, data scope, hold date.</li>
 <li><strong>Hold release</strong> — Legal team issues release notice. Holds released within 5 business days. Normal retention resumes; data that has passed its retention date is queued for deletion.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Microsoft Purview — place eDiscovery hold on mailbox and SharePoint</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Connect-IPPSSession</span> <span class="n">-UserPrincipalName</span> <span class="n">admin</span><span class="nv">@corp</span><span class="p">.</span><span class="n">onmicrosoft</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">New-CaseHoldPolicy</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-Case</span> <span class="s2">&quot;Litigation-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-ExchangeLocation</span> <span class="s2">&quot;john.doe@corp.com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">-SharePointLocation</span> <span class="s2">&quot;https://corp.sharepoint.com/sites/Finance&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">New-CaseHoldRule</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-Rule-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">-Policy</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">-ContentMatchQuery</span> <span class="s2">&quot;subject:ProjectAlpha AND date&gt;=2025-01-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Microsoft Purview — place eDiscovery hold on mailbox and SharePoint</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-IPPSSession</span> <span class="n">-UserPrincipalName</span> <span class="n">admin</span><span class="nv">@corp</span><span class="p">.</span><span class="n">onmicrosoft</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">New-CaseHoldPolicy</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-Case</span> <span class="s2">&quot;Litigation-2026-001&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-ExchangeLocation</span> <span class="s2">&quot;john.doe@corp.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">-SharePointLocation</span> <span class="s2">&quot;https://corp.sharepoint.com/sites/Finance&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">New-CaseHoldRule</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-Rule-2026-001&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Policy</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-ContentMatchQuery</span> <span class="s2">&quot;subject:ProjectAlpha AND date&gt;=2025-01-01&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="secure-data-deletion-procedure">Secure Data Deletion Procedure<a class="headerlink" href="#secure-data-deletion-procedure" title="Permanent link">&para;</a></h2>
@@ -7285,33 +7293,66 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 </tbody>
 </table>
 <h3 id="powermax-crypto-erase-a-volume">PowerMax — Crypto-Erase a Volume<a class="headerlink" href="#powermax-crypto-erase-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify volume</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;volume-name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Mark volume for crypto-erase (requires array admin role)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>-dev<span class="w"> </span>&lt;DeviceID&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>secure_erase
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Confirm erase completion</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>-dev<span class="w"> </span>&lt;DeviceID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>erase
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify volume</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;volume-name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Mark volume for crypto-erase (requires array admin role)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>-dev<span class="w"> </span>&lt;DeviceID&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>secure_erase
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Confirm erase completion</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">001</span><span class="w"> </span>-dev<span class="w"> </span>&lt;DeviceID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>erase
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Identify volume
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>DeviceID VolumeID Size(MB) Pool Emulation Status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>0A1B     prod-db-vol-03 2048000 POOL_SSD VMAX enabled
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>0A1C     prod-db-vol-04 2048000 POOL_SSD VMAX enabled
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a># Mark volume for crypto-erase (requires array admin role)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>(no output — command completes silently)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a># Confirm erase completion
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Secure_Erase_Status: IN_PROGRESS
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Secure_Erase_Percent_Complete: 87
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Secure_Erase_Estimated_Time_Remaining: 45 minutes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symdev: Error: Device 0A1B not found in array 001</code></strong> — Verify the DeviceID exists on the specified array SID using <code>symdev -sid 001 list</code>.
+<strong><code>symdev: Error: Insufficient privileges for secure_erase operation</code></strong> — Ensure your user account has array admin role; contact your storage administrator to grant permissions.</p>
+</div>
 <hr />
 <h2 id="retention-compliance-monitoring">Retention Compliance Monitoring<a class="headerlink" href="#retention-compliance-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Weekly check: Veeam jobs with restore points older than policy allows</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$jobs</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">Backup</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$job</span> <span class="k">in</span> <span class="nv">$jobs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nv">$oldPoints</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Job</span> <span class="nv">$job</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">365</span><span class="p">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="p">}</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$oldPoints</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Job &#39;</span><span class="p">$(</span><span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&#39; has </span><span class="p">$(</span><span class="nv">$oldPoints</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> restore points older than 1 year — review retention policy&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">}</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Weekly check: Veeam jobs with restore points older than policy allows</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$jobs</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">Backup</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$job</span> <span class="k">in</span> <span class="nv">$jobs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$oldPoints</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Job</span> <span class="nv">$job</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">365</span><span class="p">)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$oldPoints</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Job &#39;</span><span class="p">$(</span><span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&#39; has </span><span class="p">$(</span><span class="nv">$oldPoints</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> restore points older than 1 year — review retention policy&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="p">}</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for files on archive NFS share older than retention limit</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Example: flag files in audit archive older than 6 years</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>find<span class="w"> </span>/mnt/archive/audit_logs<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+2190<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/expired_audit_files.txt
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>wc<span class="w"> </span>-l<span class="w"> </span>/tmp/expired_audit_files.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check for files on archive NFS share older than retention limit</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Example: flag files in audit archive older than 6 years</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>find<span class="w"> </span>/mnt/archive/audit_logs<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+2190<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/expired_audit_files.txt
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>wc<span class="w"> </span>-l<span class="w"> </span>/tmp/expired_audit_files.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>-rw-r--r-- 1 root root 2.3M Jan 15 2018 /mnt/archive/audit_logs/2018/01/audit_20180115.log.gz
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>-rw-r--r-- 1 root root 1.8M Jan 22 2018 /mnt/archive/audit_logs/2018/01/audit_20180122.log.gz
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>-rw-r--r-- 1 root root 2.1M Feb 03 2018 /mnt/archive/audit_logs/2018/02/audit_20180203.log.gz
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>-rw-r--r-- 1 root root 1.9M Feb 14 2018 /mnt/archive/audit_logs/2018/02/audit_20180214.log.gz
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>-rw-r--r-- 1 root root 2.4M Mar 01 2018 /mnt/archive/audit_logs/2018/03/audit_20180301.log.gz
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>-rw-r--r-- 1 root root 2.0M Mar 18 2018 /mnt/archive/audit_logs/2018/03/audit_20180318.log.gz
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>...
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>847 /tmp/expired_audit_files.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/mnt/archive/audit_logs': No such file or directory</code></strong> — Verify the NFS share is mounted with <code>mount | grep archive</code> and mount it if necessary using <code>mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs</code>.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the archive directory with <code>sudo chmod g+rx /mnt/archive/audit_logs</code>.
+<strong><code>find: paths must begin with "." or "/"</code></strong> — Check for typos in the path and ensure <code>/mnt/archive/audit_logs</code> is an absolute path starting with <code>/</code>.</p>
+</div>
 <hr />
 <h2 id="exceptions-and-escalation">Exceptions and Escalation<a class="headerlink" href="#exceptions-and-escalation" title="Permanent link">&para;</a></h2>
 <p>Retention exceptions require formal approval before they are implemented.</p>
@@ -7369,7 +7410,7 @@ This policy defines mandatory retention periods, storage tier assignments, and d
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

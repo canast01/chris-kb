@@ -8995,25 +8995,69 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Restart sshd after changes</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
-<p>Verify the active SSH configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;passwordauthentication|permitempty|ciphers|kexalgorithms&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd.
+<strong><code>Invalid user service from 192.168.1.50 port 54321</code></strong> — Replace <code>&lt;MGMT_SUBNET&gt;</code> with actual CIDR notation (e.g., <code>AllowUsers service@192.168.0.0/24</code>) or use specific usernames without IP restrictions.
+<strong><code>Job for sshd.service failed because the control process exited with error code.</code></strong> — Run <code>sshd -t</code> to validate syntax errors in sshd_config before restarting the service.</p>
+</div>
+<p>Verify the active SSH configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;passwordauthentication|permitempty|ciphers|kexalgorithms&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>passwordauthentication yes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>permitemptypassword no
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd: command not found</code></strong> — Ensure OpenSSH server is installed with <code>apt-get install openssh-server</code> or equivalent for your distro.
+<strong><code>error: Could not load host key</code></strong> — Run the command with sudo or as root, since sshd configuration requires elevated privileges to read.</p>
+</div>
 <h3 id="https-tls-unisphere-for-vplex">HTTPS / TLS (Unisphere for VPLEX)<a class="headerlink" href="#https-tls-unisphere-for-vplex" title="Permanent link">&para;</a></h3>
 <p>Unisphere for VPLEX ships with a self-signed TLS certificate. Replace this with a certificate signed by the corporate CA before production use.</p>
 <h4 id="replacing-the-unisphere-tls-certificate">Replacing the Unisphere TLS Certificate<a class="headerlink" href="#replacing-the-unisphere-tls-certificate" title="Permanent link">&para;</a></h4>
 <p><strong>Step 1: Generate a CSR on the VMS</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to VMS as admin</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;VMS_IP&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate a private key and CSR</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-keyout<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-out<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=vplex-mgmt.example.com/O=Example Corp/C=US&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Review the CSR to confirm the subject</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to VMS as admin</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@&lt;VMS_IP&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate a private key and CSR</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-keyout<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-out<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=vplex-mgmt.example.com/O=Example Corp/C=US&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Review the CSR to confirm the subject</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>admin@vplex-mgmt-01:~$ ssh admin@192.168.100.45
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Last login: Wed Jan 15 14:22:33 2025 from 10.50.12.8
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>admin@vplex-mgmt-01:~$ openssl req -new -newkey rsa:4096 -nodes \
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>&gt;   -keyout /opt/vplex/certs/vplex_mgmt.key \
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>&gt;   -out /opt/vplex/certs/vplex_mgmt.csr \
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>&gt;   -subj &quot;/CN=vplex-mgmt.example.com/O=Example Corp/C=US&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Generating a RSA private key
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>.......................................................................................++++
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>writing new private key to &#39;/opt/vplex/certs/vplex_mgmt.key&#39;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-----
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>admin@vplex-mgmt-01:~$ openssl req -text -noout -in /opt/vplex/certs/vplex_mgmt.csr
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Certificate Request:
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    Data:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        Version: 1 (0x0)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        Subject: CN = vplex-mgmt.example.com, O = Example Corp, C = US
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        Public Key Info:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>            Public Key Algorithm: rsaEncryption
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                RSA Public-Key: (4096 bit)
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    Signature ok
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    subject=CN = vplex-mgmt.example.com, O = Example Corp, C = US
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>openssl: /opt/vplex/certs: No such file or directory</code></strong> — Create the directory with <code>mkdir -p /opt/vplex/certs</code> before running the openssl command.
+<strong><code>Permission denied</code></strong> — Ensure the admin user has write permissions to <code>/opt/vplex/certs</code> or run the command with appropriate sudo privileges.</p>
+</div>
 <p><strong>Step 2: Submit the CSR to the corporate CA</strong></p>
 <p>Submit <code>vplex_mgmt.csr</code> to the corporate certificate authority. Request a certificate with:</p>
 <ul>
@@ -9023,20 +9067,41 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 <li>Validity: 1–2 years (align with the organisation's certificate renewal cycle)</li>
 </ul>
 <p><strong>Step 3: Install the signed certificate</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Copy the signed cert chain to VMS</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>scp<span class="w"> </span>vplex_mgmt.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>scp<span class="w"> </span>corporate_ca_chain.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Import the certificate into the VPLEX keystore via Unisphere:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Settings → Security → Certificate → Import Certificate</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Upload the .key file and the signed .crt chain</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Copy the signed cert chain to VMS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>scp<span class="w"> </span>vplex_mgmt.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>scp<span class="w"> </span>corporate_ca_chain.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Import the certificate into the VPLEX keystore via Unisphere:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Settings → Security → Certificate → Import Certificate</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Upload the .key file and the signed .crt chain</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vplex_mgmt.crt                                    100% 2847     1.2MB/s   00:00
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>corporate_ca_chain.crt                            100% 5634     2.1MB/s   00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the <code>-o PubkeyAuthentication=no</code> flag.
+<strong><code>scp: /opt/vplex/certs/: No such file or directory</code></strong> — Create the target directory on the VMS first with <code>ssh admin@&lt;VMS_IP&gt; 'mkdir -p /opt/vplex/certs/'</code> before copying files.</p>
+</div>
 <p>Alternatively, import through Unisphere → Settings → Security → Certificates if a GUI-based import is supported on the installed GeoSynchrony version.</p>
 <p><strong>Step 4: Verify the certificate</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From an external host, verify the presented certificate</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Subject\|Validity\|SAN&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From an external host, verify the presented certificate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Subject\|Validity\|SAN&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Subject: CN=vplex-cluster-01.storage.local, O=Dell Inc., C=US
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Validity
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    Not Before: Jan 15 10:23:45 2023 GMT
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    Not After : Jan 15 10:23:45 2026 GMT
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>X509v3 Subject Alternative Name: 
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    DNS:vplex-cluster-01.storage.local, DNS:vplex-cluster-01, IP Address:192.168.100.45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with <code>telnet &lt;VMS_IP&gt; 443</code>.
+<strong><code>unable to load certificate</code></strong> — The certificate chain was not properly returned; try removing the pipe to <code>openssl x509</code> and run <code>openssl s_client -connect &lt;VMS_IP&gt;:443 -showcerts &lt;/dev/null 2&gt;&amp;1 | head -50</code> to inspect the raw output.
+<strong><code>grep: (standard input) is empty</code></strong> — The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly.</p>
+</div>
 <h4 id="certificate-lifecycle-management">Certificate Lifecycle Management<a class="headerlink" href="#certificate-lifecycle-management" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -9070,10 +9135,17 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </tbody>
 </table>
 <p>Configure an automated certificate expiry alert in the monitoring platform targeting the VMS HTTPS endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry from a monitoring host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check certificate expiry from a monitoring host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>notAfter=Dec 15 09:47:32 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity).
+<strong><code>unable to load certificate</code></strong> — The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online.</p>
+</div>
 <p>Alert when fewer than 30 days remain before expiry.</p>
 <h2 id="fibre-channel-layer-encryption">Fibre Channel Layer Encryption<a class="headerlink" href="#fibre-channel-layer-encryption" title="Permanent link">&para;</a></h2>
 <p>VPLEX Fibre Channel data paths (host-to-VPLEX and VPLEX-to-array) are not encrypted at the VPLEX layer. If FC encryption is required (e.g., for compliance with PCI DSS on shared fabric segments), implement it at the SAN switch level using:</p>
@@ -9119,7 +9191,7 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:07:24 UTC"><span class="timeago" datetime="2026-06-29T05:07:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:07:24 UTC">2026-06-29</span>
   </span>
 
     

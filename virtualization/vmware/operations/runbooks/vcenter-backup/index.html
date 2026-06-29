@@ -9581,6 +9581,28 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">    }</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;value&quot;: &quot;backup-job-20250214-084532&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>}
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>{
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;value&quot;: {
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;id&quot;: &quot;backup-job-20250214-084532&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;state&quot;: &quot;RUNNING&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;progress&quot;: 0,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;detail&quot;: null,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;start_time&quot;: &quot;2025-02-14T08:45:32.123Z&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &quot;end_time&quot;: null,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &quot;messages&quot;: [],
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;description&quot;: &quot;vCenter Server backup job&quot;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  }
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify certificate chain on vCenter).
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure jq is installed (<code>yum install jq</code>) and that the API response is valid JSON by testing the curl command without piping to jq first.
+<strong><code>{"value":{"messages":[{"default_message":"Authentication failed"}]}}</code></strong> — Verify the vCenter administrator password is correct and the user account is not locked; reset credentials in vCenter if needed.</p>
+</div>
 <h3 id="scheduled-backup-via-vami">Scheduled backup via VAMI<a class="headerlink" href="#scheduled-backup-via-vami" title="Permanent link">&para;</a></h3>
 <ol>
 <li>VAMI → Backup → <strong>Schedule</strong>.</li>
@@ -9592,12 +9614,38 @@
 <hr />
 <h2 id="verify-backup-integrity">Verify Backup Integrity<a class="headerlink" href="#verify-backup-integrity" title="Permanent link">&para;</a></h2>
 <p>After each backup, confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List backup files on SFTP target</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backups/vcenter/sn-*/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check the manifest file — lists all backup components and sizes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>/backups/vcenter/sn-&lt;timestamp&gt;/manifest.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List backup files on SFTP target</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backups/vcenter/sn-*/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check the manifest file — lists all backup components and sizes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cat<span class="w"> </span>/backups/vcenter/sn-&lt;timestamp&gt;/manifest.json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>total 2.3G
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>drwxr-xr-x 4 backup backup 4.0K 2024-01-15 14:32 /backups/vcenter/sn-20240115-143200/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>drwxr-xr-x 4 backup backup 4.0K 2024-01-14 09:18 /backups/vcenter/sn-20240114-091800/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>drwxr-xr-x 4 backup backup 4.0K 2024-01-13 22:45 /backups/vcenter/sn-20240113-224500/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>-rw-r--r-- 1 backup backup 1.2G 2024-01-15 14:35 sn-20240115-143200.tar.gz
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>-rw-r--r-- 1 backup backup 1.1G 2024-01-14 09:20 sn-20240114-091800.tar.gz
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>{
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;backup_id&quot;: &quot;sn-20240115-143200&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:00Z&quot;,
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  &quot;vcenter_version&quot;: &quot;7.0.3&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  &quot;components&quot;: [
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    {&quot;name&quot;: &quot;database&quot;, &quot;size_bytes&quot;: 856932864, &quot;status&quot;: &quot;completed&quot;},
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    {&quot;name&quot;: &quot;config&quot;, &quot;size_bytes&quot;: 45678912, &quot;status&quot;: &quot;completed&quot;},
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    {&quot;name&quot;: &quot;ssl_certs&quot;, &quot;size_bytes&quot;: 2097152, &quot;status&quot;: &quot;completed&quot;},
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    {&quot;name&quot;: &quot;logs&quot;, &quot;size_bytes&quot;: 312458240, &quot;status&quot;: &quot;completed&quot;}
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  ],
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;total_size_bytes&quot;: 1217167168,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;checksum&quot;: &quot;sha256:a7f3e9c2b1d4f8e6a9c3b2e1f4d7a9c2&quot;
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ls: cannot access '/backups/vcenter/sn-*/': No such file or directory</code></strong> — Verify the backup mount point is mounted with <code>mount | grep backups</code> and check the SFTP target path is correct.
+<strong><code>cat: /backups/vcenter/sn-&lt;timestamp&gt;/manifest.json: No such file or directory</code></strong> — Replace <code>&lt;timestamp&gt;</code> with an actual backup directory name from the <code>ls</code> output (e.g., <code>sn-20240115-143200</code>).</p>
+</div>
 <p>A valid backup contains:
 - <code>manifest.json</code> — metadata and component list
 - <code>*.bak</code> — encrypted backup data files
@@ -9605,15 +9653,15 @@
 <hr />
 <h2 id="restore-procedure-summary">Restore Procedure (Summary)<a class="headerlink" href="#restore-procedure-summary" title="Permanent link">&para;</a></h2>
 <p>Full restore requires a complete re-deploy — do not attempt during normal operations without a DR plan:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Mount the VCSA installer ISO
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Run the VCSA installer → Stage 1: Deploy new VCSA appliance
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   (deploy to same ESXi host; use same FQDN as original)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>3. Stage 2: restore from backup
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   — Choose &quot;Restore&quot; mode
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   — Enter SFTP backup location and backup encryption password
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   — Wait for restore to complete (30–90 minutes)
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>4. After restore: DNS must resolve the VCSA FQDN to the new appliance IP
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>5. Verify all hosts reconnect and inventory is intact
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Mount the VCSA installer ISO
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Run the VCSA installer → Stage 1: Deploy new VCSA appliance
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   (deploy to same ESXi host; use same FQDN as original)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>3. Stage 2: restore from backup
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>   — Choose &quot;Restore&quot; mode
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>   — Enter SFTP backup location and backup encryption password
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>   — Wait for restore to complete (30–90 minutes)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>4. After restore: DNS must resolve the VCSA FQDN to the new appliance IP
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>5. Verify all hosts reconnect and inventory is intact
 </code></pre></div>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
@@ -9677,7 +9725,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

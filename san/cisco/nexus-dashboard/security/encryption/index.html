@@ -7740,28 +7740,82 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>nd-dc1.corp.example.com
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Acceptable: ECDHE+AESGCM, ECDHE+CHACHA20; No RC4, DES, 3DES, NULL</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># The passphrase can also be set via CLI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>acs<span class="w"> </span>backup<span class="w"> </span>settings<span class="w"> </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alert handshake failure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cipher : (NONE)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Protocol  : TLSv1.3
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Cipher    : TLS_AES_256_GCM_SHA384
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Nmap scan report for nd-dc1.corp.example.com (10.48.12.55)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Host is up (0.024s latency).
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>PORT    STATE SERVICE
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>443/tcp open  https
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| ssl-enum-ciphers:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|   TLSv1.3:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|     ciphers:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|       TLS_AES_256_GCM_SHA384 (256) - A
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|       TLS_CHACHA20_POLY1305_SHA256 (256) - A
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|       TLS_AES_128_GCM_SHA256 (128) - A
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|   TLSv1.2:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|     ciphers:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|       ECDHE-RSA-AES256-GCM-SHA384 (256) - A
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|       ECDHE-RSA-CHACHA20-POLY1305 (256) - A
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|_  least strength: A
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Nmap done at 2024-01-15 14:32:21 UTC; 1 IP address (1 host up) scanned in 3.12 seconds
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check certificate expiry</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-servername<span class="w"> </span>nd-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Days until expiry</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">from datetime import datetime</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">import subprocess, re</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">r = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,&#39;nd-dc1.corp.example.com:443&#39;,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">  &#39;-servername&#39;,&#39;nd-dc1.corp.example.com&#39;], capture_output=True, input=b&#39;&#39;)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">c = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">  input=r.stdout, capture_output=True).stdout.decode()</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, c).group(1).strip()</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">print(f&#39;Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date()})&#39;)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Alert when &lt; 60 days remaining; renew by &lt; 30 days</span>
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load client cert</code></strong> — Verify the Nexus Dashboard certificate is valid and the hostname resolves correctly with <code>nslookup nd-dc1.corp.example.com</code>.
+<strong><code>nmap: command not found</code></strong> — Install nmap with <code>apt-get install nmap</code> (Ubuntu/Debian) or <code>yum install nmap</code> (RHEL/CentOS).
+<strong><code>Connection refused</code></strong> — Confirm the Nexus Dashboard is running and port 443 is accessible from your host using <code>telnet nd-dc1.corp.example.com 443</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># The passphrase can also be set via CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>acs<span class="w"> </span>backup<span class="w"> </span>settings<span class="w"> </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Backup encryption passphrase settings updated successfully.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Passphrase file: /home/ndadmin/.nd-backup-pass
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Encryption algorithm: AES-256-GCM
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Status: Active
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Last modified: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass</code></strong> — Verify the file path exists and run <code>ls -la /home/ndadmin/.nd-backup-pass</code> to confirm permissions and location.
+<strong><code>Error: Permission denied reading passphrase file</code></strong> — Ensure the ndadmin user has read permissions on the file with <code>chmod 600 /home/ndadmin/.nd-backup-pass</code> and verify ownership.
+<strong><code>Error: Passphrase file is empty or invalid format</code></strong> — Confirm the passphrase file contains at least 8 characters and no trailing newlines by running <code>cat /home/ndadmin/.nd-backup-pass | wc -c</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check certificate expiry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-servername<span class="w"> </span>nd-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Days until expiry</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">from datetime import datetime</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">import subprocess, re</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">r = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,&#39;nd-dc1.corp.example.com:443&#39;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">  &#39;-servername&#39;,&#39;nd-dc1.corp.example.com&#39;], capture_output=True, input=b&#39;&#39;)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">c = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">  input=r.stdout, capture_output=True).stdout.decode()</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, c).group(1).strip()</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">print(f&#39;Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date()})&#39;)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Alert when &lt; 60 days remaining; renew by &lt; 30 days</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>notBefore=Sep 15 08:22:14 2023 GMT
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>notAfter=Sep 14 08:22:14 2025 GMT
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Certificate expires in 287 days (2025-09-14)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to connect to nd-dc1.corp.example.com:443</code></strong> — Verify the hostname resolves and the Nexus Dashboard is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.
+<strong><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></strong> — Ensure the openssl s_client connection succeeded; add <code>2&gt;&amp;1</code> to stderr capture to diagnose TLS handshake failures.
+<strong><code>ValueError: time data does not match format</code></strong> — The certificate date format may differ on your system; run the openssl command standalone first to verify the exact date string format.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7799,7 +7853,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 13:38:25 UTC"><span class="timeago" datetime="2026-06-29T13:38:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 13:38:25 UTC">2026-06-29</span>
   </span>
 
     

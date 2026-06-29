@@ -8271,46 +8271,90 @@ SQL Server procedures: index rebuild and statistics update, user and role manage
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Update application connection string / DNS to point at new primary</span>
 </code></pre></div></p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Automatic failover — check MHA status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>masterha_check_repl<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Manual failover</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>masterha_master_switch<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf<span class="w"> </span>--master_state<span class="o">=</span>dead<span class="w"> </span>--new_master_host<span class="o">=</span>&lt;replica-host&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>replication_lag 
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>-----------------
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a> 00:00:00.342156
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>(1 row)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>waiting for server to promote.... done
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>server promoted
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a> pg_is_in_recovery 
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>-------------------
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a> f
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>(1 row)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>       current_time        
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>---------------------------
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a> 2024-01-15 14:32:18.567891+00
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>(1 row)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Check AG health before failover</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">-- Manual failover to synchronous replica (no data loss)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FAILOVER</span><span class="p">;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">-- Forced failover (async replica — possible data loss; only if synchronous unavailable)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FORCE_FAILOVER_ALLOW_DATA_LOSS</span><span class="p">;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory</code></strong> — Ensure PostgreSQL is running on the standby with <code>systemctl start postgresql</code> before executing promotion commands.</p>
+<p><strong><code>FATAL: the database system is in recovery mode</code></strong> — Wait for replication to catch up (lag near zero) and ensure the standby is fully synchronized before promoting.</p>
+<p><strong><code>could not open file "/var/lib/postgresql/data/promote_standby": Permission denied</code></strong> — Run the touch command as the postgres user with <code>sudo -u postgres touch /var/lib/postgresql/data/promote_standby</code>.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Automatic failover — check MHA status</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>masterha_check_repl<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Manual failover</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>masterha_master_switch<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf<span class="w"> </span>--master_state<span class="o">=</span>dead<span class="w"> </span>--new_master_host<span class="o">=</span>&lt;replica-host&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check cluster node status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-ClusterNode</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Move SQL Server resource group to another node</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Move-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="n">-Node</span> <span class="p">&lt;</span><span class="n">target-node</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Check AG health before failover</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Verify</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">OwnerNode</span><span class="p">,</span> <span class="n">State</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">-- Manual failover to synchronous replica (no data loss)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FAILOVER</span><span class="p">;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">-- Forced failover (async replica — possible data loss; only if synchronous unavailable)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FORCE_FAILOVER_ALLOW_DATA_LOSS</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify new primary accepting writes</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES (now());&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-u<span class="w"> </span>appuser<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES(now());&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Application connectivity</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-endpoint&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check for open transactions / locks</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># PostgreSQL</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE state != &#39;idle&#39;;&quot;</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># SQL Server</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>SELECT<span class="w"> </span>session_id,<span class="w"> </span>blocking_session_id,<span class="w"> </span>wait_type,<span class="w"> </span>wait_time<span class="w"> </span>FROM<span class="w"> </span>sys.dm_exec_requests<span class="w"> </span>WHERE<span class="w"> </span>blocking_session_id<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check cluster node status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-ClusterNode</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Move SQL Server resource group to another node</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Move-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="n">-Node</span> <span class="p">&lt;</span><span class="n">target-node</span><span class="p">&gt;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Verify</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Get-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">OwnerNode</span><span class="p">,</span> <span class="n">State</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify new primary accepting writes</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES (now());&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-u<span class="w"> </span>appuser<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES(now());&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Application connectivity</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-endpoint&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check for open transactions / locks</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE state != &#39;idle&#39;;&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>SELECT<span class="w"> </span>session_id,<span class="w"> </span>blocking_session_id,<span class="w"> </span>wait_type,<span class="w"> </span>wait_time<span class="w"> </span>FROM<span class="w"> </span>sys.dm_exec_requests<span class="w"> </span>WHERE<span class="w"> </span>blocking_session_id<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>INSERT 0 1
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Query OK, 0 rows affected (0.12 sec)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>OK
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> pid  | state  | wait_event_type |                query
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>------+--------+-----------------+------------------------------------------
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a> 4521 | active | IO              | INSERT INTO health_check(ts) VALUES (now())
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a> 4523 | active | Lock            | SELECT * FROM orders WHERE id = $1
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>(2 rows)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>session_id | blocking_session_id | wait_type | wait_time
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>-----------|---------------------|-----------|----------
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>      52   |          48          | PAGEIOLATCH_SH | 1250
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>      54   |          0           | WRITELOG  | 0
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>(2 rows affected)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — Increase <code>max_connections</code> in postgresql.conf or wait for idle connections to close.
+<strong><code>ERROR 1040 (HY000): Too many connections</code></strong> — Verify MySQL <code>max_connections</code> setting and close idle application connections.
+<strong><code>curl: (7) Failed to connect to &lt;app-endpoint&gt; port 443: Connection refused</code></strong> — Confirm the application service is running on the new primary and network routing is correct.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8347,7 +8391,7 @@ SQL Server procedures: index rebuild and statistics update, user and role manage
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

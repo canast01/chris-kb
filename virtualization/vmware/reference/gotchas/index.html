@@ -9298,6 +9298,13 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Fix / Avoid:</strong> For planned maintenance, put the host in Maintenance Mode (Full Data Migration or Ensure Accessibility) before powering off — this triggers an immediate, orderly resync. For an emergency outage where you need to force an early rebuild, reduce the delay temporarily:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--clom-repair-delay-minutes<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or parameter: clom-repair-delay-minutes</code></strong> — Verify the correct parameter name is <code>clom-repair-delay-minutes</code> and check your ESXi/vSAN version supports this option (available in vSAN 6.6+).
+<strong><code>Error: The VSAN cluster is not enabled on this host</code></strong> — Ensure vSAN is initialized and the cluster is properly configured before attempting to modify cluster settings.</p>
+</div>
 <p>Reset to the original value (60) after the resync completes.</p>
 <hr />
 <h2 id="vsan-esa-and-osa-are-mutually-exclusive-per-disk-group">vSAN — ESA and OSA Are Mutually Exclusive per Disk Group<a class="headerlink" href="#vsan-esa-and-osa-are-mutually-exclusive-per-disk-group" title="Permanent link">&para;</a></h2>
@@ -9329,15 +9336,26 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> vCenter services fail to start; hosts disconnect; SSO authentication fails; the web UI shows a certificate error on login.</p>
 <p><strong>Cause:</strong> VMCA issues machine certificates with a 2-year validity by default. When the machine SSL certificate expires, the <code>vpxd</code> daemon, lookup service, and SSO token service all fail simultaneously because they mutually authenticate using the same certificate chain.</p>
 <p><strong>Fix / Avoid:</strong> Monitor VMCA certificate expiry proactively:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>valid
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>valid
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Entry has CN=vcsa-01.lab.local, OU=VMware, O=VMware, C=US
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Issuer CN=VMware-Root, OU=VMware, O=VMware, C=US
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>NotBefore: Jan 15 00:00:00 2023 GMT
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>NotAfter: Jan 15 00:00:00 2025 GMT
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Valid from Jan 15 00:00:00 2023 GMT to Jan 15 00:00:00 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vecs-cli: command not found</code></strong> — Ensure the vSphere Certificate Manager service is running with <code>systemctl status vmware-vmafd</code> and verify the path is correct for your vCenter version.
+<strong><code>Error: Failed to connect to Certificate Store</code></strong> — Run the command with elevated privileges using <code>sudo</code> or as root, as VECS requires administrative access.</p>
+</div>
 <p>Set a 60-day alert. Renew certificates proactively using <code>certificate-manager</code> before expiry. Do not wait for services to fail.</p>
 <hr />
 <h2 id="vcenter-vcls-agent-vms-cannot-be-deleted-from-inventory">vCenter — vCLS Agent VMs Cannot Be Deleted from Inventory<a class="headerlink" href="#vcenter-vcls-agent-vms-cannot-be-deleted-from-inventory" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> An admin deletes or powers off vCLS agent VMs to reclaim resources; DRS immediately stops working for the affected cluster.</p>
 <p><strong>Cause:</strong> vCLS (vSphere Cluster Services) agent VMs are automatically managed by vCenter and are required for DRS and HA to function. vCenter will attempt to recreate any deleted agent VMs, but DRS operates in a degraded state until they are healthy.</p>
 <p><strong>Fix / Avoid:</strong> Never delete vCLS agent VMs. If troubleshooting requires temporarily disabling vCLS, use Retreat Mode by setting the following key in vCenter advanced settings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>config.vcls.clusters.&lt;cluster-id&gt;.enabled = false
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>config.vcls.clusters.&lt;cluster-id&gt;.enabled = false
 </code></pre></div>
 <p>Re-enable after troubleshooting is complete. vCenter will automatically recreate healthy agent VMs when Retreat Mode is disabled.</p>
 <hr />
@@ -9350,8 +9368,15 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> The Quick Boot option is greyed out for a host, or a host configured for Quick Boot falls back to a full reboot during remediation.</p>
 <p><strong>Cause:</strong> Quick Boot requires UEFI firmware, compatible hardware (listed on the VMware HCL), and no PCI passthrough devices attached to any VMs on the host. Any PCI passthrough assignment disables Quick Boot for the entire host.</p>
 <p><strong>Fix / Avoid:</strong> Check Quick Boot compatibility:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vim-cmd<span class="w"> </span>hostsvc/quickboot/enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vim-cmd<span class="w"> </span>hostsvc/quickboot/enabled
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command vim-cmd</code></strong> — Ensure you are running this command on an ESXi host with SSH enabled, not on a vCenter server or external machine.
+<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate sudo privileges on the ESXi host.</p>
+</div>
 <p>Remove PCI passthrough device assignments from all VMs on the host before enabling Quick Boot. Verify against the HCL if the host is borderline-compatible.</p>
 <hr />
 <h2 id="srm-placeholder-vms-must-be-refreshed-after-vcenter-upgrade">SRM — Placeholder VMs Must Be Refreshed After vCenter Upgrade<a class="headerlink" href="#srm-placeholder-vms-must-be-refreshed-after-vcenter-upgrade" title="Permanent link">&para;</a></h2>
@@ -9383,7 +9408,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> After upgrading SDDC Manager, NSX Manager shows as "Unsupported version" in the SDDC Manager UI.</p>
 <p><strong>Cause:</strong> VCF enforces strict BOM (Bill of Materials) ordering. NSX must be upgraded after SDDC Manager and vCenter, never before. Upgrading NSX outside of SDDC Manager orchestration, or upgrading it first, breaks the BOM alignment and puts the environment into an unsupported state.</p>
 <p><strong>Fix / Avoid:</strong> Always follow the VCF upgrade sequence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SDDC Manager → vCenter → ESXi → NSX → vSAN on-disk format
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SDDC Manager → vCenter → ESXi → NSX → vSAN on-disk format
 </code></pre></div>
 <p>Never upgrade any component outside of SDDC Manager orchestration. If a component was upgraded out of order, open a VMware support case before proceeding — attempting to continue LCM operations in a mismatched BOM state can cause further failures.</p>
 <hr />
@@ -9401,16 +9426,40 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>What catches admins:</strong> New TKC (Tanzu Kubernetes Cluster) creation requests hang at "Pending" indefinitely. Existing clusters are unaffected. The Supervisor control plane shows no error in the vCenter UI.</p>
 <p><strong>Why it happens:</strong> The Supervisor Namespace IP range is configured during Workload Management enablement and is fixed at that point. Each Supervisor VM, each TKC control plane VM, and each TKC worker node consumes an IP from this range. In environments where the initial range was sized for a pilot and then expanded with additional TKCs, the range becomes exhausted. When all IPs are consumed, new cluster creation requests wait for an IP indefinitely with no explicit "out of IP addresses" error surfaced to the administrator.</p>
 <p><strong>How to avoid / fix:</strong> Size the Supervisor Namespace IP range to at least 5x the anticipated peak number of TKC nodes, including control planes, at design time. To check current consumption:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>virtualmachinesetresourcepolicies<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>virtualmachinesetresourcepolicies<span class="w"> </span>-A
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAMESPACE            NAME                                    AGE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vmware-system-capi   default-resource-policy                 45d
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vmware-system-capi   compute-optimized-policy                32d
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vmware-system-capi   memory-optimized-policy                 28d
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>kube-system          gpu-workload-policy                     15d
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>default              custom-vm-policy                        8d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "virtualmachinesetresourcepolicies"</code></strong> — Ensure the VMware Tanzu Kubernetes Grid extension is installed and the CRD is registered with <code>kubectl get crd | grep virtualmachine</code>.
+<strong><code>No resources found in any namespace.</code></strong> — Create at least one VirtualMachineSetResourcePolicy resource using <code>kubectl apply -f policy.yaml</code> or verify the correct namespace with <code>kubectl get ns</code>.</p>
+</div>
 <p>If the range is exhausted, the only remediation is to remove unused TKCs to free IPs, or to re-enable Workload Management with a larger range — which requires destroying all existing TKCs. Plan the range generously at initial deployment.</p>
 <hr />
 <h2 id="tanzu-tkc-upgrades-cannot-skip-minor-versions">Tanzu — TKC Upgrades Cannot Skip Minor Versions<a class="headerlink" href="#tanzu-tkc-upgrades-cannot-skip-minor-versions" title="Permanent link">&para;</a></h2>
 <p><strong>What catches admins:</strong> An administrator attempts to upgrade a TKC from Kubernetes 1.25 to 1.27 in a single operation to catch up after a period of deferred upgrades. The upgrade request is rejected or silently queued without explanation.</p>
 <p><strong>Why it happens:</strong> Tanzu Kubernetes Grid enforces the same sequential minor-version upgrade constraint as upstream Kubernetes. A TKC on 1.25 must be upgraded to 1.26 before it can be upgraded to 1.27. Unlike vSphere component upgrades which can be batched, Kubernetes minor version skipping is not supported and will be blocked by the TKG service even if the target image is available in the content library.</p>
 <p><strong>How to avoid / fix:</strong> Establish a Kubernetes version lifecycle policy that limits the acceptable age of a running TKC to no more than two minor versions behind the current supported release. Check TKC versions regularly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-A
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAMESPACE                NAME                    CONTROL PLANE   WORKER   KUBECONFIG AGE
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>tkg-system              tkg-mgmt-cluster        3/3             6/6      True       45d
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>workload-ns-prod        wl-cluster-east         3/3             4/4      True       12d
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>workload-ns-staging     wl-cluster-west         2/3             3/4      False      8d
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>workload-ns-dev         dev-ephemeral           1/3             2/4      False      2d
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vmware-system-tkg       tkg-shared-services     3/3             5/5      True       60d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "tkc"</code></strong> — Ensure the Tanzu Kubernetes Cluster CRD is installed by verifying the management cluster has the TKG extension enabled.
+<strong><code>Unable to connect to the server: dial tcp: lookup api.tkg-mgmt on 10.0.0.1:53: no such host</code></strong> — Verify your kubeconfig is pointing to the correct management cluster and that DNS resolution is working for the management cluster endpoint.</p>
+</div>
 <p>For clusters that have fallen behind, plan sequential upgrade windows rather than attempting a single jump. Each minor version upgrade should be validated (workloads running, kube-system pods healthy) before proceeding to the next step.</p>
 <hr />
 <h2 id="vxrail-lcm-bundle-download-failures-leave-the-cluster-in-a-partial-upgrade-state">VxRail — LCM Bundle Download Failures Leave the Cluster in a Partial Upgrade State<a class="headerlink" href="#vxrail-lcm-bundle-download-failures-leave-the-cluster-in-a-partial-upgrade-state" title="Permanent link">&para;</a></h2>
@@ -9455,7 +9504,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

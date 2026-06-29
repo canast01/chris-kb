@@ -6963,21 +6963,60 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>query<span class="w"> </span>session<span class="w"> </span>/server:&lt;hostname&gt;
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-EventLog<span class="w"> </span>-LogName<span class="w"> </span>Security<span class="w"> </span>-InstanceId<span class="w"> </span><span class="m">4624</span>,4625<span class="w"> </span>-Newest<span class="w"> </span><span class="m">50</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@prod-web-01:~# ps aux | grep -E &quot;nc|ncat|nmap|metasploit|mimikatz|powersploit&quot;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>root      2847  0.1  0.3  45628  12544 ?        Ss   14:22   0:00 sshd: root@pts/0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>root      3156  0.0  0.1   6432   4128 pts/0    S+   14:23   0:00 grep -E nc|ncat|nmap|metasploit|mimikatz|powersploit
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>root@prod-web-01:~# last -n 50
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>root     pts/0        203.0.113.45     Wed Dec 13 14:22   still logged in
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>admin    pts/1        198.51.100.87    Wed Dec 13 12:15 - 13:45  (1:30)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>root     pts/0        192.0.2.156      Tue Dec 12 23:47 - 01:22  (1:35)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>svc_app  pts/2        10.0.45.78       Tue Dec 12 18:30 - 18:45  (0:15)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>root     tty1         -                Tue Dec 12 16:12 - down   (2:18)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>root@prod-web-01:~# grep &quot;Failed password\|Accepted password&quot; /var/log/auth.log | tail -50
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Dec 13 14:22:15 prod-web-01 sshd[3142]: Accepted password for root from 203.0.113.45 port 54821 ssh2
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Dec 13 14:15:03 prod-web-01 sshd[3089]: Failed password for invalid user testuser from 198.51.100.201 port 48392 ssh2
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Dec 13 14:14:58 prod-web-01 sshd[3087]: Failed password for invalid user admin from 198.51.100.201 port 48388 ssh2
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Dec 13 13:45:22 prod-web-01 sshd[2956]: Accepted password for admin from 198.51.100.87 port 52104 ssh2
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Dec 13 12:30:11 prod-web-01 sshd[2801]: Failed password for root from 192.0.2.99 port 41256 ssh2
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>C:\Windows\System32&gt; query session /server:dc-prod-01
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> SESSIONNAME       USERNAME                 ID  STATE   TYPE        DEVICE
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a> services                                    0  Disc
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a> console                                     1  Conn
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a> rdp-tcp#0         DOMAIN\jsmith             2  Active  rdpwd
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a> rdp-tcp#1         DOMAIN\mchen              3  Active  rdpwd
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a> rdp-tcp#2         DOMAIN\svc_backup        4  Disc
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>C:\Windows\System32&gt; Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 50
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>   Index Time          EntryType   Source                 InstanceID Message
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>   ----- ----          ---------   ------                 ---------- -------
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    8847 Dec 13 14:25  SuccessAu... Security                    4624
+</code></pre></div>
 <h2 id="phase-2-contain">Phase 2 — Contain<a class="headerlink" href="#phase-2-contain" title="Permanent link">&para;</a></h2>
 <p><strong>Network isolation (do not power off — preserve forensic state):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Windows — disable NIC (keeps system running but disconnected)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-NetAdapter</span> <span class="p">|</span> <span class="nb">Disable-NetAdapter</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Or block at firewall / network switch level</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Contact network team to port-isolate the switch port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Windows — disable NIC (keeps system running but disconnected)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-NetAdapter</span> <span class="p">|</span> <span class="nb">Disable-NetAdapter</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Or block at firewall / network switch level</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Contact network team to port-isolate the switch port</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — drop all traffic except management (use with caution)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-s<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>iptables<span class="w"> </span>-P<span class="w"> </span>INPUT<span class="w"> </span>DROP
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iptables<span class="w"> </span>-P<span class="w"> </span>OUTPUT<span class="w"> </span>DROP
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>iptables<span class="w"> </span>-P<span class="w"> </span>FORWARD<span class="w"> </span>DROP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Linux — drop all traffic except management (use with caution)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-s<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>iptables<span class="w"> </span>-P<span class="w"> </span>INPUT<span class="w"> </span>DROP
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iptables<span class="w"> </span>-P<span class="w"> </span>OUTPUT<span class="w"> </span>DROP
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>iptables<span class="w"> </span>-P<span class="w"> </span>FORWARD<span class="w"> </span>DROP
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iptables: No chain/target/match by that name</code></strong> — Ensure iptables is installed and the kernel module is loaded with <code>modprobe ip_tables</code>.
+<strong><code>iptables: Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root; iptables requires elevated privileges.
+<strong><code>Bad argument '&lt;mgmt-ip&gt;'</code></strong> — Replace <code>&lt;mgmt-ip&gt;</code> with an actual IP address (e.g., <code>192.168.1.100</code>) before executing the script.</p>
+</div>
 <p><strong>CyberArk — rotate or suspend compromised accounts immediately:</strong>
 1. CyberArk PVWA → Accounts → locate account → Change password (immediate rotation)
 2. For suspected account compromise: suspend account in AD and rotate all credentials</p>
@@ -7021,22 +7060,41 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Pull security events from last 4 hours</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">4</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">4624</span><span class="p">,</span><span class="n">4625</span><span class="p">,</span><span class="n">4648</span><span class="p">,</span><span class="n">4720</span><span class="p">,</span><span class="n">4728</span><span class="p">,</span><span class="n">7045</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Pull security events from last 4 hours</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">4</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">4624</span><span class="p">,</span><span class="n">4625</span><span class="p">,</span><span class="n">4648</span><span class="p">,</span><span class="n">4720</span><span class="p">,</span><span class="n">4728</span><span class="p">,</span><span class="n">7045</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <p><strong>Linux — audit log:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Recent sudo usage</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>sudo<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># File access audit (if auditd running)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>&lt;audit-key&gt;<span class="w"> </span>-ts<span class="w"> </span>recent
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Network connections at time of incident</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ss<span class="w"> </span>-tnp
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>netstat<span class="w"> </span>-anp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ESTABLISHED
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Recent sudo usage</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>grep<span class="w"> </span>sudo<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># File access audit (if auditd running)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>&lt;audit-key&gt;<span class="w"> </span>-ts<span class="w"> </span>recent
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Network connections at time of incident</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ss<span class="w"> </span>-tnp
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>netstat<span class="w"> </span>-anp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ESTABLISHED
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Oct 15 10:23:45 prod-web-01 sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/bin/bash
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Oct 15 10:24:12 prod-web-01 sudo: bob : TTY=pts/1 ; PWD=/var/www ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Oct 15 10:25:33 prod-web-01 sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Oct 15 10:26:01 prod-web-01 sudo: charlie : TTY=pts/2 ; PWD=/opt/app ; USER=root ; COMMAND=/usr/bin/rm -rf /tmp/cache
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Oct 15 10:27:44 prod-web-01 sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/curl http://external-host.com/script.sh
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>...
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>No matches found
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>tcp    LISTEN      0      128      0.0.0.0:22                 0.0.0.0:*                   users:((&quot;sshd&quot;,pid=412,fd=3))
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>tcp    LISTEN      0      128      0.0.0.0:80                 0.0.0.0:*                   users:((&quot;nginx&quot;,pid=2847,fd=6))
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>tcp    ESTAB       0      0      10.42.1.15:54321            203.0.113.42:443             users:((&quot;curl&quot;,pid=8934,fd=3))
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>tcp    ESTAB       0      0      10.42.1.15:22               10.20.0.88:51234             users:((&quot;sshd&quot;,pid=5621,fd=3))
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>tcp    ESTAB       0      0      10.42.1.15:3306             10.42.1.20:45678             users:((&quot;mysqld&quot;,pid=1203,fd=14))
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ausearch: command not found</code></strong> — Install auditd with <code>apt-get install auditd</code> or <code>yum install audit</code> and ensure the audit daemon is running.
+<strong><code>grep: /var/log/auth.log: No such file or directory</code></strong> — Check the correct log path for your system; on some distributions use <code>/var/log/secure</code> instead of <code>/var/log/auth.log</code>.
+<strong><code>netstat: command not found</code></strong> — Use <code>ss</code> instead (already shown in the block) or install net-tools with <code>apt-get install net-tools</code>.</p>
+</div>
 <h2 id="phase-4-eradicate-and-recover">Phase 4 — Eradicate and Recover<a class="headerlink" href="#phase-4-eradicate-and-recover" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Remove malicious files, scheduled tasks, persistence mechanisms</li>
@@ -7046,17 +7104,17 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
 <li>Reset all passwords for affected accounts and service accounts</li>
 </ul>
 <h2 id="phase-5-post-incident">Phase 5 — Post-Incident<a class="headerlink" href="#phase-5-post-incident" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Incident Report (template):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">-</span><span class="w"> </span>Date/time detected:
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">-</span><span class="w"> </span>Date/time contained:
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Systems affected:
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>Data at risk / confirmed exfiltrated:
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Root cause:
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">-</span><span class="w"> </span>Attack vector:
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">-</span><span class="w"> </span>Timeline:
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">-</span><span class="w"> </span>Actions taken:
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">-</span><span class="w"> </span>Lessons learned:
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">-</span><span class="w"> </span>Remediation items (with owners and due dates):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Incident Report (template):
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">-</span><span class="w"> </span>Date/time detected:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">-</span><span class="w"> </span>Date/time contained:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">-</span><span class="w"> </span>Systems affected:
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">-</span><span class="w"> </span>Data at risk / confirmed exfiltrated:
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">-</span><span class="w"> </span>Root cause:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">-</span><span class="w"> </span>Attack vector:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">-</span><span class="w"> </span>Timeline:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">-</span><span class="w"> </span>Actions taken:
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">-</span><span class="w"> </span>Lessons learned:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">-</span><span class="w"> </span>Remediation items (with owners and due dates):
 </code></pre></div>
 <h2 id="escalation-contacts">Escalation Contacts<a class="headerlink" href="#escalation-contacts" title="Permanent link">&para;</a></h2>
 <table>
@@ -7123,7 +7181,7 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

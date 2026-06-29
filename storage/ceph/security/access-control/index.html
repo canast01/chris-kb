@@ -7606,6 +7606,29 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=myapp-pool&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span>-o<span class="w"> </span>/etc/ceph/ceph.client.myapp.keyring
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>client.admin
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    key: AQDvF8Zl7x9kLhAAIxK2p8m9Q3vR5sT6uW7xYz==
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    caps: [mds] allow *, [mgr] allow *, [mon] allow *, [osd] allow *
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>client.cinder
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    key: AQC4G9Zm8y0mNiBAJyL3q9n0R4wS6tU7vX8yZa==
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    caps: [mon] profile rbd, [osd] profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>client.readonly
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    key: AQD5H0an9z1pOjCBKzM4r0o1S5xT7uV8wY9zAb==
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    caps: [mon] allow r, [osd] allow r
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>client.myapp
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    key: AQE6I1bo0a2qPkDCLaN5s1p2T6yU8vW9xZ0aBc==
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    caps: [mon] allow r, [osd] allow rw pool=myapp-pool
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>exported client.cinder to keyring.conf
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>created client.readonly keyring at /etc/ceph/ceph.client.readonly.keyring
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>created client.myapp keyring at /etc/ceph/ceph.client.myapp.keyring
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: permission denied</code></strong> — Ensure the user running ceph commands has sudo privileges or is in the ceph group with <code>sudo usermod -a -G ceph $USER</code>.
+<strong><code>Error EINVAL: invalid value for argument</code></strong> — Verify pool names exist with <code>ceph osd pool ls</code> and use correct capability syntax (e.g., <code>allow rw pool=poolname</code> not <code>allow rw poolname</code>).
+<strong><code>Error ENOENT: No such file or directory</code></strong> — Create the target keyring directory with <code>sudo mkdir -p /etc/ceph</code> before exporting keyrings with the <code>-o</code> flag.</p>
+</div>
 <h2 id="capability-syntax-reference">Capability Syntax Reference<a class="headerlink" href="#capability-syntax-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7663,52 +7686,101 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># MON capabilities</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w">         </span><span class="c1"># read-only (status, maps)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mon<span class="w"> </span><span class="s1">&#39;profile rbd&#39;</span><span class="w">     </span><span class="c1"># preset for RBD clients</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mon<span class="w"> </span><span class="s1">&#39;allow *&#39;</span><span class="w">         </span><span class="c1"># full admin (use only for client.admin)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># OSD capabilities — combined multi-pool</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=volumes, allow r pool=images, allow rw pool=vms&#39;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Namespace-scoped (RBD namespaces within a pool)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=rbd namespace=tenant1&#39;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># MDS capabilities (CephFS)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>mds<span class="w"> </span><span class="s1">&#39;allow rw path=/exports/tenant1&#39;</span><span class="w">  </span><span class="c1"># directory-level restriction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># MON capabilities</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w">         </span><span class="c1"># read-only (status, maps)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mon<span class="w"> </span><span class="s1">&#39;profile rbd&#39;</span><span class="w">     </span><span class="c1"># preset for RBD clients</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>mon<span class="w"> </span><span class="s1">&#39;allow *&#39;</span><span class="w">         </span><span class="c1"># full admin (use only for client.admin)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># OSD capabilities — combined multi-pool</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=volumes, allow r pool=images, allow rw pool=vms&#39;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Namespace-scoped (RBD namespaces within a pool)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=rbd namespace=tenant1&#39;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># MDS capabilities (CephFS)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>mds<span class="w"> </span><span class="s1">&#39;allow rw path=/exports/tenant1&#39;</span><span class="w">  </span><span class="c1"># directory-level restriction</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid capability string</code></strong> — Verify syntax matches <code>allow|deny &lt;action&gt; [pool=&lt;name&gt;]</code> and check for typos in pool or namespace names.
+<strong><code>Error EACCES: permission denied</code></strong> — Ensure the client key has <code>mon 'allow r'</code> capability before attempting OSD or MDS operations; add missing mon capability to the key definition.</p>
+</div>
 <h2 id="service-account-patterns">Service Account Patterns<a class="headerlink" href="#service-account-patterns" title="Permanent link">&para;</a></h2>
 <p>Never use <code>client.admin</code> in application configuration files. Create a dedicated keyring per application with the minimum required pool access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Recommended pattern: one keyring per application workload</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># App A: read-write on app-a-pool only</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.app-a<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=app-a-pool&#39;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># App B: read-only on shared dataset</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.app-b<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow r pool=shared-data&#39;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Backup agent: needs read from all data pools, write to backup pool</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.backup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow r pool=volumes, allow r pool=vms, allow rw pool=backups&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Recommended pattern: one keyring per application workload</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># App A: read-write on app-a-pool only</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.app-a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=app-a-pool&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># App B: read-only on shared dataset</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.app-b<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow r pool=shared-data&#39;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Backup agent: needs read from all data pools, write to backup pool</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow r pool=volumes, allow r pool=vms, allow rw pool=backups&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[client.app-a]
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    key = AQC7vZdnK3p+ExAAZ8mK9vL2pQ4rT5sW6xYzAg==
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    caps mon = &quot;allow r&quot;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    caps osd = &quot;allow rw pool=app-a-pool&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>[client.app-b]
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    key = AQDmwZdnL4q/FxBBa9nL0wM3qR5sU6tX7yZaBh==
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    caps mon = &quot;allow r&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    caps osd = &quot;allow r pool=shared-data&quot;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>[client.backup]
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    key = AQEnxadnM5r+GyCCb0oM1xN4rS6tV7uY8zaBci==
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    caps mon = &quot;allow r&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    caps osd = &quot;allow r pool=volumes, allow r pool=vms, allow rw pool=backups&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: permission denied</code></strong> — Ensure the user running the command has sudo privileges or is part of the ceph group; run <code>sudo ceph auth get-or-create</code> if needed.
+<strong><code>Error: pool 'app-a-pool' does not exist</code></strong> — Create the pool first with <code>ceph osd pool create app-a-pool &lt;pg_num&gt;</code> before assigning capabilities to it.
+<strong><code>Error EINVAL: invalid caps</code></strong> — Verify the OSD capability syntax uses commas without spaces between pool rules (e.g., <code>allow r pool=volumes, allow r pool=vms</code> is correct).</p>
+</div>
 <p>Quarterly rotation procedure: create new entity with <code>-new</code> suffix, distribute, verify, then delete old.</p>
 <h2 id="keyring-file-management">Keyring File Management<a class="headerlink" href="#keyring-file-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Keyring files must be owned by root, mode 600</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/ceph/*.keyring
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ceph/ceph.client.*.keyring
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ceph/ceph.client.*.keyring
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Export keyring for distribution to application nodes</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>client.cinder<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph.client.cinder.keyring
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>scp<span class="w"> </span>/tmp/ceph.client.cinder.keyring<span class="w"> </span>app-node:/etc/ceph/
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify key on application node</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>--keyring<span class="w"> </span>/etc/ceph/ceph.client.cinder.keyring<span class="w"> </span>--id<span class="w"> </span>cinder<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Keyring files must be owned by root, mode 600</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/ceph/*.keyring
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ceph/ceph.client.*.keyring
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ceph/ceph.client.*.keyring
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Export keyring for distribution to application nodes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>client.cinder<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph.client.cinder.keyring
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>scp<span class="w"> </span>/tmp/ceph.client.cinder.keyring<span class="w"> </span>app-node:/etc/ceph/
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify key on application node</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>--keyring<span class="w"> </span>/etc/ceph/ceph.client.cinder.keyring<span class="w"> </span>--id<span class="w"> </span>cinder<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>-rw------- 1 root root 129 Nov 14 10:23 /etc/ceph/ceph.client.admin.keyring
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-rw------- 1 root root 115 Nov 14 10:23 /etc/ceph/ceph.client.cinder.keyring
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>-rw------- 1 root root 108 Nov 14 10:23 /etc/ceph/ceph.client.glance.keyring
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ceph.client.cinder.keyring                                    100%  115     45.2KB/s   00:00
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  cluster:
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    mon: allow profile rbd
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    osd: allow class-read object_prefix rbd_children, allow rwx pool=cinder-volumes
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  mds: allow rw
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  fsid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  released: squid
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  status: HEALTH_OK
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  monmap e3: 3 mons at {mon-01=10.0.1.10:6789/0,mon-02=10.0.1.11:6789/0,mon-03=10.0.1.12:6789/0}
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  election epoch 24, quorum 0,1,2
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  fsid a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  health HEALTH_OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>scp: /etc/ceph/ceph.client.cinder.keyring: Permission denied</code></strong> — Ensure the destination directory exists and the app-node user has write permissions, or use <code>sudo scp</code> with passwordless SSH key authentication configured.
+<strong><code>Error connecting to the cluster: (13) Permission denied</code></strong> — Verify the keyring file exists at the specified path and is readable by the cinder user; check that the key has appropriate Ceph capabilities assigned via <code>ceph auth get client.cinder</code>.</p>
+</div>
 <h2 id="rgw-user-layers">RGW User Layers<a class="headerlink" href="#rgw-user-layers" title="Permanent link">&para;</a></h2>
 <p>RGW authentication operates at two independent layers. Confusion between them is a common misconfiguration.</p>
 <table>
@@ -7735,46 +7807,145 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># CephX entity for the RGW daemon itself (created by cephadm automatically)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get<span class="w"> </span>client.rgw.myorg
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># RGW S3/Swift user management — completely separate from cephx</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>radosgw-admin<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--uid<span class="o">=</span>app-user<span class="w"> </span>--display-name<span class="o">=</span><span class="s2">&quot;App Service Account&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--access-key<span class="o">=</span>AKID1234<span class="w"> </span>--secret<span class="o">=</span>secretkey
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>radosgw-admin<span class="w"> </span>user<span class="w"> </span>info<span class="w"> </span>--uid<span class="o">=</span>app-user
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>radosgw-admin<span class="w"> </span>caps<span class="w"> </span>add<span class="w"> </span>--uid<span class="o">=</span>app-user<span class="w"> </span>--caps<span class="o">=</span><span class="s2">&quot;buckets=read&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># CephX entity for the RGW daemon itself (created by cephadm automatically)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get<span class="w"> </span>client.rgw.myorg
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># RGW S3/Swift user management — completely separate from cephx</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>radosgw-admin<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--uid<span class="o">=</span>app-user<span class="w"> </span>--display-name<span class="o">=</span><span class="s2">&quot;App Service Account&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--access-key<span class="o">=</span>AKID1234<span class="w"> </span>--secret<span class="o">=</span>secretkey
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>radosgw-admin<span class="w"> </span>user<span class="w"> </span>info<span class="w"> </span>--uid<span class="o">=</span>app-user
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>radosgw-admin<span class="w"> </span>caps<span class="w"> </span>add<span class="w"> </span>--uid<span class="o">=</span>app-user<span class="w"> </span>--caps<span class="o">=</span><span class="s2">&quot;buckets=read&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[client.rgw.myorg]
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    key = AQDvZ8Zl9xK3FRAAp7vQ8m2K9L0pQ1R2S3T4U5==
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    caps mon = &quot;allow rwx&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    caps osd = &quot;allow rwx pool=default.rgw.buckets.data,default.rgw.buckets.index&quot;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>{
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;user_id&quot;: &quot;app-user&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    &quot;display_name&quot;: &quot;App Service Account&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    &quot;email&quot;: &quot;&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;suspended&quot;: 0,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    &quot;max_buckets&quot;: 1000,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    &quot;auid&quot;: 0,
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    &quot;subusers&quot;: [],
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    &quot;keys&quot;: [
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        {
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>            &quot;user&quot;: &quot;app-user&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>            &quot;access_key&quot;: &quot;AKID1234&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>            &quot;secret_key&quot;: &quot;secretkey&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>        }
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    ],
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    &quot;swift_keys&quot;: [],
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    &quot;caps&quot;: [
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>        {
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>            &quot;type&quot;: &quot;buckets&quot;,
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>            &quot;perm&quot;: &quot;read&quot;
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>        }
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    ],
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    &quot;op_mask&quot;: &quot;read&quot;,
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>    &quot;default_placement&quot;: &quot;&quot;,
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    &quot;placement_tags&quot;: [],
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>    &quot;bucket_quota&quot;: {
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>        &quot;enabled&quot;: false,
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>        &quot;check_on_list&quot;: false,
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>        &quot;max_size&quot;: -1,
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>        &quot;max_objects&quot;: -1
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>    },
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>    &quot;user_quota&quot;: {
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>        &quot;enabled&quot;: false,
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>        &quot;check_on_list&quot;: false,
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>        &quot;max_size&quot;: -1,
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>        &quot;max_objects&quot;: -1
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>    },
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>    &quot;temp_url_keys&quot;: [],
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>    &quot;type&quot;: &quot;rgw&quot;,
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>    &quot;mfa_ids&quot;: []
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: ENOENT: couldn't find user app-user</code></strong> — Run <code>radosgw-admin user create</code> before attempting <code>radosgw-admin user info</code> or <code>radosgw-admin caps add</code>.
+<strong><code>error: invalid access key format</code></strong> — Use a valid AWS-style access key (20+ alphanumeric characters) or omit <code>--access-key</code> to auto-generate one.</p>
+</div>
 <h2 id="rook-kubernetes-keyring-access">Rook / Kubernetes Keyring Access<a class="headerlink" href="#rook-kubernetes-keyring-access" title="Permanent link">&para;</a></h2>
 <p>Rook stores all cephx keyrings as Kubernetes Secrets in the <code>rook-ceph</code> namespace. Never copy them manually; retrieve via <code>oc get secret</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List cephx-related secrets</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>keyring
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Retrieve admin keyring (base64-encoded)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span>rook-ceph-admin-keyring<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.keyring}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Retrieve OSD keyring for a specific OSD</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span>rook-ceph-osd-&lt;id&gt;-keyring<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.keyring}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Create a custom keyring secret for an application</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>ceph-app-keyring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--from-file<span class="o">=</span><span class="nv">keyring</span><span class="o">=</span>/etc/ceph/ceph.client.myapp.keyring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>-n<span class="w"> </span>rook-ceph
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List cephx-related secrets</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>keyring
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Retrieve admin keyring (base64-encoded)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span>rook-ceph-admin-keyring<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.keyring}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Retrieve OSD keyring for a specific OSD</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>rook-ceph<span class="w"> </span>rook-ceph-osd-&lt;id&gt;-keyring<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.keyring}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Create a custom keyring secret for an application</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>ceph-app-keyring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>--from-file<span class="o">=</span><span class="nv">keyring</span><span class="o">=</span>/etc/ceph/ceph.client.myapp.keyring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>-n<span class="w"> </span>rook-ceph
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rook-ceph-admin-keyring                          Opaque                                1      45d
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>rook-ceph-mon-keyring                            Opaque                                1      45d
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>rook-ceph-osd-0-keyring                          Opaque                                1      45d
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>rook-ceph-osd-1-keyring                          Opaque                                1      45d
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>rook-ceph-rgw-keyring                            Opaque                                1      45d
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>[client.admin]
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    key = AQC7vOdlK3+PHRAAj8Z1Z2K5vZ8K9mL3Z5K8Zg==
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    caps mon = &quot;allow *&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    caps osd = &quot;allow *&quot;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    caps mds = &quot;allow *&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>[client.osd.0]
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    key = AQDvwOdlL4+QIRAAk9a2a3L6wa9L0nM4a6L9ah==
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    caps mon = &quot;allow profile osd&quot;
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    caps osd = &quot;allow *&quot;
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>secret/ceph-app-keyring created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "secret" in group "" in the namespace "rook-ceph"</code></strong> — Verify the rook-ceph namespace exists with <code>oc get ns rook-ceph</code> and that the Rook operator is deployed.
+<strong><code>error: resource name may not be empty</code></strong> — Replace <code>&lt;id&gt;</code> with the actual OSD number (e.g., <code>rook-ceph-osd-0-keyring</code>) in the OSD keyring retrieval command.
+<strong><code>error: no such file or directory</code></strong> — Ensure the keyring file exists at <code>/etc/ceph/ceph.client.myapp.keyring</code> before creating the secret, or use <code>--from-literal=keyring=&lt;key-content&gt;</code> instead.</p>
+</div>
 <h2 id="capability-audit">Capability Audit<a class="headerlink" href="#capability-audit" title="Permanent link">&para;</a></h2>
 <p>Regularly audit which entities exist and what capabilities they hold. Remove unused entities; tighten capabilities that are wider than needed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show all entities with capabilities (review for over-privileged accounts)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Find any entity with allow * (should only be client.admin and bootstrap keys)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B1<span class="w"> </span><span class="s2">&quot;allow \*&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Export full auth state for offline review</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-auth-audit-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check for entities with rw on all pools (should be pool-scoped)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;allow rw</span>$<span class="s2">&quot;</span><span class="w">   </span><span class="c1"># flag: no pool restriction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Show all entities with capabilities (review for over-privileged accounts)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Find any entity with allow * (should only be client.admin and bootstrap keys)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B1<span class="w"> </span><span class="s2">&quot;allow \*&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Export full auth state for offline review</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-auth-audit-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Check for entities with rw on all pools (should be pool-scoped)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;allow rw</span>$<span class="s2">&quot;</span><span class="w">   </span><span class="c1"># flag: no pool restriction</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>entity auid cap mon cap osd cap mds cap mgr
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>client.admin 0 allow * allow * allow * allow *
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>client.rbd-pool-user 1 allow r pool=rbd allow rwx pool=rbd
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>client.cephfs-user 2 allow r pool=cephfs_data,cephfs_metadata allow rwx pool=cephfs_data,cephfs_metadata
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>client.backup 3 allow profile rbd pool=backups allow rwx pool=backups
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>mgr.ceph-node1 4 allow profile mgr allow rwx
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>osd.0 5 allow rwx allow rwx
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>osd.1 5 allow rwx allow rwx
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>entity auid cap mon cap osd cap mds cap mgr
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>client.admin 0 allow * allow * allow * allow *
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Exported auth state to /tmp/ceph-auth-audit-2024-01-15.txt
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error connecting to cluster: [Errno 2] No such file or directory</code></strong> — Ensure the Ceph cluster is running and <code>/etc/ceph/ceph.conf</code> exists on the local system.
+<strong><code>permission denied: user does not have caps: mon ['allow r']</code></strong> — Run these commands as root or with sudo, or use a client key with sufficient mon and auth capabilities.
+<strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the Ceph cluster is healthy with <code>ceph status</code> before running auth queries.</p>
+</div>
 <h2 id="access-control-checklist">Access Control Checklist<a class="headerlink" href="#access-control-checklist" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7855,11 +8026,21 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Use profile rbd for OpenStack Cinder/Nova/Glance</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.cinder<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;profile rbd&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Use profile rbd for OpenStack Cinder/Nova/Glance</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.cinder<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;profile rbd&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>[client.cinder]
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    key = AQC7vZdnF8K3ExAA7vK9mZ4pQ2R8sT9uV0wXyZ==
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    caps mon = &quot;profile rbd&quot;
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    caps osd = &quot;profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid command</code></strong> — Verify the mon and osd capability strings are enclosed in single quotes and contain valid pool names that exist in your cluster.
+<strong><code>Error EACCES: permission denied</code></strong> — Run the command with appropriate Ceph cluster permissions (typically as root or with <code>sudo ceph</code> on a monitor node).</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../authentication/">Ceph — Authentication</a></li>
@@ -7887,7 +8068,7 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

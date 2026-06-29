@@ -7418,63 +7418,122 @@ Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is th
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># - ollama user and group</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># - /usr/share/ollama/.ollama (model storage)</span>
 </code></pre></div>
-<h2 id="macos-installation">macOS Installation<a class="headerlink" href="#macos-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Download the macOS app from ollama.com, or use Homebrew</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>brew<span class="w"> </span>install<span class="w"> </span>ollama
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Start as a background service</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>brew<span class="w"> </span>services<span class="w"> </span>start<span class="w"> </span>ollama
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or run interactively</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ollama<span class="w"> </span>serve
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Models are stored in ~/.ollama/models</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>###################################################################
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>#                   Ollama Installer                              #
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>###################################################################
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Downloading ollama...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  % Total    % Received % Xferd  Average Speed   Time    Left
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>100  45.2M  100  45.2M    0     0  8.3M      0  0:00:05  0:00:05 --:--:--
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Installing ollama to /usr/local/bin...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Creating ollama user...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Creating systemd service...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Installation complete! Run &#39;ollama serve&#39; to start the server.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ollama version is 0.1.32
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>● ollama.service - Ollama
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>     Loaded: loaded (/etc/systemd/system/ollama.service; enabled; vendor preset: enabled)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>     Active: inactive (dead)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>     Docs: https://github.com/ollama/ollama
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></strong> — Update your CA certificates with <code>update-ca-certificates</code> or disable SSL verification temporarily with <code>curl -k</code>.
+<strong><code>sudo: systemctl: command not found</code></strong> — Ensure you're running the commands with <code>sudo</code> (e.g., <code>sudo systemctl status ollama</code>) or as root, since systemd operations require elevated privileges.
+<strong><code>useradd: user 'ollama' already exists</code></strong> — The ollama user already exists from a previous installation; proceed with the rest of the installation or remove it first with <code>userdel ollama</code>.</p>
+</div>
+<h2 id="macos-installation">macOS Installation<a class="headerlink" href="#macos-installation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Download the macOS app from ollama.com, or use Homebrew</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>brew<span class="w"> </span>install<span class="w"> </span>ollama
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Start as a background service</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>brew<span class="w"> </span>services<span class="w"> </span>start<span class="w"> </span>ollama
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Or run interactively</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ollama<span class="w"> </span>serve
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Models are stored in ~/.ollama/models</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/ollama/manifests/latest
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/ollama/manifests/0.1.32
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>==&gt; Downloading ollama-0.1.32.arm64_sonoma.bottle.tar.gz
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>==&gt; Pouring ollama-0.1.32.arm64_sonoma.bottle.tar.gz
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>🍺  /opt/homebrew/Cellar/ollama/0.1.32: 47 files, 245.3MB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>==&gt; Running `brew cleanup ollama`...
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>==&gt; `brew services start ollama` is running under PID 2847.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Successfully started `ollama` (label: homebrew.mxcl.ollama).
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: ollama: No such file or directory</code></strong> — Run <code>brew install ollama</code> first before attempting to start the service.
+<strong><code>Error: homebrew.mxcl.ollama: already loaded</code></strong> — Run <code>brew services stop ollama</code> before restarting, or use <code>brew services restart ollama</code> instead.</p>
+</div>
 <h2 id="windows-installation">Windows Installation<a class="headerlink" href="#windows-installation" title="Permanent link">&para;</a></h2>
 <p>Download the installer from <a href="https://ollama.com">ollama.com</a>. Ollama installs as a Windows service. Models are stored in <code>C:\Users\&lt;user&gt;\.ollama\models</code>.</p>
 <p>For WSL2 users, install the Linux version inside WSL2. GPU passthrough requires WSL2 with CUDA support (Windows 11 or Windows 10 21H2+).</p>
 <h2 id="systemd-service-configuration">Systemd Service Configuration<a class="headerlink" href="#systemd-service-configuration" title="Permanent link">&para;</a></h2>
 <p>The default service binds to <code>127.0.0.1:11434</code>. To expose on all interfaces or a different port:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Edit the service override</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/systemd/system/ollama.service.d
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/systemd/system/ollama.service.d/override.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">[Service]</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">Environment=&quot;OLLAMA_HOST=0.0.0.0:11434&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">Environment=&quot;OLLAMA_MODELS=/data/ollama/models&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">Environment=&quot;OLLAMA_NUM_PARALLEL=4&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">Environment=&quot;OLLAMA_MAX_LOADED_MODELS=2&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">EOF</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>systemctl<span class="w"> </span>daemon-reload
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>ollama
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Edit the service override</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/systemd/system/ollama.service.d
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/systemd/system/ollama.service.d/override.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">[Service]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">Environment=&quot;OLLAMA_HOST=0.0.0.0:11434&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">Environment=&quot;OLLAMA_MODELS=/data/ollama/models&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">Environment=&quot;OLLAMA_NUM_PARALLEL=4&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">Environment=&quot;OLLAMA_MAX_LOADED_MODELS=2&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">EOF</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>systemctl<span class="w"> </span>daemon-reload
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>ollama
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to restart ollama.service: Unit ollama.service not found.</code></strong> — Install ollama first with the package manager or ensure the ollama systemd unit exists before creating overrides.
+<strong><code>Permission denied</code></strong> — Run the entire block with <code>sudo</code> since <code>/etc/systemd/system/</code> requires root access.</p>
+</div>
 <h2 id="docker-setup">Docker Setup<a class="headerlink" href="#docker-setup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># CPU only</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>ollama/ollama
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># NVIDIA GPU</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>ollama/ollama
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># AMD GPU (ROCm)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--device<span class="w"> </span>/dev/kfd<span class="w"> </span>--device<span class="w"> </span>/dev/dri<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>ollama/ollama:rocm
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># Verify it&#39;s running</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>curl<span class="w"> </span>http://localhost:11434/api/tags
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># CPU only</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>ollama/ollama
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># NVIDIA GPU</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>ollama/ollama
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># AMD GPU (ROCm)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--device<span class="w"> </span>/dev/kfd<span class="w"> </span>--device<span class="w"> </span>/dev/dri<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>-v<span class="w"> </span>ollama-models:/root/.ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>--name<span class="w"> </span>ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>ollama/ollama:rocm
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Verify it&#39;s running</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>curl<span class="w"> </span>http://localhost:11434/api/tags
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>a1f2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>a1f2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>a1f2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>{
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;models&quot;: []
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error response from daemon: driver failed programming external connectivity on endpoint ollama: Bind for 0.0.0.0:11434 failed: port is already allocated</code></strong> — Stop the existing container with <code>docker stop ollama &amp;&amp; docker rm ollama</code>, or use a different port with <code>-p 11435:11434</code>.
+<strong><code>docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]]</code></strong> — Install NVIDIA Docker runtime with <code>distribution=$(. /etc/os-release;echo $ID$VERSION_ID)</code> and follow nvidia-docker setup, or remove <code>--gpus all</code> for CPU-only mode.
+<strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Wait 2-3 seconds for the container to fully start, then retry <code>curl http://localhost:11434/api/tags</code>.</p>
+</div>
 <h2 id="key-environment-variables">Key Environment Variables<a class="headerlink" href="#key-environment-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7528,29 +7587,80 @@ Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is th
 </tbody>
 </table>
 <h2 id="updating-ollama">Updating Ollama<a class="headerlink" href="#updating-ollama" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux: re-run the install script</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># macOS with Homebrew</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>brew<span class="w"> </span>upgrade<span class="w"> </span>ollama
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>brew<span class="w"> </span>services<span class="w"> </span>restart<span class="w"> </span>ollama
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Docker: pull the new image</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>docker<span class="w"> </span>pull<span class="w"> </span>ollama/ollama
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>docker<span class="w"> </span>stop<span class="w"> </span>ollama<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>rm<span class="w"> </span>ollama
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Re-run the docker run command with the same volume</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux: re-run the install script</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># macOS with Homebrew</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>brew<span class="w"> </span>upgrade<span class="w"> </span>ollama
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>brew<span class="w"> </span>services<span class="w"> </span>restart<span class="w"> </span>ollama
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Docker: pull the new image</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>docker<span class="w"> </span>pull<span class="w"> </span>ollama/ollama
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>docker<span class="w"> </span>stop<span class="w"> </span>ollama<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>rm<span class="w"> </span>ollama
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Re-run the docker run command with the same volume</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>% curl -fsSL https://ollama.com/install.sh | sh
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>######################################################################## 100.0%
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Installing ollama to /usr/local/bin/ollama
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Created symlink /usr/local/bin/ollama → /opt/ollama/bin/ollama
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Installation complete!
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>% brew upgrade ollama
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>==&gt; Upgrading ollama
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  0.1.32 -&gt; 0.1.45
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/ollama
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>==&gt; Pouring ollama--0.1.45.monterey.bottle.tar.gz
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>🍺  /usr/local/Cellar/ollama/0.1.45 (142 files, 892MB)
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>% brew services restart ollama
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Stopping `ollama`... (might take a few seconds)
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>==&gt; Successfully stopped `ollama` (label: homebrew.mxcl.ollama)
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>==&gt; Successfully started `ollama` (label: homebrew.mxcl.ollama)
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>% docker pull ollama/ollama
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Using default tag: latest
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>latest: Pulling from ollama/ollama
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>8b16ab74ffd0: Pull complete
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>a475ecdd6c3f: Pull complete
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Digest: sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>Status: Downloaded newer image for ollama/ollama:latest
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>% docker stop ollama &amp;&amp; docker rm ollama
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>ollama
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>ollama
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to ollama.com port 443: Connection refused</code></strong> — Verify network connectivity and check if ollama.com is accessible; try again after confirming DNS resolution with <code>nslookup ollama.com</code>.
+<strong><code>Error: Homebrew must be run under Ruby 2.3.0! You're running 2.0.0.</code></strong> — Update Homebrew with <code>brew update</code> or reinstall it following the official Homebrew installation guide.
+<strong><code>Error response from daemon: No such container: ollama</code></strong> — The container doesn't exist or has already been removed; skip the <code>docker stop</code> command and proceed directly with <code>docker run</code> to create a fresh container.</p>
+</div>
 <h2 id="storage-planning">Storage Planning<a class="headerlink" href="#storage-planning" title="Permanent link">&para;</a></h2>
 <p>Models can be large. Ensure the model storage directory has sufficient space:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check space used by current models</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>~/.ollama/models/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List models and their sizes</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ollama<span class="w"> </span>list
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Remove unused models</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ollama<span class="w"> </span>rm<span class="w"> </span>llama2:7b
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check space used by current models</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>~/.ollama/models/
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># List models and their sizes</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ollama<span class="w"> </span>list
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Remove unused models</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ollama<span class="w"> </span>rm<span class="w"> </span>llama2:7b
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>4.2G    /home/ubuntu/.ollama/models/
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>NAME                    ID              SIZE      MODIFIED
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>mistral:latest          2ae4a534d206    4.1GB     2 minutes ago
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>neural-chat:7b          b586909a7e21    3.9GB     1 hour ago
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>llama2:7b               9ff71d577b6f    3.8GB     3 days ago
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>llama2:13b              91abfb1d3456    7.4GB     5 days ago
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Deleted model &#39;llama2:7b&#39;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: model 'llama2:7b' not found</code></strong> — Verify the exact model name and tag with <code>ollama list</code> before attempting removal.
+<strong><code>Error: permission denied</code></strong> — Ensure the user running the command has read/write permissions to <code>~/.ollama/models/</code> directory.</p>
+</div>
 
 
 
@@ -7573,7 +7683,7 @@ Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is th
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

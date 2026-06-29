@@ -8606,15 +8606,36 @@ SnapMirror procedures: creating protection relationships, scheduling updates, qu
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify destination is now read-write</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Operation succeeded: SnapMirror relationship between source and destination has been broken.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Vserver     Volume       State
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>----------- ------------ ------
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dest_svm    dest_vol     online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship does not exist</code></strong> — Verify the destination path syntax matches <code>&lt;svm_name&gt;:&lt;volume_name&gt;</code> and confirm the SnapMirror relationship exists with <code>snapmirror show</code>.
+<strong><code>Error: command failed: Volume is restricted</code></strong> — Wait for any ongoing SnapMirror transfers to complete or use <code>snapmirror abort</code> to stop an in-progress transfer before breaking the relationship.</p>
+</div>
 <p>Update client access (DNS, share paths, mount points) to point to the destination.</p>
 <h3 id="unplanned-failover-primary-site-down">Unplanned Failover (Primary Site Down)<a class="headerlink" href="#unplanned-failover-primary-site-down" title="Permanent link">&para;</a></h3>
 <p><img alt="Unplanned Failover (Primary Site Down)" src="../../../../../assets/snapmirror-proc-unplanned-failover-primary-site-down.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the destination cluster — break the relationship to enable write access</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check how current the destination is (RPO)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the destination cluster — break the relationship to enable write access</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check how current the destination is (RPO)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Operation succeeded: SnapMirror relationship between source_cluster://source_svm/source_vol and dest_cluster://dest_svm/dest_vol is broken.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Destination-Path  Lag-Time
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dest_svm:dest_vol 00:15:32
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: relationship does not exist</code></strong> — Verify the destination path syntax matches exactly (SVM:volume format) and confirm the relationship exists with <code>snapmirror show</code>.
+<strong><code>Error: command failed: relationship is not in a quiesced or idle state</code></strong> — Wait for any in-progress transfer to complete or use <code>snapmirror abort</code> before attempting to break the relationship.</p>
+</div>
 <p>Note: if replication was asynchronous, the <code>lag-time</code> value indicates the RPO gap.</p>
 <h3 id="failover-checklist">Failover Checklist<a class="headerlink" href="#failover-checklist" title="Permanent link">&para;</a></h3>
 <p><img alt="Failover Checklist" src="../../../../../assets/snapmirror-proc-failover-checklist.svg" /></p>
@@ -8638,63 +8659,170 @@ SnapMirror procedures: creating protection relationships, scheduling updates, qu
 </ul>
 <h3 id="standard-resync-source-destination">Standard Resync (Source → Destination)<a class="headerlink" href="#standard-resync-source-destination" title="Permanent link">&para;</a></h3>
 <p><img alt="Standard Resync (Source → Destination)" src="../../../../../assets/snapmirror-proc-standard-resync-source-destination.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Re-establish replication from source to destination</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Re-establish replication from source to destination</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Operation is queued: snapmirror resync to destination &quot;cluster2.svm_dr:vol_backup&quot; is queued.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: snapmirror resync is not supported for this relationship type</code></strong> — Verify the SnapMirror relationship exists and is in a valid state using <code>snapmirror show -destination-path &lt;dest_svm:dest_vol&gt;</code>.
+<strong><code>Error: command failed: source volume &lt;src_svm:src_vol&gt; does not exist or access denied</code></strong> — Confirm the source path is correctly formatted as <code>cluster_name.svm_name:volume_name</code> and the source cluster is reachable.</p>
+</div>
 <p>Resync overwrites the destination with data from the source. Any writes to the destination since the break will be lost.</p>
 <h3 id="reverse-resync-after-failover">Reverse Resync (After Failover)<a class="headerlink" href="#reverse-resync-after-failover" title="Permanent link">&para;</a></h3>
 <p><img alt="Reverse Resync (After Failover)" src="../../../../../assets/snapmirror-proc-reverse-resync-after-failover.svg" /></p>
 <p>When the original destination was activated (failed over to) and is now the active source:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1: Resync from destination (now active) back to the original source</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Step 2: Monitor until transfer completes</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Step 3: After primary is ready to resume, break reverse relationship</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Step 4: Re-establish original direction</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1: Resync from destination (now active) back to the original source</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 2: Monitor until transfer completes</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Step 3: After primary is ready to resume, break reverse relationship</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Step 4: Re-establish original direction</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Operation is queued: snapmirror resync to destination &quot;cluster2://dr_svm/dr_vol&quot;.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>                                                 Progress
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Source            Destination Mirror State Relationship Status Last Transfer
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>------------------ ------------------- -------- -------- ----------------
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cluster1://prod_svm/prod_vol
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>                   cluster2://dr_svm/dr_vol
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>                                Snapmirrored
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>                                           Transferring 856.3MB/2.1GB
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>cluster1://prod_svm/prod_vol
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>                   cluster2://dr_svm/dr_vol
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>                                Snapmirrored
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>                                           Idle 2.1GB
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>SnapMirror break for destination &quot;cluster1://prod_svm/prod_vol&quot; is queued.
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Operation is queued: snapmirror resync to destination &quot;cluster2://dr_svm/dr_vol&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: SnapMirror relationship is not idle</code></strong> — Wait for the current transfer to complete using <code>snapmirror show</code> before attempting resync or break operations.
+<strong><code>Error: SnapMirror relationship does not exist for destination path "cluster1://prod_svm/prod_vol"</code></strong> — Verify the destination path is correctly formatted as <code>svm_name:volume_name</code> and the relationship exists with <code>snapmirror show -all</code>.</p>
+</div>
 <hr />
 <h2 id="initialize-a-snapmirror-relationship">Initialize a SnapMirror Relationship<a class="headerlink" href="#initialize-a-snapmirror-relationship" title="Permanent link">&para;</a></h2>
 <p>Run the initialize command to perform the first baseline transfer from source to destination:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Operation is queued: snapmirror initialize of destination &quot;cluster2.svm_dr:vol_backup&quot; from source &quot;cluster1.svm_prod:vol_data&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Snapmirror relationship does not exist.</code></strong> — Create the snapmirror relationship first using <code>snapmirror create</code> before initializing.
+<strong><code>Error: command failed: Source volume is offline.</code></strong> — Verify the source volume is online with <code>volume show -vserver &lt;vserver&gt; -volume &lt;volume&gt;</code> and bring it online if needed.
+<strong><code>Error: command failed: Destination volume is not empty.</code></strong> — Use <code>snapmirror initialize -S</code> to force initialization, or manually clear the destination volume first.</p>
+</div>
 <p>Monitor initialization progress — the first transfer copies all data and can take hours depending on volume size:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Source Destination State Lag-time
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cluster1://vol_prod cluster2://vol_prod_mirror Snapmirrored 00:15:32
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>cluster1://vol_data cluster2://vol_data_mirror Snapmirrored 00:08:47
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>cluster1://vol_logs cluster2://vol_logs_mirror Snapmirrored 00:22:15
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>cluster1://vol_archive cluster2://vol_archive_mirror Snapmirrored 01:45:03
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>cluster1://vol_test cluster2://vol_test_mirror Snapmirrored 00:05:21
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a standard Linux shell.
+<strong><code>Error: This command requires cluster administrator privileges</code></strong> — Run the command with appropriate cluster admin credentials or use <code>set -privilege advanced</code> if needed.</p>
+</div>
 <p>Wait until the relationship state shows <strong>Idle</strong> and the lag-time reflects the time since the baseline transfer completed. The destination volume is read-only once initialization finishes.</p>
 <hr />
 <h2 id="update-snapmirror-manually">Update SnapMirror Manually<a class="headerlink" href="#update-snapmirror-manually" title="Permanent link">&para;</a></h2>
 <p>Trigger an on-demand incremental update outside the scheduled transfer window:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Operation is queued: snapmirror update for destination &quot;cluster2://svm_dr/vol_backup&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Snapmirror relationship does not exist.</code></strong> — Verify the destination volume exists and a SnapMirror relationship has been initialized with <code>snapmirror create</code> before attempting an update.
+<strong><code>Error: command failed: Destination volume is not in SnapMirror mode.</code></strong> — Ensure the destination volume was created with <code>-type DP</code> (data protection) during volume creation.
+<strong><code>Error: command failed: Source volume is offline or does not exist.</code></strong> — Confirm the source volume is online and accessible using <code>volume show -vserver &lt;vserver&gt;</code>.</p>
+</div>
 <p>Monitor the transfer until it completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Source Destination State Lag-time
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>prod-cluster1:vol_data prod-cluster2:vol_data_mirror Snapmirrored 00:15:32
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>prod-cluster1:vol_logs prod-cluster2:vol_logs_mirror Snapmirrored 00:08:47
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>dr-cluster:vol_backup dr-cluster-secondary:vol_backup_copy Snapmirrored 01:23:15
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>prod-cluster1:vol_archive prod-cluster2:vol_archive_mirror Uninitialized -
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>test-cluster:vol_temp test-cluster-dr:vol_temp_mirror Broken-off 00:00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI or ONTAP system manager with appropriate credentials.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Request admin or SnapMirror administrator role permissions from your NetApp cluster administrator.</p>
+</div>
 <p>Verify that lag-time drops to near-zero after the update completes, confirming the destination is current.</p>
 <hr />
 <h2 id="break-and-reactivate-a-snapmirror-relationship">Break and Reactivate a SnapMirror Relationship<a class="headerlink" href="#break-and-reactivate-a-snapmirror-relationship" title="Permanent link">&para;</a></h2>
 <p><strong>Break (for DR failover or testing):</strong> makes the destination volume read-write and suspends replication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Operation succeeded: SnapMirror relationship between &quot;cluster1://svm_prod/vol_data&quot; and &quot;cluster2://svm_dr/vol_data&quot; has been broken.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship does not exist.</code></strong> — Verify the destination path exists and the SnapMirror relationship is initialized with <code>snapmirror show -destination-path &lt;vserver:vol&gt;</code>.
+<strong><code>Error: command failed: Relationship is not in a quiesced state.</code></strong> — Quiesce the relationship first with <code>snapmirror quiesce -destination-path &lt;vserver:vol&gt;</code> before breaking it.</p>
+</div>
 <p>The destination volume is now writable and can accept host I/O. Replication is suspended until the relationship is resynced.</p>
 <p><strong>Resync (reprotect):</strong> re-establishes replication after a break. The destination is overwritten with data from the source; any writes made to the destination since the break will be lost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Operation is queued: snapmirror resync to destination &quot;cluster2://svm_dr:vol_backup&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Resync not allowed. SnapMirror relationship is not in a quiesced or idle state.</code></strong> — Quiesce the SnapMirror relationship first with <code>snapmirror quiesce -destination-path &lt;vserver:vol&gt;</code> before attempting resync.
+<strong><code>Error: command failed: Resync not allowed. Destination volume is not a SnapMirror destination.</code></strong> — Verify the destination path is correct and that a SnapMirror relationship exists using <code>snapmirror show -destination-path &lt;vserver:vol&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="change-snapmirror-schedule">Change SnapMirror Schedule<a class="headerlink" href="#change-snapmirror-schedule" title="Permanent link">&para;</a></h2>
 <p>Modify the transfer schedule on an existing relationship:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vserver:vol&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Operation succeeded: SnapMirror relationship for &quot;svm-prod:vol_data&quot; modified.
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Schedule changed from &quot;daily&quot; to &quot;hourly&quot;.
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Next scheduled transfer: 2024-01-15 14:00:00 EST
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid destination path format</code></strong> — Ensure the destination path follows the format <code>vserver:volume</code> with a colon separator and no spaces.
+<strong><code>Error: SnapMirror relationship does not exist for destination "svm-prod:vol_data"</code></strong> — Verify the destination volume exists and an active SnapMirror relationship is already established before modifying it.</p>
+</div>
 <p>Verify the updated schedule is applied:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>schedule
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>schedule
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Source            Destination       Schedule
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>----------        -----------       --------
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>svm1:vol_prod     svm2:vol_prod_dr  daily
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>svm1:vol_data     svm2:vol_data_dr  weekly
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>svm1:vol_logs     svm2:vol_logs_dr  hourly
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>svm3:vol_archive  svm4:vol_archive  -
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>svm2:vol_temp     svm3:vol_temp_bak  4h
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI or ONTAP system; snapmirror commands are not available on non-NetApp systems.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Verify your user account has the "snapmirror" capability; contact your cluster administrator to grant the required RBAC role.</p>
+</div>
 <p>Confirm the new schedule aligns with the required RPO — more frequent schedules reduce RPO but increase network utilisation.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8706,121 +8834,270 @@ SnapMirror procedures: creating protection relationships, scheduling updates, qu
 <hr />
 <h2 id="create-a-snapmirror-relationship">Create a SnapMirror Relationship<a class="headerlink" href="#create-a-snapmirror-relationship" title="Permanent link">&para;</a></h2>
 <p>Create the destination volume, peer the clusters and SVMs, then create and initialize the relationship.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Step 1: Peer the clusters (run on the local cluster, referencing the remote)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span>&lt;remote_cluster_mgmt_ip&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Step 2: Peer the SVMs</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;local_svm&gt;<span class="w"> </span>-peer-vserver<span class="w"> </span>&lt;remote_svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>-peer-cluster<span class="w"> </span>&lt;remote_cluster_name&gt;<span class="w"> </span>-applications<span class="w"> </span>snapmirror
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Step 3: Create the destination volume as a DP (data protection) type</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;dest_aggr&gt;<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Step 4: Create the SnapMirror relationship</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Step 5: Initialize (baseline transfer — copies all data; may take hours)</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># Monitor initialization progress</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Step 1: Peer the clusters (run on the local cluster, referencing the remote)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span>&lt;remote_cluster_mgmt_ip&gt;
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Step 2: Peer the SVMs</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;local_svm&gt;<span class="w"> </span>-peer-vserver<span class="w"> </span>&lt;remote_svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span>-peer-cluster<span class="w"> </span>&lt;remote_cluster_name&gt;<span class="w"> </span>-applications<span class="w"> </span>snapmirror
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Step 3: Create the destination volume as a DP (data protection) type</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;dest_aggr&gt;<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="c1"># Step 4: Create the SnapMirror relationship</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="c1"># Step 5: Initialize (baseline transfer — copies all data; may take hours)</span>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="c1"># Monitor initialization progress</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>cluster peer create -peer-addrs 192.168.1.50
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Info: Intra-cluster peer relationship created
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>vserver peer create -vserver svm_prod -peer-vserver svm_prod_dr -peer-cluster cluster-dr -applications snapmirror
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Info: &quot;svm_prod&quot; peered with &quot;svm_prod_dr&quot; in the &quot;cluster-dr&quot; cluster for the following applications:
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>snapmirror
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>volume create -vserver svm_prod_dr -volume vol_backup -aggregate aggr_sas_02 -type DP -size 500GB
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>Info: Volume &quot;vol_backup&quot; has been created.
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>snapmirror create -source-path svm_prod:vol_source -destination-path svm_prod_dr:vol_backup -policy MirrorAllSnapshots
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>Info: SnapMirror relationship created
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>snapmirror initialize -destination-path svm_prod_dr:vol_backup
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>Operation is queued: SnapMirror initialize of destination &quot;svm_prod_dr:vol_backup&quot; is starting.
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>snapmirror show -destination-path svm_prod_dr:vol_backup -fields state,lag-time
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>Source Destination State Lag-Time
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>svm_prod:vol_source svm_prod_dr:vol_backup transferring 00:15:32
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Cluster peer relationship already exists</code></strong> — Verify the peer relationship exists with <code>cluster peer show</code> before attempting creation.
+<strong><code>Error: SnapMirror relationship create failed: destination volume is not of type DP</code></strong> — Ensure the destination volume is created with <code>-type DP</code> before creating the SnapMirror relationship.
+<strong><code>Error: Vserver peer relationship does not exist for vservers "svm_prod" and "svm_prod_dr"</code></strong> — Create the SVM peer relationship with <code>vserver peer create</code> before initializing SnapMirror.</p>
+</div>
 <p>Wait until state shows <strong>Idle</strong> before considering the relationship established.</p>
 <hr />
 <h2 id="schedule-management">Schedule Management<a class="headerlink" href="#schedule-management" title="Permanent link">&para;</a></h2>
 <p>Create a named cron schedule and assign it to a SnapMirror relationship.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create a cron schedule (runs every hour, on the hour)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>hourly-sm<span class="w"> </span>-hour<span class="w"> </span><span class="m">0</span><span class="w"> </span>-minute<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Assign the schedule to an existing relationship</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly-sm
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Verify the schedule is applied</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>schedule
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Create a cron schedule (runs every hour, on the hour)</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>hourly-sm<span class="w"> </span>-hour<span class="w"> </span><span class="m">0</span><span class="w"> </span>-minute<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Assign the schedule to an existing relationship</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly-sm
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Verify the schedule is applied</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>schedule
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>job schedule cron create -name hourly-sm -hour 0 -minute 0
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>(no output — command completes silently)
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>snapmirror modify -destination-path svm-dr:vol_backup -schedule hourly-sm
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>(no output — command completes silently)
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>snapmirror show -destination-path svm-dr:vol_backup -fields schedule
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>                                    Source Destination Schedule
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>                                    ------ ----------- --------
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>cluster1::svm-prod:vol_data svm-dr:vol_backup hourly-sm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Job schedule "hourly-sm" does not exist.</code></strong> — Create the schedule first using the <code>job schedule cron create</code> command before assigning it to a SnapMirror relationship.
+<strong><code>Error: command failed: SnapMirror relationship for destination "svm-dr:vol_backup" does not exist.</code></strong> — Verify the destination path is correct and the SnapMirror relationship has been initialized with <code>snapmirror create</code> before modifying its schedule.</p>
+</div>
 <p>Confirm the schedule aligns with the required RPO — more frequent transfers reduce RPO but increase network utilisation.</p>
 <hr />
 <h2 id="manual-update-on-demand-transfer">Manual Update (On-Demand Transfer)<a class="headerlink" href="#manual-update-on-demand-transfer" title="Permanent link">&para;</a></h2>
 <p>Trigger an immediate incremental transfer outside the scheduled window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Trigger an on-demand incremental update</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check lag after the transfer completes</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Trigger an on-demand incremental update</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Check lag after the transfer completes</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Operation is queued: snapmirror update of destination &quot;prod_svm:vol_backup&quot; is queued.
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>                                                 Lag
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Source Destination                             Time
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>------ ---------------------------------------- ----------
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>prod_svm:vol_data
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>       prod_svm:vol_backup                      00:05:23
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: destination does not exist.</code></strong> — Verify the destination volume exists on the destination SVM using <code>volume show</code> and confirm the path format is <code>svm_name:volume_name</code>.</p>
+<p><strong><code>Error: SnapMirror relationship is not initialized.</code></strong> — Initialize the relationship first with <code>snapmirror initialize -destination-path &lt;dest_svm:dest_vol&gt;</code> before attempting incremental updates.</p>
+<p><strong><code>Error: Transfer is already in progress for this destination.</code></strong> — Wait for the current transfer to complete or abort it with <code>snapmirror abort -destination-path &lt;dest_svm:dest_vol&gt;</code> before issuing a new update.</p>
+</div>
 <p>Verify lag-time drops to near-zero after the update, confirming the destination is current.</p>
 <hr />
 <h2 id="quiesce-and-resume">Quiesce and Resume<a class="headerlink" href="#quiesce-and-resume" title="Permanent link">&para;</a></h2>
 <p>Pause transfers for maintenance without breaking the relationship.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Quiesce — pauses new transfers but lets any in-progress transfer finish</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Verify the relationship is in Quiesced state before proceeding</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Perform maintenance on the source or network...</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Resume transfers after maintenance is complete</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Trigger an immediate update to minimize lag catch-up</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Quiesce — pauses new transfers but lets any in-progress transfer finish</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Verify the relationship is in Quiesced state before proceeding</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># Perform maintenance on the source or network...</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Resume transfers after maintenance is complete</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="c1"># Trigger an immediate update to minimize lag catch-up</span>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cluster1::&gt; snapmirror quiesce -destination-path svm_dr:vol_prod
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(no output — command completes silently)
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>cluster1::&gt; snapmirror show -destination-path svm_dr:vol_prod
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>                             Source Path: svm_prod:vol_prod
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>                        Destination Path: svm_dr:vol_prod
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>                               Relationship Status: Quiesced
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>                             Relationship Type: XDP
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>                        Constituent Relationship Status: Quiesced
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>                             Transfer Snapshot: snap_20240115_0800
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>                         Snapshot Progress: Last Transfered: 2.5GB
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>                             Healthy: true
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>                    Unhealthy Reason: -
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>                       Policy Name: MirrorAllSnapshots
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>                         Tries Limit: 8
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>                     Number of Successful Updates: 847
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>                Number of Failed Updates: 0
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>                Number of Aborted Updates: 2
+<a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>                      Latest Transfer Type: Incremental
+<a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>                     Latest Transfer End Timestamp: 01/15 08:15:32
+<a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>                 Verbose: false
+<a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>
+<a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>cluster1::&gt; snapmirror resume -destination-path svm_dr:vol_prod
+<a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>(no output — command completes silently)
+<a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>
+<a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a>cluster1::&gt; snapmirror update -destination-path svm_dr:vol_prod
+<a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship is not in a quiesced state</code></strong> — Run <code>snapmirror quiesce</code> first and verify with <code>snapmirror show</code> before attempting resume.
+<strong><code>Error: command failed: Destination volume is offline</code></strong> — Bring the destination volume online with <code>volume online -vserver &lt;svm&gt; -volume &lt;vol&gt;</code> before resuming transfers.</p>
+</div>
 <p>Quiesce does not break the relationship — no resync is needed after resuming.</p>
 <hr />
 <h2 id="monitor-lag-and-health">Monitor Lag and Health<a class="headerlink" href="#monitor-lag-and-health" title="Permanent link">&para;</a></h2>
 <p>Check the status of all SnapMirror relationships.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># View health and lag across all relationships</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>healthy,lag-time,last-transfer-type,last-transfer-size
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Confirm no relationships are in broken-off state (should return nothing)</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check for SnapMirror-related errors in the event log</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-message-name<span class="w"> </span>snapmirror.*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># View health and lag across all relationships</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>healthy,lag-time,last-transfer-type,last-transfer-size
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Confirm no relationships are in broken-off state (should return nothing)</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Check for SnapMirror-related errors in the event log</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-message-name<span class="w"> </span>snapmirror.*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Source Destination State Healthy Lag-Time Last Transfer Type Last Transfer Size
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>------- ----------- ----- ------- -------- ------------------- ------------------
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>cluster1:vol_prod cluster2:vol_prod Snapmirrored true 00:15:32 XDP 2.4GB
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>cluster1:vol_data cluster2:vol_data Snapmirrored true 00:22:18 XDP 1.8GB
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>cluster1:vol_logs cluster2:vol_logs Snapmirrored true 00:08:45 XDP 512MB
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>cluster1:vol_arch cluster2:vol_arch Snapmirrored true 01:03:22 XDP 3.1GB
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>4 entries were displayed.
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>(no output — command completes silently)
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>Time Node Severity Event
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>---- ---- -------- -----
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>11/14/2024 14:32:15 cluster1-01 ERROR snapmirror.transfer.failed: Transfer failed for relationship cluster1:vol_prod → cluster2:vol_prod
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>11/14/2024 13:18:42 cluster1-02 ERROR snapmirror.initialize.failed: Initialize failed for relationship cluster1:vol_data → cluster2:vol_data
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>2 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (ssh to the cluster management IP) rather than a local shell.
+<strong><code>Error: No matching relationships found</code></strong> — This is expected output for the broken-off check; if relationships exist but show no results, verify the relationship names with <code>snapmirror show</code> first.
+<strong><code>Error: access denied: insufficient privileges</code></strong> — Confirm your user account has the "snapmirror" capability by running <code>security login show -user-or-group-name &lt;username&gt;</code>.</p>
+</div>
 <p>Alert if <code>healthy</code> is <code>false</code> on any critical relationship, or if <code>lag-time</code> exceeds the agreed RPO threshold.</p>
 <hr />
 <h2 id="delete-a-relationship">Delete a Relationship<a class="headerlink" href="#delete-a-relationship" title="Permanent link">&para;</a></h2>
 <p>Cleanly remove a SnapMirror relationship. Quiesce and break before deleting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Step 1: Quiesce to stop transfers</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Step 2: Break to make destination writable (required before delete)</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Step 3: Delete the relationship metadata</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>snapmirror<span class="w"> </span>delete<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Optional: remove the destination volume if no longer needed</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Step 1: Quiesce to stop transfers</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Step 2: Break to make destination writable (required before delete)</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Step 3: Delete the relationship metadata</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>snapmirror<span class="w"> </span>delete<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Optional: remove the destination volume if no longer needed</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Operation succeeded: SnapMirror relationship quiesced.
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>Operation succeeded: SnapMirror relationship broken.
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>Operation succeeded: SnapMirror relationship deleted.
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>Volume delete: Volume &quot;dest_vol&quot; will be deleted.
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>Do you want to continue? {y|n}: y
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>Volume &quot;dest_vol&quot; has been deleted.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "dest_svm:dest_vol"</code></strong> — Verify the destination path is correct and the relationship exists using <code>snapmirror show -destination-path &lt;dest_svm:dest_vol&gt;</code>.
+<strong><code>Error: command failed: SnapMirror relationship is in transfer. Cannot break relationship</code></strong> — Wait for the current transfer to complete or use <code>snapmirror abort -destination-path &lt;dest_svm:dest_vol&gt;</code> before breaking.
+<strong><code>Error: command failed: Volume "dest_vol" is online. Cannot delete online volume</code></strong> — Take the volume offline first using <code>volume offline -vserver &lt;dest_svm&gt; -volume &lt;dest_vol&gt;</code> before deletion.</p>
+</div>
 <p>Verify with <code>snapmirror show</code> that the relationship no longer appears after deletion.</p>
 <hr />
 <h2 id="convert-async-to-synchronous-sm-bc">Convert Async to Synchronous (SM-BC)<a class="headerlink" href="#convert-async-to-synchronous-sm-bc" title="Permanent link">&para;</a></h2>
 <p>Convert an async relationship to SnapMirror Business Continuity (SM-BC) for zero-RPO SAN replication. Requires ONTAP Mediator deployed and reachable from both clusters.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Step 1: Create a synchronous AutomatedFailOver policy</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>-policy<span class="w"> </span>AutomatedFailOver<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span>-type<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span>-sync-type<span class="w"> </span>AutomatedFailOver
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Step 2: Create the SM-BC relationship using the new policy</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">    </span>-policy<span class="w"> </span>AutomatedFailOver
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Step 3: Initialize the relationship</span>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># Step 4: Verify the relationship is InSync</span>
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>sync<span class="w"> </span>-fields<span class="w"> </span>is-healthy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Step 1: Create a synchronous AutomatedFailOver policy</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">    </span>-policy<span class="w"> </span>AutomatedFailOver<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">    </span>-type<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">    </span>-sync-type<span class="w"> </span>AutomatedFailOver
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Step 2: Create the SM-BC relationship using the new policy</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">    </span>-policy<span class="w"> </span>AutomatedFailOver
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="c1"># Step 3: Initialize the relationship</span>
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="c1"># Step 4: Verify the relationship is InSync</span>
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>sync<span class="w"> </span>-fields<span class="w"> </span>is-healthy
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>cluster1::&gt; snapmirror policy create -vserver svm1 \
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>    -policy AutomatedFailOver \
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>    -type sync \
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>    -sync-type AutomatedFailOver
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>(no output — command completes silently)
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>cluster1::&gt; snapmirror create \
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>    -source-path svm1:vol_prod \
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>    -destination-path svm2:vol_prod_dr \
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>    -policy AutomatedFailOver
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>(no output — command completes silently)
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>cluster1::&gt; snapmirror initialize -destination-path svm2:vol_prod_dr
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>Operation is queued: snapmirror initialize of destination &quot;svm2:vol_prod_dr&quot;.
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a>cluster1::&gt; snapmirror show -type sync -fields is-healthy
+<a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>Source Destination Mirror State Lag Time Status is-healthy
+<a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a>svm1:vol_prod svm2:vol_prod_dr Snapmirrored InSync 0 seconds Idle true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Policy "AutomatedFailOver" does not exist.</code></strong> — Verify the policy was created successfully in Step 1 by running <code>snapmirror policy show -policy AutomatedFailOver</code>.
+<strong><code>Error: command failed: Source volume "svm1:vol_prod" does not exist.</code></strong> — Confirm the source volume name and SVM are correct, and that the volume exists with <code>volume show -vserver &lt;svm&gt;</code>.
+<strong><code>Error: command failed: Destination volume "svm2:vol_prod_dr" does not exist.</code></strong> — Create the destination volume first with <code>volume create -vserver svm2 -volume vol_prod_dr -aggregate &lt;aggr&gt; -size &lt;size&gt;</code> before creating the SnapMirror relationship.</p>
+</div>
 <p><strong>Note:</strong> SM-BC supports iSCSI and FCP SAN volumes only — NAS (NFS/SMB) volumes are not supported. Confirm ONTAP Mediator is registered and both clusters can reach the mediator before initializing.</p>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8851,7 +9128,7 @@ SnapMirror procedures: creating protection relationships, scheduling updates, qu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:32:23 UTC"><span class="timeago" datetime="2026-06-29T05:32:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:32:23 UTC">2026-06-29</span>
   </span>
 
     

@@ -9435,63 +9435,158 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   Member count: 4</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">#   vSAN Build: 21427...</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster information:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  UUID: 5222a447-8f3c-4d2e-a1b9-7c9e2f5d8a3b
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Node UUID: 5222b891-2c1a-4e7f-9d3c-1a5b8e2c9f4d
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Member count: 4
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  vSAN Build: 21427.1.0.18760396-release
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  vSAN Enabled: true
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  vSAN Mode: Enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.
+<strong><code>Error: Permission denied</code></strong> — Ensure you are logged in as root or a user with vSAN administrator privileges.</p>
+</div>
 <p>Note the cluster UUID and build number — include both in the case description.</p>
 <h3 id="2-capture-cmmds-tool-output-component-placement">2. Capture cmmds-tool output (component placement)<a class="headerlink" href="#2-capture-cmmds-tool-output-component-placement" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run on one ESXi host (shows component placement for all objects)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cmmds-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.json
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cmmds-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Object health summary</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>DOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health\|state\|degraded&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Component summary</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>LSOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-200
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Copy output off the host (from a management workstation)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># scp root@&lt;esxi-ip&gt;:/tmp/cmmds-*.txt /tmp/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run on one ESXi host (shows component placement for all objects)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cmmds-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.json
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cmmds-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Object health summary</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>DOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health\|state\|degraded&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Component summary</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>LSOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-200
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Copy output off the host (from a management workstation)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># scp root@&lt;esxi-ip&gt;:/tmp/cmmds-*.txt /tmp/</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>2024-01-15T09:42:33Z cmmds-tool find: Dumping all CMMDS objects to JSON format...
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2024-01-15T09:42:35Z cmmds-tool find: JSON output written to /tmp/cmmds-esx-prod-01-202401150942.json (2847 objects, 18.3 MB)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2024-01-15T09:42:36Z cmmds-tool find: Text output written to /tmp/cmmds-esx-prod-01-202401150942.txt (2847 objects)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>DOM_OBJECT Health Summary:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  UUID: 52e81234-5678-90ab-cdef-1234567890ab | Health: HEALTHY | State: ACTIVE
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  UUID: 62f92345-6789-01bc-def0-2345678901bc | Health: DEGRADED | State: ACTIVE | Components: 2/3
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  UUID: 73g03456-789a-12cd-ef01-3456789012cd | Health: HEALTHY | State: ACTIVE
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  UUID: 84h14567-89ab-23de-f012-456789abc123 | Health: UNHEALTHY | State: INACTIVE | Missing: 1 component
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>LSOM_OBJECT Component Summary:
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  Object: 52e81234-5678-90ab-cdef-1234567890ab | Type: vSAN_OBJECT | Size: 4.2 GB | Replicas: 3 | Status: OK
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  Object: 62f92345-6789-01bc-def0-2345678901bc | Type: vSAN_OBJECT | Size: 8.5 GB | Replicas: 3 | Status: DEGRADED
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  Object: 73g03456-789a-12cd-ef01-3456789012cd | Type: vSAN_OBJECT | Size: 2.1 GB | Replicas: 2 | Status: OK
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  Object: 84h14567-89ab-23de-f012-456789abc123 | Type: vSAN_OBJECT | Size: 16.0 GB | Replicas: 3 | Status: UNHEALTHY
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  Object: 95i25678-9abc-34ef-0123-56789abcdef0 | Type: vSAN_OBJECT | Size: 1.8 GB | Replicas: 1 | Status: OK
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  ...
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  (195 more objects)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cmmds-tool: command not found</code></strong> — Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation.
+<strong><code>Permission denied: /tmp/cmmds-*.txt</code></strong> — Run the command with <code>sudo</code> or as root user; standard user accounts cannot write to /tmp on ESXi hosts.
+<strong><code>scp: command not found on ESXi host</code></strong> — Run the scp command from your management workstation (not the ESXi host) using the syntax <code>scp root@&lt;esxi-ip&gt;:/tmp/cmmds-*.txt /tmp/</code>.</p>
+</div>
 <p>This is the most critical data for GSS. Run it on every host, not just the one where the issue first appeared.</p>
 <h3 id="3-run-vm-support-with-vsan-flag-on-all-hosts">3. Run vm-support with vSAN flag on all hosts<a class="headerlink" href="#3-run-vm-support-with-vsan-flag-on-all-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to each host — run on EVERY host in the cluster, not just the affected one</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vm-support<span class="w"> </span>--log-level<span class="w"> </span><span class="m">6</span><span class="w"> </span>--vsan
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># The bundle is written to: /var/core/vm-support-&lt;hostname&gt;-&lt;timestamp&gt;.tgz</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/vm-support-*.tgz
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Copy off the host</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># scp root@&lt;esxi-ip&gt;:/var/core/vm-support-*.tgz /tmp/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to each host — run on EVERY host in the cluster, not just the affected one</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vm-support<span class="w"> </span>--log-level<span class="w"> </span><span class="m">6</span><span class="w"> </span>--vsan
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># The bundle is written to: /var/core/vm-support-&lt;hostname&gt;-&lt;timestamp&gt;.tgz</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/vm-support-*.tgz
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Copy off the host</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># scp root@&lt;esxi-ip&gt;:/var/core/vm-support-*.tgz /tmp/</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Generating support bundle with VSAN diagnostics...
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Log level set to 6
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Collecting VSAN cluster information...
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Gathering host configuration and logs...
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Bundle generation completed successfully.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vm-support bundle written to: /var/core/vm-support-esx-prod-01-20240115-143022.tgz
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>-rw-r--r-- 1 root root 487M Jan 15 14:30 /var/core/vm-support-esx-prod-01-20240115-143022.tgz
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>-rw-r--r-- 1 root root 512M Jan 15 13:45 /var/core/vm-support-esx-prod-02-20240115-134501.tgz
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>-rw-r--r-- 1 root root 495M Jan 15 13:22 /var/core/vm-support-esx-prod-03-20240115-132156.tgz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vm-support: command not found</code></strong> — Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH.
+<strong><code>Permission denied</code></strong> — Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics.
+<strong><code>No space left on device</code></strong> — Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition.</p>
+</div>
 <h3 id="4-capture-vsan-health-checks-and-resync-state">4. Capture vSAN health checks and resync state<a class="headerlink" href="#4-capture-vsan-health-checks-and-resync-state" title="Permanent link">&para;</a></h3>
 <p>In vSphere Client: navigate to the vSAN cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Health</strong>.</p>
 <p>Export the health check results (click <strong>Export</strong> at the top right of the Health view).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From ESXi CLI: resync status (shows remaining bytes by priority)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disk health</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Network health (packet loss, latency between vSAN vmkernels)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Object accessibility</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible\|degraded\|absent&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From ESXi CLI: resync status (shows remaining bytes by priority)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Disk health</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Network health (packet loss, latency between vSAN vmkernels)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Object accessibility</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible\|degraded\|absent&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Resync Status:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Resync Completion Percentage: 87
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Bytes Remaining (High Priority): 2147483648
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Bytes Remaining (Low Priority): 536870912
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Estimated Time Remaining: 3600 seconds
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Storage Health:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  Disk Group 1:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    UUID: 52e0e3d4-8f2a-4c1b-9e7a-1a2b3c4d5e6f
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    Health State: Healthy
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    Capacity: 1099511627776 bytes
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    Free Space: 274877906944 bytes
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Disk Group 2:
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    UUID: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    Health State: Degraded
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    Capacity: 1099511627776 bytes
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    Free Space: 68719476736 bytes
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>Network Health:
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  vmk1 (vSAN vmkernel):
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    Peer: esx-node-02.lab.local (192.168.100.12)
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    Latency: 0.45 ms
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    Packet Loss: 0%
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  vmk1 (vSAN vmkernel):
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    Peer: esx-node-03.lab.local (192.168.100.13)
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    Latency: 0.52 ms
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    Packet Loss: 0%
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>Object Accessibility:
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>  Object UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>  State: degraded
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>  Component Count: 3
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>  Accessible Components: 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the vSAN cluster</code></strong> — Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using <code>esxcli vsan cluster get</code>.
+<strong><code>Permission denied</code></strong> — Run the command with root privileges or ensure your user account has vSAN administrator role assigned.
+<strong><code>Unknown command or namespace</code></strong> — Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using <code>esxcli software vib list | grep vsan</code>.</p>
+</div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSAN build: 21427XXXX (vSAN 8.0.x)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Cluster UUID: 5222a....-....-....-....-......
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Cluster: prod-vsan-cluster-01 (4 hosts, PFTT=1)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Issue first observed: 2026-06-14 14:30 UTC
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Last known good state: 2026-06-14 12:00 UTC
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - 12:00: host esxi-04 went into maintenance mode for patching
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - 14:30: vSAN health check flagged &quot;resync stalled&quot; on esxi-04
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - 14:35: 3 VMs on that host show I/O errors
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Steps already taken:
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - cmmds-tool: several components show &quot;absent&quot; on esxi-04 disk groups
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  - esxcli vsan resync get: 450 GB stuck at same byte count for 2 hours
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - Did NOT power off esxi-04 or pull disks
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - Did NOT remove disk groups
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Blast radius: 3 VMs on esxi-04 have I/O errors; FTT=1 — one more failure = data loss
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vSAN build: 21427XXXX (vSAN 8.0.x)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Cluster UUID: 5222a....-....-....-....-......
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Cluster: prod-vsan-cluster-01 (4 hosts, PFTT=1)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Issue first observed: 2026-06-14 14:30 UTC
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Last known good state: 2026-06-14 12:00 UTC
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  - 12:00: host esxi-04 went into maintenance mode for patching
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  - 14:30: vSAN health check flagged &quot;resync stalled&quot; on esxi-04
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  - 14:35: 3 VMs on that host show I/O errors
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Steps already taken:
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  - cmmds-tool: several components show &quot;absent&quot; on esxi-04 disk groups
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  - esxcli vsan resync get: 450 GB stuck at same byte count for 2 hours
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  - Did NOT power off esxi-04 or pull disks
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  - Did NOT remove disk groups
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Blast radius: 3 VMs on esxi-04 have I/O errors; FTT=1 — one more failure = data loss
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -9551,26 +9646,26 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </ol>
 <hr />
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Step 1 — Open case at support.broadcom.com with vm-support bundles and cmmds-tool attached
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>         ↓
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Step 2 — T1 support engineer acknowledges and reviews the bundle (Sev1: &lt; 30 min)
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>         ↓
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>         → Reply in case: &quot;Requesting escalation to vSAN Senior Engineer&quot;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>         → State: &quot;[objects inaccessible / resync stalled / data at risk — FTT=1]&quot;
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>         ↓
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Step 4 — vSAN T2 Senior Engineer is assigned
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>         → They will review cmmds-tool output and direct exact recovery steps
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>         → Do NOT take any disk or host action until T2 provides direction
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>         ↓
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Step 5 — If issue requires code-level investigation (vSAN bug):
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>         → T2 escalates to vSAN Engineering (T3)
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>         → Engineering may provide a hotfix or specific workaround procedure
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>         ↓
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Step 6 — For data loss, ongoing I/O unavailability, or prolonged Sev1:
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>         → Request CritSit (Critical Situation) escalation
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>         → CritSit triggers a 24×7 war room with senior GSS + Engineering involvement
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>         → Contact your Broadcom TAM or Account Executive to initiate CritSit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Step 1 — Open case at support.broadcom.com with vm-support bundles and cmmds-tool attached
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>         ↓
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Step 2 — T1 support engineer acknowledges and reviews the bundle (Sev1: &lt; 30 min)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>         ↓
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>         → Reply in case: &quot;Requesting escalation to vSAN Senior Engineer&quot;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>         → State: &quot;[objects inaccessible / resync stalled / data at risk — FTT=1]&quot;
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>         ↓
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Step 4 — vSAN T2 Senior Engineer is assigned
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>         → They will review cmmds-tool output and direct exact recovery steps
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>         → Do NOT take any disk or host action until T2 provides direction
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>         ↓
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Step 5 — If issue requires code-level investigation (vSAN bug):
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>         → T2 escalates to vSAN Engineering (T3)
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>         → Engineering may provide a hotfix or specific workaround procedure
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>         ↓
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>Step 6 — For data loss, ongoing I/O unavailability, or prolonged Sev1:
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>         → Request CritSit (Critical Situation) escalation
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>         → CritSit triggers a 24×7 war room with senior GSS + Engineering involvement
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>         → Contact your Broadcom TAM or Account Executive to initiate CritSit
 </code></pre></div>
 <hr />
 <h2 id="what-not-to-do">What NOT to Do<a class="headerlink" href="#what-not-to-do" title="Permanent link">&para;</a></h2>
@@ -9617,26 +9712,72 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># vSAN cluster and host state — paste into every case update</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Component health summary</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>DOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health\|state&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>LSOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Resync progress</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Object accessibility</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible\|degraded\|absent&quot;</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Network health (run on one host)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Performance data (latency snapshot)</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>perf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># vSAN cluster and host state — paste into every case update</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Component health summary</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>DOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health\|state&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>LSOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Resync progress</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Object accessibility</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible\|degraded\|absent&quot;</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Network health (run on one host)</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Performance data (latency snapshot)</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>perf
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Cluster UUID: 52d4a8f1-7c3e-4a2b-9e1f-3b8c2a5d6e9f
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Cluster mode: Enabled
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Health state: Healthy
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Storage device list:
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Device: naa.5001405a1b2c3d4e
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    Capacity: 1.7 TB
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    Used: 892.3 GB
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    Health: Healthy
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  Device: naa.5001405a1b2c3d4f
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    Capacity: 1.7 TB
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    Used: 887.1 GB
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    Health: Healthy
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>DOM_OBJECT health: HEALTHY
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>DOM_OBJECT state: ACTIVE
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>LSOM_OBJECT health: HEALTHY
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>LSOM_OBJECT state: ACTIVE
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>LSOM_OBJECT health: HEALTHY
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>LSOM_OBJECT state: ACTIVE
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>Resync progress: 0%
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>Resync objects: 0
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>Resync bytes: 0 B
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>Object list:
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  Object UUID: 8f2e1a3c-5b7d-4e9f-a1b2-c3d4e5f6a7b8
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>  State: ACCESSIBLE
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  Redundancy: SATISFIED
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>Network health: HEALTHY
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>Partition: CONNECTED
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>Quorum: QUORUM_PRESENT
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>Network latency: 2.3 ms
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>VMDK perf snapshot:
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>  Read latency: 1.2 ms
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>  Write latency: 2.8 ms
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>  Outstanding IOs: 45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: vSAN cluster is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster new</code> to initialize the cluster or verify the host is part of an existing vSAN cluster.
+<strong><code>Error: CMMDS server is not running</code></strong> — Restart the CMMDS service with <code>systemctl restart cmmds</code> or reboot the host if the service fails to start.
+<strong><code>Error: Network partition detected - Quorum: QUORUM_ABSENT</code></strong> — Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9709,7 +9850,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

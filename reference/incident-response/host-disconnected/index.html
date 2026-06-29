@@ -7180,13 +7180,44 @@ Response procedure for an ESXi host showing "Not Responding" or "Disconnected" i
 <p><strong>First: are the VMs still reachable?</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>&lt;vm-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 192.168.45.87 (192.168.45.87) 56(84) bytes of data.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>64 bytes from 192.168.45.87: icmp_seq=1 ttl=64 time=2.341 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>64 bytes from 192.168.45.87: icmp_seq=2 ttl=64 time=2.156 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>64 bytes from 192.168.45.87: icmp_seq=3 ttl=64 time=2.489 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>64 bytes from 192.168.45.87: icmp_seq=4 ttl=64 time=2.278 ms
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>--- 192.168.45.87 statistics ---
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>rtt min/avg/max/stddev = 2.156/2.316/2.489/0.131 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;vm-ip&gt;</code></strong> — Replace <code>&lt;vm-ip&gt;</code> with the actual IP address (e.g., <code>ping 192.168.45.87</code>).
+<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Verify the VM is powered on and check network connectivity; confirm the IP address is correct and on the same subnet.
+<strong><code>ping: sendto: Operation not permitted</code></strong> — Run the command with appropriate permissions or check if ICMP is blocked by a firewall rule on the host or network.</p>
+</div>
 <p>If VMs respond to ping, the host is up but vCenter lost the management agent — lower urgency.</p>
 <p><strong>Check HA events</strong> — did HA already handle it?
 vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <h2 id="diagnose">Diagnose<a class="headerlink" href="#diagnose" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-ping-the-host-management-ip">Step 1 — Ping the host management IP<a class="headerlink" href="#step-1-ping-the-host-management-ip" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;esxi-management-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>&lt;esxi-management-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PING 192.168.1.42 (192.168.1.42) 56(84) bytes of data.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>64 bytes from 192.168.1.42: icmp_seq=4 ttl=64 time=2.01 ms
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>^C
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>--- 192.168.1.42 statistics ---
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>rtt min/avg/max/stddev = 1.89/2.09/2.34/0.16 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;esxi-management-ip&gt;</code></strong> — Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi management IP address (e.g., <code>192.168.1.42</code>).
+<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Verify the ESXi host is powered on and the management network is reachable; check physical connectivity and firewall rules.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -7206,18 +7237,37 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </tbody>
 </table>
 <h3 id="step-2-ssh-directly-to-the-host">Step 2 — SSH directly to the host<a class="headerlink" href="#step-2-ssh-directly-to-the-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check management agent status</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check uptime</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uptime
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Scan for hardware errors</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fault\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check management agent status</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check uptime</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>uptime
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Scan for hardware errors</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fault\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>root@esxi-prod-01.dc1 [ ~ ]# /etc/init.d/hostd status
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>hostd is running.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>root@esxi-prod-01.dc1 [ ~ ]# /etc/init.d/vpxa status
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vpxa is running.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>root@esxi-prod-01.dc1 [ ~ ]# uptime
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> 14:32:18 up 187 days, 3:45, 0 users, load average: 0.42, 0.38, 0.35
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>root@esxi-prod-01.dc1 [ ~ ]# grep -i &quot;error\|fault\|fail&quot; /var/log/vmkernel.log | tail -20
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T14:28:33.847Z cpu2:2097)FSS: 2097: Failed to open swap file /vmfs/volumes/datastore1/swap/esx-prod-01-2097.vswp
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T14:15:22.451Z cpu5:2156)WARNING: NMP: nmp_ThrottleLogForDevice: Reducing number of error messages from device naa.6001405a1b2c4d8e9f0a1b2c3d4e5f6a
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2024-01-15T13:42:10.923Z cpu1:2045)ALERT: FS: 2045: Failed to allocate memory for inode cache
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>2024-01-15T13:15:47.632Z cpu3:2089)WARNING: Hostd: Failed to retrieve VM inventory from vCenter
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>2024-01-15T12:58:33.119Z cpu0:2001)NMP: nmp_DeviceAttemptFailover: Failover attempt 2 for device naa.6001405a1b2c4d8e9f0a1b2c3d4e5f6a
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: connect to host &lt;esxi-management-ip&gt; port 22: Connection timed out</code></strong> — Verify the ESXi host is powered on and reachable by pinging the management IP; check firewall rules allow SSH on port 22.
+<strong><code>hostd is stopped.</code></strong> — Restart the management agent with <code>/etc/init.d/hostd start</code> and check <code>/var/log/hostd.log</code> for startup errors.
+<strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify the ESXi host filesystem is accessible; if corrupted, boot into maintenance mode and check <code>/var/log/vmkernel.log</code> path exists.</p>
+</div>
 <h3 id="step-3-try-vsphere-host-client-directly">Step 3 — Try vSphere Host Client directly<a class="headerlink" href="#step-3-try-vsphere-host-client-directly" title="Permanent link">&para;</a></h3>
 <p>Browse to <code>https://&lt;esxi-ip&gt;/ui</code> — if this loads, the host is healthy but the vCenter agent has crashed.</p>
 <h2 id="fix-option-a-reconnect-from-vcenter-ui">Fix — Option A: Reconnect from vCenter UI<a class="headerlink" href="#fix-option-a-reconnect-from-vcenter-ui" title="Permanent link">&para;</a></h2>
@@ -7228,16 +7278,35 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <li>If a credential error appears: re-enter the ESXi root credentials</li>
 </ol>
 <h2 id="fix-option-b-restart-management-agents-via-ssh">Fix — Option B: Restart Management Agents via SSH<a class="headerlink" href="#fix-option-b-restart-management-agents-via-ssh" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restart hostd and vpxa individually</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Or restart all management agents at once</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>services.sh<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Restart hostd and vpxa individually</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Or restart all management agents at once</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>services.sh<span class="w"> </span>restart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Stopping hostd... done
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Starting hostd... done
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Stopping vpxa... done
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Starting vpxa... done
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Stopping management agents
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Stopping hostd... done
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Stopping vpxa... done
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Stopping netcpa... done
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Stopping datastore... done
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Starting datastore... done
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Starting netcpa... done
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Starting vpxa... done
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Starting hostd... done
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>hostd: unrecognized service</code></strong> — Verify you are running this command on an ESXi host (not vCenter); these services only exist on ESXi.
+<strong><code>/etc/init.d/hostd: Permission denied</code></strong> — Execute the commands with root privileges using <code>sudo</code> or by logging in as root.</p>
+</div>
 <p>Wait 60–90 seconds — the host should reconnect to vCenter automatically.</p>
 <h2 id="fix-option-c-reconnect-via-powercli">Fix — Option C: Reconnect via PowerCLI<a class="headerlink" href="#fix-option-c-reconnect-via-powercli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div>
 <h2 id="fix-option-d-evacuate-vms-via-host-client">Fix — Option D: Evacuate VMs via Host Client<a class="headerlink" href="#fix-option-d-evacuate-vms-via-host-client" title="Permanent link">&para;</a></h2>
 <p>Use when the host has a hardware fault but VMs are still running:</p>
@@ -7246,9 +7315,16 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <li>Manually initiate vMotion for each VM to another host</li>
 <li>Or put host in maintenance mode to trigger DRS evacuation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From ESXi SSH shell</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From ESXi SSH shell</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '--enable'</code></strong> — Use <code>esxcli system maintenanceMode set --enable=true</code> with an equals sign instead of a space.
+<strong><code>Error: Permission denied</code></strong> — Ensure you are logged in as root or a user with administrative privileges on the ESXi host.</p>
+</div>
 <h2 id="if-vms-are-inaccessible-and-host-is-down">If VMs Are Inaccessible and Host Is Down<a class="headerlink" href="#if-vms-are-inaccessible-and-host-is-down" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Wait for HA timeout</strong> (default 5 minutes) — HA will restart VMs on surviving hosts</li>
@@ -7293,7 +7369,7 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

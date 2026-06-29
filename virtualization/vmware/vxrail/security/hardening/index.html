@@ -10261,24 +10261,39 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;password&quot;: &quot;NewVaultedPassword1!&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/user/password&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;request_id&quot;: &quot;550e8400-e29b-41d4-a716-446655440000&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;status&quot;: &quot;success&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;message&quot;: &quot;Password updated successfully&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;user&quot;: &quot;mystic&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:47.123Z&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;password_expires_in_days&quot;: 90
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the VxRail Manager's CA certificate into your system trust store.
+<strong><code>{"error": "401 Unauthorized", "message": "Invalid credentials"}</code></strong> — Verify the current mystic password is correct and base64-encoded properly by testing <code>echo -n 'mystic:CurrentPassword1!' | base64</code>.
+<strong><code>{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}</code></strong> — Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).</p>
+</div>
 <p>Store the new password in the vault immediately. Document the vault path in the VxRail runbook.</p>
 <p><strong>2 — Configure LDAP</strong></p>
 <p>VxRail Plugin → Settings → LDAP Configuration → Enable LDAP → Enter server, base DN, bind account details, and role group mappings. Refer to the <a href="../authentication/">Authentication</a> page for the full LDAP configuration reference.</p>
 <p><strong>3 — Restrict API access at network layer</strong></p>
 <p>On the management network firewall or switch ACL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Permit VxRail Manager API access from jump host subnet only</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Source: 10.0.200.0/24 (admin jump hosts)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;, port 443</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Action: PERMIT</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># All other sources to port 443 on VxRail Manager: DENY</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Permit VxRail Manager API access from jump host subnet only</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Source: 10.0.200.0/24 (admin jump hosts)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;, port 443</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Action: PERMIT</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># All other sources to port 443 on VxRail Manager: DENY</span>
 </code></pre></div>
 <p><strong>4 — Restrict SSH access</strong></p>
 <p>On the management network firewall:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Permit SSH to VxRail Manager VM from jump host subnet only</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Source: 10.0.200.0/24</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;, port 22</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Action: PERMIT</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># All other sources to port 22: DENY</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Permit SSH to VxRail Manager VM from jump host subnet only</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Source: 10.0.200.0/24</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;, port 22</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Action: PERMIT</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># All other sources to port 22: DENY</span>
 </code></pre></div>
 <p><strong>5 — Configure VM backup</strong></p>
 <p>Add the VxRail Manager VM to the Veeam backup job (or equivalent tool). Do not use vSAN snapshots as the primary backup method — snapshots degrade vSAN performance if left active and are not a substitute for off-cluster backup.</p>
@@ -10297,51 +10312,114 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </ul>
 <h3 id="step-by-step-procedure_1">Step-by-Step Procedure<a class="headerlink" href="#step-by-step-procedure_1" title="Permanent link">&para;</a></h3>
 <p><strong>1 — Change root credentials (per node)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Change default root/Calvin credentials on iDRAC</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;UniqueNodePassword1!&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify the username is root (user slot 2 on Dell iDRAC)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users.2.UserName
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Expected: UserName=root</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Change default root/Calvin credentials on iDRAC</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;UniqueNodePassword1!&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify the username is root (user slot 2 on Dell iDRAC)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users.2.UserName
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected: UserName=root</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[IPMI_SEL.Initialization] Initialized
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[IPMI_SEL.Initialization] IPMI SDR cache loading...
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[IPMI_SEL.Initialization] IPMI SDR cache loaded successfully
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Set successful: iDRAC.Users.2.Password
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>UserName=root
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RACADM.1.1.5254.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session</code></strong> — Verify iDRAC is reachable via network and IPMI is enabled; check firewall rules on port 623.
+<strong><code>RACADM.1.1.5254.0 : Access Denied</code></strong> — Confirm you are running racadm with root/administrator privileges or use <code>sudo racadm</code> if executing remotely.</p>
+</div>
 <p>Use a unique password for each node — do not reuse the same password across all iDRAC interfaces. Store each per-node credential in the vault under a path that includes the node hostname or iDRAC IP.</p>
 <p><strong>2 — Verify OOB VLAN restriction</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify iDRAC IP is in the OOB VLAN range</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.IPv4.Address
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm no routing exists from VM subnets to the OOB VLAN</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># (verify on the network layer — router/firewall ACLs)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify iDRAC IP is in the OOB VLAN range</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.IPv4.Address
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm no routing exists from VM subnets to the OOB VLAN</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># (verify on the network layer — router/firewall ACLs)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>iDRAC.IPv4.Address=192.168.1.42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>DRAC_ERROR: DRAC/iLO is currently unavailable</code></strong> — Ensure the iDRAC service is running with <code>systemctl status idrac</code> and verify network connectivity to the iDRAC IP address.
+<strong><code>racadm: connect DRAC failed</code></strong> — Confirm racadm is installed (<code>which racadm</code>), the iDRAC hostname/IP is reachable, and you have valid credentials configured in <code>~/.racadm</code> or via <code>-u</code>/<code>-p</code> flags.</p>
+</div>
 <p><strong>3 — Configure iDRAC LDAP</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable LDAP on iDRAC and map AD group to Administrator role</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap://dc01.example.local&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=example,DC=local&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindDN<span class="w"> </span><span class="s2">&quot;CN=svc-idrac,OU=ServiceAccounts,DC=example,DC=local&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindPassword<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=example,DC=local&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1FF
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable LDAP on iDRAC and map AD group to Administrator role</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap://dc01.example.local&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=example,DC=local&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindDN<span class="w"> </span><span class="s2">&quot;CN=svc-idrac,OU=ServiceAccounts,DC=example,DC=local&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindPassword<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=example,DC=local&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1FF
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[RACADM] LDAP.Enable set successfully.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[RACADM] LDAP.Server set successfully.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[RACADM] LDAP.BaseDN set successfully.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[RACADM] LDAP.BindDN set successfully.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>[RACADM] LDAP.BindPassword set successfully.
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[RACADM] LDAPRoleGroup.1.DN set successfully.
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>[RACADM] LDAPRoleGroup.1.Privilege set successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RACADM] Error: Unable to connect to LDAP server</code></strong> — Verify the LDAP server hostname/IP is reachable and the LDAP service is running on port 389 (or 636 for LDAPS).
+<strong><code>[RACADM] Error: Invalid credentials for bind DN</code></strong> — Confirm the BindDN account exists in Active Directory and the BindPassword is correct and not expired.
+<strong><code>[RACADM] Error: Group DN not found in directory</code></strong> — Verify the group DN path exists in Active Directory and matches the exact case and distinguished name format.</p>
+</div>
 <p><strong>4 — Verify iDRAC firmware currency</strong></p>
 <p>iDRAC firmware is included in VxRail LCM bundles. Keeping the cluster on a current LCM version automatically keeps iDRAC firmware patched. Verify the current iDRAC firmware version:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Compare against the expected version for the installed VxRail bundle</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Compare against the expected version for the installed VxRail bundle</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>iDRAC Version: 5.10.20.00
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Firmware Version: 5.10.20.00
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Build: 2024.01.15
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>System Model: PowerEdge R750
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>System Manufacturer: Dell Inc.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>BIOS Version: 2.16.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RACADM0001: Unable to connect to iDRAC</code></strong> — Verify iDRAC IP address is reachable and credentials are configured via <code>racadm config -g cfgIpmiLan -o cfgIpmiLanIpAddress &lt;IP&gt;</code>.
+<strong><code>RACADM0213: IPMI is not initialized</code></strong> — Restart the iDRAC service with <code>racadm racreset soft</code> or power-cycle the host to reinitialize IPMI.</p>
+</div>
 <p><strong>5 — Verify Secure Boot</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check Secure Boot status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Expected: SecureBoot=Enabled</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># If disabled, enable it (node will reboot to apply)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>BIOS.SysProfileSettings.SecureBoot<span class="w"> </span>Enabled
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>racadm<span class="w"> </span>jobqueue<span class="w"> </span>create<span class="w"> </span>BIOS.Setup.1-1<span class="w"> </span>-r<span class="w"> </span>pwrcycle<span class="w"> </span>-s<span class="w"> </span>TIME_NOW
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check Secure Boot status</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Expected: SecureBoot=Enabled</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># If disabled, enable it (node will reboot to apply)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>BIOS.SysProfileSettings.SecureBoot<span class="w"> </span>Enabled
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>racadm<span class="w"> </span>jobqueue<span class="w"> </span>create<span class="w"> </span>BIOS.Setup.1-1<span class="w"> </span>-r<span class="w"> </span>pwrcycle<span class="w"> </span>-s<span class="w"> </span>TIME_NOW
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>BIOS.SysProfileSettings.SecureBoot=Enabled
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>(no output — command completes silently)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Job ID_123456789 is scheduled for execution.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>BIOS.SysProfileSettings.SecureBoot=Disabled</code></strong> — Run <code>racadm set BIOS.SysProfileSettings.SecureBoot Enabled</code> to enable Secure Boot before scheduling the reboot job.
+<strong><code>ERROR: RACADM0387: The object specified does not exist or is not supported on this system</code></strong> — Verify the iDRAC firmware is current and the system supports Secure Boot by checking <code>racadm get BIOS.SysProfileSettings</code> for available BIOS attributes.</p>
+</div>
 <p><strong>6 — Enforce HTTPS, disable HTTP and Telnet</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Disable HTTP, leave HTTPS on port 443</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpPort<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpsPort<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Serial.Enable<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable HTTP, leave HTTPS on port 443</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpPort<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpsPort<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Serial.Enable<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>(no output — command completes silently)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RACADM0211: Unable to set property. Property value is not valid.</code></strong> — Verify the iDRAC firmware version supports HttpPort 0; some versions require explicit disabling via a separate flag instead of setting port to 0.
+<strong><code>RACADM0212: IPMI Session limit exceeded</code></strong> — Close existing iDRAC sessions or wait 5 minutes for session timeout before retrying the racadm commands.</p>
+</div>
 <hr />
 <h2 id="vsphereesxi-hardening">vSphere/ESXi Hardening<a class="headerlink" href="#vsphereesxi-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="checklist_2">Checklist<a class="headerlink" href="#checklist_2" title="Permanent link">&para;</a></h3>
@@ -10359,49 +10437,49 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </ul>
 <h3 id="step-by-step-procedure_2">Step-by-Step Procedure<a class="headerlink" href="#step-by-step-procedure_2" title="Permanent link">&para;</a></h3>
 <p><strong>1 — Enable Normal Lockdown on all hosts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Enable Normal Lockdown on all VxRail cluster hosts (PowerCLI)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Enable Normal Lockdown on all VxRail cluster hosts (PowerCLI)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>2 — Disable SSH and ESXi Shell</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Stop and disable SSH and ESXi Shell on all VxRail hosts (PowerCLI)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="nv">$vmhost</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="nb">Get-VMHostService</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Key</span> <span class="n">-in</span> <span class="s2">&quot;TSM-SSH&quot;</span><span class="p">,</span><span class="s2">&quot;TSM&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>            <span class="nb">Stop-VMHostService</span> <span class="n">-HostService</span> <span class="nv">$_</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>            <span class="nb">Set-VMHostService</span> <span class="n">-HostService</span> <span class="nv">$_</span> <span class="n">-Policy</span> <span class="n">Off</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Service </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Key</span><span class="p">)</span><span class="s2"> stopped and disabled on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="p">}</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Stop and disable SSH and ESXi Shell on all VxRail hosts (PowerCLI)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="nv">$vmhost</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="nb">Get-VMHostService</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Key</span> <span class="n">-in</span> <span class="s2">&quot;TSM-SSH&quot;</span><span class="p">,</span><span class="s2">&quot;TSM&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>        <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>            <span class="nb">Stop-VMHostService</span> <span class="n">-HostService</span> <span class="nv">$_</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>            <span class="nb">Set-VMHostService</span> <span class="n">-HostService</span> <span class="nv">$_</span> <span class="n">-Policy</span> <span class="n">Off</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Service </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Key</span><span class="p">)</span><span class="s2"> stopped and disabled on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="p">}</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>3 — Apply host profiles</strong></p>
 <p>Create a reference host profile from a known-good VxRail host:</p>
 <p><strong>vCenter → Policy and Profiles → Host Profiles → Extract Host Profile → Select reference host</strong></p>
 <p>Apply the profile to all VxRail hosts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Apply host profile to all VxRail hosts and check compliance (PowerCLI)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$profile</span> <span class="p">=</span> <span class="nb">Get-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-Baseline&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">Apply-VMHostProfile</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Profile</span> <span class="nv">$profile</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">}</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c"># Check compliance for all hosts</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Test-VMHostProfileCompliance</span> <span class="p">|</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Issues&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">IncomplianceElementList</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># Apply host profile to all VxRail hosts and check compliance (PowerCLI)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">$profile</span> <span class="p">=</span> <span class="nb">Get-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-Baseline&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">Apply-VMHostProfile</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Profile</span> <span class="nv">$profile</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="p">}</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c"># Check compliance for all hosts</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Test-VMHostProfileCompliance</span> <span class="p">|</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Issues&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">IncomplianceElementList</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
 </code></pre></div>
 <p><strong>4 — Enable vSAN encryption</strong></p>
 <p>Refer to the <a href="../encryption/">Encryption</a> page for the full vSAN at-rest and in-transit encryption procedures, including the pre-enable checklist and rebuild warning.</p>
 <p><strong>5 — Configure vCenter backup</strong></p>
 <p><strong>vCenter VAMI (port 5480) → Backup → Configure → Schedule</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nt">Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SFTP</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nt">Backup location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sftp://backup.example.local/vcentre/</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nt">Username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-vcenter-backup</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nt">Frequency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Daily</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nt">Retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14 backups</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nt">Encrypt backup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes (set a password stored in vault)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SFTP</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nt">Backup location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sftp://backup.example.local/vcentre/</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nt">Username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-vcenter-backup</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nt">Frequency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Daily</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nt">Retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14 backups</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nt">Encrypt backup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes (set a password stored in vault)</span>
 </code></pre></div>
 <hr />
 <h2 id="network-hardening">Network Hardening<a class="headerlink" href="#network-hardening" title="Permanent link">&para;</a></h2>
@@ -10460,10 +10538,10 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </tbody>
 </table>
 <p><strong>Verify VLAN isolation on the vDS:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># List all port groups and their VLAN IDs on the VxRail vDS (PowerCLI)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-VDSwitch</span> <span class="p">|</span> <span class="nb">Get-VDPortgroup</span> <span class="p">|</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Ports&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">NumPorts</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="nb">Sort-Object</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># List all port groups and their VLAN IDs on the VxRail vDS (PowerCLI)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-VDSwitch</span> <span class="p">|</span> <span class="nb">Get-VDPortgroup</span> <span class="p">|</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Ports&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">NumPorts</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="nb">Sort-Object</span> <span class="n">Name</span>
 </code></pre></div>
 <p>Confirm no VM port group has the same VLAN ID as the management, vSAN, vMotion, or OOB VLANs.</p>
 <h3 id="nsx-distributed-firewall-rules-if-nsx-deployed">NSX Distributed Firewall Rules (if NSX deployed)<a class="headerlink" href="#nsx-distributed-firewall-rules-if-nsx-deployed" title="Permanent link">&para;</a></h3>
@@ -10546,11 +10624,32 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </table>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
 <p><strong>Enable SupportAssist:</strong> VxRail Plugin → Support → SupportAssist → Enable</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check SupportAssist status via VxRail Manager API</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/support-assist/status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check SupportAssist status via VxRail Manager API</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/support-assist/status&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>{
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  &quot;status&quot;: &quot;ENABLED&quot;,
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  &quot;last_contact&quot;: &quot;2024-01-15T14:32:18Z&quot;,
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  &quot;next_contact&quot;: &quot;2024-01-16T02:32:18Z&quot;,
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  &quot;contact_method&quot;: &quot;HTTPS&quot;,
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  &quot;proxy_configured&quot;: false,
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  &quot;certificate_validation&quot;: true,
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>  &quot;support_account&quot;: &quot;ACC-VXR-789456&quot;,
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>  &quot;data_collection_enabled&quot;: true,
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>  &quot;last_collection&quot;: &quot;2024-01-15T12:00:00Z&quot;,
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>  &quot;collection_interval_hours&quot;: 24,
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>  &quot;remote_support_enabled&quot;: true,
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>  &quot;alert_notifications&quot;: &quot;ENABLED&quot;
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the VxRail Manager's CA certificate into your system trust store.
+<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the base64-encoded credentials are correct by running <code>echo -n 'username:password' | base64</code> and comparing the output to your Authorization header.
+<strong><code>curl: (7) Failed to connect to &lt;vxrail-manager-ip&gt; port 443: Connection refused</code></strong> — Confirm the VxRail Manager IP address is correct and the HTTPS service is running with <code>curl -v https://&lt;vxrail-manager-ip&gt;:443</code>.</p>
+</div>
 <h3 id="hardening-actions">Hardening Actions<a class="headerlink" href="#hardening-actions" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] Review the data sharing scope in VxRail Plugin → Support → SupportAssist → Data Privacy settings before enabling</li>
@@ -10595,7 +10694,7 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

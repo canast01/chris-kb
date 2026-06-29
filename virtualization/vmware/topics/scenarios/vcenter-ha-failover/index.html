@@ -10846,32 +10846,102 @@ edge cases where VCHA gets stuck in Isolated state.
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;config_state&quot;: &quot;CONFIGURED&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;cluster_state&quot;: &quot;HEALTHY&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;node_type&quot;: &quot;ACTIVE&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;node_id&quot;: &quot;50a3d3f0-8c2a-4a1b-9e7c-2f5b8d1c6a3e&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;ipv4_address&quot;: &quot;192.168.1.45&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;hostname&quot;: &quot;vcenter-active.corp.local&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;last_heartbeat&quot;: &quot;2024-01-15T14:32:18.456Z&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
+<strong><code>401 Unauthorized</code></strong> — Verify the administrator@vsphere.local password is correct and the account has API access permissions enabled.
+<strong><code>curl: (7) Failed to connect to &lt;vcenter-fqdn&gt; port 443: Name or service not known</code></strong> — Ensure the vCenter FQDN is resolvable and reachable from your network; check DNS and firewall rules.</p>
+</div>
 <p>Response field <code>state</code> must be <code>HEALTHY</code>; <code>active_node.ha_ip.ipv4.address</code> must show the promoted node IP.</p>
 <hr />
 <h2 id="2-check-vchalog-for-promotion-entry">2. Check vcha.log for Promotion Entry<a class="headerlink" href="#2-check-vchalog-for-promotion-entry" title="Permanent link">&para;</a></h2>
 <p>SSH to the currently active (promoted) node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@&lt;promoted-vcenter-ip&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Promotion complete&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sync lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@&lt;promoted-vcenter-ip&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Promotion complete&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sync lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>root@vcenter-01.lab.local:~#
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>root@vcenter-01.lab.local:~# grep -i &quot;Promotion complete&quot; /var/log/vcha/vcha.log
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024-01-15T09:47:32.156Z INFO vcha-watchdog: Promotion complete for node vcenter-01.lab.local
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15T09:47:45.203Z INFO vcha-watchdog: Cluster state synchronized after promotion
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>root@vcenter-01.lab.local:~# grep -i &quot;sync lag&quot; /var/log/vcha/vcha.log | tail -20
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15T09:45:12.891Z DEBUG vcha-sync: Sync lag: 245ms from passive node
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15T09:45:18.445Z DEBUG vcha-sync: Sync lag: 187ms from passive node
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T09:45:24.112Z DEBUG vcha-sync: Sync lag: 156ms from passive node
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T09:45:30.667Z DEBUG vcha-sync: Sync lag: 203ms from passive node
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2024-01-15T09:45:36.234Z DEBUG vcha-sync: Sync lag: 98ms from passive node
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>2024-01-15T09:45:42.891Z DEBUG vcha-sync: Sync lag: 142ms from passive node
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>2024-01-15T09:45:48.556Z DEBUG vcha-sync: Sync lag: 267ms from passive node
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>2024-01-15T09:46:01.123Z DEBUG vcha-sync: Sync lag: 89ms from passive node
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>root@vcenter-01.lab.local:~#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></strong> — Verify VCHA is initialized by running <code>vcha-cli status</code> and ensure you are connected to the promoted node.
+<strong><code>Permission denied</code></strong> — SSH as root or use <code>sudo</code> to access VCHA logs, which require elevated privileges.</p>
+</div>
 <p>Confirm the <code>Promotion complete</code> entry is present. The sync lag lines before failover must show lag was
 below 60 seconds — if lag exceeded 60 s, inspect whether any DB transactions were lost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>2026-06-11T03:42:17.123Z INFO vcha: Heartbeat timeout from active node (3 consecutive misses)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2026-06-11T03:42:17.124Z INFO vcha: Quorum reached — witness voted PASSIVE
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2026-06-11T03:42:18.001Z INFO vcha: Promotion complete. Node role: ACTIVE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>2026-06-11T03:42:17.123Z INFO vcha: Heartbeat timeout from active node (3 consecutive misses)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2026-06-11T03:42:17.124Z INFO vcha: Quorum reached — witness voted PASSIVE
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>2026-06-11T03:42:18.001Z INFO vcha: Promotion complete. Node role: ACTIVE
 </code></pre></div>
 <hr />
 <h2 id="3-verify-db-sync-lag-was-acceptable">3. Verify DB Sync Lag Was Acceptable<a class="headerlink" href="#3-verify-db-sync-lag-was-acceptable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>2024-01-15T09:42:33.847Z INFO vcha-watchdog[7234]: Replication lag detected: 245ms on node-02
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>2024-01-15T09:43:01.923Z WARN vcha-watchdog[7234]: Replication lag detected: 1203ms on node-03
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>2024-01-15T09:43:45.156Z INFO vcha-watchdog[7234]: Replication lag detected: 89ms on node-02
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>2024-01-15T09:44:12.441Z WARN vcha-watchdog[7234]: Replication lag detected: 2847ms on node-03
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>2024-01-15T09:45:03.672Z ERROR vcha-watchdog[7234]: Replication lag detected: 5234ms on node-03 — threshold exceeded
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>2024-01-15T09:45:30.189Z INFO vcha-watchdog[7234]: Replication lag detected: 156ms on node-02
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>2024-01-15T09:46:15.334Z WARN vcha-watchdog[7234]: Replication lag detected: 3102ms on node-03
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>2024-01-15T09:47:02.556Z INFO vcha-watchdog[7234]: Replication lag detected: 201ms on node-02
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>2024-01-15T09:47:48.891Z ERROR vcha-watchdog[7234]: Replication lag detected: 6145ms on node-03 — threshold exceeded
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>2024-01-15T09:48:22.445Z INFO vcha-watchdog[7234]: Replication lag detected: 134ms on node-02
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></strong> — Verify VCHA is installed and running with <code>systemctl status vcha</code> or check the correct log path for your vSphere version.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access VCHA log files.</p>
+</div>
 <p>Lag values below 30 s indicate a clean failover. Values between 30–60 s are acceptable but warrant
 investigation. Values above 60 s indicate the passive may have missed recent transactions; check whether
 any tasks or events appear missing from the vCenter inventory after reconnect.</p>
 <hr />
 <h2 id="4-verify-witness-connectivity">4. Verify Witness Connectivity<a class="headerlink" href="#4-verify-witness-connectivity" title="Permanent link">&para;</a></h2>
 <p>From the promoted active node, ping the witness over the HA network:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-ha-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-ha-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>56(84) bytes of data.
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>64 bytes from 192.168.100.50: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>64 bytes from 192.168.100.50: icmp_seq=2 ttl=64 time=2.41 ms
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>64 bytes from 192.168.100.50: icmp_seq=3 ttl=64 time=2.38 ms
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>64 bytes from 192.168.100.50: icmp_seq=4 ttl=64 time=2.39 ms
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>64 bytes from 192.168.100.50: icmp_seq=5 ttl=64 time=2.36 ms
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>--- 192.168.100.50 statistics ---
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>5 packets transmitted, 5 received, 0% packet loss, time 4012ms
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: -I: unknown host</code></strong> — Replace <code>-I vmk1</code> with <code>-I 192.168.100.10</code> (the actual IP bound to vmk1) or verify vmk1 exists with <code>esxcli network ip interface list</code>.
+<strong><code>PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1 ... 100% packet loss</code></strong> — Verify the witness appliance is running and reachable; check firewall rules and vMotion network connectivity with <code>esxcli network ip neighbor list</code>.
+<strong><code>ping: sendto: No route to host</code></strong> — Confirm vmk1 is on the same subnet as the witness IP or add a static route with <code>esxcli network ip route ipv4 add</code>.</p>
+</div>
 <p>Confirm packet loss = 0%. If the witness is unreachable, VCHA cannot perform automatic failover for
 future failures — restore witness connectivity immediately.</p>
 <hr />
@@ -10886,36 +10956,75 @@ future failures — restore witness connectivity immediately.</p>
 </ol>
 <h3 id="vcha-stuck-in-isolated-state">VCHA Stuck in "Isolated" State<a class="headerlink" href="#vcha-stuck-in-isolated-state" title="Permanent link">&para;</a></h3>
 <p>If the VCHA cluster is stuck and neither node can determine quorum:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster?action=failover&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster?action=failover&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;value&quot;: null
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the vCenter certificate into your system's trusted store.
+<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"The user is not authenticated.","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}</code></strong> — Verify the vCenter FQDN is correct and the administrator@vsphere.local password is URL-encoded if it contains special characters.
+<strong><code>{"type":"com.vmware.vapi.std.errors.error","value":{"messages":[{"default_message":"VCHA cluster is not in a valid state for failover.","id":"com.vmware.vapi.std.errors.error"}]}}</code></strong> — Ensure VCHA is configured and healthy by checking cluster status before attempting failover.</p>
+</div>
 <p>If <code>force</code> failover is required (witness unreachable, split-brain):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false, &quot;force&quot;: true}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false, &quot;force&quot;: true}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host</code></strong> — Verify the target API endpoint hostname is correct and resolvable in your network DNS.
+<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure your API authentication token or credentials are valid and included in the request headers.</p>
+</div>
 <p>The <code>force: true</code> flag bypasses witness quorum — use only when both nodes are healthy and witness
 connectivity cannot be restored within the maintenance window.</p>
 <h3 id="db-sync-lag-disk-space-on-passive">DB Sync Lag — Disk Space on Passive<a class="headerlink" href="#db-sync-lag-disk-space-on-passive" title="Permanent link">&para;</a></h3>
 <p>If sync lag was high, check <code>/storage/db/</code> utilisation on the passive (now active) node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/vpostgres/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/vpostgres/*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>/dev/sda3       500G  387G  113G  78% /storage/db
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>4.2G    /storage/db/vpostgres/base
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>12G /storage/db/vpostgres/global
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>2.1G    /storage/db/vpostgres/pg_wal
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>1.8G    /storage/db/vpostgres/pg_xact
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>890M    /storage/db/vpostgres/pg_tblspc
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>df: '/storage/db': No such file or directory</code></strong> — Verify the mount point exists and is mounted with <code>mount | grep /storage/db</code>.
+<strong><code>du: cannot access '/storage/db/vpostgres/*': Permission denied</code></strong> — Run the commands with <code>sudo</code> or ensure your user has read permissions on the directory with <code>chmod +rx</code>.</p>
+</div>
 <p>If near capacity, clear rotated logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/storage/log': No such file or directory</code></strong> — Verify the log directory path exists with <code>ls -ld /storage/log</code> and correct the path if needed.
+<strong><code>find: '/storage/log': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read and execute permissions on the directory with <code>chmod u+rx /storage/log</code>.
+<strong><code>find: warning: -delete: cannot delete '/storage/log/archive-2024-01-15.gz': Permission denied</code></strong> — Change ownership or permissions of the log files with <code>sudo chown $USER:$USER /storage/log/*.gz</code> or run the entire command with <code>sudo</code>.</p>
+</div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># PowerCLI — confirm HEALTHY state</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VchaState</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClusterState</span><span class="p">,</span> <span class="n">ActiveNode</span><span class="p">,</span> <span class="n">PassiveNode</span><span class="p">,</span> <span class="n">WitnessNode</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Confirm both data nodes and witness are green</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">(</span><span class="nb">Get-VchaState</span><span class="p">).</span><span class="n">ClusterState</span> <span class="o">-eq</span> <span class="s2">&quot;HEALTHY&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># PowerCLI — confirm HEALTHY state</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Get-VchaState</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClusterState</span><span class="p">,</span> <span class="n">ActiveNode</span><span class="p">,</span> <span class="n">PassiveNode</span><span class="p">,</span> <span class="n">WitnessNode</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c"># Confirm both data nodes and witness are green</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">(</span><span class="nb">Get-VchaState</span><span class="p">).</span><span class="n">ClusterState</span> <span class="o">-eq</span> <span class="s2">&quot;HEALTHY&quot;</span>
 </code></pre></div>
 <p>Optionally run a controlled test failover to confirm VCHA is fully operational:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># UI: vCenter HA → Actions → Initiate Failover</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># This returns to the original active node after a brief outage</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Test-VchaFailover</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># UI: vCenter HA → Actions → Initiate Failover</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c"># This returns to the original active node after a brief outage</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nb">Test-VchaFailover</span>
 </code></pre></div>
 <p>Clear the vCenter alarm after confirming HEALTHY:
 vSphere Client → <strong>Alarms → vCenter High Availability state changed → Reset to Green</strong>.</p>
@@ -10981,7 +11090,7 @@ vSphere Client → <strong>Alarms → vCenter High Availability state changed �
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

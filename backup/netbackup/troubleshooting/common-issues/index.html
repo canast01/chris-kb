@@ -7532,36 +7532,129 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Review bpbrm log on master</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>tail<span class="w"> </span>-200<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm/log.&lt;yyyymmdd&gt;
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check catalog backup job history</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog<span class="w"> </span>-Listdead<span class="w"> </span>-d<span class="w"> </span><span class="m">01</span>/01/1970<span class="w"> </span><span class="m">00</span>:00:00
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@master# bpps -a | grep bpcd
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    root   2847     1  0 08:15 ?        00:00:02 /usr/openv/netbackup/bin/bpcd -standalone
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Force an immediate catalog backup</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>NBU_Catalog_Backup
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check catalog database consistency</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-verbose
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>root@master# telnet client-prod-01 13782
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Trying 192.168.10.45...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Connected to client-prod-01.example.com.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Escape character is &#39;^]&#39;.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Connection closed by foreign host.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>root@master# tail -200 /usr/openv/netbackup/logs/bpcd/log.20240115
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>01/15/2024 08:15:32 bpcd: started
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>01/15/2024 08:15:35 bpcd: listening on port 13782
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>01/15/2024 08:16:12 bpcd: connection from 192.168.10.10 (master-01)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>01/15/2024 08:16:13 bpcd: backup job 12847 initiated
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>01/15/2024 08:17:45 bpcd: job 12847 completed successfully
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>root@master# tail -200 /usr/openv/netbackup/logs/bpbrm/log.20240115
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>01/15/2024 08:16:10 bpbrm: job 12847 queued for client client-prod-01
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>01/15/2024 08:16:12 bpbrm: initiating connection to 192.168.10.45:13782
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>01/15/2024 08:16:13 bpbrm: job 12847 sent to bpcd
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>01/15/2024 08:17:45 bpbrm: job 12847 completed with status 0
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all STU free space</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpstulist<span class="w"> </span>-U
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpcd: not found in process list</code></strong> — Restart bpcd on the client with <code>/usr/openv/netbackup/bin/bpcd -standalone</code> or verify the NetBackup installation is complete.
+<strong><code>telnet: Unable to connect to remote host: Connection refused</code></strong> — Verify port 13782 is open in the firewall between master and client, and that bpcd is listening on the client.
+<strong><code>tail: cannot open '/usr/openv/netbackup/logs/bpcd/log.20240115' for reading: No such file or directory</code></strong> — Correct the log filename date format (use <code>ls /usr/openv/netbackup/logs/bpcd/</code> to find the correct log file) or check that bpcd has actually run on that date.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check catalog backup job history</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog<span class="w"> </span>-Listdead<span class="w"> </span>-d<span class="w"> </span><span class="m">01</span>/01/1970<span class="w"> </span><span class="m">00</span>:00:00
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check disk pool usage (MSDP / AdvancedDisk)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Force an immediate catalog backup</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>NBU_Catalog_Backup
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expire old images to reclaim space</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bpexpdate<span class="w"> </span>-policy<span class="w"> </span>&lt;policyname&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span><span class="w"> </span>-backupid<span class="w"> </span>&lt;backup-id&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Run image cleanup to actually reclaim the space</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>bpimage<span class="w"> </span>-cleanup
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check catalog database consistency</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-verbose
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check MSDP pool status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>&lt;msdp-path&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check fingerprint database health</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cacontrol<span class="w"> </span>--dbstat
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Review dedupe log for anomalies</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/spoold/log.&lt;yyyymmdd&gt;
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Job ID: 2847362918
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Policy: NBU_Catalog
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Client: nbu-master-01.corp.local
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Schedule: NBU_Catalog_Full
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Status: COMPLETED
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Start Time: 01/15/2024 02:30:15
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>End Time: 01/15/2024 02:45:22
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Elapsed Time: 15 minutes 7 seconds
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Job ID: 2847251643
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Policy: NBU_Catalog
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Client: nbu-master-01.corp.local
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Schedule: NBU_Catalog_Incr
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Status: COMPLETED
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Start Time: 01/14/2024 02:30:08
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>End Time: 01/14/2024 02:31:44
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Elapsed Time: 1 minute 36 seconds
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Submitting backup request for policy NBU_Catalog_Backup...
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Job submitted successfully. Job ID: 2847398472
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Backup initiated on nbu-master-01.corp.local
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Checking catalog database consistency...
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Database: /usr/openv/netbackup/db/data
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Status: CONSISTENT
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Total Records: 1247834
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Orphaned Records: 0
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Integrity Check: PASSED
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Consistency verification completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bplist: invalid date format</code></strong> — Use the correct date format <code>MM/DD/YYYY HH:MM:SS</code> or omit the <code>-d</code> flag to list all jobs.
+<strong><code>bpbackup: policy NBU_Catalog_Backup not found</code></strong> — Verify the policy name exists with <code>bppllist</code> and use the exact policy name without extra characters.
+<strong><code>bpdbm: database locked by another process</code></strong> — Wait for any running backup or maintenance jobs to complete, or restart the NetBackup database manager with <code>bpdbm -restart</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all STU free space</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpstulist<span class="w"> </span>-U
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check disk pool usage (MSDP / AdvancedDisk)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expire old images to reclaim space</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>bpexpdate<span class="w"> </span>-policy<span class="w"> </span>&lt;policyname&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span><span class="w"> </span>-backupid<span class="w"> </span>&lt;backup-id&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Run image cleanup to actually reclaim the space</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>bpimage<span class="w"> </span>-cleanup
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>STU List:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>STU Name                          Media Server         Free Space (GB)  Total Space (GB)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>STU_PROD_001                      media-srv-01.corp    2847.5           5120.0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>STU_PROD_002                      media-srv-02.corp    1203.8           5120.0
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>STU_PROD_003                      media-srv-03.corp    4092.1           5120.0
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>STU_LEGACY_001                    media-srv-04.corp    512.3            2048.0
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Disk Pool List:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Pool Name              Media Server         Type       Free Space (GB)  Status
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>MSDP_Primary          media-srv-01.corp    PureDisk   8456.2           Active
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>MSDP_Secondary        media-srv-02.corp    PureDisk   3124.7           Active
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>AdvancedDisk_Archive  media-srv-03.corp    PureDisk   15892.4          Active
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Expiring images for policy &#39;DAILY_BACKUPS&#39; with backup ID &#39;bkp_20240115_001&#39;...
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Images marked for expiration: 47
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Reclaim potential: 523.6 GB
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Running image cleanup...
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Cleanup started at 2024-01-15 14:32:18
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Processing 47 expired images...
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Reclaimed space: 523.6 GB
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Cleanup completed successfully at 2024-01-15 14:35:42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpstulist: command not found</code></strong> — Ensure the NetBackup client or media server binaries are in your PATH, or source the NetBackup environment setup script (typically <code>. /usr/openv/netbackup/bin/bp.env</code>).
+<strong><code>nbdevquery: invalid option -- 's'</code></strong> — Use the correct syntax <code>nbdevquery -listdp -stype PureDisk</code> without extra spaces, or check your NetBackup version for the correct flag format.
+<strong><code>bpimage -cleanup: No images to process</code></strong> — Verify that expired images exist by running <code>bpimage -list</code> first; if none exist, ensure <code>bpexpdate</code> completed successfully and images were actually marked for expiration.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check MSDP pool status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>&lt;msdp-path&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check fingerprint database health</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>cacontrol<span class="w"> </span>--dbstat
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Review dedupe log for anomalies</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/spoold/log.&lt;yyyymmdd&gt;
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVVMFq3DAQve9XDLkvJTalJYWWtb2HQpOGOKFnWR7bamTJSPIuphT6Ef3Cfkln5Gw2BfWQk2R75s1782bcKocyKGuuwKl-CJtNfQUX3wYRQHkIA4JfxinY8dMF_PCDmJACKUOYXuPPzY6C6yDC7CF7C39-_QapFZoA0hpDYRTbzR7bZHJBydfYKgGjMKJHBwer5xGhmf2SzCgpoxRBaNtDI-TjPEEnlP4PfkXRt1YruRAr4T2Myo8iyCEZvWc2wgei8QbGSMujO9DjkxZ1UGEBbb1Pt-KSAHaX6W_Z2icXoJlkC8K0QMiqW2Cy9PIyf_c-AzuhiT30iFBgZx3CYmdosFcmjZtzQwaUj4TbuDECxwrUIQ-EAPdfaqBjsD7A5wrQOevSbjD_Is2_yJ7r6KBamJyVSA3lcmGi_nSqh237OvLFmTwTffJeGaCBgWYhcEvz5-C7bT7AUajAOqQwEjVb0pGxQZmev6eHhQWVaUHlWdB1Xd2SC1ZHNfX9A3SOJPhJSHydoJIF3c2GHGibEbZE0isaKCOXiE0QBCn_nd-jCgObF5_SY8w6qrSOKuqwjl-RiDjrYZliG28wFGsNJmI1QrAQ5_-0pF_rNOjZGC8HbGdOZVAW4ZAE8Q8DNB7ICbaOfxNr8fRmsYB9WsCeBdyhj7txZsybp2jEgOqM61JycblOC_2zjkJrcMQsvYz7s4Sb4gHK3fMCSHRBdYpcQDgIrVpeaq7yYuOTkJsath9htx7FepTrUa3Hnv4BMSY7XXLaqhienS45jWXMzE6XnAyOINnpklPHIl52uuSbv3ll4Y8=?" /></p>
@@ -7611,7 +7704,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

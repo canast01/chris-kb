@@ -9298,6 +9298,34 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;vcenters&quot;: [
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    {
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>      &quot;id&quot;: &quot;vcenter-1&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      &quot;name&quot;: &quot;vc-prod-01.example.local&quot;,
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      &quot;ip_address&quot;: &quot;192.168.1.45&quot;,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      &quot;version&quot;: &quot;7.0.3&quot;,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      &quot;status&quot;: &quot;CONNECTED&quot;,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      &quot;last_seen&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    },
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    {
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      &quot;id&quot;: &quot;vcenter-2&quot;,
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      &quot;name&quot;: &quot;vc-dr-01.example.local&quot;,
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>      &quot;ip_address&quot;: &quot;192.168.2.50&quot;,
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>      &quot;version&quot;: &quot;6.7.0&quot;,
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      &quot;status&quot;: &quot;CONNECTED&quot;,
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>      &quot;last_seen&quot;: &quot;2024-01-15T14:31:45Z&quot;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    }
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  ],
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  &quot;total_count&quot;: 2
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the CA certificate into your system trust store with <code>curl -cacert /path/to/ca.pem</code>.
+<strong><code>{"error": "Unauthorized", "message": "Invalid or expired token"}</code></strong> — Regenerate the API token in Aria Operations for Networks UI and ensure it's passed correctly in the Authorization header.
+<strong><code>curl: (7) Failed to connect to vrni.example.local port 443: Connection refused</code></strong> — Verify the VRNI appliance hostname/IP is correct and the management interface is accessible on port 443 using <code>ping</code> and <code>telnet vrni.example.local 443</code>.</p>
+</div>
 <hr />
 <h2 id="network-level-access-control">Network-Level Access Control<a class="headerlink" href="#network-level-access-control" title="Permanent link">&para;</a></h2>
 <p>Firewall rules required for vRNI components:</p>
@@ -9366,22 +9394,22 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
 <p>Restrict Platform VM port 443 to management VLAN only — deny direct access from production VLANs.</p>
 <hr />
 <h2 id="vcenter-service-account-minimum-privilege">vCenter Service Account (Minimum Privilege)<a class="headerlink" href="#vcenter-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Administration → Global Permissions → Add Permission
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  User: svc-vrni-vc@corp.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Role: Read Only
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Propagate to children: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Administration → Global Permissions → Add Permission
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  User: svc-vrni-vc@corp.local
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Role: Read Only
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Propagate to children: Yes
 </code></pre></div>
 <hr />
 <h2 id="nsx-t-service-account-minimum-privilege">NSX-T Service Account (Minimum Privilege)<a class="headerlink" href="#nsx-t-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NSX-T Manager → System → User Management → Add User
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Username: svc-vrni-nsx
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Role: Auditor (read-only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>NSX-T Manager → System → User Management → Add User
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Username: svc-vrni-nsx
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Role: Auditor (read-only)
 </code></pre></div>
 <p>Never use NSX admin credentials — vRNI only reads topology. A separate account with NSX security group write access is needed only if you push microsegmentation recommendations back to NSX.</p>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All admin actions are logged. Access via:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Settings → Audit Logs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Settings → Audit Logs
 </code></pre></div></p>
 <p>Forward to SIEM via syslog (Settings → Notifications → Syslog). Alert on:
 - Failed login attempts
@@ -9415,7 +9443,7 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

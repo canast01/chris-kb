@@ -7735,69 +7735,188 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Disable the default &#39;dcnm&#39; local OS account if not needed</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>usermod<span class="w"> </span>-L<span class="w"> </span>dcnm<span class="w">   </span><span class="c1"># lock (disable password login)</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/issue.net<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="s">WARNING: This system is for authorized use only.</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s">All connections are monitored and recorded.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s">Unauthorized access or use is prohibited.</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s">EOF</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@dcnm-dc1.corp.example.com&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last login: Wed Mar 13 14:22:18 2024 from 10.45.12.89
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Welcome to Cisco DCNM 12.1.3
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>dcnm-dc1:~# passwd root
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Changing password for user root.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>New password: 
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Retype new password: 
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>passwd: all authentication tokens updated successfully.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dcnm-dc1:~# usermod -L dcnm
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>dcnm-dc1:~#
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check available security updates</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Apply security patches</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Reboot if kernel update was applied</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>needs-restarting<span class="w"> </span>-r<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># After reboot, verify DCNM services restarted</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>passwd: Authentication token manipulation error</code></strong> — Ensure the root filesystem is not mounted read-only and SELinux is not blocking password changes; run <code>mount -o remount,rw /</code> if needed.
+<strong><code>usermod: user 'dcnm' does not exist</code></strong> — Verify the dcnm OS account exists on this DCNM appliance version with <code>id dcnm</code> before attempting to lock it.
+<strong><code>Permission denied (publickey,password)</code></strong> — Confirm SSH root login is enabled in <code>/etc/ssh/sshd_config</code> (PermitRootLogin yes) and restart sshd with <code>systemctl restart sshd</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/issue.net<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s">WARNING: This system is for authorized use only.</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">All connections are monitored and recorded.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">Unauthorized access or use is prohibited.</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">EOF</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all active services</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>active
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable services not required for DCNM</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>avahi-daemon
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>cups
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>postfix<span class="w">   </span><span class="c1"># DCNM uses its own SMTP configuration</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify DCNM services are unaffected</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On DCNM appliance, configure SNMPv3 for inbound NMS polling</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># (DCNM acts as an SNMP agent for its own health)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Navigate to Administration &gt; SNMP Credentials</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set: Auth protocol SHA, Priv protocol AES-128</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Remove any v1/v2c community strings</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /etc/issue.net: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
+**<code>bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted</code>EOF')<code>** — Ensure the closing</code>EOF` is on its own line with no leading whitespace.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check available security updates</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Apply security patches</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Reboot if kernel update was applied</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>needs-restarting<span class="w"> </span>-r<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># After reboot, verify DCNM services restarted</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify no plaintext content is served on port 80</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{redirect_url}&quot;</span><span class="w"> </span>http://dcnm-dc1.corp.example.com/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: redirect to https://...</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Loading repository metadata from cache
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Resolving Dependencies
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>--&gt; Running transaction check
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>---&gt; Package kernel.x86_64 0:3.10.0-1160.99.1.el7 will be updated
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>---&gt; Package openssl.x86_64 1:1.0.2k-26.el7_9 will be updated
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>---&gt; Package glibc.x86_64 0:2.17-326.el7_9 will be updated
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>--&gt; Processing Dependency: glibc = 0.2.17-326.el7_9 for package: glibc-common
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>--&gt; Finished Dependency Resolution
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Updated:
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  kernel.x86_64 0:3.10.0-1160.101.1.el7
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  openssl.x86_64 1:1.0.2k-26.el7_9.5
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  glibc.x86_64 0:2.17-326.el7_9.6
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Complete!
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Reboot required
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>DCNM Server Status:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Status: RUNNING
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  PID: 4827
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  Uptime: 2 days, 14 hours, 23 minutes
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  Version: 11.4.1.2000
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify NTP</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: synchronized: yes</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Configure NTP if not set</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vi<span class="w"> </span>/etc/chrony.conf
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># server 10.10.0.10 prefer</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># server 10.10.0.11</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Package: dcnm-server-11.4.1-2000.el7.x86_64 (cisco-dcnm) Requires: openssl &lt; 1.0.2k-27</code></strong> — Verify DCNM version compatibility with the target OS security patch level before applying updates, or use <code>yum update --security --skip-broken -y</code> to defer conflicting packages.
+<strong><code>Error: needs-restarting: command not found</code></strong> — Install the yum-utils package with <code>yum install -y yum-utils</code> to enable the needs-restarting utility.
+<strong><code>Error: /usr/local/cisco/dcm/dcnm/sbin/dcnm-server: No such file or directory</code></strong> — Verify DCNM installation path and ensure the service was properly installed; check actual path with <code>find / -name dcnm-server -type f 2&gt;/dev/null</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all active services</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>active
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Disable services not required for DCNM</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>avahi-daemon
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>cups
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>postfix<span class="w">   </span><span class="c1"># DCNM uses its own SMTP configuration</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expect: reference from NTP server, offset &lt; 50ms</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify DCNM services are unaffected</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Forward DCNM OS syslog to SIEM</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-siem.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s">*.* @@10.10.3.50:514    # TCP syslog to SIEM</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">EOF</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Test</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>logger<span class="w"> </span>-t<span class="w"> </span>dcnm-test<span class="w"> </span><span class="s2">&quot;Syslog forwarding test message&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>UNIT                                        LOAD   ACTIVE SUB       DESCRIPTION
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>auditd.service                              loaded active running   Security Auditing Service
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>dcnm-server.service                         loaded active running   Cisco DCNM Server
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>dcnm-fm.service                             loaded active running   Cisco DCNM Fabric Manager
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>dcnm-ha.service                             loaded active running   Cisco DCNM HA Service
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>networking.service                          loaded active running   Networking Service
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ssh.service                                 loaded active running   OpenSSH server daemon
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>syslog-ng.service                           loaded active running   System Logger
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>...
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Removed /etc/systemd/system/multi-user.target.wants/avahi-daemon.service.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Removed /etc/systemd/system/multi-user.target.wants/cups.service.
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Removed /etc/systemd/system/multi-user.target.wants/bluetooth.service.
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Removed /etc/systemd/system/multi-user.target.wants/postfix.service.
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>DCNM Server Status: RUNNING (PID: 4827)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>DCNM FM Status: RUNNING (PID: 4891)
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>DCNM HA Status: RUNNING (PID: 4856)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to disable unit, unit /etc/systemd/system/multi-user.target.wants/postfix.service does not exist.</code></strong> — Verify the service is installed with <code>systemctl list-unit-files | grep postfix</code> before attempting to disable it.
+<strong><code>Unit dcnm-server.service not found.</code></strong> — Ensure DCNM is properly installed and the systemd service file exists at <code>/etc/systemd/system/dcnm-server.service</code>.
+<strong><code>Permission denied</code></strong> — Run the entire script with <code>sudo</code> or as root user since systemctl disable/enable operations require elevated privileges.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On DCNM appliance, configure SNMPv3 for inbound NMS polling</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># (DCNM acts as an SNMP agent for its own health)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Navigate to Administration &gt; SNMP Credentials</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Set: Auth protocol SHA, Priv protocol AES-128</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Remove any v1/v2c community strings</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify no plaintext content is served on port 80</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{redirect_url}&quot;</span><span class="w"> </span>http://dcnm-dc1.corp.example.com/
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Expected: redirect to https://...</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>https://dcnm-dc1.corp.example.com/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 80: Connection refused</code></strong> — Verify the DCNM appliance is running and port 80 is accessible; check firewall rules and network connectivity to the host.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Remove the <code>-k</code> flag if you want to validate certificates, or ensure your CA bundle is current; the <code>-k</code> flag bypasses this check for self-signed certs.
+<strong><code>curl: (6) Could not resolve host name</code></strong> — Confirm DNS resolution is working and the hostname <code>dcnm-dc1.corp.example.com</code> is registered in your DNS or hosts file.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify NTP</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Expected: synchronized: yes</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Configure NTP if not set</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vi<span class="w"> </span>/etc/chrony.conf
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># server 10.10.0.10 prefer</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># server 10.10.0.11</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Expect: reference from NTP server, offset &lt; 50ms</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Local time: Wed 2024-01-17 14:32:45 UTC
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>           Universal time: Wed 2024-01-17 14:32:45 UTC
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>                 RTC time: Wed 2024-01-17 14:32:45
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>System clock synchronized: yes
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>              NTP service: active
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>       RTC in local TZ: no
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Reference ID    : 10.10.0.10 (ntp-primary.corp.local)
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Stratum         : 2
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Ref time (UTC)  : Wed Jan 17 14:32:40 2024
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>System time     : 0.000234567 seconds fast of NTP time
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Frequency       : 12.345 ppm fast
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Residual freq   : +0.123 ppm
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Skew            : 0.456 ppm
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Root delay      : 18.234 ms
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Root dispersion : 32.567 ms
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>Max error       : 45.123 ms
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>Min error       : 0.012 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chronyc: Could not talk to daemon</code></strong> — Ensure chronyd is running with <code>systemctl start chronyd</code> and check socket permissions.
+<strong><code>Failed to set NTP servers: Invalid argument</code></strong> — Verify NTP server IPs are reachable and properly formatted in <code>/etc/chrony.conf</code> without trailing comments on server lines.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Forward DCNM OS syslog to SIEM</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-siem.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="s">*.* @@10.10.3.50:514    # TCP syslog to SIEM</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s">EOF</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Test</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>logger<span class="w"> </span>-t<span class="w"> </span>dcnm-test<span class="w"> </span><span class="s2">&quot;Syslog forwarding test message&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>(no output — command completes silently)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>(no output — command completes silently)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Job for rsyslog.service failed because the control process exited with error code.</code></strong> — Verify the rsyslog configuration syntax with <code>rsyslog -N1</code> and check <code>/var/log/syslog</code> for parsing errors in the new conf file.
+<strong><code>logger: send to SIEM 10.10.3.50:514 failed: Connection refused</code></strong> — Confirm the SIEM syslog listener is running on port 514 and reachable from the DCNM host with <code>nc -zv 10.10.3.50 514</code>.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7835,7 +7954,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

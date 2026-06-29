@@ -8518,68 +8518,204 @@ VM image management, patching via Azure Update Manager, and service upgrades.
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check patch compliance status</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>update-management-v2<span class="w"> </span>assess<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  {
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.compute/virtualmachines/web-vm-01/providers/microsoft.maintenance/configurationassignments/maint-assign-001&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;name&quot;: &quot;maint-assign-001&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;type&quot;: &quot;Microsoft.Maintenance/configurationAssignments&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  }
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>{
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.compute/virtualmachines/web-vm-01/providers/microsoft.maintenance/applyupdates/20240115T143022Z&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;name&quot;: &quot;20240115T143022Z&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;properties&quot;: {
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &quot;lastUpdateTime&quot;: &quot;2024-01-15T14:30:22.456Z&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;resourceId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.compute/virtualmachines/web-vm-01&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;status&quot;: &quot;InProgress&quot;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  },
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;type&quot;: &quot;Microsoft.Maintenance/applyUpdates&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>{
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;assessmentId&quot;: &quot;assess-20240115-prod&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  &quot;machineId&quot;: &quot;web-vm-01&quot;,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;patchCount&quot;: 12,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;status&quot;: &quot;Compliant&quot;,
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;lastAssessmentTime&quot;: &quot;2024-01-15T14:25:00Z&quot;,
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  &quot;criticalUpdates&quot;: 2,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  &quot;securityUpdates&quot;: 5
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the VM name and resource group name are correct and the VM exists in your subscription.
+<strong><code>Operation returned an invalid status code 'Forbidden'</code></strong> — Ensure your Azure account has the Contributor or Owner role on the resource group or subscription.
+<strong><code>The operation timed out. Please try again later.</code></strong> — Retry the command after a few moments, as the maintenance service may be temporarily unavailable.</p>
+</div>
 <p>Patching waves:
 - Development: Patch Tuesday + 1 day (auto-reboot allowed)
 - Staging: Patch Tuesday + 3 days
 - Production: maintenance window (manual reboot approval required)</p>
 <h2 id="aks-upgrade">AKS Upgrade<a class="headerlink" href="#aks-upgrade" title="Permanent link">&para;</a></h2>
 <p>AKS supports N-2 minor Kubernetes versions. Clusters on unsupported versions receive no patches:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check available upgrades</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>aks<span class="w"> </span>get-upgrades<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Upgrade control plane first</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>aks<span class="w"> </span>upgrade<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30<span class="w"> </span>--no-wait
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Monitor upgrade progress</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;provisioningState&#39;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Upgrade node pools after control plane completes</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>--name<span class="w"> </span>&lt;nodepool-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check available upgrades</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>aks<span class="w"> </span>get-upgrades<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Upgrade control plane first</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>aks<span class="w"> </span>upgrade<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30<span class="w"> </span>--no-wait
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Monitor upgrade progress</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;provisioningState&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Upgrade node pools after control plane completes</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--name<span class="w"> </span>&lt;nodepool-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name             ResourceGroup    CurrentVersion    Upgrades
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>---------------  ---------------  ----------------  ----------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-cluster-01  infrastructure   1.28.5            1.29.11, 1.30.0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Kubernetes version upgrade initiated for cluster prod-cluster-01
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Succeeded
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The resource 'Microsoft.ContainerService/managedClusters/&lt;cluster-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the cluster name and resource group name are correct and exist in your subscription.
+<strong><code>Upgrade failed: Node pool &lt;nodepool-name&gt; not found in cluster &lt;cluster-name&gt;.</code></strong> — Confirm the node pool name matches exactly (case-sensitive) by running <code>az aks nodepool list --cluster-name &lt;cluster-name&gt; -g &lt;rg&gt;</code>.
+<strong><code>Kubernetes version 1.30 is not available for upgrade from version 1.28.5.</code></strong> — Check available versions with <code>az aks get-upgrades --name &lt;cluster-name&gt; -g &lt;rg&gt;</code> and select a supported target version.</p>
+</div>
 <h2 id="service-retirement-tracking">Service Retirement Tracking<a class="headerlink" href="#service-retirement-tracking" title="Permanent link">&para;</a></h2>
 <p>Monitor Azure service retirements:
 - Azure Portal → Home → Recommendations → Retirements
 - Subscribe to Azure Updates: <a href="https://azure.microsoft.com/en-us/updates/">azure.microsoft.com/en-us/updates</a>
 - Azure Advisor: Operational Excellence recommendations</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Advisor recommendations</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>OperationalExcellence<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;Upgrade&#39;)]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check Advisor recommendations</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>OperationalExcellence<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;Upgrade&#39;)]&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  {
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.compute/virtualmachines/vm-app-01/providers/microsoft.advisor/recommendations/upgrade-vm-sku-001&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    &quot;name&quot;: &quot;upgrade-vm-sku-001&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    &quot;type&quot;: &quot;Microsoft.Advisor/recommendations&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;category&quot;: &quot;OperationalExcellence&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    &quot;impact&quot;: &quot;Medium&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    &quot;shortDescription&quot;: {
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;problem&quot;: &quot;VM SKU is outdated&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;solution&quot;: &quot;Upgrade to newer generation VM SKU for better performance&quot;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    },
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    &quot;description&quot;: &quot;Your virtual machine vm-app-01 is running on Standard_D2s_v3. Consider upgrading to Standard_D2s_v4 for improved CPU and memory efficiency.&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    &quot;lastUpdated&quot;: &quot;2024-01-15T10:32:45Z&quot;,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    &quot;resourceMetadata&quot;: {
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;resourceId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.compute/virtualmachines/vm-app-01&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    }
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  },
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  {
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourcegroups/prod-rg/providers/microsoft.sql/servers/sqldb-prod/databases/appdb/providers/microsoft.advisor/recommendations/upgrade-sql-edition-002&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    &quot;name&quot;: &quot;upgrade-sql-edition-002&quot;,
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    &quot;type&quot;: &quot;Microsoft.Advisor/recommendations&quot;,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    &quot;category&quot;: &quot;OperationalExcellence&quot;,
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    &quot;impact&quot;: &quot;High&quot;,
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    &quot;shortDescription&quot;: {
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>      &quot;problem&quot;: &quot;SQL Database edition is outdated&quot;,
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &quot;solution&quot;: &quot;Upgrade SQL Database to latest edition for security and performance&quot;
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    },
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    &quot;description&quot;: &quot;Your SQL Database appdb is running on Standard edition. Upgrade to Premium edition to benefit from enhanced security features and SLA improvements.&quot;,
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    &quot;lastUpdated&quot;: &quot;2024-01-14T09:15:22Z&quot;
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>  }
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --subscription</code></strong> — Add <code>--subscription &lt;subscription-id&gt;</code> or set the default subscription with <code>az account set --subscription &lt;id&gt;</code>.
+<strong><code>ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/...'</code></strong> — Ensure your Azure account has Reader or Advisor role assigned at the subscription level using <code>az role assignment create</code>.</p>
+</div>
 <h2 id="subscription-lifecycle">Subscription Lifecycle<a class="headerlink" href="#subscription-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all subscriptions in tenant</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Move subscription to different management group</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>management-group<span class="w"> </span>subscriptions<span class="w"> </span>add<span class="w"> </span>--name<span class="w"> </span>&lt;sub-id&gt;<span class="w"> </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Decommission subscription</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 1. Cancel all resources</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 2. Remove from management groups</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 3. Cancel subscription (requires Billing Admin role)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;sub-id&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Cancel in Azure Portal → Subscriptions → Cancel</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all subscriptions in tenant</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Move subscription to different management group</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>management-group<span class="w"> </span>subscriptions<span class="w"> </span>add<span class="w"> </span>--name<span class="w"> </span>&lt;sub-id&gt;<span class="w"> </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Decommission subscription</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 1. Cancel all resources</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 2. Remove from management groups</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 3. Cancel subscription (requires Billing Admin role)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;sub-id&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Cancel in Azure Portal → Subscriptions → Cancel</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                                   CloudName    SubscriptionId                       TenantId                             State
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>------------------------------------   -----------  ------------------------------------  ------------------------------------  -------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Production-East                        AzureCloud   a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d  f5e6d7c8-b9a0-1c2d-3e4f-5a6b7c8d9e0f  Enabled
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Development-West                       AzureCloud   b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e  f5e6d7c8-b9a0-1c2d-3e4f-5a6b7c8d9e0f  Enabled
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Staging-Central                        AzureCloud   c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f  f5e6d7c8-b9a0-1c2d-3e4f-5a6b7c8d9e0f  Enabled
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>(no output — command completes silently)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Subscription &#39;a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&#39; set as default.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.</code></strong> — Verify the subscription ID is correct and you have access to it using <code>az account list</code>.
+<strong><code>You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/providers/Microsoft.Management/managementGroups/&lt;mg-id&gt;'.</code></strong> — Ensure your account has Management Group Contributor or Owner role on the target management group.</p>
+</div>
 <p>90-day hold period after cancellation before permanent deletion.</p>
 <h2 id="resource-group-expiry-non-production">Resource Group Expiry (Non-Production)<a class="headerlink" href="#resource-group-expiry-non-production" title="Permanent link">&para;</a></h2>
 <p>Tag non-production resource groups with expiry:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Tag with expiry date</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">ExpiryDate</span><span class="o">=</span><span class="m">2026</span>-12-31<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>dev
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Script to find expired RGs (run monthly)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>az<span class="w"> </span>group<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[?tags.ExpiryDate &lt; &#39;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&#39;].{Name:name,ExpiryDate:tags.ExpiryDate}&quot;</span><span class="w"> </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Tag with expiry date</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">ExpiryDate</span><span class="o">=</span><span class="m">2026</span>-12-31<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>dev
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Script to find expired RGs (run monthly)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>az<span class="w"> </span>group<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[?tags.ExpiryDate &lt; &#39;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&#39;].{Name:name,ExpiryDate:tags.ExpiryDate}&quot;</span><span class="w"> </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                          ExpiryDate
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------------------------------  ----------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>rg-legacy-services            2024-08-15
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>rg-temp-testing               2025-03-22
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>rg-sandbox-old                2024-11-10
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The following arguments are required: --name, --tags</code></strong> — Ensure <code>&lt;rg-name&gt;</code> is replaced with an actual resource group name and tags are formatted as key=value pairs.
+<strong><code>InvalidTemplateDeployment : The template is invalid: The property 'tags' cannot be found on the resource of type 'Microsoft.Resources/resourceGroups'.</code></strong> — Verify the resource group exists and you have sufficient permissions (Contributor or Owner role) to modify tags.</p>
+</div>
 <p>Expired RGs are notified to owner 14 days before deletion.</p>
 <h2 id="entra-id-app-registration-lifecycle">Entra ID App Registration Lifecycle<a class="headerlink" href="#entra-id-app-registration-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List app registrations with credential expiry</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[*].{AppId:appId,DisplayName:displayName}&quot;</span><span class="w"> </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check credential expiry dates</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Rotate client secret</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>reset<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;<span class="w"> </span>--credential-description<span class="w"> </span><span class="s2">&quot;rotation-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List app registrations with credential expiry</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[*].{AppId:appId,DisplayName:displayName}&quot;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check credential expiry dates</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Rotate client secret</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>reset<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;<span class="w"> </span>--credential-description<span class="w"> </span><span class="s2">&quot;rotation-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>AppId                                DisplayName
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>------------------------------------  --------------------------------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>a1b2c3d4-e5f6-7890-abcd-ef1234567890  MyWebApp
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>b2c3d4e5-f6a7-8901-bcde-f12345678901  DataProcessorService
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>c3d4e5f6-a7b8-9012-cdef-123456789012  ReportingAPI
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>d4e5f6a7-b8c9-0123-defg-234567890123  AuthenticationService
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>CredentialId                          StartDate             EndDate
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>------------------------------------  --------------------  --------------------
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>cred-001-uuid-string-here-1234567890  2023-01-15T10:30:00Z  2025-01-15T10:30:00Z
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>cred-002-uuid-string-here-2345678901  2023-06-20T14:22:00Z  2024-06-20T14:22:00Z
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>{
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;appId&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  &quot;password&quot;: &quot;Eby8vdM02xNOcqFlqUwJPLMeuL7DJH5V7EdgH1xF32s=&quot;,
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  &quot;keyId&quot;: &quot;new-cred-uuid-5678901234567890abcd&quot;,
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  &quot;startDate&quot;: &quot;2024-01-10T16:45:22.123456Z&quot;,
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  &quot;endDate&quot;: &quot;2026-01-10T16:45:22.123456Z&quot;
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The following arguments are required: --id</code></strong> — Provide the app registration ID using <code>--id &lt;app-id&gt;</code> parameter in the credential commands.
+<strong><code>Operation failed with status: 'Forbidden'. Details: Authorization_RequestDenied</code></strong> — Ensure your Azure account has sufficient permissions (Application Administrator or Global Administrator role) to manage app credentials.
+<strong><code>ResourceNotFound: Resource not found</code></strong> — Verify the app ID exists and is correctly formatted as a valid UUID.</p>
+</div>
 <p>Alert 60 days before credential expiry — expired credentials break CI/CD pipelines silently.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8615,7 +8751,7 @@ VM image management, patching via Azure Update Manager, and service upgrades.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

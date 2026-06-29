@@ -9292,77 +9292,217 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Persistent log location (on hosts with scratch disk)</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ls<span class="w"> </span>/scratch/log/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connected to 192.168.1.42 (ESXi 7.0.3, build 19193900)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-01-15T14:32:18.123Z cpu2:2156)WARNING: NMP: nmp_ThrottleLogForDevice: Reducing number of error messages from device naa.60060e80157900000157900000010001
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-01-15T14:35:42.456Z cpu5:2847)ERROR: ScsiDeviceIO: Cmd(0x4d5c9e00) 0x2a, CmdSN 0x1a5 from world 2847 to dev &quot;naa.60060e80157900000157900000010001&quot; failed H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-01-15T14:38:01.789Z cpu1:1923)WARNING: PSP: iSCSI path naa.60060e80157900000157900000010001 [iSCSI] to target vmhba64:C0:T0:L0 is down
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-01-15T14:40:15.234Z hostd[2134]: [Originator@6876 sub=Hostd.StorageSystem opID=52e8c9f4] Storage device naa.60060e80157900000157900000010001 not responding
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15T14:41:22.567Z hostd[2134]: [Originator@6876 sub=Hostd.VmProvisioning opID=52e8c9f5] Exception during VM snapshot creation: Device or resource busy
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-15T14:42:50.123Z vpxa[2456]: [Originator@6876 sub=vpxa opID=52e8c9f6] Lost connection to vCenter Server 192.168.1.10
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2024-01-15T14:43:15.456Z vpxa[2456]: [Originator@6876 sub=vpxa opID=52e8c9f7] Timeout waiting for vCenter response after 30 seconds
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>2024-01-15T14:44:30.789Z fdm[1845]: [Originator@6876 sub=HA opID=52e8c9f8] Host partition detected, isolation address 192.168.1.1 unreachable
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>2024-01-15T14:45:02.012Z fdm[1845]: [Originator@6876 sub=HA opID=52e8c9f9] Cluster membership lost, initiating failover
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>/scratch/log/:
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>hostd.log  vmkernel.log  vpxa.log  fdm.log  shell.log  syslog.log
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify SSH is enabled on the ESXi host and the root account credentials are correct.
+<strong><code>tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory</code></strong> — Ensure you are connected to the ESXi host via SSH and the log files exist; check the correct path with <code>ls /var/log/</code>.
+<strong><code>Connection refused</code></strong> — Confirm the ESXi host IP address</p>
+</div>
 <hr />
 <h2 id="step-2-check-live-storage-state">Step 2 — Check live storage state<a class="headerlink" href="#step-2-check-live-storage-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all storage paths and their state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Key fields: Plugin=NMP, State=active/dead/standby, Is Local SAN=true/false</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Problem: State=dead for all paths to a LUN = SAN connectivity issue</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List dead paths only</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check NMP path selection policy and current path for each LUN</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check VMFS datastores visible to this host</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Each datastore shows: partition, LUN UID, and datastore name</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List HBAs and their state</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Expected: LinkState=link-up for FC HBAs; Status=online</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Check storage SCSI error history</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>grep<span class="w"> </span><span class="s2">&quot;SCSI\|NMP\|LUN&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all storage paths and their state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Key fields: Plugin=NMP, State=active/dead/standby, Is Local SAN=true/false</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Problem: State=dead for all paths to a LUN = SAN connectivity issue</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List dead paths only</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check NMP path selection policy and current path for each LUN</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check VMFS datastores visible to this host</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Each datastore shows: partition, LUN UID, and datastore name</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># List HBAs and their state</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Expected: LinkState=link-up for FC HBAs; Status=online</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Check storage SCSI error history</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>grep<span class="w"> </span><span class="s2">&quot;SCSI\|NMP\|LUN&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name: vmhba1:C0:T0:L0
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Device: naa.50001fe1500d1234
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Plugin: NMP
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>State: active
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Is Local SAN: false
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Name: vmhba1:C0:T1:L0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Device: naa.50001fe1500d5678
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Plugin: NMP
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>State: active
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Is Local SAN: false
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Name: vmhba2:C0:T0:L0
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Device: naa.50001fe1500d9abc
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Plugin: NMP
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>State: standby
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Is Local SAN: false
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Name: vmhba3:C0:T0:L0
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Device: naa.50001fe1500ddef0
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Plugin: NMP
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>State: dead
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Is Local SAN: false
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Name: vmhba4:C0:T0:L0
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Device: naa.50001fe1500d1111
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Plugin: NMP
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>State: active
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Is Local SAN: false
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Device naa.50001fe1500d1234
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>   Runtime Name: vmhba1:C0:T0:L0
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>   Storage Array Type: NETAPP Fibre Channel Disk
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>   Storage Array TypeVersion: 140007000000
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>   Current Path Selection Policy: VMW_PSP_RR
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>naa.50001fe1500d5678
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>   Extent: VMFS-6 datastore1 [50001fe1500d5678-1234567890abcdef]
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>   Partition: 1
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>   Mounted: true
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>vmhba1 (lpfc821)
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>   Adapter: FC Adapter
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>   Channel: 0
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>   LinkState: link-up
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>   Status: online
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>vmhba2 (lpfc821)
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>   Adapter: FC Adapter
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>   Channel: 1
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>   LinkState: link-down
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>   Status: online
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>2024-01-15T10:23:45.123Z cpu2:2048)NMP: naa.50001fe1500d1234: Detected path state change from ACTIVE to STANDBY
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>2024-01-15T10:24:12.456Z cpu3:2050)SCSI: Command 0x28 (Read) to naa.50001fe1500ddef0 failed with status 0x2 (Check Condition)
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>2024-01-15T10:24:13.789Z cpu1:2049)NMP: naa.50001fe1500ddef0: All paths to LUN are down
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>2024-01-15T10:25:01.234Z cpu4:2051)SCSI: Sense data: Key 0x3 (Medium Error), ASC 0x11 (Unrecovered read error)
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>2024-01-15T10:26:45.567Z cpu2:2048)NMP: naa.50001fe1500d5678: Path vmhba3:C0:T0:L0 recovered
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Verify you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter.
+<strong><code>State: dead</code> for all paths to a LUN</strong> — Check SAN switch port status, FC cable connections, and storage array LUN masking for the ESXi host's WWN.
+**`LinkState: link</p>
+</div>
 <hr />
 <h2 id="step-3-check-network-state">Step 3 — Check network state<a class="headerlink" href="#step-3-check-network-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List VMkernel adapters and their IPs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Shows: vmk0=management, vmk1=vMotion, vmk2=storage (typically)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected: all required VMkernel adapters listed with correct IPs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Test VMkernel adapter connectivity</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;gateway-ip&gt;<span class="w">     </span><span class="c1"># management network</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;vmotion-ip&gt;<span class="w">     </span><span class="c1"># vMotion network</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;storage-ip&gt;<span class="w">     </span><span class="c1"># storage network (NFS/iSCSI)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># List VMs and their network adapters (for per-VM network issues)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># List port groups and their VLAN tags</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Check uplink (physical NIC) state</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Expected: Speed &gt; 0 and Link=up for all active NICs</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Check for packet drops on NICs</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List VMkernel adapters and their IPs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Shows: vmk0=management, vmk1=vMotion, vmk2=storage (typically)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Expected: all required VMkernel adapters listed with correct IPs</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Test VMkernel adapter connectivity</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;gateway-ip&gt;<span class="w">     </span><span class="c1"># management network</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;vmotion-ip&gt;<span class="w">     </span><span class="c1"># vMotion network</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;storage-ip&gt;<span class="w">     </span><span class="c1"># storage network (NFS/iSCSI)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># List VMs and their network adapters (for per-VM network issues)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List port groups and their VLAN tags</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Check uplink (physical NIC) state</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Expected: Speed &gt; 0 and Link=up for all active NICs</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Check for packet drops on NICs</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                          Enabled  Connected  MTU     IPv4 Address        IPv4 Netmask         IPv6 Address
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>----                          -------  ---------  ---     ----------------    ----------------     ----------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vmk0                          true     true       1500    192.168.1.50        255.255.255.0        fe80::250:56ff:fe9a:1b2c
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vmk1                          true     true       1500    10.20.0.50          255.255.255.0        fe80::250:56ff:fe9a:1b2d
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vmk2                          true     true       9000    10.30.0.50          255.255.255.0        fe80::250:56ff:fe9a:1b2e
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PING 192.168.1.1 timeout is 1 second, 4 packets to transmit.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>PING 10.20.0.1 timeout is 1 second, 4 packets to transmit.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>PING 10.30.0.1 timeout is 1 second, 4 packets to transmit.
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>World ID    Name                                   Num Ports
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>--------    ----                                   ---------
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>1048576     centos-prod-01                         2
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>1048577     windows-app-server                     1
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>1048578     ubuntu-db-replica                      3
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Name                Vlan ID  Ports
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>----                -------  -----
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>vSwitch0            0        vmnic0, vmnic1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>VM Network          1        vmnic0, vmnic1
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>vMotion             100      vmnic2
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Storage-NFS         200      vmnic3
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Name      PCI Bus    Driver    Admin Status  Runtime Status  Speed  Duplex  Link
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>----      --------   ------    ------------  --------------  -----  ------  ----
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>vmnic0    0000:02:00.0  bnx2   Up            Up              10000  Full    Up
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>vmnic1    0000:02:00.1  bnx2   Up            Up              10000  Full    Up
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>vmnic2    0000:04:00.0  ixgbe  Up            Up              10000  Full    Up
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>vmnic3    0000:04:00.1  ixgbe  Up            Up              10000  Full    Up
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>RxPkts: 45821934  RxBytes: 28374928384  RxErrors: 0  RxDropped: 0
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>TxPkts: 38291847  TxBytes: 19283746592  TxErrors: 0  TxDropped: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not resolve host &lt;gateway-ip&gt;</code></strong> — Replace <code>&lt;gateway-ip&gt;</code> with the actual IP address (e.g., <code>192.168.1.1</code>) before running vmkping.
+<strong><code>Network is unreachable</code></strong> — Verify the VMkernel adapter is bound to the correct vSwitch and port group, and that the physical network path is connected.
+<strong><code>RxDropped or TxDropped &gt; 0</code></strong> — Check for MTU mismatches between ESXi and network switches, or reduce VM network load if drops are increasing.</p>
+</div>
 <hr />
 <h2 id="step-4-performance-diagnostics-with-esxtop">Step 4 — Performance diagnostics with esxtop<a class="headerlink" href="#step-4-performance-diagnostics-with-esxtop" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Interactive mode — press keys to switch views</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># c = CPU view    m = Memory view    d = Disk view    n = Network view</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Batch mode — capture 30 samples at 2-second intervals to CSV</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Key thresholds to check in esxtop:</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># CPU:     %RDY (ready time)  &gt; 10% per vCPU = problem</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#          %SWPWT              &gt; 0            = swapping (memory pressure)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Memory:  MCTLSZ (balloon)   &gt; 0            = host under memory pressure</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">#          SZSWAP (swap)       &gt; 0            = critical memory pressure</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Disk:    DAVG (device avg lat) &gt; 25ms       = storage problem</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1">#          KAVG (kernel avg lat) &gt; 5ms        = ESXi queue depth issue</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Network: DRPTX / DRPRX      &gt; 0            = packet drops; check NIC and switch</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Transfer the esxtop CSV for analysis</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>scp<span class="w"> </span>root@&lt;esxi-host&gt;:/tmp/esxtop.csv<span class="w"> </span>/local/path/
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Open in Performance Analyzer or Excel; filter by column headers</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interactive mode — press keys to switch views</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxtop
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># c = CPU view    m = Memory view    d = Disk view    n = Network view</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Batch mode — capture 30 samples at 2-second intervals to CSV</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Key thresholds to check in esxtop:</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># CPU:     %RDY (ready time)  &gt; 10% per vCPU = problem</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#          %SWPWT              &gt; 0            = swapping (memory pressure)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Memory:  MCTLSZ (balloon)   &gt; 0            = host under memory pressure</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1">#          SZSWAP (swap)       &gt; 0            = critical memory pressure</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Disk:    DAVG (device avg lat) &gt; 25ms       = storage problem</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">#          KAVG (kernel avg lat) &gt; 5ms        = ESXi queue depth issue</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Network: DRPTX / DRPRX      &gt; 0            = packet drops; check NIC and switch</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Transfer the esxtop CSV for analysis</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>scp<span class="w"> </span>root@&lt;esxi-host&gt;:/tmp/esxtop.csv<span class="w"> </span>/local/path/
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Open in Performance Analyzer or Excel; filter by column headers</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ESXTOP 7.0.3 -- 192.168.1.42 -- 14:32:15
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>GID  NAME             NWORLDID WORLDID  CPUID %MLMTD %SWPWT %RDY  %CSTP %USED
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  1  vmm0:ESXi-mgmt   2097152  2097153  0     0.00   0.00   2.14  0.00  18.42
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  2  vmm0:prod-web-01 2097154  2097155  1     0.00   0.00   8.76  0.00  45.23
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  3  vmm0:prod-db-02  2097156  2097157  2     0.00   0.00   1.23  0.00  72.18
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  4  vmm0:backup-vm   2097158  2097159  3     0.00   0.00   0.45  0.00  12.67
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ESXTOP: Failed to open /proc/vmware/sched/cpu/stats</code></strong> — Ensure ESXi SSH service is running and you have root credentials; restart Management agents with <code>services.sh restart</code>.
+<strong><code>scp: command not found</code></strong> — Install openssh-client on your local machine or use <code>esxcli hardware cpu list</code> to verify connectivity first before attempting SCP.</p>
+</div>
 <p>Key metrics thresholds:</p>
 <table>
 <thead>
@@ -9408,62 +9548,130 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
 </table>
 <hr />
 <h2 id="step-5-troubleshoot-host-disconnection-from-vcenter">Step 5 — Troubleshoot host disconnection from vCenter<a class="headerlink" href="#step-5-troubleshoot-host-disconnection-from-vcenter" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the ESXi host — check vpxa (vCenter agent) status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># On the ESXi host — check hostd (host daemon) status</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Restart management agents (safe — does not affect running VMs)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify vCenter is reachable from the ESXi management network</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ping<span class="w"> </span>&lt;vcenter-ip&gt;
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-ip&gt;<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Check NTP sync (time drift &gt; 5 minutes can cause cert failures)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>date
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># View recent vpxa errors</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the ESXi host — check vpxa (vCenter agent) status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># On the ESXi host — check hostd (host daemon) status</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Restart management agents (safe — does not affect running VMs)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Verify vCenter is reachable from the ESXi management network</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ping<span class="w"> </span>&lt;vcenter-ip&gt;
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-ip&gt;<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Check NTP sync (time drift &gt; 5 minutes can cause cert failures)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>date
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># View recent vpxa errors</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vpxa is running.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>hostd is running.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Stopping hostd...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Waiting for hostd to stop...
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>hostd stopped successfully
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Starting hostd...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>hostd started successfully
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Stopping vpxa...
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Waiting for vpxa to stop...
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vpxa stopped successfully
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Starting vpxa...
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>vpxa started successfully
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>PING 192.168.1.50 (192.168.1.50) 56(84) bytes of data.
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>64 bytes from 192.168.1.50: icmp_seq=1 ttl=64 time=2.341 ms
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>64 bytes from 192.168.1.50: icmp_seq=2 ttl=64 time=1.987 ms
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>--- 192.168.1.50 statistics ---
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Connection to 192.168.1.50 443 port [tcp/https] succeeded!
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Current Time: 2024-01-15T14:32:18Z
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>UTC: 2024-01-15T14:32:18.547291Z
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Timezone: UTC
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Uptime: 45 days, 3:22:10.547291
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>date: Mon Jan 15 14:32:18 UTC 2024
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>2024-01-15T14:32:10.234Z vpxa[2048]: [error] Connection timeout to vCenter 192.168.1.50:443 after 30s
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>2024-01-15T14:31:45.891Z vpxa[2048]: [error] SSL certificate verification failed: hostname mismatch
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>2024-01-15T14:30:22.156Z vpxa[2048]: [warn] Retrying vCenter registration attempt 3 of 5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection timeout to vCenter &lt;vcenter-ip&gt;:443 after 30s</code></strong> — Verify vCenter is running and reachable on port 443 using <code>nc -zv &lt;vcenter-ip&gt; 443</code>, and check firewall rules between ESXi management network and vCenter.
+<strong><code>SSL certificate verification failed: hostname mismatch</code></strong> — Ensure the ESXi host's system time is synchronized within 5 minutes of vCenter using <code>esxcli system time get</code>, or re-register the host in vCenter if the certificate was regenerated.
+<strong><code>vpxa is not running</code></strong> — Start the vpxa service with <code>/etc/init.d/vpxa start</code> and check <code>/var/log/vpxa.log</code> for startup errors.</p>
+</div>
 <hr />
 <h2 id="step-6-validate-storage-and-network-before-maintenance">Step 6 — Validate storage and network before maintenance<a class="headerlink" href="#step-6-validate-storage-and-network-before-maintenance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm host has no active storage I/O errors</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span><span class="s2">&quot;SCSI\|I/O error\|NMP path&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm VM count and state</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># All VMs that will be vMotioned away during maintenance</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check cluster can absorb workload (run from vCenter)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># vCenter → Cluster → Monitor → Resource Reservation</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Confirm vMotion VMkernel adapter is active</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm host has no active storage I/O errors</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span><span class="s2">&quot;SCSI\|I/O error\|NMP path&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirm VM count and state</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># All VMs that will be vMotioned away during maintenance</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check cluster can absorb workload (run from vCenter)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># vCenter → Cluster → Monitor → Resource Reservation</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Confirm vMotion VMkernel adapter is active</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>2024-10-15T09:23:14.567Z cpu0:65537)NMP path &quot;vmhba0:C0:T0:L0&quot; state changed from &quot;active&quot; to &quot;dead&quot;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>2024-10-15T09:24:02.891Z cpu2:65540)SCSI: 2656: Cmd 0x28, CmdSN 0x4a5b issued on path &quot;vmhba1:C0:T1:L0&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>2024-10-15T09:25:18.334Z cpu1:65538)I/O error detected on device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>2024-10-15T09:26:45.123Z cpu3:65541)NMP path &quot;vmhba2:C0:T2:L0&quot; state changed from &quot;dead&quot; to &quot;active&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>2024-10-15T09:27:33.456Z cpu0:65537)SCSI: 2656: Cmd 0x2a, CmdSN 0x4a5c issued on path &quot;vmhba0:C0:T0:L0&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>47
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Name: vmk1
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Portset: vMotion
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>IPv4 Address: 172.16.50.42
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>IPv4 Netmask: 255.255.255.0
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>IPv6 Address: ::
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Enabled: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — SSH to the ESXi host directly; the log is only accessible on the host itself, not remotely.
+<strong><code>Unknown command or namespace: vm process list</code></strong> — Verify esxcli is in the PATH and you are running ESXi 5.0 or later; try <code>esxcli --version</code> to confirm.
+<strong><code>Name: vmk1 not found</code></strong> — Confirm the vMotion VMkernel adapter exists by running <code>esxcli network ip interface list</code> without grep to see all adapters, then create vmk1 if missing.</p>
+</div>
 <hr />
 <h2 id="step-7-collect-support-bundle-for-vmware-sr">Step 7 — Collect support bundle for VMware SR<a class="headerlink" href="#step-7-collect-support-bundle-for-vmware-sr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the ESXi host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># -n = no interactive prompt; -w = output directory</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Transfer to a workstation</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>scp<span class="w"> </span>root@&lt;esxi-host&gt;:/tmp/esx-*.tgz<span class="w"> </span>/local/path/
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Alternative: vSphere Client</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Host → Actions → Export System Logs</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># This downloads logs from vCenter for both the host and vCenter itself</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Include in VMware SR:</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># - vm-support bundle .tgz</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># - esxtop CSV if performance is involved</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># - Specific error lines from vmkernel.log and hostd.log</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># - Time window and VM/datastore names involved</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># On the ESXi host</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># -n = no interactive prompt; -w = output directory</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Transfer to a workstation</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>scp<span class="w"> </span>root@&lt;esxi-host&gt;:/tmp/esx-*.tgz<span class="w"> </span>/local/path/
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Alternative: vSphere Client</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Host → Actions → Export System Logs</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># This downloads logs from vCenter for both the host and vCenter itself</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Include in VMware SR:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># - vm-support bundle .tgz</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># - esxtop CSV if performance is involved</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># - Specific error lines from vmkernel.log and hostd.log</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># - Time window and VM/datastore names involved</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Generating support bundle for host esx-prod-01.lab.local...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Collecting system information...
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Collecting log files...
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting performance data...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Creating bundle...
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Support bundle created: /tmp/esx-prod-01-2024-01-15-14-32-45.tgz
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Bundle size: 287 MB
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>root@esx-prod-01:/tmp# scp root@esx-prod-01:/tmp/esx-*.tgz /local/path/
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>esx-prod-01-2024-01-15-14-32-45.tgz                100%  287MB   8.2MB/s   00:35
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH is enabled on the ESXi host and the root account credentials are correct.
+<strong><code>No such file or directory</code></strong> — Run <code>vm-support -n -w /tmp/</code> first to generate the bundle before attempting to transfer it.
+<strong><code>Disk space exhausted</code></strong> — Free up space on /tmp (at least 500 MB) or specify an alternate output directory with <code>-w /vmfs/volumes/datastore1/</code>.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -9542,7 +9750,7 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

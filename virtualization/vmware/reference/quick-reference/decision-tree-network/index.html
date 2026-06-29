@@ -9912,64 +9912,220 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>traceroute<span class="w"> </span>&lt;destination&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=1.95 ms
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>--- 192.168.1.1 statistics ---
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=24.56 ms
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=23.89 ms
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>64 bytes from 8.8.8.8: icmp_seq=3 ttl=119 time=24.12 ms
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>64 bytes from 8.8.8.8: icmp_seq=4 ttl=119 time=23.67 ms
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>rtt min/avg/max/stddev = 23.67/24.06/24.56/0.35 ms
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a> 1  192.168.1.1 (192.168.1.1)  1.23 ms  1.45 ms  1.67 ms
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a> 2  10.0.0.1 (10.0.0.1)  5.34 ms  5.12 ms  5.89 ms
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a> 3  203.0.113.45 (203.0.113.45)  12.56 ms  12.34 ms  12.78 ms
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a> 4  93.184.216.34 (93.184.216.34)  18.92 ms  19.01 ms  18.67 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;gateway-ip&gt;</code></strong> — Replace <code>&lt;gateway-ip&gt;</code> with the actual gateway IP address (e.g., 192.168.1.1) or verify the VM has network connectivity.
+<strong><code>ping: sendto: Operation not permitted</code></strong> — Check that ICMP is not blocked by the VM's firewall or security group rules; disable the firewall temporarily to test.
+<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).</p>
+</div>
 <p><strong>Cannot ping gateway</strong> → Step 2 (L2/VLAN issue)
 <strong>Can ping gateway, not destination</strong> → Step 4 (routing/firewall issue)</p>
 <h2 id="step-2-vlan-segment-issue">Step 2 — VLAN / Segment Issue<a class="headerlink" href="#step-2-vlan-segment-issue" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check VM&#39;s port group assignment</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">vm_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check port group VLAN ID (for standard/distributed vSwitch)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">portgroup</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check VM&#39;s port group assignment</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">vm_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check port group VLAN ID (for standard/distributed vSwitch)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">portgroup</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
 </code></pre></div>
 <p>For NSX overlay segments:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check segment exists and is connected to the correct tier-1</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>GET<span class="w"> </span>/api/v1/logical-switches?display_name<span class="o">=</span>&lt;segment-name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Verify attached to correct tier-1 gateway</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check segment exists and is connected to the correct tier-1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>GET<span class="w"> </span>/api/v1/logical-switches?display_name<span class="o">=</span>&lt;segment-name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify attached to correct tier-1 gateway</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    {
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      &quot;id&quot;: &quot;logical-switch-001&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      &quot;display_name&quot;: &quot;prod-segment-web&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;state&quot;: &quot;SUCCESS&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;realization_state&quot;: &quot;REALIZED&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      &quot;transport_zone_display_name&quot;: &quot;TZ-VLAN-100&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;connectivity&quot;: &quot;ON&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;admin_state&quot;: &quot;UP&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;tier_1_gateways&quot;: [
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        {
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>          &quot;target_id&quot;: &quot;tier1-gw-prod-01&quot;,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>          &quot;target_display_name&quot;: &quot;tier1-gw-prod-01&quot;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        }
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      ]
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    }
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  ],
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;result_count&quot;: 1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error_code":400,"error_message":"Invalid display_name parameter"}</code></strong> — Verify the segment name matches exactly (case-sensitive) and is URL-encoded if it contains special characters.
+<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Ensure your NSX Manager API credentials are valid and the authentication token has not expired.
+<strong><code>{"error_code":404,"error_message":"Segment not found"}</code></strong> — Confirm the segment exists in NSX Manager and check that you are querying the correct NSX Manager instance.</p>
+</div>
 <p><strong>Port group/segment misconfigured</strong> → Correct assignment and re-test.</p>
 <h2 id="step-3-mtu-check">Step 3 — MTU Check<a class="headerlink" href="#step-3-mtu-check" title="Permanent link">&para;</a></h2>
 <p>VM-to-gateway communication failures can be caused by MTU mismatch (especially in NSX environments where the recommended MTU is 1600+):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From VM — test with large packet (NSX requires MTU ≥ 1600 on uplinks)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">   </span><span class="c1"># Linux</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">      </span><span class="c1"># Windows (1472 + 28 headers = 1500 bytes)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># On ESXi host — check vmnic MTU</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From VM — test with large packet (NSX requires MTU ≥ 1600 on uplinks)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">   </span><span class="c1"># Linux</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">      </span><span class="c1"># Windows (1472 + 28 headers = 1500 bytes)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># On ESXi host — check vmnic MTU</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PING 10.20.1.1 (10.20.1.1) 1500(1528) bytes of data.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1508 bytes from 10.20.1.1: icmp_seq=1 ttl=64 time=2.341 ms
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>1508 bytes from 10.20.1.1: icmp_seq=2 ttl=64 time=2.156 ms
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>1508 bytes from 10.20.1.1: icmp_seq=3 ttl=64 time=2.289 ms
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>^C
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>--- 10.20.1.1 statistics ---
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>rtt min/avg/max/stddev = 2.156/2.262/2.341/0.078 ms
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Name          Mtu
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vmnic0       1500
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>vmnic1       1500
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>vmnic2       9000
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>vmnic3       1500
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: -M: unknown option</code></strong> — Use <code>ping -M do</code> on Linux; the <code>-M</code> flag is not available on macOS or older Linux versions—verify your OS and use <code>man ping</code> to confirm syntax.
+<strong><code>PING: transmit failed. General failure.</code></strong> — Ensure the gateway IP is reachable and on the same subnet; verify network connectivity with <code>ipconfig /all</code> and check firewall rules.
+<strong><code>Command 'esxcfg-nics' not found</code></strong> — Run the command directly on an ESXi host via SSH or console, not from a vCenter server or Linux VM; verify you are logged into the correct host.</p>
+</div>
 <p><strong>Packet loss on large packets</strong> → MTU mismatch on physical switch, dvSwitch, or NSX TEP VLAN.</p>
 <h2 id="step-4-routing-issue">Step 4 — Routing Issue<a class="headerlink" href="#step-4-routing-issue" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From VM</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w">   </span><span class="c1"># Confirm default gateway is correct</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>route<span class="w"> </span>print<span class="w">     </span><span class="c1"># Windows</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># From a Linux jump host on the same segment</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">   </span><span class="c1"># Where does it drop?</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From VM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w">   </span><span class="c1"># Confirm default gateway is correct</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>route<span class="w"> </span>print<span class="w">     </span><span class="c1"># Windows</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># From a Linux jump host on the same segment</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">   </span><span class="c1"># Where does it drop?</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># ip route show
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>default via 192.168.1.1 dev eth0 proto dhcp metric 100
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.45 metric 100
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>169.254.0.0/16 dev eth0 scope link metric 1002
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a># route print
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>===========================================================================
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Interface List
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  16...08:00:27:6a:2f:4c ......Intel(R) PRO/1000 MT Desktop Adapter
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>===========================================================================
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>IPv4 Route Table
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>===========================================================================
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Active Routes:
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Network Destination        Netmask          Gateway       Interface  Metric
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>          0.0.0.0          0.0.0.0      192.168.1.1    192.168.1.100      25
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      192.168.1.0    255.255.255.0         On-link     192.168.1.100     266
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a># traceroute 8.8.8.8
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a> 1  192.168.1.1 (192.168.1.1)  2.341 ms  2.156 ms  2.089 ms
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a> 2  10.0.0.1 (10.0.0.1)  8.923 ms  9.104 ms  8.756 ms
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a> 3  203.0.113.45 (203.0.113.45)  24.567 ms  24.892 ms  24.234 ms
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a> 4  * * *
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a> 5  8.8.8.8 (8.8.8.8)  31.245 ms  31.089 ms  30.876 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SIOCADDRT: No such process</code></strong> — Verify the gateway IP is reachable and the network interface is up with <code>ip link show</code>.
+<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).
+<strong><code>Network is unreachable</code></strong> — Confirm the VM's network adapter is connected to the correct vSwitch and the default gateway matches the subnet configuration.</p>
+</div>
 <p>If traffic drops at the tier-0 edge:
 - Check BGP peer state on the edge node:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">   </span><span class="c1"># All peers should be Established</span>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">   </span><span class="c1"># All peers should be Established</span>
 </code></pre></div>
 - Verify edge uplink connectivity to the physical router</p>
 <h2 id="step-5-nsx-distributed-firewall-dfw">Step 5 — NSX Distributed Firewall (DFW)<a class="headerlink" href="#step-5-nsx-distributed-firewall-dfw" title="Permanent link">&para;</a></h2>
 <p>If L2 and routing are confirmed working:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check DFW rules applied to the VM — from ESXi host where VM runs</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM&#39;s vmx file</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get VM&#39;s DFW filter name</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check DFW rules applied to the VM — from ESXi host where VM runs</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM&#39;s vmx file</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Get VM&#39;s DFW filter name</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Filter: vShield-vm-12345678-abcd-1234-5678-1234567890ab
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Direction: IN
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Action: ALLOW
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Protocol: TCP
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>DestinationPort: 443
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>SourceAddress: 192.168.1.0/24
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>---
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Direction: OUT
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Action: DROP
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Protocol: UDP
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>DestinationPort: 53
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>---
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>VM Name: web-server-prod-01
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Filter ID: vShield-vm-12345678-abcd-1234-5678-1234567890ab
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Status: ACTIVE
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Rules Applied: 8
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>Last Updated: 2024-01-15 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command directly on the ESXi host (SSH into the host), not from vCenter or a remote machine.
+<strong><code>Filter not found or invalid filter name</code></strong> — Verify the filter name matches exactly what appears in the VM's .vmx file (case-sensitive) by checking <code>/vmfs/volumes/&lt;datastore&gt;/vm-name/vm-name.vmx</code>.
+<strong><code>summarize-dvfilter: command not found</code></strong> — This command is only available on ESXi 6.0+; for older versions, use <code>net-dvs -l</code> to list distributed virtual switch filters instead.</p>
+</div>
 <p>Look for DENY rules matching the traffic flow. Check in NSX Manager:
 - Policy → Security → Gateway Firewall and Distributed Firewall
 - Use "Trace Flow" to simulate a specific flow and see which rule handles it:
   NSX Manager → Plan &amp; Troubleshoot → Traffic Analysis</p>
 <h2 id="step-6-packet-capture">Step 6 — Packet Capture<a class="headerlink" href="#step-6-packet-capture" title="Permanent link">&para;</a></h2>
 <p>If still unresolved, capture on the relevant interface:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Capture on VM&#39;s vNIC from ESXi host</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;port-id&gt;<span class="w"> </span>--proto<span class="w"> </span>0x0800<span class="w"> </span>-o<span class="w"> </span>/tmp/capture.pcap
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get port ID</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>net-dvs<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Capture on VM&#39;s vNIC from ESXi host</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;port-id&gt;<span class="w"> </span>--proto<span class="w"> </span>0x0800<span class="w"> </span>-o<span class="w"> </span>/tmp/capture.pcap
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Get port ID</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>net-dvs<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Port ID: 67108873
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Portset Name: DvsPortset-0
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Port Index: 73
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Port State: Block
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Port Flags: 0x0
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>VLAN ID: 0
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Teaming Policy: loadbalance_srcid
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Active Uplinks: vmnic0, vmnic1
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Standby Uplinks: (none)
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Reserved Clients: (none)
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Capturing on port 67108873 with filter 0x0800
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Packets captured: 1247
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>Output file: /tmp/capture.pcap
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Capture completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pktcap-uw: command not found</code></strong> — Run the command directly on the ESXi host via SSH or console, not from a vCenter client machine.
+<strong><code>net-dvs: command not found</code></strong> — Ensure you are connected to the ESXi host shell; these tools are only available in the ESXi command line, not in vCenter.
+<strong><code>Error: Invalid port ID</code></strong> — Verify the port ID exists by running <code>net-dvs -l</code> first and confirm the VM is powered on and connected to the distributed virtual switch.</p>
+</div>
 <p>Analyse with Wireshark: download from <code>/tmp/capture.pcap</code> via SCP.</p>
 
 
@@ -9993,7 +10149,7 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

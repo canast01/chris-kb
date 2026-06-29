@@ -10812,13 +10812,38 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>mystic@&lt;vxm-ip&gt;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/mystic/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;pre-check|precheck|ERROR|FAIL&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Last login: Wed Mar 15 14:22:18 2024 from 10.45.32.18
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[mystic@vxm-prod-01 ~]$ tail -100 /var/log/mystic/lcm.log | grep -iE &quot;pre-check|precheck|ERROR|FAIL&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-03-15 14:18:32.445 [INFO] Starting pre-check validation for cluster upgrade
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-03-15 14:18:45.221 [INFO] Pre-check: Validating vSAN health status
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-03-15 14:18:47.892 [INFO] Pre-check: Checking ESXi host connectivity (8/8 hosts online)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2024-03-15 14:18:52.334 [INFO] Pre-check: Verifying storage capacity (1.2TB available, 340GB required)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-03-15 14:19:01.556 [INFO] Pre-check: Validating network configuration
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-03-15 14:19:15.778 [INFO] Pre-check validation completed successfully
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-03-15 14:19:22.445 [INFO] Beginning LCM upgrade sequence for vSAN 7.0.3 → 8.0.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,gssapi-keyexchange)</code></strong> — Verify SSH key is loaded with <code>ssh-add</code> or use password authentication with <code>ssh -o PubkeyAuthentication=no mystic@&lt;vxm-ip&gt;</code>.
+<strong><code>tail: cannot open '/var/log/mystic/lcm.log' for reading: No such file or directory</code></strong> — Confirm the VXM appliance is fully initialized and check the correct log path with <code>find /var/log -name "*lcm*" -type f</code>.</p>
+</div>
 <p>Look for: the specific pre-check name that failed. Common failures and fixes:</p>
 <p><strong>vSAN health not green:</strong> Navigate to <strong>Cluster → Monitor → vSAN → Skyline Health</strong> and resolve all
 red or yellow items. LCM will not proceed with any vSAN health warning outstanding.</p>
 <p><strong>Host stuck in maintenance mode:</strong> A host manually put into maintenance mode blocks LCM. Exit maintenance mode in vCenter and retry.</p>
 <p><strong>Unsupported customisation — non-LCM VIBs:</strong> Check for VIBs installed outside of VxRail LCM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;VMware\|Dell\|Broadcom\|QLogic&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;VMware\|Dell\|Broadcom\|QLogic&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esx-ui                                    1.45.0-20567896                VMware    CommunitySupported
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>lsi-mr3                                   7.714.06.00-1OEM.700.1.0.15160174  VMware    CommunitySupported
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>net-bnx2                                  2.2.5k-1OEM.700.1.0.15160174       VMware    CommunitySupported
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>scsi-megaraid-sas                         7.714.06.00-1OEM.700.1.0.15160174  VMware    CommunitySupported
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or as root: <code>sudo esxcli software vib list | grep -v "VMware\|Dell\|Broadcom\|QLogic"</code>
+<strong><code>esxcli: command not found</code></strong> — Ensure you are running this command on an ESXi host directly (SSH session) or via vSphere CLI; this command does not work on vCenter Server.</p>
+</div>
 <p>Remove any VIBs not in the VxRail approved list before retrying.</p>
 <p><strong>NTP skew:</strong> Check and fix NTP on all nodes — see the
 <a href="ntp-drift-sso-certificate/index.md">NTP Drift Scenario</a> for the full procedure. Re-run the
@@ -10840,27 +10865,129 @@ pre-check after NTP is corrected.</p>
 <li>iDRAC → <strong>Job Queue</strong> — confirm whether the firmware job completed, failed, or is still queued.</li>
 </ul>
 <p>Check ESXi installation logs on the affected host if accessible:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>/var/log/esxi_install.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>/var/log/esxi_install.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2024-01-15T09:42:33Z [INFO] ESXi 8.0.1 installation started on host esx-prod-04.datacenter.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024-01-15T09:42:45Z [INFO] Detected hardware: Dell PowerEdge R750, 2x Intel Xeon Platinum 8380
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024-01-15T09:43:12Z [INFO] Network configuration: VLAN 100, IP 192.168.1.45/24, Gateway 192.168.1.1
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15T09:44:28Z [INFO] Storage detected: 4x 1.2TB SAS drives, 2x 960GB NVMe
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024-01-15T09:45:01Z [INFO] Partitioning disk /dev/sda with GPT layout
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15T09:46:15Z [INFO] Installing ESXi boot loader to /dev/sda1
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15T09:52:33Z [INFO] Copying system files to /dev/sda2 (progress: 87%)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T10:01:44Z [INFO] Configuring management network on vmnic0
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T10:02:19Z [INFO] Setting hostname to esx-prod-04.datacenter.local
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2024-01-15T10:03:05Z [INFO] Installation completed successfully
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>2024-01-15T10:03:22Z [INFO] System will reboot in 30 seconds
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>2024-01-15T10:03:52Z [INFO] Reboot initiated
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /var/log/esxi_install.log: No such file or directory</code></strong> — The log file only exists during active installation; check <code>/var/log/vmkernel.log</code> or <code>/var/log/hostd.log</code> on a running ESXi host instead.
+<strong><code>tail: cannot open '/var/log/esxi_install.log' for reading: Permission denied</code></strong> — Run the command with <code>ssh root@&lt;esxi-host&gt;</code> or execute it directly on the ESXi console with appropriate root privileges.</p>
+</div>
 <p>Look for:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Installation failed: Conflict with existing VIB  → manual VIB present that blocks the upgrade VIB
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Device not supported: &lt;device-id&gt;                → hardware not in the new bundle&#39;s HCL
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Maintenance mode entry failed: timeout           → VM not evacuated before maintenance mode timeout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Installation failed: Conflict with existing VIB  → manual VIB present that blocks the upgrade VIB
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Device not supported: &lt;device-id&gt;                → hardware not in the new bundle&#39;s HCL
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Maintenance mode entry failed: timeout           → VM not evacuated before maintenance mode timeout
 </code></pre></div>
 <hr />
 <h2 id="5-use-rest-api-to-check-status-and-generate-support-bundle">5. Use REST API to Check Status and Generate Support Bundle<a class="headerlink" href="#5-use-rest-api-to-check-status-and-generate-support-bundle" title="Permanent link">&para;</a></h2>
 <p>Query VxRail Manager REST API for current upgrade status and generate a support bundle for Dell support.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade/bundle/status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade/bundle/status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/system/support-bundle
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  &quot;id&quot;: &quot;upgrade-bundle-20240115&quot;,
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;status&quot;: &quot;READY&quot;,
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  &quot;version&quot;: &quot;8.0.1&quot;,
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  &quot;buildNumber&quot;: &quot;21493496&quot;,
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  &quot;releaseDate&quot;: &quot;2024-01-15T00:00:00Z&quot;,
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  &quot;bundleSize&quot;: &quot;2847563648&quot;,
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  &quot;checksum&quot;: &quot;a7f3e9c2d1b4f8e6a9c3d5e7f1b3a5c7&quot;,
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  &quot;components&quot;: [
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    {
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      &quot;name&quot;: &quot;vxrail-manager&quot;,
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>      &quot;version&quot;: &quot;8.0.1&quot;,
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    },
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    {
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      &quot;name&quot;: &quot;vcenter-server&quot;,
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>      &quot;version&quot;: &quot;8.0.1&quot;,
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    }
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  ],
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>  &quot;lastChecked&quot;: &quot;2024-01-16T14:32:18Z&quot;
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>}
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the VXM's certificate into your system's CA bundle.
+<strong><code>curl: (7) Failed to connect to &lt;vxm-ip&gt; port 443: Connection refused</code></strong> — Verify the VXM IP address is correct and the management interface is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.
+<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Confirm the username and password are correct; use <code>curl -k -u mystic:$PASSWORD</code> with proper credential escaping if special characters are present.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/system/support-bundle
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &quot;request_id&quot;: &quot;req-8f4c2b91-7d3e-4a9e-b2f1-c5e8d9a1f6b3&quot;,
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  &quot;status&quot;: &quot;INITIATED&quot;,
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  &quot;bundle_name&quot;: &quot;vxm-support-bundle-20240115-143022.tar.gz&quot;,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  &quot;estimated_size_mb&quot;: 2847,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  &quot;location&quot;: &quot;/var/log/vmware/vxm/bundles/vxm-support-bundle-20240115-143022.tar.gz&quot;,
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  &quot;created_at&quot;: &quot;2024-01-15T14:30:22Z&quot;,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  &quot;message&quot;: &quot;Support bundle generation started. Check status with request_id.&quot;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the VXM's CA certificate into your system trust store.
+<strong><code>curl: (401) Unauthorized</code></strong> — Verify the username and password are correct; use <code>curl -u mystic:password</code> with the actual password or store credentials in <code>~/.netrc</code>.
+<strong><code>curl: (7) Failed to connect to &lt;vxm-ip&gt; port 443: Connection refused</code></strong> — Confirm the VXM IP address is correct and the management interface is running; check network connectivity with <code>ping &lt;vxm-ip&gt;</code>.</p>
+</div>
 <p>Check current cluster and node versions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;hosts&quot;: [
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    {
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>      &quot;id&quot;: &quot;host-42&quot;,
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      &quot;name&quot;: &quot;esx-prod-01.datacenter.local&quot;,
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      &quot;ipAddress&quot;: &quot;192.168.1.105&quot;,
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      &quot;version&quot;: &quot;7.0.3&quot;,
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>      &quot;cpuCount&quot;: 24,
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>      &quot;memoryGB&quot;: 512
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    },
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    {
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>      &quot;id&quot;: &quot;host-43&quot;,
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>      &quot;name&quot;: &quot;esx-prod-02.datacenter.local&quot;,
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>      &quot;ipAddress&quot;: &quot;192.168.1.106&quot;,
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>      &quot;version&quot;: &quot;7.0.3&quot;,
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      &quot;cpuCount&quot;: 24,
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      &quot;memoryGB&quot;: 512
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    },
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    {
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      &quot;id&quot;: &quot;host-44&quot;,
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>      &quot;name&quot;: &quot;esx-prod-03.datacenter.local&quot;,
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>      &quot;ipAddress&quot;: &quot;192.168.1.107&quot;,
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>      &quot;version&quot;: &quot;7.0.2&quot;,
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>      &quot;status&quot;: &quot;MAINTENANCE&quot;,
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>      &quot;cpuCount&quot;: 16,
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>      &quot;memoryGB&quot;: 256
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    }
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>  ],
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>  &quot;totalCount&quot;: 3
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to &lt;vxm-ip&gt; port 443: Connection refused</code></strong> — Verify the VXM appliance is running and the IP address is correct with <code>ping &lt;vxm-ip&gt;</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag should bypass this; if persisting, ensure you're using HTTPS and not HTTP.
+<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Verify the API endpoint is correct and the VXM service is responding; check VXM logs with <code>ssh &lt;vxm-ip&gt; tail -f /var/log/vmware/vxm/vxm.log</code>.</p>
+</div>
 <p>Look for: bundle status showing <code>FAILED</code> with a phase name; support bundle creation returning a bundle ID that you can download and attach to a Dell support case.</p>
 <hr />
 <h2 id="6-rollback-and-re-image-considerations">6. Rollback and Re-image Considerations<a class="headerlink" href="#6-rollback-and-re-image-considerations" title="Permanent link">&para;</a></h2>
@@ -10990,7 +11117,7 @@ pre-check after NTP is corrected.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

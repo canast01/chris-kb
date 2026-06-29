@@ -8684,6 +8684,41 @@ Backup policies define when backups run, how many recovery points are retained, 
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--policy<span class="w"> </span>@vm-backup-policy.json<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Command group &#39;backup policy&#39; is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>{
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-backup-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault-01/backupPolicies/vm-daily-backup-policy&quot;,
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  &quot;name&quot;: &quot;vm-daily-backup-policy&quot;,
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    &quot;backupManagementType&quot;: &quot;AzureIaasVM&quot;,
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    &quot;schedulePolicy&quot;: {
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>      &quot;schedulePolicyType&quot;: &quot;SimpleSchedulePolicy&quot;,
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>      &quot;scheduleRunFrequency&quot;: &quot;Daily&quot;,
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>      &quot;scheduleRunTimes&quot;: [
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        &quot;2024-01-15T02:00:00Z&quot;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>      ]
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    },
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    &quot;retentionPolicy&quot;: {
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>      &quot;retentionPolicyType&quot;: &quot;LongTermRetentionPolicy&quot;,
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>      &quot;dailySchedule&quot;: {
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        &quot;retentionTimes&quot;: [
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>          &quot;2024-01-15T02:00:00Z&quot;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        ],
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        &quot;retentionDuration&quot;: {
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>          &quot;count&quot;: 30,
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>          &quot;durationType&quot;: &quot;Days&quot;
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        }
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>      }
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    }
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>  },
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/backupPolicies&quot;
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid template member reference 'vm-backup-policy.json'. Specify the correct path to the file.</code></strong> — Verify the JSON file exists in the current directory and use the correct relative or absolute path.
+<strong><code>The policy definition in the JSON file is invalid. Error: Missing required property 'schedulePolicy'.</code></strong> — Ensure the JSON file contains all required properties including <code>schedulePolicy</code>, <code>retentionPolicy</code>, and <code>backupManagementType</code>.
+<strong><code>The specified resource group '&lt;rg&gt;' could not be found.</code></strong> — Replace <code>&lt;rg&gt;</code> with an actual resource group name that exists in your subscription.</p>
+</div>
 <hr />
 <h2 id="retention-rules-reference">Retention Rules Reference<a class="headerlink" href="#retention-rules-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8730,46 +8765,102 @@ Backup policies define when backups run, how many recovery points are retained, 
 </table>
 <hr />
 <h2 id="modifying-an-existing-policy">Modifying an Existing Policy<a class="headerlink" href="#modifying-an-existing-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export the current policy to a file for editing</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>current-policy.json
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Apply the modified policy (overwrites existing)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--policy<span class="w"> </span>@current-policy.json
-</code></pre></div>
-<hr />
-<h2 id="assigning-a-policy-to-protected-items">Assigning a Policy to Protected Items<a class="headerlink" href="#assigning-a-policy-to-protected-items" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Change the policy for an already-protected VM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>set-policy<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export the current policy to a file for editing</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--workload-type<span class="w"> </span>VM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--policy-name<span class="w"> </span>&lt;new-policy-name&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># List items using a specific policy</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?properties.policyId contains &#39;&lt;policy-name&gt;&#39;].{Name:name, State:properties.protectionState}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>current-policy.json
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Apply the modified policy (overwrites existing)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--policy<span class="w"> </span>@current-policy.json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-backup-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault-01/backupPolicies/DailyBackupPolicy&quot;,
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;name&quot;: &quot;DailyBackupPolicy&quot;,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/backupPolicies&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &quot;backupManagementType&quot;: &quot;AzureIaasVM&quot;,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    &quot;schedulePolicy&quot;: {
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      &quot;schedulePolicyType&quot;: &quot;SimpleSchedulePolicy&quot;,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      &quot;scheduleRunFrequency&quot;: &quot;Daily&quot;,
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      &quot;scheduleRunTimes&quot;: [
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        &quot;2024-01-15T02:00:00Z&quot;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      ]
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    },
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    &quot;retentionPolicy&quot;: {
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>      &quot;retentionPolicyType&quot;: &quot;LongTermRetentionPolicy&quot;,
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      &quot;dailySchedule&quot;: {
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        &quot;retentionTimes&quot;: [
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>          &quot;2024-01-15T02:00:00Z&quot;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        ],
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        &quot;retentionDuration&quot;: {
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>          &quot;count&quot;: 30,
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>          &quot;durationType&quot;: &quot;Days&quot;
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>        }
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>      }
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    }
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  }
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>}
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The specified backup policy 'DailyBackupPolicy' was not found in vault 'prod-vault-01'.</code></strong> — Verify the policy name matches exactly with <code>az backup policy list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code>.
+<strong><code>InvalidJsonInput: The JSON file 'current-policy.json' is malformed or missing required fields.</code></strong> — Ensure the exported JSON is valid by running <code>jq empty current-policy.json</code> before applying, and do not remove required fields like <code>schedulePolicy</code> or <code>retentionPolicy</code>.
+<strong><code>AuthorizationFailed: The user does not have permission to modify backup policies in this vault.</code></strong> — Confirm your account has the "Backup Operator" or "Contributor" role on the Recovery Services vault using <code>az role assignment list --scope /subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;</code>.</p>
+</div>
+<hr />
+<h2 id="assigning-a-policy-to-protected-items">Assigning a Policy to Protected Items<a class="headerlink" href="#assigning-a-policy-to-protected-items" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Change the policy for an already-protected VM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>set-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--workload-type<span class="w"> </span>VM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--policy-name<span class="w"> </span>&lt;new-policy-name&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># List items using a specific policy</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?properties.policyId contains &#39;&lt;policy-name&gt;&#39;].{Name:name, State:properties.protectionState}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name                             State
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>---------------------------------  ----------------
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>prod-web-vm-01                    Protected
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>prod-web-vm-02                    Protected
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>prod-db-vm-03                    Protected
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>staging-app-vm-01                Protected
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>dev-test-vm-02                   ProtectionStopped
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The item with name '&lt;vm-name&gt;' not found in the container '&lt;container-name&gt;'</code></strong> — Verify the VM name and container name match exactly using <code>az backup container list</code> and <code>az backup item list</code>.
+<strong><code>The policy with name '&lt;new-policy-name&gt;' does not exist in the vault</code></strong> — Confirm the policy exists in the vault with <code>az backup policy list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code>.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' under resource group '&lt;rg&gt;' was not found</code></strong> — Ensure the vault name and resource group are correct and the vault exists in your subscription.</p>
+</div>
 <hr />
 <h2 id="deleting-a-policy">Deleting a Policy<a class="headerlink" href="#deleting-a-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Delete a policy (only if no items are assigned to it)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Delete a policy (only if no items are assigned to it)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--name<span class="w"> </span>&lt;policy-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The policy 'DailyBackupPolicy' cannot be deleted because it is still associated with 1 protected item(s).</code></strong> — Disassociate or delete all backup items using this policy before attempting deletion.
+<strong><code>ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/backupPolicies/&lt;policy-name&gt;' does not exist.</code></strong> — Verify the policy name is correct and exists in the specified vault using <code>az backup policy list</code>.</p>
+</div>
 
 
 
@@ -8792,7 +8883,7 @@ Backup policies define when backups run, how many recovery points are retained, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

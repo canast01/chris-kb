@@ -8933,6 +8933,36 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>purehostconnection<span class="w"> </span>list
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Look for any host with only 1 path shown</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name    Capacity  Used      Status    
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>drive0  1.6TB     892.3GB   healthy   
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>drive1  1.6TB     901.7GB   healthy   
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>drive2  1.6TB     885.2GB   healthy   
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>drive3  1.6TB     910.1GB   healthy   
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>(no output — no unhealthy drives found)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Name       Status   Version      
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>controller0 online  PureOS 6.4.2 
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>controller1 online  PureOS 6.4.2 
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>(no output — no critical alerts)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Name       Status  Mediator
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>pod-esx01  online  10.20.50.88
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>pod-esx02  online  10.20.50.88
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Host          Port    Target  LUN  Status   
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>esx-host-01   fc.0    ct0.fc0 0    active   
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>esx-host-01   fc.1    ct1.fc0 0    active   
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>esx-host-02   fc.0    ct0.fc0 1    active   
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>esx-host-02   fc.1    ct1.fc0 1    active   
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>esx-host-03   fc.0    ct0.fc0 2    active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No such command 'puredrive'</code></strong> — Verify the Pure Storage CLI is installed and in your PATH; run <code>which pureadmin</code> to confirm.
+<strong><code>Error: Connection refused (10.20.50.1:443)</code></strong> — Ensure the array management IP is reachable and the array is online; check network connectivity with <code>ping 10.20.50.1</code>.
+<strong><code>Error: Authentication failed</code></strong> — Verify your Pure Storage API token or credentials are valid; re-authenticate with <code>pureadmin login</code>.</p>
+</div>
 <p><strong>Common blockers and resolutions:</strong></p>
 <table>
 <thead>
@@ -8963,70 +8993,187 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 <h3 id="path-recovery-after-controller-upgrade">Path Recovery After Controller Upgrade<a class="headerlink" href="#path-recovery-after-controller-upgrade" title="Permanent link">&para;</a></h3>
 <p>If host paths do not recover automatically after a controller swap:</p>
 <p><strong>Linux (multipath):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the affected Linux host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Rescan the SCSI bus to detect new paths</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$host</span>/scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Reload multipath to pick up new paths</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>multipathd<span class="w"> </span>reconfigure
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Confirm all expected paths are visible</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the affected Linux host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Rescan the SCSI bus to detect new paths</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$host</span>/scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Reload multipath to pick up new paths</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Confirm all expected paths are visible</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>multipath<span class="w"> </span>-ll
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>device-mapper-multipath-0.8.7 (1.1.2|UP)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>size=2.0T features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| |- 2:0:0:1 sdb 8:16  active ready running
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| |- 3:0:0:1 sdc 8:32  active ready running
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| `- 4:0:0:1 sdd 8:48  active ready running
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  |- 5:0:0:1 sde 8:64  active ready running
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  |- 6:0:0:1 sdf 8:80  active ready running
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  `- 7:0:0:1 sdg 8:96  active ready running
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>mpatha (360001405a1b2c3d4e5f6g7h8i9j0k1l) dm-0 PURE,FlashArray-X70
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>size=2.0T features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>multipathd: command not found</code></strong> — Install device-mapper-multipath package with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code>.
+<strong><code>open: /sys/class/scsi_host/host*/scan: No such file or directory</code></strong> — Verify SCSI host controllers exist with <code>ls /sys/class/scsi_host/</code> and ensure the system has active storage adapters.
+<strong><code>multipath: command not found</code></strong> — Install multipath-tools with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code> and start the multipathd service.</p>
+</div>
 <p><strong>VMware ESXi:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan storage adapters in ESXi</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm paths are active for each device</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;device_naa&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rescan storage adapters in ESXi</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm paths are active for each device</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;device_naa&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Rescan of adapter vmhba0 started.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Rescan of adapter vmhba1 started.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Rescan of adapter vmhba2 started.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Rescan of adapter vmhba3 started.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Rescan of adapter vmhba4 started.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Device: naa.624a9370d1234567890abcdef012345
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   Display Name: PURE FlashArray //m20 (naa.624a9370d1234567890abcdef012345)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   Multiplex Policy: round-robin
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   Path Count: 4
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   Work Load Model: Default
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   PluginName: NMP
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>   State: active
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   Paths:
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      vmhba0:C0:T0:L0 Hostd.vmhba0:C0:T0:L0 naa.624a9370d1234567890abcdef012345 active ready
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      vmhba1:C0:T0:L0 HostD.vmhba1:C0:T0:L0 naa.624a9370d1234567890abcdef012345 active ready
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      vmhba2:C0:T0:L0 HostD.vmhba2:C0:T0:L0 naa.624a9370d1234567890abcdef012345 active ready
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      vmhba3:C0:T0:L0 HostD.vmhba3:C0:T0:L0 naa.624a9370d1234567890abcdef012345 active ready
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace storage core adapter rescan</code></strong> — Verify the ESXi host version supports this command (6.5+) and that you are connected to the correct host via SSH.
+<strong><code>Error: Could not find device naa.624a9370d1234567890abcdef012345</code></strong> — Confirm the NAA ID is correct by running <code>esxcli storage nmp device list</code> without grep to view all available devices.</p>
+</div>
 <p><strong>Windows (MPIO):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Rescan MPIO paths in PowerShell</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">mpclaim</span> <span class="n">-r</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Confirm path state</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Rescan MPIO paths in PowerShell</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">mpclaim</span> <span class="n">-r</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Confirm path state</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>
 </code></pre></div>
 <hr />
 <h2 id="capacity-management-issues">Capacity Management Issues<a class="headerlink" href="#capacity-management-issues" title="Permanent link">&para;</a></h2>
 <h3 id="identifying-top-capacity-consumers">Identifying Top Capacity Consumers<a class="headerlink" href="#identifying-top-capacity-consumers" title="Permanent link">&para;</a></h3>
 <p>When capacity alerts fire or the subscription True Forward review is approaching:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Overall capacity summary</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Volume-level space usage — identify top consumers</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">2</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Snapshot space usage — identify snapshots consuming unexpected space</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Protection group snapshot totals</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Show space used by destroyed but not yet eradicated volumes</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>purevol<span class="w"> </span>list<span class="w"> </span>--destroyed<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Overall capacity summary</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Volume-level space usage — identify top consumers</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">2</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Snapshot space usage — identify snapshots consuming unexpected space</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Protection group snapshot totals</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Show space used by destroyed but not yet eradicated volumes</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>purevol<span class="w"> </span>list<span class="w"> </span>--destroyed<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name                          Capacity      Used    Available   %Used
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pure-array-01                 100.0T        67.3T   32.7T       67.3%
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Volume                        Used          Snapshots  Provisioned
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>prod-db-01                    18.5T         2.1T       20.0T
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>prod-db-02                    14.2T         1.8T       15.0T
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>backup-archive-vol            9.7T          3.4T       12.0T
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>dev-test-clone                6.3T          0.9T       8.0T
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>logs-retention-vol            4.1T          1.2T       5.0T
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>...
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Snapshot                      Size          Volume             Created
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>prod-db-01.snap.20240115      2.1T          prod-db-01         2024-01-15T09:32:14Z
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>prod-db-02.snap.20240114      1.8T          prod-db-02         2024-01-14T14:22:08Z
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>backup-archive-vol.daily.001  1.5T          backup-archive-vol 2024-01-10T02:00:00Z
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>prod-db-01.snap.20240110      0.9T          prod-db-01         2024-01-10T09:15:22Z
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>dev-test-clone.snap.20240112  0.7T          dev-test-clone     2024-01-12T16:45:33Z
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>...
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>Name                          Snapshots     Used      Provisioned
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>prod-protection-group         12            8.3T      25.0T
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>backup-protection-group       8             4.2T      12.0T
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>dev-protection-group          5             2.1T      8.0T
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>Name                          Used          Snapshots  Destroyed
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>prod-db-old-01                3.2T          0.8T       yes
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>archive-vol-deprecated        1.9T          0.4T       yes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or API token expired</code></strong> — Verify your Pure Storage API token is valid and re-authenticate using <code>purelogin</code>.
+<strong><code>Error: Array not reachable at &lt;hostname&gt;</code></strong> — Confirm the array hostname/IP is correct and network connectivity exists with <code>ping</code> or <code>nslookup</code>.</p>
+</div>
 <h3 id="freeing-capacity-before-a-true-forward-review">Freeing Capacity Before a True Forward Review<a class="headerlink" href="#freeing-capacity-before-a-true-forward-review" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Eradicate destroyed volumes that are past the eradication timer</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Eradicate old destroyed snapshots</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Review and trim snapshot retention on protection groups that have excessive history</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Use the GUI or CLI to reduce the retention period for non-critical protection groups</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Eradicate destroyed volumes that are past the eradication timer</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Eradicate old destroyed snapshots</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Review and trim snapshot retention on protection groups that have excessive history</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Use the GUI or CLI to reduce the retention period for non-critical protection groups</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Eradicating destroyed volumes...
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Volume &#39;vol-prod-db-01.destroyed&#39; (3.2 TB) eradicated successfully
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Volume &#39;vol-backup-archive.destroyed&#39; (8.7 TB) eradicated successfully
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Volume &#39;vol-test-ephemeral.destroyed&#39; (1.1 TB) eradicated successfully
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>3 destroyed volumes eradicated. Recovered 13.0 TB of capacity.
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Eradicating destroyed snapshots...
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Snapshot &#39;snap-hourly.2024-01-15T08:00Z.destroyed&#39; eradicated successfully
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Snapshot &#39;snap-hourly.2024-01-15T09:00Z.destroyed&#39; eradicated successfully
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Snapshot &#39;snap-daily.2024-01-10.destroyed&#39; eradicated successfully
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>47 destroyed snapshots eradicated. Recovered 2.3 TB of capacity.
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Name                          Snapshots  Interval  Keep  Enabled
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>pg-database-prod              1847       hourly    168   true
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>pg-database-prod              892        daily     30    true
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>pg-database-prod              156        weekly    12    true
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>pg-fileserver-nightly         2341       hourly    72    true
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>pg-fileserver-nightly         445        daily     90    true
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>pg-archive-compliance         3156       daily     2555  true
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No destroyed volumes found to eradicate</code></strong> — Verify that volumes have been destroyed and are within the eradication timer window; check <code>purevol list --destroyed</code> to confirm candidates exist.
+<strong><code>Error: Insufficient permissions to eradicate snapshots</code></strong> — Ensure your Pure Storage API token or user account has the <code>eradicate</code> privilege assigned in the Pure1 management console.</p>
+</div>
 <h3 id="confirming-the-data-reduction-guarantee">Confirming the Data Reduction Guarantee<a class="headerlink" href="#confirming-the-data-reduction-guarantee" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current effective data reduction ratio</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Look for &#39;data_reduction&#39; field — this is the current achieved ratio</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If the ratio is below the contracted guarantee:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># 1. Note the current ratio and contracted ratio</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 2. Contact the Pure account team — Pure should provide additional capacity at no charge</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. Identify the cause: incompressible data types, deduplication disabled on volumes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check current effective data reduction ratio</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Look for &#39;data_reduction&#39; field — this is the current achieved ratio</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># If the ratio is below the contracted guarantee:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># 1. Note the current ratio and contracted ratio</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 2. Contact the Pure account team — Pure should provide additional capacity at no charge</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># 3. Identify the cause: incompressible data types, deduplication disabled on volumes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name                          Capacity  Used      Snapshots Data Reduction
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purearray-prod-01             100.0TB   67.3TB    12.4TB    3.2x
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>purearray-prod-02             100.0TB   71.8TB    8.9TB     2.8x
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>purearray-dr-01               50.0TB    22.1TB    4.2TB     2.1x
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purearray-test-01             25.0TB    8.7TB     1.1TB     1.9x
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Total                          275.0TB   169.9TB   26.6TB    2.7x
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory.
+<strong><code>Error: Unable to connect to array at &lt;ip&gt;. Connection refused.</code></strong> — Verify the array management IP is reachable and the Pure REST API service is running with <code>ssh &lt;array-ip&gt; pureadmin list</code>.
+<strong><code>Error: Invalid credentials. Authentication failed.</code></strong> — Confirm your Pure API token or username/password is current and has sufficient permissions to query space metrics.</p>
+</div>
 <hr />
 <h2 id="subscription-and-lifecycle-issues">Subscription and Lifecycle Issues<a class="headerlink" href="#subscription-and-lifecycle-issues" title="Permanent link">&para;</a></h2>
 <h3 id="scheduling-a-missed-ever-modern-controller-upgrade">Scheduling a Missed Ever Modern Controller Upgrade<a class="headerlink" href="#scheduling-a-missed-ever-modern-controller-upgrade" title="Permanent link">&para;</a></h3>
@@ -9038,47 +9185,127 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 <li>Confirm Purity software version is within the supported range for the new controller generation before scheduling — Pure will validate, but confirm independently using the compatibility matrix</li>
 </ol>
 <h3 id="checking-subscription-status">Checking Subscription Status<a class="headerlink" href="#checking-subscription-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm phonehome is active (prerequisite for subscription monitoring)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>--status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm the array is registered in Pure1 (array must appear in Pure1 portal)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Pure1 &gt; Arrays — the array should appear with a green health score</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Subscription tier, renewal date, and controller generation</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Pure1 &gt; Subscription &gt; Dashboard</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Confirm phonehome is active (prerequisite for subscription monitoring)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>--status
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Confirm the array is registered in Pure1 (array must appear in Pure1 portal)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Pure1 &gt; Arrays — the array should appear with a green health score</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Subscription tier, renewal date, and controller generation</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Pure1 &gt; Subscription &gt; Dashboard</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>phonehome is active
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Phonehome Status: enabled
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Last phonehome check-in: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Next scheduled check-in: 2024-01-15 20:32:18 UTC
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Array Registration Status: REGISTERED
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Array Name: purearray-prod-01
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Serial Number: 5b1234567890abcd
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Pure1 Portal Status: Connected
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Last sync with Pure1: 2024-01-15 14:35:02 UTC
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Subscription Information:
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  Tier: Evergreen Premium
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>  Renewal Date: 2025-06-30
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  Controller Generation: //m70
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>  Support Level: 24/7 Premium
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>phonehome is inactive</code></strong> — Enable phonehome with <code>purearray phonehome --enable</code> to restore Pure1 connectivity and subscription monitoring.
+<strong><code>Array Registration Status: UNREGISTERED</code></strong> — Register the array in Pure1 by navigating to Pure1 portal &gt; Arrays &gt; Register, or contact Pure support to link the serial number to your account.</p>
+</div>
 <hr />
 <h2 id="diagnostic-commands-summary">Diagnostic Commands Summary<a class="headerlink" href="#diagnostic-commands-summary" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Array health and version</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># All alerts</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Drive status</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=&#39;healthy&#39;&quot;</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Replication</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Host paths</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Snapshot space</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="c1"># Diagnostic bundle for Pure Support</span>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>purediag
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Array health and version</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># All alerts</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># Drive status</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=&#39;healthy&#39;&quot;</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Replication</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="c1"># Host paths</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>purehost<span class="w"> </span>list
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="c1"># Snapshot space</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="c1"># Diagnostic bundle for Pure Support</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>purediag
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name                          Revision  Status
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>pure-array-01.dc1.local      T20231015a-84  Online
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Controller A                  T20231015a-84  Online
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Controller B                  T20231015a-84  Online
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Hardware Summary:
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  Drives: 48 x 1.92TB SSD (NVMe)
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  Memory: 256GB
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  Network: 4x 25GbE
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>Space Summary:
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  Total Capacity: 92.16TB
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  Used: 67.43TB
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  Available: 24.73TB
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>Alert Summary: 23 total
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>  Error: 2
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>  Warning: 8
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>  Info: 13
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>Error Alerts:
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>  [2024-01-15 09:42:15] Drive slot 12 degraded — predictive failure
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>  [2024-01-15 08:17:03] Replication lag exceeding threshold on pod-dr-01
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>Unhealthy Drives:
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>  Slot 12  1.92TB  Degraded  predictive_failure
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>  Slot 34  1.92TB  Failed    media_error
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>Pod Replication Status:
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>  pod-prod-01  Replicating  Target: pure-array-02  Lag: 2.3s
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>  pod-dr-01    Replicating  Target: pure-array-03  Lag: 45.2s
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>Failover Preferences:
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>  pod-prod-01  Preferred: pure-array-02
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>  pod-dr-01    Preferred: pure-array-03
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>Host Connections: 12 active
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a>  host-app-01  iSCSI  Connected  4 paths
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a>  host-app-02  iSCSI  Connected  4 paths
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a>  host-db-01   FC     Connected  8 paths
+<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a>
+<a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a>Snapshot Space Usage:
+<a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a>  Total Snapshots: 847
+<a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a>  Space Used: 18.92TB
+<a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a>  Oldest: prod-db-snap-20240101_0200
+<a id="__codelineno-16-46" name="__codelineno-16-46" href="#__codelineno-16-46"></a>
+<a id="__codelineno-16-47" name="__codelineno-16-47" href="#__codelineno-16-47"></a>Protection Group Space:
+<a id="__codelineno-16-48" name="__codelineno-16-48" href="#__codelineno-16-48"></a>  pg-prod-databases  Snapshots: 156  Space: 8.34TB
+<a id="__codelineno-16-49" name="__codelineno-16-49" href="#__codelineno-16-49"></a>  pg-app-tier        Snapshots: 203  Space: 6.12TB
+<a id="__codelineno-16-50" name="__codelineno-16-50" href="#__codelineno-16-50"></a>
+<a id="__codelineno-16-51" name="__codelineno-16-51" href="#__codelineno-16-51"></a>Diagnostic bundle generated: /var/log/pure/diag_pure-array-01_20240115_094215.tar.gz (2.1GB)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory (typically <code>/opt/purearray/bin</code>).
+<strong><code>Error: Authentication failed</code></strong> — Verify credentials are set via <code>export PURE_APITOKEN=&lt;token&gt;</code> or configure <code>~/.purerc</code> with valid array management credentials.
+<strong><code>purediag: Insufficient disk space (need 3GB, have 1.2GB available)</code></strong> — Free up space on the management host or redirect the bundle to a mounted NFS share with <code>purediag --output /mnt/nfs/diags/</code>.</p>
+</div>
 <hr />
 <h2 id="before-calling-pure-support">Before Calling Pure Support<a class="headerlink" href="#before-calling-pure-support" title="Permanent link">&para;</a></h2>
 <p>Gather the following before opening a case to reduce time to resolution:</p>
@@ -9133,7 +9360,7 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

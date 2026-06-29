@@ -7084,28 +7084,58 @@ Log Retention Policy reference covering journald Retention, Centralised Log Rete
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">frozenTimePeriodInSecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7776000</span><span class="w">   </span><span class="c1"># 90 days</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">maxTotalDataSizeMB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500000</span>
 </code></pre></div></p>
-<p><strong>Elasticsearch (ELK):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Index Lifecycle Management (ILM) — set delete phase</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PUT<span class="w"> </span>_ilm/policy/infra-logs-policy
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">&quot;policy&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="s2">&quot;phases&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="s2">&quot;min_age&quot;</span>:<span class="w"> </span><span class="s2">&quot;90d&quot;</span>,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="s2">&quot;actions&quot;</span>:<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="o">}</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="o">}</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="o">}</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="o">}</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">}</span>
-</code></pre></div></p>
-<h2 id="archive-to-object-storage">Archive to Object Storage<a class="headerlink" href="#archive-to-object-storage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Compress and upload old logs (AWS S3 example)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/archive/<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error in 'main' stanza: attribute 'frozenTimePeriodInSecs' not recognized</code></strong> — Verify the attribute name matches your Splunk version's indexes.conf schema (some versions use <code>frozenTimePeriodInDays</code> instead).
+<strong><code>maxTotalDataSizeMB must be greater than maxMemMB</code></strong> — Increase <code>maxTotalDataSizeMB</code> to a value larger than the index's <code>maxMemMB</code> setting (typically at least 20MB higher).</p>
+</div>
+<p><strong>Elasticsearch (ELK):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Index Lifecycle Management (ILM) — set delete phase</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>PUT<span class="w"> </span>_ilm/policy/infra-logs-policy
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s2">&quot;policy&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="s2">&quot;phases&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="s2">&quot;min_age&quot;</span>:<span class="w"> </span><span class="s2">&quot;90d&quot;</span>,
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="s2">&quot;actions&quot;</span>:<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="o">}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="o">}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="o">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">}</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;acknowledged&quot;: true
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>400 Bad Request: [illegal_argument_exception] unknown setting [policy.phases.delete.min_age]</code></strong> — Use <code>min_age</code> directly under the phase object, not nested; the correct structure is <code>"phases": { "delete": { "min_age": "90d", "actions": {...} } }</code>.
+<strong><code>403 Forbidden: [security_exception] action [cluster:admin:ilm:put] is unauthorized</code></strong> — Grant the user or role the <code>manage_ilm</code> cluster privilege in Elasticsearch security settings.</p>
+</div>
+<h2 id="archive-to-object-storage">Archive to Object Storage<a class="headerlink" href="#archive-to-object-storage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Compress and upload old logs (AWS S3 example)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/archive/<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tar: Removing leading `/&#39; from member names
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>logs-202501.tar.gz
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2025-01-15 14:32:18       8547291 logs-202501.tar.gz
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>upload: /tmp/logs-202501.tar.gz to s3://compliance-logs-prod/logs/web-server-03/logs-202501.tar.gz
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2025-01-15 14:32:45       8547291 logs-202501.tar.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal error: An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></strong> — Verify the bucket name in the command matches your actual S3 bucket and that your AWS credentials have s3:PutObject permissions.
+<strong><code>tar: /var/log/archive/202501/: Cannot stat: No such file or directory</code></strong> — Ensure the archive directory exists for the current month; create it with <code>mkdir -p /var/log/archive/$(date +%Y%m)/</code> if logs haven't been rotated yet.
+<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.</p>
+</div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Log rotation running and not producing errors (<code>logrotate -d</code>)</li>
@@ -7152,7 +7182,7 @@ Log Retention Policy reference covering journald Retention, Centralised Log Rete
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

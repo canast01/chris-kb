@@ -7557,140 +7557,364 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># View all active jobs</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>/usr/openv/netbackup/bin/admincmd/bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">1</span><span class="w"> </span>-state<span class="w"> </span>active
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>JobId,Type,State,Status,Policy,Schedule,Client,StartTime,EndTime
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2847291,Backup,Failed,13,PROD_DB_DAILY,db_full_0200,db-prod-01.corp.local,2024-01-15 02:15:33,2024-01-15 02:47:22
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2847289,Backup,Failed,58,CORP_FILES,incremental_0100,fileserver-02.corp.local,2024-01-15 01:30:44,2024-01-15 01:45:19
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2847285,Backup,Failed,96,ARCHIVE_WEEKLY,weekly_sun_0000,backup-client-07.corp.local,2024-01-14 23:55:12,2024-01-15 00:22:08
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2847279,Backup,Failed,213,EXCHANGE_2019,hourly_0300,exch-mb-01.corp.local,2024-01-14 21:10:05,2024-01-14 21:18:47
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>JobId: 2847291
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Policy: PROD_DB_DAILY
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Client: db-prod-01.corp.local
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Status: 13 (file read failed)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Media Server: nbk-media-01.corp.local
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Storage Unit: SU_DISK_POOL_01
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Start Time: 2024-01-15 02:15:33
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>End Time: 2024-01-15 02:47:22
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Exit Code: 13
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Error Message: Cannot read file /var/lib/mysql/ibdata1 - Permission denied on client
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>JobId,Type,State,Status,Policy,Schedule,Client,StartTime,EndTime
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>2847295,Backup,Active,0,PROD_DB_DAILY,db_full_0200,db-prod-02.corp.local,2024-01-15 14:22:11,(in progress)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>2847294,Backup,Active,0,CORP_FILES,incremental_0100,fileserver-03.corp.local,2024-01-15 14:18:47,(in progress)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>2847293,Backup,Active,0,VMWARE_PROD,vm_backup_1400,esx-cluster-01.corp.local,2024-01-15 14:05:33,(in progress)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpdbjobs: command not found</code></strong> — Verify NetBackup is installed and add <code>/usr/openv/netbackup/bin/admincmd</code> to your PATH or use the full path.
+<strong><code>Error: Cannot connect to database</code></strong> — Ensure the NetBackup database service is running with <code>bpdbm status</code> and check connectivity to the master server.
+<strong><code>Error: Invalid job ID &lt;job-id&gt;</code></strong> — Use <code>bpdbjobs -report</code> without filters first to list valid job IDs, then substitute the actual numeric ID.</p>
+</div>
 <hr />
 <h2 id="step-2-check-storage-unit-and-pool-capacity">Step 2 — Check storage unit and pool capacity<a class="headerlink" href="#step-2-check-storage-unit-and-pool-capacity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all storage units with type, media server, and high watermark</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/openv/netbackup/bin/admincmd/bpstulist<span class="w"> </span>-U
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Columns: STU Name, Storage Type, Media Server, Free Space, Max MPX, High Watermark</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Problem: Free Space 0% or near High Watermark limit</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check MSDP / AdvancedDisk pool utilization</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>/usr/openv/netbackup/bin/admincmd/nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Shows: disk pool name, total capacity, used capacity, available</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># MSDP pool detailed health check</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>/msdp/data/dp1
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Expected: Status = Active; shows dedup ratio and throughput</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Check MSDP fingerprint database health</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>cacontrol<span class="w"> </span>--dbstat
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Expected: no errors; shows FP DB size</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># List tape media by pool and status</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>/usr/openv/netbackup/bin/admincmd/vmquery<span class="w"> </span>-b<span class="w"> </span>-pn<span class="w"> </span>&lt;volume-pool-name&gt;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Status: Active, Full, Frozen (frozen media = error; cannot be written)</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Check tape drives in robot</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>/usr/openv/netbackup/bin/admincmd/tpconfig<span class="w"> </span>-d
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Shows: drive name, serial, status (Up/Down)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all storage units with type, media server, and high watermark</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/openv/netbackup/bin/admincmd/bpstulist<span class="w"> </span>-U
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Columns: STU Name, Storage Type, Media Server, Free Space, Max MPX, High Watermark</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Problem: Free Space 0% or near High Watermark limit</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check MSDP / AdvancedDisk pool utilization</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>/usr/openv/netbackup/bin/admincmd/nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Shows: disk pool name, total capacity, used capacity, available</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># MSDP pool detailed health check</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>/msdp/data/dp1
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Expected: Status = Active; shows dedup ratio and throughput</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check MSDP fingerprint database health</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>cacontrol<span class="w"> </span>--dbstat
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Expected: no errors; shows FP DB size</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># List tape media by pool and status</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>/usr/openv/netbackup/bin/admincmd/vmquery<span class="w"> </span>-b<span class="w"> </span>-pn<span class="w"> </span>&lt;volume-pool-name&gt;
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Status: Active, Full, Frozen (frozen media = error; cannot be written)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Check tape drives in robot</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>/usr/openv/netbackup/bin/admincmd/tpconfig<span class="w"> </span>-d
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Shows: drive name, serial, status (Up/Down)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Storage Unit List:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>STU Name              Storage Type    Media Server      Free Space  Max MPX  High Watermark
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>stu-primary-disk     AdvancedDisk    mserver01.corp    45%         4        80%
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>stu-secondary-disk   AdvancedDisk    mserver02.corp    12%         4        80%
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>stu-tape-pool-1      Tape            mserver01.corp    89%         8        90%
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Disk Pool Query:
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Pool Name             Total Capacity  Used Capacity   Available
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>dp1-production        50.0 TB         42.3 TB         7.7 TB
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>dp2-archive           100.0 TB        98.5 TB         1.5 TB
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>MSDP Pool Health (dp1):
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Status = Active
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Dedup Ratio: 3.2:1
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Throughput: 245 MB/s
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Fingerprint DB Size: 18.4 GB
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Fingerprint Database Status:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>DB Status: Healthy
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>FP DB Size: 18.4 GB
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Last Verification: 2024-01-15 03:22:15
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Tape Media Pool (backup-monthly):
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Media ID          Status    Capacity  Used      Pool Name
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>CLN001            Active    800 GB    650 GB    backup-monthly
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>CLN002            Full      800 GB    800 GB    backup-monthly
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>CLN003            Frozen    800 GB    750 GB    backup-monthly
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Tape Drive Configuration:
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Drive Name        Serial Number    Status    Drive Type
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>TLD1              SN-LTO8-0042     Up        LTO-8
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>TLD2              SN-LTO8-0043     Down      LTO-8
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>TLD3              SN-LTO9-0051     Up        LTO-9
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpstulist: command not found</code></strong> — Verify NetBackup is installed and <code>/usr/openv/netbackup/bin/admincmd/</code> is in PATH or use the full path.
+<strong><code>cacontrol: error accessing /msdp/data/dp1: No such file or directory</code></strong> — Confirm the MSDP pool mount point exists and is mounted; check <code>/etc/fstab</code> or <code>mount | grep msdp</code>.
+<strong><code>vmquery: Media pool &lt;volume-pool-name&gt; not found</code></strong> — Replace <code>&lt;volume-pool-name&gt;</code> with an actual pool name from <code>bpstulist</code> output (e.g., <code>backup-monthly</code>).</p>
+</div>
 <hr />
 <h2 id="step-3-check-policy-and-client-configuration">Step 3 — Check policy and client configuration<a class="headerlink" href="#step-3-check-policy-and-client-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all policies with schedule and client detail</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/openv/netbackup/bin/admincmd/bppllist<span class="w"> </span>-allpolicies<span class="w"> </span>-L
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check a specific policy schedule (backup windows, frequency, type)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/openv/netbackup/bin/admincmd/bpplschedrep<span class="w"> </span>&lt;policy-name&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List catalog images available for a client</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>/usr/openv/netbackup/bin/admincmd/bplist<span class="w"> </span>-C<span class="w"> </span>&lt;client-hostname&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span>-l
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># -t 0 = any backup type; -l = long format with date and size</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check registered clients and their attributes</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>/usr/openv/netbackup/bin/admincmd/bpplclients<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Verify policy is active and has valid clients</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>/usr/openv/netbackup/bin/admincmd/bppllist<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ACTIVE|CLIENT|SCHED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all policies with schedule and client detail</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/openv/netbackup/bin/admincmd/bppllist<span class="w"> </span>-allpolicies<span class="w"> </span>-L
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check a specific policy schedule (backup windows, frequency, type)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/usr/openv/netbackup/bin/admincmd/bpplschedrep<span class="w"> </span>&lt;policy-name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List catalog images available for a client</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>/usr/openv/netbackup/bin/admincmd/bplist<span class="w"> </span>-C<span class="w"> </span>&lt;client-hostname&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span>-l
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># -t 0 = any backup type; -l = long format with date and size</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check registered clients and their attributes</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>/usr/openv/netbackup/bin/admincmd/bpplclients<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Verify policy is active and has valid clients</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>/usr/openv/netbackup/bin/admincmd/bppllist<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ACTIVE|CLIENT|SCHED&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Policy Name: prod-daily-backup
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Policy Type: Standard
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Active: Yes
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Client: web-server-01.corp.local
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Client: db-server-02.corp.local
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Client: fileserver-03.corp.local
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Schedule Name: weekday-incremental
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Schedule Type: Incremental
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Frequency: Every day at 22:00
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Retention: 30 days
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>...
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Policy: prod-daily-backup
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Schedule: weekday-incremental
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Window Start: 22:00 EST
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Window End: 06:00 EST
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Frequency: Daily (Mon-Sun)
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Type: Incremental
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Last Run: 2024-01-15 22:15:33
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Next Run: 2024-01-16 22:00:00
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Backup Images for Client: web-server-01.corp.local
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Image ID: 1705363200 | Date: 2024-01-15 22:00:00 | Size: 487.3 GB | Status: COMPLETED
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Image ID: 1705276800 | Date: 2024-01-14 22:00:00 | Size: 512.1 GB | Status: COMPLETED
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Image ID: 1705190400 | Date: 2024-01-13 22:00:00 | Size: 498.7 GB | Status: COMPLETED
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>...
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>Registered Clients for Policy: prod-daily-backup
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>Client: web-server-01.corp.local | OS: Linux | Enabled: Yes
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Client: db-server-02.corp.local | OS: Linux | Enabled: Yes
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>Client: fileserver-03.corp.local | OS: Windows | Enabled: Yes
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>ACTIVE: Yes
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>CLIENT: web-server-01.corp.local
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>CLIENT: db-server-02.corp.local
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>CLIENT: fileserver-03.corp.local
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>SCHED: weekday-incremental
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bppllist: policy 'prod-daily-backup' not found</code></strong> — Verify the policy name spelling and that it exists in the NetBackup master server configuration.
+<strong><code>bplist: client 'web-server-01.corp.local' is not registered</code></strong> — Register the client in the NetBackup admin console or use <code>bpplclients</code> to add it to the policy.
+<strong><code>Error: NetBackup master server is not running</code></strong> — Start the NetBackup services on the master server with <code>/usr/openv/netbackup/bin/bpup -start</code>.</p>
+</div>
 <hr />
 <h2 id="step-4-check-media-server-status-and-catalog">Step 4 — Check media server status and catalog<a class="headerlink" href="#step-4-check-media-server-status-and-catalog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all registered hosts in EMM (Enterprise Media Manager)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-listhosts
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check media server status specifically</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-listhosts<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Expected: all media servers with Status = UP</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Re-register a media server if missing</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-updatehost<span class="w"> </span>-machinename<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check catalog database consistency</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>/usr/openv/netbackup/bin/admincmd/bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-verbose
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Expected: no inconsistencies reported</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Check catalog disk usage</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/usr/openv/netbackup/db/
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># NetBackup catalog PostgreSQL database; should have &gt; 20% free space on the partition</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Test network connectivity to media server</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;media-server&gt;
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>traceroute<span class="w"> </span>&lt;media-server&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Verify vnetd port 1556 is listening on master and media</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>netstat<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">1556</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all registered hosts in EMM (Enterprise Media Manager)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-listhosts
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check media server status specifically</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-listhosts<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Expected: all media servers with Status = UP</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Re-register a media server if missing</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-updatehost<span class="w"> </span>-machinename<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check catalog database consistency</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>/usr/openv/netbackup/bin/admincmd/bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-verbose
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Expected: no inconsistencies reported</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check catalog disk usage</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/usr/openv/netbackup/db/
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># NetBackup catalog PostgreSQL database; should have &gt; 20% free space on the partition</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Test network connectivity to media server</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;media-server&gt;
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>traceroute<span class="w"> </span>&lt;media-server&gt;
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># Verify vnetd port 1556 is listening on master and media</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>netstat<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">1556</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Host Name                          Machine Type         Status
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>================================================================================
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>master-01.corp.local               master               UP
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>media-srv-01.corp.local            mediaserver          UP
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>media-srv-02.corp.local            mediaserver          UP
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>media-srv-03.corp.local            mediaserver          UP
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>client-backup-01.corp.local        client               UP
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Host Name                          Machine Type         Status
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>================================================================================
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>media-srv-01.corp.local            mediaserver          UP
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>media-srv-02.corp.local            mediaserver          UP
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>media-srv-03.corp.local            mediaserver          UP
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>(no output — command completes silently)
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>4.2G    /usr/openv/netbackup/db/
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>PING media-srv-01.corp.local (192.168.10.45) 56(84) bytes of data.
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>64 bytes from media-srv-01.corp.local (192.168.10.45): icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>64 bytes from media-srv-01.corp.local (192.168.10.45): icmp_seq=2 ttl=64 time=2.41 ms
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>...
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>10 packets transmitted, 10 received, 0% packet loss, time 9012ms
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>tcp        0      0 0.0.0.0:1556            0.0.0.0:*               LISTEN      8934/vnetd
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>tcp6       0      0 :::1556                 :::*                    LISTEN      8934/vnetd
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nbemmcmd: command not found</code></strong> — Verify NetBackup is installed and add <code>/usr/openv/netbackup/bin/admincmd</code> to PATH, or use the full path to the binary.
+<strong><code>Host &lt;media-server&gt; is not registered in EMM</code></strong> — Run <code>nbemmcmd -updatehost -machinename &lt;media-server&gt; -machinetype mediaserver</code> to register the missing media server.
+<strong><code>netstat: command not found</code></strong> — Use <code>ss -tulnp | grep 1556</code> instead, as netstat is deprecated on modern Linux systems.</p>
+</div>
 <hr />
 <h2 id="step-5-read-vxul-logs">Step 5 — Read VxUL logs<a class="headerlink" href="#step-5-read-vxul-logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VxUL logs location (Unified Logging)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>/usr/openv/logs/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Query logs by Origin ID (OID) and time range</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># OID 117 = nbpem (policy execution manager — job dispatch)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">117</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;DEBUG|WARNING|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># OID 118 = nbjm (job manager — data transfer)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">118</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;WARNING|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># OID 119 = nbstserv (storage service — STU and media)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">119</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># OID 143 = nbwebsvc (NetBackup web service — API)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">143</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Legacy log directories (pre-VxUL; create directories if debugging)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpcd<span class="w">     </span><span class="c1"># client daemon</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm<span class="w">    </span><span class="c1"># backup/restore manager</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bprd<span class="w">     </span><span class="c1"># request daemon</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpdm<span class="w">     </span><span class="c1"># disk manager</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># VxUL logs location (Unified Logging)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ls<span class="w"> </span>/usr/openv/logs/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Query logs by Origin ID (OID) and time range</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># OID 117 = nbpem (policy execution manager — job dispatch)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">117</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;DEBUG|WARNING|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># OID 118 = nbjm (job manager — data transfer)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">118</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;WARNING|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># OID 119 = nbstserv (storage service — STU and media)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">119</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># OID 143 = nbwebsvc (NetBackup web service — API)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>vxlogview<span class="w"> </span>-o<span class="w"> </span><span class="m">143</span><span class="w"> </span>-d<span class="w"> </span>24h<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Legacy log directories (pre-VxUL; create directories if debugging)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpcd<span class="w">     </span><span class="c1"># client daemon</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm<span class="w">    </span><span class="c1"># backup/restore manager</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bprd<span class="w">     </span><span class="c1"># request daemon</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/openv/netbackup/logs/bpdm<span class="w">     </span><span class="c1"># disk manager</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>audit.log
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>bprd.log
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>bpbrm.log
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>bpcd.log
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>bpdm.log
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>vxlogd.log
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>vxul.log
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>[OID:117 nbpem] 2024-01-15 14:32:18 DEBUG Job dispatch initiated for policy PROD_DAILY_BACKUP
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>[OID:117 nbpem] 2024-01-15 14:33:02 WARNING Schedule window exceeded by 45 seconds
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>[OID:117 nbpem] 2024-01-15 14:35:41 ERROR Failed to dispatch job 12847: insufficient media resources
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>[OID:117 nbpem] 2024-01-15 15:12:09 DEBUG Retry attempt 2 for policy PROD_DAILY_BACKUP
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>[OID:117 nbpem] 2024-01-15 16:04:33 ERROR Job 12848 terminated: client host unreachable (10.42.18.7)
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>[OID:118 nbjm] 2024-01-15 14:35:45 WARNING Data transfer rate below threshold: 45 MB/s (expected &gt;100 MB/s)
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>[OID:118 nbjm] 2024-01-15 14:52:17 ERROR Job 12847 data transfer failed: socket timeout after 300s
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>[OID:119 nbstserv] 2024-01-15 15:18:33 ERROR STU device /dev/sg5 not responding
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>[OID:143 nbwebsvc] 2024-01-15 16:22:01 ERROR API request timeout: GET /api/v1/jobs/status (client: 192.168.1.105)
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>mkdir: created directory &#39;/usr/openv/netbackup/logs/bpcd&#39;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>mkdir: created directory &#39;/usr/openv/netbackup/logs/bpbrm&#39;
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>mkdir: created directory &#39;/usr/openv/netbackup/logs/bprd&#39;
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>mkdir: created directory &#39;/usr/openv/netbackup/logs/bpdm&#39;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vxlogview: command not found</code></strong> — Verify VxUL is installed with <code>rpm -qa | grep VRTSvxul</code> and install the VxUL package if missing.
+<strong><code>Permission denied</code></strong> — Run the vxlogview and mkdir commands with <code>sudo</code> or as root user.
+<strong><code>No such file or directory: /usr/openv/logs/</code></strong> — Confirm NetBackup is installed in the default location or adjust the path to match your installation directory (check <code>echo $NB_INSTALL_DIR</code>).</p>
+</div>
 <hr />
 <h2 id="step-6-increase-verbose-logging-temporarily">Step 6 — Increase verbose logging temporarily<a class="headerlink" href="#step-6-increase-verbose-logging-temporarily" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Set verbose level to 3 (moderate) on master server</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s">VERBOSE = 3</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s">EOF</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Valid range: 0 (default) to 5 (maximum — very verbose; use briefly)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># After reproducing the issue, revert to default</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s">VERBOSE = 0</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s">EOF</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Set on a specific media server</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s">VERBOSE = 3</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Set verbose level to 3 (moderate) on master server</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">VERBOSE = 3</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">EOF</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Valid range: 0 (default) to 5 (maximum — very verbose; use briefly)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># After reproducing the issue, revert to default</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">VERBOSE = 0</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">EOF</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Set on a specific media server</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>/usr/openv/netbackup/bin/admincmd/bpsetconfig<span class="w"> </span>-h<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s">VERBOSE = 3</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="s">EOF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Configuration updated successfully on master-server
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>VERBOSE set to 3
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Configuration updated successfully on master-server
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>VERBOSE set to 0
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Configuration updated successfully on media-server-01
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>VERBOSE set to 3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpsetconfig: invalid host &lt;master-server&gt;</code></strong> — Replace <code>&lt;master-server&gt;</code> with the actual FQDN or IP address of your NetBackup master server (e.g., <code>nbmaster.corp.local</code>).
+<strong><code>bpsetconfig: permission denied</code></strong> — Run the command as root or with sudo, as NetBackup configuration changes require elevated privileges.
+<strong><code>bpsetconfig: connection timeout to &lt;media-server&gt;</code></strong> — Verify the media server is reachable and the NetBackup daemons are running with <code>bpps -a</code> on the target host.</p>
+</div>
 <hr />
 <h2 id="step-7-generate-nbsupport-bundle-for-veritas-sr">Step 7 — Generate nbsupport bundle for Veritas SR<a class="headerlink" href="#step-7-generate-nbsupport-bundle-for-veritas-sr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate diagnostic bundle on the master server</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/openv/netbackup/bin/support/nbsupport
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output: /tmp/nbsupport_&lt;hostname&gt;_&lt;timestamp&gt;.tar.gz</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Includes: VxUL logs, config files, job history, storage unit config</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Include job detail for the failing job in the SR</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>/usr/openv/netbackup/bin/admincmd/bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>-report<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/job_<span class="si">${</span><span class="nv">job_id</span><span class="si">}</span>_report.txt
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Include storage unit status</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>/usr/openv/netbackup/bin/admincmd/bpstulist<span class="w"> </span>-U<span class="w"> </span>&gt;<span class="w"> </span>/tmp/stu_status.txt
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>/usr/openv/netbackup/bin/admincmd/nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/stu_status.txt
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Upload to Veritas support portal with:</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># - nbsupport .tar.gz file</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># - Job ID, exit code, and time window of the issue</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># - Policy name, client name, and storage unit name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Generate diagnostic bundle on the master server</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/usr/openv/netbackup/bin/support/nbsupport
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Output: /tmp/nbsupport_&lt;hostname&gt;_&lt;timestamp&gt;.tar.gz</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Includes: VxUL logs, config files, job history, storage unit config</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Include job detail for the failing job in the SR</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>/usr/openv/netbackup/bin/admincmd/bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>-report<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/job_<span class="si">${</span><span class="nv">job_id</span><span class="si">}</span>_report.txt
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Include storage unit status</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>/usr/openv/netbackup/bin/admincmd/bpstulist<span class="w"> </span>-U<span class="w"> </span>&gt;<span class="w"> </span>/tmp/stu_status.txt
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>/usr/openv/netbackup/bin/admincmd/nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/stu_status.txt
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Upload to Veritas support portal with:</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># - nbsupport .tar.gz file</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># - Job ID, exit code, and time window of the issue</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># - Policy name, client name, and storage unit name</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NetBackup Support Utility
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Gathering diagnostic information...
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Collecting VxUL logs from /usr/openv/netbackup/logs/
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting configuration files...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Collecting job history...
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Collecting storage unit configuration...
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Creating archive...
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Diagnostic bundle created: /tmp/nbsupport_nbmaster01_20240115_143022.tar.gz
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Bundle size: 287 MB
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Job ID 12847 Report:
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Job ID: 12847
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Policy: DailyBackup_Finance
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Client: finance-db-01.corp.local
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Schedule: Weekly-Full
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Status: FAILED
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Start Time: 01/15/2024 02:00:15
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>End Time: 01/15/2024 02:47:33
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Exit Code: 1
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Elapsed Time: 47 minutes 18 seconds
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Storage Unit Status:
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>Storage Unit Name          Type          Status        Capacity
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>PureDisk_Primary           PureDisk      ONLINE        2.1 TB / 5.0 TB
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>PureDisk_Secondary         PureDisk      ONLINE        1.8 TB / 5.0 TB
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Disk_Archive_01            Disk          ONLINE        847 GB / 1.0 TB
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>Disk_Archive_02            Disk          DEGRADED      156 GB / 1.0 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpdbjobs: Job ID &lt;job-id&gt; not found</code></strong> — Replace <code>&lt;job-id&gt;</code> with the actual numeric job ID from the failed backup job.
+<strong><code>Permission denied: /tmp/nbsupport_*.tar.gz</code></strong> — Run the nbsupport command as root or the netbackup service user (typically <code>netbackup</code>).
+<strong><code>bpstulist: command not found</code></strong> — Ensure you are running these commands on the NetBackup master server and the PATH includes <code>/usr/openv/netbackup/bin/admincmd/</code>.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -7770,7 +7994,7 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

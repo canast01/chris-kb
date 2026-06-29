@@ -8989,63 +8989,157 @@ How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replica
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>microcode
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>microcode
 </code></pre></div>
-<h3 id="2-capture-srdf-group-and-pair-state-from-both-arrays">2. Capture SRDF group and pair state from both arrays<a class="headerlink" href="#2-capture-srdf-group-and-pair-state-from-both-arrays" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All SRDF groups on R1</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-groups-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># All SRDF groups on R2 (should mirror R1)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf-s-groups-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID               Microcode Version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>000123456789012           5978.669.669
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>000198765432109           5978.669.669
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Solutions Enabler Version: 9.2.1.0 (Build 123)
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Detailed pair state for each affected SRDF group</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-detail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check for Partitioned state specifically</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;Synchronized|Partitioned|Consistent|Invalid|pair state&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Microcode Version: 5978.669.669
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Microcode Version: 5978.669.669
 </code></pre></div>
-<h3 id="3-capture-rdf-director-and-link-state">3. Capture RDF director and link state<a class="headerlink" href="#3-capture-rdf-director-and-link-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RDF directors on R1</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-rdf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Cannot find a Symmetrix</code></strong> — Verify the R1-SID and R2-SID values are correct and the arrays are online and discoverable via <code>symcfg discover</code>.
+<strong><code>symcli: command not found</code></strong> — Ensure Solutions Enabler is installed and the bin directory is in your PATH, or use the full path <code>/opt/emc/SYMCLI/bin/symcli -version</code>.</p>
+</div>
+<h3 id="2-capture-srdf-group-and-pair-state-from-both-arrays">2. Capture SRDF group and pair state from both arrays<a class="headerlink" href="#2-capture-srdf-group-and-pair-state-from-both-arrays" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All SRDF groups on R1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-groups-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># RDF directors on R2</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf-s-rdf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># All SRDF groups on R2 (should mirror R1)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf-s-groups-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># RDF port-level details</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;port|status|online|offline&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Detailed pair state for each affected SRDF group</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-detail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.txt
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># SRDF link bandwidth and latency (Unisphere alternative)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>perf<span class="w"> </span>summary
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check for Partitioned state specifically</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;Synchronized|Partitioned|Consistent|Invalid|pair state&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                SRDF/S Group Information
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Group #  Type  R1 Dev Count  R2 Dev Count  R1 SID         R2 SID         State
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>1        RDF   100           100           000123456789012 000987654321098 Synchronized
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2        RDF   50            50            000123456789012 000987654321098 Synchronized
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>3        RDF   75            75            000123456789012 000987654321098 Partitioned
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Symmetrix ID: 000987654321098
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                                SRDF/S Group Information
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Group #  Type  R1 Dev Count  R2 Dev Count  R1 SID         R2 SID         State
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>1        RDF   100           100           000123456789012 000987654321098 Synchronized
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2        RDF   50            50            000123456789012 000987654321098 Synchronized
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>3        RDF   75            75            000123456789012 000987654321098 Partitioned
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Pair State for Group 3:
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Pair State: Partitioned
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Last Synchronized: 2024-01-15 14:32:18
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Consistency State: Inconsistent
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  RDF Link State: Down
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Synchronized
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Partitioned
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Inconsistent
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>pair state: Partitioned
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF group &lt;group-number&gt; not found</code></strong> — Verify the group number exists on the specified array using <code>symdf list -sid &lt;SID&gt;</code> first.
+<strong><code>Symmetrix ID &lt;R1-SID&gt; does not exist or is not accessible</code></strong> — Confirm the SID is correct and the array is reachable via <code>symcfg list -v</code>.
+<strong><code>RDF Link Down - Cannot query pair state</code></strong> — Check physical RDF link connectivity and restart the RDF daemon with <code>symrdf start -g &lt;group-number&gt;</code> after verifying cable connections.</p>
+</div>
+<h3 id="3-capture-rdf-director-and-link-state">3. Capture RDF director and link state<a class="headerlink" href="#3-capture-rdf-director-and-link-state" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RDF directors on R1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-rdf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># RDF directors on R2</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf-s-rdf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># RDF port-level details</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;port|status|online|offline&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># SRDF link bandwidth and latency (Unisphere alternative)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>perf<span class="w"> </span>summary
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Director Information:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Director 4a (RDF): Online, Port 0: Online, Port 1: Online
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Director 4b (RDF): Online, Port 0: Online, Port 1: Offline
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Director 5a (RDF): Online, Port 0: Online, Port 1: Online
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Director 5b (RDF): Online, Port 0: Online, Port 1: Online
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Symmetrix ID: 000198765432109
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Director Information:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Director 3a (RDF): Online, Port 0: Online, Port 1: Online
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Director 3b (RDF): Online, Port 0: Online, Port 1: Online
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Director 4a, Port 0: Online, Status: Ready
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Director 4a, Port 1: Online, Status: Ready
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Director 4b, Port 0: Online, Status: Ready
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Director 4b, Port 1: Offline, Status: Link Down
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Director 5a, Port 0: Online, Status: Ready
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Director 5a, Port 1: Online, Status: Ready
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>SRDF Group 1 Performance Summary:
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  Write Pending: 2048 tracks
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  Average Latency: 12.3 ms
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  Bandwidth: 487.5 MB/s
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  RDF Link Status: Synchronized
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to the Symmetrix array &lt;R1-SID&gt;</code></strong> — Verify the SID is correct and the Symmetrix management port is reachable via <code>symcfg -sid &lt;R1-SID&gt; list -v</code>.
+<strong><code>Error: RDF group &lt;group-number&gt; not found</code></strong> — Confirm the group number exists with <code>symrdf -sid &lt;R1-SID&gt; list -g all</code> and use the correct group identifier.
+<strong><code>Error: Permission denied</code></strong> — Run the command with appropriate privileges using <code>sudo</code> or ensure your user is in the <code>symaccess</code> group.</p>
+</div>
 <h3 id="4-capture-event-log-from-both-arrays">4. Capture event log from both arrays<a class="headerlink" href="#4-capture-event-log-from-both-arrays" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Last 500 events from R1 (production)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-events-r1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Last 500 events from R2 (DR)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-events-r2-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Filter for SRDF events</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;SRDF|RDF|partition|fault|link&quot;</span><span class="w"> </span>/tmp/srdf-s-events-r1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Last 500 events from R1 (production)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-events-r1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Last 500 events from R2 (DR)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-events-r2-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Filter for SRDF events</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;SRDF|RDF|partition|fault|link&quot;</span><span class="w"> </span>/tmp/srdf-s-events-r1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/tmp/srdf-s-events-r1-20240115.txt
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/tmp/srdf-s-events-r2-20240115.txt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>01/15/2024 14:32:18 - SRDF Link State Change: R1 to R2 - Status: Synchronized
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>01/15/2024 14:28:45 - RDF Port 4 Link Up - Speed: 8Gbps
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>01/15/2024 14:15:22 - SRDF Partition Detected on R1 - Recovery in progress
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>01/15/2024 13:52:10 - RDF Link Fault: Transient error on Port 3 - Auto-recovery enabled
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>01/15/2024 13:45:33 - SRDF Replication Resumed - 2.3 TB synchronized
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>01/15/2024 13:22:17 - RDF Port 2 Link Down - Failover to alternate path
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>01/15/2024 12:58:04 - SRDF Consistency Group Update - 156 devices in sync
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>01/15/2024 12:34:51 - RDF Link State Change: R2 to R1 - Status: Synchronized
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>01/15/2024 12:10:19 - SRDF Partition Fault: Network isolation detected
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>01/15/2024 11:47:33 - RDF Port 1 Link Up - Replication resumed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symevent: command not found</code></strong> — Ensure Symmetrix CLI tools are installed and the PATH includes the Symmetrix bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>grep: /tmp/srdf-s-events-r1-20240115.txt: No such file or directory</code></strong> — Verify the symevent commands completed successfully and check that <code>/tmp</code> has write permissions.
+<strong><code>ERROR: Invalid SID &lt;R1-SID&gt;</code></strong> — Replace <code>&lt;R1-SID&gt;</code> and <code>&lt;R2-SID&gt;</code> with actual Symmetrix array serial numbers (e.g., <code>000123456789</code>).</p>
+</div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>R1 array: PowerMax 8500, SID: 000XXXXXXXXXX (production, Site A — primary data center)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>R2 array: PowerMax 2500, SID: 000YYYYYYYYYY (DR, Site B — DR site; 50 km apart)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>PowerMaxOS: 10.1.0.2 (both)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Solutions Enabler: 10.1.0.18
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>SRDF configuration: SRDF/S synchronous (zero RPO); 1 RDF group (Group 5: 400 devices)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Link: Dark fiber 10 Gbps; normal latency 0.3 ms round-trip
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Host connectivity: 48 production hosts connected to R1 via FC
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Issue first observed: 2026-06-15 11:30 UTC
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Last confirmed Synchronized state: 2026-06-15 11:25 UTC
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Changes in 24h before the issue:
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - 11:25: Network team patched fiber amplifier on the dark fiber link
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  - 11:30: symdf list: Group 5 transitions to &quot;Partitioned&quot; state
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - 11:32: Production hosts: SCSI I/O latency increase from 0.4 ms to 45 ms (SRDF/S holding writes)
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - 11:35: SRDF Adaptive Copy NOT enabled; hosts now queueing I/O; some applications timing out
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Steps already taken:
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  - Did NOT run symrdf failover
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  - Did NOT enable Adaptive Copy
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  - Fiber team: investigating if amplifier patch caused link instability
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  - symrdf query -g 5: Pair state = Partitioned; R1 = Ready; R2 = WriteDisabled
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>Blast radius: 48 production hosts experiencing I/O delays (holding writes pending R2 ACK); applications queuing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>R1 array: PowerMax 8500, SID: 000XXXXXXXXXX (production, Site A — primary data center)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>R2 array: PowerMax 2500, SID: 000YYYYYYYYYY (DR, Site B — DR site; 50 km apart)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>PowerMaxOS: 10.1.0.2 (both)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Solutions Enabler: 10.1.0.18
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>SRDF configuration: SRDF/S synchronous (zero RPO); 1 RDF group (Group 5: 400 devices)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Link: Dark fiber 10 Gbps; normal latency 0.3 ms round-trip
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Host connectivity: 48 production hosts connected to R1 via FC
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Issue first observed: 2026-06-15 11:30 UTC
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Last confirmed Synchronized state: 2026-06-15 11:25 UTC
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Changes in 24h before the issue:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - 11:25: Network team patched fiber amplifier on the dark fiber link
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - 11:30: symdf list: Group 5 transitions to &quot;Partitioned&quot; state
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - 11:32: Production hosts: SCSI I/O latency increase from 0.4 ms to 45 ms (SRDF/S holding writes)
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  - 11:35: SRDF Adaptive Copy NOT enabled; hosts now queueing I/O; some applications timing out
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Steps already taken:
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  - Did NOT run symrdf failover
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  - Did NOT enable Adaptive Copy
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  - Fiber team: investigating if amplifier patch caused link instability
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  - symrdf query -g 5: Pair state = Partitioned; R1 = Ready; R2 = WriteDisabled
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>Blast radius: 48 production hosts experiencing I/O delays (holding writes pending R2 ACK); applications queuing
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-case-on-dellcomsupport">How to Open the Case on dell.com/support<a class="headerlink" href="#how-to-open-the-case-on-dellcomsupport" title="Permanent link">&para;</a></h2>
@@ -9149,21 +9243,58 @@ How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replica
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run on Solutions Enabler host — paste into every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># SRDF group states</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Pair state detail for affected group</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;pair state|R1 state|R2 state|synchronized|partitioned&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># RDF director states</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ONLINE|OFFLINE&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ONLINE|OFFLINE&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Recent SRDF events (last 20)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;SRDF|RDF|partition|fault&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Run on Solutions Enabler host — paste into every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># SRDF group states</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Pair state detail for affected group</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group-number&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;pair state|R1 state|R2 state|synchronized|partitioned&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># RDF director states</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ONLINE|OFFLINE&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;R2-SID&gt;<span class="w"> </span>list<span class="w"> </span>-ra<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ONLINE|OFFLINE&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Recent SRDF events (last 20)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;R1-SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;SRDF|RDF|partition|fault&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>                                SRDF/S Group Information
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Group  Pair  R1 State  R2 State  Synchronized  Mode      BW(MB/s)  Latency(ms)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>1      1     Ready     Ready     Yes           Sync      850       12.3
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>1      2     Ready     Ready     Yes           Sync      850       12.1
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Pair State Detail for Group 1:
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Pair State: Synchronized
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>R1 State: Ready
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>R2 State: Ready
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Synchronized: Yes
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Partitioned: No
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>RDF Director States (R1 - SID 000123456789012):
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>Dir  Port  Status    Link State  Frames In   Frames Out
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>4a   0     ONLINE    Up          1847293     1847291
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>4a   1     ONLINE    Up          1847293     1847291
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>4b   0     ONLINE    Up          1847294     1847292
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>RDF Director States (R2 - SID 000198765432109):
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Dir  Port  Status    Link State  Frames In   Frames Out
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>5a   0     ONLINE    Up          1847291     1847293
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>5a   1     ONLINE    Up          1847291     1847293
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>Recent SRDF Events (Last 20):
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>Timestamp             Severity  Event Type        Message
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>2024-01-15 14:32:18   INFO      SRDF              Group 1 synchronized
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>2024-01-15 13:47:02   WARNING   RDF Link Fault    Port 4b:1 link recovered
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>2024-01-15 13:46:58   CRITICAL  RDF Partition     R1-R2 link down, failover initiated
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>2024-01-15 13:46:45   INFO      SRDF              Replication resumed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symdf: Command not found</code></strong> — Install EMC Solutions Enabler package or verify PATH includes /opt/emc/SYMCLI/bin.
+<strong><code>Error: Invalid SID &lt;R1-SID&gt;</code></strong> — Replace <code>&lt;R1-SID&gt;</code> with actual 12-digit Symmetrix ID (e.g., <code>000123456789012</code>).
+<strong><code>symrdf query: Group &lt;group-number&gt; not found</code></strong> — Verify the group number exists with <code>symrdf list</code> and confirm R1 and R2 arrays are both accessible.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9246,7 +9377,7 @@ How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replica
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:51:21 UTC"><span class="timeago" datetime="2026-06-29T04:51:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:51:21 UTC">2026-06-29</span>
   </span>
 
     

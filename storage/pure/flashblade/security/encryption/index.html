@@ -8119,12 +8119,33 @@
 <p>Enforce SMB encryption on a share:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span>--smb-encryption-mode<span class="w"> </span>required<span class="w"> </span>&lt;sharename&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SMB share &#39;&lt;sharename&gt;&#39; updated
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Encryption Mode: required
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Updated at: 2024-01-15T14:32:47Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: SMB share '&lt;sharename&gt;' not found</code></strong> — Verify the share name exists with <code>purefb smb-share list</code> and use the correct name.
+<strong><code>Error: Command failed: Invalid encryption mode 'required'. Valid modes are: disabled, preferred, required</code></strong> — Ensure the encryption mode parameter matches exactly (check for typos or unsupported values).
+<strong><code>Error: You do not have permission to perform this operation</code></strong> — Confirm your FlashBlade user account has admin or security policy modification privileges.</p>
+</div>
 <h2 id="audit-log-forwarding-syslog">Audit log forwarding (syslog)<a class="headerlink" href="#audit-log-forwarding-syslog" title="Permanent link">&para;</a></h2>
 <p>Forward audit events over UDP or TLS to a SIEM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>udp://siem:514
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>tls://siem:6514
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>udp://siem:514
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>tls://siem:6514
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Syslog server added: udp://siem:514
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Syslog server added: tls://siem:6514
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Name                          Facility  Severity  URI
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>siem-udp                      local0    info      udp://siem:514
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>siem-tls                      local1    info      tls://siem:6514
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused to siem:514</code></strong> — Verify the syslog server hostname/IP is reachable and the syslog service is listening on the specified port.
+<strong><code>Error: TLS certificate verification failed for tls://siem:6514</code></strong> — Ensure the FlashBlade has the correct CA certificate installed and the syslog server's TLS certificate is valid and trusted.</p>
+</div>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm the share rejects unencrypted SMB connections from a test client</li>
@@ -8160,7 +8181,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

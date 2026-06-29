@@ -7235,24 +7235,69 @@ What to do in your first hour with a new Pure Storage FlashArray. Covers array o
 <h3 id="array-health">Array Health<a class="headerlink" href="#array-health" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purearray<span class="w"> </span>list
 </code></pre></div>
-<p>Key fields: <code>array_name</code>, <code>version</code>, <code>id</code>. No output means SSH connectivity issue.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--all
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Address         Version   Revision
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pure-fa-m20-01.corp.local     192.168.1.42    6.4.2     20230815-001
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pure-fa-m20-02.corp.local     192.168.1.43    6.4.2     20230815-001
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pure-fa-x70-r2.corp.local     192.168.1.44    6.3.8     20230712-002
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
+<strong><code>Error: Unable to connect to array at 192.168.1.42</code></strong> — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.</p>
+</div>
+<p>Key fields: <code>array_name</code>, <code>version</code>, <code>id</code>. No output means SSH connectivity issue.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--all
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                          Capacity  Used      Snapshots  Data Reduction  Arrays
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>flasharray-prod-01            100.0T    47.3T     12.4T      2.8x            1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>flasharray-dr-02              50.0T     18.9T     4.2T       2.1x            1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>flasharray-test-03            25.0T     3.7T      0.8T       1.9x            1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>flasharray-backup-04          75.0T     61.2T     8.5T       3.2x            1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the array management IP and ensure your credentials are configured in ~/.purerc or via environment variables.</p>
+</div>
 <p>Shows all array properties including <code>SafeMode</code> status.</p>
 <h3 id="drive-health">Drive Health<a class="headerlink" href="#drive-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GUI: Storage → Drives
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GUI: Storage → Drives
 </code></pre></div>
 <p>All drives should show <strong>Healthy</strong>. Drives in <strong>Failed</strong>, <strong>Unhealthy</strong>, or <strong>Evacuating</strong> state need immediate attention — the array may be in a degraded RAID state.</p>
 <p>CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>puredrive<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>puredrive<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name                           Serial                Size      Capacity  Status
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>flasharray-01-nvme-1           PDRV.CV1Q2R3S4T5U6V7  1.92TB    1.92TB    healthy
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>flasharray-01-nvme-2           PDRV.CV1Q2R3S4T5U6V8  1.92TB    1.92TB    healthy
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>flasharray-01-nvme-3           PDRV.CV1Q2R3S4T5U6V9  1.92TB    1.92TB    healthy
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>flasharray-01-nvme-4           PDRV.CV1Q2R3S4T5U6VA  1.92TB    1.92TB    healthy
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>flasharray-01-ssd-1            PDRV.SSD1Q2R3S4T5U6V  960GB     960GB     healthy
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>flasharray-01-ssd-2            PDRV.SSD1Q2R3S4T5U6W  960GB     960GB     healthy
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>puredrive: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory.
+<strong><code>Error: Unable to connect to array at &lt;ip&gt;</code></strong> — Verify the array hostname/IP is reachable and that you have authenticated with <code>pureadmin login</code> or set valid credentials.</p>
+</div>
 <p>Sort by <code>status</code>. Any status other than <code>healthy</code> is actionable.</p>
 <h3 id="hardware-component-status">Hardware Component Status<a class="headerlink" href="#hardware-component-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehw<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purehw<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name                          Status    Model              Serial Number         Hardware Version
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>flasharray-prod-01            ok        FA-405R3           5001234567890ABCD     4.3.2
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>flasharray-prod-02            ok        FA-405R3           5001234567890ABCE     4.3.2
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>flasharray-dr-01              ok        FA-250R3           5001234567890ABCF     4.3.1
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>flasharray-test-01            warning   FA-250R3           5001234567890ABD0     4.3.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehw: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purehw binary.
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the FlashArray management interface and check firewall rules.</p>
+</div>
 <p>Check all hardware components — controllers, power supplies, fans, NVRAM. Any component showing <code>not_installed</code> that should be present, or <code>failed</code>, warrants a support case.</p>
 <h3 id="protection-group-schedules">Protection Group Schedules<a class="headerlink" href="#protection-group-schedules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>GUI: Protection → Protection Groups → select group → Schedule tab
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>GUI: Protection → Protection Groups → select group → Schedule tab
 </code></pre></div>
 <p>Verify:</p>
 <ul>
@@ -7261,36 +7306,119 @@ What to do in your first hour with a new Pure Storage FlashArray. Covers array o
 <li>Retention policy matches your RPO/RTO requirements</li>
 </ul>
 <p>CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purepgroup<span class="w"> </span>list
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>purepgroup<span class="w"> </span>list
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name                          Volumes  Hosts  Snapshots
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pg-prod-01                    12       8      24
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>pg-dev-02                     5        3      8
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>pg-backup-01                  18       6      42
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>pg-repl-01                    9        4      15
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Name                          Volumes  Hosts  Snapshots  Schedule
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>pg-prod-01                    12       8      24         hourly
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>pg-dev-02                     5        3      8          daily
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>pg-backup-01                  18       6      42         weekly
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>pg-repl-01                    9        4      15         (none)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or API token expired</code></strong> — Verify your Pure Storage API token is set in your environment or configuration file.
+<strong><code>Error: Connection refused to management IP</code></strong> — Confirm the FlashArray management IP is reachable and the Pure1 REST API service is running.</p>
+</div>
 <h3 id="safemode-status">SafeMode Status<a class="headerlink" href="#safemode-status" title="Permanent link">&para;</a></h3>
 <p>SafeMode prevents snapshot deletion without Pure Support authorization — critical for ransomware protection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>safemode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>safemode
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                          SafeMode  Safemode Enabled  Safemode Expires
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>flasharray-prod-01            Enabled   True              2025-03-15T18:30:00Z
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>flasharray-prod-02            Enabled   True              2025-03-20T14:22:00Z
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>flasharray-dr-01              Disabled  False             Never
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>flasharray-test-01            Enabled   True              2025-02-28T09:15:00Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purearray binary.
+<strong><code>grep: (standard input) is empty</code></strong> — Verify the FlashArray is reachable and the purearray CLI is authenticated with valid credentials.</p>
+</div>
 <p>If SafeMode is enabled, confirm who holds the authorization contact — disabling requires a support call.</p>
 <h3 id="pure1-connection">Pure1 Connection<a class="headerlink" href="#pure1-connection" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>GUI: Settings → System → Pure1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>GUI: Settings → System → Pure1
 </code></pre></div>
 <p>The array should show <strong>Connected</strong> with a recent heartbeat timestamp. A disconnected array loses call-home alerting and proactive support.</p>
 <hr />
 <h2 id="3-common-first-tasks">3. Common First Tasks<a class="headerlink" href="#3-common-first-tasks" title="Permanent link">&para;</a></h2>
 <h3 id="list-volumes-with-space-consumption">List Volumes with Space Consumption<a class="headerlink" href="#list-volumes-with-space-consumption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name                                      Size  Provisioned  Physical  Data Reduction
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>docker-vol-01                            100GB      100GB      12.3GB           8.1x
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>k8s-pvc-mysql-data                       500GB      500GB      156.2GB          3.2x
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>backup-archive-2024                      2TB       2TB        1.8TB            1.1x
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>vm-datastore-prod                        1TB       1TB        287.5GB          3.5x
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>dev-test-volume                          250GB      250GB      8.9GB           28.1x
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or unable to connect to array</code></strong> — Verify the FlashArray management IP is reachable and your credentials are configured via <code>pureadmin login</code> or environment variables.
+<strong><code>Error: Command 'purevol' not found</code></strong> — Install the Pure Storage Python SDK with <code>pip install purestorage</code> or ensure the Pure CLI tools are in your system PATH.</p>
+</div>
 <p>Key columns: <code>name</code>, <code>size</code>, <code>total_used</code>, <code>data_reduction</code>, <code>unique</code>. Note any volume consuming significantly more unique space than expected (low data reduction ratio may indicate uncompressible data).</p>
 <h3 id="check-replication-lag">Check Replication Lag<a class="headerlink" href="#check-replication-lag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Name                          Targets                       Direction  Status
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pg-prod-01                    flasharray-dr.example.com     Snap→Repl  enabled
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>pg-prod-02                    flasharray-dr.example.com     Snap→Repl  enabled
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>pg-backup-01                  flasharray-backup.example.com Snap→Repl  enabled
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>pg-dev-01                     flasharray-dr.example.com     Snap→Repl  disabled
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>pg-test-01                    flasharray-dr.example.com     Snap→Repl  enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or unable to connect to array</code></strong> — Verify the FlashArray management IP is reachable and your API token is set via <code>export PURE_API_TOKEN=&lt;token&gt;</code>.
+<strong><code>Error: purepgroup: command not found</code></strong> — Install the Pure Storage Python SDK with <code>pip install purestorage</code> and ensure the CLI tools are in your PATH.</p>
+</div>
 <p>The <code>lag</code> field shows how far behind the remote copy is from the source. For synchronous replication (ActiveCluster), lag should be near-zero.</p>
 <p>For asynchronous protection groups:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Name                          Source              Destination         Progress
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pg-prod-01                    flasharray-01       flasharray-02        100%
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>pg-backup-tier2               flasharray-03       flasharray-04        100%
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>pg-repl-secondary             flasharray-01       flasharray-02        87%
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>pg-archive-cold               flasharray-02       flasharray-03        0%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or unable to connect to array</code></strong> — Verify your Pure Storage array credentials are configured via <code>pureadmin login</code> or check the PURE_IP and PURE_API_TOKEN environment variables.
+<strong><code>Error: No protection groups found with active transfers</code></strong> — This is expected if no replication or migration is currently in progress; run <code>purepgroup list</code> to see all protection groups regardless of transfer status.</p>
+</div>
 <p>Shows current in-flight replication transfer status and estimated completion.</p>
 <h3 id="verify-snapshot-schedule">Verify Snapshot Schedule<a class="headerlink" href="#verify-snapshot-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pgroup-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pgroup-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Name                          Interval  Keep
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>protection-group-prod         hourly    24
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>protection-group-prod         daily     7
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>protection-group-prod         weekly    4
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>protection-group-dev          hourly    12
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>protection-group-dev          daily     3
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>Name                          Created                  Size
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>protection-group-prod.1       2024-01-15T08:30:22Z     2.3TB
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>protection-group-prod.2       2024-01-15T07:30:18Z     2.3TB
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>protection-group-prod.3       2024-01-15T06:30:15Z     2.3TB
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>protection-group-prod.4       2024-01-15T05:30:12Z     2.3TB
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>protection-group-prod.5       2024-01-15T04:30:09Z     2.3TB
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown protection group '&lt;pgroup-name&gt;'</code></strong> — Replace <code>&lt;pgroup-name&gt;</code> with an actual protection group name from the output of <code>purepgroup list</code>.
+<strong><code>Error: You do not have permission to perform this operation</code></strong> — Verify your Pure Storage API token or credentials have sufficient privileges for snapshot operations.</p>
+</div>
 <p>Confirm:</p>
 <ol>
 <li>Snapshots exist for the expected time periods (hourly, daily, weekly)</li>
@@ -7298,17 +7426,30 @@ What to do in your first hour with a new Pure Storage FlashArray. Covers array o
 <li>No <code>ERROR</code> status on any snapshot</li>
 </ol>
 <h3 id="add-a-host-and-connect-a-volume">Add a Host and Connect a Volume<a class="headerlink" href="#add-a-host-and-connect-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create host entry</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqnlist<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span><span class="c1"># iSCSI</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># or</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn&gt;<span class="w"> </span><span class="c1"># FC</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Connect volume to host</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume-name&gt;
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Create host entry</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqnlist<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span><span class="c1"># iSCSI</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># or</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn&gt;<span class="w"> </span><span class="c1"># FC</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># Connect volume to host</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume-name&gt;
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Name             IQN                                          
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>host-prod-01     iqn.1991-05.com.example:host-prod-01.storage
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>(no output — command completes silently)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>Name             Volume           LUN  
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>host-prod-01     data-vol-001     1    
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>host-prod-01     backup-vol-002   2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host 'host-prod-01' already exists</code></strong> — Use <code>purehost list</code> to verify the hostname doesn't already exist, or delete it first with <code>purehost delete &lt;hostname&gt;</code>.
+<strong><code>Error: Volume '&lt;volume-name&gt;' not found</code></strong> — Confirm the volume name is correct with <code>purehost list --vol</code> and ensure it exists on the array.
+<strong><code>Error: Host '&lt;hostname&gt;' not found</code></strong> — Verify the hostname was created successfully in the previous step and check spelling with <code>purehost list</code>.</p>
+</div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7339,7 +7480,7 @@ What to do in your first hour with a new Pure Storage FlashArray. Covers array o
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

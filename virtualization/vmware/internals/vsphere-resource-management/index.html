@@ -9571,6 +9571,25 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>Select-Object<span class="w"> </span>VM,<span class="w"> </span>CpuReservationMhz,<span class="w"> </span>CpuLimitMhz,<span class="w"> </span>CpuSharesLevel
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cpu Reservation Mhz      : 2000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Memory Reservation Mb    : 512
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Cpu Limit Mhz            : Unlimited
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Cpu Shares Level         : Normal
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>VM                       CpuReservationMhz CpuLimitMhz CpuSharesLevel
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>--                       ----------------- ----------- --------------
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>DB-PROD01                2000              Unlimited   Normal
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>WEB-APP02                1000              Unlimited   Normal
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>CACHE-NODE03             500               4000        High
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>BACKUP-SRV04             0                 Unlimited   Low
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>MONITORING01             250               2000        Normal
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.
+<strong><code>Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host</code></strong> — Reduce the reservation value or verify the host has sufficient CPU resources available.</p>
+</div>
 <p><strong>Operational concern:</strong> Excessive reservations fragment capacity. If you reserve 8 GHz across 20 VMs on a 48 GHz host, you have committed 33 % of capacity even when all those VMs are idle. DRS cannot migrate a VM away from a host unless the destination has enough unreserved capacity to satisfy the reservation.</p>
 <h3 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h3>
 <p>CPU limits create hard caps. A VM with a 1000 MHz limit will not run faster than 1000 MHz even if the physical host has spare cycles. Limits are almost never appropriate except for:</p>
@@ -9606,17 +9625,37 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># esxtop — view CPU ready per VM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Launch esxtop → press &#39;c&#39; for CPU view</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Column: %RDY per vCPU, %CSTP (co-stop for SMP VMs)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxtop
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># vSphere CLI — CPU readiness for all VMs on a host</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Use performance manager via PowerCLI for historical RDY data:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;APP-01&quot;</span><span class="o">)</span><span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># esxtop — view CPU ready per VM</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Launch esxtop → press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Column: %RDY per vCPU, %CSTP (co-stop for SMP VMs)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxtop
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># vSphere CLI — CPU readiness for all VMs on a host</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Use performance manager via PowerCLI for historical RDY data:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;APP-01&quot;</span><span class="o">)</span><span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>World ID   GID Name                                   CPU Affinity
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  268435457 268435457 APP-01                          0,1,2,3
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  268435458 268435458 DB-PROD-02                      4,5,6,7
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  268435459 268435459 WEB-LB-03                       0,1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  268435460 268435460 BACKUP-UTIL                     2,3
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Timestamp            Entity      Metric                  Value
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>1/15/2025 2:45:00 PM APP-01      cpu.ready.summation    1847.23
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>1/15/2025 2:40:00 PM APP-01      cpu.ready.summation    2156.89
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>1/15/2025 2:35:00 PM APP-01      cpu.ready.summation    1623.45
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>1/15/2025 2:30:00 PM APP-01      cpu.ready.summation    2401.12
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>1/15/2025 2:25:00 PM APP-01      cpu.ready.summation    1934.67
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>1/15/2025 2:20:00 PM APP-01      cpu.ready.summation    2089.34
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>1/15/2025 2:15:00 PM APP-01      cpu.ready.summation    1756.78
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect to localhost:443 failed: Connection refused</code></strong> — Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname.
+<strong><code>The term 'Get-Stat' is not recognized as the name of a cmdlet</code></strong> — Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code> before running Get-Stat commands.</p>
+</div>
 <p><strong>Co-Stop (%CSTP):</strong> For multi-vCPU VMs, the scheduler must find N free physical cores simultaneously. If it cannot, all vCPUs wait (co-stop). VMs with unnecessary vCPU counts suffer more co-stop. Right-size vCPU counts — a 2-vCPU VM almost always outperforms a 16-vCPU VM for single-threaded workloads.</p>
 <hr />
 <h2 id="memory-reservations-and-overhead">Memory Reservations and Overhead<a class="headerlink" href="#memory-reservations-and-overhead" title="Permanent link">&para;</a></h2>
@@ -9652,11 +9691,11 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <p>Capacity planning must account for overhead. On a host with 512 GB RAM, usable VM memory is approximately 512 GB minus (overhead × number of running VMs).</p>
 <h3 id="memory-balloon-driver-vmmemctl">Memory Balloon Driver (vmmemctl)<a class="headerlink" href="#memory-balloon-driver-vmmemctl" title="Permanent link">&para;</a></h3>
 <p>When a host's physical memory is over-committed, ESXi uses four reclamation techniques in order of preference:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Memory pressure increasing →
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  1. TPS (Transparent Page Sharing) — passive; deduplicates identical pages
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  2. Balloon driver (vmmemctl) — active; reclaims guest memory cooperatively
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  3. Memory compression — ESXi compresses cold pages to a compressed cache
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  4. Host swap — ESXi swaps VM pages to disk (vmx-vmname.vswp) — severe latency
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Memory pressure increasing →
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  1. TPS (Transparent Page Sharing) — passive; deduplicates identical pages
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  2. Balloon driver (vmmemctl) — active; reclaims guest memory cooperatively
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  3. Memory compression — ESXi compresses cold pages to a compressed cache
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  4. Host swap — ESXi swaps VM pages to disk (vmx-vmname.vswp) — severe latency
 </code></pre></div>
 <p>The <strong>balloon driver</strong> is a VMware Tools kernel module installed inside each guest. ESXi inflates the balloon by asking the driver to allocate memory inside the guest OS. The guest OS is forced to page out its own least-used pages to guest-level swap (pagefile/swapfile). ESXi then reclaims the physical pages holding the balloon and gives them to another VM.</p>
 <p><strong>Key operational points:</strong></p>
@@ -9673,16 +9712,38 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <li>A VM hitting host swap will see severe performance degradation</li>
 <li>The <code>.vswp</code> file size equals the VM's configured memory minus its memory reservation (reason to set reservations on critical VMs)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># esxtop — memory view</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Press &#39;m&#39; in esxtop</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># MCTLSZ = balloon size, SWCUR = current swap usage</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>esxtop
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># PowerCLI — check balloon and swap stats</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;DB-PROD01&quot;</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average,<span class="w"> </span>mem.swapped.average<span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># esxtop — memory view</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Press &#39;m&#39; in esxtop</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># MCTLSZ = balloon size, SWCUR = current swap usage</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>esxtop
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># PowerCLI — check balloon and swap stats</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;DB-PROD01&quot;</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average,<span class="w"> </span>mem.swapped.average<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Loaded runtime libraries.
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Initializing esxtop, please wait...
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ESXTOP&gt; (Press &#39;m&#39; for memory view)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>   MCTLSZ    BALLONED  SWCUR   SWMAX   MEMCTL   MEMMAPS
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   512       256       0       2048    384      1024
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>   768       512       128     2048    640      1536
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>   1024      768       256     4096    896      2048
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Timestamp                     Entity      Metric                    Value
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>-----                         ------      ------                    -----
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>2024-01-15 14:32:00          DB-PROD01   mem.vmmemctl.average      342.50
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>2024-01-15 14:33:00          DB-PROD01   mem.vmmemctl.average      356.75
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>2024-01-15 14:34:00          DB-PROD01   mem.swapped.average       0.00
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>2024-01-15 14:35:00          DB-PROD01   mem.swapped.average       12.50
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>2024-01-15 14:36:00          DB-PROD01   mem.vmmemctl.average      371.25
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect-VIServer : The specified item was not found on the 'Inventory' object.</code></strong> — Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat.
+<strong><code>Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.</code></strong> — Use <code>-IntervalSecs</code> instead of <code>-IntervalMins</code> in PowerCLI versions 12.0+.</p>
+</div>
 <h3 id="transparent-page-sharing-tps">Transparent Page Sharing (TPS)<a class="headerlink" href="#transparent-page-sharing-tps" title="Permanent link">&para;</a></h3>
 <p>TPS scans VM memory pages and deduplicates identical content. Identical pages are merged into a single copy-on-write page, freeing the duplicates. Historically TPS was aggressive; since vSphere 6.0 inter-VM TPS is disabled by default for security reasons (side-channel attacks).</p>
 <p><strong>Current behaviour:</strong></p>
@@ -9710,19 +9771,19 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <hr />
 <h2 id="resource-pools">Resource Pools<a class="headerlink" href="#resource-pools" title="Permanent link">&para;</a></h2>
 <p>Resource pools allow you to partition cluster or host compute resources into a hierarchy. Each pool has its own shares, reservation, and limit, which apply to the aggregate of all VMs and nested pools within it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Cluster: PROD-CLUSTER  (total: 96 GHz CPU, 768 GB RAM)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  │
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  ├── Resource Pool: GOLD           (reservation: 40 GHz, High shares)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  │     ├── VM: DB-PROD01
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  │     └── VM: DB-PROD02
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  │
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  ├── Resource Pool: SILVER         (reservation: 20 GHz, Normal shares)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  │     ├── VM: APP-PROD01
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  │     └── VM: APP-PROD02
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  │
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  └── Resource Pool: DEV            (reservation: 0, Low shares, limit: 10 GHz)
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        ├── VM: DEV-01
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        └── VM: DEV-02
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Cluster: PROD-CLUSTER  (total: 96 GHz CPU, 768 GB RAM)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  ├── Resource Pool: GOLD           (reservation: 40 GHz, High shares)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  │     ├── VM: DB-PROD01
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  │     └── VM: DB-PROD02
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  ├── Resource Pool: SILVER         (reservation: 20 GHz, Normal shares)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  │     ├── VM: APP-PROD01
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  │     └── VM: APP-PROD02
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  └── Resource Pool: DEV            (reservation: 0, Low shares, limit: 10 GHz)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        ├── VM: DEV-01
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        └── VM: DEV-02
 </code></pre></div>
 <h3 id="resource-pool-inheritance">Resource Pool Inheritance<a class="headerlink" href="#resource-pool-inheritance" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9739,46 +9800,62 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <blockquote>
 <p>Disable expandable reservations when you need strict capacity isolation between business units or tenants sharing a cluster.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — create a resource pool</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-ResourcePool</span> <span class="n">-Name</span> <span class="s2">&quot;GOLD&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="n">-CpuSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="n">-CpuReservationMhz</span> <span class="n">40000</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="n">-MemSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="n">-MemReservationMB</span> <span class="n">204800</span> <span class="p">`</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="n">-MemExpandableReservation</span> <span class="nv">$false</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Move a VM into a resource pool</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;DB-PROD01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;GOLD&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — create a resource pool</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-ResourcePool</span> <span class="n">-Name</span> <span class="s2">&quot;GOLD&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="n">-CpuSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  <span class="n">-CpuReservationMhz</span> <span class="n">40000</span> <span class="p">`</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="n">-MemSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  <span class="n">-MemReservationMB</span> <span class="n">204800</span> <span class="p">`</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  <span class="n">-MemExpandableReservation</span> <span class="nv">$false</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Move a VM into a resource pool</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;DB-PROD01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;GOLD&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="the-resource-pool-death-star-anti-pattern">The "Resource Pool Death Star" Anti-Pattern<a class="headerlink" href="#the-resource-pool-death-star-anti-pattern" title="Permanent link">&para;</a></h3>
 <p>Nesting resource pools more than two levels deep creates unpredictable scheduling behaviour and makes capacity planning nearly impossible. Flat or two-level hierarchies (cluster → pool → VMs) are the operational standard.</p>
 <hr />
 <h2 id="numa-topology-and-vnuma">NUMA Topology and vNUMA<a class="headerlink" href="#numa-topology-and-vnuma" title="Permanent link">&para;</a></h2>
 <p>Modern multi-socket servers have a Non-Uniform Memory Access (NUMA) topology: each CPU socket has its own local memory bank. Accessing local memory is ~2× faster than accessing remote memory (across the QPI/UPI interconnect).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>NUMA Node 0                    NUMA Node 1
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>┌───────────────────────────────────────────── ┐         ┌ ─────────────────────────────────────────────┐
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  CPU Socket 0      │  QPI/   │  CPU Socket 1                                                          │
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  24 cores          │ ──────► │  24 cores                                                              │
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│  Local RAM: 384 GB │         │  Local RAM: 384 GB                                                     │
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>VM-A (16 vCPU, 256 GB)
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  → Spans both NUMA nodes → 50% of memory accesses are remote
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  → NUMA penalty applies unless vNUMA is configured correctly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NUMA Node 0                    NUMA Node 1
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>┌───────────────────────────────────────────── ┐         ┌ ─────────────────────────────────────────────┐
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│  CPU Socket 0      │  QPI/   │  CPU Socket 1                                                          │
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│  24 cores          │ ──────► │  24 cores                                                              │
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│  Local RAM: 384 GB │         │  Local RAM: 384 GB                                                     │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>VM-A (16 vCPU, 256 GB)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  → Spans both NUMA nodes → 50% of memory accesses are remote
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  → NUMA penalty applies unless vNUMA is configured correctly
 </code></pre></div>
 <h3 id="how-vsphere-handles-numa">How vSphere Handles NUMA<a class="headerlink" href="#how-vsphere-handles-numa" title="Permanent link">&para;</a></h3>
 <p>ESXi's NUMA scheduler attempts to fit each VM entirely within a single NUMA node. If the VM is too large, it splits the VM across nodes and uses <strong>vNUMA</strong> to expose virtual NUMA topology to the guest OS.</p>
 <p>With vNUMA enabled (automatic for VMs &gt; 8 vCPUs), the guest OS NUMA-aware scheduler can optimise memory allocation within each virtual NUMA node, matching the physical layout.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NUMA topology on a host</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Returns: total, NUMA node count, size per node</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># vNUMA — check VM&#39;s virtual NUMA config</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># vSphere Client: VM → Edit Settings → VM Options → Advanced → vNUMA topology</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Or check via VMX parameter:</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>grep<span class="w"> </span>-i<span class="w"> </span>numa<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NUMA topology on a host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Returns: total, NUMA node count, size per node</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># vNUMA — check VM&#39;s virtual NUMA config</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># vSphere Client: VM → Edit Settings → VM Options → Advanced → vNUMA topology</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Or check via VMX parameter:</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-i<span class="w"> </span>numa<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Physical Memory Information
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>   Physical Memory: 1048576 MB
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>   NUMA Node Count: 4
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>   Memory Per Node: 262144 MB
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vnuma.vcpu.maxPerVnode=16
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>vnuma.memory.maxPerVnode=65536
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>vnuma.vcpu.minPerVnode=4
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>vnuma.memory.minPerVnode=16384
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>vnuma.nodeAffinity=0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx: No such file or directory</code></strong> — Verify the datastore name and VM folder path are correct by running <code>find /vmfs/volumes -name "*.vmx" -type f</code> to locate the actual VMX file.
+<strong><code>esxcli: command not found</code></strong> — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system.</p>
+</div>
 <h3 id="numa-aware-vm-sizing-guidelines">NUMA-Aware VM Sizing Guidelines<a class="headerlink" href="#numa-aware-vm-sizing-guidelines" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9810,9 +9887,9 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># esxtop NUMA view</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Press &#39;m&#39; → then &#39;f&#39; to add NUMA fields</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># N%L = % local NUMA memory accesses (higher is better, &gt; 90% target)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># esxtop NUMA view</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Press &#39;m&#39; → then &#39;f&#39; to add NUMA fields</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># N%L = % local NUMA memory accesses (higher is better, &gt; 90% target)</span>
 </code></pre></div>
 <hr />
 <h2 id="drs-and-resource-management-integration">DRS and Resource Management Integration<a class="headerlink" href="#drs-and-resource-management-integration" title="Permanent link">&para;</a></h2>
@@ -9823,13 +9900,13 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <li>Reservations affect DRS placement: a VM cannot migrate to a host that cannot satisfy its reservation</li>
 <li><strong>DRS automation levels</strong> control whether migrations are recommendations or automatic</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — check DRS recommendations</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="nb">Select-Object</span> <span class="n">VirtualMachine</span><span class="p">,</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">Priority</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Force DRS to recalculate and apply recommendations</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">Invoke-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># PowerCLI — check DRS recommendations</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="nb">Select-Object</span> <span class="n">VirtualMachine</span><span class="p">,</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">Priority</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c"># Force DRS to recalculate and apply recommendations</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">Invoke-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span>
 </code></pre></div>
 <h3 id="drs-threshold-migration-aggressiveness">DRS Threshold (Migration Aggressiveness)<a class="headerlink" href="#drs-threshold-migration-aggressiveness" title="Permanent link">&para;</a></h3>
 <table>
@@ -9904,28 +9981,49 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </table>
 <hr />
 <h2 id="operational-checklist-resource-management-health">Operational Checklist — Resource Management Health<a class="headerlink" href="#operational-checklist-resource-management-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Identify VMs with CPU Ready &gt; 5%</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># esxtop → &#39;c&#39; view → sort by %RDY (press &#39;F&#39; → select RDY)</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Find VMs hitting CPU limits (Ready is low but performance is poor)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Look for %MLMTD &gt; 0 in esxtop CPU view (% time limited by CPU limit)</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Check for host memory pressure</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># esxtop → &#39;m&#39; view → look for MCTLSZ &gt; 0 (balloon) or SWCUR &gt; 0 (swap)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Review resource pool entitlements vs demand</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Get-ResourcePool<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>Select-Object<span class="w"> </span>ResourcePool,<span class="w"> </span>CpuReservationMhz,<span class="w"> </span>CpuLimitMhz<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>Sort-Object<span class="w"> </span>CpuReservationMhz<span class="w"> </span>-Descending
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># 5. Check NUMA efficiency</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># esxtop &#39;m&#39; view → N%L column; values &lt; 80% warrant investigation</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># 6. Find VMs with no memory reservation on critical workloads</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.MemReservationMB<span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span>Select-Object<span class="w"> </span>VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Identify VMs with CPU Ready &gt; 5%</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># esxtop → &#39;c&#39; view → sort by %RDY (press &#39;F&#39; → select RDY)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 2. Find VMs hitting CPU limits (Ready is low but performance is poor)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Look for %MLMTD &gt; 0 in esxtop CPU view (% time limited by CPU limit)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># 3. Check for host memory pressure</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># esxtop → &#39;m&#39; view → look for MCTLSZ &gt; 0 (balloon) or SWCUR &gt; 0 (swap)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># 4. Review resource pool entitlements vs demand</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>Get-ResourcePool<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span>Select-Object<span class="w"> </span>ResourcePool,<span class="w"> </span>CpuReservationMhz,<span class="w"> </span>CpuLimitMhz<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>Sort-Object<span class="w"> </span>CpuReservationMhz<span class="w"> </span>-Descending
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># 5. Check NUMA efficiency</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># esxtop &#39;m&#39; view → N%L column; values &lt; 80% warrant investigation</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># 6. Find VMs with no memory reservation on critical workloads</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.MemReservationMB<span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">  </span>Select-Object<span class="w"> </span>VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>VM
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ResourcePool                CpuReservationMhz  CpuLimitMhz
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-----------                 ----------------   -----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Production-Tier1            8000               12000
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Production-Tier2            4000               8000
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Development                 2000               4000
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Test-Pool                   1000               2000
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Legacy-Apps                 500                1000
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Name
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>----
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>web-app-prod-03
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>database-replica-02
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>legacy-batch-01
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>monitoring-agent-05
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>backup-service-04
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-ResourcePool : The term 'Get-ResourcePool' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.
+<strong><code>You do not have permission to read property CpuReservationMhz</code></strong> — Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried.</p>
+</div>
 <hr />
 <h2 id="quick-reference-key-values">Quick Reference — Key Values<a class="headerlink" href="#quick-reference-key-values" title="Permanent link">&para;</a></h2>
 <table>
@@ -10008,7 +10106,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

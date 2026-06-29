@@ -8846,68 +8846,197 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vserver<span class="w"> </span>show
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>type,state,admin-state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Vserver     Type       Subtype    State    Admin-State
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>----------- ---------- ---------- -------- -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cluster1    admin                 running  up
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svm-prod-01 data                  running  up
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>svm-prod-02 data                  running  up
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>svm-dev-01  data                  running  up
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>svm-nfs-01  data                  running  up
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Vserver     Type       State    Admin-State
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>----------- ---------- -------- -----------
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cluster1    admin      running  up
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>svm-prod-01 data       running  up
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>svm-prod-02 data       running  up
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>svm-dev-01  data       running  up
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>svm-nfs-01  data       running  up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "vserver show" is not a recognized command.</code></strong> — Ensure you are connected to the ONTAP cluster management interface via SSH or console, not the node shell.
+<strong><code>Error: This operation is not permitted: Insufficient privileges to run command "vserver show".</code></strong> — Verify your user role has the "admin" or equivalent privilege level assigned in ONTAP.</p>
+</div>
 <h3 id="svm-health">SVM Health<a class="headerlink" href="#svm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="SVM Health" src="../../../../../assets/ontap-proc-svm-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm all SVMs are running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!running
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SVM root volume health</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;svm_name&gt;_root
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm all SVMs are running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!running
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SVM root volume health</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;svm_name&gt;_root
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vserver     State    Subtype
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>----------- -------- ---------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>(no entries)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Vserver       Volume                       State      Status
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>------------- ---------------------------- ---------- ----------
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>prod-svm-01   prod-svm-01_root             online     healthy
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: vserver</code></strong> — Ensure you are connected to the ONTAP cluster management interface via SSH or the ONTAP CLI, not a local shell.
+<strong><code>Error: invalid vserver name "prod-svm-01"</code></strong> — Replace <code>&lt;svm_name&gt;</code> with an actual SVM name from your cluster; use <code>vserver show</code> to list all available SVMs.</p>
+</div>
 <h3 id="create-an-svm">Create an SVM<a class="headerlink" href="#create-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Create an SVM" src="../../../../../assets/ontap-proc-create-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;svm_name&gt;_root<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;svm_name&gt;_root<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Aggregate "&lt;aggr_name&gt;" does not exist.</code></strong> — Verify the aggregate name with <code>storage aggregate show</code> and use the correct name in the <code>-aggregate</code> parameter.
+<strong><code>Error: command failed: Vserver "&lt;svm_name&gt;" already exists.</code></strong> — Choose a unique SVM name or delete the existing SVM with <code>vserver delete</code> before recreating it.
+<strong><code>Error: command failed: Security style "unix" is not valid for root volume.</code></strong> — Use <code>mixed</code>, <code>ntfs</code>, or <code>unix</code> (ensure UNIX is capitalized); verify ONTAP version supports the chosen style for root volumes.</p>
+</div>
 <h3 id="lif-management">LIF Management<a class="headerlink" href="#lif-management" title="Permanent link">&para;</a></h3>
 <p><img alt="LIF Management" src="../../../../../assets/ontap-proc-lif-management.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List LIFs for an SVM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a data LIF</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs,cifs
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Migrate a LIF to a different port</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List LIFs for an SVM</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Create a data LIF</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs,cifs
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Migrate a LIF to a different port</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Vserver          Interface      IP Address      Status   Home Node/Port    Current Node/Port
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------         ---------      ----------      ------   ---------------   -----------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>prod-svm         nfs_lif_01     192.168.1.50    up       node1/e0c         node1/e0c
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>prod-svm         cifs_lif_01    192.168.1.51    up       node2/e0d         node2/e0d
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>prod-svm         mgmt_lif       192.168.1.10    up       node1/e0a         node1/e0a
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>prod-svm         iscsi_lif_01   192.168.1.60    up       node2/e0e         node2/e0e
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>(no output — command completes silently)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>[Job 123] Job succeeded: network interface migrate completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: The specified home-port "e0c" does not exist on node "node1".</code></strong> — Verify the port exists on the target node using <code>network port show -node &lt;node_name&gt;</code>.
+<strong><code>Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.</code></strong> — Migrate during a maintenance window or use <code>network interface migrate -force-administrative-vlan true</code> if necessary.</p>
+</div>
 <h3 id="dns-configuration-per-svm">DNS Configuration per SVM<a class="headerlink" href="#dns-configuration-per-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="DNS Configuration per SVM" src="../../../../../assets/ontap-proc-dns-configuration-per-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-domains<span class="w"> </span>&lt;domain&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-name-servers<span class="w"> </span>&lt;dns_ip1&gt;,&lt;dns_ip2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-domains<span class="w"> </span>&lt;domain&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-name-servers<span class="w"> </span>&lt;dns_ip1&gt;,&lt;dns_ip2&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver: svm-prod-01
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Domains: corp.example.com, example.com
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Name Servers: 8.8.8.8, 8.8.4.4
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Timeout (secs): 2
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Attempts: 1
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm-prod-01" is not a valid vserver name</code></strong> — Verify the SVM name exists with <code>vserver show</code> and use the exact name from the Vserver column.
+<strong><code>Error: DNS create failed: Name servers already configured</code></strong> — Delete the existing DNS configuration first using <code>vserver services name-service dns delete -vserver &lt;svm_name&gt;</code> before creating a new one.</p>
+</div>
 <h3 id="nis-ldap-lookup">NIS / LDAP Lookup<a class="headerlink" href="#nis-ldap-lookup" title="Permanent link">&para;</a></h3>
 <p><img alt="NIS / LDAP Lookup" src="../../../../../assets/ontap-proc-nis-ldap-lookup.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Vserver: prod-svm-01
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>                                               Source
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Service         Database    Order
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>-------         --------    -----
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>hosts           files, dns  files, dns
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>passwd          files, ldap files, ldap
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>group           files, ldap files, ldap
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>netgroup        files, ldap files, ldap
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>sudoers         files, ldap files, ldap
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Vserver: prod-svm-01
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                                    Enabled
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>LDAP Client Enabled: true
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>LDAP Server: ldap-server-01.corp.local (192.168.1.50)
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>LDAP Server Port: 389
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Bind DN: cn=admin,dc=corp,dc=local
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>Schema: RFC2307
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Query Timeout (sec): 3
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Min Bind Level: anonymous
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Referral Chasing: disable
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Group Member Filter: memberUid=*
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "vserver services name-service ns-switch show" is not a recognized command.</code></strong> — Verify you are connected to the ONTAP cluster management interface and have appropriate admin privileges; this command requires ONTAP 9.2 or later.
+<strong><code>Error: Vserver "&lt;svm_name&gt;" does not exist.</code></strong> — Replace <code>&lt;svm_name&gt;</code> with an actual SVM name from your cluster (run <code>vserver show</code> to list available SVMs).</p>
+</div>
 <h3 id="stop-start-an-svm">Stop / Start an SVM<a class="headerlink" href="#stop-start-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Stop / Start an SVM" src="../../../../../assets/ontap-proc-stop-start-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>This command stops and starts a NetApp ONTAP SVM (Storage Virtual Machine). Here&#39;s realistic output:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vserver stop -vserver svm_prod_01
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>This will stop the Vserver &quot;svm_prod_01&quot; and all associated services.
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Do you want to continue? {y|n}: y
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Vserver &quot;svm_prod_01&quot; has been stopped.
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>vserver start -vserver svm_prod_01
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Vserver &quot;svm_prod_01&quot; has been started.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver "svm_prod_01" is not in a state that allows this operation</code></strong> — Verify the SVM is not already stopped or in a transitional state by running <code>vserver show -vserver svm_prod_01</code> before attempting the operation.
+<strong><code>Error: command failed: Vserver "svm_prod_01" does not exist</code></strong> — Confirm the SVM name is correct and exists in the cluster by running <code>vserver show</code> to list all available SVMs.
+<strong><code>Error: command failed: This operation is not permitted: Vserver is in Disaster Recovery relationship</code></strong> — If the SVM is part of a SnapMirror DR setup, break or quiesce the relationship first using <code>snapmirror quiesce</code> or <code>snapmirror break</code>.</p>
+</div>
 <h3 id="delete-an-svm">Delete an SVM<a class="headerlink" href="#delete-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete an SVM" src="../../../../../assets/ontap-proc-delete-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Ensure no volumes except root</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Delete root volume and SVM</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Ensure no volumes except root</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Delete root volume and SVM</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Vserver   Volume       Aggregate    State      Type       Size
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>--------- ------------ ------------ ---------- ---- ----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>svm-prod  root_svm     aggr1        online     RW   20.00GB
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>svm-prod  data_vol_01  aggr1        online     RW   500.00GB
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>svm-prod  data_vol_02  aggr2        online     RW   750.00GB
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>svm-prod  backup_vol   aggr1        online     RW   1.00TB
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Warning: Vserver &quot;svm-prod&quot; cannot be deleted while it contains non-root volumes.
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Delete all data volumes first, then retry the vserver delete command.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Warning: Vserver "svm-prod" cannot be deleted while it contains non-root volumes.</code></strong> — Delete all non-root volumes using <code>volume delete -vserver &lt;svm_name&gt; -volume &lt;volume_name&gt;</code> before attempting vserver deletion.
+<strong><code>Error: Vserver "svm-prod" is in use by one or more clients or protocols.</code></strong> — Stop all active NFS/CIFS/iSCSI services and disconnect clients before retrying vserver deletion.</p>
+</div>
 <h3 id="svm-common-issues">SVM Common Issues<a class="headerlink" href="#svm-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="SVM Common Issues" src="../../../../../assets/ontap-proc-svm-common-issues.svg" /></p>
 <table>
@@ -8945,72 +9074,196 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h2 id="volume-management">Volume Management<a class="headerlink" href="#volume-management" title="Permanent link">&para;</a></h2>
 <h3 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h3>
 <p><img alt="List Volumes" src="../../../../../assets/ontap-proc-list-volumes.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>show
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used,state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>volume<span class="w"> </span>show
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used,state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Vserver   Volume       Aggregate    State      Type  Size       Used       Available Percent-Used
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>--------- ------------ ------------ ---------- ----- ---------- ---------- --------- ------------
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>cluster1  vol_data_01  aggr_sas_01  online     RW    500GB      245GB      255GB     49%
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>cluster1  vol_logs     aggr_sas_01  online     RW    100GB      87GB       13GB      87%
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>cluster1  vol_backup   aggr_sas_02  online     RW    2TB        1.8TB      200GB     90%
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>svm_prod  vol_app      aggr_sas_01  online     RW    750GB      620GB      130GB     83%
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>svm_prod  vol_snap     aggr_sas_02  online     RW    1TB        512GB      488GB     51%
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>svm_dev   vol_test     aggr_sas_01  online     RW    250GB      45GB       205GB     18%
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Vserver   Volume       Aggregate    State      Type  Size       Used       Available Percent-Used
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>--------- ------------ ------------ ---------- ----- ---------- ---------- --------- ------------
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>svm_prod  vol_app      aggr_sas_01  online     RW    750GB      620GB      130GB     83%
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>svm_prod  vol_snap     aggr_sas_02  online     RW    1TB        512GB      488GB     51%
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Size       Used       Available Percent-Used State
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>---------- ---------- --------- ------------ ------
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>500GB      245GB      255GB     49%          online
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>100GB      87GB       13GB      87%          online
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>2TB        1.8TB      200GB     90%          online
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>750GB      620GB      130GB     83%          online
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>1TB        512GB      488GB     51%          online
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>250GB      45GB       205GB     18%          online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm_prod" is not a valid Vserver</code></strong> — Verify the SVM name with <code>vserver show</code> and ensure you are connected to the correct cluster.
+<strong><code>Error: invalid field name "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) in the <code>-fields</code> parameter.</p>
+</div>
 <h3 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Health" src="../../../../../assets/ontap-proc-volume-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Show offline or restricted volumes</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Show volumes nearing capacity</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Show offline or restricted volumes</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Show volumes nearing capacity</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Vserver   Volume       State      Type  Aggregate
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>--------- ------------ ---------- ----- -----------
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>svm-prod  vol_archive  offline    RW    aggr_sas_01
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>svm-prod  vol_backup   restricted RW    aggr_sas_02
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Vserver   Volume            Percent Used
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>--------- ----------------- ------------
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>svm-prod  vol_data_01       85%
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>svm-prod  vol_logs          92%
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>svm-prod  vol_tempdb        88%
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>svm-prod  vol_archive_old   81%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid query operator "!online"</code></strong> — Use <code>offline|restricted</code> instead of <code>!online</code> in the volume show filter.
+<strong><code>Error: no matching rows</code></strong> — Ensure the cluster is reachable with <code>cluster show</code> and that volumes exist in the Vserver with <code>volume show</code>.</p>
+</div>
 <h3 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Volume" src="../../../../../assets/ontap-proc-create-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-size<span class="w"> </span>500G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>-security-style<span class="w"> </span>unix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span>-size<span class="w"> </span>500G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">    </span>-security-style<span class="w"> </span>unix
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Volume &lt;vol_name&gt; created successfully on aggregate &lt;aggr_name&gt;.
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Volume size set to 500GB.
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Junction path /&lt;vol_name&gt; created.
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Security style set to unix.
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Volume is online and ready for use.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No space left on device</code></strong> — Verify the aggregate has sufficient free space with <code>storage aggregate show -aggregate &lt;aggr_name&gt;</code> and increase the aggregate capacity or reduce the volume size.
+<strong><code>Error: command failed: Invalid vserver name</code></strong> — Confirm the SVM name exists and is spelled correctly by running <code>vserver show</code> to list all available SVMs.
+<strong><code>Error: command failed: Junction path already exists</code></strong> — Remove the conflicting junction path with <code>volume unmount -vserver &lt;svm_name&gt; -volume &lt;existing_vol&gt;</code> or choose a different junction path name.</p>
+</div>
 <h3 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Resize a Volume" src="../../../../../assets/ontap-proc-resize-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-new-size<span class="w"> </span>1T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-new-size<span class="w"> </span>1T
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Volume modify successful: Volume &quot;vol_name&quot; size set to 1.00TB on Vserver &quot;svm_name&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No such volume</code></strong> — Verify the volume name and SVM name are correct using <code>volume show -vserver &lt;svm_name&gt;</code>.
+<strong><code>Error: command failed: Insufficient space in aggregate</code></strong> — Check available space in the aggregate with <code>storage aggregate show -fields availsize</code> and reduce the new size or add capacity to the aggregate.</p>
+</div>
 <h3 id="volume-autosize">Volume Autosize<a class="headerlink" href="#volume-autosize" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Autosize" src="../../../../../assets/ontap-proc-volume-autosize.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>volume<span class="w"> </span>autosize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-maximum-size<span class="w"> </span>2T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>volume<span class="w"> </span>autosize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span>-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span>-maximum-size<span class="w"> </span>2T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Volume autosize has been successfully configured.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Vserver: svm-prod-01
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Volume: vol_data_tier1
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Mode: grow_shrink
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Maximum Size: 2TB
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Grow Threshold: 85%
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Shrink Threshold: 50%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm_name" is not a valid Vserver name</code></strong> — Replace <code>&lt;svm_name&gt;</code> with an actual SVM name from your cluster (e.g., <code>svm-prod-01</code>).
+<strong><code>Error: Volume vol_name does not exist</code></strong> — Verify the volume exists on the specified SVM using <code>volume show -vserver &lt;svm_name&gt;</code>.
+<strong><code>Error: Invalid maximum size value</code></strong> — Ensure the maximum size is specified in valid units (T, G, M) and does not exceed the aggregate's available space.</p>
+</div>
 <h3 id="volume-efficiency-deduplication-compression">Volume Efficiency (Deduplication / Compression)<a class="headerlink" href="#volume-efficiency-deduplication-compression" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Efficiency (Deduplication / Compression)" src="../../../../../assets/ontap-proc-volume-efficiency-deduplication-compression.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check efficiency state</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Enable efficiency</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Run deduplication manually</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Check efficiency state</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Enable efficiency</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Run deduplication manually</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Vserver   Volume       State    Status       Progress
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>--------- ------------ -------- ------------ ----------
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>prod-svm  data_vol_01  Enabled  Idle         -
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>(no output — command completes silently)
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Starting efficiency operation on volume data_vol_01 of Vserver prod-svm.
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>Efficiency operation started successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No such volume</code></strong> — Verify the volume name with <code>volume show -vserver &lt;svm_name&gt;</code> and ensure it exists on the specified SVM.
+<strong><code>Error: Efficiency is already enabled on this volume</code></strong> — Skip the enable step if efficiency is already active; check status with the first command before enabling.</p>
+</div>
 <h3 id="move-a-volume-between-aggregates">Move a Volume (Between Aggregates)<a class="headerlink" href="#move-a-volume-between-aggregates" title="Permanent link">&para;</a></h3>
 <p><img alt="Move a Volume (Between Aggregates)" src="../../../../../assets/ontap-proc-move-a-volume-between-aggregates.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>volume<span class="w"> </span>move<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>volume<span class="w"> </span>move<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Volume move operation initiated for volume vol_data01 on SVM prod_svm.
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Operation ID: 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Vserver             Volume           State      Progress
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>------------------- ---------------- ---------- ----------
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>prod_svm            vol_data01       initializing    5%
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>prod_svm            vol_archive      completed       100%
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>prod_svm            vol_logs         cutover_phase   87%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: volume move start: Destination aggregate &lt;dest_aggr&gt; does not exist</code></strong> — Verify the destination aggregate name with <code>storage aggregate show</code> and ensure it has sufficient free space.
+<strong><code>Error: volume move start: Volume &lt;vol_name&gt; is currently involved in another move operation</code></strong> — Wait for the existing move to complete using <code>volume move show</code> or abort it with <code>volume move abort -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;</code>.
+<strong><code>Error: volume move start: Insufficient space in destination aggregate</code></strong> — Check available space with <code>storage aggregate show -aggregate &lt;dest_aggr&gt; -fields availsize</code> and choose an aggregate with at least 110% of the source volume size.</p>
+</div>
 <h3 id="take-a-volume-offline-online">Take a Volume Offline / Online<a class="headerlink" href="#take-a-volume-offline-online" title="Permanent link">&para;</a></h3>
 <p><img alt="Take a Volume Offline / Online" src="../../../../../assets/ontap-proc-take-a-volume-offline-online.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>(no output — command completes silently)
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Use the ONTAP CLI directly via SSH to the cluster management IP or execute within the ONTAP shell context, not from a standard bash shell.
+<strong><code>Error: Invalid vserver name "&lt;svm_name&gt;"</code></strong> — Replace <code>&lt;svm_name&gt;</code> with an actual SVM name from your cluster (verify with <code>vserver show</code>).
+<strong><code>Error: Volume &lt;vol_name&gt; is not in a state that allows this operation</code></strong> — Ensure the volume is not already offline/online and check for active operations with <code>volume show -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt; -fields state</code>.</p>
+</div>
 <h3 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete a Volume" src="../../../../../assets/ontap-proc-delete-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Offline first</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Delete</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Offline first</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Delete</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>(no output — command completes silently)
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There are mounted LUNs in the volume.</code></strong> — Unmount all LUNs and delete snapshots before attempting to offline the volume.
+<strong><code>Error: command failed: Volume is not in a state that allows this operation.</code></strong> — Ensure the volume is online and not currently in use by checking <code>volume show -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;</code> before running offline.</p>
+</div>
 <h3 id="volume-common-issues">Volume Common Issues<a class="headerlink" href="#volume-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Common Issues" src="../../../../../assets/ontap-proc-volume-common-issues.svg" /></p>
 <table>
@@ -9049,70 +9302,219 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <p>ONTAP supports NFS, SMB/CIFS, iSCSI, FCP (Fibre Channel), and NVMe over Fabrics. Protocol access is configured per SVM.</p>
 <h3 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h3>
 <p><img alt="NFS" src="../../../../../assets/ontap-proc-nfs.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check NFS service status per SVM</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># List NFS exports</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Show NFS clients connected</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Check NFS service status per SVM</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># List NFS exports</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Show NFS clients connected</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Vserver: prod-svm-01
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>NFS Enabled: true
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>NFS v3 Enabled: true
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>NFS v4 Enabled: true
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>NFS v4.1 Enabled: true
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>UDP Enabled: true
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>TCP Enabled: true
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>Policy Name: default
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>Rule Index: 1
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>Access Level: ro
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>Client Match Spec: 10.42.0.0/16
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>RO Rule: sys
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>RW Rule: none
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>Superuser Security: sys
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>Policy Name: data-export
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>Rule Index: 1
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a>Access Level: rw
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>Client Match Spec: 10.42.10.0/24
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a>RO Rule: sys
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>RW Rule: sys
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>Superuser Security: none
+<a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>Vserver: prod-svm-01
+<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>Client IP: 10.42.10.45
+<a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a>Protocol: nfs3
+<a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>Access Time: 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a>Idle Time: 45 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "prod-svm-01" is not a valid vserver name</code></strong> — Verify the SVM name exists with <code>vserver show</code> and use the exact name from the Vserver column.
+<strong><code>Error: command not found: nfs</code></strong> — Ensure you are connected to the ONTAP cluster CLI (not the node shell); use <code>system node run -node &lt;nodename&gt; -command "nfs show"</code> if needed.</p>
+</div>
 <h3 id="smbcifs">SMB/CIFS<a class="headerlink" href="#smbcifs" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB/CIFS" src="../../../../../assets/ontap-proc-smb-cifs.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check CIFS server status</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># List CIFS shares</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Show active CIFS sessions</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Check CIFS server status</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># List CIFS shares</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Show active CIFS sessions</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Vserver: prod-svm-01
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>CIFS Server Name: PROD-FS-01
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>Status: running
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>NetBIOS Aliases: PROD-FS-ALIAS
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>Workgroup: WORKGROUP
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>Comment: Production File Server
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>Domain: corp.example.com
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>Domain Workgroup: corp.example.com
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>Vserver         Share Name      Path            Comment
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>prod-svm-01     data            /vol/data       Shared Data Volume
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>prod-svm-01     users           /vol/users      User Home Directories
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>prod-svm-01     backups         /vol/backups    Backup Storage
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>prod-svm-01     archive         /vol/archive    Archive Storage
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a>Vserver: prod-svm-01
+<a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>Node            Vserver         Session ID      Client IP       User Name       Open Files
+<a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a>cluster-01      prod-svm-01     1               192.168.1.45    CORP\jsmith     3
+<a id="__codelineno-37-19" name="__codelineno-37-19" href="#__codelineno-37-19"></a>cluster-01      prod-svm-01     2               192.168.1.67    CORP\mchen      1
+<a id="__codelineno-37-20" name="__codelineno-37-20" href="#__codelineno-37-20"></a>cluster-01      prod-svm-01     3               192.168.1.89    CORP\agarcia    5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "prod-svm-01" is not a valid vserver name</code></strong> — Verify the SVM name with <code>vserver show</code> and ensure you have cluster admin privileges.
+<strong><code>Error: CIFS server is not running on Vserver "prod-svm-01"</code></strong> — Start the CIFS server with <code>vserver cifs start -vserver &lt;svm_name&gt;</code> before querying sessions.
+<strong><code>Error: command not found: cifs</code></strong> — Use the full command path <code>vserver cifs show -vserver &lt;svm_name&gt;</code> instead of the shorthand <code>cifs show</code>.</p>
+</div>
 <h3 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h3>
 <p><img alt="iSCSI" src="../../../../../assets/ontap-proc-iscsi.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check iSCSI service status</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># List iSCSI LIFs</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Show connected iSCSI initiators</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Show iSCSI target portal groups</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Check iSCSI service status</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># List iSCSI LIFs</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="c1"># Show connected iSCSI initiators</span>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="c1"># Show iSCSI target portal groups</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Vserver: svm-prod-01
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>  Target Name: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr.svm-prod-01:target.lun0
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>  Administrative Status: up
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>  Operational Status: up
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>  Listen Data LIFs: 10.20.30.41, 10.20.30.42
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>Interface  Vserver      IP Address      Netmask         Status  MTU
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>--------   -----------  ---------------  ---------------  ------  -----
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>iscsi_lif1 svm-prod-01  10.20.30.41      255.255.255.0    up      1500
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>iscsi_lif2 svm-prod-01  10.20.30.42      255.255.255.0    up      1500
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a>Vserver      Initiator Name                                    Auth Type
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>-----------  ------------------------------------------------  ----------
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a>svm-prod-01  iqn.1991-05.com.example:host-db-01.local         CHAP
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>svm-prod-01  iqn.1991-05.com.example:host-db-02.local         CHAP
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>svm-prod-01  iqn.1991-05.com.example:host-app-03.local        none
+<a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a>
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a>Vserver      Target Name                                       TPGT  Portals
+<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>-----------  ------------------------------------------------  ----  -------
+<a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a>svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.41:3260
+<a id="__codelineno-39-21" name="__codelineno-39-21" href="#__codelineno-39-21"></a>svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.42:3260
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm_name" is not a valid Vserver name</code></strong> — Replace <code>&lt;svm_name&gt;</code> with the actual SVM name (e.g., <code>svm-prod-01</code>) or list available SVMs with <code>vserver show</code>.
+<strong><code>Error: There are no records matching your query</code></strong> — Verify the SVM exists and iSCSI service is enabled on it with <code>vserver iscsi show -vserver &lt;svm_name&gt;</code>.</p>
+</div>
 <h3 id="fcp-fibre-channel">FCP (Fibre Channel)<a class="headerlink" href="#fcp-fibre-channel" title="Permanent link">&para;</a></h3>
 <p><img alt="FCP (Fibre Channel)" src="../../../../../assets/ontap-proc-fcp-fibre-channel.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check FCP service status</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># List FCP LIFs (FC target ports)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>fcp
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Show connected FC initiators</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Show FC target adapter status</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>system<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>unified-connect<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Check FCP service status</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># List FCP LIFs (FC target ports)</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>fcp
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="c1"># Show connected FC initiators</span>
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="c1"># Show FC target adapter status</span>
+<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>system<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>unified-connect<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>Vserver         Status
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>--------------- ------
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>prod-svm        up
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>Interface       Vserver         Address         Status  Admin Status
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>--------------- --------------- --------------- ------- ---------------
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>fc_lif_01       prod-svm        50:0a:09:81:2c:3a up     up
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>fc_lif_02       prod-svm        50:0a:09:81:2c:3b up     up
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>Initiator WWPN           Vserver         Status  Connected LIFs
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a>------------------------ --------------- ------- ----------------
+<a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>50:00:14:40:5a:2b:1c:d0 prod-svm        logged-in fc_lif_01
+<a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a>50:00:14:40:5a:2b:1c:d1 prod-svm        logged-in fc_lif_02
+<a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>50:00:14:40:5a:2b:1c:d2 prod-svm        logged-in fc_lif_01
+<a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a>
+<a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a>Node            Adapter Slot    Status  Speed   Mode
+<a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a>--------------- ------- ------- ------- ------- -------
+<a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a>cluster-01      0a      1       enabled 16Gb   initiator
+<a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a>cluster-01      0b      2       enabled 16Gb   target
+<a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a>cluster-02      0a      1       enabled 16Gb   target
+<a id="__codelineno-41-21" name="__codelineno-41-21" href="#__codelineno-41-21"></a>cluster-02      0b      2       enabled 16Gb   target
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "prod-svm" is not a valid Vserver name</code></strong> — Verify the SVM name exists with <code>vserver show</code> and use the correct name in the command.
+<strong><code>Error: FCP service is not enabled on Vserver "prod-svm"</code></strong> — Enable FCP on the SVM using <code>vserver fcp create -vserver &lt;svm_name&gt;</code>.
+<strong><code>Error: No FC target adapters found</code></strong> — Confirm FC adapters are installed and licensed with <code>system license show</code> and <code>storage port show -type FC</code>.</p>
+</div>
 <h3 id="protocol-on-lif-verification">Protocol on LIF Verification<a class="headerlink" href="#protocol-on-lif-verification" title="Permanent link">&para;</a></h3>
 <p><img alt="Protocol on LIF Verification" src="../../../../../assets/ontap-proc-protocol-on-lif-verification.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Show all data LIFs and their protocols</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-fields<span class="w"> </span>vserver,lif,address,data-protocol
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Show all data LIFs and their protocols</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-fields<span class="w"> </span>vserver,lif,address,data-protocol
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Vserver     LIF                Address          Data-Protocol
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>----------- ------------------ ---------------- ----------------
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>svm-prod    data_lif_01        192.168.1.45     nfs,cifs
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>svm-prod    data_lif_02        192.168.1.46     nfs,cifs
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>svm-dev     data_lif_03        10.20.30.50      nfs
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>svm-backup  data_lif_04        10.20.30.51      iscsi
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>svm-backup  data_lif_05        10.20.30.52      iscsi,fc
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>svm-analytics data_lif_06      172.16.5.100     nfs
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>6 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: unknown field "data-protocol"</code></strong> — Use <code>network interface show -fields protocols</code> instead, as <code>data-protocol</code> is not a valid ONTAP field name.
+<strong><code>Error: command not found</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI; this command runs only in cluster or admin SVM context.</p>
+</div>
 <h3 id="enabledisable-a-protocol-on-an-svm">Enable/Disable a Protocol on an SVM<a class="headerlink" href="#enabledisable-a-protocol-on-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Enable/Disable a Protocol on an SVM" src="../../../../../assets/ontap-proc-enable-disable-a-protocol-on-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Enable NFS</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Enable CIFS (requires AD join)</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>cifs<span class="w"> </span>setup<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Enable iSCSI</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Enable NFS</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Enable CIFS (requires AD join)</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>cifs<span class="w"> </span>setup<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="c1"># Enable iSCSI</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>vserver nfs create -vserver prod_svm -v3 enabled -v4.1 enabled
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>(no output — command completes silently)
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>cifs setup -vserver prod_svm
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>This command will create a CIFS server and join it to the domain.
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>Enter the username to authenticate with Active Directory: admin
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>Enter the password: 
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>CIFS server &quot;PROD_SVM01&quot; created successfully and joined to domain &quot;corp.example.com&quot;
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>iscsi create -vserver prod_svm
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: CIFS setup requires Active Directory domain to be configured</code></strong> — Configure DNS and domain settings on the SVM with <code>dns create</code> and <code>active-directory create</code> before running CIFS setup.
+<strong><code>Error: command failed: iSCSI cannot be created on a vserver with no data aggregates</code></strong> — Assign at least one data aggregate to the SVM using <code>vserver modify -vserver &lt;svm_name&gt; -aggr-list &lt;aggr_name&gt;</code>.</p>
+</div>
 <h3 id="protocol-common-issues">Protocol Common Issues<a class="headerlink" href="#protocol-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Protocol Common Issues" src="../../../../../assets/ontap-proc-protocol-common-issues.svg" /></p>
 <table>
@@ -9182,7 +9584,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

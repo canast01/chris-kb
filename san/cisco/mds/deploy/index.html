@@ -7598,89 +7598,253 @@
 <p>Verify basic connectivity:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w"> </span>vrf<span class="w"> </span>management
 </code></pre></div>
-<p><strong>Apply NX-OS license:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>copy<span class="w"> </span>tftp://10.0.0.100/mds-license.lic<span class="w"> </span>bootflash:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>license<span class="w"> </span>install<span class="w"> </span>bootflash:mds-license.lic
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>license
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PING 10.0.0.1 (10.0.0.1) from 10.0.0.2 vrf management
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>56 data bytes
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>64 bytes from 10.0.0.1: icmp_seq=0 ttl=255 time=2.341 ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>64 bytes from 10.0.0.1: icmp_seq=1 ttl=255 time=1.987 ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>64 bytes from 10.0.0.1: icmp_seq=2 ttl=255 time=2.156 ms
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>64 bytes from 10.0.0.1: icmp_seq=3 ttl=255 time=2.104 ms
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>64 bytes from 10.0.0.1: icmp_seq=4 ttl=255 time=2.278 ms
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>--- 10.0.0.1 statistics ---
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>5 packets transmitted, 5 packets received, 0.00% packet loss
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>round-trip min/avg/max/stddev = 1.987/2.173/2.341/0.132 ms
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING: cannot find vrf management</code></strong> — Verify the management VRF exists with <code>show vrf</code> and confirm it is configured on the switch.
+<strong><code>PING: sendto: No route to host</code></strong> — Check that the management interface is up with <code>show interface mgmt0</code> and that routing to 10.0.0.1 is configured.
+<strong><code>PING: sendto: Permission denied</code></strong> — Ensure you have administrative privileges; use <code>enable</code> to enter privileged EXEC mode before running the ping command.</p>
+</div>
+<p><strong>Apply NX-OS license:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>copy<span class="w"> </span>tftp://10.0.0.100/mds-license.lic<span class="w"> </span>bootflash:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>license<span class="w"> </span>install<span class="w"> </span>bootflash:mds-license.lic
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>show<span class="w"> </span>license
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Copying tftp://10.0.0.100/mds-license.lic to bootflash:mds-license.lic
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>[####################] 100%
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Copy complete.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>License Installation in progress. Please wait...
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>License installation completed successfully.
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>License Usage:
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  License Level: Enterprise
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Features Enabled:
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    - FC_SWITCHING
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    - FCOE
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    - ADVANCED_FEATURES
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  Licenses Installed: 1
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  License Expiration: 2026-12-31
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>%Error opening tftp://10.0.0.100/mds-license.lic (Connection timed out)</code></strong> — Verify TFTP server is reachable and running on 10.0.0.100, and check network connectivity from the MDS switch.
+<strong><code>%License file is invalid or corrupted</code></strong> — Ensure the license file is a valid Cisco MDS .lic file and was not corrupted during transfer; re-download from Cisco if needed.
+<strong><code>%Insufficient space on bootflash</code></strong> — Free up space on bootflash using <code>delete bootflash:</code> command before copying the license file.</p>
+</div>
 <hr />
 <h2 id="configure-vsan-and-port-channels">Configure VSAN and Port Channels<a class="headerlink" href="#configure-vsan-and-port-channels" title="Permanent link">&para;</a></h2>
 <p><strong>Create VSANs:</strong></p>
 <p>VSANs logically segment the fabric. Create a VSAN for each fabric (A and B).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vsan<span class="w"> </span>database
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;Fabric-A&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;Fabric-B&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>show<span class="w"> </span>vsan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vsan<span class="w"> </span>database
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;Fabric-A&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;Fabric-B&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>vsan
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vsan 10 name Fabric-A
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vsan 20 name Fabric-B
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>VSAN       Name                             State   Interoperability
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>----       ----                             -----   ----------------
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>1          VSAN0001                         active  default
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>10         Fabric-A                         active  default
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>20         Fabric-B                         active  default
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Ensure you are in the correct configuration mode (enter <code>config t</code> then <code>vsan database</code> before entering VSAN definitions).
+<strong><code>% VSAN 10 already exists</code></strong> — Delete the existing VSAN with <code>no vsan 10</code> before redefining it, or use a different VSAN ID.</p>
+</div>
 <p><strong>Assign ports to VSANs:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vsan<span class="w"> </span>database
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>interface<span class="w"> </span>fc1/1-16<span class="w">    </span><span class="c1"># Host-facing ports for Fabric A</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w"> </span>interface<span class="w"> </span>fc1/17-32<span class="w">   </span><span class="c1"># (Not used on a single-fabric switch — adjust for your topology)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vsan<span class="w"> </span>database
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>interface<span class="w"> </span>fc1/1-16<span class="w">    </span><span class="c1"># Host-facing ports for Fabric A</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w"> </span>interface<span class="w"> </span>fc1/17-32<span class="w">   </span><span class="c1"># (Not used on a single-fabric switch — adjust for your topology)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (<code>config t</code>) and that the MDS switch supports VSAN configuration.
+<strong><code>% Interface fc1/1-16 not found</code></strong> — Confirm the port range exists on your specific MDS model (e.g., MDS 9148S has fc1/1-48); adjust the range accordingly.</p>
+</div>
 <p><strong>Set the domain ID per VSAN:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">1</span><span class="w"> </span>preferred<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">2</span><span class="w"> </span>preferred<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">1</span><span class="w"> </span>preferred<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">2</span><span class="w"> </span>preferred<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode with <code>config t</code> and that the MDS switch supports fcdomain commands.
+<strong><code>% VSAN &lt;vsan-id&gt; does not exist</code></strong> — Create the VSAN first using <code>vsan &lt;vsan-id&gt;</code> command before assigning it as preferred in fcdomain configuration.</p>
+</div>
 <p><strong>Configure ISL Port Channels (if multiple ISL links exist):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>interface<span class="w"> </span>port-channel<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>channel<span class="w"> </span>mode<span class="w"> </span>active
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>E
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>interface<span class="w"> </span>fc1/33
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>channel-group<span class="w"> </span><span class="m">1</span><span class="w"> </span>force
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>interface<span class="w"> </span>fc1/34
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>channel-group<span class="w"> </span><span class="m">1</span><span class="w"> </span>force
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Verify trunk:</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>show<span class="w"> </span>interface<span class="w"> </span>port-channel<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>show<span class="w"> </span>topology<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>interface<span class="w"> </span>port-channel<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>channel<span class="w"> </span>mode<span class="w"> </span>active
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>E
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>interface<span class="w"> </span>fc1/33
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>channel-group<span class="w"> </span><span class="m">1</span><span class="w"> </span>force
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>interface<span class="w"> </span>fc1/34
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>channel-group<span class="w"> </span><span class="m">1</span><span class="w"> </span>force
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Verify trunk:</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>show<span class="w"> </span>interface<span class="w"> </span>port-channel<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>show<span class="w"> </span>topology<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Port-channel1 is up
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Hardware is Fibre Channel
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Port WWN is 50:00:09:0f:1a:2b:3c:4d
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Admin port mode is E, Oper port mode is E
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  Trunk mode is on
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Allowed VSANs: 10
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  Active VSANs: 10
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  Last clearing of &quot;show interface&quot; counters: never
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Topology for VSAN 10:
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  Domain ID: 1 (local)
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  Switch Name: mds9710-01
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  Switch WWN: 20:00:00:0d:ec:2a:3b:4c
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  Connected to Domain 2 via port fc1/33 (port-channel 1)
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  Fabric Port Count: 8
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>  F-Port Count: 24
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact syntax for your MDS firmware version; <code>switchport mode E</code> may need to be <code>switchport mode fport</code> or configured differently depending on the context.
+<strong><code>% Port fc1/33 is already bound to a channel group</code></strong> — Remove the port from any existing channel group with <code>no channel-group</code> before assigning it to port-channel 1.
+<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first using <code>vsan 10</code> in configuration mode before assigning it to the trunk.</p>
+</div>
 <hr />
 <h2 id="zone-configuration">Zone Configuration<a class="headerlink" href="#zone-configuration" title="Permanent link">&para;</a></h2>
 <p>Cisco MDS uses Enhanced Zoning or Smart Zoning. Enhanced Zoning (default from NX-OS 8.x) allows per-VSAN zone databases and is recommended.</p>
 <p><strong>Create zones using WWN-based membership:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zone<span class="w"> </span>name<span class="w"> </span>z_esx01_hba0_pmax_fa1_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:33<span class="w">   </span>!<span class="w"> </span>Host<span class="w"> </span>HBA<span class="w"> </span>WWN
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w">   </span>!<span class="w"> </span>Storage<span class="w"> </span>target<span class="w"> </span>WWN
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>zone<span class="w"> </span>name<span class="w"> </span>z_esx01_hba1_pmax_fa2_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:34
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>zone<span class="w"> </span>name<span class="w"> </span>z_esx01_hba0_pmax_fa1_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:33<span class="w">   </span>!<span class="w"> </span>Host<span class="w"> </span>HBA<span class="w"> </span>WWN
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w">   </span>!<span class="w"> </span>Storage<span class="w"> </span>target<span class="w"> </span>WWN
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>zone<span class="w"> </span>name<span class="w"> </span>z_esx01_hba1_pmax_fa2_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:34
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3d
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (enter <code>config t</code> then <code>zone</code> submode) before entering zone member commands.
+<strong><code>% Incomplete command</code></strong> — Ensure each zone definition includes at least one <code>member pwwn</code> statement; incomplete zone configurations will be rejected.</p>
+</div>
 <p><strong>Create a zoneset and add zones:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>zoneset<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>member<span class="w"> </span>z_esx01_hba0_pmax_fa1_p0
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>member<span class="w"> </span>z_esx01_hba1_pmax_fa2_p0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>zoneset<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>member<span class="w"> </span>z_esx01_hba0_pmax_fa1_p0
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>member<span class="w"> </span>z_esx01_hba1_pmax_fa2_p0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode by entering <code>config t</code> and <code>san-device-alias database</code> context first.
+<strong><code>% Zone member not found: z_esx01_hba0_pmax_fa1_p0</code></strong> — Create the zone and its device aliases before adding them to the zoneset using <code>zone name &lt;zone_name&gt; vsan 10</code> commands.</p>
+</div>
 <p><strong>Activate the zoneset:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Save the zone configuration:</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Save the zone configuration:</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Zoneset: zs_fabric_a activated successfully for VSAN 10.
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Copy complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (use <code>config terminal</code> first if needed).
+<strong><code>% Zoneset zs_fabric_a not found</code></strong> — Create the zoneset with <code>zoneset name zs_fabric_a vsan 10</code> before attempting to activate it.</p>
+</div>
 <p><strong>Verify zones:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Host and storage WWNs should appear in the name server database</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Host and storage WWNs should appear in the name server database</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>zoneset name: prod_zoneset vsan: 10
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  zone name: zone_prod_hosts vsan: 10
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    fcid 0x010001 [pwwn 50:00:09:73:00:12:a4:5f] [nwwn 50:00:09:73:00:12:a4:5e]
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    fcid 0x010002 [pwwn 50:00:09:73:00:12:b8:3a] [nwwn 50:00:09:73:00:12:b8:39]
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  zone name: zone_storage vsan: 10
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    fcid 0x010101 [pwwn 50:00:14:40:5d:2c:a1:b0] [nwwn 50:00:14:40:5d:2c:a1:af]
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>VSAN: 10
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Zone Member:
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  Zone Name: zone_prod_hosts
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    50:00:09:73:00:12:a4:5f
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    50:00:09:73:00:12:b8:3a
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>  Zone Name: zone_storage
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    50:00:14:40:5d:2c:a1:b0
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>FCNS Database for VSAN 10:
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>  PWWN: 50:00:09:73:00:12:a4:5f  NWWN: 50:00:09:73:00:12:a4:5e  FCID: 0x010001  Port Name: esx-host-01
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>  PWWN: 50:00:09:73:00:12:b8:3a  NWWN: 50:00:09:73:00:12:b8:39  FCID: 0x010002  Port Name: esx-host-02
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>  PWWN: 50:00:14:40:5d:2c:a1:b0  NWWN: 50:00:14:40:5d:2c:a1:af  FCID: 0x010101  Port Name: netapp-array-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the VSAN number exists with <code>show vsan</code> and confirm you are in the correct mode (config or exec).
+<strong><code>FCNS Database for VSAN 10: (empty)</code></strong> — Check that devices are logged in and zoning is activated with <code>show zoneset active vsan 10</code>; if empty, devices have not registered with the name server yet.</p>
+</div>
 <hr />
 <h2 id="ndfc-integration">NDFC Integration<a class="headerlink" href="#ndfc-integration" title="Permanent link">&para;</a></h2>
 <p>Cisco Nexus Dashboard Fabric Controller (NDFC) provides centralized management for Cisco SAN fabrics.</p>
 <p><strong>Enable SNMP on the MDS switch for NDFC discovery:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>snmp-server<span class="w"> </span>community<span class="w"> </span>public<span class="w"> </span>ro
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snmp-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.0.0.30<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span>2c<span class="w"> </span>public
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>snmp-server<span class="w"> </span>community<span class="w"> </span>public<span class="w"> </span>ro
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>snmp-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.0.0.30<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span>2c<span class="w"> </span>public
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>(no output — commands complete silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (config-if or config) by checking the prompt ends with <code>(config)#</code> or <code>(config-if)#</code>.
+<strong><code>% Incomplete command</code></strong> — Ensure the SNMP community string and trap host IP are both specified; the syntax requires <code>snmp-server community &lt;string&gt; ro</code> and <code>snmp-server host &lt;ip&gt; traps version 2c &lt;community&gt;</code>.</p>
+</div>
 <p><strong>Enable CFS (Cisco Fabric Services) for zone distribution:</strong></p>
 <p>CFS automatically distributes zone changes across all switches in the VSAN when activated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cfs<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cfs<span class="w"> </span>distribute
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>show<span class="w"> </span>cfs<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>cfs<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>cfs<span class="w"> </span>distribute
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>show<span class="w"> </span>cfs<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>cfs enable
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>(no output — command completes silently)
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>cfs distribute
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>(no output — command completes silently)
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>show cfs status
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>CFS Status Information
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    CFS State: enabled
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>    Configured fabric: MDS_Fabric_1
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    Distribution Status: success
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>    Last distribution time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    Peers in sync: 4/4
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>    Pending changes: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>CFS is already enabled</code></strong> — CFS is already active; skip the <code>cfs enable</code> command or verify current state with <code>show cfs status</code> first.
+<strong><code>Distribution failed: peer switch unreachable</code></strong> — Verify all fabric switches are online and reachable using <code>show fabric status</code> before running <code>cfs distribute</code>.
+<strong><code>CFS State: disabled</code></strong> — Run <code>cfs enable</code> before attempting distribution; the feature must be activated on the switch.</p>
+</div>
 <p><strong>Add the MDS switch to NDFC:</strong></p>
 <ol>
 <li>Log in to the NDFC web interface at <code>https://&lt;ndfc_server&gt;</code>.</li>
@@ -7694,53 +7858,246 @@
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
 <p>After zoning is configured, verify hosts can see storage.</p>
 <p><strong>Check name server entries:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>detail<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Verify host HBA WWNs and storage target WWNs both appear</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># FC4 type should show SCSI FCP for storage targets</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>detail<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># Verify host HBA WWNs and storage target WWNs both appear</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># FC4 type should show SCSI FCP for storage targets</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>VSAN 10:
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  Node Name: storage-target-01.example.com
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  Node PWWN: 50:00:14:40:5a:2b:c1:e0
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>  Node NWWN: 50:00:14:40:5a:2b:c1:e1
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>  IP Address: 192.168.10.50
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>  IPA: 0x000001
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>  FC4 Types: SCSI FCP
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>  Symbolic Node Name: EMC VMAX5990 Storage Array
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>  Node Name: esx-host-07.example.com
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>  Node PWWN: 50:00:09:73:1a:4c:b2:f5
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>  Node NWWN: 50:00:09:73:1a:4c:b2:f6
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>  IP Address: 192.168.10.75
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>  IPA: 0x000002
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>  FC4 Types: SCSI FCP
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>  Symbolic Node Name: VMware ESXi 7.0 HBA
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>  Node Name: esx-host-08.example.com
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>  Node PWWN: 50:00:09:73:1a:4c:b3:a1
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>  Node NWWN: 50:00:09:73:1a:4c:b3:a2
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>  IP Address: 192.168.10.76
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>  IPA: 0x000003
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>  FC4 Types: SCSI FCP
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>  Symbolic Node Name: VMware ESXi 7.0 HBA
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (enable mode on MDS switch) and use <code>show fcns database detail vsan &lt;vsan-id&gt;</code> syntax.
+<strong><code>VSAN &lt;vsan-id&gt; does not exist</code></strong> — Confirm the VSAN exists with <code>show vsan</code> and verify the VSAN ID is correct and active.</p>
+</div>
 <p><strong>Verify zone enforcement:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:33<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Should list the zones containing this HBA WWN</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:33<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1"># Should list the zones containing this HBA WWN</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Zone Name: prod-app-zone
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>  pwwn 10:00:00:90:fa:11:22:33
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>  pwwn 10:00:00:90:fa:44:55:66
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>  pwwn 50:00:14:40:12:34:56:78
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>Zone Name: backup-zone
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>  pwwn 10:00:00:90:fa:11:22:33
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>  pwwn 50:00:14:40:87:65:43:21
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>Total of 2 zones found
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct MDS CLI mode (use <code>config terminal</code> if needed) and that the VSAN exists with <code>show vsan</code>.
+<strong><code>% VSAN 10 does not exist</code></strong> — Confirm VSAN 10 is created and active using <code>show vsan id 10</code>.
+<strong><code>% No zones found containing this member</code></strong> — Verify the WWN format is correct (use colons, not hyphens) and the HBA is actually zoned in VSAN 10 with <code>show zoneset active vsan 10</code>.</p>
+</div>
 <p><strong>From the host (Linux):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>rescan-scsi-bus.sh
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>lsscsi
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Storage paths should be visible through the MDS switch</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>rescan-scsi-bus.sh
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>lsscsi
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Storage paths should be visible through the MDS switch</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Scanning for SCSI devices...
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Scanning host 0...
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>Scanning host 1...
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>Scanning host 2...
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>Scanning host 3...
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>Scanning host 4...
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>Scanning host 5...
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>Scanning host 6...
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>Scanning host 7...
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>Scanning host 8...
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>Scanning host 9...
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>Scanning host 10...
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>Scanning host 11...
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>Scanning host 12...
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>Scanning host 13...
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>Scanning host 14...
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a>Scanning host 15...
+<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>Scanning host 16...
+<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a>Scanning host 17...
+<a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a>Scanning host 18...
+<a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a>Scanning host 19...
+<a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a>
+<a id="__codelineno-30-23" name="__codelineno-30-23" href="#__codelineno-30-23"></a>[0:0:0:0]    disk    NETAPP   LUN              9800  /dev/sda 
+<a id="__codelineno-30-24" name="__codelineno-30-24" href="#__codelineno-30-24"></a>[1:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdb 
+<a id="__codelineno-30-25" name="__codelineno-30-25" href="#__codelineno-30-25"></a>[2:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdc 
+<a id="__codelineno-30-26" name="__codelineno-30-26" href="#__codelineno-30-26"></a>[3:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdd 
+<a id="__codelineno-30-27" name="__codelineno-30-27" href="#__codelineno-30-27"></a>[4:0:0:0]    disk    NETAPP   LUN              9800  /dev/sde 
+<a id="__codelineno-30-28" name="__codelineno-30-28" href="#__codelineno-30-28"></a>[5:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdf 
+<a id="__codelineno-30-29" name="__codelineno-30-29" href="#__codelineno-30-29"></a>[6:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdg 
+<a id="__codelineno-30-30" name="__codelineno-30-30" href="#__codelineno-30-30"></a>[7:0:0:0]    disk    NETAPP   LUN              9800  /dev/sdh 
+<a id="__codelineno-30-31" name="__codelineno-30-31" href="#__codelineno-30-31"></a>
+<a id="__codelineno-30-32" name="__codelineno-30-32" href="#__codelineno-30-32"></a>mpatha (360a98000534d4b4a6d4e6f5a4b4c4d4e) dm-0 NETAPP,LUN
+<a id="__codelineno-30-33" name="__codelineno-30-33" href="#__codelineno-30-33"></a>size=2.0T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-30-34" name="__codelineno-30-34" href="#__codelineno-30-34"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-30-35" name="__codelineno-30-35" href="#__codelineno-30-35"></a>  |- 0:0:0:0 sda 8:0   active ready running
+<a id="__codelineno-30-36" name="__codelineno-30-36" href="#__codelineno-30-36"></a>  |- 1:0:0:0 sdb 8:16  active ready running
+<a id="__codelineno-30-37" name="__codelineno-30-37" href="#__codelineno-30-37"></a>  |- 2:0:0:0 sdc 8:32  active ready running
+<a id="__codelineno-30-38" name="__codelineno-30-38" href="#__codelineno-30-38"></a>  `- 3:0:0:0 sdd 8:48  active ready running
+<a id="__codelineno-30-39" name="__codelineno-30-39" href="#__codelineno-30-39"></a>mpathb (360a98000534d4b4a6d4e6f5a4b4c4d4f) dm-1 NETAPP,LUN
+<a id="__codelineno-30-40" name="__codelineno-30-40" href="#__codelineno-30-40"></a>size=1.5T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-30-41" name="__codelineno-30-41" href="#__codelineno-30-41"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-30-42" name="__codelineno-30-42" href="#__codelineno-30-42"></a>  |- 4:0:0:0 sde 8:64  active ready running
+<a id="__codelineno-30-43" name="__codelineno-30-43" href="#__codelineno-30-43"></a>  |- 5:0:0:0 sdf 8:80  active ready running
+<a id="__codelineno-30-44" name="__codelineno-30-44" href="#__codelineno-30-44"></a>  |- 6:0:0:0 sdg 8:96  active ready running
+<a id="__codelineno-30-45" name="__codelineno-30-45" href="#__codelineno-30-45"></a>  `- 7:0:0:0 sdh 8:112 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install sg3</p>
+</div>
 <hr />
 <h2 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <p><strong>Fabric health check:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1-16<span class="w"> </span>brief
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># All connected ports should show State: up, Speed: 16G (or 32G)</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># No ports should show State: down unexpectedly</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Principal switch and domain assignments should be consistent</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>show<span class="w"> </span>topology<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># ISL topology should match the cabling plan</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1-16<span class="w"> </span>brief
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># All connected ports should show State: up, Speed: 16G (or 32G)</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1"># No ports should show State: down unexpectedly</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1"># Principal switch and domain assignments should be consistent</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>show<span class="w"> </span>topology<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="c1"># ISL topology should match the cabling plan</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>fc1/1    -- up      16G   SFP    Fabric  fc1/1
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>fc1/2    -- up      16G   SFP    Fabric  fc1/2
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>fc1/3    -- up      16G   SFP    Fabric  fc1/3
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>fc1/4    -- up      16G   SFP    Fabric  fc1/4
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>fc1/5    -- up      16G   SFP    Fabric  fc1/5
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>fc1/6    -- down    --    SFP    Fabric  fc1/6
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>fc1/7    -- up      16G   SFP    Fabric  fc1/7
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>...
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>fc1/16   -- up      16G   SFP    Fabric  fc1/16
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>VSAN 10 Information:
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>  Principal Switch: mds-core-01 (Domain ID: 1)
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>  Local Switch Domain ID: 1
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>  Fabric Name: prod-fabric-01
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>  State: Stable
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>Topology for VSAN 10:
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>  mds-core-01 (Domain 1) -- ISL fc1/15 -- mds-core-02 (Domain 2)
+<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>  mds-core-02 (Domain 2) -- ISL fc1/16 -- mds-edge-01 (Domain 3)
+<a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>  mds-edge-01 (Domain 3) -- ISL fc1/14 -- mds-core-01 (Domain 1)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fc1/6    -- down    --    SFP    Fabric  fc1/6</code></strong> — Check SFP transceiver seating, cable connections, and run <code>show interface fc1/6</code> for detailed diagnostics including error counters.
+<strong><code>Domain ID conflict detected on VSAN 10</code></strong> — Verify domain IDs are unique across all switches in the fabric and reload the switch if a duplicate persists after reconfiguration.
+<strong><code>ISL port down: fc1/15 (mds-core-01 to mds-core-02)</code></strong> — Inspect the ISL cable for damage, reseat both SFP transceivers, and confirm speed negotiation with <code>show interface fc1/15 detail</code>.</p>
+</div>
 <p><strong>Error counter check:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Check: signal_loss, sync_loss, link_failure, invalid_crc</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># All should be zero on a clean deployment</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Clear counters after initial verification:</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>clear<span class="w"> </span>counters<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1"># Check: signal_loss, sync_loss, link_failure, invalid_crc</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="c1"># All should be zero on a clean deployment</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="c1"># Clear counters after initial verification:</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>clear<span class="w"> </span>counters<span class="w"> </span>interface<span class="w"> </span>fc1/1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Interface fc1/1
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>  Frames Transmitted:                    1,247,392
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>  Frames Received:                       1,245,018
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>  Transmit B2B Credit Zero:                    0
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>  Receive B2B Credit Zero:                    0
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>  Link Failures:                               0
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>  Sync Losses:                                 0
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>  Signal Losses:                               0
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>  Invalid CRCs:                                0
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>  Address Errors:                              0
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>  Delimiter Errors:                            0
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>  Disparity Errors:                            0
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>  Primitive Sequence Protocol Errors:          0
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>Clear counters on interface fc1/1
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the interface name matches your MDS model (e.g., <code>fc1/1</code> vs <code>Ethernet1/1</code>) and use <code>show interface</code> first to confirm the port exists.
+<strong><code>% Interface fc1/1 is down</code></strong> — Check physical cable connection and port status with <code>show interface fc1/1</code> before clearing counters on a non-operational link.</p>
+</div>
 <p><strong>End-to-end path verification:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Test FC ping from switch to a storage target port:</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fcping<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>count<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Should show 5/5 successful responses</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Test FC ping from switch to a storage target port:</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>fcping<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>count<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1"># Should show 5/5 successful responses</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>FCPING: 5 bytes from 50:00:09:73:00:1a:2b:3c: time=2.341 ms
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>FCPING: 5 bytes from 50:00:09:73:00:1a:2b:3c: time=2.156 ms
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>FCPING: 5 bytes from 50:00:09:73:00:1a:2b:3c: time=2.289 ms
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>FCPING: 5 bytes from 50:00:09:73:00:1a:2b:3c: time=2.412 ms
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>FCPING: 5 bytes from 50:00:09:73:00:1a:2b:3c: time=2.198 ms
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>--- 50:00:09:73:00:1a:2b:3c statistics ---
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>5 packets transmitted, 5 packets received, 0.00% packet loss
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>round-trip min/avg/max = 2.156/2.279/2.412 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>FCPING: No response from 50:00:09:73:00:1a:2b:3c</code></strong> — Verify the target PWWN is correct and the storage port is online and zoned to the initiator.
+<strong><code>FCPING: VSAN 10 is not configured</code></strong> — Create the VSAN first using <code>vsan &lt;id&gt;</code> command or confirm the VSAN number matches your fabric configuration.
+<strong><code>FCPING: Permission denied</code></strong> — Ensure you are in the correct VSAN context or have appropriate user role permissions to execute fcping commands.</p>
+</div>
 <p><strong>Traceroute within the fabric:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>fctrace<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Shows each hop through the fabric to the target port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>fctrace<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1"># Shows each hop through the fabric to the target port</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>PWWN: 50:00:09:73:00:1a:2b:3c VSAN: 10
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Hop 1: Switch fcswitch-mds1 (IP: 192.168.1.10)
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>  Port: fc1/1 (Speed: 16 Gbps, State: Up)
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>Hop 2: Switch fcswitch-mds2 (IP: 192.168.1.11)
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>  Port: fc2/5 (Speed: 16 Gbps, State: Up)
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>Hop 3: Switch fcswitch-mds3 (IP: 192.168.1.12)
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>  Port: fc3/12 (Speed: 16 Gbps, State: Up)
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a>Target Port Found:
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>  PWWN: 50:00:09:73:00:1a:2b:3c
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>  Device: EMC-VMAX-SN-000123456789
+<a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>  Port: fc3/12
+<a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a>  Distance: 3 hops
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fctrace: PWWN not found in VSAN 10</code></strong> — Verify the PWWN is correct and the device is zoned into the specified VSAN using <code>fcping</code> or <code>zone name</code> commands.
+<strong><code>fctrace: VSAN 10 does not exist or is suspended</code></strong> — Confirm the VSAN is active with <code>show vsan</code> and ensure it is not in suspended state.
+<strong><code>fctrace: Command not found</code></strong> — Enable the fctrace feature on the MDS switch using <code>feature fctrace</code> in configuration mode.</p>
+</div>
 <p>Save configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>[########################################] 100.0%
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>Copy complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Error opening tftp://255.255.255.255/network-confg (Timed out)</code></strong> — Verify TFTP server is reachable and configured; use <code>ping</code> to test connectivity to the TFTP server IP.
+<strong><code>% Invalid command</code></strong> — Ensure you are in privileged EXEC mode (prompt shows <code>#</code>); type <code>enable</code> if needed.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7777,7 +8134,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

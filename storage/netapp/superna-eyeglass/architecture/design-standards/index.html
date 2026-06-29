@@ -8217,44 +8217,146 @@ Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover 
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List SyncIQ policies mapped to a DR policy</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>egcli<span class="w"> </span>synciq<span class="w"> </span>list<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># List all DR policies
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Policy Name          Status    Type        Target Cluster    Last Updated
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>prod-dr-policy       Active    Async       cluster-dr-02     2024-01-15 14:32:18
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>backup-hourly        Active    Sync        cluster-dr-03     2024-01-15 14:28:45
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>test-failover        Inactive  Async       cluster-dr-02     2024-01-14 09:15:22
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>archive-weekly       Active    Async       cluster-dr-04     2024-01-14 23:59:01
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Detailed view of a specific policy
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Policy Name:         prod-dr-policy
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Status:              Active
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Type:                Asynchronous
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Target Cluster:      cluster-dr-02 (192.168.50.10)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>RPO (minutes):       15
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>RTO (minutes):       30
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Last Replication:    2024-01-15 14:32:18
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Replication Lag:     2 minutes 14 seconds
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Last Test Date:      2024-01-10 11:45:00
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Test Status:         PASSED
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Status of all policies (replication state, lag, last test)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Policy Name          Replication State    Lag        Last Test Result    Next Test
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>prod-dr-policy       In Sync              2m 14s     PASSED (Jan 10)     Jan 17 11:00
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>backup-hourly        In Sync              45s        PASSED (Jan 12)     Jan 19 08:30
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>test-failover        Idle                 N/A        FAILED (Jan 08)     Jan 22 14:00
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>archive-weekly       In Sync              8m 32s     PASSED (Jan 07)     Jan 21 06:00
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># List access zones included in a policy
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Access Zone          Replication Status    Data Size    Last Sync
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>system               Active                245 GB       2024-01-15 14:32:10
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>zone-finance         Active                1.2 TB       2024-01-15 14:31:55
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>zone-hr              Active                340 GB       2024-01-15 14:32:05
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># List SyncIQ policies mapped to a DR policy
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>SyncIQ Policy ID     Source Path          Target Path              Status
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>sync-001             /ifs/data/finance    /ifs/dr/finance         Active
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>sync-002             /ifs/data/hr         /ifs/dr/hr              Active
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>sync-003             /ifs/data/archive    /ifs/dr/archive         Paused
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy '&lt;policy_name&gt;' not found</code></strong> — Verify the policy name with <code>egcli drpolicy list</code> and use the exact name from the output.
+<strong><code>Error: Connection refused to cluster-dr-02</code></strong> — Ensure the target cluster is reachable and the network path is not blocked by firewall rules.
+<strong><code>Error: Insufficient permissions to view policy details</code></strong> — Confirm your user account has the required DR policy read permissions in Eyeglass RBAC settings.</p>
+</div>
 <h3 id="creating-a-dr-policy">Creating a DR Policy<a class="headerlink" href="#creating-a-dr-policy" title="Permanent link">&para;</a></h3>
 <p>DR policies are typically created via the Eyeglass web UI. CLI equivalent:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new DR policy (basic parameters)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>POL-NAS-PROD<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--source-cluster<span class="w"> </span>&lt;production-cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--target-cluster<span class="w"> </span>&lt;dr-cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--access-zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--synciq-policy<span class="w"> </span>&lt;synciq_policy_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--rpo-seconds<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Add additional access zones to an existing policy</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>addzone<span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD<span class="w"> </span>--access-zone<span class="w"> </span>&lt;zone2_name&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Add additional SyncIQ policies to an existing policy</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>addsync<span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD<span class="w"> </span>--synciq-policy<span class="w"> </span>&lt;synciq_policy2&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Enable the policy</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a new DR policy (basic parameters)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span>POL-NAS-PROD<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--source-cluster<span class="w"> </span>&lt;production-cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--target-cluster<span class="w"> </span>&lt;dr-cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--access-zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--synciq-policy<span class="w"> </span>&lt;synciq_policy_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--rpo-seconds<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Add additional access zones to an existing policy</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>addzone<span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD<span class="w"> </span>--access-zone<span class="w"> </span>&lt;zone2_name&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Add additional SyncIQ policies to an existing policy</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>addsync<span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD<span class="w"> </span>--synciq-policy<span class="w"> </span>&lt;synciq_policy2&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Enable the policy</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--policy<span class="w"> </span>POL-NAS-PROD
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Creating DR policy POL-NAS-PROD...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Policy POL-NAS-PROD created successfully
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Source Cluster: prod-cluster-01.corp.local
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Target Cluster: dr-cluster-02.corp.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Access Zone: system
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  SyncIQ Policy: sync-prod-hourly
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  RPO: 300 seconds
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Status: disabled
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Adding access zone zone2 to policy POL-NAS-PROD...
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Access zone zone2 added successfully
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Adding SyncIQ policy sync-prod-daily to policy POL-NAS-PROD...
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>SyncIQ policy sync-prod-daily added successfully
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Enabling policy POL-NAS-PROD...
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Policy POL-NAS-PROD enabled successfully
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Current Status: active
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Last Modified: 2024-01-15T09:42:17Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy POL-NAS-PROD already exists</code></strong> — Use a unique policy name or delete the existing policy with <code>egcli drpolicy delete --policy POL-NAS-PROD</code> first.
+<strong><code>Error: Access zone &lt;zone2_name&gt; not found on target cluster</code></strong> — Verify the access zone exists on the DR cluster with <code>egcli zone list --cluster &lt;dr-cluster&gt;</code>.
+<strong><code>Error: SyncIQ policy &lt;synciq_policy2&gt; does not exist</code></strong> — Confirm the SyncIQ policy name is correct and exists with <code>egcli synciq list --cluster &lt;production-cluster&gt;</code>.</p>
+</div>
 <h3 id="synciq-integration">SyncIQ Integration<a class="headerlink" href="#synciq-integration" title="Permanent link">&para;</a></h3>
 <p>Eyeglass monitors and manages SyncIQ policies as part of DR orchestration. SyncIQ policies must be pre-configured on the production PowerScale cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On production PowerScale — view SyncIQ policy configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;synciq_policy_name&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm policy target is the DR cluster</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm schedule (should be frequent enough to meet RPO)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm source/target paths match the access zone directories</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check last run time and status</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>--policy<span class="w"> </span>&lt;synciq_policy_name&gt;<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Manually trigger a SyncIQ sync (e.g., before a planned failover)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;synciq_policy_name&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Monitor sync job completion</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On production PowerScale — view SyncIQ policy configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;synciq_policy_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm policy target is the DR cluster</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm schedule (should be frequent enough to meet RPO)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Confirm source/target paths match the access zone directories</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check last run time and status</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>--policy<span class="w"> </span>&lt;synciq_policy_name&gt;<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Manually trigger a SyncIQ sync (e.g., before a planned failover)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;synciq_policy_name&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Monitor sync job completion</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name: prod-to-dr-sync
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Policy ID: 8f4c2a91-7e3f-4d8b-9c1a-5b3e8f2d6a4c
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Source Path: /ifs/data/production
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Target Cluster: dr-cluster-01.example.com
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Target Path: /ifs/data/production
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Schedule: Every 6 hours
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Enabled: Yes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Last Run: 2024-01-15T14:32:18Z
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Last Run Status: Succeeded
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ID                                    Policy Name         Start Time              End Time                Status      Duration
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>8f4c2a91-7e3f-4d8b-9c1a-5b3e8f2d6a4c  prod-to-dr-sync     2024-01-15T14:32:18Z    2024-01-15T14:47:22Z    Succeeded   15m 4s
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>7e3f4d8b-9c1a-5b3e8f2d6a4c-8f4c2a91   prod-to-dr-sync     2024-01-15T08:15:09Z    2024-01-15T08:29:44Z    Succeeded   14m 35s
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>5b3e8f2d-6a4c-8f4c-2a91-7e3f4d8b9c1a   prod-to-dr-sync     2024-01-15T02:10:33Z    2024-01-15T02:25:18Z    Succeeded   14m 45s
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>...
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Job ID: 9c1a-5b3e-8f2d-6a4c-8f4c2a91-7e3f
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Policy: prod-to-dr-sync
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Status: RUNNING
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Progress: 847 GB of 1.2 TB (70%)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Elapsed Time: 8m 22s
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Estimated Remaining: 3m 45s
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>ID                                    Policy Name         Status      Progress
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>9c1a-5b3e-8f2d-6a4c-8f4c2a91-7e3f     prod-to-dr-sync     RUNNING     70%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy 'prod-to-dr-sync' not found</code></strong> — Verify the policy name matches exactly with <code>isi sync policies list</code> and check for typos or case sensitivity.
+<strong><code>Error: Connection refused to target cluster dr-cluster-01.example.com</code></strong> — Confirm network connectivity and HTTPS/port 8080 access between clusters, and verify the target cluster hostname is resolvable.
+<strong><code>Error: Job already running for policy 'prod-to-dr-sync'</code></strong> — Wait for the current sync job to complete before manually triggering another, or use <code>isi sync jobs cancel &lt;job_id&gt;</code> if needed.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8286,33 +8388,76 @@ Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover 
 </tbody>
 </table>
 <h3 id="policy-rpo-monitoring">Policy RPO Monitoring<a class="headerlink" href="#policy-rpo-monitoring" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current replication lag vs RPO target per policy</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Alert if lag exceeds RPO</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Eyeglass sends SNMP traps or syslog events on RPO breach</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Forward events to monitoring: Settings → Notifications in Eyeglass UI</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Manually check SyncIQ lag on production cluster</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Last|Status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current replication lag vs RPO target per policy</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Alert if lag exceeds RPO</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Eyeglass sends SNMP traps or syslog events on RPO breach</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Forward events to monitoring: Settings → Notifications in Eyeglass UI</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Manually check SyncIQ lag on production cluster</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Last|Status&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Policy Name: prod-hourly-sync
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Target RPO: 1 hour
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Current Lag: 47 minutes
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Status: In Sync
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Last Run: 2024-01-15 14:32:15 UTC
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Policy Name: dr-daily-backup
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Target RPO: 24 hours
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Current Lag: 18 hours 23 minutes
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  Status: In Sync
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Last Run: 2024-01-15 06:15:42 UTC
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Policy Name: archive-weekly
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Target RPO: 7 days
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Current Lag: 5 days 12 hours
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  Status: In Sync
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Last Run: 2024-01-14 22:00:08 UTC
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Name                          Last Run                Status
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>prod-hourly-sync              2024-01-15 14:32:15    Finished
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>dr-daily-backup               2024-01-15 06:15:42    Finished
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>archive-weekly                2024-01-14 22:00:08    Finished
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused to Eyeglass API on 192.168.1.50:8443</code></strong> — Verify Eyeglass appliance is running and network connectivity exists with <code>ping</code> and <code>nc -zv</code>.
+<strong><code>isi: command not found</code></strong> — Run the <code>isi</code> command directly on the OneFS cluster console or configure SSH key-based authentication to the cluster in your shell environment.</p>
+</div>
 <h3 id="modifying-and-disabling-policies">Modifying and Disabling Policies<a class="headerlink" href="#modifying-and-disabling-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Update RPO target for a policy</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>modify<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--rpo-seconds<span class="w"> </span><span class="m">600</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable a policy (e.g., when decommissioning a workload)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>disable<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Remove an access zone from a policy</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>removezone<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--access-zone<span class="w"> </span>&lt;zone_name&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Delete a policy (caution — removes Eyeglass orchestration but does not</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># remove underlying SyncIQ policies from PowerScale)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>delete<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># After deletion: verify remaining SyncIQ policies on PowerScale are correct</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Update RPO target for a policy</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>modify<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--rpo-seconds<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Disable a policy (e.g., when decommissioning a workload)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>disable<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Remove an access zone from a policy</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>removezone<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--access-zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Delete a policy (caution — removes Eyeglass orchestration but does not</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># remove underlying SyncIQ policies from PowerScale)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>delete<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># After deletion: verify remaining SyncIQ policies on PowerScale are correct</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Policy &#39;prod-dr-policy&#39; RPO target updated to 600 seconds
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Policy &#39;prod-dr-policy&#39; disabled successfully
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Access zone &#39;finance_zone&#39; removed from policy &#39;prod-dr-policy&#39;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Policy &#39;prod-dr-policy&#39; deleted from Eyeglass orchestration
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Sync policies on cluster &#39;pscale-prod-01&#39;:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  prod-dr-policy-sync (source: /ifs/data/prod, target: 10.50.12.45:/ifs/backup, interval: 600s)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  archive-dr-policy-sync (source: /ifs/archive, target: 10.50.12.46:/ifs/backup, interval: 3600s)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  legacy-sync-policy (source: /ifs/legacy, target: 10.50.12.47:/ifs/backup, interval: 7200s)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy 'prod-dr-policy' not found</code></strong> — Verify the policy name with <code>egcli drpolicy list</code> and use the exact name.
+<strong><code>Error: Cannot remove access zone 'finance_zone': zone is actively replicating</code></strong> — Disable the policy first with <code>egcli drpolicy disable</code> or wait for the current sync cycle to complete.
+<strong><code>Error: SyncIQ policy 'prod-dr-policy-sync' still exists on PowerScale cluster</code></strong> — Manually delete orphaned SyncIQ policies from PowerScale using <code>isi sync policies delete</code> after confirming they are no longer needed.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8342,7 +8487,7 @@ Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

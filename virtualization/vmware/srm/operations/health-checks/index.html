@@ -9462,55 +9462,116 @@ SRM health checks: `Get-SrmRecoveryPlan`, site pair connectivity test, VM protec
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Site Recovery → Storage → Array Pairs → [pair] → Discover Devices</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># This re-runs the SRA discovery against the storage array</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Array Pair: EMC-VMAX-01
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Status: Enabled
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Health: Healthy
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  Last Discovery: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  Devices Discovered: 47
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Array Pair: NetApp-FAS8300
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Status: Enabled
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  Health: Healthy
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  Last Discovery: 2024-01-15 14:28:45 UTC
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  Devices Discovered: 23
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Array Pair: Pure-FlashArray-X90R2
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>  Status: Enabled
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  Health: Degraded
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>  Last Discovery: 2024-01-14 09:15:22 UTC
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  Devices Discovered: 12
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>SRA Discovery Process Started
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>  Target Array: Pure-FlashArray-X90R2
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>  Discovery Duration: 45 seconds
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>  Status: Completed Successfully
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>  Devices Re-discovered: 12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRA Discovery Failed: Connection timeout to storage array (60s)</code></strong> — Verify network connectivity to the storage array and confirm SRA credentials are current in Site Recovery → Storage → Array Pairs settings.
+<strong><code>Array Pair Status: Unhealthy - SRA Plugin Version Mismatch</code></strong> — Update the SRA plugin to match the vSphere Replication version by downloading the latest SRA from the storage vendor's support portal.</p>
+</div>
 <hr />
 <h2 id="placeholder-vms-at-recovery-site">Placeholder VMs at Recovery Site<a class="headerlink" href="#placeholder-vms-at-recovery-site" title="Permanent link">&para;</a></h2>
 <p><img alt="Placeholder VMs at Recovery Site" src="../../../../../assets/virtualization-vmware-srm-hc-placeholder-vms-at-recovery-site.svg" /></p>
 <p>Placeholder VMs must exist at the recovery site for each protected VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Recovery<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>VMs<span class="w"> </span>and<span class="w"> </span>Templates
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>Look<span class="w"> </span><span class="k">for</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>names<span class="w"> </span>matching<span class="w"> </span>protected<span class="w"> </span>VMs<span class="w"> </span>—<span class="w"> </span>these<span class="w"> </span>are<span class="w"> </span>placeholder<span class="w"> </span>VMs
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>They<span class="w"> </span>appear<span class="w"> </span>as<span class="w"> </span><span class="s2">&quot;shadow&quot;</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>minimal<span class="w"> </span>resources
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Placeholder VMs missing = protection group needs reconfiguration</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Site Recovery → Protection → [PG] → Configure → Reconfigure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Recovery<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>VMs<span class="w"> </span>and<span class="w"> </span>Templates
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>Look<span class="w"> </span><span class="k">for</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>names<span class="w"> </span>matching<span class="w"> </span>protected<span class="w"> </span>VMs<span class="w"> </span>—<span class="w"> </span>these<span class="w"> </span>are<span class="w"> </span>placeholder<span class="w"> </span>VMs
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>They<span class="w"> </span>appear<span class="w"> </span>as<span class="w"> </span><span class="s2">&quot;shadow&quot;</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>minimal<span class="w"> </span>resources
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Placeholder VMs missing = protection group needs reconfiguration</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Site Recovery → Protection → [PG] → Configure → Reconfigure</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>vCenter (Recovery Site) → VMs and Templates
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  Look for VMs with names matching protected VMs — these are placeholder VMs
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  They appear as &quot;shadow&quot; VMs with minimal resources
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Placeholder VMs found:
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  prod-web-01 (128 MB RAM, 1 vCPU) — Recovery Site
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  prod-web-02 (128 MB RAM, 1 vCPU) — Recovery Site
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  prod-db-01 (256 MB RAM, 2 vCPU) — Recovery Site
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  prod-app-03 (128 MB RAM, 1 vCPU) — Recovery Site
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>Protection Group Status: PROTECTED
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>Last Test Failover: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>Recovery Point Objective: 5 minutes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group not found in Site Recovery Manager</code></strong> — Verify the protection group name matches exactly in Site Recovery → Protection and check that SRM is properly licensed on both sites.
+<strong><code>Error: Placeholder VMs missing from recovery site datastore</code></strong> — Re-run the protection group reconfiguration wizard via Site Recovery → Protection → [PG] → Configure → Reconfigure to regenerate placeholder VMs.</p>
+</div>
 <hr />
 <h2 id="recovery-plan-pre-check">Recovery Plan Pre-Check<a class="headerlink" href="#recovery-plan-pre-check" title="Permanent link">&para;</a></h2>
 <p><img alt="Recovery Plan Pre-Check" src="../../../../../assets/virtualization-vmware-srm-hc-recovery-plan-pre-check.svg" /></p>
 <p>Run the built-in pre-check before any recovery:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Site Recovery → Recovery Plans → [plan] → Test or Recover
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  Step 1: Run validation checks (pre-check)
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  Verify: no errors before proceeding
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  Common warnings: network mapping not set, no IP customization defined
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Site Recovery → Recovery Plans → [plan] → Test or Recover
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Step 1: Run validation checks (pre-check)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Verify: no errors before proceeding
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  Common warnings: network mapping not set, no IP customization defined
 </code></pre></div>
 <hr />
 <h2 id="certificate-expiry">Certificate Expiry<a class="headerlink" href="#certificate-expiry" title="Permanent link">&para;</a></h2>
 <p><img alt="Certificate Expiry" src="../../../../../assets/virtualization-vmware-srm-hc-certificate-expiry.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check SRM Server certificate</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Check vSphere Replication appliance cert</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check SRM Server certificate</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Check vSphere Replication appliance cert</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>notBefore=Jan 15 08:23:47 2023 GMT
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>notAfter=Jan 15 08:23:47 2026 GMT
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>notBefore=Jan 15 08:23:47 2023 GMT
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>notAfter=Jan 15 08:23:47 2026 GMT
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>notBefore=Mar 22 14:10:12 2022 GMT
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>notAfter=Mar 22 14:10:12 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify the SRM or VRA appliance is running and the hostname resolves correctly with <code>nslookup</code> or <code>ping</code>.
+<strong><code>connect: Name or service not known</code></strong> — Add the appliance hostnames to your DNS or <code>/etc/hosts</code> file, or use the IP address instead of the FQDN.
+<strong><code>Verify return code: 20 (unable to verify the first certificate)</code></strong> — This is a warning for self-signed certificates; the dates are still valid—add <code>-showcerts</code> to inspect the full chain if needed.</p>
+</div>
 <hr />
 <h2 id="monthly-test-recovery-verification">Monthly Test Recovery Verification<a class="headerlink" href="#monthly-test-recovery-verification" title="Permanent link">&para;</a></h2>
 <p><img alt="Monthly Test Recovery Verification" src="../../../../../assets/virtualization-vmware-srm-hc-monthly-test-recovery-verification.svg" /></p>
 <p>Run a test failover monthly on at least one non-critical Recovery Plan:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Test</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Mode</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Network</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isolated (do not connect test VMs to production network)</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nt">After test</span><span class="p">:</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nt">Verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all VMs powered on in isolated network</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IP addresses correct per IP customization rules</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application-level connectivity within isolated network (ping, service check)</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="nt">Cleanup</span><span class="p">:</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Cleanup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Test</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Mode</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Network</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isolated (do not connect test VMs to production network)</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nt">After test</span><span class="p">:</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span><span class="nt">Verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all VMs powered on in isolated network</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IP addresses correct per IP customization rules</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application-level connectivity within isolated network (ping, service check)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nt">Cleanup</span><span class="p">:</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Cleanup</span>
 </code></pre></div>
 <p>Document test results and any issues found. Track trend of test durations — increasing duration indicates scaling issues.</p>
 <h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
@@ -9593,7 +9654,7 @@ SRM health checks: `Get-SrmRecoveryPlan`, site pair connectivity test, VM protec
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

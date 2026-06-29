@@ -10773,81 +10773,215 @@ recover the workflow.
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sudo<span class="w"> </span>find<span class="w"> </span>/var/log/vmware/vcf<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;sos-health*&quot;</span><span class="w"> </span>-newer<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-exec<span class="w"> </span>tail<span class="w"> </span>-50<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vcf@sddc-manager-01:~$ ssh vcf@192.168.1.50
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vcf@192.168.1.50&#39;s password: 
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Welcome to VMware Cloud Foundation SDDC Manager
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.100
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vcf@sddc-manager-01:~$ sudo tail -200 /var/log/vmware/vcf/lcm/lcm-debug.log | grep -iE &quot;ERROR|FAIL|exception&quot;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2025-01-15T14:28:45.123Z ERROR [LCM-Task-Worker-12] com.vmware.vcf.lcm.upgrade.task.UpgradeTask - Failed to apply patch to host esx-01.sddc.local: Connection timeout after 300s
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2025-01-15T14:29:12.456Z EXCEPTION [LCM-Task-Worker-12] java.net.SocketTimeoutException: Host unreachable
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2025-01-15T14:30:01.789Z ERROR [LCM-Scheduler] com.vmware.vcf.lcm.health.HealthCheck - Precheck validation FAILED: Insufficient disk space on /var/log (required: 50GB, available: 12GB)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vcf@sddc-manager-01:~$ sudo tail -100 /var/log/vmware/vcf/sddc-manager.log | grep -iE &quot;ERROR|FAIL&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2025-01-15T14:27:33.012Z ERROR [http-nio-8443-exec-5] com.vmware.vcf.sddc.api.controller.UpgradeController - Upgrade bundle validation FAILED: Checksum mismatch for bundle vcf-5.5.0-build.12345678
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2025-01-15T14:28:15.345Z ERROR [http-nio-8443-exec-8] com.vmware.vcf.sddc.api.service.LcmService - Unable to reach vCenter Server 192.168.1.40:443
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>vcf@sddc-manager-01:~$ sudo find /var/log/vmware/vcf -name &quot;sos-health*&quot; -newer /var/log/vmware/vcf/lcm/lcm-debug.log -exec tail -50 {} \;
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>=== SOS Health Check Report ===
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Timestamp: 2025-01-15T14:25:00Z
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Host: esx-02.sddc.local (192.168.1.52)
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Status: FAILED
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Issues Detected:
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  - vSAN cluster disk group missing on device mpx.vmhba2:C0:T0:L0
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  - NTP sync error: offset 2500ms (threshold: 100ms)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  - vMotion network latency: 450ms (threshold: 100ms)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: command not found</code></strong> — Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access.
+<strong><code>/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vmware-vcf-lcm</code> and check the correct log path for your</p>
+</div>
 <p>Look for: the specific exception class or error message. Common patterns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SshCommandException    — SDDC Manager cannot SSH to an ESXi host or NSX Manager
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CertExpiredException   — a certificate expired; check vCenter, ESXi, or NSX certs
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>NsxUpgradeCheckFailed  — NSX precheck script returned errors; check NSX Manager directly
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>TimeoutException       — task took too long; check if the component is under load
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>VsanHealthCheckFailed  — vSAN Skyline Health not green; check vSAN status directly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SshCommandException    — SDDC Manager cannot SSH to an ESXi host or NSX Manager
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>CertExpiredException   — a certificate expired; check vCenter, ESXi, or NSX certs
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>NsxUpgradeCheckFailed  — NSX precheck script returned errors; check NSX Manager directly
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>TimeoutException       — task took too long; check if the component is under load
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>VsanHealthCheckFailed  — vSAN Skyline Health not green; check vSAN status directly
 </code></pre></div>
 <hr />
 <h2 id="3-fix-the-underlying-issue">3. Fix the Underlying Issue<a class="headerlink" href="#3-fix-the-underlying-issue" title="Permanent link">&para;</a></h2>
 <p>Address the root cause before retrying. The most common issues and their fixes:</p>
 <p><strong>SOS validation failure — component unreachable:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify SDDC Manager can reach all ESXi hosts</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>sddc-manager-cli<span class="w"> </span>get-hosts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;get hosts manually&quot;</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$host</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2"> OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2"> UNREACHABLE&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">done</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify DNS resolution from SDDC Manager</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>nslookup<span class="w"> </span>vcenter.domain.local
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nslookup<span class="w"> </span>nsx-manager.domain.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify SDDC Manager can reach all ESXi hosts</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>sddc-manager-cli<span class="w"> </span>get-hosts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;get hosts manually&quot;</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$host</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2"> OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2"> UNREACHABLE&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">done</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Verify DNS resolution from SDDC Manager</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>nslookup<span class="w"> </span>vcenter.domain.local
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>nslookup<span class="w"> </span>nsx-manager.domain.local
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esx-01.domain.local OK
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esx-02.domain.local OK
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esx-03.domain.local OK
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>esx-04.domain.local OK
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Server:     10.0.0.53
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Address:    10.0.0.53#53
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Name:   vcenter.domain.local
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Address: 10.20.1.45
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Server:     10.0.0.53
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Address:    10.0.0.53#53
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Name:   nsx-manager.domain.local
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>Address: 10.20.1.67
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: sddc-manager-cli</code></strong> — Ensure the SDDC Manager CLI is installed and in your PATH, or run this command directly from the SDDC Manager appliance.
+<strong><code>UNREACHABLE</code></strong> — Verify the ESXi host is powered on, check network connectivity from SDDC Manager, and confirm firewall rules allow ICMP traffic.
+<strong><code>nslookup: can't resolve 'vcenter.domain.local': No answer</code></strong> — Verify DNS servers are configured correctly on SDDC Manager and that the DNS zone contains the required A records.</p>
+</div>
 <p><strong>Certificate issue — expiry or trust:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry on vCenter from SDDC Manager</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check certificate expiry on vCenter from SDDC Manager</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>notBefore=Jan 15 10:23:45 2023 GMT
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>notAfter=Jan 15 10:23:45 2024 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with <code>ping &lt;vcenter-fqdn&gt;</code> first.
+<strong><code>error in x509 parsing</code></strong> — The certificate chain may not be complete; add <code>-showcerts</code> to <code>openssl s_client</code> to inspect the full chain and identify parsing issues.</p>
+</div>
 <p>For certificate rotation in SDDC Manager, see the <a href="certificate-expiry-rotation/index.md">Certificate Expiry and Rotation</a> scenario.</p>
 <p><strong>vSAN health blocking upgrade:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to an ESXi host; check vSAN health summary</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># If resync is in progress, wait for completion</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;BytesToResync|ETA&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to an ESXi host; check vSAN health summary</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># If resync is in progress, wait for completion</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;BytesToResync|ETA&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Cluster Information
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>   Cluster UUID: 52d4a8f1-2b3c-4e7f-9a1c-8d3e5f2a1b4c
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>   Cluster Health Status: healthy
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>   Cluster Health Reason: No issues detected
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>   Number of Host Failures Tolerable: 1
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>   Number of Disk Failures Tolerable: 1
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Object Health Summary
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>   Number of Objects: 2847
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>   Number of Healthy Objects: 2847
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>   Number of Unhealthy Objects: 0
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>   Number of Inaccessible Objects: 0
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>BytesToResync: 0
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ETA: 0 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace vsan</code></strong> — Ensure you are connected to an ESXi 6.5+ host with vSAN enabled; run <code>esxcli vsan cluster get</code> to verify vSAN is active.
+<strong><code>Error: Permission denied</code></strong> — SSH to the ESXi host with root credentials or a user with vSAN admin privileges.</p>
+</div>
 <p>Do not retry the upgrade workflow while a vSAN resync is in progress — the upgrade stall is protecting data integrity.</p>
 <p><strong>NSX precheck failure:</strong></p>
 <p>Verify NSX Manager is reachable and healthy before retrying:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NSX Manager → System → Overview — confirm all NSX Manager nodes show Up
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>NSX Manager → System → Upgrade — check NSX is not already in a partial upgrade state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NSX Manager → System → Overview — confirm all NSX Manager nodes show Up
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>NSX Manager → System → Upgrade — check NSX is not already in a partial upgrade state
 </code></pre></div>
 <hr />
 <h2 id="4-retry-or-resume-the-workflow">4. Retry or Resume the Workflow<a class="headerlink" href="#4-retry-or-resume-the-workflow" title="Permanent link">&para;</a></h2>
 <p>After fixing the root cause, retry the workflow from SDDC Manager.</p>
 <p><strong>Via UI (preferred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>SDDC Manager → Administration → Lifecycle Management → Bundles
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Select the failed workflow → Actions → Retry Task
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SDDC Manager → Administration → Lifecycle Management → Bundles
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Select the failed workflow → Actions → Retry Task
 </code></pre></div>
 <p><strong>Via API (when UI retry is not available):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Get the workflow task ID from the failed workflow</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://localhost/v1/upgrades&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;id|status|taskName&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Retry a specific upgrade task</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;status&quot;:&quot;RETRY&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="s2">&quot;https://localhost/v1/upgrades/&lt;upgrade-id&gt;/tasks/&lt;task-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Get the workflow task ID from the failed workflow</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="s2">&quot;https://localhost/v1/upgrades&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;id|status|taskName&quot;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Retry a specific upgrade task</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;status&quot;:&quot;RETRY&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="s2">&quot;https://localhost/v1/upgrades/&lt;upgrade-id&gt;/tasks/&lt;task-id&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>{
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    &quot;id&quot;: &quot;upgrade-2024-01-15-prod-cluster&quot;,
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    &quot;taskName&quot;: &quot;PreUpgradeValidation&quot;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>}
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>{
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    &quot;id&quot;: &quot;upgrade-2024-01-15-prod-cluster&quot;,
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    &quot;taskName&quot;: &quot;HostPatch&quot;
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>}
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>{
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    &quot;id&quot;: &quot;upgrade-2024-01-15-prod-cluster&quot;,
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    &quot;taskName&quot;: &quot;VMSnapshot&quot;
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>}
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>{
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  &quot;taskId&quot;: &quot;task-8f3c2a91-7e4d-11ee-b962-005056b5c4a1&quot;,
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>  &quot;status&quot;: &quot;RETRY&quot;,
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>  &quot;message&quot;: &quot;Task retry scheduled successfully&quot;,
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>  &quot;retryAttempt&quot;: 2,
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>  &quot;nextRetryTime&quot;: &quot;2024-01-15T14:32:00Z&quot;
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vCenter CA certificate into your system trust store.
+<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; use <code>-u admin:$(echo -n 'password' | jq -sRr @uri)</code> for special chars.
+<strong><code>{"error":"Not Found","code":404}</code></strong> — Confirm the <code>&lt;upgrade-id&gt;</code> and <code>&lt;task-id&gt;</code> values exist by running the first curl command to list active upgrades and their task IDs.</p>
+</div>
 <p>Look for: some tasks cannot be retried individually and require retrying the entire upgrade operation from the beginning. If the component was partially upgraded (e.g., one NSX Manager node upgraded), check whether rollback or completion is the safer path before retrying.</p>
 <hr />
 <h2 id="5-validate-upgrade-completion">5. Validate Upgrade Completion<a class="headerlink" href="#5-validate-upgrade-completion" title="Permanent link">&para;</a></h2>
 <p>After the workflow completes, verify component versions and run SOS health check.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run SOS health check from SDDC Manager</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--skip-known-host-check<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--domain-name<span class="w"> </span>&lt;workload-domain-name&gt;
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check component versions after upgrade</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--version-check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Run SOS health check from SDDC Manager</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--skip-known-host-check<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--domain-name<span class="w"> </span>&lt;workload-domain-name&gt;
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Check component versions after upgrade</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--version-check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Running SOS health check for domain: workload-domain-01
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Checking SDDC Manager connectivity... OK
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Checking vCenter Server... OK
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Checking NSX Manager... OK
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Checking vSAN cluster health... OK
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Checking ESXi hosts (8 total)... OK
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Checking network configuration... OK
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>Checking certificate validity... OK (expires in 287 days)
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>Health check completed successfully. No critical issues detected.
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>SOS Version Check Report
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>========================
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>SDDC Manager: 5.4.1.0-21432156
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>vCenter Server: 7.0.3.00100
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>NSX Manager: 3.2.2.1-20145896
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>vSAN: 7.0 U3
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>ESXi Hosts: 7.0.3, Build 19482537
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>Photon OS: 4.0 Rev 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: /opt/vmware/sddc-support/sos: command not found</code></strong> — Verify the SOS tool is installed by running <code>ls -la /opt/vmware/sddc-support/</code> and confirm the SDDC Manager support bundle is present.
+<strong><code>Error: Domain '&lt;workload-domain-name&gt;' not found in SDDC Manager inventory</code></strong> — Replace <code>&lt;workload-domain-name&gt;</code> with the actual workload domain name from your environment (e.g., <code>workload-domain-01</code>).
+<strong><code>Permission denied</code></strong> — Ensure you are running the command with <code>sudo</code> and that your user account has sufficient privileges in the SDDC Manager appliance.</p>
+</div>
 <p>Expected results:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>SOS health check output (healthy):
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  vCenter:     PASS
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  ESXi:        PASS (all hosts)
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  vSAN:        PASS
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  NSX Manager: PASS
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Version:     All components at target bundle version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>SOS health check output (healthy):
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  vCenter:     PASS
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  ESXi:        PASS (all hosts)
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  vSAN:        PASS
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  NSX Manager: PASS
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Version:     All components at target bundle version
 </code></pre></div>
 <p>Look for: any FAIL or WARN in the SOS health check output indicates that the upgrade did not fully complete or introduced a configuration issue. Address each failure before closing the change.</p>
 <hr />
@@ -10935,7 +11069,7 @@ recover the workflow.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8904,165 +8904,349 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Expected: all Status = in-use, Attachment.Status = attached</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HostId                          State
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>------------------------------- -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>host-0a7f2c1e9d4b5f3a          AVAILABLE
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>host-1b8e3d2f0c6a4e9b          AVAILABLE
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>host-2c9f4e3g1d7b5f0c          AVAILABLE
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>InstanceId          SystemStatus    InstanceStatus
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>i-0f7a2b9c4d1e5a3f  ok              ok
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>i-1g8b3c0d5e2f6b4g  ok              ok
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>i-2h9c4d1e6f3g7c5h  ok              ok
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>DestinationCidrBlock    State    GatewayId        NetworkInterfaceId
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>10.0.0.0/16             active   local             None
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>10.1.0.0/24             active   igw-0a1b2c3d     None
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>10.2.0.0/24             active   eni-0f7a2b9c4d   None
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>0.0.0.0/0               active   igw-0a1b2c3d     None
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>NetworkInterfaceId      Status    AttachmentStatus    Description
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>eni-0f7a2b9c4d1e5a3f   in-use    attached            EVS-Host-eth0
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>eni-1g8b3c0d5e2f6b4g   in-use    attached            EVS-Host-eth1
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>eni-2h9c4d1e6f3g7c5h   in-use    attached            EVS-Host-eth2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID</code></strong> — Verify the $ENV_ID variable is set correctly with <code>echo $ENV_ID</code> and matches an existing EVS environment.
+<strong><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: Invalid id: "vpc-"</code> — Ensure $EVS_VPC_ID is populated with a valid VPC ID using <code>aws ec2 describe-vpcs --query 'Vpcs[*].VpcId'</code>.
+</strong><code>An error occurred (InvalidParameterValue) when calling the DescribeNetworkInterfaces operation: Invalid id: "subnet-"</code> — Confirm $EVS_MGMT_SUBNET_ID is set to a valid subnet ID with <code>aws ec2 describe-subnets --query 'Subnets[*].SubnetId'</code>.</p>
+</div>
 <hr />
 <h2 id="step-2-check-cloudtrail-for-evs-api-errors">Step 2 — Check CloudTrail for EVS API errors<a class="headerlink" href="#step-2-check-cloudtrail-for-evs-api-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All EVS API calls in the last 24 hours</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>EventSource,AttributeValue<span class="o">=</span>evs.amazonaws.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[EventTime,EventName,Username,ErrorCode]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Filter for failed EVS API calls (errorCode present)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>EventSource,AttributeValue<span class="o">=</span>evs.amazonaws.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">events = json.load(sys.stdin).get(&#39;Events&#39;, [])</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">for e in events:</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">    ct = json.loads(e.get(&#39;CloudTrailEvent&#39;,&#39;{}&#39;))</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s2">    if ct.get(&#39;errorCode&#39;):</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s2">        print(f\&quot;{e[&#39;EventTime&#39;]} {e[&#39;EventName&#39;]}: {ct[&#39;errorCode&#39;]} - {ct.get(&#39;errorMessage&#39;,&#39;&#39;)}\&quot;)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># CloudWatch EVS host metrics</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostState<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>EnvironmentId,Value<span class="o">=</span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All EVS API calls in the last 24 hours</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>EventSource,AttributeValue<span class="o">=</span>evs.amazonaws.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[EventTime,EventName,Username,ErrorCode]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Filter for failed EVS API calls (errorCode present)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>EventSource,AttributeValue<span class="o">=</span>evs.amazonaws.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">events = json.load(sys.stdin).get(&#39;Events&#39;, [])</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">for e in events:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">    ct = json.loads(e.get(&#39;CloudTrailEvent&#39;,&#39;{}&#39;))</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">    if ct.get(&#39;errorCode&#39;):</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">        print(f\&quot;{e[&#39;EventTime&#39;]} {e[&#39;EventName&#39;]}: {ct[&#39;errorCode&#39;]} - {ct.get(&#39;errorMessage&#39;,&#39;&#39;)}\&quot;)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># CloudWatch EVS host metrics</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostState<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>EnvironmentId,Value<span class="o">=</span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>|                  EventTime                   |           EventName            |        Username         | ErrorCode |
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|----------------------------------------------+--------------------------------+-------------------------+-----------|
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| 2024-01-15T14:32:18Z                         | CreateEnvironment               | arn:aws:iam::123456789:user/alice | None      |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| 2024-01-15T13:47:52Z                         | DescribeEnvironments            | arn:aws:iam::123456789:role/lambda-exec | None      |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| 2024-01-15T12:19:41Z                         | UpdateEnvironmentConfig         | arn:aws:iam::123456789:user/bob | AccessDenied |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| 2024-01-15T11:05:33Z                         | DeleteEnvironment               | arn:aws:iam::123456789:user/alice | None      |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>| 2024-01-15T09:28:15Z                         | ListEnvironments                | arn:aws:iam::123456789:role/monitoring | None      |
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15T12:19:41Z UpdateEnvironmentConfig: AccessDenied - User: arn:aws:iam::123456789:user/bob is not authorized to perform: evs:UpdateEnvironmentConfig on resource: arn:aws:evs:us-east-1:123456789:environment/prod-env-001
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>2024-01-15T08:43:22Z CreateEnvironment: InvalidParameterValue - Parameter validation failed: invalid value for EnvironmentType
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>{
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;Label&quot;: &quot;HostState&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    &quot;Datapoints&quot;: [
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        {
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>            &quot;Timestamp&quot;: &quot;2024-01-15T14:00:00Z&quot;,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>            &quot;Average&quot;: 1.0,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>            &quot;Unit&quot;: &quot;None&quot;
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        },
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        {
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>            &quot;Timestamp&quot;: &quot;2024-01-15T13:55:00Z&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>            &quot;Average&quot;: 1.0,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>            &quot;Unit&quot;: &quot;None&quot;
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        },
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        {
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>            &quot;Timestamp&quot;: &quot;2024-01-15T13:50:00Z&quot;,
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>            &quot;Average&quot;: 0.0,
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>            &quot;Unit&quot;: &quot;None&quot;
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>        }
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    ]
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>date: illegal time format</code></strong> — Use <code>date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ</code> on Linux instead of the BSD <code>-v</code> flag.
+<strong><code>An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Lookup attributes do not support EventSource</code></strong> — Use <code>EventName</code> or <code>ResourceName</code> attributes instead; CloudTrail EVS events may require filtering by specific operation names like <code>CreateEnvironment</code>.
+<strong><code>jq: command not found</code> or Python JSON parsing errors</strong> — Ensure <code>python3</code> is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with <code>aws cloudtrail lookup-events --max-results 1</code> first.</p>
+</div>
 <hr />
 <h2 id="step-3-inspect-vpc-flow-logs-for-network-drops">Step 3 — Inspect VPC Flow Logs for network drops<a class="headerlink" href="#step-3-inspect-vpc-flow-logs-for-network-drops" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query VPC Flow Logs via CloudWatch Logs Insights</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Go to: CloudWatch → Logs Insights → select evs-flow-logs log group</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Via CLI: start a query for REJECT entries in the last 5 minutes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>aws<span class="w"> </span>logs<span class="w"> </span>start-query<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--log-group-name<span class="w"> </span>evs-flow-logs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">300</span><span class="k">))</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--query-string<span class="w"> </span><span class="s1">&#39;fields @timestamp, srcAddr, dstAddr, dstPort, action | filter action = &quot;REJECT&quot; | sort @timestamp desc | limit 50&#39;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Poll for query results</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-query-results<span class="w"> </span>--query-id<span class="w"> </span>&lt;query-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">results = json.load(sys.stdin).get(&#39;results&#39;, [])</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">for row in results:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">    fields = {f[&#39;field&#39;]: f[&#39;value&#39;] for f in row}</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">    print(f\&quot;{fields.get(&#39;@timestamp&#39;,&#39;&#39;)} {fields.get(&#39;srcAddr&#39;,&#39;&#39;)} -&gt; {fields.get(&#39;dstAddr&#39;,&#39;&#39;)}:{fields.get(&#39;dstPort&#39;,&#39;&#39;)} ACTION={fields.get(&#39;action&#39;,&#39;&#39;)}\&quot;)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">&quot;</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># REJECT entries show which flows are blocked by security group or NACL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Query VPC Flow Logs via CloudWatch Logs Insights</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Go to: CloudWatch → Logs Insights → select evs-flow-logs log group</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Via CLI: start a query for REJECT entries in the last 5 minutes</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>logs<span class="w"> </span>start-query<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--log-group-name<span class="w"> </span>evs-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">300</span><span class="k">))</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--query-string<span class="w"> </span><span class="s1">&#39;fields @timestamp, srcAddr, dstAddr, dstPort, action | filter action = &quot;REJECT&quot; | sort @timestamp desc | limit 50&#39;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Poll for query results</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-query-results<span class="w"> </span>--query-id<span class="w"> </span>&lt;query-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">results = json.load(sys.stdin).get(&#39;results&#39;, [])</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">for row in results:</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">    fields = {f[&#39;field&#39;]: f[&#39;value&#39;] for f in row}</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">    print(f\&quot;{fields.get(&#39;@timestamp&#39;,&#39;&#39;)} {fields.get(&#39;srcAddr&#39;,&#39;&#39;)} -&gt; {fields.get(&#39;dstAddr&#39;,&#39;&#39;)}:{fields.get(&#39;dstPort&#39;,&#39;&#39;)} ACTION={fields.get(&#39;action&#39;,&#39;&#39;)}\&quot;)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># REJECT entries show which flows are blocked by security group or NACL</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    &quot;queryId&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    &quot;logGroupName&quot;: &quot;evs-flow-logs&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    &quot;status&quot;: &quot;Running&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>}
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15T14:32:18Z 10.0.1.45 -&gt; 10.0.2.18:443 ACTION=REJECT
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15T14:31:52Z 10.0.1.89 -&gt; 172.31.0.5:3306 ACTION=REJECT
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T14:31:28Z 192.168.1.22 -&gt; 10.0.2.18:22 ACTION=REJECT
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T14:30:15Z 10.0.1.45 -&gt; 10.0.2.18:443 ACTION=REJECT
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2024-01-15T14:29:44Z 10.0.1.200 -&gt; 8.8.8.8:53 ACTION=REJECT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFoundException: The specified log group does not exist.</code></strong> — Verify the log group name matches your VPC Flow Logs configuration with <code>aws logs describe-log-groups --log-group-name-prefix evs-flow-logs</code>.
+<strong><code>InvalidParameterException: Query string is invalid</code></strong> — Ensure the CloudWatch Logs Insights query syntax is correct; test the query string in the CloudWatch console first before running via CLI.
+<strong><code>An error occurred (AccessDenied) when calling the GetQueryResults operation</code></strong> — Add <code>logs:GetQueryResults</code> and <code>logs:StartQuery</code> permissions to your IAM user or role policy.</p>
+</div>
 <hr />
 <h2 id="step-4-check-vmware-platform-health">Step 4 — Check VMware platform health<a class="headerlink" href="#step-4-check-vmware-platform-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># vCenter service health (SSH to VCSA)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@&lt;vcenter-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vmon-cli<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>STARTED
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Expected: all services STARTED</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Problem: any service STOPPED</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Key vCenter log</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># vSAN health via PowerCLI</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span><span class="nv">$VCENTER</span><span class="w"> </span>-User<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>-Password<span class="w"> </span><span class="nv">$PASS</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">$vsanHealth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VsanView<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nv">$summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$vsanHealth</span>.QueryVsanClusterHealthSummary<span class="o">(</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="o">(</span>Get-Cluster<span class="o">)</span>.Id,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$true</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="s2">&quot;defaultView&quot;</span><span class="o">)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nv">$summary</span>.OverallHealth
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">$summary</span>.Groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GroupHealth<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>GroupName,<span class="w"> </span>GroupHealth
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># ESXi host connectivity</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.ConnectionState<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Connected&quot;</span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># vCenter service health (SSH to VCSA)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>root@&lt;vcenter-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vmon-cli<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>STARTED
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Expected: all services STARTED</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Problem: any service STOPPED</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Key vCenter log</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># vSAN health via PowerCLI</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span><span class="nv">$VCENTER</span><span class="w"> </span>-User<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>-Password<span class="w"> </span><span class="nv">$PASS</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">$vsanHealth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VsanView<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$vsanHealth</span>.QueryVsanClusterHealthSummary<span class="o">(</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="o">(</span>Get-Cluster<span class="o">)</span>.Id,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$true</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="nv">$null</span>,<span class="w"> </span><span class="s2">&quot;defaultView&quot;</span><span class="o">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$summary</span>.OverallHealth
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">$summary</span>.Groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GroupHealth<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>GroupName,<span class="w"> </span>GroupHealth
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># ESXi host connectivity</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.ConnectionState<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Connected&quot;</span><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root@vcsa-prod-01 [ ~ ]# vmon-cli -l | grep -v STARTED
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>root@vcsa-prod-01 [ ~ ]# tail -100 /var/log/vmware/vpxd/vpxd.log | grep -i &quot;error\|fail\|exception&quot;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15T09:42:33.847Z [7F2A1C5D9E00 verbose &#39;vpxd:00FB:00000B24&#39;] [VpxdVmomi] Exception caught in function &#39;QueryVsanClusterHealthSummary&#39;: Connection timeout to host esx-node-03.prod.local
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15T09:41:12.521Z [7F2A1C5D9E00 warning &#39;vpxd:00FB:00000B1F&#39;] Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>root@vcsa-prod-01 [ ~ ]# 
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>PowerCLI C:\&gt; Connect-VIServer -Server vcenter.prod.local -User administrator@vsphere.local -Password $PASS
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Name                           Port  User
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>----                           ----  ----
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vcenter.prod.local             443   VSPHERE.LOCAL\Administrator
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>PowerCLI C:\&gt; $summary.OverallHealth
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>green
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>PowerCLI C:\&gt; $summary.Groups | Where-Object {$_.GroupHealth -ne &quot;green&quot;} | Select GroupName, GroupHealth
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>PowerCLI C:\&gt; Get-VMHost | Select Name, ConnectionState, PowerState | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;}
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Name                ConnectionState PowerState
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>----                --------------- ----------
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>esx-node-03.prod    NotResponding   On
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>esx-node-07.prod    Disconnected    On
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Exception caught in function 'QueryVsanClusterHealthSummary': Connection timeout to host esx-node-03.prod.local</code></strong> — Verify network connectivity to the ESXi host, check firewall rules blocking port 443, and restart the vpxd service if the host remains unreachable.
+<strong><code>Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout</code></strong> — Increase the RPC timeout value in vpxd.cfg or restart the affected ESXi host's management agents using <code>services.sh restart</code>.
+<strong><code>Get-VMHost returns hosts with ConnectionState -ne "Connected"</code></strong> — Reconnect the disconnected host in vCenter, verify vSAN network connectivity, and check for certificate or authentication issues in the vpxd.log.</p>
+</div>
 <hr />
 <h2 id="step-5-check-nsx-t-health-in-evs">Step 5 — Check NSX-T health in EVS<a class="headerlink" href="#step-5-check-nsx-t-health-in-evs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># NSX-T Manager cluster health</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/cluster/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;Cluster: {d[&#39;mgmt_cluster_status&#39;][&#39;status&#39;]}\&quot;)&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># NSX-T transport node state (ESXi hosts)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">for tn in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">    state = tn.get(&#39;state&#39;,&#39;?&#39;)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    name  = tn.get(&#39;display_name&#39;,&#39;?&#39;)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    if state != &#39;success&#39;:</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">        print(f&#39;PROBLEM: {name} state={state}&#39;)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># T0 BGP neighbor state (check inter-VPC BGP with AWS VGW)</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/&lt;svc-id&gt;/bgp/neighbors/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s2">for n in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s2">    print(f\&quot;{n[&#39;neighbor_address&#39;]}: {n[&#39;connection_state&#39;]}\&quot;)</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># Expected: all peers ESTABLISHED</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># NSX-T Manager cluster health</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/cluster/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;Cluster: {d[&#39;mgmt_cluster_status&#39;][&#39;status&#39;]}\&quot;)&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># NSX-T transport node state (ESXi hosts)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s2">for tn in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">    state = tn.get(&#39;state&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s2">    name  = tn.get(&#39;display_name&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s2">    if state != &#39;success&#39;:</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s2">        print(f&#39;PROBLEM: {name} state={state}&#39;)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s2">&quot;</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># T0 BGP neighbor state (check inter-VPC BGP with AWS VGW)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/&lt;svc-id&gt;/bgp/neighbors/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s2">for n in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="s2">    print(f\&quot;{n[&#39;neighbor_address&#39;]}: {n[&#39;connection_state&#39;]}\&quot;)</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="s2">&quot;</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Expected: all peers ESTABLISHED</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cluster: STABLE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>PROBLEM: esxi-host-02.lab.local state=DEGRADED
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>PROBLEM: esxi-host-04.lab.local state=UNKNOWN
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>172.31.0.1: ESTABLISHED
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>172.31.0.2: ESTABLISHED
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>172.31.1.1: ESTABLISHED
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>172.31.1.2: IDLE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or set <code>export CURL_CA_BUNDLE=""</code> to skip certificate validation.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Verify <code>$NSX_URL</code> is set correctly (e.g. <code>https://nsx-manager.local</code>) and the NSX-T API endpoint is reachable with <code>curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/cluster/status"</code>.
+<strong><code>KeyError: 'results'</code></strong> — Check that the API endpoint path is correct for your NSX-T version; some versions use <code>result</code> (singular) instead of <code>results</code> (plural) in the JSON response.</p>
+</div>
 <hr />
 <h2 id="step-6-collect-vsphere-nsx-t-and-sddc-manager-bundles">Step 6 — Collect vSphere, NSX-T, and SDDC Manager bundles<a class="headerlink" href="#step-6-collect-vsphere-nsx-t-and-sddc-manager-bundles" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># vCenter support bundle (SSH to VCSA)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>root@&lt;vcenter-ip&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vc-support.sh<span class="w"> </span>-L<span class="w"> </span>/tmp/vc-support
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or: VAMI → https://&lt;vcenter&gt;:5480 → Monitoring → Create Support Bundle</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># NSX-T support bundle (REST API)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">TASK_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/support-bundles?action=collect&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;log_age&quot;: 1440}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;id&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Monitor NSX-T bundle progress</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/tasks/</span><span class="nv">$TASK_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;status&#39;])&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># SDDC Manager logs (SSH to SDDC Manager)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ssh<span class="w"> </span>vcf@&lt;sddc-manager-ip&gt;
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/domainmanager/domainmanager.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># ESXi vm-support bundle (from each host)</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;timestamp&gt;.tgz</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c1"># HCX log bundle (if HCX-related issue)</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># HCX Manager UI → Support → Download Log Bundle</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># vCenter support bundle (SSH to VCSA)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>root@&lt;vcenter-ip&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>vc-support.sh<span class="w"> </span>-L<span class="w"> </span>/tmp/vc-support
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Or: VAMI → https://&lt;vcenter&gt;:5480 → Monitoring → Create Support Bundle</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># NSX-T support bundle (REST API)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nv">TASK_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/support-bundles?action=collect&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;log_age&quot;: 1440}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;id&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Monitor NSX-T bundle progress</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/tasks/</span><span class="nv">$TASK_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;status&#39;])&quot;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># SDDC Manager logs (SSH to SDDC Manager)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>ssh<span class="w"> </span>vcf@&lt;sddc-manager-ip&gt;
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/domainmanager/domainmanager.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># ESXi vm-support bundle (from each host)</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;timestamp&gt;.tgz</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="c1"># HCX log bundle (if HCX-related issue)</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1"># HCX Manager UI → Support → Download Log Bundle</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>root@vcsa-prod-01:~# vc-support.sh -L /tmp/vc-support
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Collecting support bundle...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Collecting vCenter Server logs...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Collecting ESXi host information...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Collecting vSAN cluster data...
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Support bundle created: /tmp/vc-support/vc-support-2024-01-15-14-32-45.tar.gz
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Size: 487 MB
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>RUNNING
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>SUCCEEDED
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>vcf@sddc-mgr-01:~$ tail -100 /var/log/vmware/vcf/lcm/lcm.log | grep -i &quot;error\|fail&quot;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>2024-01-15 14:22:18 ERROR [lcm-worker-12] Failed to apply patch to cluster-1: Connection timeout
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>2024-01-15 14:18:45 WARN [lcm-worker-08] Retry attempt 2/3 for host esx-06.lab.local
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>2024-01-15 14:15:22 ERROR [domainmanager] Domain configuration failed: Invalid vSAN witness configuration
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>root@esx-prod-04:~# vm-support -w /tmp
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Gathering support information...
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Creating tar archive...
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>/tmp/esx-prod-04-2024-01-15-14-45-22.tgz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification for self-signed NSX-T certificates.
+<strong><code>bash: python3: command not found</code></strong> — Install python3 on the VCSA/NSX-T appliance or use <code>python</code> instead if Python 2 is available.
+<strong><code>Permission denied (publickey,password)</code></strong> — Verify SSH credentials and ensure the target user (root for VCSA/ESXi, vcf for SDDC Manager) has SSH access enabled.</p>
+</div>
 <hr />
 <h2 id="step-7-diagnose-hcx-and-collect-escalation-data">Step 7 — Diagnose HCX and collect escalation data<a class="headerlink" href="#step-7-diagnose-hcx-and-collect-escalation-data" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># HCX Interconnect tunnel status (from HCX Manager UI)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># HCX Manager → Interconnect → Service Mesh → verify tunnel state</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># HCX Manager SSH</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh<span class="w"> </span>admin@&lt;hcx-manager-ip&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/opt/vmware/log/edge/edge-main.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># AWS-specific: account and environment IDs for the support case</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;environmentSummaries[*].[name,environmentId,state]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Provide in AWS support case:</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># - Account ID and Environment ID</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># - EVS host IDs from list-environment-hosts</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># - CloudTrail event IDs for failed API calls</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># - VPC ID, subnet IDs, and route table IDs</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># - CloudWatch log group name for Flow Logs</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Provide in VMware support case:</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># - vCenter support bundle + NSX-T support bundle</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># - SDDC Manager log excerpts</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># - EVS version: vSphere version + NSX-T version</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># - HCX log bundle (for HCX-related issues)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># HCX Interconnect tunnel status (from HCX Manager UI)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># HCX Manager → Interconnect → Service Mesh → verify tunnel state</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># HCX Manager SSH</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ssh<span class="w"> </span>admin@&lt;hcx-manager-ip&gt;
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/opt/vmware/log/edge/edge-main.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># AWS-specific: account and environment IDs for the support case</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;environmentSummaries[*].[name,environmentId,state]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Provide in AWS support case:</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># - Account ID and Environment ID</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># - EVS host IDs from list-environment-hosts</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># - CloudTrail event IDs for failed API calls</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># - VPC ID, subnet IDs, and route table IDs</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># - CloudWatch log group name for Flow Logs</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Provide in VMware support case:</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># - vCenter support bundle + NSX-T support bundle</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># - SDDC Manager log excerpts</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># - EVS version: vSphere version + NSX-T version</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1"># - HCX log bundle (for HCX-related issues)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@hcx-manager-01:~$ tail -100 /opt/vmware/log/edge/edge-main.log | grep -i &quot;error\|fail\|warn&quot;
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>2024-01-15T09:47:23.456Z WARN  [EdgeService] Tunnel state transition: ACTIVE → DEGRADED
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>2024-01-15T09:48:12.789Z ERROR [IPSecHandler] Failed to establish Phase 1 negotiation with 203.0.113.42:500
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>2024-01-15T09:49:05.123Z WARN  [BGPSession] Route flapping detected on peer 10.0.1.254
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>2024-01-15T09:50:31.567Z ERROR [TunnelMonitor] Health check timeout after 30s, marking tunnel unhealthy
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>admin@hcx-manager-01:~$ aws sts get-caller-identity
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>{
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;UserId&quot;: &quot;AIDAI7EXAMPLE9ABCDEF&quot;,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    &quot;Account&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    &quot;Arn&quot;: &quot;arn:aws:iam::123456789012:user/hcx-automation&quot;
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>}
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>admin@hcx-manager-01:~$ aws evs list-environments --query &#39;environmentSummaries[*].[name,environmentId,state]&#39; --output table
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>---------------------------------------------------------------------------------------------------------
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>|                                    ListEnvironments                                                   |
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>+---------------------------+----------------------------------+------------------+
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>|  name                     |  environmentId                   |  state           |
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>+---------------------------+----------------------------------+------------------+
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>|  prod-sddc-us-east-1a     |  env-0a1b2c3d4e5f6g7h8i9j0k1l2m   |  AVAILABLE       |
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>|  dr-sddc-us-west-2b       |  env-9z8y7x6w5v4u3t2s1r0q9p8o7n   |  AVAILABLE       |
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>|  staging-sddc-eu-west-1c  |  env-5m4l3k2j1i0h9g8f7e6d5c4b3a   |  DEGRADED        |
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>+---------------------------+----------------------------------+------------------+
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials via <code>aws configure</code> or set <code>AWS_PROFILE</code> environment variable.
+<strong><code>An error occurred (InvalidParameterException) when calling the ListEnvironments operation: Invalid query parameter</code></strong> — Verify the <code>--query</code> syntax matches your AWS CLI version; use <code>aws evs list-environments --output table</code> without filtering if query fails.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -9148,7 +9332,7 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:40:09 UTC"><span class="timeago" datetime="2026-06-29T06:40:09+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:40:09 UTC">2026-06-29</span>
   </span>
 
     

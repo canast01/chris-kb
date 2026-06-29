@@ -7626,67 +7626,170 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Windows</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">type</span><span class="w"> </span><span class="s2">&quot;C:\Program Files\Veritas\NetBackup\version.txt&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NetBackup 8.3.2.1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>NetBackup 8.3.2.1 (Build: 20210915)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /usr/openv/netbackup/bin/version: No such file or directory</code></strong> — Verify NetBackup is installed on this system with <code>rpm -qa | grep netbackup</code> or check the correct installation path.
+<strong><code>nbpem: command not found</code></strong> — Ensure the NetBackup PATH is set correctly by sourcing <code>/usr/openv/netbackup/bin/bp.env</code> or add <code>/usr/openv/netbackup/bin/goodies</code> to your PATH.</p>
+</div>
 <h3 id="2-collect-failing-job-details">2. Collect failing job details<a class="headerlink" href="#2-collect-failing-job-details" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List failed jobs in the last 48 hours</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">48</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|error\|status [^0]&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Get full report for a specific job ID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;jobid&gt;<span class="w"> </span>-report<span class="w"> </span>-most_columns
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get the job&#39;s detailed log (replace jobid)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cat<span class="w"> </span>/usr/openv/netbackup/logs/user_ops/&lt;jobid&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Get policy and storage unit configuration</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>bppllist<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L<span class="w"> </span>&gt;<span class="w"> </span>/tmp/policy-config.txt
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>nbstlutil<span class="w"> </span>list<span class="w"> </span>-storage_server<span class="w"> </span>&lt;stu-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/stu-config.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List failed jobs in the last 48 hours</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">48</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|error\|status [^0]&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Get full report for a specific job ID</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;jobid&gt;<span class="w"> </span>-report<span class="w"> </span>-most_columns
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Get the job&#39;s detailed log (replace jobid)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cat<span class="w"> </span>/usr/openv/netbackup/logs/user_ops/&lt;jobid&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Get policy and storage unit configuration</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>bppllist<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-L<span class="w"> </span>&gt;<span class="w"> </span>/tmp/policy-config.txt
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>nbstlutil<span class="w"> </span>list<span class="w"> </span>-storage_server<span class="w"> </span>&lt;stu-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/stu-config.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Job ID    Policy                  Client          Status  Elapsed Time  GB
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>--------  ----------------------  --------------  ------  -----------  ----
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>12847561  PROD-DB-DAILY           db-prod-01      FAILED  02:34:12     245.3
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>12847562  PROD-DB-DAILY           db-prod-02      FAILED  00:15:44     12.8
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>12847559  WEEKLY-ARCHIVE          archive-srv-03  FAILED  01:22:05     1847.2
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>12847548  INCREMENTAL-BACKUP      web-app-04      FAILED  00:08:33     3.1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>12847521  PROD-DB-DAILY           db-prod-01      FAILED  03:12:18     267.9
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Job ID: 12847561
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Policy: PROD-DB-DAILY
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Client: db-prod-01
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Status: FAILED
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Start Time: 2024-01-15 22:30:45
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>End Time: 2024-01-16 01:05:12
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Elapsed Time: 02:34:27
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>GB Processed: 245.3
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Reason: Network timeout during backup phase
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2024-01-16 22:31:02 db-prod-01: Connection refused (port 13782)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>2024-01-16 22:31:15 db-prod-01: Retrying connection attempt 1 of 3
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>2024-01-16 22:31:45 db-prod-01: Retrying connection attempt 2 of 3
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>2024-01-16 22:32:15 db-prod-01: Retrying connection attempt 3 of 3
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>2024-01-16 22:32:45 db-prod-01: FATAL: Unable to establish connection to client
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Policy: PROD-DB-DAILY
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Enabled: Yes
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Backup Type: Full + Incremental
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Schedule: Daily 22:00
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Retention: 30 days
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Storage Unit: PROD-VAULT-01
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>Storage Unit: PROD-VAULT-01
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Type: Disk
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>Location: /netbackup/vault01
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>Capacity: 10.0 TB
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>Used: 8.7 TB
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>Available: 1.3 TB
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>Status: Online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpdbjobs: command not found</code></strong> — Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbjobs</code>.
+<strong><code>cat: /usr/openv/netbackup/logs/user_ops/&lt;jobid&gt;: No such file or directory</code></strong> — Replace <code>&lt;jobid&gt;</code> with an actual numeric job ID (e.g., <code>12847561</code>) and verify the log directory exists with <code>ls -la /usr/openv/netbackup/logs/user_ops/</code>.
+<strong><code>bppllist: policy &lt;policy-name&gt; does not exist</code></strong> — Verify the policy name is correct by running <code>bppllist -L</code> to list all available policies, then use the exact policy name from the output.</p>
+</div>
 <h3 id="3-run-the-nbsu-support-utility">3. Run the nbsu support utility<a class="headerlink" href="#3-run-the-nbsu-support-utility" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run nbsu on the master server — this is the primary artifact for Veritas support</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Takes 5–15 minutes; creates a compressed bundle in /usr/openv/support/</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>/usr/openv/netbackup/bin/support/nbsu<span class="w"> </span>-collect<span class="w"> </span>ALL
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm bundle location</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/usr/openv/support/nbsu_*.tar.gz
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># On Windows</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">&quot;C:\Program Files\Veritas\NetBackup\bin\support\nbsu.exe&quot;</span><span class="w"> </span>-collect<span class="w"> </span>ALL
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Bundle in C:\Program Files\Veritas\NetBackup\logs\nbsu_output\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run nbsu on the master server — this is the primary artifact for Veritas support</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Takes 5–15 minutes; creates a compressed bundle in /usr/openv/support/</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/usr/openv/netbackup/bin/support/nbsu<span class="w"> </span>-collect<span class="w"> </span>ALL
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm bundle location</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/usr/openv/support/nbsu_*.tar.gz
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># On Windows</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">&quot;C:\Program Files\Veritas\NetBackup\bin\support\nbsu.exe&quot;</span><span class="w"> </span>-collect<span class="w"> </span>ALL
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Bundle in C:\Program Files\Veritas\NetBackup\logs\nbsu_output\</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NetBackup Support Utility (nbsu) v8.2.1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Collecting diagnostic data from master server...
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[████████████████████████████████] 87%
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Collection complete. Processing...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Creating compressed bundle: nbsu_20240115_143022.tar.gz
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Bundle size: 2.3 GB
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Location: /usr/openv/support/nbsu_20240115_143022.tar.gz
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Elapsed time: 8 minutes 34 seconds
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-rw-r--r-- 1 root root 2.3G Jan 15 14:30 /usr/openv/support/nbsu_20240115_143022.tar.gz
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>-rw-r--r-- 1 root root 1.8G Jan 14 09:15 /usr/openv/support/nbsu_20240114_091502.tar.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/usr/openv/netbackup/bin/support/nbsu: Permission denied</code></strong> — Run the command with sudo or as root user.
+<strong><code>ERROR: Unable to write to /usr/openv/support/ — disk full</code></strong> — Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space).
+<strong><code>ERROR: NetBackup services not running — cannot collect process data</code></strong> — Start NetBackup services with <code>systemctl start netbackup</code> or <code>/usr/openv/netbackup/bin/bpup -start</code> before running nbsu.</p>
+</div>
 <h3 id="4-collect-key-log-files-manually-if-nbsu-fails">4. Collect key log files manually (if nbsu fails)<a class="headerlink" href="#4-collect-key-log-files-manually-if-nbsu-fails" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Last 500 lines of the backup process manager log</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/bpbrm.txt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Last 500 lines of the scheduler log</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/bpsched/log.&lt;today-date&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/bpsched.txt
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Catalog database consistency</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/catalog-check.txt
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Device and robot status</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tpconfig<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/tpconfig.txt
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>vmquery<span class="w"> </span>-a<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50<span class="w"> </span>&gt;<span class="w"> </span>/tmp/media-status.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Last 500 lines of the backup process manager log</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/bpbrm.txt
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Last 500 lines of the scheduler log</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/bpsched/log.&lt;today-date&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/bpsched.txt
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Catalog database consistency</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/catalog-check.txt
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Device and robot status</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>tpconfig<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/tpconfig.txt
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>vmquery<span class="w"> </span>-a<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50<span class="w"> </span>&gt;<span class="w"> </span>/tmp/media-status.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>tail: cannot open &#39;/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;&#39; for reading: No such file or directory
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tail: cannot open &#39;/usr/openv/netbackup/logs/bpsched/log.&lt;today-date&gt;&#39; for reading: No such file or directory
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Consistency Check Report
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Database: /usr/openv/netbackup/db/NBDB
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Status: PASSED
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Checked Records: 47382
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Inconsistencies Found: 0
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Check Duration: 2m 34s
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Device Configuration Report
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Device Name: TLD0
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Device Type: LTO Tape Drive
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Status: READY
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Serial Number: LTO9-SN-0847392
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Robot: ADIC-Scalar-i500
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Media Status Summary (first 50 entries):
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Media ID          Pool          Status    Last Used
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>000001            Default       FULL      2024-01-15 14:22:10
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>000002            Default       FULL      2024-01-15 13:45:33
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>000003            Default       AVAILABLE  2024-01-14 09:12:44
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>000004            Default       AVAILABLE  2024-01-13 16:58:19
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>000005            Offsite       FULL      2024-01-12 11:33:02
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;' for reading: No such file or directory</code></strong> — Replace <code>&lt;today-date&gt;</code> with the actual date in YYYYMMDD format (e.g., <code>log.20240115</code>) or use <code>ls /usr/openv/netbackup/logs/bpbrm/</code> to find the correct filename.
+<strong><code>bpdbm: command not found</code></strong> — Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbm</code>.
+<strong><code>vmquery: command not found</code></strong> — Run the command as root or with sudo, and verify NetBackup services are running with <code>bpps -a</code>.</p>
+</div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NetBackup version: 10.3.0.1
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Master server: nbu-master.example.com (Linux RHEL 8.6)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Media servers: nbu-media-01.example.com, nbu-media-02.example.com
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Storage: MSDP pool on PowerStore 1000T, 50 TB allocated
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Issue first observed: 2026-06-15 02:00 UTC (scheduled backup window)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Last known good backup: 2026-06-14 02:30 UTC
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Error observed:
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Job ID 45231 — Policy: PROD_DB — Status: 58 (can&#39;t connect to client)
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  Job ID 45232 — Policy: PROD_FS — Status: 96 (unable to allocate new media)
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Steps already taken:
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Verified network connectivity to affected clients
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - Checked media server is reachable
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  - Did NOT restart nbwmc or bprd
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>Blast radius:
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  - All backup jobs for PROD_DB policy failing
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  - Other policies appear unaffected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NetBackup version: 10.3.0.1
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Master server: nbu-master.example.com (Linux RHEL 8.6)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Media servers: nbu-media-01.example.com, nbu-media-02.example.com
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Storage: MSDP pool on PowerStore 1000T, 50 TB allocated
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Issue first observed: 2026-06-15 02:00 UTC (scheduled backup window)
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Last known good backup: 2026-06-14 02:30 UTC
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Error observed:
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Job ID 45231 — Policy: PROD_DB — Status: 58 (can&#39;t connect to client)
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Job ID 45232 — Policy: PROD_FS — Status: 96 (unable to allocate new media)
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Steps already taken:
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  - Verified network connectivity to affected clients
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  - Checked media server is reachable
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  - Did NOT restart nbwmc or bprd
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>Blast radius:
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  - All backup jobs for PROD_DB policy failing
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  - Other policies appear unaffected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-veritas-support-case">How to Open a Veritas Support Case<a class="headerlink" href="#how-to-open-a-veritas-support-case" title="Permanent link">&para;</a></h2>
@@ -7784,28 +7887,85 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Current daemon status — paste into every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bpps<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Job summary for last 24 hours</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&lt;=50&#39;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Catalog size and health</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/usr/openv/db/
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># MSDP pool utilisation</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>nbdevquery<span class="w"> </span>-listdv<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Type|State|Total|Used|Available&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Media server connectivity (for each media server)</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>bpclntcmd<span class="w"> </span>-hn<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span>-ip
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Check current active sessions (who is connected to nbwmc)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>bpps<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bpcd
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Recent error status codes from all jobs</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">6</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Current daemon status — paste into every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>bpps<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Job summary for last 24 hours</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&lt;=50&#39;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Catalog size and health</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/usr/openv/db/
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># MSDP pool utilisation</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>nbdevquery<span class="w"> </span>-listdv<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Type|State|Total|Used|Available&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Media server connectivity (for each media server)</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>bpclntcmd<span class="w"> </span>-hn<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span>-ip
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Check current active sessions (who is connected to nbwmc)</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>bpps<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bpcd
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Recent error status codes from all jobs</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>bpdbjobs<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">6</span><span class="w"> </span>-report<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NetBackup 10.1.1 (build 20230815)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>bpps output:
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  PID    PPID CMD
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a> 2847       1 /usr/openv/netbackup/bin/bprd -d
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a> 2951    2847 /usr/openv/netbackup/bin/bpsched
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a> 3104    2847 /usr/openv/netbackup/bin/bpdbm
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a> 3215    2847 /usr/openv/netbackup/bin/bptm
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a> 3401    2847 /usr/openv/netbackup/bin/bpbackupdb
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Job Summary (last 24 hours):
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Policy                  Schedule  Status    Elapsed  GB
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>prod-db-full            Full      COMPLETED 02:14:33 847.2
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>prod-db-incr            Incr      COMPLETED 00:47:22 124.5
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>app-tier-backup         Full      FAILED    01:33:18 0.0
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>web-servers-incr        Incr      COMPLETED 00:22:11 89.3
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>archive-monthly         Full      COMPLETED 03:02:55 2156.8
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>...
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Catalog consistency check:
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>Consistency check started at 2024-01-15 14:32:18
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Checking database integrity... OK
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Checking image catalog... OK (4,287 images)
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>Consistency check completed successfully
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>Database size: 45G    /usr/openv/db/
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>MSDP Pool Status:
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>Disk Type: PureDisk
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>State: ONLINE
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>Total: 50.0 TB
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>Used: 38.7 TB
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>Available: 11.3 TB
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>Media server connectivity (media-srv-01):
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>Host: media-srv-01.corp.local
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>IP: 192.168.42.15
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>Status: ACTIVE
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>Connection time: 2024-01-15 14:28:42
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>Active bpcd sessions:
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a> 2847 root     /usr/openv/netbackup/bin/bpcd
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a> 3521 root     /usr/openv/netbackup/bin/bpcd
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a> 3689 root     /usr/openv/netbackup/bin/bpcd
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>Recent error codes (last 6 hours):
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>     12 0
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>      3 1
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>      2 6
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>      1 13
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>      1 24
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpps: command not found</code></strong> — Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps.
+<strong><code>bpdbjobs: Database connection failed</code></strong> — Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%.
+<strong><code>nbdevquery: No devices found matching filter</code></strong> — Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage &gt; Disk Pools.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7842,7 +8002,7 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

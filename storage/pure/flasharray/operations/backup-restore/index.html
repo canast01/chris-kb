@@ -8469,6 +8469,26 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Verify the schedule is active</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--schedule
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>prod-oracle-pg
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>prod-oracle-data-01
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>prod-oracle-data-02
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>prod-oracle-redo-01
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>prod-oracle-redo-02
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>prod-oracle-arch-01
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Name                          Volumes  Snapshots  Source  Schedule
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>prod-oracle-pg                5        0          self    enabled
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Snap Frequency                3600s (1h)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Snapshots Per Day             24
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Snapshot Retention (days)     7
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Snap Enabled                  true
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Last Snapshot                 2024-01-15T09:47:22Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-oracle-pg' already exists</code></strong> — Use <code>purepgroup list</code> to verify existing groups, or delete the group first with <code>purepgroup destroy prod-oracle-pg</code>.
+<strong><code>Error: Volume 'prod-oracle-data-02' not found or not available</code></strong> — Verify volume names with <code>purevol list</code> and ensure all volumes are provisioned before adding to the protection group.
+<strong><code>Error: Cannot set schedule on protection group without replication target</code></strong> — Configure a replication target with <code>purepgroup setreplication prod-oracle-pg --target &lt;target-array&gt;</code> before enabling snapshot schedules.</p>
+</div>
 <p><strong>Schedule parameter guidance:</strong></p>
 <table>
 <thead>
@@ -8504,158 +8524,369 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
 <p><strong>Retention calculation:</strong> <code>snap-per-day × snap-for-days</code> gives the maximum snapshot count on the array from this schedule. For hourly snapshots with 24/day and 7 days: up to 168 snapshots per PG. Monitor capacity consumption with <code>puresnap list --space</code>.</p>
 <hr />
 <h3 id="async-replication-to-a-remote-array">Async Replication to a Remote Array<a class="headerlink" href="#async-replication-to-a-remote-array" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Establish a connection to the remote array (run on local array)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>connect<span class="w"> </span>--management-address<span class="w"> </span>&lt;remote_mgmt_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--replication-address<span class="w"> </span>&lt;remote_repl_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--type<span class="w"> </span>replication<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>remote-dr-fa-01
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify the connection is established</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Add the remote array as a replication target on the protection group</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--target<span class="w"> </span>remote-dr-fa-01
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Set a replication schedule (replicate every 4 hours)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">14400</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Verify replication is running</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--schedule
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Establish a connection to the remote array (run on local array)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purearray<span class="w"> </span>connect<span class="w"> </span>--management-address<span class="w"> </span>&lt;remote_mgmt_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--replication-address<span class="w"> </span>&lt;remote_repl_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--type<span class="w"> </span>replication<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>remote-dr-fa-01
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify the connection is established</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Add the remote array as a replication target on the protection group</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--target<span class="w"> </span>remote-dr-fa-01
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Set a replication schedule (replicate every 4 hours)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">14400</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Verify replication is running</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--schedule
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--replication
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connected to remote array remote-dr-fa-01 (10.20.50.15)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Replication address: 10.20.50.16
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Connection type: replication
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Connection status: connected
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Name                  Management IP    Replication IP   Type         Status
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>remote-dr-fa-01       10.20.50.15      10.20.50.16      replication  connected
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Protection group prod-oracle-pg connected to target remote-dr-fa-01
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Schedule updated for prod-oracle-pg
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Replication enabled: true
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Replication frequency: 14400 seconds (4 hours)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Name             Schedule Status    Replicate Enabled   Frequency
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>prod-oracle-pg   active             true                14400s
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Protection Group: prod-oracle-pg
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Replication Target: remote-dr-fa-01
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Last Replication: 2024-01-15 09:32:14 UTC
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Next Replication: 2024-01-15 13:32:14 UTC
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Replication Status: healthy
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Snapshots Replicated: 847
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection failed to 10.20.50.15 — verify the remote management IP is reachable and the arrays have network connectivity on both management and replication networks.</code></strong> — Verify network connectivity and correct IP addresses with <code>ping</code> and <code>traceroute</code>.
+<strong><code>Error: Protection group 'prod-oracle-pg' not found</code></strong> — Confirm the protection group name exists on the local array using <code>purepgroup list</code>.
+<strong><code>Error: Remote array 'remote-dr-fa-01' is not connected</code></strong> — Ensure the initial <code>purearray connect</code> command completed successfully before attempting to add it as a replication target.</p>
+</div>
 <hr />
 <h3 id="take-an-on-demand-snapshot">Take an On-Demand Snapshot<a class="headerlink" href="#take-an-on-demand-snapshot" title="Permanent link">&para;</a></h3>
 <p>Take manual snapshots before changes, migrations, or maintenance windows:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On-demand snapshot with a descriptive suffix</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--pgroup<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--suffix<span class="w"> </span>premigration-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List all snapshots for a protection group</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># List with space usage</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On-demand snapshot with a descriptive suffix</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--pgroup<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--suffix<span class="w"> </span>premigration-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List all snapshots for a protection group</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List with space usage</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Created snapshot: prod-oracle-pg.premigration-20240315
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>prod-oracle-pg.premigration-20240315
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Name                                    Created                  Source
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>prod-oracle-pg.premigration-20240315    2024-03-15 14:32:18 UTC prod-oracle-pg
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>prod-oracle-pg.premigration-20240314    2024-03-14 09:15:42 UTC prod-oracle-pg
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>prod-oracle-pg.premigration-20240313    2024-03-13 22:47:19 UTC prod-oracle-pg
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Name                                    Snapshots  Physical(GB)  Virtual(GB)  Data Reduction
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>prod-oracle-pg.premigration-20240315    1          127.4         512.8        4.0x
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>prod-oracle-pg.premigration-20240314    1          119.2         512.8        4.3x
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>prod-oracle-pg.premigration-20240313    1          115.6         512.8        4.4x
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>prod-oracle-pg.premigration-20240312    1          108.9         512.8        4.7x
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-oracle-pg' not found</code></strong> — Verify the protection group name with <code>purepgroup list</code> and ensure it exists on the array.
+<strong><code>Error: Insufficient space to create snapshot</code></strong> — Check available capacity with <code>purearray list --space</code> and delete old snapshots or add capacity if needed.</p>
+</div>
 <hr />
 <h2 id="restore-procedures">Restore Procedures<a class="headerlink" href="#restore-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="restore-a-volume-from-a-protection-group-snapshot">Restore a Volume from a Protection Group Snapshot<a class="headerlink" href="#restore-a-volume-from-a-protection-group-snapshot" title="Permanent link">&para;</a></h3>
 <p>Use this procedure when recovering from accidental data corruption, application rollback, or logical data loss. Always restore to a clone first for validation before overwriting production.</p>
 <p><strong>Step 1 — Identify the recovery point:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all snapshots for the protection group</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># The output shows snapshot names in the format:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># prod-oracle-pg.&lt;suffix&gt;  e.g.  prod-oracle-pg.premigration-20260501</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List individual volume snapshots inside a PG snapshot</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg.premigration-20260501.*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all snapshots for the protection group</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># The output shows snapshot names in the format:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># prod-oracle-pg.&lt;suffix&gt;  e.g.  prod-oracle-pg.premigration-20260501</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List individual volume snapshots inside a PG snapshot</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-pg.premigration-20260501.*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                                    Source                  Created
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>prod-oracle-pg.premigration-20260501    prod-oracle-pg          2026-05-01 14:32:18 PDT
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>prod-oracle-pg.daily-20260430           prod-oracle-pg          2026-04-30 23:00:02 PDT
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>prod-oracle-pg.hourly-20260501-1400     prod-oracle-pg          2026-05-01 14:00:15 PDT
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>prod-oracle-pg.hourly-20260501-1300     prod-oracle-pg          2026-05-01 13:00:08 PDT
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>prod-oracle-pg.weekly-20260428          prod-oracle-pg          2026-04-28 02:15:33 PDT
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Name                                              Source                              Size
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>prod-oracle-pg.premigration-20260501.oradb01     prod-oracle-pg.premigration-20260501  2.3T
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>prod-oracle-pg.premigration-20260501.oradb02     prod-oracle-pg.premigration-20260501  1.8T
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>prod-oracle-pg.premigration-20260501.oralog      prod-oracle-pg.premigration-20260501  847G
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>prod-oracle-pg.premigration-20260501.oratemp     prod-oracle-pg.premigration-20260501  512G
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-oracle-pg' not found</code></strong> — Verify the protection group name with <code>purepgroup list</code> and ensure it exists on the array.
+<strong><code>Error: No snapshots found matching 'prod-oracle-pg.premigration-20260501.*'</code></strong> — Check that the snapshot name is spelled correctly and exists using <code>purepgroup listsnaps prod-oracle-pg</code>.</p>
+</div>
 <p><strong>Step 2 — Clone the snapshot to a temporary volume for validation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a writable clone of the snapshot for validation</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>restore-validate-oracle-data-01
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Connect the clone to a validation host</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>purehost<span class="w"> </span>connect<span class="w"> </span>validate-host-01<span class="w"> </span>--vol<span class="w"> </span>restore-validate-oracle-data-01
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Mount and validate the data on the validation host before overwriting production</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a writable clone of the snapshot for validation</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>restore-validate-oracle-data-01
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Connect the clone to a validation host</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>purehost<span class="w"> </span>connect<span class="w"> </span>validate-host-01<span class="w"> </span>--vol<span class="w"> </span>restore-validate-oracle-data-01
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Mount and validate the data on the validation host before overwriting production</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Volume copy started: prod-oracle-pg.premigration-20260501.prod-oracle-data-01 → restore-validate-oracle-data-01
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Copy progress: 100%
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Volume restore-validate-oracle-data-01 created successfully (847.3 GB)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Host Connection Details:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Host: validate-host-01
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Volume: restore-validate-oracle-data-01
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  LUN: 2
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  WWN: 600144588c4c3f0000005a6e2d8c0001
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Connection Status: Connected
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Ready for mount and validation on validate-host-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume 'prod-oracle-pg.premigration-20260501.prod-oracle-data-01' not found</code></strong> — Verify the snapshot name matches exactly using <code>purevol list --snap</code> and check for typos in the source volume name.
+<strong><code>Error: Host 'validate-host-01' not found or not initialized</code></strong> — Ensure the validation host exists and is registered on the array with <code>purehost list</code>, and that its WWNs are properly configured.</p>
+</div>
 <p><strong>Step 3 — Overwrite production volume (disruptive — requires host quiesce):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Quiesce or stop the application on the host before proceeding</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Disconnect the production volume from the host</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Overwrite production volume with snapshot content</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--overwrite<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>prod-oracle-data-01
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Reconnect to the host</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>purehost<span class="w"> </span>connect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Rescan HBA on the host; mount filesystem; validate at application layer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Quiesce or stop the application on the host before proceeding</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Disconnect the production volume from the host</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Overwrite production volume with snapshot content</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--overwrite<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>prod-oracle-data-01
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Reconnect to the host</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>purehost<span class="w"> </span>connect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Rescan HBA on the host; mount filesystem; validate at application layer</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Disconnecting volume prod-oracle-data-01 from host prod-oracle-01...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Volume prod-oracle-data-01 successfully disconnected from host prod-oracle-01
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Copying snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 to prod-oracle-data-01 with overwrite...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Copy job started: job-id 8f4a2c1b-9e7d-4d2a-b1c3-5a8f9e2d3c4b
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Copy job completed successfully in 47 seconds
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Volume prod-oracle-data-01 overwritten with snapshot content
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Connecting volume prod-oracle-data-01 to host prod-oracle-01...
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Volume prod-oracle-data-01 successfully connected to host prod-oracle-01
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Connection details:
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  LUN: 42
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  WWN: 600144588f4a2c1b9e7d4d2ab1c35a8f
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  iSCSI IQN: iqn.2010-06.com.purestorage:flasharray.prod-oracle-01.42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume prod-oracle-data-01 is still connected to 1 host(s). Use --force to disconnect.</code></strong> — Add the <code>--force</code> flag to the disconnect command if the volume must be forcibly unmapped despite active connections.
+<strong><code>Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found</code></strong> — Verify the snapshot name matches exactly (check with <code>purevol list --snap</code>) and confirm the snapshot has not expired or been deleted.
+<strong><code>Error: Cannot overwrite volume prod-oracle-data-01: insufficient space in pod</code></strong> — Ensure the target volume has sufficient capacity to accommodate the snapshot data, or expand the volume before retrying the copy operation.</p>
+</div>
 <hr />
 <h3 id="restore-a-volume-from-a-volume-level-snapshot">Restore a Volume from a Volume-Level Snapshot<a class="headerlink" href="#restore-a-volume-from-a-volume-level-snapshot" title="Permanent link">&para;</a></h3>
 <p>For individual volume snapshots (taken with <code>purevol snap</code> or <code>puresnap create</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List snapshots for a specific volume</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-data-01.*
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Example output: prod-oracle-data-01.preupgrade-20260501</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Clone to a validation volume first</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>purevol<span class="w"> </span>copy<span class="w"> </span>prod-oracle-data-01.preupgrade-20260501<span class="w"> </span>restore-validate-01
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># After validation, overwrite production (disconnect host first)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>purevol<span class="w"> </span>copy<span class="w"> </span>prod-oracle-data-01.preupgrade-20260501<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>--overwrite<span class="w"> </span>prod-oracle-data-01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List snapshots for a specific volume</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-data-01.*
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Example output: prod-oracle-data-01.preupgrade-20260501</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Clone to a validation volume first</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>purevol<span class="w"> </span>copy<span class="w"> </span>prod-oracle-data-01.preupgrade-20260501<span class="w"> </span>restore-validate-01
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># After validation, overwrite production (disconnect host first)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>purevol<span class="w"> </span>copy<span class="w"> </span>prod-oracle-data-01.preupgrade-20260501<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span>--overwrite<span class="w"> </span>prod-oracle-data-01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>prod-oracle-data-01.preupgrade-20260501
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>prod-oracle-data-01.preupgrade-20260415
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>prod-oracle-data-01.preupgrade-20260301
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>prod-oracle-data-01.daily-20260501
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>prod-oracle-data-01.daily-20260430
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Volume prod-oracle-data-01.preupgrade-20260501 copied to restore-validate-01
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Copy completed in 47 seconds
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Source: prod-oracle-data-01.preupgrade-20260501 (2.3 TB)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Destination: restore-validate-01 (2.3 TB)
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Volume prod-oracle-data-01.preupgrade-20260501 copied to prod-oracle-data-01 (overwrite)
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Copy completed in 52 seconds
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>WARNING: Production volume prod-oracle-data-01 has been overwritten
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume prod-oracle-data-01 is currently connected to host oracle-prod-01</code></strong> — Disconnect the volume from all hosts using <code>purevol disconnect prod-oracle-data-01 --host oracle-prod-01</code> before attempting overwrite.
+<strong><code>Error: Snapshot prod-oracle-data-01.preupgrade-20260501 not found</code></strong> — Verify the snapshot name exists by running <code>purevol list prod-oracle-data-01.*</code> and use the exact name from the output.</p>
+</div>
 <hr />
 <h3 id="restore-from-an-async-replication-snapshot-at-the-dr-site">Restore from an Async Replication Snapshot at the DR Site<a class="headerlink" href="#restore-from-an-async-replication-snapshot-at-the-dr-site" title="Permanent link">&para;</a></h3>
 <p>For recovery at the DR site from a replicated PGroup snapshot:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the DR array — list replicated snapshots</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--on<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Snapshots replicated from the production array appear here</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Create a volume from the replicated snapshot on the DR array</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>dr-restore-oracle-data-01
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Connect to DR hosts and mount for recovery</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>purehost<span class="w"> </span>connect<span class="w"> </span>dr-oracle-01<span class="w"> </span>--vol<span class="w"> </span>dr-restore-oracle-data-01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># On the DR array — list replicated snapshots</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--on<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Snapshots replicated from the production array appear here</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Create a volume from the replicated snapshot on the DR array</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>purevol<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>prod-oracle-pg.premigration-20260501.prod-oracle-data-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>dr-restore-oracle-data-01
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Connect to DR hosts and mount for recovery</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>purehost<span class="w"> </span>connect<span class="w"> </span>dr-oracle-01<span class="w"> </span>--vol<span class="w"> </span>dr-restore-oracle-data-01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name                                          Source                                         Created
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>prod-oracle-pg.premigration-20260501.prod-oracle-data-01  prod-oracle-data-01                            2026-05-01 14:32:18 UTC
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>prod-oracle-pg.premigration-20260501.prod-oracle-data-02  prod-oracle-data-02                            2026-05-01 14:32:19 UTC
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>prod-oracle-pg.premigration-20260501.prod-oracle-logs-01  prod-oracle-logs-01                            2026-05-01 14:32:20 UTC
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Volume dr-restore-oracle-data-01 created from snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Size: 500GB
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Serial: 8e3f7c2a9b1d4e6f
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Connected dr-oracle-01 to volume dr-restore-oracle-data-01
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>LUN: 3
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Host IQN: iqn.1991-05.com.example:dr-oracle-01.storage
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found</code></strong> — Verify the snapshot name matches exactly with <code>purepgroup listsnaps prod-oracle-pg --on local</code> output, including the date and source volume suffix.
+<strong><code>Error: Volume dr-restore-oracle-data-01 already exists</code></strong> — Use a unique volume name or delete the existing volume with <code>purevol destroy dr-restore-oracle-data-01</code> before retrying the copy command.
+<strong><code>Error: Host dr-oracle-01 not found on array</code></strong> — Register the DR host first using <code>purehost create dr-oracle-01 --iqn &lt;host-iqn&gt;</code> before attempting to connect volumes.</p>
+</div>
 <hr />
 <h3 id="activedr-pod-promotion-for-dr-failover">ActiveDR: Pod Promotion for DR Failover<a class="headerlink" href="#activedr-pod-promotion-for-dr-failover" title="Permanent link">&para;</a></h3>
 <p>ActiveDR uses a replica-link between pods on the production and DR arrays. To activate the DR site (promote the DR pod to writable):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the DR array — check the replica-link status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Promote the DR pod to primary (makes volumes writable on DR)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># This is a planned failover operation — coordinate with the application team</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purepod<span class="w"> </span>demote<span class="w"> </span>prod-oracle-pod<span class="w">     </span><span class="c1"># On production array (demotes prod pod)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># OR</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purepod<span class="w"> </span>promote<span class="w"> </span>dr-oracle-pod<span class="w">      </span><span class="c1"># On DR array (promotes DR pod)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify pod is promoted and volumes are writable</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>purepod<span class="w"> </span>list<span class="w"> </span>dr-oracle-pod
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>purevol<span class="w"> </span>list<span class="w"> </span>dr-oracle-pod::*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># On the DR array — check the replica-link status</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>list
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Promote the DR pod to primary (makes volumes writable on DR)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># This is a planned failover operation — coordinate with the application team</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>purepod<span class="w"> </span>demote<span class="w"> </span>prod-oracle-pod<span class="w">     </span><span class="c1"># On production array (demotes prod pod)</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># OR</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>purepod<span class="w"> </span>promote<span class="w"> </span>dr-oracle-pod<span class="w">      </span><span class="c1"># On DR array (promotes DR pod)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Verify pod is promoted and volumes are writable</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>purepod<span class="w"> </span>list<span class="w"> </span>dr-oracle-pod
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>purevol<span class="w"> </span>list<span class="w"> </span>dr-oracle-pod::*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># purepod replica-link list
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Name                  Status      Direction    Lag(ms)    Last_Updated
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>prod-oracle-pod       Connected   Inbound      12         2024-01-15T14:32:18Z
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>prod-mysql-pod        Connected   Inbound      8          2024-01-15T14:32:19Z
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>prod-app-cache-pod    Connected   Inbound      156        2024-01-15T14:32:05Z
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a># purepod demote prod-oracle-pod
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Demoting pod &#39;prod-oracle-pod&#39;...
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Pod &#39;prod-oracle-pod&#39; demoted to secondary. Replication direction reversed.
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a># purepod promote dr-oracle-pod
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Promoting pod &#39;dr-oracle-pod&#39; to primary...
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Pod &#39;dr-oracle-pod&#39; promoted successfully. Volumes are now writable.
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a># purepod list dr-oracle-pod
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Name              Status    Primary    Mediator      Volumes
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>dr-oracle-pod     Online    dr-array   10.20.30.40   12
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a># purevol list dr-oracle-pod::*
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>Name                          Size      Provisioned    Thin    Snapshots
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>dr-oracle-pod::ora_data_01    500GB     450GB          Yes     3
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>dr-oracle-pod::ora_data_02    500GB     480GB          Yes     2
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>dr-oracle-pod::ora_logs       100GB     95GB           Yes     1
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>dr-oracle-pod::ora_archive    250GB     210GB          Yes     0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Pod 'prod-oracle-pod' is not in a replicable state</code></strong> — Verify the pod exists on the production array and has an active replica-link before attempting demotion.
+<strong><code>Error: Cannot promote pod 'dr-oracle-pod' — replica-link status is 'Disconnected'</code></strong> — Check network connectivity between arrays and ensure the replica-link is in 'Connected' state using <code>purepod replica-link list</code>.</p>
+</div>
 <p>For unplanned failover (production array is offline), promote the DR pod without demoting production first, then reconcile after production is restored.</p>
 <hr />
 <h3 id="recover-a-destroyed-volume-undelete">Recover a Destroyed Volume (Undelete)<a class="headerlink" href="#recover-a-destroyed-volume-undelete" title="Permanent link">&para;</a></h3>
 <p>Volumes that have been destroyed (<code>purevol destroy</code>) remain in a pending-eradication state for 24 hours (or longer if SafeMode is enabled). They can be recovered during this window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all destroyed volumes awaiting eradication</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Recover a destroyed volume (returns it to active state)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purevol<span class="w"> </span>recover<span class="w"> </span>prod-oracle-data-01
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Verify the volume is back in active state</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-data-01
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Reconnect to the host if needed</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>purehost<span class="w"> </span>connect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List all destroyed volumes awaiting eradication</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Recover a destroyed volume (returns it to active state)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>purevol<span class="w"> </span>recover<span class="w"> </span>prod-oracle-data-01
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Verify the volume is back in active state</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-data-01
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Reconnect to the host if needed</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>purehost<span class="w"> </span>connect<span class="w"> </span>prod-oracle-01<span class="w"> </span>--vol<span class="w"> </span>prod-oracle-data-01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Name                          Size      Source    Pending Eradication
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>prod-oracle-data-01           1.0T      —         True
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>prod-mysql-backup-02          500G      —         True
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>prod-kafka-log-01             2.0T      —         True
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>prod-elasticsearch-heap-03    750G      —         True
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Volume prod-oracle-data-01 recovered successfully.
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Name                 Size      Provisioned    Used      Data Reduction    Hosts
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>prod-oracle-data-01  1.0T      1.0T           847.3G    1.8x               prod-oracle-01
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Connection established: prod-oracle-01 → prod-oracle-data-01 (LUN 3)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume prod-oracle-data-01 not found in pending eradication queue</code></strong> — Verify the volume name is correct and check if it has already been eradicated with <code>purevol list --destroyed</code>.
+<strong><code>Error: Host prod-oracle-01 not found or offline</code></strong> — Confirm the host exists and is registered in Pure with <code>purehost list</code> before attempting reconnection.
+<strong><code>Error: Volume prod-oracle-data-01 is already connected to host prod-oracle-01</code></strong> — Remove the redundant connection attempt or use <code>purehost disconnect</code> first if reassigning the volume.</p>
+</div>
 <blockquote>
 <p>If <code>purealert list</code> shows a volume was eradicated (permanent deletion after 24 hours), recovery is not possible from the array. Recovery requires restoring from a protection group snapshot.</p>
 </blockquote>
 <hr />
 <h3 id="recover-a-destroyed-protection-group-snapshot">Recover a Destroyed Protection Group Snapshot<a class="headerlink" href="#recover-a-destroyed-protection-group-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List pending (not yet eradicated) snapshots</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--pending
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Recover a pending snapshot</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>puresnap<span class="w"> </span>recover<span class="w"> </span>prod-oracle-pg.premigration-20260501
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify it is available</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># List pending (not yet eradicated) snapshots</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--pending
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Recover a pending snapshot</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>puresnap<span class="w"> </span>recover<span class="w"> </span>prod-oracle-pg.premigration-20260501
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Verify it is available</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Name                                    Created                 Source
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>prod-oracle-pg.premigration-20260501    2026-05-01 14:32:18Z    prod-oracle-pg
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>prod-oracle-pg.backup-20260430          2026-04-30 09:15:42Z    prod-oracle-pg
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>prod-oracle-pg.weekly-20260428          2026-04-28 22:00:01Z    prod-oracle-pg
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>...
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Snapshot prod-oracle-pg.premigration-20260501 recovered successfully.
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Name                                    Created                 Source              Size
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>prod-oracle-pg.premigration-20260501    2026-05-01 14:32:18Z    prod-oracle-pg      847.3GB
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>prod-oracle-pg.backup-20260430          2026-04-30 09:15:42Z    prod-oracle-pg      823.1GB
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>prod-oracle-pg.weekly-20260428          2026-04-28 22:00:01Z    prod-oracle-pg      798.5GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Snapshot prod-oracle-pg.premigration-20260501 not found</code></strong> — Verify the exact snapshot name with <code>puresnap list --pending</code> and check for typos in the recovery command.
+<strong><code>Error: Permission denied</code></strong> — Ensure your user account has array administrator or snapshot recovery privileges on the Pure FlashArray.</p>
+</div>
 <hr />
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
 <h3 id="after-any-restore-operation">After Any Restore Operation<a class="headerlink" href="#after-any-restore-operation" title="Permanent link">&para;</a></h3>
@@ -8670,24 +8901,54 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
 <hr />
 <h2 id="snapshot-capacity-management">Snapshot Capacity Management<a class="headerlink" href="#snapshot-capacity-management" title="Permanent link">&para;</a></h2>
 <p>Snapshots consume capacity proportional to the changed data between the snapshot and the current volume state (space-efficient / redirect-on-write). Uncontrolled snapshot retention causes unexpected capacity growth.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all snapshots with space usage (sorted by size, largest first)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--sort<span class="w"> </span>size-
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check total snapshot space consumption</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Review the &#39;snapshot&#39; field in the space output</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Check protection group schedule and retention</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Eradicate snapshots that are past retention and no longer needed</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># (Snapshots past their expiry are deleted automatically by the schedule)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># To manually eradicate a specific snapshot:</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>prod-oracle-pg.old-snapshot-20250101
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Eradicate all pending snapshots (use with caution)</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List all snapshots with space usage (sorted by size, largest first)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--sort<span class="w"> </span>size-
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Check total snapshot space consumption</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Review the &#39;snapshot&#39; field in the space output</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Check protection group schedule and retention</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1"># Eradicate snapshots that are past retention and no longer needed</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="c1"># (Snapshots past their expiry are deleted automatically by the schedule)</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># To manually eradicate a specific snapshot:</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>prod-oracle-pg.old-snapshot-20250101
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1"># Eradicate all pending snapshots (use with caution)</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Name                                    Size      Provisioned   Snapshots
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>prod-oracle-pg                          2.3T      5.0T          847.2G
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>prod-mysql-pg                           1.8T      3.5T          612.4G
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>prod-app-pg                             950G      2.0T          284.1G
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>dev-test-pg                             420G      1.0T          156.3G
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>...
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Total snapshot space: 1.9T
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Array Name          Capacity      Used          Snapshots         Data Reduction
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>flasharray-01       100T          67.3T         1.9T              3.2x
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>...
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>Name                                    Enabled   Frequency   Retention
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>prod-oracle-pg                          Yes       hourly      7 days
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>prod-mysql-pg                           Yes       daily       30 days
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>prod-app-pg                             Yes       4-hourly    14 days
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>dev-test-pg                             Yes       weekly      90 days
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>Eradicated snapshot: prod-oracle-pg.old-snapshot-20250101
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>WARNING: Eradicating all pending snapshots. This action cannot be undone.
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>Proceed? [y/N]: y
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>Eradicated 23 snapshots (847.2G freed)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Array connection failed. Check credentials and array IP.</code></strong> — Verify the Pure array hostname/IP is reachable and credentials are configured in <code>~/.purerc</code> or environment variables.
+<strong><code>Error: Snapshot 'prod-oracle-pg.old-snapshot-20250101' not found or already eradicated.</code></strong> — Confirm the snapshot name exists using <code>puresnap list</code> before attempting eradication.
+<strong><code>Error: Cannot eradicate snapshot—still referenced by active replication or clone.</code></strong> — Wait for dependent clones/replicas to complete or break the relationship before eradicating the source snapshot.</p>
+</div>
 <p><strong>Capacity thresholds:</strong></p>
 <table>
 <thead>
@@ -8723,12 +8984,27 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
 <li>Veeam creates a FlashArray snapshot before the backup job, mounts it on a proxy server, and backs up from the snapshot rather than live data</li>
 </ol>
 <p><strong>Verify Veeam snapshot jobs from the array:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Snapshots created by Veeam appear with a &#39;VEEAM&#39; suffix in the name</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>veeam
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check protection groups Veeam is managing</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>veeam
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Snapshots created by Veeam appear with a &#39;VEEAM&#39; suffix in the name</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>puresnap<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>veeam
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Check protection groups Veeam is managing</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>veeam
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Name                                    Source                          Created
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>veeam-db-prod-backup.1                  veeam-db-prod-backup            2024-01-15 14:32:18 PST
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>veeam-exchange-daily.2                  veeam-exchange-daily            2024-01-15 09:15:42 PST
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>veeam-fileserver-hourly.5               veeam-fileserver-hourly         2024-01-15 16:45:03 PST
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>veeam-sql-incremental.3                 veeam-sql-incremental           2024-01-15 13:22:17 PST
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Name                                    Hosts
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>veeam-protection-group-01               host-esx-01, host-esx-02, host-esx-03
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>veeam-protection-group-02               host-hyperv-04, host-hyperv-05
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>puresnap: command not found</code></strong> — Verify the Pure Storage FlashArray CLI tools are installed and the PATH environment variable includes the installation directory.
+<strong><code>No matches found</code></strong> — This is expected output if no Veeam snapshots or protection groups exist; confirm Veeam backup jobs have run and are configured to use this FlashArray.</p>
+</div>
 <blockquote>
 <p>The service account API token provided to Veeam requires <code>storage_admin</code> role — it needs to create and delete snapshots and protection groups. Do not give it <code>array_admin</code>.</p>
 </blockquote>
@@ -8768,7 +9044,7 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

@@ -9279,156 +9279,376 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/iaas/api/about&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Expected: version info JSON with buildNumber and controllerVersion</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkB2c3BoZXJlLmxvY2FsIiwiaWF0IjoxNjk4NzY1NDMyLCJleHAiOjE2OTg3NjkwMzIsImlzcyI6Imh0dHBzOi8vdnJhLWZxZG4uY29ycC5sb2NhbC9jc3AvZ2F0ZXdheSIsImF1ZCI6WyJjc3AiXX0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;buildNumber&quot;: &quot;8.10.1.0-20231031&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;controllerVersion&quot;: &quot;8.10.1&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;productName&quot;: &quot;VMware Aria Automation&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;releaseVersion&quot;: &quot;8.10.1&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;timestamp&quot;: &quot;2023-10-31T14:23:45.123Z&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify vRA appliance certificate is valid).
+<strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index object with string "cspAuthToken"</code></strong> — Verify credentials are correct and domain is set to <code>vsphere.local</code>; check vIDM is reachable and user account is not locked.
+<strong><code>curl: (7) Failed to connect to &lt;vra-fqdn&gt; port 443: Connection refused</code></strong> — Confirm vRA FQDN is correct and vRA appliance is running; check network connectivity and firewall rules allow port 443.</p>
+</div>
 <hr />
 <h2 id="step-2-check-failed-deployments">Step 2 — Check failed deployments<a class="headerlink" href="#step-2-check-failed-deployments" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all failed deployments</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments?status=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">for d in data.get(&#39;content&#39;, []):</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">    print(d[&#39;name&#39;], &#39;|&#39;, d[&#39;status&#39;], &#39;|&#39;, d.get(&#39;lastRequest&#39;, {}).get(&#39;completionDetails&#39;,&#39;&#39;))</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Get full detail for a specific deployment</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">DEPLOY_ID</span><span class="o">=</span><span class="s2">&quot;&lt;deployment-id&gt;&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Get deployment event log (full audit trail for what happened step by step)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">/events&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s2">for e in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s2">    print(e.get(&#39;timestamp&#39;,&#39;&#39;), e.get(&#39;eventType&#39;,&#39;&#39;), e.get(&#39;message&#39;,&#39;&#39;)[:120])</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Filter events to only FAILED type</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">/events?eventTypes=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<hr />
-<h2 id="step-3-check-catalog-request-status">Step 3 — Check catalog request status<a class="headerlink" href="#step-3-check-catalog-request-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List failed catalog requests</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all failed deployments</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?requestState=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments?status=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">for r in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">    print(r.get(&#39;id&#39;,&#39;&#39;)[:8], &#39;|&#39;, r.get(&#39;requestedByDisplay&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;reason&#39;,&#39;&#39;))</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Get full detail for a specific request</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Get request event log</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">for d in data.get(&#39;content&#39;, []):</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">    print(d[&#39;name&#39;], &#39;|&#39;, d[&#39;status&#39;], &#39;|&#39;, d.get(&#39;lastRequest&#39;, {}).get(&#39;completionDetails&#39;,&#39;&#39;))</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Get full detail for a specific deployment</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">DEPLOY_ID</span><span class="o">=</span><span class="s2">&quot;&lt;deployment-id&gt;&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Get deployment event log (full audit trail for what happened step by step)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">/events&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s2">import json,sys</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s2">for e in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s2">    print(e.get(&#39;timestamp&#39;,&#39;&#39;), e.get(&#39;eventType&#39;,&#39;&#39;), e.get(&#39;message&#39;,&#39;&#39;)[:120])</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Filter events to only FAILED type</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/</span><span class="nv">$DEPLOY_ID</span><span class="s2">/events?eventTypes=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>web-app-prod | FAILED | Resource allocation timeout after 300 seconds
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>db-cluster-02 | FAILED | vSphere API connection refused on host esx-04.corp.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>legacy-app-test | FAILED | Blueprint validation failed: missing required input &#39;environment&#39;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>{
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;id&quot;: &quot;deployment-a7f3c2e1-9b4d-4f8a-b2d1-5e8c9a3f7d2b&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;name&quot;: &quot;web-app-prod&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;createdAt&quot;: &quot;2024-01-15T14:32:18.000Z&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;lastRequest&quot;: {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    &quot;id&quot;: &quot;request-b8e4d3f2-0c5e-5g9b-c3e2-6f9d0b4g8e3c&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;completionDetails&quot;: &quot;Resource allocation timeout after 300 seconds&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    &quot;completedAt&quot;: &quot;2024-01-15T14:37:22.000Z&quot;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  },
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;inputs&quot;: {
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    &quot;environment&quot;: &quot;production&quot;,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    &quot;cpu_count&quot;: 4,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    &quot;memory_gb&quot;: 16
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  }
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>}
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>2024-01-15T14:32:18.123Z DEPLOYMENT_REQUESTED Deployment request submitted by admin@corp.local
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>2024-01-15T14:32:25.456Z RESOURCE_ALLOCATION_STARTED Attempting to allocate 4 vCPU and 16GB memory from cluster-prod
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>2024-01-15T14:35:10.789Z RESOURCE_ALLOCATION_FAILED vSphere cluster-prod returned error: insufficient free memory on hosts
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>2024-01-15T14:35:11.012Z DEPLOYMENT_FAILED Deployment failed due to resource constraints; check vSphere capacity
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>{
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;content&quot;: [
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    {
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:35:10.789Z&quot;,
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>      &quot;eventType&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>      &quot;message&quot;: &quot;vSphere cluster-prod returned error: insufficient free memory on hosts esx-01, esx-02, esx-03&quot;,
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      &quot;severity&quot;: &quot;ERROR&quot;
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    }
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  ],
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>  &quot;totalElements&quot;: 1
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the VRA certificate into your system CA bundle.
+<strong><code>jq: command not found</code></strong> — Install python3-json or use <code>python3 -m json.tool</code> instead of piping to jq for JSON formatting.
+<strong><code>Authorization: Bearer $TOKEN: command not found</code></strong> — Ensure <code>$TOKEN</code> variable is set by running <code>TOKEN=$(curl -sk -u admin:password "https://&lt;vra-fqdn&gt;/iaas/api/login" | grep -o '"token":"[^"]*' | cut -d'"' -f4)</code> first.</p>
+</div>
+<hr />
+<h2 id="step-3-check-catalog-request-status">Step 3 — Check catalog request status<a class="headerlink" href="#step-3-check-catalog-request-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List failed catalog requests</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?requestState=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">import json,sys</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">for r in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">    print(r.get(&#39;id&#39;,&#39;&#39;)[:8], &#39;|&#39;, r.get(&#39;requestedByDisplay&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;reason&#39;,&#39;&#39;))</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Get full detail for a specific request</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Get request event log</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>a7f2c1e4 | john.smith@corp.local | Insufficient vSphere cluster resources
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>b3e9d2f1 | sarah.jones@corp.local | Network policy violation detected
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>c5a1b8e7 | mike.brown@corp.local | Storage quota exceeded for project-prod
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>d9f4c2a6 | lisa.wang@corp.local | Blueprint validation failed: missing required input
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>e2b7f5d3 | admin@corp.local | vCenter connection timeout
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>{
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  &quot;id&quot;: &quot;a7f2c1e4-9b3c-4d2e-8f1a-7c5e2b9d4a1f&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  &quot;requestedByDisplay&quot;: &quot;john.smith@corp.local&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;requestState&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  &quot;reason&quot;: &quot;Insufficient vSphere cluster resources&quot;,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  &quot;requestedOn&quot;: 1698765432000,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  &quot;completedOn&quot;: 1698765892000,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  &quot;blueprint&quot;: &quot;CentOS-8-Standard&quot;,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  &quot;catalogItemId&quot;: &quot;5f2a8c1b-3e4d-9f7a-2c1b-8e5d3a9f2c1b&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>}
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>{
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;content&quot;: [
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    {
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>      &quot;eventType&quot;: &quot;REQUEST_FAILED&quot;,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>      &quot;message&quot;: &quot;vSphere cluster &#39;prod-cluster-01&#39; has insufficient CPU resources&quot;,
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>      &quot;timestamp&quot;: 1698765892000
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    },
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    {
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &quot;eventType&quot;: &quot;RESOURCE_ALLOCATION_ERROR&quot;,
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>      &quot;message&quot;: &quot;Requested 8 vCPU but only 2 available&quot;,
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>      &quot;timestamp&quot;: 1698765891000
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    }
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>  ]
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the VRA certificate into your system's trusted CA store.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the <code>$TOKEN</code> variable is set correctly with a valid bearer token and the VRA API endpoint is reachable.
+<strong><code>"reason": ""</code></strong> — Check the request events endpoint for detailed error messages, as some failures only populate the event log rather than the reason field.</p>
+</div>
 <hr />
 <h2 id="step-4-inspect-kubernetes-pod-logs">Step 4 — Inspect Kubernetes pod logs<a class="headerlink" href="#step-4-inspect-kubernetes-pod-logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to the vRA appliance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@&lt;vra-appliance-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List all pods in the vRA namespace (all should be Running)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Problem: any pod in CrashLoopBackOff, Error, or Pending state</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Get logs for a specific failing pod</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Follow logs in real time for a pod (Ctrl-C to stop)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-f
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Get logs from all containers in a pod (for multi-container pods)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--all-containers
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Filter for errors across all pods (runs kubectl exec or log aggregation)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--selector<span class="w"> </span><span class="nv">app</span><span class="o">=</span>catalog<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Describe a pod in CrashLoopBackOff to get exit reason</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Look for: &quot;Last State&quot;, &quot;Reason&quot;, &quot;Exit Code&quot; in the output</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># Check all pod resource consumption</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;metrics-server not available&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to the vRA appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>root@&lt;vra-appliance-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List all pods in the vRA namespace (all should be Running)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Problem: any pod in CrashLoopBackOff, Error, or Pending state</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Get logs for a specific failing pod</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Follow logs in real time for a pod (Ctrl-C to stop)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-f
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Get logs from all containers in a pod (for multi-container pods)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--all-containers
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Filter for errors across all pods (runs kubectl exec or log aggregation)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--selector<span class="w"> </span><span class="nv">app</span><span class="o">=</span>catalog<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Describe a pod in CrashLoopBackOff to get exit reason</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Look for: &quot;Last State&quot;, &quot;Reason&quot;, &quot;Exit Code&quot; in the output</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Check all pod resource consumption</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;metrics-server not available&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root@vra-appliance-01:~# kubectl get pods -n prelude
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>catalog-service-7d4f8c9b2-kx9m2         1/1     Running   0          14d
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>identity-service-5b2c1a8f-9qr3p         1/1     Running   2          14d
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>orchestration-engine-6f8e2d5c-lmn7x     0/1     CrashLoopBackOff   12   2h
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>request-service-8a3b9e1f-pq2rs          1/1     Running   0          14d
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>approval-service-4c7d6b2e-uvwxy         1/1     Running   1          14d
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>...
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>root@vra-appliance-01:~# kubectl logs -n prelude orchestration-engine-6f8e2d5c-lmn7x --tail=200
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15T09:42:31.847Z ERROR [main] Failed to connect to database: Connection refused (localhost:5432)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15T09:42:32.102Z ERROR [main] Retrying connection attempt 3/10
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>2024-01-15T09:42:35.456Z ERROR [main] Max retries exceeded, shutting down
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Exception in thread &quot;main&quot; java.sql.SQLException: Cannot get a connection, pool error Timeout waiting for idle object
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>root@vra-appliance-01:~# kubectl describe pod -n prelude orchestration-engine-6f8e2d5c-lmn7x
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Name:         orchestration-engine-6f8e2d5c-lmn7x
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Namespace:    prelude
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Status:       Running
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Last State:     Terminated
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  Reason:       ExitCode 1
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  Exit Code:    1
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  Started:      Mon, 15 Jan 2024 09:44:15Z
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  Finished:     Mon, 15 Jan 2024 09:44:18Z
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Restart Count:  12
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>root@vra-appliance-01:~# kubectl top pods -n prelude 2&gt;/dev/null || echo &quot;metrics-server not available&quot;
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>catalog-service-7d4f8c9b2-kx9m2         145      512
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>identity-service-5b2c1a8f-9qr3p         89       384
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>request-service-8a3b9e1f-pq2rs          201      768
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>approval-service-4c7d6b2e-uvwxy         67       256
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "pods"</code></strong> — Verify kubectl is configured correctly and you have access to the cluster with <code>kubectl cluster-info</code>.
+<strong><code>Unable to connect to the server: dial tcp: lookup &lt;vra-appliance-ip&gt;: no such host</code></strong> — Ensure the vRA appliance IP is correct and reachable, or use the FQDN instead of IP address.
+<strong><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></strong> — Confirm the pod name is spelled correctly and exists in the prelude namespace with <code>kubectl get pods -n prelude</code>.</p>
+</div>
 <hr />
 <h2 id="step-5-check-postgresql-database-health">Step 5 — Check PostgreSQL database health<a class="headerlink" href="#step-5-check-postgresql-database-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the vRA appliance — connect to the Postgres database</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check replication lag (if clustered vRA)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="se">\c</span><span class="w"> </span>vcac
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>SELECT<span class="w"> </span>client_addr,<span class="w"> </span>state,<span class="w"> </span>sent_lsn,<span class="w"> </span>replay_lsn,
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">       </span><span class="o">(</span>sent_lsn<span class="w"> </span>-<span class="w"> </span>replay_lsn<span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>lag_bytes
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>FROM<span class="w"> </span>pg_stat_replication<span class="p">;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check for table bloat (dead tuples)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>SELECT<span class="w"> </span>relname,<span class="w"> </span>n_dead_tup,<span class="w"> </span>last_autovacuum
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>FROM<span class="w"> </span>pg_stat_user_tables
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>WHERE<span class="w"> </span>n_dead_tup<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10000</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ORDER<span class="w"> </span>BY<span class="w"> </span>n_dead_tup<span class="w"> </span>DESC<span class="w"> </span>LIMIT<span class="w"> </span><span class="m">20</span><span class="p">;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Manually vacuum if autovacuum hasn&#39;t run</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>VACUUM<span class="w"> </span>ANALYZE<span class="w"> </span>public.*<span class="p">;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Exit psql</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="se">\q</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the vRA appliance — connect to the Postgres database</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check replication lag (if clustered vRA)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="se">\c</span><span class="w"> </span>vcac
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>SELECT<span class="w"> </span>client_addr,<span class="w"> </span>state,<span class="w"> </span>sent_lsn,<span class="w"> </span>replay_lsn,
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">       </span><span class="o">(</span>sent_lsn<span class="w"> </span>-<span class="w"> </span>replay_lsn<span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>lag_bytes
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>FROM<span class="w"> </span>pg_stat_replication<span class="p">;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check for table bloat (dead tuples)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>SELECT<span class="w"> </span>relname,<span class="w"> </span>n_dead_tup,<span class="w"> </span>last_autovacuum
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>FROM<span class="w"> </span>pg_stat_user_tables
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>WHERE<span class="w"> </span>n_dead_tup<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10000</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ORDER<span class="w"> </span>BY<span class="w"> </span>n_dead_tup<span class="w"> </span>DESC<span class="w"> </span>LIMIT<span class="w"> </span><span class="m">20</span><span class="p">;</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Manually vacuum if autovacuum hasn&#39;t run</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>VACUUM<span class="w"> </span>ANALYZE<span class="w"> </span>public.*<span class="p">;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Exit psql</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="se">\q</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>psql (12.13 (Debian 12.13-1.pgdg110+1))
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Type &quot;help&quot; for help.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>postgres=# \c vcac
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>You are now connected to database &quot;vcac&quot; as user &quot;postgres&quot;.
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>vcac=# SELECT client_addr, state, sent_lsn, replay_lsn,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>       (sent_lsn - replay_lsn) AS lag_bytes
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>FROM pg_stat_replication;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> client_addr |   state   |  sent_lsn  | replay_lsn | lag_bytes
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>-------------+-----------+------------+------------+-----------
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> 10.42.18.55 | streaming | 0/4A2B1F80 | 0/4A2B1F80 |         0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 10.42.18.56 | streaming | 0/4A2B1F80 | 0/4A2B1C00 |      1920
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>(2 rows)
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>vcac=# SELECT relname, n_dead_tup, last_autovacuum
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>FROM pg_stat_user_tables
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>WHERE n_dead_tup &gt; 10000
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>ORDER BY n_dead_tup DESC LIMIT 20;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>       relname       | n_dead_tup |       last_autovacuum
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>---------------------+------------+------------------------
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a> request_state_log   |      87432 | 2024-01-15 03:22:14+00
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a> resource_action     |      34156 | 2024-01-15 02:18:07+00
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a> deployment_resource |      12847 | 2024-01-14 18:45:33+00
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>(3 rows)
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>vcac=# VACUUM ANALYZE public.*;
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>VACUUM
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>vcac=# \q
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></strong> — Run the psql command directly on the vRA appliance or configure pg_hba.conf to allow password authentication.
+<strong><code>ERROR: permission denied for schema public</code></strong> — Connect as the vcac database owner instead: <code>psql -U vcac -d vcac</code> or grant appropriate privileges to the postgres user.</p>
+</div>
 <hr />
 <h2 id="step-6-check-abx-action-failures">Step 6 — Check ABX action failures<a class="headerlink" href="#step-6-check-abx-action-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via vRA UI (most informative for ABX):</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Navigate to: Extensibility → Action Runs</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Filter by: Status = Failed; sort by Most Recent</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Click on a failed run → View Logs</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Look at: stdout, stderr, exit code, and inputs passed to the action</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Via API — list recent ABX action runs</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/abx/api/resources/action-runs?page=0&amp;size=20&amp;status=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">for r in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">    print(r.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;status&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;error&#39;,&#39;&#39;)[:100])</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Get detail for a specific action run</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/abx/api/resources/action-runs/&lt;run-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Via vRA UI (most informative for ABX):</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Navigate to: Extensibility → Action Runs</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Filter by: Status = Failed; sort by Most Recent</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Click on a failed run → View Logs</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Look at: stdout, stderr, exit code, and inputs passed to the action</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Via API — list recent ABX action runs</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/abx/api/resources/action-runs?page=0&amp;size=20&amp;status=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s2">import json,sys</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s2">for r in json.load(sys.stdin).get(&#39;content&#39;, []):</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">    print(r.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;status&#39;,&#39;&#39;), &#39;|&#39;, r.get(&#39;error&#39;,&#39;&#39;)[:100])</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">&quot;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Get detail for a specific action run</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/abx/api/resources/action-runs/&lt;run-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>my-provision-action | FAILED | Error: Timeout waiting for resource allocation after 300s
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>update-network-config | FAILED | NullPointerException in line 42: cannot read property &#39;ipAddress&#39; of undefined
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>cleanup-vm-snapshot | FAILED | Permission denied: user lacks &#39;abx.action.execute&#39; role
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>post-deployment-webhook | FAILED | Connection refused to https://webhook.example.com:8443
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>{
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  &quot;id&quot;: &quot;run-12a4f8c9-3e2b-47d1-9f6a-2c8e5b1d4a7f&quot;,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  &quot;name&quot;: &quot;my-provision-action&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  &quot;status&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  &quot;createdAt&quot;: &quot;2024-01-15T14:32:18.456Z&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  &quot;completedAt&quot;: &quot;2024-01-15T14:33:52.891Z&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  &quot;actionId&quot;: &quot;action-5c3b2a1f-8e9d-4c7b-a2f1-9d8c7b6a5e4f&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  &quot;error&quot;: &quot;Timeout waiting for resource allocation after 300s&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;stdout&quot;: &quot;Starting provisioning workflow...\nValidating input parameters...\nInitiating vSphere API call...&quot;,
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  &quot;stderr&quot;: &quot;WARNING: Deprecated API endpoint used\nERROR: Timeout after 300000ms&quot;,
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  &quot;exitCode&quot;: 1,
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  &quot;inputs&quot;: {
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    &quot;cpuCount&quot;: 4,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    &quot;memoryMB&quot;: 8192,
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    &quot;templateName&quot;: &quot;ubuntu-20.04-base&quot;
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  }
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRA root CA into your system trust store.
+<strong><code>jq: command not found</code></strong> — Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the Python JSON parser shown in the example instead.
+<strong><code>Authorization: Bearer $TOKEN: command not found</code></strong> — Ensure <code>$TOKEN</code> is set by running <code>TOKEN=$(curl -sk ... /api/login)</code> first, or use explicit token value in quotes.</p>
+</div>
 <hr />
 <h2 id="step-7-collect-support-bundle">Step 7 — Collect support bundle<a class="headerlink" href="#step-7-collect-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Via LCM logscraper (recommended for full Aria Suite diagnostics)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Navigate to: vRSLCM UI → Support → Logscraper</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Select: Aria Automation; time range; Generate Bundle</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Download the .zip file and attach to VMware SR</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Via VAMI (vRA appliance-level bundle)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Browse to: https://&lt;vra-appliance-ip&gt;:5480</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Navigate to: Support → Generate Support Bundle</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Wait 5–15 minutes; download .gz file</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Via appliance CLI</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ssh<span class="w"> </span>root@&lt;vra-appliance-ip&gt;
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Support bundle for vRA:</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>/var/log/vmware/vra/support-bundle.sh
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Output: /tmp/vra-support-&lt;timestamp&gt;.tar.gz</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Include in the VMware SR:</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># - LCM logscraper bundle or VAMI bundle</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># - Deployment ID or request ID that failed</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># - vRA version: vRA UI → Administration → About</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># - Timeline of the issue and any recent changes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Via LCM logscraper (recommended for full Aria Suite diagnostics)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Navigate to: vRSLCM UI → Support → Logscraper</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Select: Aria Automation; time range; Generate Bundle</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Download the .zip file and attach to VMware SR</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Via VAMI (vRA appliance-level bundle)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Browse to: https://&lt;vra-appliance-ip&gt;:5480</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Navigate to: Support → Generate Support Bundle</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Wait 5–15 minutes; download .gz file</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Via appliance CLI</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ssh<span class="w"> </span>root@&lt;vra-appliance-ip&gt;
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Support bundle for vRA:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>/var/log/vmware/vra/support-bundle.sh
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Output: /tmp/vra-support-&lt;timestamp&gt;.tar.gz</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># Include in the VMware SR:</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># - LCM logscraper bundle or VAMI bundle</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># - Deployment ID or request ID that failed</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># - vRA version: vRA UI → Administration → About</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># - Timeline of the issue and any recent changes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>root@vra-appliance-01:~# /var/log/vmware/vra/support-bundle.sh
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Generating Aria Automation support bundle...
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Collecting system logs...
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting vRA application logs...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Collecting database diagnostics...
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Collecting network configuration...
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Collecting certificate information...
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Bundle generation in progress: [████████████████████] 100%
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Support bundle created successfully.
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Output file: /tmp/vra-support-20240115-143022.tar.gz
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Bundle size: 487 MB
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Timestamp: 2024-01-15 14:30:22 UTC
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>root@vra-appliance-01:~#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/var/log/vmware/vra/support-bundle.sh: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure you are logged in as root user.
+<strong><code>/tmp: No space left on device</code></strong> — Free up disk space on the appliance (check with <code>df -h</code>) or specify an alternate output directory before running the script.
+<strong><code>support-bundle.sh: command not found</code></strong> — Verify the vRA appliance is fully deployed and the support tools are installed; check <code>/var/log/vmware/vra/</code> exists with <code>ls -la /var/log/vmware/vra/</code>.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -9502,7 +9722,7 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

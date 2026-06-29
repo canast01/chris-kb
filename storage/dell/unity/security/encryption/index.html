@@ -9011,6 +9011,39 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># View drive encryption status</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/disk<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|sed&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Encryption: Yes
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Encryption Mode: DARE
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Encryption Status: Enabled
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Encryption Cipher: AES-256
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Pool ID: pool_1
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Pool Name: SAS_Pool_01
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Encryption: Yes
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Encryption Type: DARE
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Encryption Status: Active
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Pool ID: pool_2
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Pool Name: NL_SAS_Pool_02
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Encryption: Yes
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Encryption Status: Active
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Disk 0_0_0
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>SED: Yes
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Encryption Status: Active
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Disk 0_0_1
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>SED: Yes
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Encryption Status: Active
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Disk 0_0_2
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>SED: Yes
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Encryption Status: Active
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to &lt;ip&gt;. Connection refused.</code></strong> — Verify the storage array IP address is correct and reachable with <code>ping &lt;ip&gt;</code>, and ensure the management interface is responding.
+<strong><code>Error: Authentication failed for user 'admin'.</code></strong> — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed.
+<strong><code>Error: Command not found: uemcli</code></strong> — Install the UEMCLI package on your management host or add the installation directory to your system PATH environment variable.</p>
+</div>
 <p>In Unisphere: <strong>Settings &gt; Encryption</strong> displays D@RE status and key management configuration.</p>
 <h3 id="enabling-dre">Enabling D@RE<a class="headerlink" href="#enabling-dre" title="Permanent link">&para;</a></h3>
 <p>D@RE must be enabled at pool creation time. It cannot be applied to an existing pool that was created without encryption. To enable D@RE:</p>
@@ -9019,19 +9052,52 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 <li>Ensure all drives in the pool are SED-capable.</li>
 <li>Enable encryption when creating the pool in Unisphere (<strong>Storage &gt; Pools &gt; Create Pool</strong>) or via <code>uemcli</code>:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an encrypted pool (requires SED drives)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-name<span class="w"> </span>pool-encrypted<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-diskGroup<span class="w"> </span>&lt;dg_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-raidType<span class="w"> </span>RAID5<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-isDataReductionEnabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-isEncryptionEnabled<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an encrypted pool (requires SED drives)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-name<span class="w"> </span>pool-encrypted<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-diskGroup<span class="w"> </span>&lt;dg_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-raidType<span class="w"> </span>RAID5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-isDataReductionEnabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-isEncryptionEnabled<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>The operation completed successfully.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Pool ID: pool_1a4f8c2e
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Pool Name: pool-encrypted
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>RAID Type: RAID5
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Disk Group: dg_5
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Data Reduction: Enabled
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Encryption: Enabled
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Encryption Cipher: AES-256
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>SED Status: Active
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Pool Capacity: 10.95 TB
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Available Capacity: 10.95 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error Code: 0x7d000009 - Insufficient SED drives in disk group</code></strong> — Verify the disk group contains only Self-Encrypting Drives (SEDs) by running <code>uemcli -d &lt;ip&gt; -u admin /disk/list</code> and check the "Encryption Capable" field.
+<strong><code>Error Code: 0x7d000015 - Authentication failed</code></strong> — Confirm the admin credentials are correct and the user has pool creation privileges by testing connectivity with <code>uemcli -d &lt;ip&gt; -u admin /system/info</code>.
+<strong><code>Error Code: 0x7d000021 - Disk group does not exist</code></strong> — List available disk groups with <code>uemcli -d &lt;ip&gt; -u admin /diskgroup/list</code> and replace <code>&lt;dg_id&gt;</code> with a valid disk group ID.</p>
+</div>
 <ol>
 <li>Verify the pool is marked as encrypted after creation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Pool Name:                    pool_01
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Pool ID:                      pool_01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Encryption:                   Yes
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Encryption Cipher:            AES-256
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Encryption Key Management:    External (KMIP)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Encryption Status:            Active
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Encryption Rekey Progress:    100%
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Encryption Algorithm:         AES
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The system cannot find the path specified.</code></strong> — Verify the pool ID exists by running <code>uemcli -d &lt;ip&gt; -u admin /stor/config/pool show</code> without the <code>-id</code> filter first.
+<strong><code>Authentication failed</code></strong> — Confirm admin credentials and network connectivity to the Unity array with <code>ping &lt;ip&gt;</code> and verify the <code>-u</code> username has appropriate permissions.
+<strong><code>grep: (standard input) is empty</code></strong> — The command executed successfully but returned no encryption data; check if the pool exists or if encryption is not configured on this pool.</p>
+</div>
 <h3 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h3>
 <p>By default, D@RE encryption keys are managed internally by Unity OE. For environments requiring separation of key management from the storage array (FIPS compliance, PCI DSS, or DoD requirements), configure an external KMIP-compatible key management server.</p>
 <table>
@@ -9057,13 +9123,32 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 </table>
 <h2 id="external-key-management-kmip">External Key Management (KMIP)<a class="headerlink" href="#external-key-management-kmip" title="Permanent link">&para;</a></h2>
 <p>Configure KMIP key management in Unisphere: <strong>Settings &gt; Encryption &gt; Key Management</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show current key management configuration</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security/keymanager<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Configure an external KMIP server</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># (Configuration is GUI-driven for certificate exchange; CLI is limited for KMIP)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># In Unisphere: Settings &gt; Encryption &gt; Key Management Servers &gt; Add</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show current key management configuration</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security/keymanager<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Configure an external KMIP server</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># (Configuration is GUI-driven for certificate exchange; CLI is limited for KMIP)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># In Unisphere: Settings &gt; Encryption &gt; Key Management Servers &gt; Add</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Key Management Server Configuration:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Server Address: 192.168.100.45
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Server Port: 5696
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Protocol: KMIP 1.2
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Status: Connected
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Last Connection: 2024-01-15 14:32:18
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Certificate Validation: Enabled
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Server Certificate CN: kmip-server.corp.local
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Connection Timeout: 30 seconds
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  Failover Enabled: Yes
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Secondary Server: 192.168.100.46
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Authentication Method: Certificate-based
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused on &lt;ip&gt;:443</code></strong> — Verify the Unity array IP is reachable and the management interface is responding with <code>ping &lt;ip&gt;</code> and <code>telnet &lt;ip&gt; 443</code>.
+<strong><code>Error: Authentication failed for user 'admin'</code></strong> — Confirm the admin credentials are correct and the user account has not been locked due to failed login attempts.
+<strong><code>Error: KMIP server certificate validation failed</code></strong> — Import the KMIP server's CA certificate into the Unity array's trusted certificate store via Unisphere before attempting connection.</p>
+</div>
 <p>Steps to configure KMIP:</p>
 <ol>
 <li>Generate a Certificate Signing Request (CSR) from Unity in Unisphere &gt; <strong>Settings &gt; Encryption &gt; Key Management</strong>.</li>
@@ -9076,23 +9161,99 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 <p>Supported KMIP-compatible KMS solutions include Thales CipherTrust, Entrust KeyControl, SafeNet KeySecure, and HashiCorp Vault (with KMIP plugin).</p>
 <h2 id="management-channel-encryption-tls">Management Channel Encryption (TLS)<a class="headerlink" href="#management-channel-encryption-tls" title="Permanent link">&para;</a></h2>
 <p>All management access — Unisphere GUI, REST API, and uemcli — uses HTTPS. By default, Unity OE enables TLS 1.2 and TLS 1.3. TLS 1.0 and 1.1 are considered deprecated and must be explicitly disabled.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check TLS configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tls
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable TLS 1.0 and 1.1 (Unisphere: Settings &gt; Security &gt; TLS Settings)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># CLI command for TLS version restriction varies by OE version:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-tlsMinVersion<span class="w"> </span>TLSv1_2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check TLS configuration</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tls
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Disable TLS 1.0 and 1.1 (Unisphere: Settings &gt; Security &gt; TLS Settings)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># CLI command for TLS version restriction varies by OE version:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-tlsMinVersion<span class="w"> </span>TLSv1_2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>TLS Protocol Version: TLSv1.2
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>TLS Protocol Version: TLSv1.3
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>TLS Cipher Suites: ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-AES128-GCM-SHA256, AES256-GCM-SHA384
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>TLS Certificate: CN=unity-array-01.corp.local, O=Dell EMC, C=US
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>TLS Certificate Expiration: 2025-12-15
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>TLS Session Cache: Enabled
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>TLS Handshake Timeout: 30 seconds
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>The operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The object specified does not exist</code></strong> — Verify the array IP address is correct and the management interface is reachable with <code>ping &lt;ip&gt;</code>.
+<strong><code>Error: Authentication failed</code></strong> — Confirm admin credentials are correct and the user account has not been locked after failed login attempts.
+<strong><code>Error: The parameter 'tlsMinVersion' is not supported on this OE version</code></strong> — Check the array's operating environment version with <code>uemcli -d &lt;ip&gt; -u admin /sys/about show</code> and consult Dell EMC documentation for the correct TLS configuration syntax for your OE version.</p>
+</div>
 <h3 id="verifying-tls-version-from-outside-the-array">Verifying TLS Version from Outside the Array<a class="headerlink" href="#verifying-tls-version-from-outside-the-array" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test which TLS versions the array accepts (from a Linux host)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1<span class="w">   </span><span class="c1"># Should fail if TLS 1.0 disabled</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="c1"># Should fail if TLS 1.1 disabled</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="c1"># Should succeed</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="c1"># Should succeed if supported</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check the cipher suites advertised by Unity</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;sp-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Test which TLS versions the array accepts (from a Linux host)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1<span class="w">   </span><span class="c1"># Should fail if TLS 1.0 disabled</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="c1"># Should fail if TLS 1.1 disabled</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="c1"># Should succeed</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sp-ip&gt;:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="c1"># Should succeed if supported</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check the cipher suites advertised by Unity</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;sp-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># openssl s_client -connect 192.168.1.100:443 -tls1
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>connect:errno=1 error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a># openssl s_client -connect 192.168.1.100:443 -tls1_1
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>connect:errno=1 error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a># openssl s_client -connect 192.168.1.100:443 -tls1_2
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>CONNECTED(00000003)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>depth=1 C=US, O=Dell Inc., CN=Dell Unity CA
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>verify return:1
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>depth=0 C=US, O=Dell Inc., CN=unity-sp-a.lab.local
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>verify return:1
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>---
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Certificate chain
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a> 0 s:C=US, O=Dell Inc., CN=unity-sp-a.lab.local
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>   i:C=US, O=Dell Inc., CN=Dell Unity CA
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>---
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Server certificate
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>subject=C=US, O=Dell Inc., CN=unity-sp-a.lab.local
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>issuer=C=US, O=Dell Inc., CN=Dell Unity CA
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>---
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Cipher   : ECDHE-RSA-AES256-GCM-SHA384
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Protocol : TLSv1.2
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>---
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a># openssl s_client -connect 192.168.1.100:443 -tls1_3
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>CONNECTED(00000003)
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>depth=1 C=US, O=Dell Inc., CN=Dell Unity CA
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>verify return:1
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>depth=0 C=US, O=Dell Inc., CN=unity-sp-a.lab.local
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>verify return:1
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>---
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>Cipher   : TLS_AES_256_GCM_SHA384
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>Protocol : TLSv1.3
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>---
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a># nmap --script ssl-enum-ciphers -p 443 192.168.1.100
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>Starting Nmap 7.92 ( https://nmap.org )
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>Nmap scan report for unity-sp-a.lab.local (192.168.1.100)
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>Host is up (0.0042s latency).
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>PORT    STATE SERVICE
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>443/tcp open  https
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>| ssl-enum-ciphers:
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>|   TLSv1.2:
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>|     ECDHE-RSA-AES256-GCM-SHA384 - A
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>|     ECDHE-RSA-AES128-GCM-SHA256 - A
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>|     ECDHE-RSA-CHACHA20-POLY1305 - A
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>|   TLSv1.3:
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>|     TLS_AES_256_GCM_SHA384 - A
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a>|_    TLS_AES_128_GCM_SHA256 - A
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a>
+<a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>Nmap done at Thu Jan 16 14:32:18 2024; 1 IP address (1 host up) scanned in 2.34s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify the SP IP address is correct and port 443 is reachable with <code>ping</code> and <code>telnet &lt;sp-ip&gt; 443</code>.
+**`error:1409442E:SSL routines:ssl3</p>
+</div>
 <p>Expected result after hardening: TLS 1.0 and 1.1 connections refused; TLS 1.2 and 1.3 accepted; no weak ciphers (RC4, 3DES, NULL) in the cipher list.</p>
 <h2 id="iscsi-chap-authentication">iSCSI CHAP Authentication<a class="headerlink" href="#iscsi-chap-authentication" title="Permanent link">&para;</a></h2>
 <p>CHAP provides authentication for iSCSI sessions, ensuring that only registered hosts can access Unity iSCSI targets.</p>
@@ -9122,19 +9283,41 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure CHAP credentials on a host object</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-chapUser<span class="w"> </span>&lt;initiator_username&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-chapPassword<span class="w"> </span>&lt;initiator_secret&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># For mutual CHAP, also set the reverse credentials</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-reverseChapUser<span class="w"> </span>&lt;target_username&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-reverseChapPassword<span class="w"> </span>&lt;target_secret&gt;
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># List all hosts and their CHAP configuration</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>chap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Configure CHAP credentials on a host object</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-chapUser<span class="w"> </span>&lt;initiator_username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-chapPassword<span class="w"> </span>&lt;initiator_secret&gt;
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># For mutual CHAP, also set the reverse credentials</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>-reverseChapUser<span class="w"> </span>&lt;target_username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span>-reverseChapPassword<span class="w"> </span>&lt;target_secret&gt;
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># List all hosts and their CHAP configuration</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>chap
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>The operation completed successfully.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>The operation completed successfully.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Host ID: host_001
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  chapUser: iqn.1991-05.com.example:initiator.host1
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  chapPassword: ••••••••
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  reverseChapUser: iqn.1991-05.com.example:target.unity01
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  reverseChapPassword: ••••••••
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Host ID: host_002
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  chapUser: iqn.1991-05.com.example:initiator.host2
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  chapPassword: ••••••••
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  reverseChapUser: iqn.1991-05.com.example:target.unity01
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  reverseChapPassword: ••••••••
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Host ID: host_003
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  chapUser: (not configured)
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>  reverseChapUser: (not configured)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The specified host was not found.</code></strong> — Verify the host_id exists on the array using <code>uemcli -d &lt;ip&gt; -u admin /remote/host show</code> and correct the <code>-id</code> parameter.
+<strong><code>Error: Authentication failed. Invalid credentials.</code></strong> — Confirm the admin username and password are correct, or use <code>-p</code> flag to prompt for password interactively.
+<strong><code>Error: Connection refused. Unable to reach management interface.</code></strong> — Verify the array IP address is reachable and the management interface is online using <code>ping &lt;ip&gt;</code>.</p>
+</div>
 <p>CHAP secrets must be 12–16 characters. Use unique secrets per host — do not reuse the same CHAP secret across multiple hosts.</p>
 <h2 id="nfs-kerberos-encryption">NFS Kerberos Encryption<a class="headerlink" href="#nfs-kerberos-encryption" title="Permanent link">&para;</a></h2>
 <p>NFS v4 with Kerberos provides authentication, optional integrity checking, and optional encryption for NFS traffic.</p>
@@ -9179,35 +9362,78 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create an NFS export with Kerberos integrity</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Modify an existing NFS export to require Kerberos</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>-id<span class="w"> </span>&lt;nfs_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Show NFS export security configuration</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;security\|krb&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create an NFS export with Kerberos integrity</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Modify an existing NFS export to require Kerberos</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>-id<span class="w"> </span>&lt;nfs_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Show NFS export security configuration</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;security\|krb&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Create NFS export with Kerberos integrity
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>NFS export created successfully.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ID: nfs_1234567890
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Modify NFS export security
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>NFS export modified successfully.
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>NFS Export Security Configuration
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>ID                          nfs_1234567890
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Name                        fs_export_prod
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Security Flavors            krb5i
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Kerberos Realm              CORP.EXAMPLE.COM
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Allow Unmapped Users        No
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Anonymous UID               4294967295
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Anonymous GID               4294967295
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Default Access              Read-Write
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Kerberos Encryption         AES-256-CTS-HMAC-SHA1-96
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid NAS server ID &lt;nas_id&gt;</code></strong> — Verify the NAS server ID exists with <code>uemcli -d &lt;ip&gt; -u admin /nas show</code> and use the correct ID value.
+<strong><code>Error: Security flavor krb5i is not supported on this system</code></strong> — Confirm Kerberos licensing is enabled on the Unity array and NFS service supports krb5i with <code>uemcli -d &lt;ip&gt; -u admin /prot/nfs show</code>.
+<strong><code>Error: Access denied. User admin does not have permission to modify NFS exports</code></strong> — Ensure the admin user has Storage Administrator or equivalent role assigned in the Unity management interface.</p>
+</div>
 <h2 id="smb-encryption">SMB Encryption<a class="headerlink" href="#smb-encryption" title="Permanent link">&para;</a></h2>
 <p>SMB 3.0 supports per-share or per-server encryption for SMB traffic in transit. When enabled, data is encrypted between the SMB client and the Unity NAS server using AES-128-CCM or AES-128-GCM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable SMB encryption on a NAS server (all shares on the server)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb/server<span class="w"> </span>-id<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-isEncryptionEnabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Enable SMB encryption on a specific share</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># (Unisphere: Storage &gt; File &gt; File Systems &gt; [fs] &gt; SMB Shares &gt; [share] &gt; Edit &gt; Encryption)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Enable SMB encryption on a NAS server (all shares on the server)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb/server<span class="w"> </span>-id<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>-isEncryptionEnabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Enable SMB encryption on a specific share</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># (Unisphere: Storage &gt; File &gt; File Systems &gt; [fs] &gt; SMB Shares &gt; [share] &gt; Edit &gt; Encryption)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>The operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Authentication failed</code></strong> — Verify the admin credentials and ensure the management IP is reachable with <code>ping &lt;ip&gt;</code>.
+<strong><code>Error: NAS server not found or invalid &lt;nas_id&gt;</code></strong> — Confirm the NAS server ID exists by running <code>uemcli -d &lt;ip&gt; -u admin /prot/smb/server list</code> to retrieve valid server identifiers.</p>
+</div>
 <p>SMB encryption requires Windows 8/Windows Server 2012 or later on the client side. Older clients connecting to an encryption-required server will be denied access.</p>
 <h2 id="fips-140-2-mode">FIPS 140-2 Mode<a class="headerlink" href="#fips-140-2-mode" title="Permanent link">&para;</a></h2>
 <p>Unity OE uses FIPS 140-2 validated cryptographic modules. FIPS mode restricts the cipher suites and algorithms available for management connections to FIPS-approved options only.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check FIPS mode status</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check FIPS mode status</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>FIPS Mode:                                    Enabled
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>FIPS Certificates:                            Valid
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>FIPS Certification Level:                     FIPS 140-2 Level 2
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>FIPS Mode Last Changed:                       2024-01-15 14:32:18
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>FIPS Compliance Status:                       Compliant
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused</code></strong> — Verify the Dell Unity array IP address is correct and the management interface is reachable with <code>ping &lt;ip&gt;</code>.
+<strong><code>Error: Authentication failed</code></strong> — Confirm the admin credentials are correct and the user account has sufficient privileges to query security settings.
+<strong><code>Error: Command not found: uemcli</code></strong> — Install the Dell EMC Unity CLI package or ensure it is in your system PATH.</p>
+</div>
 <p>In Unisphere: <strong>Settings &gt; Security</strong> — FIPS mode is shown and can be toggled. Enabling FIPS mode may disable some legacy cipher suites and require clients to support FIPS-approved TLS ciphers.</p>
 <p><strong>Impact of enabling FIPS mode:</strong>
 - TLS connections restricted to FIPS-approved cipher suites (no RC4, no export ciphers).
@@ -9289,7 +9515,7 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:59:39 UTC"><span class="timeago" datetime="2026-06-29T04:59:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:59:39 UTC">2026-06-29</span>
   </span>
 
     

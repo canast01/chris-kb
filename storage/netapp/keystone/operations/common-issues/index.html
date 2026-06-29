@@ -8757,6 +8757,33 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check Collector logs</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Collector Status: RUNNING
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last Collection: 2024-01-15 14:32:18 UTC (successful)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Collection Duration: 2m 34s
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Data Points Collected: 1,247
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Next Collection: 2024-01-15 15:32:18 UTC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>HTTP/1.1 200 OK
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Server: nginx
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Content-Type: application/json
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Connection: keep-alive
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>HTTP/1.1 200 OK
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Server: nginx
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Content-Type: application/json
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Connection: keep-alive
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Jan 15 14:32:45 collector-vm keystone-collector[2847]: Collection cycle started
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Jan 15 14:33:12 collector-vm keystone-collector[2847]: Connected to ONTAP cluster: prod-cluster-01
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Jan 15 14:34:18 collector-vm keystone-collector[2847]: Data transmission to api.keystone.netapp.com completed
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Jan 15 14:34:19 collector-vm keystone-collector[2847]: Collection cycle completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out</code></strong> — Verify network connectivity and firewall rules allow outbound HTTPS to NetApp Keystone endpoints.
+<strong><code>Collector Status: STOPPED</code></strong> — Restart the collector service with <code>systemctl restart keystone-collector</code> and check for configuration errors in <code>/etc/keystone-collector/config.yaml</code>.
+<strong><code>Collection cycle failed: Authentication error - Invalid API credentials</code></strong> — Verify the Keystone API credentials are correctly configured in the collector's authentication file and have not expired.</p>
+</div>
 <p><strong>Resolution:</strong></p>
 <ol>
 <li>Confirm outbound HTTPS (443) is allowed from Collector VM to NetApp cloud endpoints</li>
@@ -8768,39 +8795,120 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
 <h2 id="subscription-consumption-shows-unexpected-spike">Subscription Consumption Shows Unexpected Spike<a class="headerlink" href="#subscription-consumption-shows-unexpected-spike" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Keystone portal reports a sudden jump in consumed TiB not explained by provisioning.</p>
 <p><strong>Checks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On ONTAP — check which volumes grew</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-r
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for large snapshot accumulation</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check for new qtrees or volumes provisioned without Keystone awareness</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>qtree<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On ONTAP — check which volumes grew</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-r
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check for large snapshot accumulation</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check for new qtrees or volumes provisioned without Keystone awareness</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>qtree<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vserver                 Volume       Size       Used       Percent-Used
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>-------                 ------       ----       ---        ----
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>keystone-svm            vol_prod_01  2.5TB      2.1TB      84%
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>keystone-svm            vol_prod_02  1.8TB      1.4TB      78%
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>keystone-svm            vol_data_03  900GB      650GB      72%
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>keystone-svm            vol_archive  500GB      485GB      97%
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>keystone-svm            vol_temp     300GB      45GB       15%
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Vserver                 Volume       Snapshot Name        Size
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>-------                 ------       ---------------      ----
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>keystone-svm            vol_prod_01  hourly.2024-01-15   180GB
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>keystone-svm            vol_prod_01  hourly.2024-01-14   175GB
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>keystone-svm            vol_prod_02  daily.2024-01-10    220GB
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>keystone-svm            vol_data_03  weekly.2024-01-08   95GB
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Vserver     Volume              Aggregate  State  Type  Size
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>-------     ------              ---------  -----  ----  ----
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>keystone-svm vol_prod_01        aggr_01    online RW    2.5TB
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>keystone-svm vol_prod_02        aggr_01    online RW    1.8TB
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>keystone-svm vol_data_03        aggr_02    online RW    900GB
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>keystone-svm vol_archive        aggr_02    online RW    500GB
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>keystone-svm vol_temp           aggr_01    online RW    300GB
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Vserver     Volume  Qtree        Style
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>-------     ------  -----        -----
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>keystone-svm vol_prod_01 qtree_finance unix
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>keystone-svm vol_prod_01 qtree_hr     unix
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>keystone-svm vol_prod_02 qtree_ops    mixed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: permission denied for "volume show"</code></strong> — Verify the ONTAP user account has cluster-admin or appropriate SVM-admin role assigned.
+<strong><code>Error: Vserver "&lt;keystone-svm&gt;" does not exist</code></strong> — Confirm the SVM name is correct and exists on the cluster using <code>vserver show</code>.</p>
+</div>
 <p><strong>Common causes:</strong> Snapshot accumulation from a missed cleanup job; a bulk data ingest; a new volume provisioned directly on the SVM outside of Keystone portal workflow.</p>
 <hr />
 <h2 id="snapmirror-lag-alert">SnapMirror Lag Alert<a class="headerlink" href="#snapmirror-lag-alert" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Keystone portal or ONTAP reports replication lag on a Keystone-backed SnapMirror relationship.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check SnapMirror relationship status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time,health
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Re-sync if relationship is broken</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Update immediately</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SnapMirror relationship status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time,health
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Re-sync if relationship is broken</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Update immediately</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Vserver: svm-prod-01
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                            Source Path: cluster1://vol_source
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                       Destination Path: cluster2://vol_dest
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                                              Relation Type: XDP
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                                          Lag Time: 00:00:15
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                                          Mirror State: Snapmirrored
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                                          Relationship Status: Idle
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                                          Health Status: Healthy
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Transfer in progress: false
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Last Transfer Size: 2.1GB
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Last Transfer Duration: 00:03:42
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Network Compression Ratio: 1.2:1
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>(no output — command completes silently)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Transfer started on Mon Nov 20 14:32:18 UTC
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Transfer in progress: true
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Last Transfer Size: 856MB
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Last Transfer Duration: 00:01:29
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No SnapMirror relationship found for destination path "cluster2://vol_dest"</code></strong> — Verify the destination path is correct and the relationship exists with <code>snapmirror show</code>.
+<strong><code>Error: command failed: Snapmirror relationship is in "broken-off" state and cannot be resynced</code></strong> — Release the broken relationship on the destination with <code>snapmirror release -relationship-info-only</code> before attempting resync.</p>
+</div>
 <hr />
 <h2 id="collector-vm-cannot-reach-ontap-array">Collector VM Cannot Reach ONTAP Array<a class="headerlink" href="#collector-vm-cannot-reach-ontap-array" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>keystone-collector list-arrays</code> shows an array as unreachable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test from Collector VM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span>https://&lt;ontap-mgmt-ip&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.name
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check ONTAP management LIF status</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test from Collector VM</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span>https://&lt;ontap-mgmt-ip&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.name
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check ONTAP management LIF status</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PING 192.168.1.50 (192.168.1.50) 56(84) bytes of data.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>64 bytes from 192.168.1.50: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>64 bytes from 192.168.1.50: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>64 bytes from 192.168.1.50: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>--- 192.168.1.50 statistics ---
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>rtt min/avg/max/stddev = 1.89/2.11/2.34/0.19 ms
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>&quot;cluster-01&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Vserver     Interface       Address         Status
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>----------- --------------- --------------- ----------
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>cluster-01  cluster-mgmt    192.168.1.50    up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused</code></strong> — Verify the ONTAP management IP is correct and the HTTPS service is running on the cluster with <code>system services web show</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification, or import the ONTAP cluster certificate into your Collector VM's certificate store.
+<strong><code>Error: command not found</code></strong> — Run the network interface command directly on the ONTAP cluster via SSH, not from the Collector VM; use <code>ssh admin@&lt;ontap-mgmt-ip&gt; "network interface show -role cluster-mgmt"</code> instead.</p>
+</div>
 <p><strong>Resolution:</strong> Confirm ONTAP management LIF is up, firewall rules allow 443 from Collector VM, and credentials stored in Collector config are current.</p>
 <hr />
 <h2 id="keystone-portal-shows-wrong-committed-capacity">Keystone Portal Shows Wrong Committed Capacity<a class="headerlink" href="#keystone-portal-shows-wrong-committed-capacity" title="Permanent link">&para;</a></h2>
@@ -8877,7 +8985,7 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

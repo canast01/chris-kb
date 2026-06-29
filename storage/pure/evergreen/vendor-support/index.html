@@ -8299,6 +8299,24 @@ Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening
 <p>Ensure phonehome is active at all times. To verify:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>--status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Phone Home Status Report
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>========================
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Status: ENABLED
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Last Phone Home: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Next Scheduled Phone Home: 2024-01-22 14:32:18 UTC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Phone Home Proxy: proxy.internal.company.com:8080
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Connectivity: ONLINE
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Last Successful Transmission: 2024-01-15 14:32:45 UTC
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Data Collected: 2.3 MB
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Transmission Success Rate: 99.8%
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Last Error: None
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically <code>/opt/purearray/bin</code>).
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the array's management IP and that SSH credentials are properly configured.
+<strong><code>Phone Home service is DISABLED</code></strong> — Run <code>purearray phonehome --enable</code> to activate phone home functionality for vendor support.</p>
+</div>
 <h2 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h2>
 <p>When opening a case manually through the support portal or by phone, provide:</p>
 <table>
@@ -8334,30 +8352,66 @@ Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening
 <p>For controller refresh or Ever Modern scheduling issues, also have the subscription renewal date and the current controller generation ready.</p>
 <h2 id="information-to-collect">Information to Collect<a class="headerlink" href="#information-to-collect" title="Permanent link">&para;</a></h2>
 <p>Run the following before or immediately after opening a case:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Array identity and Purity version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Full diagnostic bundle (Pure Support can pull via phonehome)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purediag
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Drive health and status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Capacity usage summary</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Controller and hardware component status</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Host path and connection status</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Replication pod and ActiveCluster status</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>purepod<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Array identity and Purity version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Full diagnostic bundle (Pure Support can pull via phonehome)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purediag
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># All active alerts</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Drive health and status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Capacity usage summary</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Controller and hardware component status</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Host path and connection status</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Replication pod and ActiveCluster status</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>purepod<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                          Version           Revision
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray-prod-01             6.4.2.0           20240115_165432
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Name      Status    Capacity      Used          Available     Snapshots
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purearray Healthy   102.4 TB      67.8 TB       34.6 TB       18.2 TB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>AlertId    Severity    Component         Message                              Timestamp
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>alert-442  warning     controller-1      Temperature threshold approaching    2024-01-15 14:32:18
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>alert-441  info        drive-slot-12     Predictive failure detected          2024-01-15 13:45:22
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Slot    Status      Capacity      Model              Serial
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>0       Healthy     3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A2
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>1       Healthy     3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A3
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2       Degraded    3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A4
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Controller    Status      Model              Temp(C)    FanSpeed
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>controller-0  Healthy     FA-m70-2U          38         45%
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>controller-1  Healthy     FA-m70-2U          42         52%
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Host                    Connection    Status      Paths
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>esx-host-01.prod        FC            Connected   4
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>esx-host-02.prod        FC            Connected   4
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>esx-host-03.prod        iSCSI         Connected   2
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>...
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>PodName              Status      Replication    ActiveCluster
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>pod-us-east-01       Synced      Healthy        primary
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>pod-us-west-01       Synced      Healthy        secondary
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
+<strong><code>Error: Array unreachable at 192.168.1.100</code></strong> — Verify network connectivity to the array management IP and confirm credentials are set via <code>pureauthenticate</code>.
+<strong><code>Error: Insufficient privileges for this operation</code></strong> — Ensure your user account has the required Pure Storage role permissions (typically "Administrator" or "Operator").</p>
+</div>
 <p>Attach <code>purediag</code> output to the case if phonehome is offline. If phonehome is active, inform the support engineer that the diagnostic bundle is available for remote pull.</p>
 <h2 id="sla-tiers">SLA Tiers<a class="headerlink" href="#sla-tiers" title="Permanent link">&para;</a></h2>
 <table>
@@ -8431,7 +8485,7 @@ Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

@@ -9535,14 +9535,28 @@ vSphere Client → vCenter → Configure → Key Providers → Add Standard Key 
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check vSAN network config for encryption mode</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Encryption Enabled: true
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Encryption Mode: AES-256
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Encryption Cipher: AES_XTS_256_V2
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Encryption Re-key Interval: 0
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Encryption Mode: AES-256
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Cipher Suite: AES_XTS_256_V2
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Re-key Interval (minutes): 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace vsan.</code></strong> — Verify vSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster list</code> to confirm vSAN membership.
+<strong><code>grep: (standard input) is empty</code></strong> — The vSAN cluster may not have encryption configured; run <code>esxcli vsan cluster get</code> without grep to see all encryption-related fields.</p>
+</div>
 <hr />
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
 <p>Regular key rotation limits exposure if keys are compromised. Rotate KEKs (not DEKs — DEK rotation would require full disk reformat).</p>
 <h3 id="rotate-keks">Rotate KEKs<a class="headerlink" href="#rotate-keks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Trigger KEK rotation on the cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Invoke-VsanClusterKeyRotation</span> <span class="n">-Configuration</span> <span class="nv">$vsanConfig</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Trigger KEK rotation on the cluster</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Invoke-VsanClusterKeyRotation</span> <span class="n">-Configuration</span> <span class="nv">$vsanConfig</span>
 </code></pre></div>
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
@@ -9568,12 +9582,26 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
 <p><strong>Mitigation:</strong> Always configure a clustered, redundant KMS with at least two nodes and a secondary KMS cluster in vCenter.</p>
 <h3 id="secure-drive-erase-on-disk-removal">Secure Drive Erase on Disk Removal<a class="headerlink" href="#secure-drive-erase-on-disk-removal" title="Permanent link">&para;</a></h3>
 <p>With vSAN D@RE enabled, removing a disk from the cluster does not require physical drive shredding. Destroying the DEK cryptographically erases all data on the disk — a process called crypto-erase.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>!!!<span class="w"> </span>danger<span class="w"> </span><span class="s2">&quot;Cryptographically destroys all data on disk group — irreversible&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>This<span class="w"> </span><span class="nb">command</span><span class="w"> </span>destroys<span class="w"> </span>the<span class="w"> </span>Data<span class="w"> </span>Encryption<span class="w"> </span>Key<span class="w"> </span><span class="o">(</span>DEK<span class="o">)</span><span class="w"> </span>and<span class="w"> </span>cryptographically<span class="w"> </span>erases<span class="w"> </span>all<span class="w"> </span>data<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>disk<span class="w"> </span>group.<span class="w"> </span>The<span class="w"> </span>data<span class="w"> </span>**cannot<span class="w"> </span>be<span class="w"> </span>recovered**<span class="w"> </span>after<span class="w"> </span>the<span class="w"> </span>DEK<span class="w"> </span>is<span class="w"> </span>destroyed.<span class="w"> </span>Ensure<span class="w"> </span>all<span class="w"> </span>required<span class="w"> </span>snapshots,<span class="w"> </span>backups,<span class="w"> </span>or<span class="w"> </span>replicas<span class="w"> </span>exist<span class="w"> </span>before<span class="w"> </span>running.<span class="w"> </span>This<span class="w"> </span>satisfies<span class="w"> </span>NIST<span class="w"> </span><span class="m">800</span>-88<span class="w"> </span>crypto-erase.
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Remove a disk group (DEK is destroyed, data is cryptographically erased)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;cache_ssd_naa&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>!!!<span class="w"> </span>danger<span class="w"> </span><span class="s2">&quot;Cryptographically destroys all data on disk group — irreversible&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>This<span class="w"> </span><span class="nb">command</span><span class="w"> </span>destroys<span class="w"> </span>the<span class="w"> </span>Data<span class="w"> </span>Encryption<span class="w"> </span>Key<span class="w"> </span><span class="o">(</span>DEK<span class="o">)</span><span class="w"> </span>and<span class="w"> </span>cryptographically<span class="w"> </span>erases<span class="w"> </span>all<span class="w"> </span>data<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>disk<span class="w"> </span>group.<span class="w"> </span>The<span class="w"> </span>data<span class="w"> </span>**cannot<span class="w"> </span>be<span class="w"> </span>recovered**<span class="w"> </span>after<span class="w"> </span>the<span class="w"> </span>DEK<span class="w"> </span>is<span class="w"> </span>destroyed.<span class="w"> </span>Ensure<span class="w"> </span>all<span class="w"> </span>required<span class="w"> </span>snapshots,<span class="w"> </span>backups,<span class="w"> </span>or<span class="w"> </span>replicas<span class="w"> </span>exist<span class="w"> </span>before<span class="w"> </span>running.<span class="w"> </span>This<span class="w"> </span>satisfies<span class="w"> </span>NIST<span class="w"> </span><span class="m">800</span>-88<span class="w"> </span>crypto-erase.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Remove a disk group (DEK is destroyed, data is cryptographically erased)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;cache_ssd_naa&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Removing disk group naa.5001b46d8c4a2f1e from vSAN cluster...
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Waiting for rebalance to complete...
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>[============================] 100%
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Disk group removed successfully.
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Data Encryption Key (DEK) destroyed.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>All data on disk group cryptographically erased.
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Operation completed in 47 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Disk group naa.5001b46d8c4a2f1e is not found</code></strong> — Verify the correct NAA identifier using <code>esxcli vsan storage list</code> before running the remove command.
+<strong><code>Error: Cannot remove disk group while rebalance is in progress</code></strong> — Wait for any ongoing vSAN rebalance operations to complete using <code>esxcli vsan cluster get</code> before attempting removal.
+<strong><code>Error: Permission denied</code></strong> — Run the command with root privileges or ensure your vSphere user account has the vSAN administrator role assigned.</p>
+</div>
 <p>After DEK destruction, even if the physical drive is accessed directly, the encrypted data cannot be recovered without the DEK. This satisfies NIST 800-88 crypto-erase for drive decommission.</p>
 <h3 id="audit-and-compliance">Audit and Compliance<a class="headerlink" href="#audit-and-compliance" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9619,12 +9647,27 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check KMS connectivity from ESXi host</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>kms.example.com<span class="w"> </span><span class="m">5696</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check encryption-related errors in VMkernel log</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|kmip\|kms&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check KMS connectivity from ESXi host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>kms.example.com<span class="w"> </span><span class="m">5696</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check encryption-related errors in VMkernel log</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|kmip\|kms&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Connection to kms.example.com 5696 port [tcp/*] succeeded!
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T09:23:47.123Z cpu14:66234)WARNING: KMS: KMS server kms.example.com responded with status code 200
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>2024-01-15T09:24:12.456Z cpu8:45821)INFO: KMIP: Successfully authenticated to KMS server
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2024-01-15T09:25:03.789Z cpu2:12045)INFO: Encryption: VM disk encryption enabled for vm-12345
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>2024-01-15T09:26:18.234Z cpu19:78901)WARNING: KMS: Certificate validation passed for kms.example.com
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>2024-01-15T09:27:45.567Z cpu5:34567)INFO: KMIP: Key retrieval successful, key ID: a7f3-9e2c-4b1d-8f6a
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>2024-01-15T09:28:22.891Z cpu11:56789)INFO: Encryption: vSAN encryption policy applied to cluster
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>2024-01-15T09:29:01.345Z cpu3:23456)INFO: KMS: Connection pool size: 4, active connections: 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: connect to kms.example.com port 5696 (tcp) failed: Connection refused</code></strong> — Verify the KMS server is running and listening on port 5696, and check firewall rules between the ESXi host and KMS server.
+<strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log path is ESXi-specific.
+<strong><code>WARNING: KMS: Failed to authenticate to KMS server: Certificate verification failed</code></strong> — Import the KMS server's root CA certificate into the ESXi host's certificate store using <code>esxcli system certificate store add -c /path/to/ca-cert.pem</code>.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../hardening/">vSAN — Hardening</a></li>
@@ -9652,7 +9695,7 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

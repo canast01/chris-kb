@@ -9693,6 +9693,13 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Diagnostics → Log Bundle → Download</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Look for hbr_server.log entries matching the stuck VM&#39;s moref ID</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection to target-vrs.example.local 31031 port [tcp/*] succeeded!
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: getaddrinfo for host "target-vrs.example.local" port 31031: Name or service not known</code></strong> — Verify the target VRS hostname is correct and resolvable in DNS, or use the IP address directly.
+<strong><code>Connection refused</code></strong> — Confirm the VRS replication service is running on the target appliance by checking service status via VAMI or SSH into the target VRS.</p>
+</div>
 <hr />
 <h2 id="move-a-replication-to-a-different-target-datastore">Move a Replication to a Different Target Datastore<a class="headerlink" href="#move-a-replication-to-a-different-target-datastore" title="Permanent link">&para;</a></h2>
 <p>Relocate a VM's replica files to a different datastore at the target site — for example, when decommissioning a datastore, rebalancing storage, or moving from HDD to SSD-backed storage.</p>
@@ -9772,18 +9779,43 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 <li>Repeat on the target site's VRA if bidirectional protection is needed.</li>
 <li>Verify in <strong>SRM → Summary</strong>: the VR server should appear as a registered replication provider.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Access VRA VAMI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>https://vra-source.example.local:5480
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>Configuration<span class="w"> </span>→<span class="w"> </span>Site<span class="w"> </span>Recovery<span class="w"> </span>Manager
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>SRM<span class="w"> </span>Server:<span class="w"> </span>srm-source.example.local
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>Port:<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>Username:<span class="w"> </span>administrator@vsphere.local
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>Password:<span class="w"> </span>••••••••
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>→<span class="w"> </span>Register
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify via SRM UI:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SRM<span class="w"> </span>→<span class="w"> </span>Summary<span class="w"> </span>→<span class="w"> </span>Replication<span class="w"> </span>→<span class="w"> </span>vSphere<span class="w"> </span>Replication<span class="w"> </span>Servers:<span class="w"> </span><span class="o">[</span>listed<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Access VRA VAMI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>https://vra-source.example.local:5480
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>Configuration<span class="w"> </span>→<span class="w"> </span>Site<span class="w"> </span>Recovery<span class="w"> </span>Manager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>SRM<span class="w"> </span>Server:<span class="w"> </span>srm-source.example.local
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>Port:<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>Username:<span class="w"> </span>administrator@vsphere.local
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>Password:<span class="w"> </span>••••••••
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>→<span class="w"> </span>Register
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify via SRM UI:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>SRM<span class="w"> </span>→<span class="w"> </span>Summary<span class="w"> </span>→<span class="w"> </span>Replication<span class="w"> </span>→<span class="w"> </span>vSphere<span class="w"> </span>Replication<span class="w"> </span>Servers:<span class="w"> </span><span class="o">[</span>listed<span class="o">]</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Configuration → Site Recovery Manager
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  SRM Server: srm-source.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Port: 443
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Username: administrator@vsphere.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Status: Connected
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Registration Status: Successfully registered
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Last Heartbeat: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>SRM → Summary → Replication
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  vSphere Replication Servers:
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    - vra-source.example.local (v8.7.0.1)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      Status: Online
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      Replicated VMs: 47
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      RPO Health: Good
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    - vra-recovery.example.local (v8.7.0.1)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      Status: Online
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      Replicated VMs: 43
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>      RPO Health: Good
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused on srm-source.example.local:443</code></strong> — Verify SRM service is running with <code>systemctl status srm</code> on the SRM server and confirm firewall rules allow port 443 from VRA.
+<strong><code>Authentication failed for administrator@vsphere.local</code></strong> — Confirm the vCenter SSO password is current and the account has SRM Administrator role assigned in the SRM UI.
+<strong><code>Certificate validation failed: self-signed certificate</code></strong> — Accept the self-signed certificate warning in your browser or import the SRM server's CA certificate into the VRA VAMI trusted store.</p>
+</div>
 <hr />
 <h2 id="verify-vr-appliance-registration">Verify VR Appliance Registration<a class="headerlink" href="#verify-vr-appliance-registration" title="Permanent link">&para;</a></h2>
 <p>Confirms that the VRA is correctly registered with vCenter and SRM. Run this check after deploying a new VRA, after a site recovery, or during routine DR health checks.</p>
@@ -9825,12 +9857,27 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 <li>Check the <strong>VRS health</strong> under <strong>vSphere Replication → Replication Servers</strong>: all appliances should show <code>Connected</code>.</li>
 <li>Export or screenshot the summary for DR health documentation.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via vSphere API / PowerCLI — list replication status for all VMs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Connect-VIServer<span class="w"> </span>vcenter-source.example.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$vrService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span>-ViewType<span class="w"> </span>ServiceInstance
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Use Hbr API or SRM API for programmatic status — requires SRM PowerCLI module:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Get-SRMProtectionGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SRMVM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>LastError
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Via vSphere API / PowerCLI — list replication status for all VMs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Connect-VIServer<span class="w"> </span>vcenter-source.example.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$vrService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span>-ViewType<span class="w"> </span>ServiceInstance
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Use Hbr API or SRM API for programmatic status — requires SRM PowerCLI module:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Get-SRMProtectionGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SRMVM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>LastError
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                                    State                LastError
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>----                                    -----                ----------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>web-app-prod-01                         Protected            
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>db-backup-vm-02                         Protected            
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>legacy-app-test-03                      Protected            
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>mail-server-04                          FailureToConnect     Connection timeout to replica site
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>storage-vm-05                           Protected            
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The term 'Get-SRMProtectionGroup' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Install the SRM PowerCLI module via <code>Install-Module -Name VMware.VimAutomation.Srm</code> and import it with <code>Import-Module VMware.VimAutomation.Srm</code>.
+<strong><code>Connect-VIServer : Cannot find a vCenter Server system at 'vcenter-source.example.local'. The server may not be reachable or credentials may be invalid.</code></strong> — Verify the vCenter hostname/IP is correct and reachable, then retry with explicit credentials: <code>Connect-VIServer -Server vcenter-source.example.local -Credential (Get-Credential)</code>.
+<strong><code>Get-SRMProtectionGroup : The SRM server is not registered or not responding.</code></strong> — Confirm SRM is installed and running on the recovery site, and that the SRM PowerCLI module is connected to the correct SRM instance via <code>Connect-SrmServer</code>.</p>
+</div>
 <hr />
 <h2 id="check-individual-vm-replication-status">Check Individual VM Replication Status<a class="headerlink" href="#check-individual-vm-replication-status" title="Permanent link">&para;</a></h2>
 <p>Drill into a specific VM's replication details to assess sync health, last sync time, and current RPO compliance.</p>
@@ -9897,12 +9944,19 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 <li>Check VRS resource usage in the VAMI (<code>https://&lt;vra-ip&gt;:5480 → Monitoring</code>).</li>
 <li>After remediation, monitor the replication through 2–3 consecutive sync cycles to confirm the violation clears.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Estimate required bandwidth for a given VM and RPO</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Formula: (Daily change rate GB × 8 bits) / (RPO seconds) = required Mbps</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Example: 50 GB/day change rate, 1-hour RPO</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; (50 * 8 * 1024) / (3600)&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Result: ~113 Mbps minimum sustained bandwidth required</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Estimate required bandwidth for a given VM and RPO</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Formula: (Daily change rate GB × 8 bits) / (RPO seconds) = required Mbps</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Example: 50 GB/day change rate, 1-hour RPO</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; (50 * 8 * 1024) / (3600)&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Result: ~113 Mbps minimum sustained bandwidth required</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>113.78
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: bc</code></strong> — Install bc with <code>apt-get install bc</code> (Debian/Ubuntu) or <code>yum install bc</code> (RHEL/CentOS).
+<strong><code>(standard_in) 1: syntax error</code></strong> — Ensure the echo string is properly quoted and the division syntax is correct; use <code>bc -l</code> for floating-point math if needed.</p>
+</div>
 <hr />
 <h2 id="failback-a-replicated-vm-after-srm-recovery">Failback a Replicated VM (after SRM recovery)<a class="headerlink" href="#failback-a-replicated-vm-after-srm-recovery" title="Permanent link">&para;</a></h2>
 <p>After an SRM-initiated failover, the VM is running at the recovery site. Failback returns the VM to the original source site once the source site is restored.</p>
@@ -9979,8 +10033,8 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 </ol>
 <h3 id="step-5-validate-replications">Step 5 — Validate Replications<a class="headerlink" href="#step-5-validate-replications" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 5 — Validate Replications" src="../../../../../assets/vsphere-replication-proc-step-5-validate-replications.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all replications resumed after the VRA upgrade</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># In vCenter: Site Recovery → Replications — all replications should return to &quot;OK&quot; within one cycle</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check all replications resumed after the VRA upgrade</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># In vCenter: Site Recovery → Replications — all replications should return to &quot;OK&quot; within one cycle</span>
 </code></pre></div>
 <ul>
 <li>[ ] VRA version shows the new version in Site Recovery UI</li>
@@ -10015,9 +10069,9 @@ Use array-level snapshot and transport (SRDF, SnapMirror, or similar) to copy th
 <p>vSphere Replication will calculate the delta between the source and the seed and transfer only the changed blocks, dramatically reducing initial sync time.</p>
 <h3 id="step-3-monitor-initial-sync">Step 3 — Monitor Initial Sync<a class="headerlink" href="#step-3-monitor-initial-sync" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Monitor Initial Sync" src="../../../../../assets/vsphere-replication-proc-step-3-monitor-initial-sync.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Monitor sync progress in vCenter: Site Recovery → Replications → select VM</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># &quot;Syncing&quot; status shows transfer bytes and estimated completion</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Once &quot;OK&quot;, full replication protection is active</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Monitor sync progress in vCenter: Site Recovery → Replications → select VM</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># &quot;Syncing&quot; status shows transfer bytes and estimated completion</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Once &quot;OK&quot;, full replication protection is active</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -10054,7 +10108,7 @@ Use array-level snapshot and transport (SRDF, SnapMirror, or similar) to copy th
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

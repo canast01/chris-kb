@@ -9311,6 +9311,20 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check which objects own absent components</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>absent
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                                    Health Status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vsan-health-check-vsan-cluster-health   absent
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vsan-health-check-vsan-physical-disk    absent
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vsan-health-check-vsan-object-health    absent
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Object UUID                              Owner Node    Status
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>52e4c8f1-a2b4-4d7e-9c1f-8b3a2e5d6f9a   esx-node-02   absent
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>7f9d2c1e-5a3b-4c6d-8e9f-1a2b3c4d5e6f   esx-node-04   absent
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the ESXi host is vSAN-enabled and the vSAN service is running with <code>systemctl status vsanvpd</code>.
+<strong><code>Error: Unknown command or namespace vsan.debug</code></strong> — Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts.</p>
+</div>
 <p><strong>Risk during ABSENT:</strong> The object is running with reduced redundancy but is fully accessible. One more failure of a different component means data loss (for FTT=1 objects). For FTT=2, one absent + one degraded still leaves the object accessible.</p>
 <hr />
 <h3 id="degraded">DEGRADED<a class="headerlink" href="#degraded" title="Permanent link">&para;</a></h3>
@@ -9322,15 +9336,35 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 - Host permanently removed from the cluster</p>
 <p><strong>What vSAN does:</strong> CLOM schedules a rebuild. It selects a target host and disk group with sufficient free capacity to place the new component. The object transitions to REBUILDING.</p>
 <p><strong>What you should do:</strong> Monitor resync. If the rebuild does not start within 5–10 minutes of the state changing to DEGRADED, check capacity headroom and cluster health.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List degraded objects</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>degraded
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check resync queue — rebuild should appear here</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check capacity — rebuild requires free space</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Free Capacity&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List degraded objects</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>degraded
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check resync queue — rebuild should appear here</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check capacity — rebuild requires free space</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Free Capacity&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Object UUID                          Health State      Policy
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>52a4c8f1-7d2e-4a9c-b1e3-9f2c6d8a1b3c Degraded         raid1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>7c9e3f2a-1b4d-8c6e-9a2f-5d3c1e8b4a7f Degraded         raid5
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6 Degraded         raid1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Resync Queue Summary:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Total objects to resync: 3
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Objects currently resyncing: 1
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Estimated time remaining: 45 minutes
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Resync rate: 125 MB/s
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Used Capacity: 2.8 TB
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Free Capacity: 1.2 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run <code>esxcli vsan cluster get</code> to verify.
+<strong><code>Error: Unknown command or namespace</code></strong> — Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active.
+<strong><code>Resync Queue Summary: (empty)</code></strong> — This is normal if no objects are degraded; check actual object health with <code>esxcli vsan object list</code> to confirm cluster state.</p>
+</div>
 <p><strong>Risk during DEGRADED:</strong> The object has zero redundancy for FTT=1. Any further failure of the remaining component causes data loss and the object becomes INACCESSIBLE. Treat all DEGRADED objects as P1 until rebuild completes.</p>
 <hr />
 <h3 id="stale">STALE<a class="headerlink" href="#stale" title="Permanent link">&para;</a></h3>
@@ -9341,13 +9375,20 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 - Host exits maintenance mode (Ensure Accessibility mode — data was not fully migrated)</p>
 <p><strong>What vSAN does:</strong> CLOM schedules a delta-sync — only the changed blocks need to be copied, not the full object. This is significantly faster than a full rebuild.</p>
 <p><strong>What you should do:</strong> Wait. STALE components resolve automatically via delta-sync. Do not remove the disk or the host while sync is in progress.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># STALE components appear in resync list</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stale
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor delta-sync completion</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># STALE components appear in resync list</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stale
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Monitor delta-sync completion</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
 </code></pre></div>
-<p><strong>Risk during STALE:</strong> The object remains accessible — reads go to the up-to-date copies while the STALE component syncs. Protection is temporarily reduced (similar to DEGRADED) but recovery is faster because data already exists on the disk.</p>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>STALE components appear in resync list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Object UUID: 52e4f1a8-7c3a-4d92-b1e2-9f8c6d2a1b4e, Component UUID: a3b2c1d0-e5f4-4a3b-9c8d-7e6f5a4b3c2d, Status: STALE
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Object UUID: 7f6e5d4c-3b2a-1a0f-9e8d-7c6b5a4f3e2d, Component UUID: b4c3d2e1-f6a5-5b4c-0d9e-8f7a6b5c4d3e, Status: STALE
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Object UUID: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d, Component UUID: c5d4e3f2-a7b6-6c5d-1e0f-9a8b7c6d5e4f, Status: STALE
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Every 30.0s: esxcli vsan debug resync summary get
+</code></pre></div>
+<strong>Risk during STALE:</strong> The object remains accessible — reads go to the up-to-date copies while the STALE component syncs. Protection is temporarily reduced (similar to DEGRADED) but recovery is faster because data already exists on the disk.</p>
 <hr />
 <h3 id="rebuilding">REBUILDING<a class="headerlink" href="#rebuilding" title="Permanent link">&para;</a></h3>
 <p><strong>What it means:</strong> vSAN is actively writing a new component to replace a DEGRADED one. Data is being copied from the healthy component(s) to a new location.</p>
@@ -9357,47 +9398,75 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 - After rebalance operation moves a component to a different host</p>
 <p><strong>What vSAN does:</strong> Copies data from remaining healthy components to the new target location. During rebuild, I/O continues normally — the VM is not paused. However, rebuild I/O competes with VM workload I/O.</p>
 <p><strong>What you should do:</strong> Monitor progress. Do not perform further changes to the cluster (adding/removing hosts or disks) until rebuild completes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Monitor rebuild progress</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Shows: Active resyncing components, bytes remaining, estimated time</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Detailed per-object rebuild status</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Monitor rebuild progress</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Shows: Active resyncing components, bytes remaining, estimated time</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Detailed per-object rebuild status</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Active Resyncing Components: 12
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Bytes Remaining: 847.3 GB
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Estimated Time Remaining: 2h 14m
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Resync Rate: 104.5 MB/s
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Objects Being Resynced: 8
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Cluster UUID: 52d4a8f0-7c2a-4d91-b3e2-1a9c8f7e6d5b
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Object UUID                              Object Name          Bytes Remaining  Progress
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>52d4a8f0-7c2a-4d91-b3e2-1a9c8f7e6d5b    vm-prod-01.vmdk      156.2 GB         45%
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>7f3e1b9c-8d2a-4f91-c3e2-2b0d9g8f7e6c    vm-prod-02.vmdk      203.5 GB         32%
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>8g4f2c0d-9e3b-5g02-d4f3-3c1e0h9g8f7d    vm-backup-01.vmdk    187.8 GB         28%
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>9h5g3d1e-0f4c-6h13-e5g4-4d2f1i0h9g8e    vm-test-01.vmdk      124.6 GB         61%
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>0i6h4e2f-1g5d-7i24-f6h5-5e3g2j1i0h9f    vm-dev-01.vmdk       175.2 GB         38%
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vsan cluster is not healthy</code></strong> — Verify all hosts are online and network connectivity is stable with <code>esxcli vsan cluster get</code>.
+<strong><code>Permission denied</code></strong> — Run the command with root privileges or ensure your vSphere user has the required VSAN administrator role.</p>
+</div>
 <p><strong>Throttle rebuild during business hours:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Limit rebuild to 500 IOPS (reduce VM impact)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Remove throttle during off-hours for faster completion</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Limit rebuild to 500 IOPS (reduce VM impact)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remove throttle during off-hours for faster completion</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace vsan debug resync</code></strong> — Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host.
+<strong><code>Error: The object or item could not be found</code></strong> — Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands.</p>
+</div>
 <p><strong>Risk during REBUILDING:</strong> Same as DEGRADED — the object still has only one copy until the rebuild completes. Do not perform any maintenance on other hosts during a rebuild unless it is unavoidable.</p>
 <hr />
 <h2 id="state-transition-diagram">State Transition Diagram<a class="headerlink" href="#state-transition-diagram" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>                    Host rebooted / network partition
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                              │
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                              ▼
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                          ABSENT
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                     (clomRepairDelay timer)
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                         /          \
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>              Host returns        Timer expires
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>              (&lt; 60 min)          (default 60 min)
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                  │                      │
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                  ▼                      ▼
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>               HEALTHY             DEGRADED
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                                        │
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                              CLOM schedules rebuild
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                                        │
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                        ▼
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                                  REBUILDING
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                                        │
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                              Rebuild completes
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                                        │
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                                        ▼
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                                    HEALTHY
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Host returns after write-divergence:
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    ABSENT → (reconnect) → STALE → (delta-sync) → HEALTHY
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>                    Host rebooted / network partition
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>                              │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>                              ▼
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                          ABSENT
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>                     (clomRepairDelay timer)
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>                         /          \
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>              Host returns        Timer expires
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>              (&lt; 60 min)          (default 60 min)
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>                  │                      │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>                  ▼                      ▼
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>               HEALTHY             DEGRADED
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>                                        │
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>                              CLOM schedules rebuild
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>                                        │
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                                        ▼
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>                                  REBUILDING
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>                                        │
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>                              Rebuild completes
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>                                        │
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>                                        ▼
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>                                    HEALTHY
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>Host returns after write-divergence:
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>    ABSENT → (reconnect) → STALE → (delta-sync) → HEALTHY
 </code></pre></div>
 <hr />
 <h2 id="the-clomrepairdelay-timer">The clomRepairDelay Timer<a class="headerlink" href="#the-clomrepairdelay-timer" title="Permanent link">&para;</a></h2>
@@ -9438,12 +9507,21 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </tbody>
 </table>
 <p><strong>Adjust the timer:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View current value</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>repair
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set via vCenter UI</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Cluster → Configure → vSAN → Advanced Options → clomRepairDelay</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># View current value</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>repair
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Set via vCenter UI</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Cluster → Configure → vSAN → Advanced Options → clomRepairDelay</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Repair Delay (seconds): 60
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Repair Timer: enabled
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Automatic Repair: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace vsan</code></strong> — Ensure vSAN is licensed and enabled on the cluster, and run the command on an ESXi host that is part of the vSAN cluster.
+<strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host has network connectivity to other cluster members and that vSAN clustering is properly initialized with <code>esxcli vsan cluster list</code>.</p>
+</div>
 <hr />
 <h2 id="when-objects-become-inaccessible">When Objects Become INACCESSIBLE<a class="headerlink" href="#when-objects-become-inaccessible" title="Permanent link">&para;</a></h2>
 <p>INACCESSIBLE is not a component state — it is an object-level state that occurs when there are no accessible copies of a component remaining. The VM stops responding to I/O.</p>
@@ -9456,12 +9534,26 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 2. Check which hosts are unreachable and restore connectivity first.
 3. If a host hardware failure caused it, restore the host rather than immediately decommissioning.
 4. If data is genuinely lost, restore from backup.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Identify inaccessible objects</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check which components are involved</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Identify inaccessible objects</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check which components are involved</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Object UUID                              Inaccessible Components
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>52a4c8f1-2b3e-4a9c-b1d2-7f8e9c0a1b2c    1
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>7c9d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f    2
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c    3
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Component UUID                           Inaccessible Count
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>a1b2c3d4-e5f6-7a8b-9c0d-1e2f-3a4b5c6d   1
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>d4e5f6a7-b8c9-d0e1-f2a3-b4c5-d6e7f8a9   2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the VSAN cluster is healthy and the ESXi host has VSAN enabled by running <code>esxcli vsan cluster get</code>.
+<strong><code>Unknown command or namespace</code></strong> — Ensure you are running this command on a VSAN-enabled ESXi host with VSAN service running; check with <code>esxcli vsan cluster get</code>.</p>
+</div>
 <p>Escalate immediately to VMware GSS for any inaccessible object state — see Troubleshooting → Escalation.</p>
 
 
@@ -9485,7 +9577,7 @@ How vSAN classifies each object component's health — from the initial ABSENT s
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7561,168 +7561,420 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometh
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>ls<span class="w"> </span>/tmp/must-gather/must-gather.local.*/
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>cat<span class="w"> </span>/tmp/must-gather/must-gather.local.*/cluster-info/clusterversion
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ oc adm must-gather --dest-dir=/tmp/must-gather
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gathering data...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Gathering data for ns/openshift-etcd...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Gathering data for ns/openshift-apiserver...
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Gathering data for ns/openshift-controller-manager...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Gathering data for ns/openshift-kube-apiserver...
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Gathering data for ns/openshift-monitoring...
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Gathering data for ns/openshift-network-operator...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Gathering data for ns/openshift-ovn-kubernetes...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Gathering data for ns/openshift-sdn...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Gathering data for ns/openshift-kube-scheduler...
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Gathering data for ns/openshift-kube-controller-manager...
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>...
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>must-gather collection complete, output available in /tmp/must-gather/must-gather.local.20240315-143022/
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>$ tar czf must-gather-2024-03-15-1430.tar.gz /tmp/must-gather/
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>$ ls /tmp/must-gather/must-gather.local.*/
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>audit_logs  cluster-info  etcd  namespaces  network  nodes  pods
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>$ cat /tmp/must-gather/must-gather.local.20240315-143022/cluster-info/clusterversion
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>apiVersion: config.openshift.io/v1
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>kind: ClusterVersion
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>metadata:
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  name: version
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>status:
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  desired:
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    image: quay.io/openshift-release-dev/ocp-release:4.14.8-x86_64
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    version: 4.14.8
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  history:
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  - image: quay.io/openshift-release-dev/ocp-release:4.14.8-x86_64
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    version: 4.14.8
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    state: Completed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to find image "registry.redhat.io/ocs4/ocs-must-gather-rhel8" locally</code></strong> — Ensure the cluster has pull credentials for registry.redhat.io and the image name matches your OCS/ODF version (e.g., ocs-must-gather-rhel9 for OCS 4.13+).
+<strong><code>error: open /tmp/must-gather: permission denied</code></strong> — Run the command with appropriate permissions or specify a writable destination directory (e.g., <code>--dest-dir=$HOME/must-gather</code>).
+<strong><code>error: unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host</code></strong> — Verify kubeconfig is set correctly with <code>oc config current-context</code> and the cluster API endpoint is reachable.</p>
+</div>
 <h2 id="oc-adm-inspect-targeted">oc adm inspect (Targeted)<a class="headerlink" href="#oc-adm-inspect-targeted" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collect specific cluster operator state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/etcd<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/etcd-inspect
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/ingress<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/ingress-inspect
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/authentication<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/auth-inspect
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/kube-apiserver<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/apiserver-inspect
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Collect full namespace (faster than must-gather for single namespace issues)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/monitoring
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-dns<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/dns
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Collect a specific resource</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>deployment/prometheus-operator<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Inspect all failure events cluster-wide</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--field-selector<span class="w"> </span><span class="nv">reason</span><span class="o">=</span>Failed<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
-</code></pre></div>
-<h2 id="metrics-based-diagnostics">Metrics-Based Diagnostics<a class="headerlink" href="#metrics-based-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Node resource usage</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Pod memory usage across all namespaces sorted by highest memory</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Collect specific cluster operator state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/etcd<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/etcd-inspect
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/ingress<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/ingress-inspect
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/authentication<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/auth-inspect
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/kube-apiserver<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/apiserver-inspect
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Pod CPU usage across all namespaces sorted by highest CPU</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Run a Prometheus instant query directly against the in-cluster Prometheus</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s1">&#39;etcd_disk_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;}&#39;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># etcd backend commit latency (should be &lt; 25ms P99)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s1">&#39;histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))&#39;</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># OOM events on nodes (node-level memory pressure)</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="s1">&#39;kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;}&#39;</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># API server error rate</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s1">&#39;sum(rate(apiserver_request_total{code=~&quot;5..&quot;}[5m])) by (resource, verb)&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Collect full namespace (faster than must-gather for single namespace issues)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/monitoring
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-dns<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/dns
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Collect a specific resource</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>deployment/prometheus-operator<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Inspect all failure events cluster-wide</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--field-selector<span class="w"> </span><span class="nv">reason</span><span class="o">=</span>Failed<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>inspecting clusteroperator/etcd
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  clusteroperator/etcd
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  deployment/etcd-quorum-guard -n openshift-etcd
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  statefulset/etcd -n openshift-etcd
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  pod/etcd-ip-10-0-145-23.ec2.internal -n openshift-etcd
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  pod/etcd-ip-10-0-156-44.ec2.internal -n openshift-etcd
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  pod/etcd-ip-10-0-167-89.ec2.internal -n openshift-etcd
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>inspecting clusteroperator/ingress
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  clusteroperator/ingress
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  deployment/router-default -n openshift-ingress
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  service/router-default -n openshift-ingress
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>inspecting clusteroperator/authentication
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  clusteroperator/authentication
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  deployment/oauth-openshift -n openshift-authentication
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  pod/oauth-openshift-7d4f8c9b2-xk9mj -n openshift-authentication
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>inspecting clusteroperator/kube-apiserver
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  clusteroperator/kube-apiserver
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  kubeapiserver/cluster
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  pod/kube-apiserver-ip-10-0-145-23.ec2.internal -n openshift-kube-apiserver
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  pod/kube-apiserver-ip-10-0-156-44.ec2.internal -n openshift-kube-apiserver
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>inspecting namespace/openshift-monitoring
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  namespace/openshift-monitoring
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  deployment/prometheus-operator -n openshift-monitoring
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  statefulset/prometheus-k8s -n openshift-monitoring
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  pod/prometheus-operator-5c8d6f7b9-lmk2p -n openshift-monitoring
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  pod/prometheus-k8s-0 -n openshift-monitoring
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>inspecting namespace/openshift-dns
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  namespace/openshift-dns
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  daemonset/dns-default -n openshift-dns
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  pod/dns-default-4xk8m -n openshift-dns
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  pod/dns-default-7jn2p -n openshift-dns
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>inspecting deployment/prometheus-operator -n openshift-monitoring
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  deployment/prometheus-operator
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  pod/prometheus-operator-5c8d6f7b9-lmk2p -n openshift-monitoring
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>NAMESPACE                    NAME                                              REASON    AGE
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>openshift-kube-apiserver     pod/kube-apiserver-ip-10-0-145-23.ec2.internal   Failed    12m
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>openshift-etcd               pod/etcd-ip-10-0-156-44.ec2.internal             Failed    8m
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>openshift-monitoring         pod/prometheus-k8s-0                              Failed    5m
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>openshift-ingress            pod/router-default-9k4lm                          Failed    3m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "clusteroperator"</code></strong> — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc version</code> and check cluster API availability.
+<strong><code>error: unable to write to /tmp/etcd-inspect: permission denied</code></strong> — Run the command with appropriate permissions or specify a writable destination directory like <code>$HOME/inspect-output</code>.
+**`error: no resources found in openshift</p>
+</div>
+<h2 id="metrics-based-diagnostics">Metrics-Based Diagnostics<a class="headerlink" href="#metrics-based-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Node resource usage</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Pod memory usage across all namespaces sorted by highest memory</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Pod CPU usage across all namespaces sorted by highest CPU</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Run a Prometheus instant query directly against the in-cluster Prometheus</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="s1">&#39;etcd_disk_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;}&#39;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># etcd backend commit latency (should be &lt; 25ms P99)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s1">&#39;histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))&#39;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># OOM events on nodes (node-level memory pressure)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="s1">&#39;kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;}&#39;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># API server error rate</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span>http://localhost:9090<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span><span class="s1">&#39;sum(rate(apiserver_request_total{code=~&quot;5..&quot;}[5m])) by (resource, verb)&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NAME                                    CPU(cores)   MEMORY(Mi)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>master-0.example.com                    1245m        8932Mi
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>master-1.example.com                    1089m        8156Mi
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>worker-0.example.com                    892m         6234Mi
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>worker-1.example.com                    756m         5891Mi
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>worker-2.example.com                    634m         4127Mi
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>NAMESPACE                NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>openshift-etcd           etcd-master-0                           892      1456
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>openshift-apiserver      apiserver-master-1                      756      2134
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>openshift-monitoring     prometheus-k8s-0                        634      3892
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>openshift-kube-scheduler scheduler-master-0                      445      892
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>openshift-controller-mgr controller-manager-master-2             389      1023
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>...
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>NAMESPACE                NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>openshift-monitoring     prometheus-k8s-0                        1245     3892
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>openshift-etcd           etcd-master-0                           892      1456
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>openshift-apiserver      apiserver-master-1                      756      2134
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>openshift-kube-scheduler scheduler-master-0                      445      892
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>openshift-controller-mgr controller-manager-master-2             389      1023
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>...
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>etcd_disk_wal_fsync_duration_seconds{instance=&quot;10.0.1.15:2379&quot;,job=&quot;prometheus-k8s&quot;} =&gt; 0.0234 @1699564892.123
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m])) =&gt; 0.0189 @1699564892.123
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;,pod=&quot;worker-pod-xyz&quot;,namespace=&quot;default&quot;} =&gt; 2 @1699564892.123
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>{resource=&quot;pods&quot;,verb=&quot;create&quot;} =&gt; 0.00234 @1699564892.123
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>{resource=&quot;nodes&quot;,verb=&quot;get&quot;} =&gt; 0.00089 @1699564892.123
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: metrics not available yet</code></strong> — Wait 2-3 minutes after cluster startup for Prometheus to collect initial metrics, then retry the query.
+<strong><code>Error executing remote command: command terminated with exit code 1</code></strong> — Verify the prometheus-k8s-0 pod is running with <code>oc get pod -n openshift-monitoring prometheus-k8s-0</code> and check pod logs with <code>oc logs -n openshift-monitoring prometheus-k8s-0</code>.
+<strong><code>error: unable to connect to the server: dial tcp: lookup prometheus-k8s-0 on [IP]: no such host</code></strong> — Ensure you are connected to the correct cluster context with <code>oc config current-context</code> and the openshift-monitoring namespace exists.</p>
+</div>
 <h2 id="etcd-diagnostics">etcd Diagnostics<a class="headerlink" href="#etcd-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get etcd pod</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Helper function for etcdctl inside the etcd pod</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>etcdctl_cmd<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>etcdctl<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span>hostname<span class="k">)</span>.key
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="o">}</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Member list — verify all 3 masters are members</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>etcdctl_cmd<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>table
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Endpoint health — all endpoints should be healthy</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Endpoint status — DB SIZE, IS LEADER, RAFT_TERM</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Compact and defrag if DB &gt; 8 GB</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nv">REV</span><span class="o">=</span><span class="k">$(</span>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[0][&#39;Status&#39;][&#39;header&#39;][&#39;revision&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>etcdctl_cmd<span class="w"> </span>compact<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>etcdctl_cmd<span class="w"> </span>defrag<span class="w"> </span>--cluster
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get etcd pod</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Helper function for etcdctl inside the etcd pod</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>etcdctl_cmd<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>etcdctl<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span>hostname<span class="k">)</span>.key
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="o">}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Member list — verify all 3 masters are members</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>etcdctl_cmd<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>table
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Endpoint health — all endpoints should be healthy</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Endpoint status — DB SIZE, IS LEADER, RAFT_TERM</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># Compact and defrag if DB &gt; 8 GB</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nv">REV</span><span class="o">=</span><span class="k">$(</span>etcdctl_cmd<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[0][&#39;Status&#39;][&#39;header&#39;][&#39;revision&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>etcdctl_cmd<span class="w"> </span>compact<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>etcdctl_cmd<span class="w"> </span>defrag<span class="w"> </span>--cluster
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pod/etcd-ip-10-0-1-45.ec2.internal
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>+------------------+---------+-------+----------+-----+----------+
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>| ID               | STATUS  | NAME  | PEER URL | ... | LEARNER  |
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>+------------------+---------+-------+----------+-----+----------+
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>| 8f3c2a1b5d9e4f6 | started | etcd0 | https... |     | false    |
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>| 7e2b1a9c4d8f3e5 | started | etcd1 | https... |     | false    |
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>| 6d1a0b8c3e7f2d4 | started | etcd2 | https... |     | false    |
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>+------------------+---------+-------+----------+-----+----------+
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>https://10.0.1.45:2379 is healthy: successfully committed proposal: took = 12.456ms
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>https://10.0.1.46:2379 is healthy: successfully committed proposal: took = 11.234ms
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>https://10.0.1.47:2379 is healthy: successfully committed proposal: took = 13.891ms
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>+------------------+----------+--------+--------+--------+
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>| ENDPOINT         | ID       | VERSION | DB SIZE | IS LEADER |
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>+------------------+----------+--------+--------+--------+
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>| https://10.0.1.45:2379 | 8f3c2a1b | 3.5.9   | 2.1 GB  | true      |
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>| https://10.0.1.46:2379 | 7e2b1a9c | 3.5.9   | 2.0 GB  | false     |
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>| https://10.0.1.47:2379 | 6d1a0b8c | 3.5.9   | 2.2 GB  | false     |
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>+------------------+----------+--------+--------+--------+
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>compacted revision 4521847
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Finished defragmenting etcd member [8f3c2a1b5d9e4f6] in 8.234s
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Finished defragmenting etcd member [7e2b1a9c4d8f3e5] in 7.891s
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Finished defragmenting etcd member [6d1a0b8c3e7f2d4] in 8.456s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to match a volume mount in pod openshift-etcd/etcd-ip-10-0-1-45.ec2.internal for /etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/</code></strong> — Verify the certificate path exists in the pod with <code>oc rsh -n openshift-etcd &lt;pod&gt; ls -la /etc/kubernetes/static-pod-certs/secrets/</code> and adjust the path if using a different OpenShift version.
+<strong><code>Error: context deadline exceeded</code></strong> — The etcd cluster is overloaded or unhealthy; check member health with <code>etcdctl_cmd member list</code> and verify all three masters are running before retrying.
+<strong><code>Error: failed to dial default: context deadline exceeded</code></strong> — Ensure network connectivity between the control plane nodes and that the etcd service is listening on port 2379 with `oc rsh -n openshift-et</p>
+</div>
 <h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test pod-to-service connectivity</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>source-ns<span class="w"> </span>source-pod<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>curl<span class="w"> </span>-v<span class="w"> </span>http://target-service.target-ns.svc.cluster.local
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test DNS resolution from a pod</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Debug CoreDNS</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-l<span class="w"> </span>dns.operator.openshift.io/daemonset-dns<span class="w"> </span>--tail<span class="o">=</span><span class="m">30</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># OVN-Kubernetes diagnostics</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>&lt;ovnkube-master-pod&gt;<span class="w"> </span>-c<span class="w"> </span>nbdb<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>&lt;ovnkube-node-pod&gt;<span class="w"> </span>-c<span class="w"> </span>ovnkube-node<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># OVN flow trace — determine why traffic is dropped</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>ovnkube-node-&lt;hash&gt;<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>ovn-trace<span class="w"> </span>--ovs<span class="w"> </span><span class="s2">&quot;inport=&lt;logical-port&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="s2">&quot;eth.dst == &lt;mac&gt;, ip4.src == &lt;src-ip&gt;, ip4.dst == &lt;dst-ip&gt;, tcp.dst == 80&quot;</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Capture packets on a node for offline analysis</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>chroot<span class="w"> </span>/host
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>ens192<span class="w"> </span>-w<span class="w"> </span>/host/tmp/capture.pcap<span class="w"> </span>host<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span>and<span class="w"> </span>port<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># Copy pcap off node:</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>oc<span class="w"> </span>cp<span class="w"> </span>&lt;debug-pod&gt;:/host/tmp/capture.pcap<span class="w"> </span>/tmp/capture.pcap
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Check NetworkPolicy is not blocking traffic</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>oc<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>oc<span class="w"> </span>describe<span class="w"> </span>networkpolicy<span class="w"> </span>&lt;np&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test pod-to-service connectivity</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>source-ns<span class="w"> </span>source-pod<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>curl<span class="w"> </span>-v<span class="w"> </span>http://target-service.target-ns.svc.cluster.local
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Test DNS resolution from a pod</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Debug CoreDNS</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-l<span class="w"> </span>dns.operator.openshift.io/daemonset-dns<span class="w"> </span>--tail<span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># OVN-Kubernetes diagnostics</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>&lt;ovnkube-master-pod&gt;<span class="w"> </span>-c<span class="w"> </span>nbdb<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>&lt;ovnkube-node-pod&gt;<span class="w"> </span>-c<span class="w"> </span>ovnkube-node<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># OVN flow trace — determine why traffic is dropped</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>ovnkube-node-&lt;hash&gt;<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>ovn-trace<span class="w"> </span>--ovs<span class="w"> </span><span class="s2">&quot;inport=&lt;logical-port&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span><span class="s2">&quot;eth.dst == &lt;mac&gt;, ip4.src == &lt;src-ip&gt;, ip4.dst == &lt;dst-ip&gt;, tcp.dst == 80&quot;</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Capture packets on a node for offline analysis</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>chroot<span class="w"> </span>/host
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>ens192<span class="w"> </span>-w<span class="w"> </span>/host/tmp/capture.pcap<span class="w"> </span>host<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span>and<span class="w"> </span>port<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1"># Copy pcap off node:</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>oc<span class="w"> </span>cp<span class="w"> </span>&lt;debug-pod&gt;:/host/tmp/capture.pcap<span class="w"> </span>/tmp/capture.pcap
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="c1"># Check NetworkPolicy is not blocking traffic</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>oc<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>oc<span class="w"> </span>describe<span class="w"> </span>networkpolicy<span class="w"> </span>&lt;np&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Trying 10.217.4.52...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>* Connected to target-service.target-ns.svc.cluster.local (10.217.4.52) port 80 (#0)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>&gt; GET / HTTP/1.1
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>&lt; HTTP/1.1 200 OK
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>&lt; Content-Length: 1234
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Server: 10.217.4.52:8080
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Address: 10.217.4.52#53
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Name:   kubernetes.default.svc.cluster.local
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Address: 10.96.0.1
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>nameserver 10.96.0.10
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>nameserver 10.96.0.11
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>search default.svc.cluster.local svc.cluster.local cluster.local
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>NAME                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>dns-default-5x7kj       1/1     Running   0          12d
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>dns-default-9m2lp       1/1     Running   0          12d
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>dns-default-b4c8n       1/1     Running   0          12d
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>2024-01-15T14:32:18.456Z [INFO] 192.168.1.45 - 53 &quot;A IN kubernetes.default.svc.cluster.local. udp 54 false 512&quot; NOERROR qr,aa,rd 97 0.002s
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>2024-01-15T14:32:19.123Z [INFO] 192.168.1.46 - 53 &quot;A IN target-service.target-ns.svc.cluster.local. udp 62 false 512&quot; NOERROR qr,aa,rd 105 0.001s
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>NAME                              READY   STATUS    RESTARTS   AGE   IP             NODE
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>ovnkube-master-4xz9p              3/3     Running   2          8d    10.0.128.4     worker-1
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>ovnkube-master-7k2lm              3/3     Running   1          8d    10.0.128.5     worker-2
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>ovnkube-node-8b9qx                3/3     Running   0          8d    10.0.129.10    worker-3
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>ovnkube-node-c5d2r                3/3     Running   0          8d    10.0.129.11    worker-4
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>2024-01-15T14:35:42.789Z [INFO] NBDB: Listening on 0.0.0.0:6641
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>2024-01-15T14:35:43.012Z [INFO] NBDB: Cluster state: active
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>2024-01-15T14:35:44.234Z [INFO] NBDB: 3 databases synchronized
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>2024-01-15T14:36:01.456Z [INFO] ovnkube-node: Setting up br-int bridge
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>2024-01-15T14:36:02.789Z [INFO] ovnkube-node: Configuring logical port for pod source-pod
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>2024-01-15T14:36:03.123Z [INFO] ovnkube-node: Flow rules installed: 247 total
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a> 0. inport == &quot;source-ns_source-pod&quot; (source-ns_source-pod), priority 100
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a> 1. eth.dst == fa:16:3e:ab:
 </code></pre></div>
 <h2 id="log-aggregation">Log Aggregation<a class="headerlink" href="#log-aggregation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Node journal logs via oc adm (no SSH required)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>--since<span class="o">=</span>1h
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>--since<span class="o">=</span>2h
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># All nodes at once for a specific service</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>--role<span class="o">=</span>master<span class="w"> </span>-u<span class="w"> </span>etcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Platform component logs</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>alertmanager-main-0<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span>-c<span class="w"> </span>prometheus
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Cluster Logging Operator (if deployed): query Loki</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-logging
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-logging<span class="w"> </span>-l<span class="w"> </span><span class="nv">component</span><span class="o">=</span>collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Get all failure events across all namespaces sorted by time</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--field-selector<span class="w"> </span><span class="nv">reason</span><span class="o">=</span>Failed<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Get all Warning events cluster-wide</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--field-selector<span class="w"> </span><span class="nv">type</span><span class="o">=</span>Warning<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Node journal logs via oc adm (no SSH required)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>--since<span class="o">=</span>1h
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>--since<span class="o">=</span>2h
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># All nodes at once for a specific service</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>--role<span class="o">=</span>master<span class="w"> </span>-u<span class="w"> </span>etcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Platform component logs</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>alertmanager-main-0<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>prometheus-k8s-0<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span>-c<span class="w"> </span>prometheus
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Cluster Logging Operator (if deployed): query Loki</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-logging
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-logging<span class="w"> </span>-l<span class="w"> </span><span class="nv">component</span><span class="o">=</span>collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Get all failure events across all namespaces sorted by time</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span>--field-selector<span class="w"> </span><span class="nv">reason</span><span class="o">=</span>Failed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Get all Warning events cluster-wide</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">  </span>--field-selector<span class="w"> </span><span class="nv">type</span><span class="o">=</span>Warning<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">  </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>oc adm node-logs &lt;node&gt; -u crio --since=1h
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>-- Logs begin at Wed 2024-01-17 14:32:18 UTC, end at Wed 2024-01-17 15:47:22 UTC. --
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Jan 17 14:45:33 worker-node-02.ocp.local crio[2847]: time=&quot;2024-01-17T14:45:33.521847Z&quot; level=info msg=&quot;PullImage&quot; image.name=&quot;quay.io/openshift-release-dev/ocp-v4.13.5:cli&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Jan 17 15:12:09 worker-node-02.ocp.local crio[2847]: time=&quot;2024-01-17T15:12:09.847291Z&quot; level=warn msg=&quot;ImagePull timeout&quot; image.name=&quot;registry.redhat.io/rhel8/rhel:8.7&quot; duration=45.2s
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Jan 17 15:33:44 worker-node-02.ocp.local crio[2847]: time=&quot;2024-01-17T15:33:44.193012Z&quot; level=error msg=&quot;Failed to create container&quot; container.id=&quot;a7f2c9e1&quot; error=&quot;OCI runtime error&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>oc adm node-logs &lt;node&gt; -u kubelet --since=2h
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Jan 17 13:47:51 worker-node-02.ocp.local kubelet[1924]: I0117 13:47:51.234567 1924 kubelet.go:2847] SyncLoop (PERM_DENIED): &quot;kube-system/coredns-558bd4d5db-7xk2m&quot;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Jan 17 14:22:18 worker-node-02.ocp.local kubelet[1924]: W0117 14:22:18.456789 1924 pod_workers.go:1456] Error syncing pod, skipping: failed to &quot;CreatePodSandbox&quot; for &quot;default/nginx-deployment-66b6c48dd5-9m4kl&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Jan 17 15:01:33 worker-node-02.ocp.local kubelet[1924]: E0117 15:01:33.789012 1924 remote_runtime.go:432] RunPodSandbox from runtime service failed: rpc error: code = Unavailable desc = connection refused
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>oc adm node-logs --role=master -u etcd | tail -200
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Jan 17 15:40:22 master-node-01.ocp.local etcd[3847]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2024-01-17T15:40:22.123456Z&quot;,&quot;caller&quot;:&quot;rafthttp/peer.go:345&quot;,&quot;msg&quot;:&quot;peer connected&quot;,&quot;remote-peer-id&quot;:&quot;8e9f2c1a3b5d7e9f&quot;,&quot;remote-peer-version&quot;:&quot;3.5.7&quot;}
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Jan 17 15:41:05 master-node-01.ocp.local etcd[3847]: {&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2024-01-17T15:41:05.654321Z&quot;,&quot;caller&quot;:&quot;etcdserver/raft.go:456&quot;,&quot;msg&quot;:&quot;apply request took too long&quot;,&quot;took&quot;:&quot;2.847s&quot;,&quot;expected-duration&quot;:&quot;100ms&quot;}
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Jan 17 15:42:18
 </code></pre></div>
 <h2 id="node-level-diagnostics">Node-Level Diagnostics<a class="headerlink" href="#node-level-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Access node as root via debug pod</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chroot<span class="w"> </span>/host
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check container runtime</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>crictl<span class="w"> </span>ps<span class="w">                          </span><span class="c1"># running containers</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>crictl<span class="w"> </span>pods<span class="w">                        </span><span class="c1"># pod sandboxes</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>crictl<span class="w"> </span>info<span class="w">                        </span><span class="c1"># CRI-O runtime info</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>crictl<span class="w"> </span>logs<span class="w"> </span>&lt;container-id&gt;<span class="w">         </span><span class="c1"># container logs via CRI-O</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check kubelet</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check disk usage (high disk → DiskPressure → pod evictions)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>df<span class="w"> </span>-h<span class="w"> </span>/
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/containers/*<span class="w">       </span><span class="c1"># container image layers</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/pods/*<span class="w">             </span><span class="c1"># pod logs on disk</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Check current MachineConfig state</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>rpm-ostree<span class="w"> </span>status<span class="w">                  </span><span class="c1"># RHCOS OS version + pending changes</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>systemctl<span class="w"> </span>--failed<span class="w">                 </span><span class="c1"># any failed systemd units</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Access node as root via debug pod</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>chroot<span class="w"> </span>/host
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check container runtime</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>crictl<span class="w"> </span>ps<span class="w">                          </span><span class="c1"># running containers</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>crictl<span class="w"> </span>pods<span class="w">                        </span><span class="c1"># pod sandboxes</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>crictl<span class="w"> </span>info<span class="w">                        </span><span class="c1"># CRI-O runtime info</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>crictl<span class="w"> </span>logs<span class="w"> </span>&lt;container-id&gt;<span class="w">         </span><span class="c1"># container logs via CRI-O</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Check kubelet</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Check disk usage (high disk → DiskPressure → pod evictions)</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/containers/*<span class="w">       </span><span class="c1"># container image layers</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/pods/*<span class="w">             </span><span class="c1"># pod logs on disk</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># Check current MachineConfig state</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>rpm-ostree<span class="w"> </span>status<span class="w">                  </span><span class="c1"># RHCOS OS version + pending changes</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>systemctl<span class="w"> </span>--failed<span class="w">                 </span><span class="c1"># any failed systemd units</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Starting pod/node-debug-4x8kp ...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Pod IP: 10.0.128.45
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>If you don&#39;t see a command prompt with &#39;#&#39;, try pressing enter.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>sh-4.4# chroot /host
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>sh-4.4# crictl ps
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>CONTAINER           IMAGE                                    CREATED             STATE               NAME                      ATTEMPT             POD ID
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>a7f2c9e1b4d6e      quay.io/openshift-release-dev/ocp-v4.12:latest  2 minutes ago       Running             openshift-apiserver     0                   b9c3e2f1a5d8k
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>c4b1d9e2f3a6h      registry.redhat.io/ubi8/ubi:latest       5 minutes ago       Running             etcd                      0                   d2e5f8a1b3c9m
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>sh-4.4# crictl pods
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>POD ID              CREATED             STATE               NAME                      NAMESPACE           ATTEMPT             RUNTIME
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>b9c3e2f1a5d8k      2 minutes ago       Ready               openshift-apiserver-pod  openshift-apiserver 0                   cri-o
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>d2e5f8a1b3c9m      5 minutes ago       Ready               etcd-pod                  openshift-etcd      0                   cri-o
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>sh-4.4# systemctl status kubelet
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>● kubelet.service - Kubernetes Kubelet
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>   Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>   Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2h 45m ago
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>   Main PID: 2847 (kubelet)
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>   Tasks: 28
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>   Memory: 512.3M
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>sh-4.4# df -h /
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>/dev/sda3       100G   78G   22G  78% /
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>sh-4.4# df -h /var
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>/dev/sda3       100G   78G   22G  78% /var
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>sh-4.4# du -sh /var/lib/containers/*
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>45G     /var/lib/containers/storage
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>sh-4.4# rpm-ostree status
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>State: idle
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>Deployments:
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>● rhcos-412.86.202401151234
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>    Version: 412.86.202401151234
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>    Timestamp: 2024-01-15T12:34:00Z
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>    Commit: 8f3a2b1c9e4d5f6a7b8c9d0e1f2a3b4c
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>sh-4.4# systemctl --failed
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>0 loaded units listed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chroot: can't execute '/bin/bash': No such file or directory</code></strong> — Use <code>sh</code> instead of <code>bash</code> or verify the host filesystem is properly mounted by checking <code>ls /host/bin</code>.
+<strong><code>error: unable to get pod logs: rpc error: code = Unavailable desc = connection error: desc = "error reading from server: EOF"</code></strong> — Restart the CRI-O service with <code>systemctl restart crio</code> or check if the container runtime socket is accessible</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7757,7 +8009,7 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometh
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

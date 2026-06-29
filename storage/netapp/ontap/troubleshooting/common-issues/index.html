@@ -8708,29 +8708,93 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check aggregate available space — thin volumes must have aggregate backing</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,available,percent-used
 </code></pre></div>
-<h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Option 1 — Increase volume size immediately</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-new-size<span class="w"> </span>500G
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Option 2 — Enable or extend autogrow</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-autosize-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-max-autosize<span class="w"> </span>1T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Option 3 — Delete old or unnecessary snapshots</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Delete all non-busy snapshots (use with caution)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Option 4 — Reduce snapshot reserve percentage</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Option 5 — Run deduplication to reclaim space</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-scan-all<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Volume       Vserver      Used%  Size       Available  Autosize-Mode
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-----------  -----------  -----  ---------  ---------  ---------------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vol_data_01  svm_prod     87%    500GB      65GB       grow
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vol_logs_02  svm_prod     94%    200GB      12GB       off
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vol_backup   svm_dr       45%    1TB        550GB      grow
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vol_temp_03  svm_dev      72%    100GB      28GB       off
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Autosize-Mode  Max-Autosize  Grow-Threshold-Percent
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>--------------  -----------  ----------------------
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>grow            600GB        80%
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Snapshot-Percent  Snapshot-Count
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>-----------------  ---------------
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>18%                247
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Volume Snapshot                    Size       Create-Time
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>------  ---------------------------  ---------  -------------------------
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vol_data_01  hourly.2024-01-15_0600  8.2GB      Jan 15 06:00:15 +0000
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>vol_data_01  hourly.2024-01-15_0500  7.9GB      Jan 15 05:00:22 +0000
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>vol_data_01  daily.2024-01-14        12.1GB     Jan 14 00:00:08 +0000
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>vol_data_01  weekly.2024-01-08       15.3GB     Jan 08 00:00:03 +0000
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Aggregate      Available  Percent-Used
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>-----------    ---------  -----------
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>aggr_ssd_01    120GB      78%
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>aggr_ssd_02    340GB      62%
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>aggr_sas_01    85GB       81%
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>aggr_sas_02    450GB      55%
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No such vserver &lt;svm&gt;</code></strong> — Verify the SVM name with <code>vserver show</code> and use the exact name from the Vserver column.
+<strong><code>Error: command failed: No such volume &lt;vol&gt;</code></strong> — Confirm the volume exists on the target SVM using <code>volume show -vserver &lt;svm&gt;</code> before running field-specific queries.</p>
+</div>
+<h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option 1 — Increase volume size immediately</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-new-size<span class="w"> </span>500G
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Option 2 — Enable or extend autogrow</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-autosize-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-max-autosize<span class="w"> </span>1T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Option 3 — Delete old or unnecessary snapshots</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Delete all non-busy snapshots (use with caution)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Option 4 — Reduce snapshot reserve percentage</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Option 5 — Run deduplication to reclaim space</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-scan-all<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster1::&gt; volume size -vserver svm_prod -volume vol_data -new-size 500G
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Volume modify successful: volume &quot;vol_data&quot; size set to 500GB.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cluster1::&gt; volume modify -vserver svm_prod -volume vol_data -autosize-mode grow_shrink -max-autosize 1T -grow-threshold-percent 85
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Volume modify successful: volume &quot;vol_data&quot; autogrow enabled.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cluster1::&gt; volume snapshot show -vserver svm_prod -volume vol_data
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Vserver  Volume   Snapshot                                  State    Busy
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>-------- -------- ----------------------------------------- -------- ------
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>svm_prod vol_data hourly.2024-01-15_0500                    valid    false
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>svm_prod vol_data hourly.2024-01-15_0400                    valid    false
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>svm_prod vol_data daily.2024-01-14_0000                     valid    false
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>svm_prod vol_data weekly.2024-01-08_0000                    valid    false
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>svm_prod vol_data nightly_backup.2024-01-14_2200            valid    true
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>cluster1::&gt; volume snapshot delete -vserver svm_prod -volume vol_data -snapshot hourly.2024-01-15_0400
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Snapshot deleted successfully.
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>cluster1::&gt; volume modify -vserver svm_prod -volume vol_data -percent-snapshot-space 10
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Volume modify successful: snapshot reserve set to 10%.
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>cluster1::&gt; volume efficiency start -vserver svm_prod -volume vol_data -scan-all true
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Efficiency operation started on volume &quot;vol_data&quot; (UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890).
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: entry doesn't have a value for field "snapshot"</code></strong> — Specify the exact snapshot name or use <code>*</code> with <code>-force true</code> to delete all non-busy snapshots.
+<strong><code>Error: volume is currently involved in a SnapMirror transfer</code></strong> — Wait for the active SnapMirror operation to complete before modifying volume properties or deleting snapshots.
+<strong><code>Error: cannot set max-autosize to a value smaller than current volume size</code></strong> — Set <code>-max-autosize</code> to a value larger than the current volume size (e.g., 1T for a 500G volume).</p>
+</div>
 <h3 id="prevention">Prevention<a class="headerlink" href="#prevention" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Enable autogrow with an explicit maximum on all production volumes</li>
@@ -8748,38 +8812,102 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>ONTAP issues EMS events: <code>aggr.nearly.full</code>, <code>aggr.full</code></li>
 </ul>
 <h3 id="diagnosis_1">Diagnosis<a class="headerlink" href="#diagnosis_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show all aggregates with usage</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,available,size,percent-used,state
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show per-aggregate space breakdown including snapshot reserve</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Identify which volumes are consuming space</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,size,used,percent-used
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check for volumes with large snapshot reserves</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,snapshot-percent,percent-used
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Identify volumes with large unused space (candidate for move)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,size,used,available<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show all aggregates with usage</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,available,size,percent-used,state
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show per-aggregate space breakdown including snapshot reserve</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Identify which volumes are consuming space</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,size,used,percent-used
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check for volumes with large snapshot reserves</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,snapshot-percent,percent-used
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Identify volumes with large unused space (candidate for move)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>volume<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,size,used,available<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Aggregate                Node            Available         Size Percent Used State
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aggr0                   node-01         45.2GB            500GB       90%      online
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>aggr1                   node-02         120.5GB           2TB         94%      online
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>aggr2                   node-01         8.3GB             1TB         99%      online
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aggr3                   node-02         250.1GB           4TB         94%      online
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Physical Used       Physical Reserved  Physical Total      Snapshot Reserve
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>450.2GB             50GB                500GB               5%
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Volume              Vserver           Size      Used      Percent Used
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vol_prod_01         vs_prod           500GB     485GB     97%
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>vol_prod_02         vs_prod           300GB     156GB     52%
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>vol_backup_01       vs_backup         1TB       920GB     92%
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vol_test_01         vs_test           200GB     45GB      22%
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Volume              Snapshot Percent  Percent Used
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>vol_prod_01         8%                97%
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>vol_prod_02         2%                52%
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>vol_backup_01       12%               92%
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>vol_test_01         15%               22%
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Volume              Size      Used      Available
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>vol_test_01         200GB     45GB      155GB
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>vol_prod_02         300GB     156GB     144GB
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>vol_prod_01         500GB     485GB     15GB
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>vol_backup_01       1TB       920GB     104GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage aggregate show</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
+<strong><code>Error: There is no entry in the Compat database for command "storage aggregate show-space"</code></strong> — Verify your ONTAP version supports this command (available in ONTAP 9.1+); use <code>version</code> to check cluster version.
+<strong><code>Error: invalid fieldname "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) in the -fields parameter.</p>
+</div>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option 1 — Move a volume to a less-full aggregate (non-disruptive)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>volume<span class="w"> </span>move<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Option 2 — Add disks to the aggregate</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-diskcount<span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Confirm unassigned disks available</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>unassigned
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Option 3 — Reduce snapshot reserves across volumes in the aggregate</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Option 4 — Run storage efficiency on all volumes in the aggregate</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Option 1 — Move a volume to a less-full aggregate (non-disruptive)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>volume<span class="w"> </span>move<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Option 2 — Add disks to the aggregate</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-diskcount<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Confirm unassigned disks available</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>unassigned
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Option 3 — Reduce snapshot reserves across volumes in the aggregate</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Option 4 — Run storage efficiency on all volumes in the aggregate</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cluster1::&gt; volume move start -vserver svm1 -volume vol_data01 -destination-aggregate aggr2
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Operation started successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>cluster1::&gt; volume move show -vserver svm1 -volume vol_data01
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Vserver   Volume             State      Progress
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>--------- ------------------ ---------- ----------
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>svm1      vol_data01         running    28%
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>cluster1::&gt; storage aggregate add-disks -aggregate aggr1 -diskcount 4
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Added 4 disks to aggregate aggr1.
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>cluster1::&gt; storage disk show -container-type unassigned
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Disk       Container Type    Size      RPM   Checksum
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>---------- ----------------- --------- ----- ----------
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>1.0.1      unassigned        1.75TB    7200  block
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>1.0.2      unassigned        1.75TB    7200  block
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>1.0.3      unassigned        1.75TB    7200  block
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>1.0.4      unassigned        1.75TB    7200  block
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>cluster1::&gt; volume modify -vserver svm1 -volume vol_data01 -percent-snapshot-space 5
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Volume modify successful.
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>cluster1::&gt; volume efficiency start -aggregate aggr1
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Efficiency operation started on 6 volumes.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No unassigned disks available</code></strong> — Verify spare disks exist with <code>storage disk show -container-type spare</code> and ensure they are not reserved for RAID reconstruction.
+<strong><code>Error: volume move failed: Destination aggregate does not have sufficient space</code></strong> — Check destination aggregate free space with <code>storage aggregate show -fields usedsize,availsize</code> and select an aggregate with at least 120% of the source volume size.
+<strong><code>Error: Invalid percent-snapshot-space value: must be between 0 and 90</code></strong> — Use a snapshot reserve percentage within the valid range (typically 5–20% for production volumes).</p>
+</div>
 <hr />
 <h2 id="snapmirror-lag-unhealthy-relationship">SnapMirror Lag / Unhealthy Relationship<a class="headerlink" href="#snapmirror-lag-unhealthy-relationship" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_2">Symptoms<a class="headerlink" href="#symptoms_2" title="Permanent link">&para;</a></h3>
@@ -8790,45 +8918,102 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>EMS events: <code>snapmirror.dest.lag.warn</code>, <code>snapmirror.src.unreachable</code></li>
 </ul>
 <h3 id="diagnosis_2">Diagnosis<a class="headerlink" href="#diagnosis_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show all relationships with health and lag</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-size
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show only unhealthy relationships</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check transfer history for failures</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check for throttle limiting transfer speed</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>snapmirror<span class="w"> </span>config-replication<span class="w"> </span>show
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check intercluster LIF connectivity between clusters</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Verify intercluster LIF reachability</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;ic_lif&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_admin_svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;remote_ic_lif_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show all relationships with health and lag</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-size
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show only unhealthy relationships</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check transfer history for failures</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check for throttle limiting transfer speed</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>snapmirror<span class="w"> </span>config-replication<span class="w"> </span>show
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Check intercluster LIF connectivity between clusters</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Verify intercluster LIF reachability</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;ic_lif&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_admin_svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;remote_ic_lif_ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Source Path                Destination Path           Lag Time State    Healthy Last Transfer Size
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------------------------   ------------------------   -------- -------- ------- ------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>svm1:vol_data              svm2:vol_data_mirror       00:15:32 snapmirrored true   2.4GB
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>svm1:vol_logs              svm2:vol_logs_mirror       00:08:47 snapmirrored true   856MB
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>svm3:vol_archive           svm4:vol_archive_mirror    02:34:19 snapmirrored false  0B
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Source Path                Destination Path           State
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>------------------------   ------------------------   --------
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>svm3:vol_archive           svm4:vol_archive_mirror    broken-off
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Snapshot              Bytes Transferred  Duration   Result
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>-------------------  -----------------  ---------  ------
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>2024.01.15_0200       5.2GB              00:18:32   Success
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>2024.01.14_1400       0B                 00:02:15   Failed
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>2024.01.14_0600       4.8GB              00:16:47   Success
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Vserver              Policy              Throttle (KB/s)  RPO (minutes)
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>-------------------  -----------------  ---------------  ---------------
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>svm1                 DPDefault           Unlimited        60
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>svm3                 DPDefault           51200            60
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>Interface Name       IP Address          Role         Status
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>-------------------  ------------------  -----------  ------
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>cluster1_ic_lif1     192.168.100.45      intercluster up
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>cluster1_ic_lif2     192.168.100.46      intercluster up
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>cluster2_ic_lif1     192.168.101.50      intercluster up
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>cluster2_ic_lif2     192.168.101.51      intercluster down
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Peer Cluster         Peer Address        Status
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>-------------------  ------------------  --------
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>cluster2             192.168.101.50      available
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>PING 192.168.101.50 (192.168.101.50): 56 data bytes
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>64 bytes from 192.168.101.50: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>64 bytes from 192.168.101.50: icmp_seq=1 ttl=64 time=2.287 ms
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>64 bytes from 192.168.101.50: icmp_seq=2 ttl=64 time=2.415 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No snapmirror relationships found</code></strong> — Verify the source and destination paths exist and the snapmirror relationship has been initialized with <code>snapmirror initialize -source-path &lt;src&gt; -destination-path &lt;dst&gt;</code>.
+<strong><code>Error: network ping: failed to resolve destination address</code></strong> — Confirm the remote intercluster LIF IP address is correct and reachable by checking <code>cluster peer show</code> and verifying firewall rules allow ICMP traffic on port 10000-10001.
+<strong><code>Error: command failed: Intercluster LIF is not configured</code></strong> — Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask</p>
+</div>
 <h3 id="resolution_2">Resolution<a class="headerlink" href="#resolution_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Resume a quiesced relationship</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Force a manual update to catch up on lag</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Abort a stuck transfer and restart</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># If relationship is broken-off (after a failover), resync it</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Remove a throttle if one is limiting transfer speed</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span>-throttle<span class="w"> </span>unlimited
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Re-initialize from scratch (only if relationship is corrupt — destructive)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Resume a quiesced relationship</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Force a manual update to catch up on lag</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Abort a stuck transfer and restart</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># If relationship is broken-off (after a failover), resync it</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Remove a throttle if one is limiting transfer speed</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span>-throttle<span class="w"> </span>unlimited
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Re-initialize from scratch (only if relationship is corrupt — destructive)</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Operation succeeded: SnapMirror relationship for &quot;dr_svm:dr_vol01&quot; resumed.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Operation succeeded: SnapMirror update started for destination &quot;dr_svm:dr_vol01&quot;.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Operation succeeded: SnapMirror transfer aborted for destination &quot;dr_svm:dr_vol01&quot;.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Operation succeeded: SnapMirror update started for destination &quot;dr_svm:dr_vol01&quot;.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Operation succeeded: SnapMirror relationship for &quot;dr_svm:dr_vol01&quot; resynchronized.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Operation succeeded: SnapMirror modify operation completed for destination &quot;dr_svm:dr_vol01&quot;.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Operation succeeded: SnapMirror initialize started for destination &quot;dr_svm:dr_vol01&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "dr_svm:dr_vol01"</code></strong> — Verify the destination SVM and volume names are correct using <code>snapmirror show</code>.
+<strong><code>Error: command failed: SnapMirror relationship is in "broken-off" state and cannot be resumed</code></strong> — Use <code>snapmirror resync</code> instead of <code>snapmirror resume</code> for broken-off relationships.
+<strong><code>Error: command failed: Transfer is already in progress for destination "dr_svm:dr_vol01"</code></strong> — Wait for the current transfer to complete or use <code>snapmirror abort</code> before issuing a new update command.</p>
+</div>
 <hr />
 <h2 id="nfs-mount-hangs-stale-lock-after-failover">NFS Mount Hangs / Stale Lock After Failover<a class="headerlink" href="#nfs-mount-hangs-stale-lock-after-failover" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_3">Symptoms<a class="headerlink" href="#symptoms_3" title="Permanent link">&para;</a></h3>
@@ -8839,40 +9024,104 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>Automount does not recover after LIF migration</li>
 </ul>
 <h3 id="diagnosis_3">Diagnosis<a class="headerlink" href="#diagnosis_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify the LIF is online and on the correct port</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,address,curr-node,curr-port,status-oper
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check if the LIF is on its home port (takeover may have migrated it)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,home-node,home-port,curr-node,curr-port
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check NFS grace period state (clients waiting for lock reclaim)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Grace period is typically 45 seconds after failover</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>grace-period
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check for connected NFS clients</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Check export policy — did it change during failover?</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify the LIF is online and on the correct port</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,address,curr-node,curr-port,status-oper
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check if the LIF is on its home port (takeover may have migrated it)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,home-node,home-port,curr-node,curr-port
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check NFS grace period state (clients waiting for lock reclaim)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Grace period is typically 45 seconds after failover</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>grace-period
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Check for connected NFS clients</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Check export policy — did it change during failover?</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cluster1::&gt; network interface show -vserver nfs_svm -fields lif,address,curr-node,curr-port,status-oper
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Vserver     LIF            Address         Curr-Node       Curr-Port Status-Oper
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>----------- -------------- --------------- --------------- --------- -----------
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>nfs_svm     nfs_lif_01     192.168.1.45    node-01         e0d       up
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>nfs_svm     nfs_lif_02     192.168.1.46    node-02         e0d       up
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>cluster1::&gt; network interface show -vserver nfs_svm -fields lif,home-node,home-port,curr-node,curr-port
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Vserver     LIF            Home-Node       Home-Port Curr-Node       Curr-Port
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>----------- -------------- --------------- --------- --------------- ---------
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>nfs_svm     nfs_lif_01     node-01         e0d       node-02         e0c
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>nfs_svm     nfs_lif_02     node-02         e0d       node-02         e0d
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>cluster1::&gt; nfs show -vserver nfs_svm -fields grace-period
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Vserver Grace-Period
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>------- ---------------
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>nfs_svm 0 seconds
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>cluster1::&gt; nfs connected-client show -vserver nfs_svm
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Vserver Client-IP       Protocol Version State
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>------- --------------- -------- ------- -------
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>nfs_svm 10.50.12.88     tcp      nfs3    connected
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>nfs_svm 10.50.12.89     tcp      nfs4    connected
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>nfs_svm 10.50.12.90     tcp      nfs4    connected
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>cluster1::&gt; vserver export-policy show -vserver nfs_svm
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Vserver         Policy Name
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>--------------- ----------------
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>nfs_svm         default
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>nfs_svm         prod_exports
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>nfs_svm         backup_exports
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid field "status-oper" for "network interface show"</code></strong> — Use <code>status-admin</code> and <code>status-oper</code> as separate queries, or check ONTAP version compatibility for field names.
+<strong><code>Error: There is no data to display</code></strong> — Verify the SVM name is correct with <code>vserver show</code> and confirm NFS is licensed and enabled on the SVM.
+<strong><code>Error: command failed: Invalid vserver name "nfs_svm"</code></strong> — Confirm the SVM exists and you are connected to the correct cluster with <code>vserver show</code>.</p>
+</div>
 <h3 id="resolution_3">Resolution<a class="headerlink" href="#resolution_3" title="Permanent link">&para;</a></h3>
 <p>On the storage side:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Revert LIF to home port if it migrated during failover</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify LIF is accessible from the client IP</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;client_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Revert LIF to home port if it migrated during failover</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify LIF is accessible from the client IP</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;client_ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Reverting LIF &quot;data_lif01&quot; on Vserver &quot;prod_svm&quot; to home port...
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>LIF data_lif01 successfully reverted to home port e0a on node cluster-01.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>PING data_lif01 (192.168.1.45) from 192.168.1.45: 56 data bytes
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>64 bytes from 192.168.1.45: icmp_seq=0 ttl=64 time=0.891 ms
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>64 bytes from 192.168.1.45: icmp_seq=1 ttl=64 time=0.756 ms
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>64 bytes from 192.168.1.45: icmp_seq=2 ttl=64 time=0.823 ms
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>64 bytes from 192.168.1.45: icmp_seq=3 ttl=64 time=0.712 ms
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>4 packets transmitted, 4 packets received, 0% packet loss
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "data_lif01" does not exist</code></strong> — Verify the LIF name is correct and exists on the specified Vserver using <code>network interface show -vserver &lt;svm&gt;</code>.
+<strong><code>Error: LIF data_lif01 is administratively down</code></strong> — Bring the LIF online with <code>network interface modify -vserver &lt;svm&gt; -lif &lt;lif_name&gt; -status-admin up</code> before reverting.
+<strong><code>PING: sendto: No route to host</code></strong> — Ensure the client IP is reachable and on the same network segment as the LIF, or check firewall rules blocking ICMP traffic.</p>
+</div>
 <p>On the NFS client side:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Force unmount a hung NFS mount (lazy unmount)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>umount<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span>/mnt/data
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remount after confirming LIF is accessible</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;lif_ip&gt;:/vol/data<span class="w"> </span>/mnt/data
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># For automount, bounce the autofs service</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>autofs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Force unmount a hung NFS mount (lazy unmount)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>umount<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span>/mnt/data
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Remount after confirming LIF is accessible</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;lif_ip&gt;:/vol/data<span class="w"> </span>/mnt/data
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># For automount, bounce the autofs service</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>autofs
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>(no output — command completes silently)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>(no output — command completes silently)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Stopping automount service... done.
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Starting automount service... done.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>umount: /mnt/data: target is busy</code></strong> — Use <code>lsof /mnt/data</code> to identify processes holding the mount, kill them, then retry the lazy unmount.
+<strong><code>mount.nfs: Connection timed out</code></strong> — Verify the LIF IP is reachable with <code>ping &lt;lif_ip&gt;</code> and confirm the NFS export exists on the NetApp array with <code>ssh admin@&lt;netapp_ip&gt; volume show</code>.
+<strong><code>Failed to restart autofs.service: Unit autofs.service not found</code></strong> — Install autofs with <code>apt-get install autofs</code> (Debian/Ubuntu) or <code>yum install autofs</code> (RHEL/CentOS), then retry the systemctl restart.</p>
+</div>
 <p>If NFSv4 state is stale, the NFS server grace period (default 45 seconds) must expire before new locks are granted. Do not reboot NFS clients during the grace period — this resets their lock reclaim timer.</p>
 <hr />
 <h2 id="iscsi-session-dropped-host-cannot-access-lun">iSCSI Session Dropped / Host Cannot Access LUN<a class="headerlink" href="#iscsi-session-dropped-host-cannot-access-lun" title="Permanent link">&para;</a></h2>
@@ -8884,39 +9133,116 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>Windows Disk Management shows disk offline</li>
 </ul>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check iSCSI sessions from ONTAP side</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,tpgroup,lif
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check iSCSI LIFs are operational</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Verify LUN is online and mapped</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>path,state,mapped
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Check igroup has the correct initiator IQN</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check iSCSI sessions from ONTAP side</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,tpgroup,lif
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check iSCSI LIFs are operational</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Verify LUN is online and mapped</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>path,state,mapped
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># Check igroup has the correct initiator IQN</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Vserver    Session ID  Initiator Name                          Target Name                             TSIH
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>---------- ----------- --------------------------------------- --------------------------------------- ------
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>svm-prod   1           iqn.1991-05.com.example:host01.local    iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6 65535
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>svm-prod   2           iqn.1991-05.com.example:host02.local    iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6 65534
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Vserver    Initiator Name                          Tpgroup
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>---------- --------------------------------------- -------
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>svm-prod   iqn.1991-05.com.example:host01.local    default
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>svm-prod   iqn.1991-05.com.example:host02.local    default
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Vserver    Lif                 Status      Data Protocol
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>---------- ------------------- ----------- ---------------
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>svm-prod   iscsi_lif_01        up          iscsi
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>svm-prod   iscsi_lif_02        up          iscsi
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>Vserver    Path                                    State    Mapped
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>---------- --------------------------------------- -------- ------
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>svm-prod   /vol/lun_vol_01/lun_01                 online   yes
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>svm-prod   /vol/lun_vol_02/lun_02                 online   yes
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>Vserver    Igroup Name         Protocol  OS Type   Initiators
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>---------- ------------------- --------- --------- -----------------------------------------------
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>svm-prod   igroup_linux_01     iscsi     linux     iqn.1991-05.com.example:host01.local
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>svm-prod   igroup_linux_02     iscsi     linux     iqn.1991-05.com.example:host02.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "No iSCSI sessions found for Vserver &lt;svm&gt;"</code></strong> — Verify the initiator is connected and the target portal group is reachable using <code>iscsi connection show</code>.
+<strong><code>Error: "LUN is offline"</code></strong> — Check the volume status with <code>volume show -vserver &lt;svm&gt;</code> and verify the aggregate is online.
+<strong><code>Error: "Initiator IQN not found in igroup"</code></strong> — Add the missing initiator IQN to the igroup using <code>lun igroup add -vserver &lt;svm&gt; -igroup &lt;igroup_name&gt; -initiator &lt;iqn&gt;</code>.</p>
+</div>
 <h3 id="resolution_4">Resolution<a class="headerlink" href="#resolution_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Bring a LUN back online if it went offline</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>lun<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>/vol/&lt;vol&gt;/&lt;lun_name&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify iSCSI service is running on the SVM</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-admin-enabled<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Bring a LUN back online if it went offline</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>lun<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>/vol/&lt;vol&gt;/&lt;lun_name&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Verify iSCSI service is running on the SVM</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-admin-enabled<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>LUN /vol/data_vol/lun_prod_01 brought online.
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Vserver: svm_prod_01
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Admin Enabled: true
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Status: running
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Node: cluster-01-01
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Target Alias: svm_prod_01.iscsi.local
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Allowed Initiators: ALL
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Authentication Type: CHAP
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>CHAP Inbound Username: initiator_user
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>...
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is not found</code></strong> — Verify the volume and LUN names exist with <code>lun show -vserver &lt;svm&gt;</code> and correct the path syntax.
+<strong><code>Error: command failed: Vserver &lt;svm&gt; does not exist</code></strong> — Confirm the SVM name is correct by running <code>vserver show</code> to list all available SVMs.
+<strong><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is already online</code></strong> — This is informational; the LUN is already in the desired state and no action is needed.</p>
+</div>
 <p>On the Linux host:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Rescan iSCSI targets</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>--rescan
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Log back into a target after network recovery</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;iqn.target&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;lif_ip&gt;:3260<span class="w"> </span>--login
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Rescan SCSI bus to pick up re-connected LUN</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>rescan-scsi-bus.sh
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>multipath<span class="w"> </span>-r<span class="w">     </span><span class="c1"># reload multipath maps</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Rescan iSCSI targets</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>--rescan
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Log back into a target after network recovery</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;iqn.target&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;lif_ip&gt;:3260<span class="w"> </span>--login
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Rescan SCSI bus to pick up re-connected LUN</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>rescan-scsi-bus.sh
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>multipath<span class="w"> </span>-r<span class="w">     </span><span class="c1"># reload multipath maps</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Scanning for new I/O devices...
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>iSCSI Connection: [1] 10.48.12.45:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6 (non-flash)
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>iSCSI Connection: [2] 10.48.12.46:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6 (non-flash)
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Rescanning existing sessions
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Session [sid=1, target=iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal=10.48.12.45,3260]
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    Rescanning session [1]
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.48.12.46,3260]
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.48.12.46,3260] successful.
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Scanning for new I/O devices...
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>Scanning host 3 for new devices
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Scanning host 4 for new devices
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>Scanning host 5 for new devices
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>Found new device(s) on host 3: sdc (36001405a1b2c3d4e5f6g7h8i9j0k1l2)
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Found new device(s) on host 4: sdd (36001405a1b2c3d4e5f6g7h8i9j0k1l3)
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Reconfiguring multipath devices
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>mpatha (36001405a1b2c3d4e5f6g7h8i9j0k1l2) dm-0 NETAPP,LUN
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>mpathb (36001405a1b2c3d4e5f6g7h8i9j0k1l3) dm-1 NETAPP,LUN
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>size=250G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Verify the target IQN and portal IP are correct, and that the iSCSI daemon is running with <code>systemctl status iscsid</code>.
+<strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install the sg3-utils package with <code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>.
+<strong><code>multipathd: error in blacklist section</code></strong> — Check <code>/etc/multipath.conf</code> for syntax errors and reload the daemon with <code>systemctl restart multipathd</code>.</p>
+</div>
 <hr />
 <h2 id="storage-failover-ha-not-triggering">Storage Failover (HA) Not Triggering<a class="headerlink" href="#storage-failover-ha-not-triggering" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_5">Symptoms<a class="headerlink" href="#symptoms_5" title="Permanent link">&para;</a></h3>
@@ -8926,33 +9252,81 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>Cluster shows one node unreachable but storage is not serving from the surviving node</li>
 </ul>
 <h3 id="diagnosis_5">Diagnosis<a class="headerlink" href="#diagnosis_5" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check HA failover state on all nodes</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Expected output: Enabled = true, State = Connected</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Check cluster interconnect (heartbeat link)</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Check HA interconnect port state</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-fields<span class="w"> </span>port,health-status,link-status
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Check if failover is manually disabled</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,enabled,mode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Check HA failover state on all nodes</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Expected output: Enabled = true, State = Connected</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Check cluster interconnect (heartbeat link)</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># Check HA interconnect port state</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-fields<span class="w"> </span>port,health-status,link-status
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="c1"># Check if failover is manually disabled</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,enabled,mode
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Node           Partner        State      HA-Configured
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>-------------- -------------- ---------- ---------------
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>node-01        node-02        Connected  true
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>node-02        node-01        Connected  true
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Cluster Ping to node-02 (10.0.1.45):
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>  Sent 5, Received 5, Lost 0%
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>  Min/Avg/Max/Stddev = 0.842/1.156/2.104/0.487 ms
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>Cluster Ping to node-01 (10.0.1.44):
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>  Sent 5, Received 5, Lost 0%
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>  Min/Avg/Max/Stddev = 0.756/0.998/1.892/0.401 ms
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>Node  Port      Health-Status Link-Status
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>----- --------- ------------- -----------
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>node-01 e0a    healthy       up
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>node-01 e0b    healthy       up
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>node-02 e0a    healthy       up
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>node-02 e0b    healthy       up
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>Node           Enabled Mode
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>-------------- ------- ----
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>node-01        true    HA
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>node-02        true    HA
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage failover show</code></strong> — Verify you are connected to the cluster management interface and have cluster admin privileges.
+<strong><code>Cluster Ping to &lt;node&gt; (&lt;ip&gt;): Sent 5, Received 0, Lost 100%</code></strong> — Check network connectivity and HA interconnect cables; verify the target node is online with <code>cluster show</code>.
+<strong><code>Node           Enabled Mode</code></strong> <code>node-01        false   HA</code> — Re-enable failover with <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> if failover was manually disabled.</p>
+</div>
 <h3 id="resolution_5">Resolution<a class="headerlink" href="#resolution_5" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Re-enable storage failover if it was disabled</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Trigger a manual takeover (planned maintenance)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_to_take_over&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># After node recovery, return ownership</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Force giveback if stuck in partial state</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-require-partner-waiting<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Re-enable storage failover if it was disabled</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Trigger a manual takeover (planned maintenance)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_to_take_over&gt;
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># After node recovery, return ownership</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Force giveback if stuck in partial state</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-require-partner-waiting<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Node: node-01
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Takeover of node node-02 will commence in 10 seconds...
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Waiting for node node-02 to halt...
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Takeover complete. Node node-02 is now halted.
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>node-01&gt; storage failover modify -node node-02 -enabled true
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>(no output — command completes silently)
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>node-01&gt; storage failover giveback -ofnode node-02
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>Waiting for node node-02 to boot...
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Giveback of aggregates from node-01 to node-02 complete.
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>node-01&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: node node-02 is not in a halted state</code></strong> — Ensure the node has fully shut down before attempting giveback, or use <code>system node halt -node &lt;node_name&gt;</code> to force shutdown.
+<strong><code>Error: storage failover is not enabled for node node-01</code></strong> — Run <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> on both nodes to enable failover before takeover.
+<strong><code>Error: giveback cannot proceed, aggregates are offline</code></strong> — Wait for aggregates to come online using <code>storage aggregate show</code> to verify state, or manually bring them online with <code>storage aggregate online -aggregate &lt;name&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="smbcifs-share-inaccessible">SMB/CIFS Share Inaccessible<a class="headerlink" href="#smbcifs-share-inaccessible" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_6">Symptoms<a class="headerlink" href="#symptoms_6" title="Permanent link">&para;</a></h3>
@@ -8962,40 +9336,94 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li>Kerberos errors in Windows event log</li>
 </ul>
 <h3 id="diagnosis_6">Diagnosis<a class="headerlink" href="#diagnosis_6" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check CIFS server status and domain join health</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Check for Active Directory connectivity issues</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Check CIFS sessions — are any clients connected?</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Verify the CIFS LIF is operational</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>cifs
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Check if the SVM is running</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Check CIFS server status and domain join health</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># Check for Active Directory connectivity issues</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="c1"># Check CIFS sessions — are any clients connected?</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="c1"># Verify the CIFS LIF is operational</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>cifs
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="c1"># Check if the SVM is running</span>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Vserver       CIFS Server    Domain/Workgroup Comment
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>------------- -------------- --------------- ---------
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>svm-prod-01   CIFS-SVM-01    corp.example.com Configured
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Vserver       Domain              Trusted Domains
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>------------- ------------------- ----------------
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>svm-prod-01   corp.example.com    child.corp.example.com
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>CIFS server check for vserver &quot;svm-prod-01&quot;:
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>  DNS: OK
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>  LDAP: OK
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>  Kerberos: OK
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>  Active Directory: OK
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>Vserver       Node            Session ID  Client IP      User Name              Connected Time
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>------------- --------------- ----------- -------------- ---------------------- ----------------
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>svm-prod-01   node-01         1           192.168.10.45  CORP\jsmith            2h 15m 32s
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>svm-prod-01   node-01         2           192.168.10.67  CORP\mchen             1h 8m 19s
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>Vserver       Interface       IP Address      Status  MTU
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>------------- --------------- --------------- ------- -----
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>svm-prod-01   cifs_lif_01     10.50.20.15     up      1500
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>svm-prod-01   cifs_lif_02     10.50.20.16     up      1500
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>Vserver       State
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a>------------- -------
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>svm-prod-01   running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>CIFS server check for vserver "svm-prod-01": Active Directory: FAILED</code></strong> — Verify DNS resolution is working with <code>dns check -vserver &lt;svm&gt;</code> and confirm the CIFS server account password is synchronized with Active Directory.
+<strong><code>vserver cifs show: There is no data to display</code></strong> — Create a CIFS server configuration on the SVM using <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;server-name&gt; -domain &lt;domain-name&gt;</code>.
+<strong><code>network interface show: There is no data to display</code></strong> — Create a CIFS data LIF on the SVM with <code>network interface create -vserver &lt;svm&gt; -lif &lt;lif-name&gt; -role data -data-protocol cifs -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;</code>.</p>
+</div>
 <h3 id="resolution_6">Resolution<a class="headerlink" href="#resolution_6" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Start the SVM if it is stopped</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Re-join Active Directory if the machine account is broken</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=Servers,DC=domain,DC=corp&quot;</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Reset the CIFS machine account password (requires Domain Admin)</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>password<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Verify DNS resolution from the SVM</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Disable SMB1 if legacy clients cause negotiation failures</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Start the SVM if it is stopped</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Re-join Active Directory if the machine account is broken</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">    </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=Servers,DC=domain,DC=corp&quot;</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Reset the CIFS machine account password (requires Domain Admin)</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>password<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="c1"># Verify DNS resolution from the SVM</span>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a><span class="c1"># Disable SMB1 if legacy clients cause negotiation failures</span>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>SVM &quot;svm_prod_01&quot; started successfully.
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>CIFS configuration deleted for SVM &quot;svm_prod_01&quot;.
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>CIFS server &quot;NETAPP-SVM01&quot; created successfully for domain &quot;domain.corp&quot;.
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>CIFS machine account password reset for SVM &quot;svm_prod_01&quot;.
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Vserver &quot;svm_prod_01&quot; DNS Check
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>    Vserver Name: svm_prod_01
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    Nameserver: 10.20.30.40
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    Query FQDN: svm_prod_01.domain.corp
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>    Query Result: successful
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>    Nameserver: 10.20.30.41
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>    Query FQDN: svm_prod_01.domain.corp
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>    Query Result: successful
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>SMB1 disabled for CIFS server &quot;NETAPP-SVM01&quot; on SVM &quot;svm_prod_01&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"</code></strong> — Delete the existing CIFS configuration with <code>vserver cifs delete -vserver &lt;svm&gt;</code> before creating a new one.
+<strong><code>Error: DNS name resolution failed for domain.corp</code></strong> — Verify DNS nameservers are configured on the SVM with <code>vserver services name-service dns modify -vserver &lt;svm&gt; -servers &lt;ip1&gt;,&lt;ip2&gt;</code> and that the domain controller is reachable.
+<strong><code>Error: Failed to reset CIFS machine account password: Access Denied</code></strong> — Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory.</p>
+</div>
 <hr />
 <h2 id="disk-failure-raid-degraded">Disk Failure / RAID Degraded<a class="headerlink" href="#disk-failure-raid-degraded" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_7">Symptoms<a class="headerlink" href="#symptoms_7" title="Permanent link">&para;</a></h3>
@@ -9005,35 +9433,91 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <li><code>storage aggregate show-status</code> shows RAID group in <code>degraded</code> state</li>
 </ul>
 <h3 id="diagnosis_7">Diagnosis<a class="headerlink" href="#diagnosis_7" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List all broken disks</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w"> </span>-fields<span class="w"> </span>disk,container-type,bay,shelf,node
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check RAID status per aggregate</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Identify available spare disks for automatic RAID rebuild</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Check if reconstruction is already in progress</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,state,raid-status
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Get full disk details including location</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,serial-number,bay,shelf,node,rpm,size
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># List all broken disks</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w"> </span>-fields<span class="w"> </span>disk,container-type,bay,shelf,node
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Check RAID status per aggregate</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Identify available spare disks for automatic RAID rebuild</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="c1"># Check if reconstruction is already in progress</span>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,state,raid-status
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="c1"># Get full disk details including location</span>
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,serial-number,bay,shelf,node,rpm,size
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Disk            Container Type  Bay  Shelf  Node
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>--------------- --------------- ---- ------ --------
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>1.0.0           aggregate       0    0      node-01
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>1.0.1           aggregate       1    0      node-01
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>1.0.5           broken          5    0      node-01
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>1.0.8           broken          8    0      node-02
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>2.0.3           broken          3    1      node-02
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>                                    Aggregate Status
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>Name                State           RAID Status
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>------------------- --------------- ----------------
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>aggr1               online          raid_deg
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>aggr2               online          raid_ok
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>aggr3               degraded        raid_rebuilding
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>Disk            Container Type
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>--------------- ---------------
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>1.1.0           spare
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>1.1.1           spare
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>2.1.2           spare
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>Aggregate Name  State           RAID Status
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>--------------- --------------- ----------------
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>aggr1           online          raid_rebuilding
+<a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a>aggr2           online          raid_ok
+<a id="__codelineno-33-26" name="__codelineno-33-26" href="#__codelineno-33-26"></a>aggr3           degraded        raid_rebuilding
+<a id="__codelineno-33-27" name="__codelineno-33-27" href="#__codelineno-33-27"></a>
+<a id="__codelineno-33-28" name="__codelineno-33-28" href="#__codelineno-33-28"></a>Disk     Serial Number        Bay  Shelf  Node      RPM   Size
+<a id="__codelineno-33-29" name="__codelineno-33-29" href="#__codelineno-33-29"></a>-------- -------------------- ---- ------ -------- ----- --------
+<a id="__codelineno-33-30" name="__codelineno-33-30" href="#__codelineno-33-30"></a>1.0.0    SN0A1B2C3D4E5F6G7    0    0      node-01  7200  1.75TB
+<a id="__codelineno-33-31" name="__codelineno-33-31" href="#__codelineno-33-31"></a>1.0.1    SN0F5E4D3C2B1A0G9    1    0      node-01  7200  1.75TB
+<a id="__codelineno-33-32" name="__codelineno-33-32" href="#__codelineno-33-32"></a>1.0.5    SN0X9Y8Z7W6V5U4T3    5    0      node-01  7200  1.75TB
+<a id="__codelineno-33-33" name="__codelineno-33-33" href="#__codelineno-33-33"></a>1.0.8    SN0M2L3K4J5I6H7G8    8    0      node-02  7200  1.75TB
+<a id="__codelineno-33-34" name="__codelineno-33-34" href="#__codelineno-33-34"></a>2.0.3    SN0P9O8N7M6L5K4J3    3    1      node-02  7200  1.75TB
+<a id="__codelineno-33-35" name="__codelineno-33-35" href="#__codelineno-33-35"></a>2.1.2    SN0A1B2C3D4E5F6G7    2    1      node-02  7200  1.75TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are logged into the ONTAP cluster CLI (not the host shell) and have cluster admin privileges.
+<strong><code>Error: There is no entry in the Compat database for the specified aggregate &lt;aggr_name&gt;</code></strong> — Verify the aggregate name is correct by running <code>storage aggregate show</code> without the <code>-aggregate</code> parameter.
+<strong><code>Error: Access denied. You do not have permission to run this command</code></strong> — Confirm your user role includes "admin" or equivalent cluster-wide permissions using <code>security login show</code>.</p>
+</div>
 <h3 id="resolution_7">Resolution<a class="headerlink" href="#resolution_7" title="Permanent link">&para;</a></h3>
 <p>ONTAP will automatically initiate RAID reconstruction when a spare disk is available. No manual intervention is needed for reconstruction to start.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Confirm reconstruction is underway</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Mark a disk as failed if ONTAP has not done so automatically</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>fail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Unfail a disk if it was transiently removed and re-seated successfully</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>unfail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Assign an unassigned spare to replace a failed disk</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;spare_disk_id&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Confirm reconstruction is underway</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Mark a disk as failed if ONTAP has not done so automatically</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>fail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Unfail a disk if it was transiently removed and re-seated successfully</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>unfail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Assign an unassigned spare to replace a failed disk</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;spare_disk_id&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Disk     Aggregate  Container  RA    FSID State    Rebuild%
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>-----    ---------  ---------  --    ---- -----    --------
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>1.0.0    aggr0      shared     4K    N/A  reconstructing  12
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>1.0.1    aggr0      shared     4K    N/A  reconstructing  12
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>1.0.2    aggr1      shared     4K    N/A  reconstructing   8
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>1.0.3    -          -          4K    N/A  failed    0
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>Disk assignment successful. Disk 1.0.4 assigned to node-01.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: disk &lt;disk_id&gt; is not in a failed state</code></strong> — Use <code>storage disk show</code> to verify the disk state before attempting to unfail it.
+<strong><code>Error: No spare disks available for assignment</code></strong> — Confirm spare disks exist with <code>storage disk show -container-type spare</code> and check node ownership constraints.</p>
+</div>
 <p>If no spare disks are available, RAID reconstruction cannot proceed. Escalate immediately — a second disk failure in the same RAID group will cause aggregate loss.</p>
 <hr />
 <h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
@@ -9082,7 +9566,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:24:31 UTC"><span class="timeago" datetime="2026-06-29T05:24:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:24:31 UTC">2026-06-29</span>
   </span>
 
     

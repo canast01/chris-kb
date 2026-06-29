@@ -8263,16 +8263,83 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># Check DHCP pool utilisation (Windows)</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>Get-DhcpServerv4ScopeStatistics<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;dhcp-server&gt;
 </code></pre></div>
-<p><strong>ISC dhcpd scope example (/etc/dhcp/dhcpd.conf):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>subnet<span class="w"> </span><span class="m">192</span>.168.1.0<span class="w"> </span>netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>range<span class="w"> </span><span class="m">192</span>.168.1.100<span class="w"> </span><span class="m">192</span>.168.1.200<span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>option<span class="w"> </span>routers<span class="w"> </span><span class="m">192</span>.168.1.1<span class="p">;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>option<span class="w"> </span>domain-name-servers<span class="w"> </span><span class="m">192</span>.168.1.10,<span class="w"> </span><span class="m">192</span>.168.1.11<span class="p">;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>option<span class="w"> </span>domain-name<span class="w"> </span><span class="s2">&quot;corp.example.com&quot;</span><span class="p">;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>default-lease-time<span class="w"> </span><span class="m">86400</span><span class="p">;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>max-lease-time<span class="w"> </span><span class="m">604800</span><span class="p">;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">}</span>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Linux: View current DHCP lease details
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>lease {
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  interface &quot;eth0&quot;;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  fixed-address 192.168.1.105;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  option subnet-mask 255.255.255.0;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  option routers 192.168.1.1;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  option domain-name-servers 8.8.8.8,8.8.4.4;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  renew 4 2024/01/15 14:32:15;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  expire 4 2024/01/15 22:32:15;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>}
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Linux: Force DHCP renewal
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Listening on LPF/eth0/08:00:27:a4:c2:f1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Sending on   LPF/eth0/08:00:27:a4:c2:f1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Sending on   Socket/fallback
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 3
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>DHCPOFFER from 192.168.1.1
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>DHCPACK from 192.168.1.1
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>bound to 192.168.1.106 -- renewal in 28800 seconds.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># View DHCP leases on ISC dhcpd server
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>lease 192.168.1.50 {
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  starts 1 2024/01/15 10:15:22;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  ends 1 2024/01/15 18:15:22;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  hardware ethernet aa:bb:cc:dd:ee:ff;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  uid &quot;printer-01&quot;;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  set vendor-string &quot;Canon-MF445dw&quot;;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  binding state active;
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>}
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Windows: View current IP configuration (shows lease expiry)
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Ethernet adapter Ethernet:
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>   Connection-specific DNS Suffix: example.com
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>   IPv4 Address: 192.168.1.42
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>   Subnet Mask: 255.255.255.0
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>   Default Gateway: 192.168.1.1
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>   DHCP Server: 192.168.1.10
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>   Lease Obtained: Monday, January 15, 2024 10:15:22 AM
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>   Lease Expires: Monday, January 15, 2024 6:15:22 PM
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># Windows: Release and renew DHCP lease
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>Successfully released the IPv4 address for adapter &quot;Ethernet&quot;.
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>Successfully renewed the IPv4 address for adapter &quot;Ethernet&quot;.
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a># Windows Server: List all DHCP scopes
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>ScopeId         : 192.168.1.0
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>Name            : Main-Office
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>SubnetMask      : 255.255.255.0
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>State            : Active
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>StartRange       : 192.168.1.100
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>EndRange         : 192.168.1.200
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>ActivationState  : True
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a># Windows Server: Show active leases in a scope
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>IPAddress        HostName         ClientID                    LeaseExpiryTime
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>---------        --------         --------                    ---------------
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>192.168.1.105    ws-dev-01        5254001234ab                1/15/2024 6:15:22 PM
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>192.168.1.110    printer-floor2   aabbccddeeff                1/15/2024 6:18:45 PM
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>192.168.1.115    iot-sensor-03    001a2b3c4d5e
+</code></pre></div>
+<strong>ISC dhcpd scope example (/etc/dhcp/dhcpd.conf):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>subnet<span class="w"> </span><span class="m">192</span>.168.1.0<span class="w"> </span>netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>range<span class="w"> </span><span class="m">192</span>.168.1.100<span class="w"> </span><span class="m">192</span>.168.1.200<span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>option<span class="w"> </span>routers<span class="w"> </span><span class="m">192</span>.168.1.1<span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>option<span class="w"> </span>domain-name-servers<span class="w"> </span><span class="m">192</span>.168.1.10,<span class="w"> </span><span class="m">192</span>.168.1.11<span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>option<span class="w"> </span>domain-name<span class="w"> </span><span class="s2">&quot;corp.example.com&quot;</span><span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>default-lease-time<span class="w"> </span><span class="m">86400</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>max-lease-time<span class="w"> </span><span class="m">604800</span><span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">}</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>subnet declaration not terminated with semicolon</code></strong> — Add a semicolon after the closing brace: <code>}</code>
+<strong><code>unknown option domain-name-servers</code></strong> — Use the correct DHCP option syntax <code>domain-name-servers</code> without hyphens in the value list, or verify the dhcpd.conf man page for your ISC DHCP version.</p>
+</div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8337,7 +8404,7 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

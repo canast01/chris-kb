@@ -8689,66 +8689,136 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;diagnosticsProfile.bootDiagnostics&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;enabled&quot;: true,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;storageUri&quot;: &quot;https://diagstg12345.blob.core.windows.net/&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the resource group name and VM name are correct with <code>az vm list --resource-group &lt;rg&gt;</code>.</p>
+<p><strong><code>StorageAccountNotFound : The storage account '&lt;storage-account-uri&gt;' does not exist or you do not have permission to access it.</code></strong> — Ensure the storage account URI is valid and your account has Storage Blob Data Contributor role on that storage account.</p>
+<p><strong><code>InvalidParameter : Boot diagnostics storage account must be in the same region as the virtual machine.</code></strong> — Create or specify a storage account in the same Azure region as your VM.</p>
+</div>
 <hr />
 <h2 id="enabling-at-vm-creation">Enabling at VM Creation<a class="headerlink" href="#enabling-at-vm-creation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create VM with boot diagnostics enabled (managed storage)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--image<span class="w"> </span>Ubuntu2204<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--size<span class="w"> </span>Standard_D2s_v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--boot-diagnostics-storage<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--admin-username<span class="w"> </span>azureuser<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--generate-ssh-keys
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Create VM with boot diagnostics using a specific storage account</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--image<span class="w"> </span>Ubuntu2204<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--size<span class="w"> </span>Standard_D2s_v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--boot-diagnostics-storage<span class="w"> </span>https://&lt;storage-account&gt;.blob.core.windows.net/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--admin-username<span class="w"> </span>azureuser<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--generate-ssh-keys
-</code></pre></div>
-<hr />
-<h2 id="reading-boot-logs">Reading Boot Logs<a class="headerlink" href="#reading-boot-logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get the serial console log (text output from OS boot)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create VM with boot diagnostics enabled (managed storage)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Save the boot log to a file for analysis</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>boot-log.txt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--image<span class="w"> </span>Ubuntu2204<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--size<span class="w"> </span>Standard_D2s_v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--boot-diagnostics-storage<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--admin-username<span class="w"> </span>azureuser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--generate-ssh-keys
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Get a SAS URL to download the boot screenshot</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log-uris<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Create VM with boot diagnostics using a specific storage account</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--output<span class="w"> </span>json
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--image<span class="w"> </span>Ubuntu2204<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--size<span class="w"> </span>Standard_D2s_v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--boot-diagnostics-storage<span class="w"> </span>https://&lt;storage-account&gt;.blob.core.windows.net/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--admin-username<span class="w"> </span>azureuser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--generate-ssh-keys
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;fqdns&quot;: &quot;&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;macAddress&quot;: &quot;00:0D:3A:2E:5F:8C&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;powerState&quot;: &quot;VM running&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;privateIpAddress&quot;: &quot;10.0.1.42&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;publicIpAddress&quot;: &quot;52.170.45.123&quot;,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;zones&quot;: &quot;&quot;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>}
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>{
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  &quot;fqdns&quot;: &quot;&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-02&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;macAddress&quot;: &quot;00:0D:3A:2E:5F:8D&quot;,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;powerState&quot;: &quot;VM running&quot;,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;privateIpAddress&quot;: &quot;10.0.1.43&quot;,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;publicIpAddress&quot;: &quot;52.170.45.124&quot;,
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;zones&quot;: &quot;&quot;
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group exists in the target subscription with <code>az group list</code> and use the correct <code>--resource-group</code> name.
+<strong><code>InvalidStorageAccountUri</code></strong> — Ensure the storage account URI follows the format <code>https://&lt;storage-account&gt;.blob.core.windows.net/</code> and the storage account exists in the same region and subscription.
+<strong><code>InsufficientQuotaAvailable</code></strong> — Request a quota increase for the Standard_D2s_v3 VM size in your subscription via the Azure portal or contact support.</p>
+</div>
 <hr />
+<h2 id="reading-boot-logs">Reading Boot Logs<a class="headerlink" href="#reading-boot-logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get the serial console log (text output from OS boot)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Save the boot log to a file for analysis</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>boot-log.txt
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Get a SAS URL to download the boot screenshot</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log-uris<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--output<span class="w"> </span>json
+</code></pre></div>
+<h2 id="expected-outputbooting-100-0000000-linux-version-5100-28-generic-builddlgw02-amd64-060-gcc-10-debian-1021-6-1021-20210110-gnu-ld-gnu-binutils-for-debian-2352-30-ubuntu-smp-tue-mar-7-124606-utc-2023-ubuntu-5100-2829-generic-510209-0000000-command-line-boot_imagebootvmlinuz-5100-28-generic-rootuuida1b2c3d4-e5f6-7890-abcd-ef1234567890-ro-quiet-splash-0000000-kernel-supported-cpus-0000000-intel-genuineintel-0000000-amd-authenticamd-0000000-hygon-hygongenuine-0000000-centaur-centaurhauls-0000000-zhaoxin-shanghai-0123456-memory-7891234k8388608k-available-14339k-kernel-code-2741k-rwdata-4640k-rodata-2788k-init-7234k-pages-5432k-reserved-0k-cma-1234567-systemd1-started-user-manager-for-uid-0-2345678-cloud-init1234-cloud-init-v-2311-running-init-stage-pid-1234-time-234s-3456789-systemd1-started-session-c1-of-user-root-consolescreenshotbloburi-httpsdiagstg1a2b3c4d5e6fblobcorewindowsnetbootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890vmnamescreenshotbmpsv2021-06-08ssbsrtscosprwdlacse2024-01-15t123456zst2024-01-14t123456zsprhttpssigabcdefghijklmnopqrstuvwxyz1234567890abcdefgh3d-serialconsolelogbloburi-httpsdiagstg1a2b3c4d5e6fblobcorewindowsnetbootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890vmnameserialconsolelogsv2021-06-08ssbsrtscosprwdlacse2024-01-15t123456zst2024-01-14t123456zsprhttpssigxyz9876543210fedcb"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Booting [=========================] 100%
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[    0.000000] Linux version 5.10.0-28-generic (buildd@lgw02-amd64-060) (gcc-10 (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2) #30-Ubuntu SMP Tue Mar 7 12:46:06 UTC 2023 (Ubuntu 5.10.0-28.29-generic 5.10.209)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-28-generic root=UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890 ro quiet splash
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>[    0.000000] KERNEL supported cpus:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>[    0.000000]   Intel GenuineIntel
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>[    0.000000]   AMD AuthenticAMD
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>[    0.000000]   Hygon HygonGenuine
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>[    0.000000]   Centaur CentaurHauls
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>[    0.000000]   zhaoxin   Shanghai
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>[    0.123456] Memory: 7891234K/8388608K available (14339K kernel code, 2741K rwdata, 4640K rodata, 2788K init, 7234K pages, 5432K reserved, 0K cma)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>[    1.234567] systemd[1]: Started User Manager for UID 0.
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>[    2.345678] cloud-init[1234]: Cloud-init v. 23.1.1 running &#39;init&#39; stage (PID 1234 TIME 2.34s)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>[    3.456789] systemd[1]: Started Session c1 of user root.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>{
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  &quot;consoleScreenshotBlobUri&quot;: &quot;https://diagstg1a2b3c4d5e6f.blob.core.windows.net/bootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890/vmname.screenshot.bmp?sv=2021-06-08&amp;ss=b&amp;srt=sco&amp;sp=rwdlac&amp;se=2024-01-15T12:34:56Z&amp;st=2024-01-14T12:34:56Z&amp;spr=https&amp;sig=AbCdEfGhIjKlMnOpQrStUvWxYz1234567890ABCDEFGH%3D&quot;,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  &quot;serialConsoleLogBlobUri&quot;: &quot;https://diagstg1a2b3c4d5e6f.blob.core.windows.net/bootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890/vmname.serialconsole.log?sv=2021-06-08&amp;ss=b&amp;srt=sco&amp;sp=rwdlac&amp;se=2024-01-15T12:34:56Z&amp;st=2024-01-14T12:34:56Z&amp;spr=https&amp;sig=XyZ9876543210FeDcB
+</code></pre></div><a class="headerlink" href="#expected-outputbooting-100-0000000-linux-version-5100-28-generic-builddlgw02-amd64-060-gcc-10-debian-1021-6-1021-20210110-gnu-ld-gnu-binutils-for-debian-2352-30-ubuntu-smp-tue-mar-7-124606-utc-2023-ubuntu-5100-2829-generic-510209-0000000-command-line-boot_imagebootvmlinuz-5100-28-generic-rootuuida1b2c3d4-e5f6-7890-abcd-ef1234567890-ro-quiet-splash-0000000-kernel-supported-cpus-0000000-intel-genuineintel-0000000-amd-authenticamd-0000000-hygon-hygongenuine-0000000-centaur-centaurhauls-0000000-zhaoxin-shanghai-0123456-memory-7891234k8388608k-available-14339k-kernel-code-2741k-rwdata-4640k-rodata-2788k-init-7234k-pages-5432k-reserved-0k-cma-1234567-systemd1-started-user-manager-for-uid-0-2345678-cloud-init1234-cloud-init-v-2311-running-init-stage-pid-1234-time-234s-3456789-systemd1-started-session-c1-of-user-root-consolescreenshotbloburi-httpsdiagstg1a2b3c4d5e6fblobcorewindowsnetbootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890vmnamescreenshotbmpsv2021-06-08ssbsrtscosprwdlacse2024-01-15t123456zst2024-01-14t123456zsprhttpssigabcdefghijklmnopqrstuvwxyz1234567890abcdefgh3d-serialconsolelogbloburi-httpsdiagstg1a2b3c4d5e6fblobcorewindowsnetbootdiagnostics-vmname-a1b2c3d4-e5f6-7890-abcd-ef1234567890vmnameserialconsolelogsv2021-06-08ssbsrtscosprwdlacse2024-01-15t123456zst2024-01-14t123456zsprhttpssigxyz9876543210fedcb" title="Permanent link">&para;</a></h2>
 <h2 id="serial-console-access">Serial Console Access<a class="headerlink" href="#serial-console-access" title="Permanent link">&para;</a></h2>
 <p>Azure Serial Console provides interactive access to the VM's serial port, even when the VM has no network connectivity. It requires boot diagnostics to be enabled.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Serial Console is accessed via the Azure portal:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Virtual Machines &gt; &lt;vm-name&gt; &gt; Help &gt; Serial Console</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm prerequisites are met</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{BootDiagnostics:diagnosticsProfile.bootDiagnostics.enabled, PowerState:powerState}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--output<span class="w"> </span>json
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Ensure the VM agent is running (required for some serial console features)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;instanceView.vmAgent.statuses[?code==&#39;ProvisioningState/succeeded&#39;]&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Serial Console is accessed via the Azure portal:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Virtual Machines &gt; &lt;vm-name&gt; &gt; Help &gt; Serial Console</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm prerequisites are met</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{BootDiagnostics:diagnosticsProfile.bootDiagnostics.enabled, PowerState:powerState}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--output<span class="w"> </span>json
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Ensure the VM agent is running (required for some serial console features)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;instanceView.vmAgent.statuses[?code==&#39;ProvisioningState/succeeded&#39;]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;BootDiagnostics&quot;: true,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;PowerState&quot;: &quot;VM running&quot;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>}
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Code    DisplayStatus    Message
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>------  ---------------  -----------------------------------------
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ProvisioningState/succeeded  Provisioning succeeded  Guest Agent has reported success.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFoundError: The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the resource group name and VM name are correct with <code>az vm list --resource-group &lt;rg&gt;</code>.</p>
+<p><strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;vm-name&gt;'.</code></strong> — Ensure your Azure account has at least Reader role on the resource group or VM.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8788,15 +8858,40 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 <hr />
 <h2 id="windows-special-admin-console-sac">Windows — Special Admin Console (SAC)<a class="headerlink" href="#windows-special-admin-console-sac" title="Permanent link">&para;</a></h2>
 <p>On Windows VMs, the Serial Console connects to the Special Administration Console.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># In SAC, type the following to open a command prompt channel:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cmd
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List active channels</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ch<span class="w"> </span>-?
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Switch to cmd channel</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ch<span class="w"> </span>-si<span class="w"> </span>&lt;channel-number&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># In SAC, type the following to open a command prompt channel:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cmd
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List active channels</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ch<span class="w"> </span>-?
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Switch to cmd channel</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ch<span class="w"> </span>-si<span class="w"> </span>&lt;channel-number&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SAC&gt;cmd
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>The Command Prompt session was successfully created.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>SAC&gt;ch -?
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Channel List
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Cmd                                      Cmd(1)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>EMS                                      Cmd(2)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>SAC                                      SAC(3)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>SAC&gt;ch -si 1
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Name                : Cmd
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Description         : Command Prompt
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Type                : VT100/ANSI
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Channel GUID        : 60908076-a466-11d1-b053-00c04fc2d4cd
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Application Type    : Cmd
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Command Line        : Cmd.exe
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Transport           : Serial
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Flags               : 
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Access Level        : *
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ch -si: No such channel</code></strong> — Verify the channel number exists by running <code>ch -?</code> first and use the correct number in parentheses.
+<strong><code>SAC&gt;: command not found</code></strong> — Ensure you are in the Serial Admin Console (SAC) session; if disconnected, reconnect via <code>sasutil.exe</code> or the Azure portal's Serial Console blade.</p>
+</div>
 <hr />
 <h2 id="common-boot-issues-and-diagnostics">Common Boot Issues and Diagnostics<a class="headerlink" href="#common-boot-issues-and-diagnostics" title="Permanent link">&para;</a></h2>
 <table>
@@ -8835,11 +8930,19 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable boot diagnostics if no longer needed</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>disable<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Disable boot diagnostics if no longer needed</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>disable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Command group &#39;vm boot-diagnostics&#39; is deprecated and will be removed in a future release. Use &#39;vm boot-diagnostics disable&#39; from &#39;az vm&#39; instead.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceGroupNotFound : The resource group '&lt;rg&gt;' could not be found.</code></strong> — Verify the resource group name with <code>az group list</code> and ensure you're using the correct subscription via <code>az account set --subscription &lt;id&gt;</code>.
+<strong><code>ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Confirm the VM name and resource group are correct by running <code>az vm list --resource-group &lt;rg&gt; --query "[].name"</code>.</p>
+</div>
 
 
 
@@ -8862,7 +8965,7 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

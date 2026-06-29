@@ -7485,53 +7485,146 @@ AWS Bedrock Agents enable multi-step reasoning and action execution using founda
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Prepare a working draft after every config change</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>prepare-agent<span class="w"> </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    &quot;agent&quot;: {
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        &quot;agentName&quot;: &quot;support-agent&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        &quot;agentStatus&quot;: &quot;CREATING&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        &quot;agentArn&quot;: &quot;arn:aws:bedrock:us-east-1:123456789012:agent/AGENTID123&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        &quot;foundationModel&quot;: &quot;anthropic.claude-3-sonnet-20240229-v1:0&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        &quot;instruction&quot;: &quot;You are a support agent. Use tools to look up orders, accounts, and tickets.&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        &quot;agentResourceRoleArn&quot;: &quot;arn:aws:iam::123456789012:role/AmazonBedrockExecutionRoleForAgents&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        &quot;createdAt&quot;: &quot;2024-01-15T14:32:18.456Z&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        &quot;updatedAt&quot;: &quot;2024-01-15T14:32:18.456Z&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    }
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>}
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>{
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;agentStatus&quot;: &quot;DRAFT&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;draftVersion&quot;: &quot;DRAFT_V1&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;preparedAt&quot;: &quot;2024-01-15T14:32:45.123Z&quot;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ValidationException) when calling the CreateAgent operation: Invalid IAM role ARN format</code></strong> — Verify the IAM role ARN exists and matches the pattern <code>arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME</code>.
+<strong><code>An error occurred (ResourceNotFoundException) when calling the PrepareAgent operation: Agent not found: AGENTID123</code></strong> — Use the actual agent ID returned from the create-agent command instead of the placeholder "AGENTID123".
+<strong><code>An error occurred (AccessDenied) when calling the CreateAgent operation: User is not authorized to perform: bedrock:CreateAgent</code></strong> — Add the <code>bedrock:CreateAgent</code> permission to your IAM user or role policy.</p>
+</div>
 <p>The execution role must trust <code>bedrock.amazonaws.com</code> and have <code>bedrock:InvokeModel</code> on the chosen model ARN.</p>
 <h2 id="action-groups">Action Groups<a class="headerlink" href="#action-groups" title="Permanent link">&para;</a></h2>
 <p>Action groups map the API operations an agent can call to an OpenAPI schema and a Lambda function. Keep schemas focused — overly broad schemas cause the model to hallucinate tool calls.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-action-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--agent-version<span class="w"> </span><span class="s2">&quot;DRAFT&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--action-group-name<span class="w"> </span><span class="s2">&quot;OrderActions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--action-group-executor<span class="w"> </span><span class="s1">&#39;{&quot;lambda&quot;:&quot;arn:aws:lambda:us-east-1:123456789012:function:order-actions&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--api-schema<span class="w"> </span><span class="s1">&#39;{&quot;s3&quot;:{&quot;s3BucketName&quot;:&quot;my-schemas&quot;,&quot;s3ObjectKey&quot;:&quot;order-actions.json&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-action-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--agent-version<span class="w"> </span><span class="s2">&quot;DRAFT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--action-group-name<span class="w"> </span><span class="s2">&quot;OrderActions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--action-group-executor<span class="w"> </span><span class="s1">&#39;{&quot;lambda&quot;:&quot;arn:aws:lambda:us-east-1:123456789012:function:order-actions&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--api-schema<span class="w"> </span><span class="s1">&#39;{&quot;s3&quot;:{&quot;s3BucketName&quot;:&quot;my-schemas&quot;,&quot;s3ObjectKey&quot;:&quot;order-actions.json&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    &quot;agentActionGroupId&quot;: &quot;AAGID9f7c2e1b&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;agentVersion&quot;: &quot;DRAFT&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;actionGroupName&quot;: &quot;OrderActions&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;actionGroupExecutor&quot;: {
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;lambda&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:order-actions&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    },
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    &quot;apiSchema&quot;: {
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        &quot;s3&quot;: {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            &quot;s3BucketName&quot;: &quot;my-schemas&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            &quot;s3ObjectKey&quot;: &quot;order-actions.json&quot;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        }
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    },
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    &quot;createdAt&quot;: &quot;2024-01-15T14:32:47.123Z&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    &quot;updatedAt&quot;: &quot;2024-01-15T14:32:47.123Z&quot;
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the CreateAgentActionGroup operation: Agent not found</code></strong> — Verify the agent ID exists with <code>aws bedrock-agent get-agent --agent-id AGENTID123 --region us-east-1</code>.
+<strong><code>An error occurred (AccessDeniedException) when calling the CreateAgentActionGroup operation: User is not authorized to perform bedrock-agent:CreateAgentActionGroup</code></strong> — Add the <code>bedrock-agent:CreateAgentActionGroup</code> permission to your IAM role or user policy.
+<strong><code>An error occurred (ValidationException) when calling the CreateAgentActionGroup operation: S3 object not found</code></strong> — Confirm the schema file exists at <code>s3://my-schemas/order-actions.json</code> and your credentials have <code>s3:GetObject</code> permission.</p>
+</div>
 <h2 id="lambda-integration">Lambda Integration<a class="headerlink" href="#lambda-integration" title="Permanent link">&para;</a></h2>
 <p>The Lambda receives a structured event and must return a response in the Bedrock-expected format.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">action_group</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;actionGroup&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">api_path</span>      <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;apiPath&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">http_method</span>   <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;httpMethod&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">params</span>        <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[])}</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">if</span> <span class="n">api_path</span> <span class="o">==</span> <span class="s2">&quot;/get-order&quot;</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">fetch_order</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;orderId&quot;</span><span class="p">])</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">body</span>  <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;orderId&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]}</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unknown path&quot;</span><span class="p">}</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="k">return</span> <span class="p">{</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="s2">&quot;messageVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            <span class="s2">&quot;actionGroup&quot;</span><span class="p">:</span> <span class="n">action_group</span><span class="p">,</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="s2">&quot;apiPath&quot;</span><span class="p">:</span> <span class="n">api_path</span><span class="p">,</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            <span class="s2">&quot;httpMethod&quot;</span><span class="p">:</span> <span class="n">http_method</span><span class="p">,</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>            <span class="s2">&quot;httpStatusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>            <span class="s2">&quot;responseBody&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;application/json&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">body</span><span class="p">)}}</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="p">}</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">action_group</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;actionGroup&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">api_path</span>      <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;apiPath&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">http_method</span>   <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;httpMethod&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">params</span>        <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[])}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="k">if</span> <span class="n">api_path</span> <span class="o">==</span> <span class="s2">&quot;/get-order&quot;</span><span class="p">:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">fetch_order</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;orderId&quot;</span><span class="p">])</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">body</span>  <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;orderId&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unknown path&quot;</span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="s2">&quot;messageVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>            <span class="s2">&quot;actionGroup&quot;</span><span class="p">:</span> <span class="n">action_group</span><span class="p">,</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>            <span class="s2">&quot;apiPath&quot;</span><span class="p">:</span> <span class="n">api_path</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>            <span class="s2">&quot;httpMethod&quot;</span><span class="p">:</span> <span class="n">http_method</span><span class="p">,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="s2">&quot;httpStatusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="s2">&quot;responseBody&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;application/json&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">body</span><span class="p">)}}</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="p">}</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="p">}</span>
 </code></pre></div>
 <p>Set Lambda timeout to at least 60 seconds — agent orchestration adds latency before Lambda is invoked.</p>
 <h2 id="testing-agents">Testing Agents<a class="headerlink" href="#testing-agents" title="Permanent link">&para;</a></h2>
 <p>Use a unique <code>sessionId</code> per conversation. The built-in <code>TSTALIASID</code> alias always points to the DRAFT version.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aws<span class="w"> </span>bedrock-agent-runtime<span class="w"> </span>invoke-agent<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--agent-alias-id<span class="w"> </span><span class="s2">&quot;TSTALIASID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--session-id<span class="w"> </span><span class="s2">&quot;test-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--input-text<span class="w"> </span><span class="s2">&quot;What is the status of order 98765?&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--enable-trace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>aws<span class="w"> </span>bedrock-agent-runtime<span class="w"> </span>invoke-agent<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--agent-alias-id<span class="w"> </span><span class="s2">&quot;TSTALIASID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--session-id<span class="w"> </span><span class="s2">&quot;test-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--input-text<span class="w"> </span><span class="s2">&quot;What is the status of order 98765?&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--enable-trace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    &quot;sessionState&quot;: {
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        &quot;sessionAttributes&quot;: {},
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        &quot;invocationId&quot;: &quot;invoke-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    },
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    &quot;output&quot;: &quot;Order 98765 is currently in transit. Expected delivery: 2024-01-15. Last scanned at distribution center in Atlanta, GA at 2024-01-12 14:32 UTC.&quot;,
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    &quot;trace&quot;: {
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        &quot;trace&quot;: [
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            {
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                &quot;agentAliasId&quot;: &quot;TSTALIASID&quot;,
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                &quot;sessionId&quot;: &quot;test-1705084532&quot;,
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                &quot;timestamp&quot;: &quot;2024-01-12T15:42:12.456Z&quot;,
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                &quot;type&quot;: &quot;ModelInvocationRequest&quot;,
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                &quot;modelInvocationInput&quot;: {
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>                    &quot;text&quot;: &quot;What is the status of order 98765?&quot;
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>                }
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>            },
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>            {
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>                &quot;type&quot;: &quot;ActionGroupInvocation&quot;,
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>                &quot;actionGroupName&quot;: &quot;OrderLookup&quot;,
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>                &quot;actionName&quot;: &quot;getOrderStatus&quot;,
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>                &quot;invocationId&quot;: &quot;invoke-xyz789&quot;,
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>                &quot;timestamp&quot;: &quot;2024-01-12T15:42:13.891Z&quot;
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>            }
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>        ]
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    },
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>    &quot;responseMetadata&quot;: {
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>        &quot;RequestId&quot;: &quot;req-9f8e7d6c-5b4a-3c2b-1a09-f8e7d6c5b4a3&quot;,
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>        &quot;HTTPStatusCode&quot;: 200,
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>        &quot;HTTPHeaders&quot;: {
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>            &quot;date&quot;: &quot;Fri, 12 Jan 2024 15:42:14 GMT&quot;,
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>            &quot;x-amzn-requestid&quot;: &quot;req-9f8e7d6c-5b4a-3c2b-1a09-f8e7d6c5b4a3&quot;
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>        }
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    }
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the InvokeAgent operation: Could not find agent with ID AGENTID123</code></strong> — Verify the agent ID exists in your AWS account and region by running <code>aws bedrock-agent list-agents --region us-east-1</code>.
+<strong><code>An error occurred (ValidationException) when calling the InvokeAgent operation: Agent alias TSTALIASID is not in PREPARED state</code></strong> — Check the alias status with <code>aws bedrock-agent get-agent-alias --agent-id AGENTID123 --agent-alias-id TSTALIASID --region us-east-1</code> and ensure it has been prepared.
+<strong><code>An error occurred (AccessDeniedException) when calling the InvokeAgent operation: User is not authorized to perform bedrock-agent-runtime:InvokeAgent</code></strong> — Add the <code>bedrock-agent:InvokeAgent</code> permission to your IAM user or role policy.</p>
+</div>
 <p><code>--enable-trace</code> returns orchestration steps showing how the model reasoned, which tools it considered, and what it returned.</p>
 <h2 id="agent-aliases-and-versioning">Agent Aliases and Versioning<a class="headerlink" href="#agent-aliases-and-versioning" title="Permanent link">&para;</a></h2>
 <table>
@@ -7560,15 +7653,43 @@ AWS Bedrock Agents enable multi-step reasoning and action execution using founda
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create an immutable version from the current DRAFT</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-version<span class="w"> </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a production alias pointing to version 2</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-alias<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--agent-alias-name<span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--routing-configuration<span class="w"> </span><span class="s1">&#39;[{&quot;agentVersion&quot;:&quot;2&quot;}]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create an immutable version from the current DRAFT</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-version<span class="w"> </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Create a production alias pointing to version 2</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-agent-alias<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--agent-alias-name<span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--routing-configuration<span class="w"> </span><span class="s1">&#39;[{&quot;agentVersion&quot;:&quot;2&quot;}]&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    &quot;agentVersion&quot;: {
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        &quot;agentVersion&quot;: &quot;2&quot;,
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        &quot;agentStatus&quot;: &quot;NOT_PREPARED&quot;,
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        &quot;createdAt&quot;: &quot;2024-01-15T14:32:47.123Z&quot;,
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        &quot;updatedAt&quot;: &quot;2024-01-15T14:32:47.123Z&quot;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    }
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>}
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>{
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    &quot;agentAliasId&quot;: &quot;ALIA5K9M2X&quot;,
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    &quot;agentId&quot;: &quot;AGENTID123&quot;,
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    &quot;agentAliasName&quot;: &quot;production&quot;,
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    &quot;agentAliasStatus&quot;: &quot;CREATED&quot;,
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    &quot;routingConfiguration&quot;: [
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        {
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>            &quot;agentVersion&quot;: &quot;2&quot;
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>        }
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    ],
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    &quot;createdAt&quot;: &quot;2024-01-15T14:32:52.456Z&quot;,
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    &quot;updatedAt&quot;: &quot;2024-01-15T14:32:52.456Z&quot;
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ValidationException) when calling the CreateAgentVersion operation: Agent AGENTID123 is in FAILED state and cannot be versioned</code></strong> — Ensure the agent is in a PREPARED or DRAFT state by running <code>aws bedrock-agent get-agent --agent-id AGENTID123</code> to check status, then fix any preparation errors before retrying.
+<strong><code>An error occurred (ResourceNotFoundException) when calling the CreateAgentAlias operation: Could not find agent with id AGENTID123</code></strong> — Verify the agent ID is correct and exists in your account by listing agents with <code>aws bedrock-agent list-agents</code>.</p>
+</div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7624,7 +7745,7 @@ AWS Bedrock Agents enable multi-step reasoning and action execution using founda
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:29:39 UTC"><span class="timeago" datetime="2026-06-29T06:29:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:29:39 UTC">2026-06-29</span>
   </span>
 
     

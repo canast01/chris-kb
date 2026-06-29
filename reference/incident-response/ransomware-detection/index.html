@@ -7249,6 +7249,21 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;<span class="w"> </span>--sort<span class="w"> </span>created<span class="w"> </span>--reverse
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Verify eradication period (default 24h) has not expired</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Name                                    Created                 Size      State
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>prod-db-backup-2024-01-15-0300         2024-01-15 03:00:12     487.3GB   active
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>prod-db-backup-2024-01-14-0300         2024-01-14 03:00:08     487.1GB   active
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>prod-db-backup-2024-01-13-0300         2024-01-13 03:00:15     486.9GB   active
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>prod-db-backup-2024-01-12-0300         2024-01-12 03:00:11     487.2GB   active
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>prod-db-backup-2024-01-11-0300         2024-01-11 03:00:09     486.8GB   active
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>prod-db-backup-2024-01-10-0300         2024-01-10 03:00:14     487.0GB   active
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Total: 47 snapshots | Eradication window expires: 2024-01-16 03:00:12 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group '&lt;pgroup&gt;' not found</code></strong> — Verify the protection group name with <code>pureprotectiongroup list</code> and use the correct name.
+<strong><code>Error: Command requires authentication token</code></strong> — Ensure you are authenticated to the Pure Storage array with <code>pureauth login</code> before running snapshot commands.</p>
+</div>
 <p>Check Veeam Hardened Repository: confirm immutability lock is active and unexpired.</p>
 <h2 id="recovery-options">Recovery Options<a class="headerlink" href="#recovery-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -7288,12 +7303,29 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 </tbody>
 </table>
 <h3 id="option-a-pure-safemode-restore">Option A — Pure SafeMode Restore<a class="headerlink" href="#option-a-pure-safemode-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List available immutable snapshots</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restore volume from clean snapshot</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;pgroup&gt;.&lt;snapshot&gt;.&lt;vol&gt;<span class="w"> </span>&lt;restore-vol-name&gt;<span class="w"> </span>--overwrite
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List available immutable snapshots</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restore volume from clean snapshot</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;pgroup&gt;.&lt;snapshot&gt;.&lt;vol&gt;<span class="w"> </span>&lt;restore-vol-name&gt;<span class="w"> </span>--overwrite
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name                           Created                  Serial                   Pgrouplist
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pgrouplist-prod-01.2024-01-15  2024-01-15 14:32:18 UTC  8a3f9c2e-b741-4d2a-9e1b  pgrouplist-prod-01
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pgrouplist-prod-01.2024-01-14  2024-01-14 14:32:18 UTC  7b2e8d1f-a630-3c1b-8d0a  pgrouplist-prod-01
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>pgrouplist-prod-01.2024-01-13  2024-01-13 14:32:18 UTC  6c1d7c0e-9f52-2b0a-7c9f  pgrouplist-prod-01
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>pgrouplist-prod-01.2024-01-12  2024-01-12 14:32:18 UTC  5d0c6b9d-8e41-1a9f-6b8e  pgrouplist-prod-01
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>pgrouplist-prod-01.2024-01-11  2024-01-11 14:32:18 UTC  4e9b5a8c-7d30-0f8e-5a7d  pgrouplist-prod-01
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Volume copy started: restore-vol-prod-01
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Copy progress: 100%
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Volume restore-vol-prod-01 created successfully from pgrouplist-prod-01.2024-01-15.database-vol
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group '&lt;pgroup&gt;' not found</code></strong> — Verify the protection group name with <code>pureprotectiongroup list</code> and ensure it exists on the array.
+<strong><code>Error: Snapshot '&lt;snapshot&gt;' does not exist in protection group</code></strong> — Confirm the snapshot name is correct and hasn't been purged by checking the full snapshot list output above.
+<strong><code>Error: Volume '&lt;restore-vol-name&gt;' already exists</code></strong> — Remove the <code>--overwrite</code> flag if you want to preserve the existing volume, or delete it first with <code>purevol destroy &lt;restore-vol-name&gt;</code>.</p>
+</div>
 <h3 id="option-b-veeam-restore-from-hardened-repository">Option B — Veeam Restore from Hardened Repository<a class="headerlink" href="#option-b-veeam-restore-from-hardened-repository" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Veeam Console → Home → Backups → Disk</li>
@@ -7302,14 +7334,14 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 <li>Restore to isolated network first, validate, then reconnect</li>
 </ol>
 <h2 id="communication-template">Communication Template<a class="headerlink" href="#communication-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Subject: [P0 INCIDENT] Ransomware Activity Detected — [Date/Time]
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Status: Contained / Investigating / Recovering
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Affected systems: [list]
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Impact: [describe user/service impact]
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Actions taken: [isolation steps, backup assessment, recovery plan]
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Next update: [time]
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Incident commander: [name/channel]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Subject: [P0 INCIDENT] Ransomware Activity Detected — [Date/Time]
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Status: Contained / Investigating / Recovering
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Affected systems: [list]
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Impact: [describe user/service impact]
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Actions taken: [isolation steps, backup assessment, recovery plan]
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Next update: [time]
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Incident commander: [name/channel]
 </code></pre></div>
 <h2 id="post-incident">Post-Incident<a class="headerlink" href="#post-incident" title="Permanent link">&para;</a></h2>
 <p>After recovery is confirmed and validated:</p>
@@ -7349,7 +7381,7 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

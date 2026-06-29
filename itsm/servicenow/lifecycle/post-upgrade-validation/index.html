@@ -8202,19 +8202,64 @@ Structured validation procedure to confirm system health and application functio
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Active (I/O)&quot;</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Dead\|Standby&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 </code></pre></div>
-<h2 id="2-service-health">2. Service Health<a class="headerlink" href="#2-service-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux — check all expected services are running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>nginx<span class="w"> </span>postgresql<span class="w"> </span>haproxy<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>systemctl<span class="w"> </span>is-active<span class="w"> </span><span class="nv">$svc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">: OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">: FAILED&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">done</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Generic — check listening ports</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;80|443|5432|6379|9200&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>netstat<span class="w"> </span>-tulnp
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Windows — check services</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Get-Service<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.StartType<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Automatic&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-ne<span class="w"> </span><span class="s1">&#39;Running&#39;</span><span class="o">}</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>System Health Status: Green
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powerState = &quot;poweredOn&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>connectionState = &quot;connected&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>VMware ESXi 7.0.3 build-19193900
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Product: VMware ESXi
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Version: 7.0.3
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Build: 19193900
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Release Date: 2023-09-15
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>147
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>147
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>42
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>3
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>System Health Status: Yellow</code></strong> — Check <code>esxcli system health status list</code> to identify which subsystem is degraded (typically storage or memory), then remediate the specific component before proceeding.
+<strong><code>vim-cmd: Unknown command</code></strong> — Verify the vSphere API is running with <code>service-control --status vmware-vpxd</code> and restart if needed; if persists, the ESXi host may need a reboot.
+<strong><code>grep: (standard input) is empty</code></strong> — Confirm storage devices are detected with <code>esxcli storage core device list</code>; if no devices appear, rescan HBAs using <code>esxcli storage core adapter rescan --adapter=vmhba0</code>.</p>
+</div>
+<h2 id="2-service-health">2. Service Health<a class="headerlink" href="#2-service-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — check all expected services are running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>nginx<span class="w"> </span>postgresql<span class="w"> </span>haproxy<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>systemctl<span class="w"> </span>is-active<span class="w"> </span><span class="nv">$svc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">: OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">: FAILED&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">done</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Generic — check listening ports</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;80|443|5432|6379|9200&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>netstat<span class="w"> </span>-tulnp
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Windows — check services</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Get-Service<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.StartType<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Automatic&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-ne<span class="w"> </span><span class="s1">&#39;Running&#39;</span><span class="o">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nginx: OK
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>postgresql: OK
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>haproxy: OK
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>LISTEN    0      128                0.0.0.0:80            0.0.0.0:*    users:((&quot;nginx&quot;,pid=2847,fd=6))
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>LISTEN    0      128                0.0.0.0:443          0.0.0.0:*    users:((&quot;nginx&quot;,pid=2847,fd=7))
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>LISTEN    0      128              127.0.0.1:5432        0.0.0.0:*    users:((&quot;postgres&quot;,pid=1923,fd=3))
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>LISTEN    0      128              127.0.0.1:6379        0.0.0.0:*    users:((&quot;redis-server&quot;,pid=2156,fd=4))
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>LISTEN    0      128              127.0.0.1:9200        0.0.0.0:*    users:((&quot;java&quot;,pid=3401,fd=42))
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      2847/nginx
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      2847/nginx
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>tcp        0      0 127.0.0.1:5432         0.0.0.0:*               LISTEN      1923/postgres
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>tcp        0      0 127.0.0.1:6379         0.0.0.0:*               LISTEN      2156/redis-server
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>tcp        0      0 127.0.0.1:9200         0.0.0.0:*               LISTEN      3401/java
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Status   Name               StartType
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Stopped  WinRM              Automatic
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Stopped  WinDefend          Automatic
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nginx: FAILED</code></strong> — Run <code>systemctl start nginx &amp;&amp; systemctl enable nginx</code> to start the service and enable it on boot.
+<strong><code>ss: command not found</code></strong> — Install iproute2 with <code>apt-get install iproute2</code> or use <code>netstat -tulnp</code> as a fallback.
+<strong><code>Get-Service : The term 'Get-Service' is not recognized</code></strong> — Run the PowerShell command on Windows only; use <code>wmic service list brief</code> on Windows systems without PowerShell.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8252,77 +8297,195 @@ Structured validation procedure to confirm system health and application functio
 </tbody>
 </table>
 <h2 id="3-application-health">3. Application Health<a class="headerlink" href="#3-application-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># HTTP health endpoint</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check response time (&lt; 2s expected)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{time_total}&quot;</span><span class="w"> </span>https://&lt;app-url&gt;/
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Database connectivity from app</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;db-host&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-d<span class="w"> </span>appdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check application logs for errors post-upgrade</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>myapp<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|exception|fatal&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/myapp/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|exception&quot;</span>
-</code></pre></div>
-<h2 id="4-monitoring-validation">4. Monitoring Validation<a class="headerlink" href="#4-monitoring-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm no new alerts fired post-upgrade</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Check Prometheus alerts</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://prometheus:9090/api/v1/alerts<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(a[&#39;labels&#39;][&#39;alertname&#39;]) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if a[&#39;state&#39;]==&#39;firing&#39;]&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Confirm metrics are flowing (not stale)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://prometheus:9090/api/v1/query?query<span class="o">=</span>up<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;&quot;value&quot;&#39;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check node_exporter last scrape</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://&lt;host&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_time_seconds&quot;</span>
-</code></pre></div>
-<h2 id="5-performance-baseline-comparison">5. Performance Baseline Comparison<a class="headerlink" href="#5-performance-baseline-comparison" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># CPU — compare to pre-upgrade baseline</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mpstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># HTTP health endpoint</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Memory</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>free<span class="w"> </span>-h
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check response time (&lt; 2s expected)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{time_total}&quot;</span><span class="w"> </span>https://&lt;app-url&gt;/
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Disk I/O</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Database connectivity from app</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;db-host&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-d<span class="w"> </span>appdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Network</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>lo
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Application response time (compare to pre-upgrade SLA)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{time_total}\n&quot;</span><span class="w"> </span>https://&lt;app-url&gt;/
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {printf &quot;Avg: %.3fs\n&quot;, sum/count}&#39;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check application logs for errors post-upgrade</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>myapp<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|exception|fatal&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/myapp/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|exception&quot;</span>
 </code></pre></div>
-<h2 id="6-replication-and-data-integrity">6. Replication and Data Integrity<a class="headerlink" href="#6-replication-and-data-integrity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># VMware vSphere Replication / SRM</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Get-SpbmReplicationGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>RPO,<span class="w"> </span>LatestRpo
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># NetApp SnapMirror</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Dell RecoverPoint</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check via UNISPHERE: verify consistency groups healthy, lag within SLA</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;status&quot;: &quot;healthy&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;version&quot;: &quot;2.4.1&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;database&quot;: &quot;connected&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;uptime_seconds&quot;: 3847,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>}
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>0.847
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Database replication</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># PostgreSQL streaming replication</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT client_addr, state, sent_lsn, replay_lsn, write_lag, flush_lag FROM pg_stat_replication;&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>PostgreSQL 12.14 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 9.4.0, 64-bit
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Jan 15 14:28:42 app-prod-01 myapp[2847]: INFO: Database migration completed successfully
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Jan 15 14:29:15 app-prod-01 myapp[2847]: INFO: Cache warmed in 1.2s
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Jan 15 14:31:05 app-prod-01 myapp[2847]: WARNING: Slow query detected (2.3s) on endpoint /api/reports
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>(no matching lines — no errors in last hour)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>(no matching lines — no errors in app.log)
 </code></pre></div>
-<h2 id="7-post-upgrade-cleanup">7. Post-Upgrade Cleanup<a class="headerlink" href="#7-post-upgrade-cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Remove pre-upgrade snapshot (after 24h stability confirmation)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Remove-Snapshot<span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Remove temp files</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>rm<span class="w"> </span>-f<span class="w"> </span>/tmp/upgrade-*.log<span class="w"> </span>/tmp/pre-upgrade-backup-*.tar.gz
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Update CMDB / inventory</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># → Update firmware/OS version in asset management system</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or use <code>--cacert /path/to/ca.crt</code> with a valid certificate.
+<strong><code>psql: error: could not translate host name "&lt;db-host&gt;" to address: Name or service not known</code></strong> — Replace <code>&lt;db-host&gt;</code> with the actual database hostname (e.g., <code>db-prod-01.internal</code>) and verify network connectivity with <code>ping</code>.
+<strong><code>Unit myapp.service not found</code></strong> — Verify the systemd service name with <code>systemctl list-units --type=service | grep myapp</code> and update the <code>journalctl -u</code> parameter accordingly.</p>
+</div>
+<h2 id="4-monitoring-validation">4. Monitoring Validation<a class="headerlink" href="#4-monitoring-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm no new alerts fired post-upgrade</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Check Prometheus alerts</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://prometheus:9090/api/v1/alerts<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(a[&#39;labels&#39;][&#39;alertname&#39;]) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if a[&#39;state&#39;]==&#39;firing&#39;]&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Confirm metrics are flowing (not stale)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://prometheus:9090/api/v1/query?query<span class="o">=</span>up<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;&quot;value&quot;&#39;</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Close change ticket</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># → Set status to &quot;Implemented&quot; with validation notes</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check node_exporter last scrape</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://&lt;host&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_time_seconds&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>AlertmanagerDown
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>HighMemoryUsage
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PrometheusRemoteWriteErrors
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>&quot;value&quot;: [
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  1702541823.456,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;1&quot;
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>]
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>&quot;value&quot;: [
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  1702541824.123,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;1&quot;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>]
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>&quot;value&quot;: [
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  1702541825.789,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;1&quot;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>]
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a># HELP node_time_seconds Seconds since boot.
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a># TYPE node_time_seconds gauge
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>node_time_seconds 2847392.45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to prometheus:9090: Connection refused</code></strong> — Verify Prometheus service is running with <code>systemctl status prometheus</code> and check firewall rules allow port 9090.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Confirm the Prometheus endpoint is responding with valid JSON by testing <code>curl -s http://prometheus:9090/api/v1/alerts</code> directly.
+<strong><code>curl: (7) Failed to connect to &lt;host&gt;:9100: No route to host</code></strong> — Replace <code>&lt;host&gt;</code> with the actual hostname/IP and verify node_exporter is listening on port 9100 with <code>netstat -tlnp | grep 9100</code>.</p>
+</div>
+<h2 id="5-performance-baseline-comparison">5. Performance Baseline Comparison<a class="headerlink" href="#5-performance-baseline-comparison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># CPU — compare to pre-upgrade baseline</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mpstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Memory</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>free<span class="w"> </span>-h
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Disk I/O</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Network</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>lo
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Application response time (compare to pre-upgrade SLA)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{time_total}\n&quot;</span><span class="w"> </span>https://&lt;app-url&gt;/
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {printf &quot;Avg: %.3fs\n&quot;, sum/count}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Linux 4.15.0-213-generic (svc-app-prod-01)  01/15/2025  _x86_64_    (16 CPU)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Average:    12.45    5.23    2.18    0.08   80.06
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>MemTotal:        65894456 kB
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>MemFree:         42156892 kB
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>MemAvailable:    51203748 kB
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Buffers:          1245632 kB
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Cached:           8956124 kB
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>SwapTotal:       16777216 kB
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>SwapFree:        16777216 kB
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Linux 4.15.0-213-generic (svc-app-prod-01)  01/15/2025  _x86_64_    (16 CPU)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Device            r/s     w/s     rMB/s   wMB/s   rrqm/s  wrqm/s  %rrqm  %wrqm r_await w_await svctm  %util
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>sda               8.20   12.45    0.34    0.89    0.12    2.34    1.44  15.82   4.32    8.76   2.18   4.42
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>sdb               2.10    3.80    0.12    0.45    0.00    0.98    0.00  20.51   3.21    6.89   1.95   1.18
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>dm-0              9.45   15.23    0.42    1.12    0.00    0.00    0.00   0.00   3.98    7.54   1.87   4.63
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>IFACE     RXPCK/s TXPCK/s RXKB/s  TXKB/s RXCMP/s TXCMP/s RXMCST/s
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>eth0       1245.3  1089.2   342.1   298.5    0.0     0.0      0.0
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>eth1        89.2    76.4    12.3    11.8    0.0     0.0      0.0
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Avg: 0.487s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or use <code>--cacert /path/to/ca-bundle.crt</code> with your organization's CA certificate.
+<strong><code>command not found: mpstat</code></strong> — Install sysstat package with <code>sudo apt-get install sysstat</code> (Debian/Ubuntu) or <code>sudo yum install sysstat</code> (RHEL/CentOS).
+<strong><code>Name or service not known</code></strong> — Verify the <code>&lt;app-url&gt;</code> placeholder is replaced with the actual application hostname and that DNS resolution is working with <code>nslookup &lt;app-url&gt;</code>.</p>
+</div>
+<h2 id="6-replication-and-data-integrity">6. Replication and Data Integrity<a class="headerlink" href="#6-replication-and-data-integrity" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># VMware vSphere Replication / SRM</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Get-SpbmReplicationGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>RPO,<span class="w"> </span>LatestRpo
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># NetApp SnapMirror</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Dell RecoverPoint</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check via UNISPHERE: verify consistency groups healthy, lag within SLA</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Database replication</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># PostgreSQL streaming replication</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT client_addr, state, sent_lsn, replay_lsn, write_lag, flush_lag FROM pg_stat_replication;&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name                          State      RPO        LatestRpo
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>----                          -----      ---        ---------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>prod-vm-cluster-01            Healthy    01:00:00   00:45:32
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>prod-vm-cluster-02            Healthy    01:00:00   00:58:12
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>dr-sync-group-03              Healthy    00:30:00   00:28:47
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>                                    Source Destination State    Lag-time
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>                                    ------ ----------- -----    --------
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>prod_svm:prod_vol_01 prod_svm:prod_vol_01_dr SnapMirrored 2m 15s
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>prod_svm:prod_vol_02 prod_svm:prod_vol_02_dr SnapMirrored 1m 42s
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>prod_svm:prod_vol_03 prod_svm:prod_vol_03_dr SnapMirrored 3m 8s
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a> client_addr  |   state   | sent_lsn  | replay_lsn | write_lag | flush_lag
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>--------------+-----------+-----------+------------+-----------+-----------
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a> 10.45.12.88  | streaming | 0/4A2F5B8 | 0/4A2F520  | 125 ms    | 142 ms
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a> 10.45.12.89  | streaming | 0/4A2F5B8 | 0/4A2F4F0  | 287 ms    | 301 ms
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>(2 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-SpbmReplicationGroup : The term 'Get-SpbmReplicationGroup' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the cmdlet.
+<strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are connected to the NetApp cluster management interface via SSH or execute the command from the NetApp cluster console directly.
+<strong><code>psql: could not translate host name "localhost" to address</code></strong> — Specify the correct PostgreSQL host with <code>-h &lt;hostname&gt;</code> and verify the database is running and accessible on that host.</p>
+</div>
+<h2 id="7-post-upgrade-cleanup">7. Post-Upgrade Cleanup<a class="headerlink" href="#7-post-upgrade-cleanup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Remove pre-upgrade snapshot (after 24h stability confirmation)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Remove-Snapshot<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Remove temp files</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>rm<span class="w"> </span>-f<span class="w"> </span>/tmp/upgrade-*.log<span class="w"> </span>/tmp/pre-upgrade-backup-*.tar.gz
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Update CMDB / inventory</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># → Update firmware/OS version in asset management system</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Close change ticket</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># → Set status to &quot;Implemented&quot; with validation notes</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Snapshot removal initiated...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Snapshot &quot;pre-upgrade-20240115-143022&quot; removed successfully
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Snapshot &quot;pre-upgrade-20240115-120015&quot; removed successfully
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>/tmp/upgrade-hotfix-20240115.log removed
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>/tmp/upgrade-hotfix-20240115-secondary.log removed
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>/tmp/pre-upgrade-backup-HOSTNAME-20240115.tar.gz removed
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>/tmp/pre-upgrade-backup-HOSTNAME-20240115-incremental.tar.gz removed
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>CMDB update: Asset ID AST-0847293 — OS version updated to 2024.1.5
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>CMDB update: Firmware version updated to 8.4.2-build.19847
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Change ticket CHG-0156847 status: Implemented
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Validation notes appended: Post-upgrade stability confirmed. All snapshots removed. 24h monitoring complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Ensure PowerShell is running on a Windows system with Hyper-V or VMware PowerCLI module installed, or use the appropriate hypervisor CLI for your platform.
+<strong><code>rm: cannot remove '/tmp/pre-upgrade-backup-*.tar.gz': No such file or directory</code></strong> — Verify the backup files exist with <code>ls /tmp/pre-upgrade-backup-*.tar.gz</code> before removal, or adjust the glob pattern to match actual filenames.
+<strong><code>Error: CMDB API authentication failed (401 Unauthorized)</code></strong> — Confirm your ServiceNow API credentials and token are valid, and that your user account has write permissions to the CMDB table.</p>
+</div>
 <h2 id="validation-sign-off">Validation Sign-Off<a class="headerlink" href="#validation-sign-off" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8407,7 +8570,7 @@ Structured validation procedure to confirm system health and application functio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

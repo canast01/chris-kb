@@ -8689,15 +8689,50 @@ Monitoring ASR replication health is critical for validating that DR protection 
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.{Health:replicationHealth, RPO:rpoInSeconds, TestFailoverState:testFailoverState, LastSync:lastSuccessfulTestFailoverTime}&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Health    RPO      ActiveLocation
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>------------------------------  --------  -------  ----------------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>prod-web-vm-01                Normal    300      primaryLocation
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>prod-db-vm-02                 Warning   1847     primaryLocation
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>prod-app-vm-03                Normal    285      primaryLocation
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>dr-cache-vm-04                Critical  5923     secondaryLocation
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>prod-web-vm-05                Normal    312      primaryLocation
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>{
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;Health&quot;: &quot;Normal&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;RPO&quot;: 298,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;TestFailoverState&quot;: &quot;None&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;LastSync&quot;: &quot;2024-01-15T14:32:47.123Z&quot;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The subscription '&lt;sub-id&gt;' could not be found.</code></strong> — Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id</code>.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name and resource group exist in the correct subscription using <code>az recovery-services vault list -g &lt;dr-rg&gt;</code>.
+<strong><code>Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' on resource.</code></strong> — Ensure your account has Reader or Site Recovery Operator role on the Recovery Services vault using <code>az role assignment list --scope /subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="rpo-warnings">RPO Warnings<a class="headerlink" href="#rpo-warnings" title="Permanent link">&para;</a></h2>
 <p>RPO (Recovery Point Objective) warnings appear when the time since the last synchronised recovery point exceeds the policy threshold.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Identify items with RPO warnings (RPO &gt; 300 seconds = 5 minutes)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.rpoInSeconds &gt; \`300\`].{Name:name, RPO:properties.rpoInSeconds, Health:properties.replicationHealth}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Identify items with RPO warnings (RPO &gt; 300 seconds = 5 minutes)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.rpoInSeconds &gt; \`300\`].{Name:name, RPO:properties.rpoInSeconds, Health:properties.replicationHealth}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                                    RPO    Health
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>--------------------------------------  -----  ----------------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vm-prod-db-01                           487    Warning
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vm-prod-app-tier-02                     612    Warning
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vm-staging-web-01                       305    Degraded
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vm-prod-cache-redis                     1203   Critical
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>vm-dr-failover-test-03                  401    Warning
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The subscription '&lt;sub-id&gt;' could not be found.</code></strong> — Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code>.</p>
+<p><strong><code>ERROR: The resource group '&lt;dr-rg&gt;' could not be found in the subscription.</code></strong> — Verify the resource group name with <code>az group list --query "[].name" -o tsv</code> and ensure it exists in the correct subscription.</p>
+<p><strong><code>ERROR: The vault '&lt;vault-name&gt;' could not be found in the specified resource group.</code></strong> — Confirm the Recovery Services vault name using <code>az backup vault list --resource-group &lt;dr-rg&gt; --query "[].name" -o tsv</code>.</p>
+</div>
 <p>Common RPO warning causes:</p>
 <table>
 <thead>
@@ -8738,49 +8773,113 @@ Monitoring ASR replication health is critical for validating that DR protection 
 <hr />
 <h2 id="triggering-a-resync">Triggering a Resync<a class="headerlink" href="#triggering-a-resync" title="Permanent link">&para;</a></h2>
 <p>If replication is stuck or health is critical, a resync forces a full re-synchronisation from the source.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger resync for a protected item</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;fabric&gt;/replicationProtectionContainers/&lt;container&gt;/replicationProtectedItems/&lt;item-name&gt;/resync?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Monitor resync job</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;Resync&#39;].{Name:name, State:properties.state, Progress:properties.stateDescription}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Trigger resync for a protected item</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;fabric&gt;/replicationProtectionContainers/&lt;container&gt;/replicationProtectedItems/&lt;item-name&gt;/resync?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Monitor resync job</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;Resync&#39;].{Name:name, State:properties.state, Progress:properties.stateDescription}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/dr-rg-prod/providers/Microsoft.RecoveryServices/vaults/vault-dr-01/replicationJobs/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;name&quot;: &quot;a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/replicationJobs&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;jobType&quot;: &quot;Resync&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    &quot;state&quot;: &quot;InProgress&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    &quot;stateDescription&quot;: &quot;Resync in progress&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  }
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>}
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Name                                  State         Progress
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>----                                  -----         --------
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d  InProgress    Resync in progress
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e  Succeeded     Resync completed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The URI is invalid.</code></strong> — Replace all placeholder values (<code>&lt;sub-id&gt;</code>, <code>&lt;dr-rg&gt;</code>, <code>&lt;vault-name&gt;</code>, <code>&lt;fabric&gt;</code>, <code>&lt;container&gt;</code>, <code>&lt;item-name&gt;</code>) with actual resource names from your Azure environment.
+<strong><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' over scope...</code></strong> — Ensure your Azure account has the "Site Recovery Contributor" or "Backup Operator" role assigned on the Recovery Services vault.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the protected item name and container name are correct by running <code>az recovery-services-backup item list --vault-name &lt;vault-name&gt; --resource-group &lt;dr-rg&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="monitoring-via-azure-monitor-alerts">Monitoring via Azure Monitor Alerts<a class="headerlink" href="#monitoring-via-azure-monitor-alerts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an alert for replication health degradation</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>metrics<span class="w"> </span>alert<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span>asr-replication-health-alert<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--scopes<span class="w"> </span>&lt;vault-resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--condition<span class="w"> </span><span class="s2">&quot;avg ReplicationHealthErrors &gt; 0&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--window-size<span class="w"> </span>5m<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--evaluation-frequency<span class="w"> </span>1m<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--severity<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;ASR replication health degraded&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># List all metric alerts for the vault</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>az<span class="w"> </span>monitor<span class="w"> </span>metrics<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create an alert for replication health degradation</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>metrics<span class="w"> </span>alert<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--name<span class="w"> </span>asr-replication-health-alert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--scopes<span class="w"> </span>&lt;vault-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--condition<span class="w"> </span><span class="s2">&quot;avg ReplicationHealthErrors &gt; 0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--window-size<span class="w"> </span>5m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--evaluation-frequency<span class="w"> </span>1m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--severity<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;ASR replication health degraded&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># List all metric alerts for the vault</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>az<span class="w"> </span>monitor<span class="w"> </span>metrics<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;actions&quot;: [],
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;creationTime&quot;: &quot;2024-01-15T09:32:47.123456+00:00&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;description&quot;: &quot;ASR replication health degraded&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;enabled&quot;: true,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;evaluationFrequency&quot;: &quot;PT1M&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Insights/metricAlerts/asr-replication-health-alert&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;location&quot;: &quot;global&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;name&quot;: &quot;asr-replication-health-alert&quot;,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;severity&quot;: 2,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;windowSize&quot;: &quot;PT5M&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>}
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Name                                    ResourceGroup    Enabled    Severity
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>--------------------------------------  ---------------  ---------  ----------
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>asr-replication-health-alert            prod-rg          True       2
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>vm-cpu-utilization-alert                prod-rg          True       1
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>vault-backup-failure-alert               prod-rg          True       3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The resource '/subscriptions/.../providers/Microsoft.RecoveryServices/vaults/&lt;vault-resource-id&gt;' could not be found.</code></strong> — Verify the vault resource ID is correct and exists in the specified resource group using <code>az recovery-services vault list --resource-group &lt;rg&gt;</code>.
+<strong><code>InvalidMetricName: The metric 'ReplicationHealthErrors' is not valid for this resource type.</code></strong> — Replace with the correct metric name <code>ReplicationHealthStatus</code> or <code>ReplicationLatency</code> by checking available metrics with <code>az monitor metrics list-definitions --resource &lt;vault-resource-id&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="replication-jobs-monitoring">Replication Jobs Monitoring<a class="headerlink" href="#replication-jobs-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List replication jobs in the past 24 hours</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Type:properties.jobType, State:properties.state, StartTime:properties.startTime, EndTime:properties.endTime}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List failed replication jobs only</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.state==&#39;Failed&#39;].{Name:name, Type:properties.jobType, Error:properties.errors[0].details[0].message}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List replication jobs in the past 24 hours</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Type:properties.jobType, State:properties.state, StartTime:properties.startTime, EndTime:properties.endTime}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># List failed replication jobs only</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.state==&#39;Failed&#39;].{Name:name, Type:properties.jobType, Error:properties.errors[0].details[0].message}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                                          Type                State      StartTime                 EndTime
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>--------------------------------------------  ------------------  ---------  ------------------------  ------------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>dr-vm-sync-20250115-001                       Replication         Completed  2025-01-15T08:23:45.123Z  2025-01-15T08:45:12.456Z
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>dr-vm-sync-20250115-002                       Replication         Completed  2025-01-15T09:10:33.789Z  2025-01-15T09:32:01.012Z
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>dr-failover-test-20250114-001                 TestFailover        Completed  2025-01-14T22:15:22.345Z  2025-01-14T22:58:44.678Z
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>dr-vm-sync-20250115-003                       Replication         InProgress 2025-01-15T10:05:17.234Z  None
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>dr-resync-20250114-001                        Resynchronize       Failed     2025-01-14T19:42:11.567Z  2025-01-14T20:15:33.890Z
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Name                                          Type                Error
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>--------------------------------------------  ------------------  -----------------------------------------------
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>dr-resync-20250114-001                        Resynchronize       Target resource group not found in subscription
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AuthorizationError: The client '&lt;client-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read'</code></strong> — Ensure your Azure CLI account has the Reader or Contributor role on the Recovery Services vault resource.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Verify the subscription ID, resource group name, and vault name are correct and exist in your Azure subscription.
+<strong><code>InvalidApiVersion: The api-version '2022-10-01' is not supported for this resource type</code></strong> — Update the api-version parameter to a currently supported version by running <code>az provider show --namespace Microsoft.RecoveryServices --query "resourceTypes[?resourceType=='vaults/replicationJobs'].apiVersions"</code>.</p>
+</div>
 <hr />
 <h2 id="replication-health-dashboard-metrics">Replication Health Dashboard Metrics<a class="headerlink" href="#replication-health-dashboard-metrics" title="Permanent link">&para;</a></h2>
 <p>Key metrics to surface in an Azure Monitor workbook or dashboard:</p>
@@ -8837,7 +8936,7 @@ Monitoring ASR replication health is critical for validating that DR protection 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

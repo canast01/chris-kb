@@ -7559,190 +7559,513 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 6. Check if a ConfigMap or Secret the pod depends on is missing</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Reason\|Error\|Warning&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ oc logs nginx-deployment-5d4b8c9f7-k2x9m -n production
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15T09:23:45.123Z [INFO] Starting nginx server
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-01-15T09:23:46.456Z [INFO] Listening on 0.0.0.0:8080
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-01-15T09:24:12.789Z [ERROR] Connection refused from 10.244.1.5:54321
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>$ oc logs nginx-deployment-5d4b8c9f7-k2x9m -n production --previous
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-01-15T09:20:10.234Z [FATAL] Out of memory: cannot allocate 512MB
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Killed
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>$ oc describe pod nginx-deployment-5d4b8c9f7-k2x9m -n production
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Name:         nginx-deployment-5d4b8c9f7-k2x9m
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Namespace:    production
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Status:       CrashLoopBackOff
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Events:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Type     Reason     Age   Message
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  ----     ------     ---   -------
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  Normal   Created    2m    Created container nginx
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  Warning  BackOff    1m    Back-off restarting failed container
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  Warning  Failed     45s   Error: OOMKilled
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Last State:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Terminated
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    Reason:       OOMKilled
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Exit Code:    137
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    Started:      Mon, 15 Jan 2024 09:20:08 +0000
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    Finished:     Mon, 15 Jan 2024 09:20:10 +0000
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>$ oc debug deployment/nginx-deployment -n production
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Starting pod/nginx-deployment-debug, command was: /usr/sbin/nginx -g daemon off;
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Pod IP: 10.244.2.15
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>If you don&#39;t see a command prompt, try entering &#39;sh&#39;.
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>sh-4.4#
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>$ oc describe pod nginx-deployment-5d4b8c9f7-k2x9m -n production | grep -A5 &quot;Reason\|Error\|Warning&quot;
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  Warning  Failed     45s   Error: OOMKilled
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  Warning  BackOff    1m    Back-off restarting failed container
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): pods "&lt;pod&gt;" not found</code></strong> — Verify the pod name and namespace with <code>oc get pods -n &lt;ns&gt;</code> and use the exact pod name.
+<strong><code>error: unable to upgrade connection: container not found ("&lt;container&gt;")</code></strong> — Ensure the pod is running (not in CrashLoopBackOff) before attempting <code>oc debug</code>; use <code>oc get pods -n &lt;ns&gt;</code> to check status.
+<strong><code>Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:..." cannot get resource "pods"</code></strong> — Add RBAC permissions for the service account with <code>oc adm policy add-role-to-user view &lt;user&gt; -n &lt;ns&gt;</code>.</p>
+</div>
 <h2 id="imagepullbackoff">ImagePullBackOff<a class="headerlink" href="#imagepullbackoff" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Check which image and exact error</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Events: Failed to pull image &quot;quay.io/myapp:latest&quot;: ...</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. Common causes and fixes:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># a) Wrong image name/tag → fix image reference in deployment</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># b) No pull secret for private registry:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>docker-registry<span class="w"> </span>registry-creds<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--docker-server<span class="o">=</span>quay.io<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--docker-username<span class="o">=</span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--docker-password<span class="o">=</span>&lt;token&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>oc<span class="w"> </span>secrets<span class="w"> </span>link<span class="w"> </span>default<span class="w"> </span>registry-creds<span class="w"> </span>--for<span class="o">=</span>pull<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># c) Registry unreachable → check network, proxy env vars, firewall</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># d) Air-gapped: image not mirrored → mirror to internal registry and add ImageContentSourcePolicy</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># e) Auth expired → re-create or rotate pull secret</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># 3. Test pull manually on a node</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;<span class="w"> </span>--<span class="w"> </span>crictl<span class="w"> </span>pull<span class="w"> </span>&lt;image&gt;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 4. Check global pull secret (applies to all namespaces)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>pull-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.\.dockerconfigjson}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># 5. Check ImageContentSourcePolicy for air-gapped mirror config</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>oc<span class="w"> </span>get<span class="w"> </span>imagecontentsourcepolicy
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>oc<span class="w"> </span>get<span class="w"> </span>imagecontentsourcepolicy<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>mirrors
-</code></pre></div>
-<h2 id="pending-pods-not-scheduling">Pending Pods (Not Scheduling)<a class="headerlink" href="#pending-pods-not-scheduling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Check events — scheduling failure reason is always in events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Check which image and exact error</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># a) Insufficient resources: &quot;0/6 nodes are available: Insufficient cpu&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {name: .metadata.name, cpu: .status.allocatable.cpu, mem: .status.allocatable.memory}&#39;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># b) SCC violation: &quot;unable to validate against any security context constraint&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>scc-subject-review<span class="w"> </span>-f<span class="w"> </span>pod.yaml
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-scc-to-user<span class="w"> </span>anyuid<span class="w"> </span>-z<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># c) Taint/toleration mismatch: &quot;node(s) had untolerated taint&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Taint
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Add toleration to pod spec if intentional; otherwise investigate node taints</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># d) NodeAffinity mismatch: &quot;node(s) didn&#39;t match nodeAffinity&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;required-label&gt;
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># e) PVC not bound: pod stays Pending until PVC is Bound</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>oc<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Common: wrong StorageClass or no provisioner available</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># f) Topology constraint: PodTopologySpreadConstraints too strict</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.topologySpreadConstraints}&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Events: Failed to pull image &quot;quay.io/myapp:latest&quot;: ...</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Common causes and fixes:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># a) Wrong image name/tag → fix image reference in deployment</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># b) No pull secret for private registry:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>docker-registry<span class="w"> </span>registry-creds<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--docker-server<span class="o">=</span>quay.io<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--docker-username<span class="o">=</span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--docker-password<span class="o">=</span>&lt;token&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>oc<span class="w"> </span>secrets<span class="w"> </span>link<span class="w"> </span>default<span class="w"> </span>registry-creds<span class="w"> </span>--for<span class="o">=</span>pull<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># c) Registry unreachable → check network, proxy env vars, firewall</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># d) Air-gapped: image not mirrored → mirror to internal registry and add ImageContentSourcePolicy</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># e) Auth expired → re-create or rotate pull secret</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># 3. Test pull manually on a node</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;<span class="w"> </span>--<span class="w"> </span>crictl<span class="w"> </span>pull<span class="w"> </span>&lt;image&gt;
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># 4. Check global pull secret (applies to all namespaces)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>pull-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.\.dockerconfigjson}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># 5. Check ImageContentSourcePolicy for air-gapped mirror config</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>oc<span class="w"> </span>get<span class="w"> </span>imagecontentsourcepolicy
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>oc<span class="w"> </span>get<span class="w"> </span>imagecontentsourcepolicy<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>mirrors
 </code></pre></div>
-<h2 id="oomkilled">OOMKilled<a class="headerlink" href="#oomkilled" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Identify which container OOMKilled</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Last State: Terminated  Reason: OOMKilled</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 2. Check memory usage vs limit</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--containers
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. Check Prometheus for historical memory usage</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Query: container_memory_working_set_bytes{pod=&quot;&lt;pod&gt;&quot;, namespace=&quot;&lt;ns&gt;&quot;}</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 4. Increase memory limit</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>oc<span class="w"> </span><span class="nb">set</span><span class="w"> </span>resources<span class="w"> </span>deployment<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--containers<span class="o">=</span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--limits<span class="o">=</span><span class="nv">memory</span><span class="o">=</span>2Gi<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--requests<span class="o">=</span><span class="nv">memory</span><span class="o">=</span>512Mi
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 5. If limit is already generous: profile the app for memory leak</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1">#    Look for unbounded caches, connection leaks, recursive structures</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name:         my-app-pod-5d8f9
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Namespace:    production
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Status:       ImagePullBackOff
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Events:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Type     Reason                 Age                From               Message
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  ----     ------                 ---                ----               -------
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Normal   Scheduled              2m45s              default-scheduler  Successfully assigned production/my-app-pod-5d8f9 to worker-node-03
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Warning  Failed                 2m30s              kubelet            Failed to pull image &quot;quay.io/myapp:latest&quot;: rpc error: code = Unknown desc = failed to pull and unpack image &quot;quay.io/myapp:latest&quot;: failed to resolve reference &quot;quay.io/myapp:latest&quot;: unexpected status code [manifests latest]: 401
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>secret/registry-creds created
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>secretlink.authorization.openshift.io/default-registry-creds-pull created
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>{
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;auths&quot;: {
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    &quot;quay.io&quot;: {
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;auth&quot;: &quot;dXNlcjp0b2tlbjEyMzQ1Ng==&quot;
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    },
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    &quot;registry.redhat.io&quot;: {
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      &quot;auth&quot;: &quot;c2VydmljZWFjY291bnQ6cGFzc3dvcmQ=&quot;
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    }
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  }
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>}
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>NAME                                                 AGE
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>registry-mirror.io-imagecontentsourcepolicy         14d
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>quay-io-imagecontentsourcepolicy                    8d
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>apiVersion: config.openshift.io/v1
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>kind: ImageContentSourcePolicy
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>metadata:
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  name: quay-io-imagecontentsourcepolicy
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>spec:
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  repositoryDigestMirrors:
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  - mirrors:
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    - mirror.internal.corp:5000/quay-mirror
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>    source: quay.io
 </code></pre></div>
-<h2 id="node-notready">Node NotReady<a class="headerlink" href="#node-notready" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Check node conditions</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Conditions section: MemoryPressure, DiskPressure, PIDPressure, Ready</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Check kubelet and CRI-O on the node</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>chroot<span class="w"> </span>/host
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crio
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to pull image "quay.io/myapp:latest": unexpected status code [manifests latest]: 401</code></strong> — Create a pull secret with valid credentials and link it to the service account using <code>oc secrets link default registry-creds --for=pull -n &lt;ns&gt;</code>.
+<strong><code>rpc error: code = Unknown desc = failed to resolve reference</code></strong> — Verify the image tag exists in the registry and the node has network connectivity to the registry; check firewall rules and proxy environment variables with <code>oc debug node/&lt;node&gt;</code>.
+<strong><code>ImagePullBackOff</code></strong> — Check the pod events with <code>oc describe pod &lt;pod&gt; -n &lt;ns&gt;</code> to see the exact pull error, then address the root cause (auth, network, or image availability).</p>
+</div>
+<h2 id="pending-pods-not-scheduling">Pending Pods (Not Scheduling)<a class="headerlink" href="#pending-pods-not-scheduling" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Check events — scheduling failure reason is always in events</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># a) Insufficient resources: &quot;0/6 nodes are available: Insufficient cpu&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {name: .metadata.name, cpu: .status.allocatable.cpu, mem: .status.allocatable.memory}&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># b) SCC violation: &quot;unable to validate against any security context constraint&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>scc-subject-review<span class="w"> </span>-f<span class="w"> </span>pod.yaml
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-scc-to-user<span class="w"> </span>anyuid<span class="w"> </span>-z<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 3. Check disk usage (DiskPressure threshold default: 85%)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>df<span class="w"> </span>-h<span class="w"> </span>/
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># c) Taint/toleration mismatch: &quot;node(s) had untolerated taint&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Taint
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Add toleration to pod spec if intentional; otherwise investigate node taints</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 4. Check OVN-K network pods on the node</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--field-selector<span class="o">=</span>spec.nodeName<span class="o">=</span>&lt;node&gt;
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># 5. Check NTP (etcd elections require &lt; 1s time skew between masters)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>chroot<span class="w"> </span>/host<span class="w"> </span>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># d) NodeAffinity mismatch: &quot;node(s) didn&#39;t match nodeAffinity&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;required-label&gt;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># e) PVC not bound: pod stays Pending until PVC is Bound</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>oc<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Common: wrong StorageClass or no provisioner available</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># 6. If node stuck NotReady after reboot:</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfigpool<span class="w"> </span>-w
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># MCO may be applying a MachineConfig — wait for it to complete</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># f) Topology constraint: PodTopologySpreadConstraints too strict</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.topologySpreadConstraints}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name:         nginx-app-5d4c9f2b1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Namespace:    production
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Status:       Pending
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Events:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Type     Reason            Age   From               Message
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  ----     ------            ---   ----               -------
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Warning  FailedScheduling  2m    default-scheduler  0/6 nodes are available: Insufficient cpu.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>NAME                 CPU    MEMORY
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>worker-01.lab.local  2400m  7776Mi
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>worker-02.lab.local  2400m  7776Mi
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>worker-03.lab.local  2400m  7776Mi
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>NAME                 CPU    MEMORY
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>worker-01.lab.local  2400m  7776Mi
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>worker-02.lab.local  2400m  7776Mi
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>worker-03.lab.local  2400m  7776Mi
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>RESOURCE   ALLOWED  MATCHED  TEMPLATE
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>scc        anyuid   false    -
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>pod &quot;nginx-app-5d4c9f2b1&quot; is forbidden: unable to validate against any security context constraint: [spec.securityContext.runAsUser: Invalid value: 1000: must be in ranges [0-65535]]
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Name:        worker-04.lab.local
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Taints:      gpu=true:NoSchedule,workload=batch:NoExecute
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>NAME             STATUS   ROLES    AGE   VERSION   LABELS
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>worker-01.lab.local   Ready    worker   45d   4.12.5    kubernetes.io/hostname=worker-01.lab.local,disktype=ssd
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>worker-02.lab.local   Ready    worker   45d   4.12.5    kubernetes.io/hostname=worker-02.lab.local,disktype=ssd
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>app-data-pvc        Pending                                             10Gi       RWO            fast-ssd       3m
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>database-pvc        Bound    pvc-a7f2c8d1-9e4b-4a2c-b1f3-8c9d2e1f5a6b  50Gi       RWO            standard       12h
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>[{&quot;maxSkew&quot;:1,&quot;topologyKey&quot;:&quot;kubernetes.io/hostname&quot;,&quot;whenUnsatisfiable&quot;:&quot;DoNotSchedule&quot;}]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>0/6 nodes are available: Insufficient cpu</code></strong> — Increase resource requests in the pod spec, add worker nodes, or evict low-priority workloads using <code>oc delete pod</code> on non-critical pods.
+<strong><code>unable to validate against any security context constraint</code></strong> — Add the appropriate SCC to the service account with <code>oc adm policy add-scc-to-user &lt;scc-name&gt; -z &lt;sa-name&gt; -n &lt;namespace&gt;</code>.
+<strong><code>node(s) had untolerated taint</code></strong> — Add matching tolerations to the pod spec under <code>spec.tolerations</code> or remove the taint from the node with <code>oc adm taint nodes &lt;node-name&gt; &lt;key&gt;=&lt;value&gt;:&lt;effect&gt;-</code>.</p>
+</div>
+<h2 id="oomkilled">OOMKilled<a class="headerlink" href="#oomkilled" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Identify which container OOMKilled</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Last State: Terminated  Reason: OOMKilled</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 2. Check memory usage vs limit</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--containers
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. Check Prometheus for historical memory usage</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Query: container_memory_working_set_bytes{pod=&quot;&lt;pod&gt;&quot;, namespace=&quot;&lt;ns&gt;&quot;}</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 4. Increase memory limit</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>oc<span class="w"> </span><span class="nb">set</span><span class="w"> </span>resources<span class="w"> </span>deployment<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--containers<span class="o">=</span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--limits<span class="o">=</span><span class="nv">memory</span><span class="o">=</span>2Gi<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--requests<span class="o">=</span><span class="nv">memory</span><span class="o">=</span>512Mi
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># 5. If limit is already generous: profile the app for memory leak</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1">#    Look for unbounded caches, connection leaks, recursive structures</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name:                 api-server-5d8c9b2f
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Namespace:            production
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Status:               Running
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Last State:           Terminated
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Reason:             OOMKilled
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Exit Code:          137
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Started:            2024-01-15T14:32:18Z
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Finished:           2024-01-15T14:35:42Z
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>POD                    NAME              CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>api-server-5d8c9b2f   api-container     245m         1847Mi
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>api-server-5d8c9b2f   sidecar           12m          128Mi
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>deployment.apps/api-server resource requirements updated
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): pods "&lt;pod&gt;" not found</code></strong> — Verify the pod name and namespace with <code>oc get pods -n &lt;ns&gt;</code> before running describe.
+<strong><code>error: the server doesn't have a resource type "top"</code></strong> — Enable metrics-server on the cluster with <code>oc apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</code>.
+<strong><code>Error from server (NotFound): deployments.apps "&lt;name&gt;" not found</code></strong> — Confirm the deployment exists in the target namespace and use the correct resource type (deployment, statefulset, daemonset, etc.).</p>
+</div>
+<h2 id="node-notready">Node NotReady<a class="headerlink" href="#node-notready" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Check node conditions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Conditions section: MemoryPressure, DiskPressure, PIDPressure, Ready</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># 2. Check kubelet and CRI-O on the node</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>chroot<span class="w"> </span>/host
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crio
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># 3. Check disk usage (DiskPressure threshold default: 85%)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># 4. Check OVN-K network pods on the node</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--field-selector<span class="o">=</span>spec.nodeName<span class="o">=</span>&lt;node&gt;
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># 5. Check NTP (etcd elections require &lt; 1s time skew between masters)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>chroot<span class="w"> </span>/host<span class="w"> </span>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="c1"># 6. If node stuck NotReady after reboot:</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfigpool<span class="w"> </span>-w
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1"># MCO may be applying a MachineConfig — wait for it to complete</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAME                 STATUS   ROLES           AGE   VERSION
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>worker-01.ocp.local  NotReady worker,worker-cnf 45d   v1.27.6+f67aeb3
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Conditions:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Type                 Status  LastHeartbeatTime         Reason
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  MemoryPressure       False   Wed Jan 10 14:32:15 2024  KubeletHasSufficientMemory
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  DiskPressure         True    Wed Jan 10 14:32:15 2024  KubeletHasDiskPressure
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  PIDPressure          False   Wed Jan 10 14:32:15 2024  KubeletHasSufficientPID
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Ready                False   Wed Jan 10 14:32:15 2024  KubeletNotReady
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>/dev/sda3      100G  87G  13G  87%  /
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>/dev/sda4      50G  42G  8G   84%  /var
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>NAME                                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>ovnkube-node-8xf7m                        1/1     Running   0          12d
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>ovn-controller-5qp2k                      1/1     Running   2          8d
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Reference ID : 8d4a8c2f.1704879135
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Leap status  : Normal
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>System time  : 0.000234567 seconds slow of NTP time
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>RMS offset   : 0.000456789 seconds
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>NAME                    CONFIG                                        UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>master                  rendered-master-a1b2c3d4e5f6g7h8i9j0k1l2   True      False      False      3               3                   3                     0                      45d
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>worker                  rendered-worker-x9y8z7w6v5u4t3s2r1q0p9o8   False     True       False      5               4                   4                     0                      45d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to the server: dial tcp: lookup &lt;node&gt;: no such host</code></strong> — Replace <code>&lt;node&gt;</code> with the actual node name from <code>oc get nodes</code>.
+<strong><code>chroot: cannot change root directory to /host: No such file or directory</code></strong> — Ensure you are running <code>oc debug node/&lt;node&gt;</code> first and waiting for the debug pod to start before executing chroot.
+<strong><code>Unit kubelet.service could not be found.</code></strong> — The kubelet service may not be installed or the node OS differs; verify the node is RHCOS and check <code>/etc/systemd/system/kubelet.service.d/</code> for custom configurations.</p>
+</div>
 <h2 id="etcd-high-latency">etcd High Latency<a class="headerlink" href="#etcd-high-latency" title="Permanent link">&para;</a></h2>
 <p>High disk I/O latency causes etcd to miss heartbeat deadlines, leading to leader elections, slow API responses, and cascading CrashLoopBackOff on etcd pods.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get etcd pod name</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check endpoint status: DB SIZE and RAFT_APPLIED_INDEX</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>--write-out<span class="o">=</span>table<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check P99 WAL fsync latency via Prometheus</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Alert threshold: &gt; 10ms P99</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Query: etcd_disk_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Check disk latency on the etcd node</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;master-node&gt;
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>chroot<span class="w"> </span>/host
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Use iostat to identify disk saturation:</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device|sd|nvme&quot;</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Defrag etcd if DB size &gt; 8 GB</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>etcdctl<span class="w"> </span>defrag<span class="w"> </span>--cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get etcd pod name</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check endpoint status: DB SIZE and RAFT_APPLIED_INDEX</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>--write-out<span class="o">=</span>table<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Check P99 WAL fsync latency via Prometheus</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Alert threshold: &gt; 10ms P99</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Query: etcd_disk_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;}</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Check disk latency on the etcd node</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;master-node&gt;
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>chroot<span class="w"> </span>/host
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Use iostat to identify disk saturation:</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device|sd|nvme&quot;</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="c1"># Defrag etcd if DB size &gt; 8 GB</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">  </span>etcdctl<span class="w"> </span>defrag<span class="w"> </span>--cluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pod/etcd-ip-10-0-1-42.ec2.internal
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>+------------------------+------------------+---------+---------+-----------+
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>|       ENDPOINT         |        ID        | VERSION | DB SIZE | RAFT INDEX|
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>+------------------------+------------------+---------+---------+-----------+
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>| https://10.0.1.42:2379 | 8e4c5d7f9a2b1c3e |   3.5.9 | 7.2 GB  | 2847561   |
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>| https://10.0.1.51:2379 | 4a6b8c2d5e9f1a3b |   3.5.9 | 7.1 GB  | 2847561   |
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>| https://10.0.1.63:2379 | 9f1e2d3c4b5a6e7d |   3.5.9 | 7.3 GB  | 2847561   |
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>+------------------------+------------------+---------+---------+-----------+
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Starting debug pod on master-0.ocp.example.com ...
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Pod IP: 10.128.0.45
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>chroot /host
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Device     r/s     w/s     rkB/s     wkB/s   await svctm  %util
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>sda       12.4    45.2    156.8   1024.3   18.5   2.1   12.1
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>nvme0n1   8.1     38.9    102.4    892.1   16.2   1.8    8.9
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Defragmentation started on member 8e4c5d7f9a2b1c3e
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Defragmentation finished for member 8e4c5d7f9a2b1c3e
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to match a pod using the provided selectors: etcd=true</code></strong> — Verify the label selector with <code>oc get pod -n openshift-etcd --show-labels</code> and update the label name if it differs (e.g., <code>app=etcd</code> or <code>k8s-app=etcd</code>).
+<strong><code>x509: certificate signed by unknown authority</code></strong> — Ensure the certificate paths are correct and the pod is running with proper mounted secrets by checking <code>oc describe pod $ETCD_POD -n openshift-etcd</code> for volume mounts.
+<strong><code>error: node "&lt;master-node&gt;" not found</code></strong> — Replace <code>&lt;master-node&gt;</code> with an actual node name from <code>oc get nodes -l node-role.kubernetes.io/master</code> (e.g., <code>master-0.ocp.example.com</code>).</p>
+</div>
 <h2 id="dns-failures">DNS Failures<a class="headerlink" href="#dns-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Check CoreDNS pods (one per node via DaemonSet)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># All should be Running; any Pending or Error needs investigation</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 2. Test DNS from within a pod</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>debug<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>&lt;service&gt;.&lt;ns&gt;.svc.cluster.local
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>oc<span class="w"> </span>debug<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 3. Check CoreDNS logs for forwarding errors</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-l<span class="w"> </span>dns.operator.openshift.io/daemonset-dns<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 4. Verify DNS ConfigMap (Corefile)</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>oc<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>dns-default<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-o<span class="w"> </span>yaml
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check upstream forwarder configuration</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># 5. Check /etc/resolv.conf inside a pod</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Should show: nameserver 172.30.0.10 (cluster DNS service IP)</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># 6. Verify DNS service is running</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>oc<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>openshift-dns
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># dns-default ClusterIP should be the IP in /etc/resolv.conf</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Check CoreDNS pods (one per node via DaemonSet)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># All should be Running; any Pending or Error needs investigation</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># 2. Test DNS from within a pod</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>oc<span class="w"> </span>debug<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>&lt;service&gt;.&lt;ns&gt;.svc.cluster.local
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>oc<span class="w"> </span>debug<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># 3. Check CoreDNS logs for forwarding errors</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>-l<span class="w"> </span>dns.operator.openshift.io/daemonset-dns<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># 4. Verify DNS ConfigMap (Corefile)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>oc<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>dns-default<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>-o<span class="w"> </span>yaml
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Check upstream forwarder configuration</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># 5. Check /etc/resolv.conf inside a pod</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Should show: nameserver 172.30.0.10 (cluster DNS service IP)</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># 6. Verify DNS service is running</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>oc<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>openshift-dns
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1"># dns-default ClusterIP should be the IP in /etc/resolv.conf</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NAME                    READY   STATUS    RESTARTS   AGE     IP            NODE
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>dns-default-abcd1       1/1     Running   0          7d      10.128.0.5    worker-1.example.com
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>dns-default-efgh2       1/1     Running   0          7d      10.128.1.8    worker-2.example.com
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>dns-default-ijkl3       1/1     Running   2          6d23h   10.128.2.12   master-0.example.com
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Server:         172.30.0.10
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Address:        172.30.0.10#53
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Name:   nginx.default.svc.cluster.local
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Address: 10.129.0.45
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Server:         172.30.0.10
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Address:        172.30.0.10#53
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Name:   kubernetes.default.svc.cluster.local
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Address: 172.30.0.1
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>[INFO] plugin/reload: Running configuration MD5 = 1a2b3c4d5e6f7g8h
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>[INFO] 10.128.0.15:54321 - 16384 &quot;A&quot; &quot;nginx.default.svc.cluster.local.&quot; udp 54 false 2 0.001234s
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>[INFO] 10.128.1.22:45678 - 16384 &quot;A&quot; &quot;kubernetes.default.svc.cluster.local.&quot; udp 54 false 2 0.000891s
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>apiVersion: v1
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>kind: ConfigMap
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>metadata:
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  name: dns-default
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  namespace: openshift-dns
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>data:
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>  Corefile: |
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>    .:5353 {
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>        errors
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>        health :8080
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>        ready :8081
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>        kubernetes cluster.local in-addr.arpa ip6.arpa {
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>            pods insecure
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>            fallthrough in-addr.arpa ip6.arpa
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>        }
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>        forward . 8.8.8.8 8.8.4.4
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>        cache 30
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>    }
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>nameserver 172.30.0.10
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>search default.svc.cluster.local svc.cluster.local cluster.local
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>options ndots:2
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>NAME          TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>dns-default   ClusterIP   172.30.0.10   &lt;none&gt;        53/UDP    45d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to forward to node "worker-1.example.com": error when getting node: nodes "worker-1.example.com" not found</code></strong> — Use the exact node name from <code>oc get nodes</code> instead of the FQDN.
+<strong><code>nslookup: can't resolve 'nginx.default.svc.cluster.local': No answer</code></strong> — Verify the service exists with <code>oc get svc -n default</code> and check CoreDNS logs for forwarding errors.
+<strong><code>nameserver 10.0.0.1</code></strong> — The resolver is pointing to the host DNS instead of the cluster DNS (172.30.0.10); restart the pod or check the CNI plugin configuration.</p>
+</div>
 <h2 id="cluster-operator-degraded">Cluster Operator Degraded<a class="headerlink" href="#cluster-operator-degraded" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Get detailed status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;operator-name&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Conditions section → message field has root cause</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 2. Check operator pod logs</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-name&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-name&gt;<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>&lt;operator-pod&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Common operator degraded scenarios:</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># dns degraded → check coredns pods in openshift-dns; check upstream DNS reachability</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># ingress degraded → check router pods in openshift-ingress; check wildcard cert expiry</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># monitoring degraded → check prometheus pods; likely PVC full or OOM</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># authentication degraded → OAuth pods failing; check LDAP/OIDC connectivity</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># storage degraded → CSI driver pods; check underlying storage system</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># 4. Check if Progressing is stuck (often indicates upgrade issue)</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Any CO with Available=False, Degraded=True, or Progressing=True for &gt; 15 min</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># 5. Force operator to reconcile (redeploy its managed pods)</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>oc<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;operator-pod&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-ns&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Get detailed status</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;operator-name&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Conditions section → message field has root cause</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># 2. Check operator pod logs</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-name&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-name&gt;<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>&lt;operator-pod&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># 3. Common operator degraded scenarios:</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># dns degraded → check coredns pods in openshift-dns; check upstream DNS reachability</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># ingress degraded → check router pods in openshift-ingress; check wildcard cert expiry</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># monitoring degraded → check prometheus pods; likely PVC full or OOM</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># authentication degraded → OAuth pods failing; check LDAP/OIDC connectivity</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># storage degraded → CSI driver pods; check underlying storage system</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># 4. Check if Progressing is stuck (often indicates upgrade issue)</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Any CO with Available=False, Degraded=True, or Progressing=True for &gt; 15 min</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># 5. Force operator to reconcile (redeploy its managed pods)</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>oc<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;operator-pod&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;operator-ns&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>$ oc describe co dns
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Name:         dns
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Namespace:    
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Labels:       &lt;none&gt;
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Annotations:  &lt;none&gt;
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>API Version:  config.openshift.io/v1
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Kind:         ClusterOperator
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Metadata:
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  Creation Timestamp:  2024-01-15T09:22:33Z
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  Generation:          47
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  Resource Version:    8934521
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  UID:                 a7c2f1e9-8b3d-4a6f-91c2-5e8d3f2a1b9c
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Status:
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  Conditions:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  - Last Transition Time:  2024-01-15T14:18:22Z
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    Message:              DNS controller successfully rolled out coredns
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    Reason:               AsExpected
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    Status:               True
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    Type:                 Available
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  - Last Transition Time:  2024-01-15T14:18:22Z
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    Message:              DNS controller successfully rolled out coredns
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    Reason:               AsExpected
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    Status:               False
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>    Type:                 Degraded
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  - Last Transition Time:  2024-01-15T14:18:22Z
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>    Message:              DNS controller successfully rolled out coredns
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>    Reason:               AsExpected
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    Status:               False
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>    Type:                 Progressing
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>  Related Objects:
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>  - Group:      apps
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>    Name:       dns-default
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>    Namespace:  openshift-dns
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>    Resource:   deployments
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>  Version:      4.13.8
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>$ oc get pods -n openshift-dns
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>NAME                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>dns-default-5f8c2d9b-k7m9l   1/1     Running   0          2d14h
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>dns-default-5f8c2d9b-n3x6p   1/1     Running   0          2d14h
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>$ oc logs -n openshift-dns -l app=dns-default --tail=100
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>2024-01-15T14:18:15.234Z [INFO] coredns: CoreDNS-1.10.1
+<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>2024-01-15T14:18:15.456Z [INFO] plugin/reload: Running CoreDNS-1.10.1
+<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>2024-01-15T14:18:22.891Z [INFO] Successfully loaded Corefile configuration
+<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>2024-01-15T14:18:23.012Z [INFO] Ready to accept queries
+<a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>$ oc get co | grep -v &quot;True.*False.*False&quot;
+<a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>NAME                                       AVAILABLE   DEGRADED   PROGRESSING   SINCE   VERSION
+<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>authentication                             True        False      False         2d      4.13.8
+<a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a>cloud-credential                           True        False      False         2d      4.13.8
+<a id="__codelineno-15-52" name="__codelineno-15-52" href="#__codelineno-15-52"></a>cluster-autoscaler                         True        False      False         2d      4.13.8
+<a id="__codelineno-15-53" name="__codelineno-15-53" href="#__codelineno-15-53"></a>dns                                        True        False      False         2d      4.13.8
+<a id="__codelineno-15-54" name="__codelineno-15-54" href="#__codelineno-15-54"></a>etcd                                       True        False      False         2d      4.13.8
+<a id="__codelineno-15-55" name="__codelineno-15-55" href="#__codelineno-15-55"></a>...
+<a id="__codelineno-15-56" name="__codelineno-15-56" href="#__codelineno-15-56"></a>
+<a id="__codelineno-15-57" name="__codelineno-15-57" href="#__codelineno-15-57"></a>$ oc rollout restart deployment/dns-default -n openshift-dns
+<a id="__codelineno-15-58" name="__codelineno-15-58" href="#__codelineno-15-58"></a>deployment.apps/dns-default restarted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "co"</code></strong> — Use the full resource name `oc describe clusteroperator</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7778,7 +8101,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

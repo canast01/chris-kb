@@ -7588,131 +7588,324 @@
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Show signatures in log</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>git<span class="w"> </span>log<span class="w"> </span>--show-signature<span class="w"> </span>--oneline<span class="w"> </span>-10
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Generate an Ed25519 GPG key</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpg<span class="w"> </span>--expert<span class="w"> </span>--full-generate-key
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Select: (9) ECC (sign and encrypt) → (1) Curve 25519</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Export public key for GitHub/GitLab upload</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Backup private key (store offline/in secrets manager)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export-secret-keys<span class="w"> </span>&lt;KEY_ID&gt;<span class="w"> </span>&gt;<span class="w"> </span>gpg_private_backup.asc
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Use the same SSH key for transport and signing</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>gpg.format<span class="w"> </span>ssh
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>~/.ssh/id_ed25519_git.pub
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Configure allowed signers for verification</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/git
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user@corp.example.com </span><span class="k">$(</span>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>&gt;&gt;<span class="w"> </span>~/.config/git/allowed_signers
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>gpg.ssh.allowedSignersFile<span class="w"> </span>~/.config/git/allowed_signers
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Verify a commit signed with SSH</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># macOS — store in Keychain</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Windows — Git Credential Manager (encrypted in Windows Credential Store)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Linux — GNOME Keyring (libsecret)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>/usr/lib/git-core/git-credential-libsecret
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Linux — pass (GPG-encrypted password store)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>/usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List credentials currently stored by the helper</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>credential-osxkeychain<span class="w"> </span>get<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s">protocol=https</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">host=github.com</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">EOF</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Remove a stored credential</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>credential-osxkeychain<span class="w"> </span>erase<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">protocol=https</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s">host=github.com</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s">EOF</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Verify no plaintext credentials in global git config</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;password\|token\|secret&quot;</span><span class="w"> </span>~/.gitconfig
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>brew<span class="w"> </span>install<span class="w"> </span>git-crypt<span class="w">   </span><span class="c1"># macOS</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>apt-get<span class="w"> </span>install<span class="w"> </span>git-crypt<span class="w">  </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Initialise in a repository</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">cd</span><span class="w"> </span>/path/to/repo
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>git-crypt<span class="w"> </span>init
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Add a GPG user who can decrypt</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>git-crypt<span class="w"> </span>add-gpg-user<span class="w"> </span>&lt;GPG_KEY_ID&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Export a symmetric key (for CI systems)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>git-crypt<span class="w"> </span>export-key<span class="w"> </span>/path/to/git-crypt-key
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Define which files to encrypt (.gitattributes)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;secrets/** filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.pem filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>git<span class="w"> </span>add<span class="w"> </span>.gitattributes
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Encrypt secrets with git-crypt&quot;</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># Unlock repository (after clone)</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>git-crypt<span class="w"> </span>unlock<span class="w"> </span>/path/to/git-crypt-key
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># or with GPG:</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>git-crypt<span class="w"> </span>unlock
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>brew<span class="w"> </span>install<span class="w"> </span>sops
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Create SOPS config (.sops.yaml in repo root)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>.sops.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s">creation_rules:</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s">  - path_regex: secrets/.*\.yaml$</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s">    pgp: &quot;FINGERPRINT1,FINGERPRINT2&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s">    aws_profile: default</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s">  - path_regex: config/.*\.env$</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s">    pgp: &quot;FINGERPRINT1&quot;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s">EOF</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Encrypt a file</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>sops<span class="w"> </span>--encrypt<span class="w"> </span>secrets/database.yaml<span class="w"> </span>&gt;<span class="w"> </span>secrets/database.enc.yaml
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Decrypt and edit in place</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>sops<span class="w"> </span>secrets/database.enc.yaml
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Decrypt to stdout</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>sops<span class="w"> </span>--decrypt<span class="w"> </span>secrets/database.enc.yaml
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify LFS endpoint</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>lfs<span class="w"> </span>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Endpoint
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Lock a file to prevent concurrent writes</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>lfs<span class="w"> </span>lock<span class="w"> </span>path/to/large/file.bin
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># List locked files</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>git<span class="w"> </span>lfs<span class="w"> </span>locks
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Unlock a file</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>git<span class="w"> </span>lfs<span class="w"> </span>unlock<span class="w"> </span>path/to/large/file.bin
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Scan entire history with truffleHog</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>file://.<span class="w"> </span>--only-verified
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Scan with gitleaks</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>gitleaks<span class="w"> </span>detect<span class="w"> </span>--source<span class="w"> </span>.<span class="w"> </span>--report-format<span class="w"> </span>json<span class="w"> </span>--report-path<span class="w"> </span>gitleaks-report.json
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># If secrets are found — rewrite history with git filter-repo</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>pip<span class="w"> </span>install<span class="w"> </span>git-filter-repo
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>git<span class="w"> </span>filter-repo<span class="w"> </span>--path<span class="w"> </span>secrets/old-secret.env<span class="w"> </span>--invert-paths
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Force-push rewritten history (coordinate with all users)</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>git<span class="w"> </span>push<span class="w"> </span>--force-with-lease<span class="w"> </span>origin<span class="w"> </span>main
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[master a3f7e2c] Signed commit
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> 1 file changed, 2 insertions(+)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Created tag &#39;v1.2.3&#39;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>commit a3f7e2c8b9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>gpg: Signature made Wed 15 Jan 2025 14:32:18 UTC using RSA key ID 4A3F8E2D
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>gpg: Good signature from &quot;DevOps Team &lt;devops@company.internal&gt;&quot;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>object a3f7e2c8b9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>type commit
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tag v1.2.3
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>tagger DevOps Team &lt;devops@company.internal&gt; Wed 15 Jan 2025 14:32:45 UTC
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>gpg: Signature made Wed 15 Jan 2025 14:32:45 UTC using RSA key ID 4A3F8E2D
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>gpg: Good signature from &quot;DevOps Team &lt;devops@company.internal&gt;&quot;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>a3f7e2c Signed commit
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>b2e6d1b Update security policy
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>c1f5a0e Initial infrastructure setup
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: gpg failed to sign the data</code></strong> — Ensure GPG is installed (<code>apt-get install gnupg2</code>), the key ID is correct, and the GPG agent is running (<code>gpg-agent --daemon</code>).
+<strong><code>error: gpg.program not found</code></strong> — Configure the GPG program path with <code>git config --global gpg.program /usr/bin/gpg2</code> if using GPG 2.x.
+<strong><code>error: key &lt;GPG_KEY_ID&gt; does not contain a secret key</code></strong> — Verify the key exists in your local keyring with <code>gpg --list-secret-keys</code> and use the correct 16-character key ID.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate an Ed25519 GPG key</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpg<span class="w"> </span>--expert<span class="w"> </span>--full-generate-key
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Select: (9) ECC (sign and encrypt) → (1) Curve 25519</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Export public key for GitHub/GitLab upload</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Backup private key (store offline/in secrets manager)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export-secret-keys<span class="w"> </span>&lt;KEY_ID&gt;<span class="w"> </span>&gt;<span class="w"> </span>gpg_private_backup.asc
+</code></pre></div>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpg (GnuPG) 2.2.19; Copyright (C) 2019 Free Software Foundation, Inc.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>This is free software: you are free to change and redistribute it.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>There is NO WARRANTY, to the extent permitted by law.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Please select what kind of key you want:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   (1) RSA and RSA (default)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   (2) RSA and Elgamal
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   (3) DSA and Elgamal
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   (4) RSA (sign only)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   (5) DSA (sign only)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   (6) Elgamal (encrypt only)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   (7) DSA (set your own capabilities)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>   (8) RSA (set your own capabilities)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   (9) ECC (sign and encrypt)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Your selection? 9
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Please select which elliptic curve you want:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>   (1) Curve 25519
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>   (2) Curve 448
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>   (3) NIST P-256
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>   (4) NIST P-384
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>   (5) NIST P-521
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Your selection? 1
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Please specify how long the key should be valid.
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>         0 = key does not expire
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>      &lt;n&gt;  = key expires in n days
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &lt;n&gt;w = key expires in n weeks
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>      &lt;n&gt;m = key expires in n months
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>      &lt;n&gt;y = key expires in n years
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>Key is valid for? (0) 0
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Key expires at Thu 01 Jan 2026 00:00:00 UTC
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>Is this correct? (y/N) y
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>GnuPG needs to construct a user ID to identify your key.
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>Real name: DevOps Admin
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>Email address: admin@company.dev
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>Comment: Git signing key
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>You selected this user ID:
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    &quot;DevOps Admin &lt;admin@company.dev&gt;&quot;
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>Change (N)ame, (C)omment or (E)mail (or quit to cancel)? N
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>We need to generate a lot of random bytes. It is a good idea to perform
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>some other action (typing, moving the mouse, using the disk) during the
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>prime generation; this gives the random number generator a better chance
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>to gain enough entropy.
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>gpg: key 4F2E8B9C3A1D5E7F marked as ultimately trusted
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>pub   ed25519 2024-01-15 [SC]
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>      4F2E8B9C3A1D5E7F2B4A6C8E9D1F3A5B
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>uid           [ultimate] DevOps Admin &lt;admin@company.dev&gt;
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>sub   cv25519 2024-01-15 [E]
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>-----BEGIN PGP PUBLIC KEY BLOCK-----
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>mQENBGXk7pYBCADf8q2N3vK9mL2pQ4rJ8sX5hY3kZ6aB2cD4eF6gH8iJ0kL2mN4o
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>P6qR8sT0uV2wX4yZ6aB8cD0eF2gH4iJ6kL8mN0oP2qR4sT6uV8wX0yZ2aB4cD8eF8
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>...
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>=aBcD
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>-----END PGP PUBLIC KEY BLOCK-----
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>gpg: key 4F2E8B9C3A1D5
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Use the same SSH key for transport and signing</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>gpg.format<span class="w"> </span>ssh
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>~/.ssh/id_ed25519_git.pub
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Configure allowed signers for verification</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/git
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user@corp.example.com </span><span class="k">$(</span>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>&gt;&gt;<span class="w"> </span>~/.config/git/allowed_signers
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>gpg.ssh.allowedSignersFile<span class="w"> </span>~/.config/git/allowed_signers
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Verify a commit signed with SSH</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(no output — command completes silently)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>(no output — command completes silently)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>(no output — command completes silently)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>(no output — command completes silently)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>commit 7a3f8e2c9b1d4e5f6a7b8c9d0e1f2a3b
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Good &quot;git&quot; signature for user@corp.example.com with ED25519 key SHA256:aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890abcdefghijkl
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: key does not contain a public key</code></strong> — Ensure the SSH public key file path is correct and the file contains a valid public key (not a private key).
+<strong><code>error: unknown signature type 'ssh'</code></strong> — Update Git to version 2.34 or later, which added SSH signature support.
+<strong><code>fatal: your current branch 'main' does not have any commits yet</code></strong> — Create an initial commit before attempting to verify; <code>git verify-commit HEAD</code> requires at least one signed commit in history.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># macOS — store in Keychain</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Windows — Git Credential Manager (encrypted in Windows Credential Store)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Linux — GNOME Keyring (libsecret)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>/usr/lib/git-core/git-credential-libsecret
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Linux — pass (GPG-encrypted password store)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>/usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>(no output — command completes silently)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: not in a git repository</code></strong> — Run these commands outside a repo; they set global config in <code>~/.gitconfig</code>, not repo-specific settings.
+<strong><code>error: unknown credential helper 'osxkeychain'</code></strong> — Install Git via Homebrew (<code>brew install git</code>) or Xcode Command Line Tools to include the osxkeychain helper.
+<strong><code>error: unknown credential helper '/usr/lib/git-core/git-credential-libsecret'</code></strong> — Install the libsecret package (<code>sudo apt install libsecret-1-0 git</code>) and verify the helper path exists before configuring.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List credentials currently stored by the helper</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>credential-osxkeychain<span class="w"> </span>get<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">protocol=https</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">host=github.com</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">EOF</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Remove a stored credential</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>git<span class="w"> </span>credential-osxkeychain<span class="w"> </span>erase<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">protocol=https</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">host=github.com</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">EOF</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Verify no plaintext credentials in global git config</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;password\|token\|secret&quot;</span><span class="w"> </span>~/.gitconfig
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>protocol=https
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>host=github.com
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>username=dev-user@company.com
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>password=ghp_aBcD1234eFgH5678iJkL9012mNoPqRsT
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: cannot run git-credential-osxkeychain: No such file or directory</code></strong> — Install the credential helper with <code>git credential-osxkeychain</code> or use <code>brew install git-credential-osxkeychain</code> on macOS.
+<strong><code>grep: /Users/username/.gitconfig: No such file or directory</code></strong> — Create a basic <code>.gitconfig</code> file with <code>git config --global user.name "Your Name"</code> or verify the file path is correct for your user.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>brew<span class="w"> </span>install<span class="w"> </span>git-crypt<span class="w">   </span><span class="c1"># macOS</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>apt-get<span class="w"> </span>install<span class="w"> </span>git-crypt<span class="w">  </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Initialise in a repository</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">cd</span><span class="w"> </span>/path/to/repo
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>git-crypt<span class="w"> </span>init
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Add a GPG user who can decrypt</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>git-crypt<span class="w"> </span>add-gpg-user<span class="w"> </span>&lt;GPG_KEY_ID&gt;
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Export a symmetric key (for CI systems)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>git-crypt<span class="w"> </span>export-key<span class="w"> </span>/path/to/git-crypt-key
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Define which files to encrypt (.gitattributes)</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;secrets/** filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.pem filter=git-crypt diff=git-crypt&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>git<span class="w"> </span>add<span class="w"> </span>.gitattributes
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Encrypt secrets with git-crypt&quot;</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># Unlock repository (after clone)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>git-crypt<span class="w"> </span>unlock<span class="w"> </span>/path/to/git-crypt-key
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="c1"># or with GPG:</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>git-crypt<span class="w"> </span>unlock
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Homebrew 4.2.15
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/git-crypt/manifests/0.7.0
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>==&gt; Pouring git-crypt-0.7.0.arm64_darwin.bottle.tar.gz
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>🍺  /usr/local/opt/git-crypt (8 files, 156KB)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Initialised empty git-crypt repository in /path/to/repo/.git/crypt
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>[master (root-commit) a7f3e2c] Encrypt secrets with git-crypt
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a> 3 files changed, 3 insertions(+)
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a> create mode 100644 .gitattributes
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a> create mode 100644 .git/crypt/keys/default
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Repository unlocked. Files decrypted.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: not a git repository (or any of the parent directories): .git</code></strong> — Run <code>git init</code> before <code>git-crypt init</code>, or ensure you are inside a valid git repository directory.
+<strong><code>gpg: error reading key: No public key</code></strong> — Verify the GPG_KEY_ID exists locally with <code>gpg --list-keys</code> and use the correct key ID format (16-character hex or email).
+<strong><code>git-crypt: error: could not decrypt file</code></strong> — Ensure the correct decryption key file is provided with <code>git-crypt unlock</code> or that your GPG key is available in the local keyring.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>brew<span class="w"> </span>install<span class="w"> </span>sops
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Create SOPS config (.sops.yaml in repo root)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>.sops.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s">creation_rules:</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="s">  - path_regex: secrets/.*\.yaml$</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="s">    pgp: &quot;FINGERPRINT1,FINGERPRINT2&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="s">    aws_profile: default</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="s">  - path_regex: config/.*\.env$</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="s">    pgp: &quot;FINGERPRINT1&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="s">EOF</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Encrypt a file</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>sops<span class="w"> </span>--encrypt<span class="w"> </span>secrets/database.yaml<span class="w"> </span>&gt;<span class="w"> </span>secrets/database.enc.yaml
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Decrypt and edit in place</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>sops<span class="w"> </span>secrets/database.enc.yaml
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># Decrypt to stdout</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>sops<span class="w"> </span>--decrypt<span class="w"> </span>secrets/database.enc.yaml
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/sops/manifests/3.8.1
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>==&gt; Downloading https://ghcr.io/v2/homebrew/core/sops/blobs/sha256:a1b2c3d4e5f6
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>==&gt; Installing sops
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>==&gt; Pouring sops--3.8.1.monterey.bottle.tar.gz
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>🍺  /usr/local/Cellar/sops/3.8.1/bin/sops
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>(no output — command completes silently)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>(no output — command completes silently)
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>sops 3.8.1 (latest)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>enc: 0.0.0
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>gpg: 2.3.11
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>age: 1.1.1
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>sops --encrypt secrets/database.yaml &gt; secrets/database.enc.yaml
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Encrypting /dev/stdin
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>sops --decrypt secrets/database.enc.yaml
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>database:
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  host: prod-db-01.internal
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  port: 5432
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>  username: app_user
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  password: ENC[AES256_GCM,data:K7x9mP2qL8vN,iv:...]
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  sops:
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    kms: []
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    gcp_kms: []
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>    azure_kv: []
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>    hc_vault: []
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>    age: []
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>    lastmodified: &#39;2024-01-15T14:32:18Z&#39;
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    mac: ENC[AES256_GCM,data:...]
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>    pgp:
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>    - created_at: &#39;2024-01-15T14:32:18Z&#39;
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>      enc: |-
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>        -----BEGIN PGP MESSAGE-----
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>        ...
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>      fp: A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>    version: 3.8.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: failed to get the data key [error getting data key from pgp: gpg: no default secret key]</code></strong> — Ensure your GPG secret key is imported and set as the default key with <code>gpg --default-key FINGERPRINT</code>.
+<strong><code>error: failed to encrypt the file [error encrypting with pgp: gpg: no public key]</code></strong> — Verify the PGP fingerprints in <code>.sops.yaml</code> match your imported public keys using <code>gpg --list-keys</code>.
+<strong><code>error: failed to open file [permission denied]</code></strong> — Ensure the secrets directory exists and has write permissions with <code>mkdir -p secrets &amp;&amp; chmod 700 secrets</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify LFS endpoint</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>lfs<span class="w"> </span>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Endpoint
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Lock a file to prevent concurrent writes</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>git<span class="w"> </span>lfs<span class="w"> </span>lock<span class="w"> </span>path/to/large/file.bin
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># List locked files</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>git<span class="w"> </span>lfs<span class="w"> </span>locks
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Unlock a file</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>git<span class="w"> </span>lfs<span class="w"> </span>unlock<span class="w"> </span>path/to/large/file.bin
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Endpoint=https://git-lfs.company.internal/storage
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Current user: admin@company.com
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Locked path/to/large/file.bin
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>path/to/large/file.bin  admin@company.com   ID: 8f4c2e91-7a3b-4d9e-b2f1-5c8a9d3e7f2a
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Repository or object not found</code></strong> — Verify the LFS endpoint URL is accessible and the repository exists on the LFS server.
+<strong><code>Error: path/to/large/file.bin is already locked by another user</code></strong> — Have the other user run <code>git lfs unlock</code> first, or contact them to release the lock.
+<strong><code>fatal: Not a git repository</code></strong> — Run this command from within a Git repository that has LFS initialized with <code>git lfs install</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Scan entire history with truffleHog</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>file://.<span class="w"> </span>--only-verified
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Scan with gitleaks</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>gitleaks<span class="w"> </span>detect<span class="w"> </span>--source<span class="w"> </span>.<span class="w"> </span>--report-format<span class="w"> </span>json<span class="w"> </span>--report-path<span class="w"> </span>gitleaks-report.json
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># If secrets are found — rewrite history with git filter-repo</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>pip<span class="w"> </span>install<span class="w"> </span>git-filter-repo
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>git<span class="w"> </span>filter-repo<span class="w"> </span>--path<span class="w"> </span>secrets/old-secret.env<span class="w"> </span>--invert-paths
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Force-push rewritten history (coordinate with all users)</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>git<span class="w"> </span>push<span class="w"> </span>--force-with-lease<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj0EOgjAQRfc9xYSFOy_AwoS4caMuOEDTtA1MrDOkLSHEeHepgIbQXfvmv8wfg97qiEwlGB5ICLJxYP-Qmil6dqGE4jYjOC-ogFdoVWdLSK6ixtm34CBb5Y0lpGZy7jVc1m82r7rOoVZptQxW9x7jOHnVH0O94LzfG4zyyYSR_byzSggOcP3BrLk7EY4n2Nafn2FzVErlS6_p3PRr7aquxgeoUY2z?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7751,7 +7944,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

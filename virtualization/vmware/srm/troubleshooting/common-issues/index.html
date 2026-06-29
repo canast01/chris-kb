@@ -9292,8 +9292,7 @@
 <h2 id="protection-group-shows-error">Protection Group Shows Error<a class="headerlink" href="#protection-group-shows-error" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Protection Group status is "Error" or "Warning"</p>
 <ol>
-<li>
-<p><strong>RPO lag exceeds configured RPO</strong>: Replication is not keeping up
+<li><strong>RPO lag exceeds configured RPO</strong>: Replication is not keeping up
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>   Site Recovery → Replication → vSphere Replication
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>   Find the VMs in the PG → check &quot;Lag&quot; column
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   Investigate: network bandwidth, ESXi CPU on source host, source datastore I/O
@@ -9387,22 +9386,46 @@
 <a id="__codelineno-4-91" name="__codelineno-4-91" href="#__codelineno-4-91"></a>sitePair -&gt; cert
 <a id="__codelineno-4-92" name="__codelineno-4-92" href="#__codelineno-4-92"></a>netMap -&gt; netCheck
 <a id="__codelineno-4-93" name="__codelineno-4-93" href="#__codelineno-4-93"></a>stuck -&gt; script
-</code></pre></div></p>
-</li>
-<li>
-<p>SRM → Configure → Array Managers → check status</p>
-</li>
+</code></pre></div></li>
+</ol>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Verifying vCenter at protected site is operational...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  vCenter: vcenter-protected.corp.local (192.168.10.50)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Status: RUNNING
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Build: 7.0.3.00100
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  SSL Certificate: Valid (expires 2025-11-14)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Verifying SRM service running at protected site...
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  SRM Service: RUNNING
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Process ID: 4521
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Memory Usage: 1.2 GB / 4.0 GB
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Last Health Check: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Verifying site pairing is Connected...
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Protected Site: site-a.srm.local
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Recovery Site: site-b.srm.local
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Pairing Status: CONNECTED
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  Last Sync: 2024-01-15 14:35:42 UTC
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Replication Health: 98.5%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vCenter service unavailable: connection refused on port 443</code></strong> — Verify vCenter is running with <code>systemctl status vmware-vpxd</code> and check firewall rules allow port 443 between SRM and vCenter.
+<strong><code>SRM service not running: failed to connect to localhost:13116</code></strong> — Restart the SRM service with <code>systemctl restart vmware-srm</code> and check <code>/var/log/vmware/srm/srm.log</code> for startup errors.
+<strong><code>Site pairing status: DISCONNECTED - certificate validation failed</code></strong> — Regenerate and re-import the SSL certificates on both sites, then re-pair the sites through the SRM UI.</p>
+</div>
+<ol>
+<li>SRM → Configure → Array Managers → check status</li>
 <li>Verify SRA service is running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-Service</span> <span class="n">vmware-sra</span><span class="p">-*</span>   <span class="c"># Windows SRM</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-Service</span> <span class="n">vmware-sra</span><span class="p">-*</span>   <span class="c"># Windows SRM</span>
 </code></pre></div></li>
 <li>Re-test array credentials: Array Manager → Edit → Test Connection</li>
 <li>Check SRA log for specific error (Dell SRA logs: see above path)</li>
 <li>Verify Unisphere/FlashArray/ONTAP API is accessible from SRM server:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot;</span> <span class="n">-SkipCertificateCheck</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot;</span> <span class="n">-SkipCertificateCheck</span>
 </code></pre></div></li>
 </ol>
 <h2 id="recovery-plan-stuck-running">Recovery Plan Stuck <code>Running</code><a class="headerlink" href="#recovery-plan-stuck-running" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Cause: Custom script step timed out, or a VM failed to power on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Cause: Custom script step timed out, or a VM failed to power on
 </code></pre></div>
 <ol>
 <li>SRM → Recovery Plans → running plan → Steps tab — identify which step is stuck</li>
@@ -9411,15 +9434,15 @@
 <li>As a last resort (during actual DR): manually advance the plan past the stuck step using "Force Next Step"</li>
 </ol>
 <h2 id="site-pair-shows-error">Site Pair Shows <code>Error</code><a class="headerlink" href="#site-pair-shows-error" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 </code></pre></div>
 <ol>
 <li>From SRM server, verify vCenter is reachable:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
 </code></pre></div></li>
 <li>Check certificate validity:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
 </code></pre></div></li>
 <li>Re-enter site pair credentials: SRM → Sites → Edit Credentials</li>
 </ol>
@@ -9459,7 +9482,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

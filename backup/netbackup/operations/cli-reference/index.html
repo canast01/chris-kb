@@ -7774,60 +7774,199 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Initiate instant access restore</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bprestore<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>-R<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>&lt;path&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bprestore -C prod-web-01 -t Standard -L /tmp/restore.log /home/appuser/data
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Restore Request ID: RID-2024-001847
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Status: SUBMITTED
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Estimated completion: 2024-01-15 14:32:00
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>bpimmedia -U -client prod-web-01
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Image ID                          Policy       Backup Date         Size (GB)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>IMG-20240115-084521               Standard     2024-01-15 08:45    245.3
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>IMG-20240114-084501               Standard     2024-01-14 08:45    248.7
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>IMG-20240113-084512               Standard     2024-01-13 08:45    251.2
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>IMG-20240112-084530               Standard     2024-01-12 08:45    243.9
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>bplist -C prod-web-01 -t Standard -R /
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>/home/appuser/data/config.xml
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>/home/appuser/data/app.log
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>/home/appuser/data/cache/
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>/var/lib/appdata/
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>...
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Total files: 1247
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>bprestore -L /tmp/restore.log -R -C prod-web-01 /home/appuser/data
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Instant Access Restore initiated
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Mount point: /mnt/nbu_instant_20240115_prod-web-01
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Status: MOUNTED
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Access available for: 7 days
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bprestore: Client 'prod-web-01' not found in policy</code></strong> — Verify the client name matches exactly in the NetBackup policy configuration using <code>bppllist -l</code>.
+<strong><code>bpimmedia: No images found for client within retention period</code></strong> — Confirm backups exist for the specified client and check retention policies haven't expired the required image.
+<strong><code>bprestore: Permission denied writing to /tmp/restore.log</code></strong> — Ensure the NetBackup daemon user has write permissions to the log directory or specify an alternate writable path.</p>
+</div>
 <hr />
 <h2 id="catalog-media">Catalog &amp; Media<a class="headerlink" href="#catalog-media" title="Permanent link">&para;</a></h2>
 <p>Manage media, catalog verification, and storage unit health.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all storage units</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bpstulist
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List storage unit detail</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bpstulist<span class="w"> </span>-label<span class="w"> </span>&lt;stu_name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List media volumes</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmquery<span class="w"> </span>-b<span class="w"> </span>-m<span class="w"> </span>&lt;media_id&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List all tape drives</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>tpconfig<span class="w"> </span>-d
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Run catalog backup</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>bpcatarc
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify catalog integrity</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>bpdbm<span class="w"> </span>-consistency_check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all storage units</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpstulist
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List storage unit detail</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpstulist<span class="w"> </span>-label<span class="w"> </span>&lt;stu_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List media volumes</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vmquery<span class="w"> </span>-b<span class="w"> </span>-m<span class="w"> </span>&lt;media_id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List all tape drives</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>tpconfig<span class="w"> </span>-d
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Run catalog backup</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>bpcatarc
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Verify catalog integrity</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>bpdbm<span class="w"> </span>-consistency_check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Storage Units:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  STU_PRIMARY_001 (disk)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  STU_SECONDARY_002 (tape)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  STU_ARCHIVE_003 (disk)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Storage Unit: STU_PRIMARY_001
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Type: disk
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Path: /netbackup/storage/primary
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Capacity: 2.0 TB
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Used: 1.2 TB
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Media ID: CLN001234
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Status: Active
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Location: Vault_A
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Last_Used: 2024-01-15 14:32:00
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Remaining_Capacity: 450 GB
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Tape Drives:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Drive_001: /dev/rmt/0 (LTO9, Online)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  Drive_002: /dev/rmt/1 (LTO9, Online)
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  Drive_003: /dev/rmt/2 (LTO8, Offline)
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Catalog backup started: 2024-01-15 15:45:22
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Backup completed successfully
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Catalog size: 12.4 GB
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Consistency check: PASSED
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Database integrity verified
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Check completed: 2024-01-15 15:47:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpstulist: command not found</code></strong> — Ensure NetBackup bin directory is in PATH: <code>export PATH=$PATH:/usr/openv/netbackup/bin</code>
+<strong><code>vmquery: Media ID not found</code></strong> — Verify the media ID exists and is not expired by running <code>vmquery -b</code> without the <code>-m</code> flag first.
+<strong><code>bpdbm: Consistency check FAILED - 3 errors detected</code></strong> — Run <code>bpdbm -rebuild_catalog</code> to repair the database, then re-run the consistency check.</p>
+</div>
 <hr />
 <h2 id="client-policy-management">Client &amp; Policy Management<a class="headerlink" href="#client-policy-management" title="Permanent link">&para;</a></h2>
 <p>Inspect and manage client records and policy assignments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all clients</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpclient<span class="w"> </span>-L
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show detail for a specific client</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpclient<span class="w"> </span>-L<span class="w"> </span>-client<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test BPCD connectivity to a client</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Test client backup connectivity</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>bptestnetconn<span class="w"> </span>-sv<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List media servers</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>nbemmcmd<span class="w"> </span>-listhosts<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all clients</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpclient<span class="w"> </span>-L
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show detail for a specific client</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>bpclient<span class="w"> </span>-L<span class="w"> </span>-client<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test BPCD connectivity to a client</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Test client backup connectivity</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>bptestnetconn<span class="w"> </span>-sv<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># List media servers</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>nbemmcmd<span class="w"> </span>-listhosts<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>bpclient -L
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>apollo-web-01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>apollo-db-02
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>apollo-app-03
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>apollo-cache-01
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>apollo-backup-gw
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>5 clients listed
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>bpclient -L -client apollo-web-01
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Client Name: apollo-web-01
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Platform: Linux
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>OS Version: Red Hat Enterprise Linux 8.7
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Last Backup: 2024-01-15 22:45:33
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Status: Active
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>bptestbpcd -client apollo-web-01
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Connected to BPCD on apollo-web-01 (192.168.45.12:13782)
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>BPCD Version: 9.1.0.1
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Connection Status: OK
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>bptestnetconn -sv -client apollo-web-01
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Testing connectivity from backup server to apollo-web-01...
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>TCP port 13782 (BPCD): OPEN
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>TCP port 13783 (BPCD SSL): OPEN
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Network connectivity: SUCCESS
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>nbemmcmd -listhosts -machinetype mediaserver
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>apollo-media-01 (192.168.50.10)
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>apollo-media-02 (192.168.50.11)
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>apollo-media-03 (192.168.50.12)
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>3 media servers found
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpclient: client not found</code></strong> — Verify the client hostname matches exactly in NetBackup Admin Console and check DNS resolution with <code>nslookup &lt;hostname&gt;</code>.
+<strong><code>bptestbpcd: connection refused on port 13782</code></strong> — Ensure the BPCD daemon is running on the client with <code>ps aux | grep bpcd</code> and firewall rules allow port 13782 from the master server.
+<strong><code>nbemmcmd: invalid option or command not found</code></strong> — Confirm you are running this command on the NetBackup master server and that the NetBackup binaries are in your PATH with <code>which nbemmcmd</code>.</p>
+</div>
 <hr />
 <h2 id="error-log-analysis">Error &amp; Log Analysis<a class="headerlink" href="#error-log-analysis" title="Permanent link">&para;</a></h2>
 <p>Decode errors and review logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show backup errors from last 24 hours</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Look up an error code</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>bperror<span class="w"> </span>-S<span class="w"> </span>&lt;exit_status&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># View unified logs (unilog format)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vxlogview<span class="w"> </span>-i<span class="w"> </span><span class="m">51216</span><span class="w"> </span>-d<span class="w"> </span><span class="m">24</span>:00:00
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Tail legacy job logs</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/usr/openv/netbackup/logs/bprd/log.&lt;today&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show backup errors from last 24 hours</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Look up an error code</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>bperror<span class="w"> </span>-S<span class="w"> </span>&lt;exit_status&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># View unified logs (unilog format)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vxlogview<span class="w"> </span>-i<span class="w"> </span><span class="m">51216</span><span class="w"> </span>-d<span class="w"> </span><span class="m">24</span>:00:00
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Tail legacy job logs</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/usr/openv/netbackup/logs/bprd/log.&lt;today&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>bperror -backstat -hoursago 24
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Backup Status Report - Last 24 Hours
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>=====================================
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Host              Policy          Status    Time            Size(GB)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>backup-prod-01    daily_full      FAILED    2024-01-15 03:45    2048.5
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>backup-prod-02    daily_incr      COMPLETED 2024-01-15 04:12    512.3
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>backup-dev-01     weekly_full     FAILED    2024-01-15 02:30    1024.0
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>backup-prod-03    daily_full      COMPLETED 2024-01-15 05:00    4096.2
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Total Errors: 2
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>bperror -S 1
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Exit Status: 1
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Description: The requested operation was partially successful
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Recommendation: Check individual job logs for details
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>vxlogview -i 51216 -d 24:00:00
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>[2024-01-15 03:45:22] INFO: Backup job 12847 initiated for backup-prod-01
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>[2024-01-15 03:47:15] WARN: Network timeout on secondary path, retrying
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>[2024-01-15 03:52:08] ERROR: Media mount failed - tape drive offline
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>[2024-01-15 04:12:33] INFO: Backup job 12848 completed successfully
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>[2024-01-15 05:00:01] INFO: Cleanup phase started
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>tail -f /usr/openv/netbackup/logs/bprd/log.20240115
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>01/15/2024 03:45:22 - bprd[1234]: Job 12847 started
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>01/15/2024 03:47:15 - bprd[1234]: Connection established to backup-prod-01
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>01/15/2024 03:52:08 - bprd[1234]: ERROR - Cannot access /dev/rmt/0 (Device busy)
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>01/15/2024 04:12:33 - bprd[1235]: Job 12848 completed, status=0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vxlogview: invalid instance ID 51216</code></strong> — Verify the correct instance ID with <code>vxlogview -l</code> and use a valid ID from the output.
+<strong><code>tail: cannot open '/usr/openv/netbackup/logs/bprd/log.20240115' for reading: No such file or directory</code></strong> — Replace <code>&lt;today&gt;</code> with the actual date in YYYYMMDD format (e.g., <code>log.20240115</code>) or use <code>ls /usr/openv/netbackup/logs/bprd/</code> to find available log files.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7864,7 +8003,7 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

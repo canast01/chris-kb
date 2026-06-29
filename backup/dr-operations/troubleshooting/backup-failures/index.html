@@ -7788,6 +7788,28 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># List active jobs</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>qlist<span class="w"> </span>job<span class="w"> </span>-t<span class="w"> </span>backup<span class="w"> </span>-st<span class="w"> </span>running
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>10234  Backup  Completed  srv-prod-db01   default     05/08 02:00:03     05/08 03:45:11
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>10235  Backup  Failed     srv-prod-app02  default     05/08 02:00:05     05/08 02:17:33
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>10236  Backup  Completed  srv-prod-web01  default     05/08 03:00:12     05/08 04:22:47
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>10237  Backup  Failed     srv-prod-db02   default     05/08 04:00:08     05/08 04:35:19
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>10238  Backup  Running    srv-prod-app03  default     05/08 05:00:01     -
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>10239  Backup  Completed  srv-prod-web02  default     05/08 05:30:44     05/08 06:15:22
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Job Failure Reason for Job ID: 10235
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Error Code: 31:4
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Error Message: Failed to connect to the client. Verify network connectivity and firewall rules.
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>10238  Backup  Running    srv-prod-app03  default     05/08 05:00:01     -
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>10240  Backup  Running    srv-prod-db03   default     05/08 05:45:22     -
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qlist: command not found</code></strong> — Ensure the CommServe client is installed and the PATH includes the Commvault bin directory (typically <code>/opt/commvault/Base/bin</code>).
+<strong><code>Error Code: 31:4 - Failed to connect to the client</code></strong> — Verify network connectivity between CommServe and the client, check firewall rules, and confirm the client service is running with <code>systemctl status cvd</code>.
+<strong><code>qoperation execscript: Invalid script name 'QS_GetJobFailureReason'</code></strong> — Verify the exact script name and job ID syntax; use <code>qoperation execscript -sn QS_GetJobFailureReason -si &lt;jobid&gt;</code> with a valid numeric job ID.</p>
+</div>
 <h3 id="log-locations-and-analysis">Log Locations and Analysis<a class="headerlink" href="#log-locations-and-analysis" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7815,12 +7837,29 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check cvfwd log for network errors</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/cvfwd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check connectivity from client to MediaAgent</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>telnet<span class="w"> </span>mediaagent01.corp.example.com<span class="w"> </span><span class="m">8400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check cvfwd log for network errors</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/cvfwd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check connectivity from client to MediaAgent</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>telnet<span class="w"> </span>mediaagent01.corp.example.com<span class="w"> </span><span class="m">8400</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2024-01-15 14:32:18 [ERROR] Connection timeout to MediaAgent mediaagent01.corp.example.com:8400 after 30s
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024-01-15 14:33:05 [WARN] Failed to authenticate with CommServe, retrying...
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024-01-15 14:33:42 [ERROR] Socket error: Connection refused on port 8400
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15 14:34:19 [ERROR] Backup job failed: Unable to reach MediaAgent within timeout window
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024-01-15 14:35:01 [WARN] Network latency detected: 450ms round-trip to mediaagent01
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15 14:35:47 [ERROR] Failed to write to staging area: Disk quota exceeded
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15 14:36:22 [ERROR] Timeout waiting for MediaAgent response (120s exceeded)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Trying 10.42.18.105...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>telnet: Unable to connect to remote host: Connection timed out
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>telnet: Unable to connect to remote host: Connection timed out</code></strong> — Verify MediaAgent is running (<code>systemctl status commvault-ma</code>), check firewall rules allow port 8400, and confirm DNS resolution with <code>nslookup mediaagent01.corp.example.com</code>.
+<strong><code>Socket error: Connection refused on port 8400</code></strong> — Restart the MediaAgent service with <code>systemctl restart commvault-ma</code> and verify the cvfwd daemon is listening on port 8400 using <code>netstat -tlnp | grep 8400</code>.
+<strong><code>Backup job failed: Unable to reach MediaAgent within timeout window</code></strong> — Increase the network timeout in CommServe backup policy settings or check for network congestion/packet loss using <code>ping -c 10 mediaagent01.corp.example.com</code>.</p>
+</div>
 <h3 id="commvault-job-failure-reason-codes">Commvault Job Failure Reason Codes<a class="headerlink" href="#commvault-job-failure-reason-codes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7861,18 +7900,54 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 <hr />
 <h2 id="netbackup-troubleshooting">NetBackup Troubleshooting<a class="headerlink" href="#netbackup-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="job-status_1">Job Status<a class="headerlink" href="#job-status_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List recent jobs with status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-M<span class="w"> </span>master01.corp.example.com
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Filter failed jobs only</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-M<span class="w"> </span>master01<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 1 &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Get detailed job info</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-all_columns
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Query error detail</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>bperror<span class="w"> </span>-S<span class="w"> </span>master01<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-l
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List recent jobs with status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-M<span class="w"> </span>master01.corp.example.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Filter failed jobs only</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-M<span class="w"> </span>master01<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 1 &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Get detailed job info</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-all_columns
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Query error detail</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>bperror<span class="w"> </span>-S<span class="w"> </span>master01<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-l
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Job ID    Policy Name          Client Name              Schedule      Status  Elapsed Time  KB Processed
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>123456    PROD_DB_DAILY        db-server-01.corp.local  Full_Backup   1       02:45:30      524288000
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>123457    PROD_DB_DAILY        db-server-02.corp.local  Full_Backup   0       00:15:22      1048576000
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>123458    PROD_APP_WEEKLY      app-server-03.corp.local Incremental   1       01:22:15      262144000
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>123459    PROD_DB_DAILY        db-server-04.corp.local  Full_Backup   1       03:10:45      786432000
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>123460    PROD_MAIL_DAILY      mail-server-01.corp.local Full_Backup   0       00:08:33      2097152000
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Job ID    Policy Name          Client Name              Schedule      Status  Elapsed Time  KB Processed
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>123456    PROD_DB_DAILY        db-server-01.corp.local  Full_Backup   1       02:45:30      524288000
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>123458    PROD_APP_WEEKLY      app-server-03.corp.local Incremental   1       01:22:15      262144000
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>123459    PROD_DB_DAILY        db-server-04.corp.local  Full_Backup   1       03:10:45      786432000
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Job ID: 123456
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Policy Name: PROD_DB_DAILY
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Client Name: db-server-01.corp.local
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Schedule: Full_Backup
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Status: 1 (Failed)
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Elapsed Time: 02:45:30
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>KB Processed: 524288000
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Error Code: 6
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Start Time: 2024-01-15 22:30:15
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>End Time: 2024-01-16 01:15:45
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Backup Type: Full
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Error detail for job 123456:
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Error Code: 6
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>Message: Cannot open file - permission denied on /var/lib/mysql/ibdata1
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>Client: db-server-01.corp.local
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>Time: 2024-01-16 01:15:42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpdbjobs: command not found</code></strong> — Ensure the NetBackup client or admin console is installed and the PATH includes the NetBackup bin directory (typically <code>/usr/openv/netbackup/bin</code>).
+<strong><code>Error: Cannot connect to master01.corp.example.com</code></strong> — Verify the master server hostname is correct, the NetBackup services are running on the master, and network connectivity exists from your current host.
+<strong><code>bperror: invalid jobid 123456</code></strong> — Confirm the job ID exists by running <code>bpdbjobs -report</code> first and use a valid job ID from the output.</p>
+</div>
 <h3 id="netbackup-status-code-reference">NetBackup Status Code Reference<a class="headerlink" href="#netbackup-status-code-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7925,50 +8000,96 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check backup client connectivity</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>client01.corp.example.com
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify NetBackup daemon status on client</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check catalog health</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-M<span class="w"> </span>master01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check backup client connectivity</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>client01.corp.example.com
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify NetBackup daemon status on client</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check catalog health</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-M<span class="w"> </span>master01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>client01.corp.example.com: PASSED (response time: 42ms)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>NetBackup processes on client01.corp.example.com:
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  PID     PPID    COMMAND
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  2847    1       /usr/openv/netbackup/bin/bprd
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  2891    2847    /usr/openv/netbackup/bin/bpsched
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  2934    2847    /usr/openv/netbackup/bin/bpdbm
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  3012    2847    /usr/openv/netbackup/bin/bptm
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  3156    2847    /usr/openv/netbackup/bin/bpcd
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Catalog consistency check on master01:
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Checking database integrity...
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Total records scanned: 1,247,392
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Inconsistencies found: 0
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Status: HEALTHY
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Check completed in 187 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bptestbpcd: command not found</code></strong> — Ensure NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or use the full path <code>/usr/openv/netbackup/bin/bptestbpcd</code>.
+<strong><code>Connection refused on client01.corp.example.com port 13782</code></strong> — Verify the NetBackup daemon (bpcd) is running on the client with <code>/usr/openv/netbackup/bin/bpps -a</code> and check firewall rules allow port 13782 between master and client.
+<strong><code>bpdbm: Catalog database locked by another process</code></strong> — Wait for any running backup or restore jobs to complete, or check for hung processes with <code>bpps -a</code> and kill stale processes if necessary.</p>
+</div>
 <hr />
 <h2 id="repository-capacity-checks">Repository Capacity Checks<a class="headerlink" href="#repository-capacity-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux: disk usage on repository mount</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/backup
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Filesystem      Size  Used Avail Use% Mounted on</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># /dev/sdb1        20T   18T  2.0T  90% /backup</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Find largest directories consuming space</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/backup/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Windows: check backup drive</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Get-PSDrive<span class="w"> </span>-Name<span class="w"> </span>D<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Used,<span class="w"> </span>Free<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">        </span><span class="o">[</span>PSCustomObject<span class="o">]</span>@<span class="o">{</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">            </span><span class="nv">Drive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>.Name
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">            </span><span class="nv">UsedGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">            </span><span class="nv">FreeGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">            </span><span class="nv">UsedPct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/<span class="o">(</span><span class="nv">$_</span>.Used+<span class="nv">$_</span>.Free<span class="o">)</span>*100,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="o">}</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Linux: disk usage on repository mount</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/backup
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Filesystem      Size  Used Avail Use% Mounted on</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># /dev/sdb1        20T   18T  2.0T  90% /backup</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Find largest directories consuming space</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/backup/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Windows: check backup drive</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Get-PSDrive<span class="w"> </span>-Name<span class="w"> </span>D<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Used,<span class="w"> </span>Free<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">        </span><span class="o">[</span>PSCustomObject<span class="o">]</span>@<span class="o">{</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">            </span><span class="nv">Drive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>.Name
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">            </span><span class="nv">UsedGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">            </span><span class="nv">FreeGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">            </span><span class="nv">UsedPct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/<span class="o">(</span><span class="nv">$_</span>.Used+<span class="nv">$_</span>.Free<span class="o">)</span>*100,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">        </span><span class="o">}</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/dev/sdb1        20T   18T  2.0T  90% /backup
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>18G /backup/daily-2024-01-15
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>16G /backup/daily-2024-01-14
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>14G /backup/weekly-2024-01-08
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>12G /backup/monthly-2024-01
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>8.5G    /backup/daily-2024-01-13
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>7.2G    /backup/archive-prod-db
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>6.8G    /backup/daily-2024-01-12
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>5.4G    /backup/incremental-cache
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>4.1G    /backup/daily-2024-01-11
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>3.9G    /backup/temp-staging
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Drive UsedGB FreeGB UsedPct
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>----- ------ ------ -------
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    D  1847.3  152.7    92.4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>du: cannot access '/backup/daily-2024-01-15': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has read permissions on the backup directory.
+<strong><code>Get-PSDrive : Cannot find drive. Does the drive 'D' exist?</code></strong> — Verify the backup drive letter with <code>Get-PSDrive</code> and replace 'D' with the correct drive letter.</p>
+</div>
 <hr />
 <h2 id="network-path-validation-to-backup-target">Network Path Validation to Backup Target<a class="headerlink" href="#network-path-validation-to-backup-target" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Test TCP connectivity to backup repository (Veeam default ports 2500-3300)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2500</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2501</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Measure throughput with iperf3 (install on both ends)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Server side:</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">iperf3</span> <span class="n">-s</span> <span class="n">-p</span> <span class="n">5201</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Client side:</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">iperf3</span> <span class="n">-c</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-p</span> <span class="n">5201</span> <span class="n">-t</span> <span class="n">30</span> <span class="n">-P</span> <span class="n">4</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># Example good output:</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># [SUM]   0.00-30.00  sec  33.8 GBytes  9.69 Gbits/sec    0   sender</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Test TCP connectivity to backup repository (Veeam default ports 2500-3300)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2500</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2501</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c"># Measure throughput with iperf3 (install on both ends)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c"># Server side:</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">iperf3</span> <span class="n">-s</span> <span class="n">-p</span> <span class="n">5201</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c"># Client side:</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">iperf3</span> <span class="n">-c</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-p</span> <span class="n">5201</span> <span class="n">-t</span> <span class="n">30</span> <span class="n">-P</span> <span class="n">4</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c"># Example good output:</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c"># [SUM]   0.00-30.00  sec  33.8 GBytes  9.69 Gbits/sec    0   sender</span>
 </code></pre></div>
 <hr />
 <h2 id="top-10-veeam-error-codes-with-fixes">Top 10 Veeam Error Codes with Fixes<a class="headerlink" href="#top-10-veeam-error-codes-with-fixes" title="Permanent link">&para;</a></h2>
@@ -8081,7 +8202,7 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

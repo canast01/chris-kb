@@ -7720,8 +7720,36 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree<span class="w"> </span>--show-shadow
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>created rule rack_replicated at (2)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>set pool 0 crush_rule to rack_replicated
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>added bucket ssd-root of type root to crush tree
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>set item ssd-root weight to 1 in bucket default
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>created rule ssd_rule at (3)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>reweighted item osd.5 to 3.64 in crush tree
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ID  CLASS WEIGHT   TYPE NAME
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>-13       10.92    root ssd-root
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>-12        3.64     host ssd-host1
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  5   hdd  3.64      osd.5
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> -1       36.48    root default
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> -2        7.28     rack rack1
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  0   hdd  3.64      osd.0
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  1   hdd  3.64      osd.1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a> -3        7.28     rack rack2
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  2   hdd  3.64      osd.2
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  3   hdd  3.64      osd.3
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>HOST WEIGHT REWEIGHT SIZE   USE    AVAIL   %USE PGS STATUS
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ssd-host1 3.64  1.00    4.0T  1.2T   2.8T  30.0  128 up
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>rack1     7.28  1.00    8.0T  2.4T   5.6T  30.0  256 up
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>rack2     7.28  1.00    8.0T  2.4T   5.6T  30.0  256 up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: crush rule 'rack_replicated' does not exist</code></strong> — Ensure the rule was created successfully before assigning it to a pool; check with <code>ceph osd crush rule ls</code>.
+<strong><code>Error EINVAL: invalid crush rule name 'ssd_rule'</code></strong> — Verify the ssd_rule was created with the correct root bucket name using <code>ceph osd crush rule dump ssd_rule</code>.</p>
+</div>
 <h2 id="pg-count-formula">PG Count Formula<a class="headerlink" href="#pg-count-formula" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PGs per pool = (Total OSDs × 100) / pool_size
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PGs per pool = (Total OSDs × 100) / pool_size
 </code></pre></div>
 <p>Round the result up to the next power of 2. Keep total PGs per OSD ≤ 250 across all pools.</p>
 <table>
@@ -7761,30 +7789,44 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </tbody>
 </table>
 <p><strong>PG autoscaler</strong> (default on in Octopus+) handles PG count automatically:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check autoscaler status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>autoscale-status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable autoscaler on a specific pool</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>pg_autoscale_mode<span class="w"> </span>on
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set target ratio (autoscaler calculates PGs based on % of cluster)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>target_size_ratio<span class="w"> </span><span class="m">0</span>.4<span class="w">   </span><span class="c1"># 40% of cluster capacity</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Disable autoscaler globally (use manual PG counts)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>osd_pool_default_pg_autoscale_mode<span class="w"> </span>off
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check autoscaler status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>autoscale-status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable autoscaler on a specific pool</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>pg_autoscale_mode<span class="w"> </span>on
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Set target ratio (autoscaler calculates PGs based on % of cluster)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>target_size_ratio<span class="w"> </span><span class="m">0</span>.4<span class="w">   </span><span class="c1"># 40% of cluster capacity</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable autoscaler globally (use manual PG counts)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>osd_pool_default_pg_autoscale_mode<span class="w"> </span>off
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>POOL                 SIZE  TARGET SIZE  RATIO  EFFECTIVE RATIO  BIAS  PG_NUM  NEW PG_NUM  AUTOSCALE
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rbd-pool            12.4G       50.0G  0.248        0.248        1.0    128       256       on
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>metadata             2.1G        8.0G  0.263        0.263        4.0     32        32       on
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>.rgw.root           512M        2.0G  0.256        0.256        1.0      8         8       on
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>(no output — command completes silently)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>(no output — command completes silently)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: pool 'rbd-pool' does not exist</code></strong> — Verify the pool name with <code>ceph osd pool ls</code> and use the correct pool identifier.
+<strong><code>Error EINVAL: invalid pg_autoscale_mode 'on'</code></strong> — Use valid values <code>off</code>, <code>warn</code>, or <code>on</code> (ensure no typos in the mode string).</p>
+</div>
 <h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Two networks required:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Public network:   10.0.1.0/24   → client-to-OSD traffic (reads, writes)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Cluster network:  10.0.2.0/24   → OSD-to-OSD replication and recovery
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Why separate?
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Without a cluster network, recovery/replication traffic consumes client I/O bandwidth.
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Recovery after a disk failure can generate 100–500 Mbps per OSD.
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Bandwidth guidelines:
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Public:  10 GbE minimum per OSD node; 25 GbE for NVMe-heavy clusters
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Cluster: 25 GbE minimum; 100 GbE for dense NVMe nodes (50+ OSDs per node)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Two networks required:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Public network:   10.0.1.0/24   → client-to-OSD traffic (reads, writes)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Cluster network:  10.0.2.0/24   → OSD-to-OSD replication and recovery
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Why separate?
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Without a cluster network, recovery/replication traffic consumes client I/O bandwidth.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Recovery after a disk failure can generate 100–500 Mbps per OSD.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Bandwidth guidelines:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Public:  10 GbE minimum per OSD node; 25 GbE for NVMe-heavy clusters
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Cluster: 25 GbE minimum; 100 GbE for dense NVMe nodes (50+ OSDs per node)
 </code></pre></div>
 <table>
 <thead>
@@ -7822,79 +7864,171 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify Ceph is using separate networks (from ceph.conf or cephadm config)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>public_network
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>cluster_network
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Set cluster network (if not already configured)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>public_network<span class="w"> </span><span class="m">10</span>.0.1.0/24
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>cluster_network<span class="w"> </span><span class="m">10</span>.0.2.0/24
-</code></pre></div>
-<h2 id="capacity-planning">Capacity Planning<a class="headerlink" href="#capacity-planning" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Replicated pool (size=3):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Raw capacity needed = usable × 3
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Safety threshold: never exceed 85% full (ceph warns at nearfull ratio)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Full threshold: cluster stops writes at 95% (full ratio)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Erasure-coded pool (k=4, m=2):
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Raw capacity needed = usable × 1.5
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Better efficiency but slightly more complex recovery
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>OSD count formula:
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  OSDs = Usable capacity target (TB) × replication factor / disk size (TB)
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Example: 100 TB usable, replica=3, 8 TB disks: (100 × 3) / 8 = 37.5 → 40 OSDs
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>PG count formula:
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  PGs per pool = (Total OSDs × 100) / pool size (round to power of 2)
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Total PGs across all pools: aim for 100–200 per OSD
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check cluster capacity and usage</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>df
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify Ceph is using separate networks (from ceph.conf or cephadm config)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>public_network
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>cluster_network
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check per-OSD usage</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Adjust nearfull and full thresholds</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_nearfull_ratio<span class="w"> </span><span class="m">0</span>.80
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_full_ratio<span class="w"> </span><span class="m">0</span>.90
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_backfillfull_ratio<span class="w"> </span><span class="m">0</span>.85
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Set cluster network (if not already configured)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>public_network<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>cluster_network<span class="w"> </span><span class="m">10</span>.0.2.0/24
 </code></pre></div>
-<h2 id="crush-hierarchy-design">CRUSH Hierarchy Design<a class="headerlink" href="#crush-hierarchy-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Standard CRUSH hierarchy: datacenter → room → rack → host → OSD</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Minimum failure domain: host (3 hosts = 3 failure domains for replica=3)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example CRUSH rule for host-level failure domain</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>replicated_rule<span class="w"> </span>default<span class="w"> </span>host<span class="w"> </span>firstn
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Rack-level failure domain (better fault isolation)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>rack_rule<span class="w"> </span>default<span class="w"> </span>rack<span class="w"> </span>firstn
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Assign pool to rack-level rule</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>crush_rule<span class="w"> </span>rack_rule
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Verify OSD placement</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>10.0.1.0/24
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>10.0.2.0/24
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(no output — command completes silently)
 </code></pre></div>
-<h2 id="upgrade-and-maintenance-standards">Upgrade and Maintenance Standards<a class="headerlink" href="#upgrade-and-maintenance-standards" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check cluster compatibility before upgrade</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>versions<span class="w">                     </span><span class="c1"># lists all daemon versions in cluster</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>require-osd-release<span class="w"> </span>quincy<span class="w">  </span><span class="c1"># set minimum OSD release gate</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Drain OSDs on a node before maintenance (graceful)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">               </span><span class="c1"># prevent OSDs from being marked out during maint</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># --- perform maintenance ---</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout<span class="w">             </span><span class="c1"># re-enable after returning node to service</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'</code></strong> — Ensure the CIDR notation is valid and the network actually exists in your infrastructure.
+<strong><code>Error: failed to set config option 'cluster_network': Permission denied</code></strong> — Run the command with appropriate ceph admin privileges or use <code>sudo ceph config set</code>.</p>
+</div>
+<h2 id="capacity-planning">Capacity Planning<a class="headerlink" href="#capacity-planning" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Replicated pool (size=3):
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Raw capacity needed = usable × 3
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Safety threshold: never exceed 85% full (ceph warns at nearfull ratio)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Full threshold: cluster stops writes at 95% (full ratio)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Erasure-coded pool (k=4, m=2):
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Raw capacity needed = usable × 1.5
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  Better efficiency but slightly more complex recovery
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Full set of maintenance flags</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norecover<span class="w">           </span><span class="c1"># pause all recovery</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norebalance<span class="w">         </span><span class="c1"># pause rebalancing</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nobackfill<span class="w">          </span><span class="c1"># pause backfill</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norecover
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norebalance
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nobackfill
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>OSD count formula:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  OSDs = Usable capacity target (TB) × replication factor / disk size (TB)
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Example: 100 TB usable, replica=3, 8 TB disks: (100 × 3) / 8 = 37.5 → 40 OSDs
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>PG count formula:
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  PGs per pool = (Total OSDs × 100) / pool size (round to power of 2)
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  Total PGs across all pools: aim for 100–200 per OSD
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check cluster capacity and usage</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ceph<span class="w"> </span>df
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check per-OSD usage</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Adjust nearfull and full thresholds</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_nearfull_ratio<span class="w"> </span><span class="m">0</span>.80
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_full_ratio<span class="w"> </span><span class="m">0</span>.90
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_backfillfull_ratio<span class="w"> </span><span class="m">0</span>.85
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>RAW STORAGE:
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    CLASS     SIZE        AVAIL       USED        RAW USED     %RAW USED
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    ssd       1.099 TiB   892.3 GiB   206.7 GiB   206.7 GiB       18.81
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    TOTAL     1.099 TiB   892.3 GiB   206.7 GiB   206.7 GiB       18.81
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>POOLS:
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    POOL                     ID     STORED      OBJECTS     USED        %USED     MAX AVAIL
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    device_health_metrics     1     1.2 MiB        256      3.6 MiB      0.00      297.4 GiB
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    rbd-pool                  2     142.5 GiB   36521      427.5 GiB    47.89      297.4 GiB
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    cephfs_data               3     58.3 GiB    14892      174.9 GiB    19.60      297.4 GiB
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    cephfs_metadata           4     512 MiB      8124      1.5 GiB      0.17      297.4 GiB
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>OSD     CLASS  WEIGHT   REWEIGHT   SIZE        RAW USE     %USE     VAR      PGS   STATUS
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>0       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>1       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>2       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>(no output — command completes silently)
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>(no output — command completes silently)
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>(no output — command completes silently)
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: access denied</code></strong> — Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group.
+<strong><code>Error: unknown command</code></strong> — Verify the Ceph version supports the <code>ceph config set</code> syntax; older versions may require <code>ceph tell mon.\* config set</code> instead.</p>
+</div>
+<h2 id="crush-hierarchy-design">CRUSH Hierarchy Design<a class="headerlink" href="#crush-hierarchy-design" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Standard CRUSH hierarchy: datacenter → room → rack → host → OSD</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Minimum failure domain: host (3 hosts = 3 failure domains for replica=3)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Example CRUSH rule for host-level failure domain</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>replicated_rule<span class="w"> </span>default<span class="w"> </span>host<span class="w"> </span>firstn
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Rack-level failure domain (better fault isolation)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>rack_rule<span class="w"> </span>default<span class="w"> </span>rack<span class="w"> </span>firstn
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Assign pool to rack-level rule</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>crush_rule<span class="w"> </span>rack_rule
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Verify OSD placement</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>created rule replicated_rule
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>created rule rack_rule
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>set pool &#39;rbd-pool&#39; crush_rule to rack_rule
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ID CLASS WEIGHT  TYPE NAME                                    UP/DOWN REWEIGHT PRIMARY-AFFINITY
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>-1       270.00 root default
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>-3       90.00     datacenter dc1
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>-5       45.00         room room-a
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>-7       15.00             rack rack-01
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a> 0   ssd  5.00                 host osd-node-01
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a> 1   ssd  5.00                 host osd-node-02
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a> 2   ssd  5.00                 host osd-node-03
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>-9       30.00             rack rack-02
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a> 3   ssd  5.00                 host osd-node-04
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a> 4   ssd  5.00                 host osd-node-05
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a> 5   ssd  5.00                 host osd-node-06
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>ID CLASS WEIGHT  REWEIGHT SIZE    RAW USE %USE  VAR  PGS STATUS
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a> 0   ssd  5.00   1.00000 5.0G  2.1G 42.00 0.98  156    up
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a> 1   ssd  5.00   1.00000 5.0G  2.0G 40.00 0.93  154    up
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a> 2   ssd  5.00   1.00000 5.0G  2.2G 44.00 1.02  158    up
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid crush rule name 'rack_rule'</code></strong> — Verify the rule was created successfully with <code>ceph osd crush rule ls</code> and check for typos in the pool set command.
+<strong><code>Error ENOENT: pool 'rbd-pool' does not exist</code></strong> — Create the pool first with <code>ceph osd pool create rbd-pool &lt;pg_num&gt; &lt;pgp_num&gt;</code> before assigning a crush rule.</p>
+</div>
+<h2 id="upgrade-and-maintenance-standards">Upgrade and Maintenance Standards<a class="headerlink" href="#upgrade-and-maintenance-standards" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check cluster compatibility before upgrade</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ceph<span class="w"> </span>versions<span class="w">                     </span><span class="c1"># lists all daemon versions in cluster</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>require-osd-release<span class="w"> </span>quincy<span class="w">  </span><span class="c1"># set minimum OSD release gate</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Drain OSDs on a node before maintenance (graceful)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">               </span><span class="c1"># prevent OSDs from being marked out during maint</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># --- perform maintenance ---</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout<span class="w">             </span><span class="c1"># re-enable after returning node to service</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Full set of maintenance flags</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norecover<span class="w">           </span><span class="c1"># pause all recovery</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norebalance<span class="w">         </span><span class="c1"># pause rebalancing</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nobackfill<span class="w">          </span><span class="c1"># pause backfill</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norecover
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norebalance
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nobackfill
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>{
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  &quot;mon&quot;: {
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    &quot;ceph version 17.2.6 (quincy)&quot;: 2
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  },
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  &quot;mgr&quot;: {
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    &quot;ceph version 17.2.6 (quincy)&quot;: 2
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  },
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  &quot;osd&quot;: {
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    &quot;ceph version 17.2.6 (quincy)&quot;: 24,
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    &quot;ceph version 17.2.5 (quincy)&quot;: 2
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  },
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  &quot;mds&quot;: {}
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>}
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>set require_osd_release = quincy
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>noout is set
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>(no output — command completes silently)
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>norecover is set
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>norebalance is set
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>nobackfill is set
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>norecover is unset
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>norebalance is unset
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>nobackfill is unset
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: access denied</code></strong> — Ensure you have admin-level Ceph credentials or run with appropriate <code>ceph</code> keyring permissions.
+<strong><code>Error EINVAL: invalid value</code></strong> — Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with <code>ceph status</code> first.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -7932,22 +8066,61 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </tbody>
 </table>
 <h2 id="cephadm-orchestration-commands">cephadm Orchestration Commands<a class="headerlink" href="#cephadm-orchestration-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View all running daemons</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ps
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Deploy additional MON</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="o">=</span><span class="s2">&quot;host1,host2,host3&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Add OSDs from a specific host/device</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>host1:/dev/sdb
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Remove an OSD gracefully (marks out, waits for clean, then removes)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ceph<span class="w"> </span>orch<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span>osd.12<span class="w"> </span>--replace
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Check orchestrator status</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>status
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View all running daemons</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ps
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Deploy additional MON</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="o">=</span><span class="s2">&quot;host1,host2,host3&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Add OSDs from a specific host/device</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>host1:/dev/sdb
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Remove an OSD gracefully (marks out, waits for clean, then removes)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ceph<span class="w"> </span>orch<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span>osd.12<span class="w"> </span>--replace
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Check orchestrator status</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>status
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>NAME                 HOST      STATUS        REFRESHED  AGE  VERSION   IMAGE ID      CONTAINER ID
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>mon.a                host1     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-a-xyz
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>mon.b                host2     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-b-xyz
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>mon.c                host3     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-c-xyz
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>osd.0                host1     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-0-abc
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>osd.1                host2     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-1-def
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>osd.2                host3     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-2-ghi
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>mgr.host1.abcd12     host1     running (8h)   3m ago     8d   17.2.5    abc123def456  pod-mgr-xyz
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>Scheduled to deploy mon on hosts: host1, host2, host3
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>(no output — command completes silently)
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>Created osd.13 on host1 device /dev/sdb
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>(no output — command completes silently)
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>Removing osd.12 (marked out, waiting for rebalance to complete)
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>osd.12 marked out. Waiting for PGs to rebalance...
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>osd.12 removed successfully
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>Orchestrator: ceph-rook
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>Backend: rook
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>Available: Yes
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>SERVICE         PORTS   RUNNING  REFRESHED  AGE  PLACEMENT
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>alertmanager            1        2m ago     8d   count:1
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>crash                   6        2m ago     8d   *
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>grafana         3000    1        2m ago     8d   count:1
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>mds.cephfs      -       2        2m ago     8d   label:mds=true
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>mon             3300    3        2m ago     8d   host1,host2,host3
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>mgr             8443    2        2m ago     8d   label:mgr=true
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>osd             -       3        2m ago     8d   *
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>prometheus      9095    1        2m ago     8d   count:1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: osd.12 is still rebalancing, cannot remove yet</code></strong> — Wait for the cluster to reach a healthy state (ceph health) before attempting removal.
+<strong><code>Error: host1 is not in the orchestrator inventory</code></strong> — Verify the host is added to the cluster with <code>ceph orch host ls</code> and ensure it has a valid IP and SSH connectivity.
+<strong><code>Error: /dev/sdb does not exist or is already in use on host1</code></strong> — Confirm the device path with <code>lsblk</code> on the target host and ensure it is not already part of another OSD.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../how-it-works/">Ceph — How It Works</a></li>
@@ -7975,7 +8148,7 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

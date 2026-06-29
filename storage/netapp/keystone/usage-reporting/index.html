@@ -8376,6 +8376,31 @@ Keystone Usage Reporting reference covering BlueXP Digital Wallet, Keystone Coll
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># View last collection run</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@collector-01.example.com&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>● keystone-collector.service - NetApp Keystone Collector
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>     Loaded: loaded (/etc/systemd/system/keystone-collector.service; enabled; vendor preset: enabled)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>       Docs: https://docs.netapp.com/keystone/
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    Process: 8421 ExecStart=/opt/keystone/bin/collector --config /etc/keystone/collector.conf (code=exited, status=0/SUCCESS)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   Main PID: 8422 (collector)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      Tasks: 12 (limit: 4096)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>     Memory: 287.3M
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        CPU: 2min 34.891s
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>     CGroup: /system.slice/keystone-collector.service
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>             └─8422 /opt/keystone/bin/collector --config /etc/keystone/collector.conf
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Jan 17 14:32:18 collector-01 systemd[1]: Started NetApp Keystone Collector.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Jan 17 14:35:42 collector-01 keystone-collector[8422]: INFO: Collection cycle started for cluster ks-cluster-prod-01
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Jan 17 14:36:15 collector-01 keystone-collector[8422]: INFO: Successfully collected metrics from 12 nodes
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Jan 17 14:36:47 collector-01 keystone-collector[8422]: INFO: Usage data transmitted to Keystone portal (request_id: a7f2c9e1-4b8d-11ee-9c2a-0242ac120002)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Jan 17 14:37:22 collector-01 keystone-collector[8422]: INFO: Collection cycle completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname &lt;collector_ip&gt;: Name or service not known</code></strong> — Replace <code>&lt;collector_ip&gt;</code> with the actual IP address or FQDN of your Keystone Collector appliance.
+<strong><code>Unit keystone-collector.service could not be found.</code></strong> — Verify the collector service is installed by running <code>dpkg -l | grep keystone</code> or <code>rpm -qa | grep keystone</code> and reinstall if necessary.
+<strong><code>Failed to get unit file state for keystone-collector.service: Connection refused</code></strong> — Ensure systemd is running and you have sudo/root privileges; try <code>sudo systemctl status keystone-collector</code> instead.</p>
+</div>
 <p>If the collector is offline, NetApp cannot generate accurate invoices — restore connectivity promptly.</p>
 <h2 id="monthly-consumption-reports">Monthly Consumption Reports<a class="headerlink" href="#monthly-consumption-reports" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8385,12 +8410,33 @@ Keystone Usage Reporting reference covering BlueXP Digital Wallet, Keystone Coll
 <li>If burst consumption is unexpected, identify the source before the invoice is finalized</li>
 </ul>
 <h2 id="identifying-high-consuming-volumes-ontap-cli">Identifying High-Consuming Volumes (ONTAP CLI)<a class="headerlink" href="#identifying-high-consuming-volumes-ontap-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List volumes sorted by used capacity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-nr
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Identify volumes in burst service levels</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>qos<span class="w"> </span>statistics<span class="w"> </span>volume<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List volumes sorted by used capacity</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-nr
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Identify volumes in burst service levels</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>qos<span class="w"> </span>statistics<span class="w"> </span>volume<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vserver         Volume          Size       Used       Percent-Used
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>-------         ------          ----       ---        ------------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>svm-prod-01     vol_data_tier1  10.0TB     8.7TB      87%
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>svm-prod-01     vol_logs        5.0TB      4.2TB      84%
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>svm-prod-02     vol_backup      20.0TB     15.3TB     76%
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>svm-dev-01      vol_test        2.0TB      1.1TB      55%
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>svm-prod-01     vol_archive     50.0TB     22.5TB     45%
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>...
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Policy Group                Volume          Throughput(MB/s)  Latency(ms)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>------------                ------          ----------------  -----------
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>qos_burst_premium            vol_data_tier1  450.2             2.1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>qos_standard                 vol_logs        120.5             5.3
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>qos_burst_premium            vol_backup      380.1             3.7
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>qos_standard                 vol_test        45.3              8.9
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume show</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a local shell.
+<strong><code>Error: No matching volumes found</code></strong> — Verify the vserver exists and contains volumes by running <code>vserver show</code> first.</p>
+</div>
 <h2 id="reporting-discrepancies">Reporting Discrepancies<a class="headerlink" href="#reporting-discrepancies" title="Permanent link">&para;</a></h2>
 <p>If the consumption report shows unexpected usage:</p>
 <ol>
@@ -8453,7 +8499,7 @@ Keystone Usage Reporting reference covering BlueXP Digital Wallet, Keystone Coll
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

@@ -9211,59 +9211,161 @@
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Reduce query load by narrowing time ranges and adding field filters</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Use: last 1 hour instead of last 7 days when investigating active incidents</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check the cluster nodes via API from the master</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state}&#39;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># SSH to the worker node and check the loginsight service</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ssh<span class="w"> </span>admin@vrli-prod-02.example.local
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>loginsight
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;join\|cluster\|error\|master&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Test connectivity from worker to master on required ports</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.example.local<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.example.local<span class="w"> </span><span class="m">16520</span><span class="w">  </span><span class="c1"># cluster internal communication port</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify alert is enabled</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/alerts/&lt;alert-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{name: .name, enabled: .enabled, numHits: .numHits}&#39;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Test the notification channel</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/notification/&lt;channel-id&gt;/test&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check the runtime log for notification delivery errors</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;notification\|email\|webhook\|smtp\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NTP on the Aria Ops for Logs appliance</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># If NTP is drifting: restart chronyd and check sources</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>chronyc<span class="w"> </span>sources
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Verify all cluster nodes are synced to the same NTP source</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrli-prod-01<span class="w"> </span>vrli-prod-02<span class="w"> </span>vrli-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span>.example.local<span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">done</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm disk usage</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log/loginsight
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check if hot retention is set too long for current disk size</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Reduce retention to free space: Administration → General → Retention → reduce days</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Remove old archives from the NFS target if archiving is enabled</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Do NOT manually delete files from /var/log/loginsight — Cassandra manages this path</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># If retention cannot be reduced, add a worker node with additional disk</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Workers can be added without downtime: deploy OVA → setup wizard → Join Cluster</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>admin@vrli-prod-01.example.local&#39;s password: 
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Compaction Manager
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Current compaction tasks:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>task type : Compaction
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>keyspace : loginsight
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>table : events
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>completed : 847392645120 bytes, 2156 MB/s, 39% done
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>remaining : 1342087564288 bytes
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>total : 2189480209408 bytes
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Heap Memory (MB): 28672 / 32768
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2024-01-15 14:23:47,891 [pool-12-thread-4] WARN  QueryExecutor - Slow query detected duration=4521ms query_id=a7f3e2c1-9d4b-11ee-b9d7-0050569e1234
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2024-01-15 14:24:12,445 [pool-12-thread-8] ERROR QueryExecutor - Query timeout after 5000ms for tenant_id=prod-cluster-1
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>2024-01-15 14:25:33,221 [pool-12-thread-2] WARN  QueryExecutor - Slow query detected duration=3847ms query_id=b8e4f3d2-9d4b-11ee-c2e8-0050569e5678
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>2024-01-15 14:26:01,556 [pool-12-thread-6] ERROR QueryExecutor - Query timeout after 5000ms for tenant_id=prod-cluster-2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that the admin user exists on the target node with <code>ssh-keyscan vrli-prod-01.example.local</code> to confirm connectivity.
+<strong><code>nodetool: command not found</code></strong> — Ensure you are in the Cassandra installation directory or add <code>$CASSANDRA_HOME/bin</code> to your PATH with <code>export PATH=$PATH:/opt/cassandra/bin</code>.
+<strong><code>tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied</code></strong> — Run the tail command with <code>sudo</code> or ensure the admin user has read permissions on the loginsight log directory.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check the cluster nodes via API from the master</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># SSH to the worker node and check the loginsight service</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ssh<span class="w"> </span>admin@vrli-prod-02.example.local
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>loginsight
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;join\|cluster\|error\|master&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Test connectivity from worker to master on required ports</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.example.local<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.example.local<span class="w"> </span><span class="m">16520</span><span class="w">  </span><span class="c1"># cluster internal communication port</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;host&quot;: &quot;vrli-prod-01.example.local&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;state&quot;: &quot;MASTER&quot;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>}
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>{
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;host&quot;: &quot;vrli-prod-02.example.local&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  &quot;state&quot;: &quot;WORKER&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>}
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>{
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;host&quot;: &quot;vrli-prod-03.example.local&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  &quot;state&quot;: &quot;WORKER&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>}
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>● loginsight.service - VMware vRealize Log Insight
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   Loaded: loaded (/etc/systemd/system/loginsight.service; enabled; vendor preset: enabled)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>   Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>   Main PID: 4521 (java)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>     CGroup: /system.slice/loginsight.service
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>2024-01-15 14:32:45 vrli-prod-02 loginsight[4521]: [INFO] Cluster join initiated for node vrli-prod-02
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>2024-01-15 14:33:12 vrli-prod-02 loginsight[4521]: [INFO] Successfully joined cluster with master vrli-prod-01.example.local
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>2024-01-15 14:33:15 vrli-prod-02 loginsight[4521]: [INFO] Cluster state synchronized
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Connection to vrli-prod-01.example.local 443 [tcp/https] succeeded!
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Connection to vrli-prod-01.example.local 16520 [tcp/*] succeeded!
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the master's CA certificate into your system trust store.
+<strong><code>Connection refused</code></strong> — Verify the loginsight service is running on the master node with <code>systemctl status loginsight</code> and check firewall rules allow traffic on ports 443 and 16520.
+<strong><code>ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known</code></strong> — Ensure DNS resolution is working or add the worker node IP to <code>/etc/hosts</code> on the master node.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify alert is enabled</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/alerts/&lt;alert-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{name: .name, enabled: .enabled, numHits: .numHits}&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Test the notification channel</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/notification/&lt;channel-id&gt;/test&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check the runtime log for notification delivery errors</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;notification\|email\|webhook\|smtp\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;name&quot;: &quot;Critical Memory Threshold Alert&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;enabled&quot;: true,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;numHits&quot;: 847
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>}
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Test notification sent successfully to channel: email-prod-alerts (ID: ch-8f2a9c1d)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-01-15 14:32:18,421 INFO  [NotificationService] Notification delivery successful for alert ID: alert-7b4e2f9a to recipient: ops-team@example.local
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-01-15 14:31:45,892 WARN  [SMTPClient] SMTP connection timeout after 30s, retrying...
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15 14:31:16,334 INFO  [WebhookNotifier] Webhook POST to https://slack.example.local/hooks/alerts returned 200 OK
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15 14:30:52,167 ERROR [EmailNotifier] Failed to deliver email: javax.mail.AuthenticationFailedException: 535 5.7.8 Authentication credentials invalid
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>2024-01-15 14:29:33,445 INFO  [NotificationService] Channel test completed with status: SUCCESS
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>2024-01-15 14:28:19,771 WARN  [SMTPClient] Certificate validation disabled for SMTP host mail.example.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.
+<strong><code>jq: parse error: Cannot index number with string "name"</code></strong> — Verify the alert ID exists and is valid by listing alerts with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'</code>.
+<strong><code>grep: /var/log/loginsight/runtime.log: No such file or directory</code></strong> — SSH into the vRLI appliance and check the correct log path with <code>find /var/log -name "*runtime*" -o -name "*notification*"</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NTP on the Aria Ops for Logs appliance</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If NTP is drifting: restart chronyd and check sources</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>chronyc<span class="w"> </span>sources
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Verify all cluster nodes are synced to the same NTP source</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrli-prod-01<span class="w"> </span>vrli-prod-02<span class="w"> </span>vrli-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span>.example.local<span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Reference ID    : 91F0B524 (ntp.ubuntu.com)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Stratum         : 2
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Ref time (UTC)  : Wed Dec 13 14:32:18 2024
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>System time     : 0.000234567 seconds fast of NTP time
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Frequency       : -12.456 ppm fast
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Residual freq   : +0.123 ppm
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Skew            : 0.087 ppm
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Root delay      : 0.045678 seconds
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Root dispersion : 0.156234 seconds
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Update interval : 1024.2 seconds
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Leap status     : Normal
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>MS Name/IP address         Stratum Poll Reach LastRx Last sample
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>===============================================================
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>^* 91.189.89.198              1  10   377    45   -234us[ -198us] +/-   21ms
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>^- 185.125.190.39             2  10   377   102   +456us[ +512us] +/-   45ms
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>^+ 139.162.238.205            2  10   377    67   +123us[ +145us] +/-   38ms
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>vrli-prod-01.example.local: System time : 0.000156789 seconds fast of NTP time
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>vrli-prod-02.example.local: System time : 0.000198765 seconds fast of NTP time
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>vrli-prod-03.example.local: System time : 0.000167234 seconds fast of NTP time
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Temporary failure in name resolution</code></strong> — Verify DNS resolution is working with <code>nslookup vrli-prod-01.example.local</code> and ensure all cluster nodes are reachable via SSH.
+<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the admin SSH key is configured on all cluster nodes or use <code>ssh-copy-id admin@$node.example.local</code> to deploy your public key.
+<strong><code>Stratum : 16</code> or <code>Leap status : Not synchronised</code></strong> — Restart chronyd with <code>systemctl restart chronyd</code> and verify NTP server connectivity with <code>chronyc sources</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm disk usage</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log/loginsight
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check if hot retention is set too long for current disk size</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Reduce retention to free space: Administration → General → Retention → reduce days</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Remove old archives from the NFS target if archiving is enabled</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Do NOT manually delete files from /var/log/loginsight — Cassandra manages this path</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># If retention cannot be reduced, add a worker node with additional disk</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Workers can be added without downtime: deploy OVA → setup wizard → Join Cluster</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVMFu2kAQvfMVo9wTxdgmkEMrghsFCQiyU9pDL4s92CvMLtpdg1DVaz6gP9N7P6Vf0tm1IWrlRCKnHdkz82bee7sZV5gaLsUtKJ4XptNJbuHiS8EMcA2mQNCHzdbIzccL-K4LtkVKpAom8hJ_dO48yh7mKAwIaUCjyLjIoZS5bs_vUv5Y5KgtJihmEDIlt1vM2vN9yk8OmhqClpVK0eEwKmCKkNqLAjtUiaoeasVfzwwpM-J6DZVmOYLcoYL-NWyRkIRpr-lZgqRaU6qQGc3PdSqFoIxXlogsSZHX-i-2_2Kig9G0i-meKYQJLTsW2soBNbcJqh1P8Zv48_wTXugba11hO9GxJXpUYLpuWoykWPEcfv-Ce5J8z8oS5pIwQy8AqWAQBv4Z7SPbPuq2Q1vNhiot-A6BiQzmlSJuH8sMImaYHSHGrCIpYzQ0GkHVyE6Iz06Ix0aI-RtCxMFpxUaOmZVjIllmMYZZdvy-mJ7DXHhqq53xrvJSLll5ReGD1Aao_FPylVuMJ2pnzZ4TyEhuNrTtOSRaoiK_fYqe88UlCrYsEWo3HxFn0vAVT5kDGBWMzFfWuHWeJX1UVtrQWG9tevNCIC4LKYn9eGJRkunT3DrGmprvuDm8p3vfbeCEfqBreBLbidPYw0iY3Sf_yWV98D5HDE4LzWiBZI1723qBiq8Otd29Xti9ri1Y3zlSjzd37Z9bdtaunQQuP8Cd15zd5vSbM2jOsDl79CTYIPaOQZdulAv8YxDQ2-eCkHzigt4xuKF3ywV9eoxcMOj8BQTf964=?" /></p>
@@ -9313,7 +9415,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

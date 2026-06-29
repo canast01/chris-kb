@@ -7716,94 +7716,357 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>nutanix@&lt;any-cvm-ip&gt;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
 </code></pre></div>
-<p><strong>Expected output:</strong> All services listed as <code>UP</code>. If any service shows <code>DOWN</code>, investigate that service before continuing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all CVMs are reachable and services are running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status | head -5&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nutanix@10.20.30.40&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Cluster Status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  ==============
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Cluster UUID: 00051234-1234-1234-1234-123456789abc
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Cluster Incarnation ID: 1702891234
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Cluster External IP Address: 10.20.30.50
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Number of Nodes: 4
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Number of vDisks: 287
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Number of Storage Containers: 12
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Cluster Creation Time: 2023-10-15 14:22:33
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Cluster Timezone: UTC
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Cluster Domain Name: prod.local
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  NCC Version: ncc-2023.3.1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Cluster Software Version: el7.9-20231015.1234
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  Cluster Redundancy Factor: 2
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  Cluster Metadata Redundancy Factor: 2
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  Cluster Encryption: Enabled
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  Cluster Witness VM: Enabled
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  Cluster Witness VM IP: 10.20.30.51
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Cluster Witness VM Port: 2019
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Cluster Witness VM Status: UP
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Cluster Witness VM Heartbeat Status: OK
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  Cluster Witness VM Last Heartbeat Time: 2024-01-10 09:15:42
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  Cluster Witness VM Last Heartbeat Latency: 2ms
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  Cluster Witness VM Redundancy: 2
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  Cluster Witness VM Redundancy Status: OK
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  Cluster Witness VM Redundancy Status Details: All replicas are healthy
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  Cluster Witness VM Redundancy Status Details: Replica 0 is healthy
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  Cluster Witness VM Redundancy Status Details: Replica 1 is healthy
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  Cluster Witness VM Redundancy Status Details: Replica 2 is healthy
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  Cluster Witness VM Redundancy Status Details: Replica 3 is healthy
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  Cluster Witness VM Redundancy Status Details: Replica 4 is healthy
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  Cluster Witness VM Redundancy Status Details: Replica 5 is healthy
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  Cluster Witness VM Redundancy Status Details: Replica 6 is healthy
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  Cluster Witness VM Redundancy Status Details: Replica 7 is healthy
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the CVM IP address is correct and the SSH service is running with <code>sudo systemctl status sshd</code> on the CVM.
+<strong><code>Permission denied (publickey,password)</code></strong> — Ensure you are using the correct nutanix user credentials and that SSH key-based authentication is properly configured if required by your cluster.
+<strong><code>cluster: command not found</code></strong> — SSH into a CVM and verify the Nutanix cluster tools are installed by running <code>which cluster</code> or check if you need to source the environment with <code>source /etc/profile</code>.</p>
+</div>
+<p><strong>Expected output:</strong> All services listed as <code>UP</code>. If any service shows <code>DOWN</code>, investigate that service before continuing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all CVMs are reachable and services are running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status | head -5&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>node-1: Genesis Service Status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>node-1: ===========================
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>node-1: NtpServer              RUNNING
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>node-1: Cassandra              RUNNING
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>node-1: ZooKeeper              RUNNING
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>node-2: Genesis Service Status
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>node-2: ===========================
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>node-2: NtpServer              RUNNING
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>node-2: Cassandra              RUNNING
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>node-2: ZooKeeper              RUNNING
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>node-3: Genesis Service Status
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>node-3: ===========================
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>node-3: NtpServer              RUNNING
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>node-3: Cassandra              RUNNING
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>node-3: ZooKeeper              RUNNING
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>allssh: command not found</code></strong> — Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.
+<strong><code>Connection refused on node-2</code></strong> — Verify the CVM on node-2 is powered on and the network connectivity between cluster nodes is functional.
+<strong><code>Permission denied (publickey)</code></strong> — Confirm SSH keys are properly configured in ~/.ssh/authorized_keys on all CVMs or use password-based authentication if configured.</p>
+</div>
 <p><strong>Expected:</strong> Each CVM returns <code>Genesis is running.</code></p>
 <h3 id="2-ncc-quick-check-critical-tests-only">2. NCC Quick Check (Critical Tests Only)<a class="headerlink" href="#2-ncc-quick-check-critical-tests-only" title="Permanent link">&para;</a></h3>
 <p><img alt="2. NCC Quick Check (Critical Tests Only)" src="../../../../assets/virtualization-nutanix-hc-2-ncc-quick-check-critical-tests-only.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Fast — runs only critical checks (~3 min)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span>--include_category<span class="o">=</span>critical<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Fast — runs only critical checks (~3 min)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span>--include_category<span class="o">=</span>critical<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Running NCC health checks...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[2024-01-15 14:23:47] Starting critical health checks on cluster-prod-01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[2024-01-15 14:23:52] CHECK: Cluster connectivity — PASS
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>[2024-01-15 14:24:03] CHECK: CVM disk space — PASS (87% used on node-3)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>[2024-01-15 14:24:15] CHECK: Stargate service health — PASS
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>[2024-01-15 14:24:28] CHECK: Prism Element API — PASS
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>[2024-01-15 14:24:41] CHECK: AHV hypervisor status — PASS (3/3 nodes online)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>[2024-01-15 14:24:53] CHECK: Network latency — PASS (avg 2.1ms)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>[2024-01-15 14:25:04] CHECK: Data redundancy factor — PASS (RF=2)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>[2024-01-15 14:25:16] CHECK: Replication factor — PASS
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>[2024-01-15 14:25:28] CHECK: NTP synchronization — PASS
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Health check summary: 10/10 passed, 0 failed, 0 warnings
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Total runtime: 2m 41s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncc: command not found</code></strong> — Ensure NCC is installed on the CVM or add its path to $PATH (typically <code>/home/nutanix/ncc/bin/ncc</code>).
+<strong><code>ERROR: Failed to connect to cluster — Connection refused</code></strong> — Verify cluster connectivity and that Prism Element is accessible; check network connectivity from the CVM.
+<strong><code>WARNING: Some checks skipped — insufficient permissions</code></strong> — Run the command with appropriate sudo privileges or as the nutanix user account.</p>
+</div>
 <p><strong>Expected:</strong> <code>PASS</code> for all critical checks. Any <code>FAIL</code> must be investigated immediately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Full NCC run (all 400+ checks) — run weekly or before maintenance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ncc-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Summary view</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full NCC run (all 400+ checks) — run weekly or before maintenance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ncc-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Summary view</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN|ERROR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Starting Nutanix Cluster Check (NCC) v4.2.1...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Cluster: prod-cluster-01 | Nodes: 4 | CVM Version: 20231015.123
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Running 412 health checks...
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>[████████████████████████████████] 100% (412/412) — 3m 42s elapsed
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>=== HEALTH CHECK SUMMARY ===
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>PASS:  387 checks
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>WARN:  18 checks
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>FAIL:  7 checks
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ERROR: 0 checks
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Output saved to /tmp/ncc-20240115.txt
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>FAIL | DNS Resolution | cvm-02.local unreachable
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>FAIL | NTP Sync | Node-03 offset 847ms (threshold: 100ms)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>FAIL | Certificate Expiry | Prism cert expires in 14 days
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>WARN | Memory Pressure | CVM-01 at 87% utilization
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>WARN | Disk I/O | vSAN latency elevated on node-04
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>WARN | Log Rotation | /var/log partition 76% full on cvm-03
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncc: command not found</code></strong> — Ensure NCC is installed via <code>yum install nutanix-cluster-check</code> or verify PATH includes <code>/opt/nutanix/bin</code>.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the <code>nutanix</code> user; NCC requires elevated privileges to access cluster health data.
+<strong><code>Connection refused to Prism (127.0.0.1:9440)</code></strong> — Verify Prism Central/Element is running with <code>systemctl status prism-gw</code> and check network connectivity to the cluster.</p>
+</div>
 <h3 id="3-cluster-resilience">3. Cluster Resilience<a class="headerlink" href="#3-cluster-resilience" title="Permanent link">&para;</a></h3>
 <p><img alt="3. Cluster Resilience" src="../../../../assets/virtualization-nutanix-hc-3-cluster-resilience.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify cluster can tolerate a node failure</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify cluster can tolerate a node failure</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Domain Fault Tolerance Status for Node:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Metadata:
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    UUID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    Timestamp: 2024-01-15T09:42:31Z
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Current Redundancy Factor: 3
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Node Fault Tolerance: HEALTHY
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Tolerable Node Failures: 1
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Current Node Count: 5
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Minimum Required Nodes: 4
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Details:
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    RF3 Status: SATISFIED
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    Replication Status: HEALTHY
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    Data Distribution: BALANCED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused on 127.0.0.1:9440</code></strong> — Ensure the Nutanix cluster is running and accessible; verify network connectivity to the cluster IP.
+<strong><code>Error: Authentication failed - invalid credentials</code></strong> — Verify your ncli credentials are correct and your user has cluster admin permissions.</p>
+</div>
 <p><strong>Expected:</strong> <code>CAN_TOLERATE_FAILURE_COUNT</code> ≥ 1 (RF2) or ≥ 2 (RF3).</p>
 <p>If <code>CAN_TOLERATE_FAILURE_COUNT=0</code>, the cluster cannot tolerate any additional failure — investigate immediately (node down, disk missing, degraded objects).</p>
 <h3 id="4-storage-capacity">4. Storage Capacity<a class="headerlink" href="#4-storage-capacity" title="Permanent link">&para;</a></h3>
 <p><img alt="4. Storage Capacity" src="../../../../assets/virtualization-nutanix-hc-4-storage-capacity.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Cluster-level storage summary</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|capacity\|used&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Per-container usage</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;name|usage|capacity&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Detailed storage with efficiency metrics</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-usage-stats
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Cluster-level storage summary</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|capacity\|used&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Per-container usage</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;name|usage|capacity&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Detailed storage with efficiency metrics</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-usage-stats
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Storage Summary
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>                                    ===============
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Usable Capacity: 12.50 TB
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Used Capacity: 8.73 TB
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Free Capacity: 3.77 TB
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Storage Efficiency Ratio: 2.14x
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Deduplication Savings: 4.21 TB
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Name                          Usage (GB)      Capacity (GB)   Usage %
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>container-prod-01             2048.5          4096.0          50.0%
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>container-prod-02             1856.3          4096.0          45.3%
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>container-backup              2156.8          2048.0          105.3%
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>container-archive             1024.2          2048.0          50.0%
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Timestamp: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Total Read IOPS: 12847
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>Total Write IOPS: 3421
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Avg Latency (ms): 2.34
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Compression Ratio: 1.87x
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncli: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools in your PATH.
+<strong><code>Error: Not authenticated to cluster</code></strong> — Run <code>ncli -u admin -p &lt;password&gt;</code> or ensure your Nutanix credentials are configured in your environment.
+<strong><code>Error: container-backup: Over-provisioned (105.3% usage)</code></strong> — Expand the container capacity or migrate data to another container with available space immediately.</p>
+</div>
 <p><strong>Expected:</strong> Used capacity below 70% on each container. Alert at 70%; critical at 80%.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for any storage-related alerts</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>warning
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check for any storage-related alerts</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>warning
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>AlertId                          Severity  EntityType  Message                                    CreatedTime
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>================================ ========= =========== ========================================== ====================
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>alert-20240115-001               Critical  Storage     Disk 0 on node-ph-001 failed              2024-01-15 14:32:18
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>alert-20240115-002               Critical  Cluster     Replication factor compromised on DS-01   2024-01-15 14:28:45
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>AlertId                          Severity  EntityType  Message                                    CreatedTime
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>================================ ========= =========== ========================================== ====================
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>alert-20240114-156               Warning   Storage     Disk utilization at 87% on node-ph-003   2024-01-14 22:15:33
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>alert-20240114-157               Warning   Network     Latency spike detected on 10GbE link      2024-01-14 21:09:12
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>alert-20240114-158               Warning   Storage     Snapshot backup delayed by 45 minutes     2024-01-14 20:44:51
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (127.0.0.1:9440)</code></strong> — Verify the Nutanix cluster is reachable and ncli is configured with correct credentials using <code>ncli -h &lt;cluster-ip&gt;</code>.
+<strong><code>Error: Invalid severity value 'critical'. Valid values are: CRITICAL, WARNING, INFO</code></strong> — Use uppercase severity levels: <code>ncli alert list severity=CRITICAL</code>.</p>
+</div>
 <h3 id="5-cvm-health">5. CVM Health<a class="headerlink" href="#5-cvm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="5. CVM Health" src="../../../../assets/virtualization-nutanix-hc-5-cvm-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify all CVMs are up (should show all IPs)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;name|cvm-ip&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check CVM services on each node</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;is running&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Expected: no output (all running)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check Cassandra ring health (metadata store)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^UN&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Expected: no output — all nodes should be UN (Up/Normal)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify all CVMs are up (should show all IPs)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;name|cvm-ip&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check CVM services on each node</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;is running&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Expected: no output (all running)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Check Cassandra ring health (metadata store)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^UN&quot;</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Expected: no output — all nodes should be UN (Up/Normal)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Host Name                : host-01.ntnx.local
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>CVM IP                   : 192.168.1.101
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Host Name                : host-02.ntnx.local
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>CVM IP                   : 192.168.1.102
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Host Name                : host-03.ntnx.local
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>CVM IP                   : 192.168.1.103
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>host-01.ntnx.local: genesis status: Nutanix cluster is running. All services are running.
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>host-02.ntnx.local: genesis status: Nutanix cluster is running. All services are running.
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>host-03.ntnx.local: genesis status: Nutanix cluster is running. All services are running.
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>host-01.ntnx.local: UN  192.168.1.101  100.0 GB  256     33.3%  a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>host-02.ntnx.local: UN  192.168.1.102  100.0 GB  256     33.3%  b2c3d4e5-f6a7-8901-bcde-f12345678901
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>host-03.ntnx.local: UN  192.168.1.103  100.0 GB  256     33.4%  c3d4e5f6-a7b8-9012-cdef-123456789012
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>allssh: command not found</code></strong> — Ensure you are running this command from a CVM with the Nutanix environment sourced, or use <code>ssh</code> to each CVM individually.
+<strong><code>DN  192.168.1.102  100.0 GB  256     33.3%</code></strong> — A node showing "DN" (Down/Normal) indicates the Cassandra service is down; restart it with <code>allssh "service cassandra restart"</code> on the affected CVM.</p>
+</div>
 <h3 id="6-ahv-host-health">6. AHV Host Health<a class="headerlink" href="#6-ahv-host-health" title="Permanent link">&para;</a></h3>
 <p><img alt="6. AHV Host Health" src="../../../../assets/virtualization-nutanix-hc-6-ahv-host-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all AHV hosts and their state</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>acli<span class="w"> </span>host.list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check for any hosts in maintenance mode unexpectedly</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>acli<span class="w"> </span>host.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>maintenance
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check AHV memory usage on each host</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>allssh<span class="w"> </span><span class="s2">&quot;free -m | grep Mem&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List all AHV hosts and their state</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>acli<span class="w"> </span>host.list
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check for any hosts in maintenance mode unexpectedly</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>acli<span class="w"> </span>host.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>maintenance
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check AHV memory usage on each host</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>allssh<span class="w"> </span><span class="s2">&quot;free -m | grep Mem&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Host: host-01.ntnx.local (192.168.1.10)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  State: NORMAL
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Hypervisor: AHV
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  CPU Count: 16
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  Memory: 256 GB
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Host: host-02.ntnx.local (192.168.1.11)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  State: NORMAL
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Hypervisor: AHV
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  CPU Count: 16
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Memory: 256 GB
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Host: host-03.ntnx.local (192.168.1.12)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  State: NORMAL
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  Hypervisor: AHV
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  CPU Count: 16
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  Memory: 256 GB
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>Host: host-04.ntnx.local (192.168.1.13)
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  State: MAINTENANCE
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>  Hypervisor: AHV
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>  CPU Count: 16
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  Memory: 256 GB
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>(no output — no hosts in unexpected maintenance mode)
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>host-01: Mem:        262144        98304       163840          0       12288      145536
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>host-02: Mem:        262144       102456       159688          0        8192      142016
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>host-03: Mem:        262144        95872       166272          0       15360      148224
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>host-04: Mem:        262144       187392        74752          0        2048       65408
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>acli: command not found</code></strong> — Ensure you are running this command from a Nutanix cluster node or have the Nutanix CLI tools installed in your PATH.
+<strong><code>allssh: command not found</code></strong> — Run this command from the Nutanix cluster master node where allssh is available, or source the Nutanix environment setup script.</p>
+</div>
 <p><strong>Expected:</strong> All hosts show <code>normal</code> state; no unexpected maintenance mode entries.</p>
 <h3 id="7-vm-health">7. VM Health<a class="headerlink" href="#7-vm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="7. VM Health" src="../../../../assets/virtualization-nutanix-hc-7-vm-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Count powered-on vs total VMs</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;on</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check for VMs in unexpected states (paused, suspended, unknown)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\s+on</span>$<span class="s2">|\s+off</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check for VMs with no NIC (common misconfiguration)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>acli<span class="w"> </span>vm.list<span class="w"> </span>--include_filter<span class="o">=</span><span class="nv">num_nics</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Count powered-on vs total VMs</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;on</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check for VMs in unexpected states (paused, suspended, unknown)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\s+on</span>$<span class="s2">|\s+off</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Check for VMs with no NIC (common misconfiguration)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>acli<span class="w"> </span>vm.list<span class="w"> </span>--include_filter<span class="o">=</span><span class="nv">num_nics</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>42
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>87
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>VM-DEV-PAUSED-001                                    paused
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>VM-TEST-SUSPENDED-002                                suspended
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>VM-LEGACY-UNKNOWN-003                                unknown
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>acli: error code 4001 — VM filter not supported
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>acli: error code 4001 — VM filter not supported</code></strong> — Remove the <code>--include_filter</code> parameter; use <code>acli vm.list</code> and pipe to <code>grep</code> instead to filter by NIC count.
+<strong><code>Connection refused</code></strong> — Ensure the Nutanix cluster is reachable and acli is authenticated; verify cluster IP and credentials with <code>acli cluster status</code>.
+<strong><code>grep: (standard input) is empty</code></strong> — Confirm VMs exist in the cluster by running <code>acli vm.list</code> without filters; if empty, the cluster may have no VMs or acli connection is broken.</p>
+</div>
 <h3 id="8-alert-review">8. Alert Review<a class="headerlink" href="#8-alert-review" title="Permanent link">&para;</a></h3>
 <p><img alt="8. Alert Review" src="../../../../assets/virtualization-nutanix-hc-8-alert-review.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check active critical alerts</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check alerts from last 24 hours</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">resolved</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>start-time<span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span>+%s<span class="k">)</span><span class="m">000000</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Acknowledge resolved alerts</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># ncli alert acknowledge id=&lt;alert-id&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check active critical alerts</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check alerts from last 24 hours</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">resolved</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>start-time<span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span>+%s<span class="k">)</span><span class="m">000000</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Acknowledge resolved alerts</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># ncli alert acknowledge id=&lt;alert-id&gt;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>AlertId                              Severity  Message                                    CreatedTime
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>================================================================================================
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>alert-uuid-001-a1b2c3d4e5f6g7h8    CRITICAL  Cluster memory utilization exceeds 95%     2024-01-15 14:32:18
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>alert-uuid-002-b2c3d4e5f6g7h8i9    CRITICAL  Storage pool redundancy factor degraded     2024-01-15 13:45:22
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>alert-uuid-003-c3d4e5f6g7h8i9j0    CRITICAL  Node prism-node-04 is unreachable          2024-01-15 12:18:55
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>alert-uuid-004-d4e5f6g7h8i9j0k1    CRITICAL  Replication factor below minimum threshold  2024-01-15 11:02:33
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>AlertId                              Severity  Message                                    CreatedTime
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>================================================================================================
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>alert-uuid-005-e5f6g7h8i9j0k1l2    WARNING   vSAN heartbeat timeout on host-12          2024-01-15 10:15:44
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>alert-uuid-006-f6g7h8i9j0k1l2m3    INFO      Snapshot retention policy updated          2024-01-15 09:33:12
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>alert-uuid-007-g7h8i9j0k1l2m3n4    CRITICAL  NTP sync failed on prism-node-02           2024-01-15 08:47:29
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid time format for start-time parameter</code></strong> — Ensure the date command outputs milliseconds in the correct format; use <code>date -d "24 hours ago" +%s000</code> without the trailing zeros.
+<strong><code>Error: Alert ID not found or already acknowledged</code></strong> — Verify the alert ID exists and is unacknowledged by running <code>ncli alert list</code> first to confirm the exact alert UUID.</p>
+</div>
 <p><strong>From Prism Element:</strong> Home → Alerts → filter by Severity = Critical. Acknowledge or create tickets for all unacknowledged critical alerts.</p>
 <hr />
 <h2 id="key-checks-what-to-look-for">Key Checks — What to Look For<a class="headerlink" href="#key-checks-what-to-look-for" title="Permanent link">&para;</a></h2>
@@ -7857,18 +8120,48 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 <hr />
 <h2 id="weekly-extended-checks">Weekly Extended Checks<a class="headerlink" href="#weekly-extended-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Weekly Extended Checks" src="../../../../assets/virtualization-nutanix-hc-weekly-extended-checks.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check data resiliency status — any degraded or rebuilding objects?</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>disk
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check for any scheduled NCC failures from last 7 days</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ncli<span class="w"> </span>ncc<span class="w"> </span>get-ncc-result<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check disk health</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>NORMAL
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># LCM inventory — any pending upgrades?</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Prism Central → LCM → Inventory → check for available updates</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check data resiliency status — any degraded or rebuilding objects?</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>disk
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Check for any scheduled NCC failures from last 7 days</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>ncli<span class="w"> </span>ncc<span class="w"> </span>get-ncc-result<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Check disk health</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>NORMAL
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># LCM inventory — any pending upgrades?</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1"># Prism Central → LCM → Inventory → check for available updates</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Domain Fault Tolerance Status:
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  RF2 Metadata: Tolerate 1 node failure
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  RF3 Data: Tolerate 1 node failure
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>  Current State: HEALTHY
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  Rebuilding Objects: 0
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  Degraded Objects: 0
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>NCC Result Summary (Last 7 Days):
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>2024-01-15 10:32:15 | Check: DNS Resolution | Status: WARN | Node: host-03.nutanix.local
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>2024-01-14 22:18:42 | Check: Memory Utilization | Status: WARN | Node: host-01.nutanix.local
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>2024-01-13 14:05:09 | Check: Cluster Time Sync | Status: FAIL | Node: host-02.nutanix.local
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>2024-01-12 09:47:33 | Check: vSAN Connectivity | Status: WARN | Node: host-04.nutanix.local
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Disk Health Status:
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>  Disk ID: 5c8f2a1b-9e3d-4f7a-8c2b-1a5d9e3f7c2b | Status: DEGRADED | Node: host-02 | Serial: SSD-NK8H2J4L
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>  Disk ID: 7a2c5f9d-1b4e-6g8h-3d9f-2b6e0f4g8d3c | Status: REBUILDING | Node: host-03 | Serial: SSD-MK9L3K5M
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>LCM Inventory Check:
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>  Available Updates: 3
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>    - AOS 6.5.2.1 (Current: 6.5.1.5)
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>    - Firmware Bundle 2024.01 (Current: 2023.12)
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>    - Foundation 4.8.2 (Current: 4.8.1)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncli: command not found</code></strong> — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed; verify PATH includes <code>/usr/local/nutanix/bin</code>.
+<strong><code>Error: Cluster is not accessible</code></strong> — Verify cluster connectivity with <code>ncli cluster status</code> and confirm your user has appropriate RBAC permissions.
+<strong><code>grep: (standard input) is empty</code></strong> — The NCC result may be empty if no checks have run in the past 7 days; run <code>ncli ncc run</code> to trigger a health check.</p>
+</div>
 <hr />
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -7907,7 +8200,7 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

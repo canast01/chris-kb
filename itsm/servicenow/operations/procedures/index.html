@@ -8160,7 +8160,7 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">Resolved</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Fix applied; awaiting confirmation from caller</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">Closed</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Caller confirmed resolution or auto-closed after N days</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manually reassign an incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manually reassign an incident</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8176,234 +8176,708 @@
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=priority&lt;=2^assigned_to=NULL^active=true&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,priority,opened_at&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Flag an incident for escalation</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;escalation&quot;: &quot;1&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;work_notes&quot;: &quot;Escalating — no progress after 2 hours. Notified manager.&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>{
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    &quot;number&quot;: &quot;INC0010847&quot;,
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    &quot;assignment_group&quot;: &quot;network-ops&quot;,
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    &quot;assigned_to&quot;: &quot;jdoe&quot;,
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    &quot;work_notes&quot;: &quot;Reassigned to network-ops — suspected BGP issue&quot;,
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    &quot;sys_updated_on&quot;: &quot;2024-01-15 14:32:18&quot;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  }
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>}
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>{
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  &quot;result&quot;: [
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    {
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>      &quot;number&quot;: &quot;INC0010851&quot;,
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>      &quot;short_description&quot;: &quot;Database replication lag detected on prod-db-02&quot;,
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>      &quot;priority&quot;: &quot;1&quot;,
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>      &quot;opened_at&quot;: &quot;2024-01-15 13:47:22&quot;
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    },
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    {
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>      &quot;number&quot;: &quot;INC0010849&quot;,
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>      &quot;short_description&quot;: &quot;VPN gateway failover incomplete&quot;,
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>      &quot;priority&quot;: &quot;2&quot;,
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>      &quot;opened_at&quot;: &quot;2024-01-15 12:15:09&quot;
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    },
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    {
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>      &quot;number&quot;: &quot;INC0010848&quot;,
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>      &quot;short_description&quot;: &quot;Load balancer health check failures&quot;,
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>      &quot;priority&quot;: &quot;1&quot;,
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>      &quot;opened_at&quot;: &quot;2024-01-15 11:53:44&quot;
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    }
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>  ]
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Resolve an incident</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error":{"message":"Invalid table API (incident)","status":"failure"}}</code></strong> — Verify the ServiceNow instance URL and that the REST API is enabled for the incident table.
+<strong><code>{"error":{"message":"Invalid field name (assigned_to)","status":"failure"}}</code></strong> — Use the correct field name <code>assignment_group</code> or check your instance's field naming convention; some instances use <code>assigned_to_user</code> instead.
+<strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Flag an incident for escalation</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;state&quot;: &quot;6&quot;,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;close_code&quot;: &quot;Solved (Permanently)&quot;,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;close_notes&quot;: &quot;Root cause: memory leak in v2.3.0. Fixed in v2.3.1. Deployed 15:45 UTC.&quot;,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;resolved_by&quot;: &quot;jsmith&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;escalation&quot;: &quot;1&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;work_notes&quot;: &quot;Escalating — no progress after 2 hours. Notified manager.&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">Category</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">Infrastructure / Application / Network / Security</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">Risk</span><span class="p">:</span><span class="w">             </span><span class="l l-Scalar l-Scalar-Plain">Low / Medium / High / Critical</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">Impact</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">1 (Enterprise) to 4 (Minimal)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">Assignment group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Platform / Network / Security</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">Planned start</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Date and time (UTC)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">Planned end</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Date and time (UTC)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">Short description: &lt;Component&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;what is changing&gt;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">Description</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Full details including scope and method</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    &quot;number&quot;: &quot;INC0010847&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    &quot;short_description&quot;: &quot;Database connection timeout on prod-db-03&quot;,
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &quot;state&quot;: &quot;2&quot;,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    &quot;escalation&quot;: &quot;1&quot;,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &quot;escalation_time&quot;: &quot;2024-01-15 14:32:18&quot;,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    &quot;work_notes&quot;: &quot;Escalating — no progress after 2 hours. Notified manager.&quot;,
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    &quot;assigned_to&quot;: &quot;62826bf03710200044e0bfc578601e57&quot;,
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    &quot;assignment_group&quot;: &quot;Database Support Team&quot;,
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    &quot;priority&quot;: &quot;2&quot;,
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    &quot;updated_on&quot;: &quot;2024-01-15 14:32:18&quot;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  }
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a change request via REST API</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>401 Unauthorized</code></strong> — Verify your ServiceNow instance URL, username, and API token are correct and the token has not expired.
+<strong><code>404 Not Found</code></strong> — Replace <code>SYS_ID</code> with the actual incident system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>).
+<strong><code>403 Forbidden</code></strong> — Confirm your user account has the <code>incident_write</code> or <code>admin</code> role in ServiceNow to modify incidents.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Resolve an incident</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;short_description&quot;: &quot;Upgrade Postgres to 15.6 on prod-db-01&quot;,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;category&quot;: &quot;Database&quot;,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;risk&quot;: &quot;2&quot;,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    &quot;impact&quot;: &quot;2&quot;,</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">    &quot;type&quot;: &quot;normal&quot;,</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">    &quot;assignment_group&quot;: &quot;platform-team&quot;,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">    &quot;start_date&quot;: &quot;2025-05-10 02:00:00&quot;,</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">    &quot;end_date&quot;: &quot;2025-05-10 04:00:00&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Get a change request by number</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request?number=CHG0012345&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;state&quot;: &quot;6&quot;,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;close_code&quot;: &quot;Solved (Permanently)&quot;,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;close_notes&quot;: &quot;Root cause: memory leak in v2.3.0. Fixed in v2.3.1. Deployed 15:45 UTC.&quot;,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;resolved_by&quot;: &quot;jsmith&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="l l-Scalar l-Scalar-Plain">Draft → Assess → Authorize → Scheduled → Implement → Review → Closed</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="l l-Scalar l-Scalar-Plain">Draft</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Requester fills in all fields and attachments</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">Assess</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Change manager reviews risk, impact, and scope</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">Authorize</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">CAB approves (or rejects) the change</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nt">Scheduled</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Change is confirmed for the maintenance window</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nt">Implement</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Work is performed; work notes updated in real time</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nt">Review</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Post-implementation review; confirm success or document issues</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nt">Closed</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Change closed as Successful / Unsuccessful / Cancelled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">Category</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">Infrastructure / Application / Network / Security</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">Risk</span><span class="p">:</span><span class="w">             </span><span class="l l-Scalar l-Scalar-Plain">Low / Medium / High / Critical</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">Impact</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">1 (Enterprise) to 4 (Minimal)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">Assignment group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Platform / Network / Security</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">Planned start</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Date and time (UTC)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nt">Planned end</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Date and time (UTC)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nt">Short description: &lt;Component&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;what is changing&gt;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nt">Description</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Full details including scope and method</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Move a change to a new state</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a change request via REST API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;-1&quot;}&#39;</span><span class="w">   </span><span class="c1"># -1 = Authorize, 0 = Scheduled, 1 = Implement</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">    &quot;short_description&quot;: &quot;Upgrade Postgres to 15.6 on prod-db-01&quot;,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">    &quot;category&quot;: &quot;Database&quot;,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">    &quot;risk&quot;: &quot;2&quot;,</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">    &quot;impact&quot;: &quot;2&quot;,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">    &quot;type&quot;: &quot;normal&quot;,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s1">    &quot;assignment_group&quot;: &quot;platform-team&quot;,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s1">    &quot;start_date&quot;: &quot;2025-05-10 02:00:00&quot;,</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s1">    &quot;end_date&quot;: &quot;2025-05-10 04:00:00&quot;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Get a change request by number</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request?number=CHG0012345&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create an emergency change</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;short_description&quot;: &quot;Emergency: revert broken nginx config on prod-lb-01&quot;,</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">    &quot;type&quot;: &quot;emergency&quot;,</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">    &quot;risk&quot;: &quot;3&quot;,</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">    &quot;justification&quot;: &quot;Production outage since 14:32 UTC. Revert to last known good config.&quot;</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="l l-Scalar l-Scalar-Plain">Draft → Assess → Authorize → Scheduled → Implement → Review → Closed</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="l l-Scalar l-Scalar-Plain">Draft</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">Requester fills in all fields and attachments</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">Assess</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Change manager reviews risk, impact, and scope</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nt">Authorize</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">CAB approves (or rejects) the change</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">Scheduled</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Change is confirmed for the maintenance window</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nt">Implement</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Work is performed; work notes updated in real time</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nt">Review</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Post-implementation review; confirm success or document issues</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nt">Closed</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Change closed as Successful / Unsuccessful / Cancelled</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Query upcoming normal changes pending CAB review</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=state=-1^type=normal&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,risk,start_date,assignment_group&#39;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Export CAB agenda to CSV</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=state=-1^type=normal&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,risk,start_date&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.result[] | [.number, .short_description, .risk, .start_date] | @csv&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Query open requests for a user</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_request&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=requested_for=jsmith^active=true&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,state,opened_at&#39;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Get request items for a request</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_req_item&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request.number=REQ0001234&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,cat_item,state,approval&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Get variables for a request item</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_item_option_mtom&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request_item=RITM_SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=sc_item_option.item_option_new.question_text,sc_item_option.value&#39;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Create a request programmatically (submit a catalog item)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/sn_sc/servicecatalog/items/CATALOG_ITEM_SYS_ID/order_now&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="s1">    &quot;sysparm_quantity&quot;: &quot;1&quot;,</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s1">    &quot;variables&quot;: {</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="s1">      &quot;environment&quot;: &quot;dev&quot;,</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="s1">      &quot;instance_type&quot;: &quot;t3.medium&quot;,</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="s1">      &quot;requested_by_date&quot;: &quot;2025-05-15&quot;</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="s1">    }</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Query pending approvals for a request</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=sysapproval.number=REQ0001234^state=requested&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=approver,state,due_date&#39;</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Approve a request item as the approver</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver/APPROVAL_SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;approved&quot;, &quot;comments&quot;: &quot;Approved for dev environment use&quot;}&#39;</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Reject an approval</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver/APPROVAL_SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;rejected&quot;, &quot;comments&quot;: &quot;Budget approval required first&quot;}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List fulfillment tasks for a request item</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request_item.number=RITM0001234&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,state,assigned_to&#39;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Update a fulfillment task</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="s1">    &quot;state&quot;: &quot;2&quot;,</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="s1">    &quot;work_notes&quot;: &quot;VM provisioned in dev VPC. IP: 10.0.4.55&quot;</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Close a fulfillment task</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;3&quot;, &quot;work_notes&quot;: &quot;Confirmed by requester — closing task&quot;}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Find overdue request items</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_req_item&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=due_date&lt;javascript:gs.now()^active=true^state!=3&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,cat_item,due_date,assigned_to,state&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Add a work note to an incident</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;work_notes&quot;: &quot;Checked error logs on prod-api-01. OOM kill at 14:28 UTC. Restarting service and monitoring.&quot;}&#39;</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Add an additional comment (customer-visible)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;comments&quot;: &quot;We have identified the issue and are working on a fix. Expected resolution within 2 hours.&quot;}&#39;</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Add a work note to a change request</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;work_notes&quot;: &quot;Step 1 complete: database backup verified. Proceeding to step 2.&quot;}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Good work note format</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="o">[</span><span class="m">14</span>:35<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Checked<span class="w"> </span>nginx<span class="w"> </span>access<span class="w"> </span>logs<span class="w"> </span>—<span class="w"> </span>confirmed<span class="w"> </span>503s<span class="w"> </span>starting<span class="w"> </span><span class="m">14</span>:28<span class="w"> </span>UTC
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="o">[</span><span class="m">14</span>:40<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Correlated<span class="w"> </span>with<span class="w"> </span>deployment<span class="w"> </span>at<span class="w"> </span><span class="m">14</span>:25<span class="w"> </span>UTC<span class="w"> </span>by<span class="w"> </span>@jsmith
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="o">[</span><span class="m">14</span>:42<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Rolled<span class="w"> </span>back<span class="w"> </span>to<span class="w"> </span>previous<span class="w"> </span>image.<span class="w"> </span>Error<span class="w"> </span>rate<span class="w"> </span>dropping.
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="o">[</span><span class="m">14</span>:50<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Error<span class="w"> </span>rate<span class="w"> </span>back<span class="w"> </span>to<span class="w"> </span>baseline<span class="w"> </span><span class="m">0</span>.1%.<span class="w"> </span>Monitoring<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">30</span><span class="w"> </span>min<span class="w"> </span>before<span class="w"> </span>closing.
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Set resolution notes when closing an incident</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="s1">    &quot;state&quot;: &quot;6&quot;,</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="s1">    &quot;close_code&quot;: &quot;Solved (Permanently)&quot;,</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="s1">    &quot;close_notes&quot;: &quot;A misconfigured deployment caused the service to run out of memory. We have rolled back to the previous version and applied a fix. The service has been stable since 15:00 UTC. We will deploy the corrected version during the next maintenance window.&quot;</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Get audit history for a record</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sys_audit&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=documentkey=SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=fieldname,oldvalue,newvalue,sys_created_by,sys_created_on&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {field: .fieldname, from: .oldvalue, to: .newvalue, by: .sys_created_by, at: .sys_created_on}&#39;</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Get journal entries (work notes + comments) for a ticket</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sys_journal_field&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=element_id=SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=name,element,value,sys_created_by,sys_created_on&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result | sort_by(.sys_created_on)[] | {type: .element, author: .sys_created_by, time: .sys_created_on, note: .value}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Add the same work note to multiple incidents (e.g., all P1s during a major outage)</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nv">INCIDENTS</span><span class="o">=</span><span class="s2">&quot;INC0001 INC0002 INC0003&quot;</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nv">NOTE</span><span class="o">=</span><span class="s2">&quot;Major outage identified — root cause is BGP flap on core-rtr-01. Bridge open in #incident-bridge.&quot;</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">for</span><span class="w"> </span>INC<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$INCIDENTS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span><span class="nv">SYS_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;sysparm_query=number=</span><span class="si">${</span><span class="nv">INC</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.result[0].sys_id&#39;</span><span class="k">)</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/</span><span class="si">${</span><span class="nv">SYS_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;work_notes\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NOTE</span><span class="si">}</span><span class="s2">\&quot;}&quot;</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Move a change to a new state</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;-1&quot;}&#39;</span><span class="w">   </span><span class="c1"># -1 = Authorize, 0 = Scheduled, 1 = Implement</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    &quot;number&quot;: &quot;CHG0010847&quot;,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    &quot;state&quot;: &quot;-1&quot;,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    &quot;short_description&quot;: &quot;Database patch deployment&quot;,
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    &quot;assignment_group&quot;: &quot;Change Management&quot;,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    &quot;assigned_to&quot;: &quot;admin@company.com&quot;,
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    &quot;created_on&quot;: &quot;2024-01-15 09:23:45&quot;,
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    &quot;updated_on&quot;: &quot;2024-01-15 14:52:12&quot;,
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    &quot;status&quot;: &quot;Authorize&quot;
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  }
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).
+<strong><code>{"error":{"message":"Invalid field value","detail":"Invalid state value: -1"},"status":"failure"}</code></strong> — Verify the state value is valid for your change type; some change models may not support the Authorize state.
+<strong><code>{"error":{"message":"Invalid table API (change_request)"},"status":"failure"}</code></strong> — Confirm the table name is correct; use <code>change_request</code> for standard changes or check your instance's custom change table name.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create an emergency change</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;short_description&quot;: &quot;Emergency: revert broken nginx config on prod-lb-01&quot;,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;type&quot;: &quot;emergency&quot;,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">    &quot;risk&quot;: &quot;3&quot;,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s1">    &quot;justification&quot;: &quot;Production outage since 14:32 UTC. Revert to last known good config.&quot;</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    &quot;sys_id&quot;: &quot;a7f2c8d9e1b4a5f6c9d2e3f4a5b6c7d8&quot;,
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    &quot;number&quot;: &quot;CHG0087543&quot;,
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    &quot;short_description&quot;: &quot;Emergency: revert broken nginx config on prod-lb-01&quot;,
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    &quot;type&quot;: &quot;emergency&quot;,
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    &quot;risk&quot;: &quot;3&quot;,
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    &quot;state&quot;: &quot;1&quot;,
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    &quot;created_on&quot;: &quot;2024-01-15 14:35:22&quot;,
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    &quot;created_by&quot;: &quot;user&quot;,
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    &quot;assignment_group&quot;: &quot;Infrastructure Team&quot;,
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    &quot;status&quot;: &quot;pending_approval&quot;
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  }
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the correct table name is <code>change_request</code> and your API version supports it; check ServiceNow instance REST API documentation.
+<strong><code>{"error":{"message":"Invalid field value [type=emergency]","status":"invalid_field_value"}}</code></strong> — Use valid change type values from your instance (typically <code>standard</code>, <code>normal</code>, or <code>emergency</code>); check your change_request table field definitions.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Query upcoming normal changes pending CAB review</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=state=-1^type=normal&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,risk,start_date,assignment_group&#39;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Export CAB agenda to CSV</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=state=-1^type=normal&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,risk,start_date&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.result[] | [.number, .short_description, .risk, .start_date] | @csv&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>{
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    {
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>      &quot;number&quot;: &quot;CHG0042857&quot;,
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>      &quot;short_description&quot;: &quot;Database connection pool upgrade to v8.2&quot;,
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>      &quot;risk&quot;: &quot;medium&quot;,
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>      &quot;start_date&quot;: &quot;2024-01-15 02:00:00&quot;,
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>      &quot;assignment_group&quot;: &quot;Database Team&quot;
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    },
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    {
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>      &quot;number&quot;: &quot;CHG0042891&quot;,
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>      &quot;short_description&quot;: &quot;Load balancer SSL certificate renewal&quot;,
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>      &quot;risk&quot;: &quot;low&quot;,
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>      &quot;start_date&quot;: &quot;2024-01-16 23:30:00&quot;,
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>      &quot;assignment_group&quot;: &quot;Network Operations&quot;
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    },
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    {
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>      &quot;number&quot;: &quot;CHG0042903&quot;,
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>      &quot;short_description&quot;: &quot;Kubernetes cluster patch 1.28.4&quot;,
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>      &quot;risk&quot;: &quot;high&quot;,
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>      &quot;start_date&quot;: &quot;2024-01-18 01:00:00&quot;,
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>      &quot;assignment_group&quot;: &quot;Platform Engineering&quot;
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>    }
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>  ]
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>}
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>&quot;CHG0042857&quot;,&quot;Database connection pool upgrade to v8.2&quot;,&quot;medium&quot;,&quot;2024-01-15 02:00:00&quot;
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>&quot;CHG0042891&quot;,&quot;Load balancer SSL certificate renewal&quot;,&quot;low&quot;,&quot;2024-01-16 23:30:00&quot;
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>&quot;CHG0042903&quot;,&quot;Kubernetes cluster patch 1.28.4&quot;,&quot;high&quot;,&quot;2024-01-18 01:00:00&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>acme-dev.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct; use <code>change_request</code> or check your instance's table naming convention via the ServiceNow API explorer.
+<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Ensure the API response is valid JSON by checking authentication credentials and that the <code>-s</code> flag is present to suppress curl progress output.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Query open requests for a user</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_request&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=requested_for=jsmith^active=true&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,state,opened_at&#39;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Get request items for a request</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_req_item&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request.number=REQ0001234&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,cat_item,state,approval&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    {
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>      &quot;number&quot;: &quot;REQ0001847&quot;,
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>      &quot;short_description&quot;: &quot;Laptop provisioning request&quot;,
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>      &quot;state&quot;: &quot;1&quot;,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>      &quot;opened_at&quot;: &quot;2024-01-15 09:23:45&quot;
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    },
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    {
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>      &quot;number&quot;: &quot;REQ0001823&quot;,
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>      &quot;short_description&quot;: &quot;VPN access for contractor&quot;,
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>      &quot;state&quot;: &quot;2&quot;,
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>      &quot;opened_at&quot;: &quot;2024-01-14 14:12:30&quot;
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>    },
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>    {
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>      &quot;number&quot;: &quot;REQ0001801&quot;,
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>      &quot;short_description&quot;: &quot;Software license renewal&quot;,
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>      &quot;state&quot;: &quot;1&quot;,
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>      &quot;opened_at&quot;: &quot;2024-01-12 11:05:18&quot;
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>    }
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>  ]
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>}
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>{
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>  &quot;result&quot;: [
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>    {
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>      &quot;number&quot;: &quot;RITM0010456&quot;,
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>      &quot;cat_item&quot;: &quot;Laptop - Standard Build&quot;,
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>      &quot;state&quot;: &quot;On Hold&quot;,
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>      &quot;approval&quot;: &quot;Approved&quot;
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>    },
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>    {
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>      &quot;number&quot;: &quot;RITM0010457&quot;,
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>      &quot;cat_item&quot;: &quot;Windows 11 Pro License&quot;,
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>      &quot;state&quot;: &quot;Pending&quot;,
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>      &quot;approval&quot;: &quot;Pending&quot;
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>    }
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>  ]
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).
+<strong><code>{"error":{"message":"Invalid table API (sc_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct and your API user has read access to the sc_request table in ServiceNow.
+<strong><code>{"error":{"message":"Invalid query: requested_for=jsmith^active=true","status":"failure"}}</code></strong> — Ensure field names and query syntax match your ServiceNow instance schema; use the ServiceNow API explorer to validate field names.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Get variables for a request item</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_item_option_mtom&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request_item=RITM_SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=sc_item_option.item_option_new.question_text,sc_item_option.value&#39;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Create a request programmatically (submit a catalog item)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/sn_sc/servicecatalog/items/CATALOG_ITEM_SYS_ID/order_now&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="s1">    &quot;sysparm_quantity&quot;: &quot;1&quot;,</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="s1">    &quot;variables&quot;: {</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="s1">      &quot;environment&quot;: &quot;dev&quot;,</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="s1">      &quot;instance_type&quot;: &quot;t3.medium&quot;,</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="s1">      &quot;requested_by_date&quot;: &quot;2025-05-15&quot;</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="s1">    }</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>{
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    {
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>      &quot;sc_item_option&quot;: {
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>        &quot;item_option_new&quot;: {
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>          &quot;question_text&quot;: &quot;Select Environment&quot;
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        },
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        &quot;value&quot;: &quot;dev&quot;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>      },
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>      &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    },
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    {
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>      &quot;sc_item_option&quot;: {
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>        &quot;item_option_new&quot;: {
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>          &quot;question_text&quot;: &quot;Instance Type&quot;
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>        },
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>        &quot;value&quot;: &quot;t3.medium&quot;
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>      },
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>      &quot;sys_id&quot;: &quot;m2n3o4p5q6r7s8t9u0v1w2x3&quot;
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    }
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>  ]
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>}
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>{
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>  &quot;result&quot;: {
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>    &quot;request_number&quot;: &quot;REQ0010847&quot;,
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>    &quot;sys_id&quot;: &quot;7f8g9h0i1j2k3l4m5n6o7p8q&quot;,
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>    &quot;status&quot;: &quot;pending_approval&quot;,
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>    &quot;order_id&quot;: &quot;ORD0005623&quot;,
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>    &quot;message&quot;: &quot;Request submitted successfully&quot;
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a>  }
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host name</code></strong> — Verify the ServiceNow instance URL is correct and replace <code>your-instance</code> with your actual instance name.
+<strong><code>{"error":{"message":"Invalid table API (Invalid Offset)","status":"failure"}}</code></strong> — Ensure the RITM_SYS_ID and CATALOG_ITEM_SYS_ID are valid sys_id values from your ServiceNow instance.
+<strong><code>{"error":{"message":"Invalid request. User does not have permission to access this API","status":"failure"}}</code></strong> — Confirm the API user account has the <code>catalog_admin</code> or <code>itil</code> role and appropriate table ACLs in ServiceNow.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Query pending approvals for a request</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=sysapproval.number=REQ0001234^state=requested&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=approver,state,due_date&#39;</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Approve a request item as the approver</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver/APPROVAL_SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;approved&quot;, &quot;comments&quot;: &quot;Approved for dev environment use&quot;}&#39;</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Reject an approval</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sysapproval_approver/APPROVAL_SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;rejected&quot;, &quot;comments&quot;: &quot;Budget approval required first&quot;}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>{
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    {
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>      &quot;approver&quot;: &quot;john.smith@company.com&quot;,
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>      &quot;state&quot;: &quot;requested&quot;,
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>      &quot;due_date&quot;: &quot;2024-01-15 17:00:00&quot;,
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>      &quot;sys_id&quot;: &quot;e8d4a5f2c1b9e3a7d2f5c8a1b4e7f0d3&quot;
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    },
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    {
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>      &quot;approver&quot;: &quot;sarah.jones@company.com&quot;,
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>      &quot;state&quot;: &quot;requested&quot;,
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>      &quot;due_date&quot;: &quot;2024-01-15 17:00:00&quot;,
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>      &quot;sys_id&quot;: &quot;f9e5b6g3d2c0f4b8e3g6d9b2c5f8a1e4&quot;
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    }
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>  ]
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>}
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>{
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>  &quot;result&quot;: {
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    &quot;sys_id&quot;: &quot;e8d4a5f2c1b9e3a7d2f5c8a1b4e7f0d3&quot;,
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>    &quot;state&quot;: &quot;approved&quot;,
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>    &quot;comments&quot;: &quot;Approved for dev environment use&quot;,
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>    &quot;updated_on&quot;: &quot;2024-01-12 09:34:22&quot;
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>  }
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>}
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>{
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>  &quot;result&quot;: {
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>    &quot;sys_id&quot;: &quot;f9e5b6g3d2c0f4b8e3g6d9b2c5f8a1e4&quot;,
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>    &quot;state&quot;: &quot;rejected&quot;,
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>    &quot;comments&quot;: &quot;Budget approval required first&quot;,
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>    &quot;updated_on&quot;: &quot;2024-01-12 09:35:18&quot;
+<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>  }
+<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API (Invalid Referral Record)","status":"failure"},"status":"failure"}</code></strong> — Verify the <code>APPROVAL_SYS_ID</code> is a valid sys_id from the query results; use the exact value from the first API call's response.
+<strong><code>{"error":{"message":"Invalid field name: state","status":"failure"}}</code></strong> — Confirm the field name is <code>state</code> (not <code>status</code>); check your ServiceNow instance's sysapproval_approver table schema for correct field names.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># List fulfillment tasks for a request item</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=request_item.number=RITM0001234&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,short_description,state,assigned_to&#39;</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Update a fulfillment task</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="s1">    &quot;state&quot;: &quot;2&quot;,</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="s1">    &quot;work_notes&quot;: &quot;VM provisioned in dev VPC. IP: 10.0.4.55&quot;</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="c1"># Close a fulfillment task</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_task/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;3&quot;, &quot;work_notes&quot;: &quot;Confirmed by requester — closing task&quot;}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>{
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    {
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>      &quot;number&quot;: &quot;TASK0010456&quot;,
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>      &quot;short_description&quot;: &quot;Provision Ubuntu 20.04 VM&quot;,
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>      &quot;state&quot;: &quot;1&quot;,
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>      &quot;assigned_to&quot;: {
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>        &quot;display_value&quot;: &quot;alice.chen@company.com&quot;,
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>        &quot;value&quot;: &quot;46d44a23c0a8016700b2d4be33ee4019&quot;
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>      }
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    },
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    {
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>      &quot;number&quot;: &quot;TASK0010457&quot;,
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>      &quot;short_description&quot;: &quot;Configure network security group&quot;,
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>      &quot;state&quot;: &quot;1&quot;,
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>      &quot;assigned_to&quot;: {
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>        &quot;display_value&quot;: &quot;bob.martinez@company.com&quot;,
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>        &quot;value&quot;: &quot;62f8c41ac0a8016700c3e5cf44ff5021&quot;
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>      }
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>    }
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>  ]
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>}
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>{
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>  &quot;result&quot;: {
+<a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a>    &quot;number&quot;: &quot;TASK0010456&quot;,
+<a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a>    &quot;state&quot;: &quot;2&quot;,
+<a id="__codelineno-22-28" name="__codelineno-22-28" href="#__codelineno-22-28"></a>    &quot;work_notes&quot;: &quot;VM provisioned in dev VPC. IP: 10.0.4.55&quot;
+<a id="__codelineno-22-29" name="__codelineno-22-29" href="#__codelineno-22-29"></a>  }
+<a id="__codelineno-22-30" name="__codelineno-22-30" href="#__codelineno-22-30"></a>}
+<a id="__codelineno-22-31" name="__codelineno-22-31" href="#__codelineno-22-31"></a>{
+<a id="__codelineno-22-32" name="__codelineno-22-32" href="#__codelineno-22-32"></a>  &quot;result&quot;: {
+<a id="__codelineno-22-33" name="__codelineno-22-33" href="#__codelineno-22-33"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-22-34" name="__codelineno-22-34" href="#__codelineno-22-34"></a>    &quot;number&quot;: &quot;TASK0010456&quot;,
+<a id="__codelineno-22-35" name="__codelineno-22-35" href="#__codelineno-22-35"></a>    &quot;state&quot;: &quot;3&quot;,
+<a id="__codelineno-22-36" name="__codelineno-22-36" href="#__codelineno-22-36"></a>    &quot;work_notes&quot;: &quot;Confirmed by requester — closing task&quot;
+<a id="__codelineno-22-37" name="__codelineno-22-37" href="#__codelineno-22-37"></a>  }
+<a id="__codelineno-22-38" name="__codelineno-22-38" href="#__codelineno-22-38"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid table API (Invalid table: sc_task)</code></strong> — Verify the ServiceNow instance URL and API version; use <code>/api/now/v2/table/sc_task</code> if on a newer instance.
+<strong><code>401 Unauthorized</code></strong> — Confirm the API user credentials and token are correct, and that the user has the <code>itil</code> or <code>sn_request_read</code> role.
+<strong><code>Invalid field name: SYS_ID</code></strong> — Replace <code>SYS_ID</code> with the actual task system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>) from the GET response.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Find overdue request items</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sc_req_item&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=due_date&lt;javascript:gs.now()^active=true^state!=3&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=number,cat_item,due_date,assigned_to,state&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>{
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  &quot;result&quot;: [
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    {
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>      &quot;number&quot;: &quot;REQ0010234&quot;,
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>      &quot;cat_item&quot;: &quot;Software License Renewal&quot;,
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>      &quot;due_date&quot;: &quot;2024-01-15 09:30:00&quot;,
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>      &quot;assigned_to&quot;: &quot;john.smith&quot;,
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>      &quot;state&quot;: &quot;1&quot;
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    },
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>    {
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>      &quot;number&quot;: &quot;REQ0010198&quot;,
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>      &quot;cat_item&quot;: &quot;Hardware Provisioning&quot;,
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>      &quot;due_date&quot;: &quot;2024-01-12 14:22:00&quot;,
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>      &quot;assigned_to&quot;: &quot;sarah.jones&quot;,
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>      &quot;state&quot;: &quot;2&quot;
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>    },
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>    {
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>      &quot;number&quot;: &quot;REQ0010156&quot;,
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>      &quot;cat_item&quot;: &quot;Access Request&quot;,
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>      &quot;due_date&quot;: &quot;2024-01-10 11:15:00&quot;,
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>      &quot;assigned_to&quot;: &quot;mike.chen&quot;,
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>      &quot;state&quot;: &quot;1&quot;
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a>    }
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>  ]
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct; use <code>sc_request</code> for requests or <code>sc_req_item</code> for request items, and confirm your user has table API read access.
+<strong><code>{"error":{"message":"Invalid query: due_date&lt;javascript:gs.now()","status":"failure"}}</code></strong> — Replace the JavaScript function with a valid ISO date string like <code>due_date&lt;2024-01-20</code> or use the REST API's native query syntax without <code>javascript:</code> prefix.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Add a work note to an incident</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;work_notes&quot;: &quot;Checked error logs on prod-api-01. OOM kill at 14:28 UTC. Restarting service and monitoring.&quot;}&#39;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Add an additional comment (customer-visible)</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;comments&quot;: &quot;We have identified the issue and are working on a fix. Expected resolution within 2 hours.&quot;}&#39;</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="c1"># Add a work note to a change request</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/change_request/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;work_notes&quot;: &quot;Step 1 complete: database backup verified. Proceeding to step 2.&quot;}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>{
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;,
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>    &quot;number&quot;: &quot;INC0010156&quot;,
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    &quot;short_description&quot;: &quot;Production API service OOM crash&quot;,
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    &quot;state&quot;: &quot;2&quot;,
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>    &quot;work_notes&quot;: &quot;Checked error logs on prod-api-01. OOM kill at 14:28 UTC. Restarting service and monitoring.&quot;,
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>    &quot;work_notes_list&quot;: [
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>      {
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>        &quot;element&quot;: &quot;work_notes&quot;,
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>        &quot;element_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;,
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>        &quot;sys_created_on&quot;: &quot;2024-01-15 14:32:18&quot;,
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>        &quot;value&quot;: &quot;Checked error logs on prod-api-01. OOM kill at 14:28 UTC. Restarting service and monitoring.&quot;
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>      }
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>    ]
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>  }
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>}
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>{
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>  &quot;result&quot;: {
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;,
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>    &quot;number&quot;: &quot;INC0010156&quot;,
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>    &quot;comments&quot;: &quot;We have identified the issue and are working on a fix. Expected resolution within 2 hours.&quot;,
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>    &quot;comments_list&quot;: [
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>      {
+<a id="__codelineno-26-25" name="__codelineno-26-25" href="#__codelineno-26-25"></a>        &quot;element&quot;: &quot;comments&quot;,
+<a id="__codelineno-26-26" name="__codelineno-26-26" href="#__codelineno-26-26"></a>        &quot;element_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;,
+<a id="__codelineno-26-27" name="__codelineno-26-27" href="#__codelineno-26-27"></a>        &quot;sys_created_on&quot;: &quot;2024-01-15 14:33:05&quot;,
+<a id="__codelineno-26-28" name="__codelineno-26-28" href="#__codelineno-26-28"></a>        &quot;value&quot;: &quot;We have identified the issue and are working on a fix. Expected resolution within 2 hours.&quot;
+<a id="__codelineno-26-29" name="__codelineno-26-29" href="#__codelineno-26-29"></a>      }
+<a id="__codelineno-26-30" name="__codelineno-26-30" href="#__codelineno-26-30"></a>    ]
+<a id="__codelineno-26-31" name="__codelineno-26-31" href="#__codelineno-26-31"></a>  }
+<a id="__codelineno-26-32" name="__codelineno-26-32" href="#__codelineno-26-32"></a>}
+<a id="__codelineno-26-33" name="__codelineno-26-33" href="#__codelineno-26-33"></a>{
+<a id="__codelineno-26-34" name="__codelineno-26-34" href="#__codelineno-26-34"></a>  &quot;result&quot;: {
+<a id="__codelineno-26-35" name="__codelineno-26-35" href="#__codelineno-26-35"></a>    &quot;sys_id&quot;: &quot;b2c3d4e5f6g7h8i9j0k1l2m3&quot;,
+<a id="__codelineno-26-36" name="__codelineno-26-36" href="#__codelineno-26-36"></a>    &quot;number&quot;: &quot;CHG0005847&quot;,
+<a id="__codelineno-26-37" name="__codelineno-26-37" href="#__codelineno-26-37"></a>    &quot;type&quot;: &quot;standard&quot;,
+<a id="__codelineno-26-38" name="__codelineno-26-38" href="#__codelineno-26-38"></a>    &quot;state&quot;: &quot;in_progress&quot;,
+<a id="__codelineno-26-39" name="__codelineno-26-39" href="#__codelineno-26-39"></a>    &quot;work_notes&quot;: &quot;Step 1 complete: database backup verified. Proceeding to step 2.&quot;,
+<a id="__codelineno-26-40" name="__codelineno-26-40" href="#__codelineno-26-40"></a>    &quot;work_notes_list&quot;: [
+<a id="__codelineno-26-41" name="__codelineno-26-41" href="#__codelineno-26-41"></a>      {
+<a id="__codelineno-26-42" name="__codelineno-26-42" href="#__codelineno-26-42"></a>        &quot;element&quot;: &quot;work_notes&quot;,
+<a id="__codelineno-26-43" name="__codelineno-26-43" href="#__codelineno-26-43"></a>        &quot;element_id&quot;: &quot;b2c3d4e5f6g7h8i9j0k1l2m3&quot;,
+<a id="__codelineno-26-44" name="__codelineno-26-44" href="#__codelineno-26-44"></a>        &quot;sys_created_on&quot;: &quot;2024-01-15 14:34:22&quot;,
+<a id="__codelineno-26-45" name="__codelineno-26-45" href="#__codelineno-26-45"></a>        &quot;value&quot;: &quot;Step 1 complete: database backup verified. Proceeding to step 2.&quot;
+<a id="__codelineno-26-46" name="__codelineno-26-46" href="#__codelineno-26-46"></a>      }
+<a id="__codelineno-26-47" name="__codelineno-26-47" href="#__codelineno-26-47"></a>    ]
+<a id="__codelineno-26-48" name="__codelineno-26-48" href="#__codelineno-26-48"></a>  }
+<a id="__codelineno-26-49" name="__codelineno-26-49" href="#__codelineno-26-49"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid table API (Invalid table name [incident])</code></strong> — Verify the table name is correct (use <code>incident</code> for incidents, <code>change_request</code> for changes) and check your ServiceNow instance API version supports the endpoint.
+<strong><code>401 Unauthorized</code></strong> — Confirm your API user credentials and token are valid, and that the user has the <code>itil</code> or <code>admin</code> role with API access permissions.
+<strong><code>Invalid field name [work_notes]</code></strong> — Check that the field name matches your ServiceNow instance configuration; some instances use <code>work_notes_list</code> or custom field names instead of <code>work_notes</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Good work note format</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="o">[</span><span class="m">14</span>:35<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Checked<span class="w"> </span>nginx<span class="w"> </span>access<span class="w"> </span>logs<span class="w"> </span>—<span class="w"> </span>confirmed<span class="w"> </span>503s<span class="w"> </span>starting<span class="w"> </span><span class="m">14</span>:28<span class="w"> </span>UTC
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="o">[</span><span class="m">14</span>:40<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Correlated<span class="w"> </span>with<span class="w"> </span>deployment<span class="w"> </span>at<span class="w"> </span><span class="m">14</span>:25<span class="w"> </span>UTC<span class="w"> </span>by<span class="w"> </span>@jsmith
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="o">[</span><span class="m">14</span>:42<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Rolled<span class="w"> </span>back<span class="w"> </span>to<span class="w"> </span>previous<span class="w"> </span>image.<span class="w"> </span>Error<span class="w"> </span>rate<span class="w"> </span>dropping.
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="o">[</span><span class="m">14</span>:50<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Error<span class="w"> </span>rate<span class="w"> </span>back<span class="w"> </span>to<span class="w"> </span>baseline<span class="w"> </span><span class="m">0</span>.1%.<span class="w"> </span>Monitoring<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">30</span><span class="w"> </span>min<span class="w"> </span>before<span class="w"> </span>closing.
+</code></pre></div>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Set resolution notes when closing an incident</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/SYS_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="s1">    &quot;state&quot;: &quot;6&quot;,</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="s1">    &quot;close_code&quot;: &quot;Solved (Permanently)&quot;,</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="s1">    &quot;close_notes&quot;: &quot;A misconfigured deployment caused the service to run out of memory. We have rolled back to the previous version and applied a fix. The service has been stable since 15:00 UTC. We will deploy the corrected version during the next maintenance window.&quot;</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="s1">  }&#39;</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>{
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>  &quot;result&quot;: {
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    &quot;sys_id&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2&quot;,
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>    &quot;number&quot;: &quot;INC0010847&quot;,
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>    &quot;short_description&quot;: &quot;Production API service unavailable&quot;,
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>    &quot;state&quot;: &quot;6&quot;,
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>    &quot;close_code&quot;: &quot;Solved (Permanently)&quot;,
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>    &quot;close_notes&quot;: &quot;A misconfigured deployment caused the service to run out of memory. We have rolled back to the previous version and applied a fix. The service has been stable since 15:00 UTC. We will deploy the corrected version during the next maintenance window.&quot;,
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>    &quot;closed_by&quot;: &quot;admin.user&quot;,
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>    &quot;closed_at&quot;: &quot;2024-01-15 16:42:33&quot;,
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>    &quot;resolution_time&quot;: &quot;02:15:30&quot;,
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>    &quot;caller_id&quot;: &quot;john.smith&quot;,
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>    &quot;assignment_group&quot;: &quot;Platform Engineering&quot;
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>  }
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev123456.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API (incident)","status":"failure"},"status":"failure"}</code></strong> — Verify the incident table name is correct and your API user has read/write permissions on the incident table.
+<strong><code>{"error":{"message":"Invalid field value [6]","status":"failure"}}</code></strong> — Confirm that state value <code>6</code> (Closed) is valid in your ServiceNow instance; some configurations use different state codes.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Get audit history for a record</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sys_audit&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=documentkey=SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=fieldname,oldvalue,newvalue,sys_created_by,sys_created_on&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {field: .fieldname, from: .oldvalue, to: .newvalue, by: .sys_created_by, at: .sys_created_on}&#39;</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="c1"># Get journal entries (work notes + comments) for a ticket</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/sys_journal_field&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=element_id=SYS_ID&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=name,element,value,sys_created_by,sys_created_on&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result | sort_by(.sys_created_on)[] | {type: .element, author: .sys_created_by, time: .sys_created_on, note: .value}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>{
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  &quot;field&quot;: &quot;state&quot;,
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>  &quot;from&quot;: &quot;1&quot;,
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>  &quot;to&quot;: &quot;2&quot;,
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>  &quot;by&quot;: &quot;admin.user&quot;,
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>  &quot;at&quot;: &quot;2024-01-15 09:23:47&quot;
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>}
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>{
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>  &quot;field&quot;: &quot;assigned_to&quot;,
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>  &quot;from&quot;: &quot;d4c5e8f2a1b3c9d7e2f4a5b6c7d8e9f0&quot;,
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>  &quot;to&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>  &quot;by&quot;: &quot;change.manager&quot;,
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>  &quot;at&quot;: &quot;2024-01-15 10:15:22&quot;
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>}
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>{
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>  &quot;field&quot;: &quot;priority&quot;,
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>  &quot;from&quot;: &quot;3&quot;,
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>  &quot;to&quot;: &quot;2&quot;,
+<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>  &quot;by&quot;: &quot;incident.owner&quot;,
+<a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>  &quot;at&quot;: &quot;2024-01-15 11:42:08&quot;
+<a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>}
+<a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a>{
+<a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a>  &quot;type&quot;: &quot;work_notes&quot;,
+<a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a>  &quot;author&quot;: &quot;tech.support&quot;,
+<a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a>  &quot;time&quot;: &quot;2024-01-15 09:45:33&quot;,
+<a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a>  &quot;note&quot;: &quot;Investigated database connectivity issue. Restarted connection pool.&quot;
+<a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a>}
+<a id="__codelineno-32-28" name="__codelineno-32-28" href="#__codelineno-32-28"></a>{
+<a id="__codelineno-32-29" name="__codelineno-32-29" href="#__codelineno-32-29"></a>  &quot;type&quot;: &quot;comments&quot;,
+<a id="__codelineno-32-30" name="__codelineno-32-30" href="#__codelineno-32-30"></a>  &quot;author&quot;: &quot;admin.user&quot;,
+<a id="__codelineno-32-31" name="__codelineno-32-31" href="#__codelineno-32-31"></a>  &quot;time&quot;: &quot;2024-01-15 10:22:15&quot;,
+<a id="__codelineno-32-32" name="__codelineno-32-32" href="#__codelineno-32-32"></a>  &quot;note&quot;: &quot;Escalated to infrastructure team for network diagnostics.&quot;
+<a id="__codelineno-32-33" name="__codelineno-32-33" href="#__codelineno-32-33"></a>}
+<a id="__codelineno-32-34" name="__codelineno-32-34" href="#__codelineno-32-34"></a>{
+<a id="__codelineno-32-35" name="__codelineno-32-35" href="#__codelineno-32-35"></a>  &quot;type&quot;: &quot;work_notes&quot;,
+<a id="__codelineno-32-36" name="__codelineno-32-36" href="#__codelineno-32-36"></a>  &quot;author&quot;: &quot;network.eng&quot;,
+<a id="__codelineno-32-37" name="__codelineno-32-37" href="#__codelineno-32-37"></a>  &quot;time&quot;: &quot;2024-01-15 11:58:42&quot;,
+<a id="__codelineno-32-38" name="__codelineno-32-38" href="#__codelineno-32-38"></a>  &quot;note&quot;: &quot;Identified misconfigured firewall rule. Applied hotfix.&quot;
+<a id="__codelineno-32-39" name="__codelineno-32-39" href="#__codelineno-32-39"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
+<strong><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></strong> — Verify the API user has read access to <code>sys_audit</code> and <code>sys_journal_field</code> tables; check role assignments in ServiceNow.
+<strong><code>jq: parse error: Cannot index string with string "fieldname"</code></strong> — Ensure the API response contains valid JSON by checking authentication credentials and confirming the table name is correct.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Add the same work note to multiple incidents (e.g., all P1s during a major outage)</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="nv">INCIDENTS</span><span class="o">=</span><span class="s2">&quot;INC0001 INC0002 INC0003&quot;</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="nv">NOTE</span><span class="o">=</span><span class="s2">&quot;Major outage identified — root cause is BGP flap on core-rtr-01. Bridge open in #incident-bridge.&quot;</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="k">for</span><span class="w"> </span>INC<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$INCIDENTS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span><span class="nv">SYS_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;sysparm_query=number=</span><span class="si">${</span><span class="nv">INC</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.result[0].sys_id&#39;</span><span class="k">)</span>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/incident/</span><span class="si">${</span><span class="nv">SYS_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;work_notes\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NOTE</span><span class="si">}</span><span class="s2">\&quot;}&quot;</span>
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>{&quot;sys_id&quot;:&quot;62d4a8f847c12110a6c1f8b3c9e2d1a4&quot;,&quot;number&quot;:&quot;INC0001&quot;,&quot;work_notes&quot;:&quot;Major outage identified — root cause is BGP flap on core-rtr-01. Bridge open in #incident-bridge.&quot;,&quot;updated_on&quot;:&quot;2024-01-15 14:32:18&quot;}
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>{&quot;sys_id&quot;:&quot;73e5b9g958d23221b7d2g9c4d0f3e2b5&quot;,&quot;number&quot;:&quot;INC0002&quot;,&quot;work_notes&quot;:&quot;Major outage identified — root cause is BGP flap on core-rtr-01. Bridge open in #incident-bridge.&quot;,&quot;updated_on&quot;:&quot;2024-01-15 14:32:19&quot;}
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>{&quot;sys_id&quot;:&quot;84f6c0h069e34332c8e3h0d5e1g4f3c6&quot;,&quot;number&quot;:&quot;INC0003&quot;,&quot;work_notes&quot;:&quot;Major outage identified — root cause is BGP flap on core-rtr-01. Bridge open in #incident-bridge.&quot;,&quot;updated_on&quot;:&quot;2024-01-15 14:32:20&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
+<strong><code>jq: parse error: Cannot index null with string "result"</code></strong> — Verify the incident number exists and your API user has read permissions on the incident table; check credentials with a test query first.
+<strong><code>{"error":{"message":"Invalid field name: work_notes","status":"failure"}}</code></strong> — Use the correct field name <code>work_notes_list</code> or append to existing notes using <code>work_notes</code> as a JSON array instead of a string.</p>
+</div>
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbEOwjAMRPd-hcXODzAgAWJgQyyMUZq6bSAkxWlhQPw7TlsqECmw-u6eT3amCVWtnZ0B6aKsk0QRyhqFtEJbpTO09Qwmq3YI0sKmH07g5ktZIecYIG1h8J6gV9J8ptf9-Gf-uVuokicoCM8N-tcCsGoV2HVKlCKritwFhSMGHHg-ABm06ERwxIwgDszvjTiVGjwxUTnKXhttO4VxQYlTnM110VAApY3XFr0X1Ji249XRMTcuIJ82pi57G-zYFtruO9s1uiDyNZjOIfaP6JOCeeT4Y08JkfFLf3nC2673s46du438ccPkAeO1C9Q=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8533,7 +9007,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

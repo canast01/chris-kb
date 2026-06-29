@@ -9023,239 +9023,466 @@ End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers 
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Confirm PTR record for the Supervisor VIP also exists</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>nslookup<span class="w"> </span>&lt;supervisor-VIP&gt;
 </code></pre></div>
-<h3 id="ntp-verification">NTP Verification<a class="headerlink" href="#ntp-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify NTP on each ESXi host (SSH to host)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>stats
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Clock offset should be &lt; 1 second</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.0.1.53
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   supervisor.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 10.20.30.40
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Address: 10.20.30.41
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Server:     10.0.1.53
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>40.30.20.10.in-addr.arpa    name = supervisor.example.local.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>41.30.20.10.in-addr.arpa    name = supervisor.example.local.
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find supervisor.example.local: NXDOMAIN</code></strong> — Add the A-record for supervisor.example.local to your DNS server before enabling Workload Management.
+<strong><code>** server can't find 40.30.20.10.in-addr.arpa: NXDOMAIN</code></strong> — Create a PTR record in your reverse DNS zone pointing the Supervisor VIP back to supervisor.example.local.</p>
+</div>
+<h3 id="ntp-verification">NTP Verification<a class="headerlink" href="#ntp-verification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NTP on each ESXi host (SSH to host)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>stats
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Clock offset should be &lt; 1 second</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NTP Enabled: true
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>NTP Servers: 10.20.30.40, 10.20.30.41
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>NTP Running: true
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Remote Server: 10.20.30.40, Stratum: 2, ReferenceID: 192.168.1.1, Synchronized: true, Reachability: 377, Delay(ms): 12.543, Offset(ms): 0.234
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Remote Server: 10.20.30.41, Stratum: 2, ReferenceID: 192.168.1.2, Synchronized: true, Reachability: 377, Delay(ms): 14.821, Offset(ms): -0.156
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the host. The host may not be running, or the login credentials may not be correct.</code></strong> — Verify SSH connectivity to the ESXi host and confirm credentials are correct.
+<strong><code>NTP Enabled: false</code></strong> — Enable NTP with <code>esxcli system ntp set --enabled=true</code> and start the service with <code>esxcli system service start ntpd</code>.</p>
+</div>
 <hr />
 <h2 id="phase-2-enable-workload-management-supervisor">Phase 2 — Enable Workload Management (Supervisor)<a class="headerlink" href="#phase-2-enable-workload-management-supervisor" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Supervisor cluster in Running state; three control plane VMs healthy in vCenter.</p>
 <h3 id="enable-via-vsphere-client">Enable via vSphere Client<a class="headerlink" href="#enable-via-vsphere-client" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Workload Management → Get Started → Select vSphere cluster
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Step 1: Cluster         — select the vSphere cluster to host the Supervisor
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Step 2: Control Plane   — size: Tiny (lab) / Small / Medium (production: 4 vCPU, 16 GB RAM)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Step 3: Storage         — select default storage policy for control plane VMs
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Step 4: Load Balancer   — NSX-T (auto-configured) or AVI (enter AVI controller FQDN + credentials)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Step 5: Management Net  — select management portgroup; enter IP range for 5 control plane VM IPs
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Step 6: Workload Net    — NSX-T: enter ingress/egress CIDRs, pod CIDR, service CIDR
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  Step 7: Content Library — select the Tanzu Kubernetes releases content library
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  Step 8: Finish          — deployment takes 30–60 minutes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Workload Management → Get Started → Select vSphere cluster
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Step 1: Cluster         — select the vSphere cluster to host the Supervisor
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Step 2: Control Plane   — size: Tiny (lab) / Small / Medium (production: 4 vCPU, 16 GB RAM)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Step 3: Storage         — select default storage policy for control plane VMs
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Step 4: Load Balancer   — NSX-T (auto-configured) or AVI (enter AVI controller FQDN + credentials)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Step 5: Management Net  — select management portgroup; enter IP range for 5 control plane VM IPs
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Step 6: Workload Net    — NSX-T: enter ingress/egress CIDRs, pod CIDR, service CIDR
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  Step 7: Content Library — select the Tanzu Kubernetes releases content library
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Step 8: Finish          — deployment takes 30–60 minutes
 </code></pre></div>
 <h3 id="monitor-supervisor-status">Monitor Supervisor Status<a class="headerlink" href="#monitor-supervisor-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># After wizard completes, check Supervisor status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># vCenter → Workload Management → Clusters tab</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Wait for Status: Running (green)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify control plane VMs in vCenter inventory</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Three VMs named: SupervisorControlPlaneVM-0, -1, -2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After wizard completes, check Supervisor status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># vCenter → Workload Management → Clusters tab</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Wait for Status: Running (green)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify control plane VMs in vCenter inventory</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Three VMs named: SupervisorControlPlaneVM-0, -1, -2</span>
 </code></pre></div>
 <h3 id="post-enable-checks">Post-Enable Checks<a class="headerlink" href="#post-enable-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Retrieve Supervisor API server endpoint</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># vCenter → Workload Management → Clusters → click cluster → Control Plane Node IP Address</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test Supervisor API connectivity from admin workstation</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;supervisor-VIP&gt;:443/api/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected: API discovery response</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Retrieve Supervisor API server endpoint</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># vCenter → Workload Management → Clusters → click cluster → Control Plane Node IP Address</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Test Supervisor API connectivity from admin workstation</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;supervisor-VIP&gt;:443/api/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Expected: API discovery response</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;kind&quot;: &quot;APIGroup&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;apiVersion&quot;: &quot;v1&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;name&quot;: &quot;api&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;versions&quot;: [
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    {
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      &quot;groupVersion&quot;: &quot;v1&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      &quot;version&quot;: &quot;v1&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    },
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    {
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      &quot;groupVersion&quot;: &quot;apps/v1&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      &quot;version&quot;: &quot;v1&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    }
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  ],
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;preferredVersion&quot;: {
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    &quot;groupVersion&quot;: &quot;v1&quot;,
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    &quot;version&quot;: &quot;v1&quot;
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  }
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to &lt;supervisor-VIP&gt; port 443: Connection refused</code></strong> — Verify the Supervisor VIP is correct and reachable from your workstation by pinging the IP first.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag should bypass SSL verification; if still failing, ensure you're using lowercase <code>-sk</code> and not mixing with other curl options.
+<strong><code>curl: (6) Could not resolve host</code></strong> — Confirm the <code>&lt;supervisor-VIP&gt;</code> placeholder was replaced with an actual IP address (e.g., <code>192.168.1.100</code>) and is resolvable from your network.</p>
+</div>
 <hr />
 <h2 id="phase-3-vsphere-namespace-configuration">Phase 3 — vSphere Namespace Configuration<a class="headerlink" href="#phase-3-vsphere-namespace-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> At least one namespace created with resource limits, storage policy, and AD permissions assigned.</p>
 <h3 id="create-a-vsphere-namespace">Create a vSphere Namespace<a class="headerlink" href="#create-a-vsphere-namespace" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Workload Management → Namespaces → New Namespace
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Cluster: select Supervisor cluster
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Name: team-prod (lowercase, no spaces)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  → Create
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Workload Management → Namespaces → New Namespace
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Cluster: select Supervisor cluster
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Name: team-prod (lowercase, no spaces)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  → Create
 </code></pre></div>
 <h3 id="assign-resource-limits">Assign Resource Limits<a class="headerlink" href="#assign-resource-limits" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Namespace → Edit → Capacity and Usage
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  CPU limit: 64 GHz
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Memory limit: 256 GB
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Storage limit: 2 TB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Namespace → Edit → Capacity and Usage
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  CPU limit: 64 GHz
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Memory limit: 256 GB
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Storage limit: 2 TB
 </code></pre></div>
 <h3 id="assign-storage-policies">Assign Storage Policies<a class="headerlink" href="#assign-storage-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Namespace → Edit → Storage → Add Storage
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Select policy: vSAN Default Storage Policy
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Storage limit: 2 TB
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  → Add (this creates the StorageClass usable by PVCs in the namespace)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Namespace → Edit → Storage → Add Storage
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Select policy: vSAN Default Storage Policy
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Storage limit: 2 TB
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  → Add (this creates the StorageClass usable by PVCs in the namespace)
 </code></pre></div>
 <h3 id="assign-permissions">Assign Permissions<a class="headerlink" href="#assign-permissions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Namespace → Edit → Permissions → Add Permission
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Identity source: vsphere.local (or AD domain)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  User/Group: &lt;AD group for namespace owners&gt;
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Role: Edit (for cluster admins) or View (for read-only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Namespace → Edit → Permissions → Add Permission
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Identity source: vsphere.local (or AD domain)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  User/Group: &lt;AD group for namespace owners&gt;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Role: Edit (for cluster admins) or View (for read-only)
 </code></pre></div>
 <h3 id="verify-namespace">Verify Namespace<a class="headerlink" href="#verify-namespace" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Authenticate to Supervisor and list namespaces</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>--insecure-skip-tls-verify
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>kubectl<span class="w"> </span>config<span class="w"> </span>get-contexts
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Authenticate to Supervisor and list namespaces</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>--insecure-skip-tls-verify
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>kubectl<span class="w"> </span>config<span class="w"> </span>get-contexts
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Logged in successfully to &#39;https://10.42.100.15&#39; as &#39;administrator@vsphere.local&#39;
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>The server has a self signed certificate. Proceeding anyway.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>CURRENT   NAME                          CLUSTER                       AUTHINFO                      NAMESPACE
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>*         10.42.100.15                  10.42.100.15                  wcp:10.42.100.15:administrator@vsphere.local   
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>          tanzu-cli-mc-stg              tanzu-cli-mc-stg              tanzu-cli-mc-stg-user         
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>NAME              STATUS   AGE
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>default           Active   45d
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>kube-node-lease   Active   45d
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>kube-public       Active   45d
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>kube-system       Active   45d
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>workload-prod     Active   38d
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>workload-staging  Active   22d
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Unable to connect to the server: dial tcp: lookup &lt;supervisor-VIP&gt;: no such host</code></strong> — Replace <code>&lt;supervisor-VIP&gt;</code> with the actual Supervisor Cluster IP address (e.g., <code>10.42.100.15</code>).
+<strong><code>error: invalid credentials provided</code></strong> — Verify the vSphere username and password are correct; use <code>--vsphere-username</code> with the full UPN format (e.g., <code>administrator@vsphere.local</code>).
+<strong><code>error: x509: certificate signed by unknown authority</code></strong> — Remove the <code>--insecure-skip-tls-verify</code> flag once you have a valid certificate, or ensure your CA certificate is in the system trust store.</p>
+</div>
 <hr />
 <h2 id="phase-4-tkg-workload-cluster-provisioning">Phase 4 — TKG Workload Cluster Provisioning<a class="headerlink" href="#phase-4-tkg-workload-cluster-provisioning" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> TKG cluster in Ready state with all nodes in Ready status; kubeconfig retrieved successfully.</p>
 <h3 id="authenticate-to-supervisor">Authenticate to Supervisor<a class="headerlink" href="#authenticate-to-supervisor" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--insecure-skip-tls-verify
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Switch context to the target vSphere namespace</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--insecure-skip-tls-verify
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Switch context to the target vSphere namespace</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Logged in successfully.
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>The current context is now &quot;team-prod&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Verify the supervisor VIP is correct and the vSphere credentials are valid; check that the user has permission to access the Supervisor Cluster.
+<strong><code>error: context "team-prod" does not exist</code></strong> — List available contexts with <code>kubectl config get-contexts</code> and use the correct namespace name from the output.</p>
+</div>
 <h3 id="list-available-tkg-releases">List Available TKG Releases<a class="headerlink" href="#list-available-tkg-releases" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Show available TanzuKubernetesRelease images in the content library</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetesrelease
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Choose a TKR from this list for the cluster manifest below</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show available TanzuKubernetesRelease images in the content library</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetesrelease
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Choose a TKR from this list for the cluster manifest below</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME                                    VERSION        READY   REASON
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>v1.24.9---vmware.1-tkg.1-tiny           1.24.9         True    
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>v1.25.7---vmware.1-tkg.1-small          1.25.7         True    
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>v1.26.5---vmware.1-tkg.1-medium         1.26.5         True    
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>v1.27.2---vmware.1-tkg.1-large          1.27.2         True    
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>v1.28.1---vmware.1-tkg.1-xlarge         1.28.1         False   ImageNotReady
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "tanzukubernetesrelease"</code></strong> — Ensure the Tanzu Kubernetes Grid management cluster is properly initialized with <code>tanzu management-cluster create</code> and the required CRDs are installed.
+<strong><code>No resources found in default namespace.</code></strong> — Switch to the correct namespace where TanzuKubernetesRelease objects exist, typically <code>tkg-system</code>, using <code>kubectl config set-context --current --namespace=tkg-system</code>.</p>
+</div>
 <h3 id="deploy-tkg-workload-cluster">Deploy TKG Workload Cluster<a class="headerlink" href="#deploy-tkg-workload-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>prod-cluster.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s">apiVersion: run.tanzu.vmware.com/v1alpha3</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s">kind: TanzuKubernetesCluster</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">metadata:</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">  name: prod-cluster</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">  namespace: team-prod</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">spec:</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">  topology:</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s">    controlPlane:</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">      replicas: 3</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">      vmClass: best-effort-medium</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s">      storageClass: vsan-default</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s">      tkr:</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="s">        reference:</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="s">          name: v1.28.8---vmware.1-tkg.2</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="s">    nodePools:</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="s">    - name: worker-pool-1</span>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="s">      replicas: 5</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="s">      vmClass: best-effort-large</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="s">      storageClass: vsan-default</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="s">      volumes:</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="s">      - name: containerd-storage</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="s">        mountPath: /var/lib/containerd</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="s">        capacity:</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="s">          storage: 50Gi</span>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="s">EOF</span>
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>prod-cluster.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>prod-cluster.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="s">apiVersion: run.tanzu.vmware.com/v1alpha3</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="s">kind: TanzuKubernetesCluster</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="s">metadata:</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s">  name: prod-cluster</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s">  namespace: team-prod</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s">spec:</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s">  topology:</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="s">    controlPlane:</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s">      replicas: 3</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="s">      vmClass: best-effort-medium</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="s">      storageClass: vsan-default</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s">      tkr:</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="s">        reference:</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="s">          name: v1.28.8---vmware.1-tkg.2</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="s">    nodePools:</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="s">    - name: worker-pool-1</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="s">      replicas: 5</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="s">      vmClass: best-effort-large</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="s">      storageClass: vsan-default</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="s">      volumes:</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="s">      - name: containerd-storage</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="s">        mountPath: /var/lib/containerd</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="s">        capacity:</span>
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a><span class="s">          storage: 50Gi</span>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a><span class="s">EOF</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>prod-cluster.yaml
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>cat &gt; prod-cluster.yaml &lt;&lt;&#39;EOF&#39;
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>apiVersion: run.tanzu.vmware.com/v1alpha3
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>kind: TanzuKubernetesCluster
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>metadata:
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  name: prod-cluster
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  namespace: team-prod
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>spec:
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  topology:
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    controlPlane:
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>      replicas: 3
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>      vmClass: best-effort-medium
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>      storageClass: vsan-default
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>      tkr:
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>        reference:
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>          name: v1.28.8---vmware.1-tkg.2
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    nodePools:
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>    - name: worker-pool-1
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>      replicas: 5
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>      vmClass: best-effort-large
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>      storageClass: vsan-default
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>      volumes:
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>      - name: containerd-storage
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>        mountPath: /var/lib/containerd
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>        capacity:
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>          storage: 50Gi
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>EOF
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>tanzukubernetescluster.run.tanzu.vmware.com/prod-cluster created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to recognize "prod-cluster.yaml": no matches for kind "TanzuKubernetesCluster" in version "run.tanzu.vmware.com/v1alpha3"</code></strong> — Verify the Tanzu Kubernetes Grid management cluster is properly initialized and the TKG CRDs are installed with <code>kubectl get crds | grep tanzu</code>.
+<strong><code>The namespace "team-prod" does not exist</code></strong> — Create the namespace first with <code>kubectl create namespace team-prod</code>.
+<strong><code>vmClass "best-effort-medium" not found</code></strong> — Verify available VM classes in your Supervisor Cluster with <code>kubectl get vmclass</code> and use an existing class name.</p>
+</div>
 <h3 id="monitor-cluster-provisioning">Monitor Cluster Provisioning<a class="headerlink" href="#monitor-cluster-provisioning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Watch cluster status (takes 10–20 minutes)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>prod-cluster<span class="w"> </span>-w
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check individual machine objects</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>machines<span class="w"> </span>-n<span class="w"> </span>team-prod
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Once cluster Ready, retrieve kubeconfig</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>prod-cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>team-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span>--insecure-skip-tls-verify
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>prod-cluster
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># Expected: all nodes in Ready state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Watch cluster status (takes 10–20 minutes)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>prod-cluster<span class="w"> </span>-w
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check individual machine objects</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>machines<span class="w"> </span>-n<span class="w"> </span>team-prod
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Once cluster Ready, retrieve kubeconfig</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>--server<span class="w"> </span>&lt;supervisor-VIP&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>prod-cluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>team-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span>--insecure-skip-tls-verify
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>prod-cluster
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c1"># Expected: all nodes in Ready state</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>NAME           PHASE         READY   TKR NAME                    AGE
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>prod-cluster   Provisioning  False   v1.27.5---vmware.2-tkg.1    2m
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>prod-cluster   Provisioning  False   v1.27.5---vmware.2-tkg.1    5m
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>prod-cluster   Ready         True    v1.27.5---vmware.2-tkg.1    18m
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>NAME                                    PHASE     VERSION
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>prod-cluster-control-plane-2xk9f        Running   v1.27.5
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>prod-cluster-md-0-5d8c4f7b9-lm2pq       Running   v1.27.5
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>prod-cluster-md-0-5d8c4f7b9-n8qvx       Running   v1.27.5
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Logged in successfully to supervisor cluster 10.20.1.50 as administrator@vsphere.local
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>Switched to context prod-cluster
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>NAME                             STATUS   ROLES           AGE   VERSION
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>prod-cluster-control-plane-2xk9f Ready    control-plane   16m   v1.27.5
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>prod-cluster-md-0-5d8c4f7b9-lm2pq Ready    &lt;none&gt;          14m   v1.27.5
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>prod-cluster-md-0-5d8c4f7b9-n8qvx Ready    &lt;none&gt;          14m   v1.27.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to the server: dial tcp 10.20.1.50:6443: i/o timeout</code></strong> — Verify the supervisor-VIP is reachable and the vSphere control plane is healthy; check network connectivity and firewall rules.
+<strong><code>error: x509: certificate signed by unknown authority</code></strong> — Remove the <code>--insecure-skip-tls-verify</code> flag once a valid certificate is installed, or ensure your CA bundle is properly configured in kubeconfig.</p>
+</div>
 <hr />
 <h2 id="phase-5-harbor-container-registry">Phase 5 — Harbor Container Registry<a class="headerlink" href="#phase-5-harbor-container-registry" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Harbor running, CA-signed certificate installed, projects and robot accounts created, Trivy scanner enabled.</p>
 <h3 id="deploy-harbor-ova">Deploy Harbor OVA<a class="headerlink" href="#deploy-harbor-ova" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter → Deploy OVF Template → Harbor-&lt;version&gt;.ova
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Network:   Management portgroup
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Storage:   vSAN or NFS datastore (all images stored here; size appropriately)
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  Customize: Set FQDN, IP, gateway, DNS, NTP, admin password, root password
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  → Deploy (takes ~5 minutes)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>vCenter → Deploy OVF Template → Harbor-&lt;version&gt;.ova
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  Network:   Management portgroup
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  Storage:   vSAN or NFS datastore (all images stored here; size appropriately)
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  Customize: Set FQDN, IP, gateway, DNS, NTP, admin password, root password
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  → Deploy (takes ~5 minutes)
 </code></pre></div>
 <h3 id="initial-harbor-configuration">Initial Harbor Configuration<a class="headerlink" href="#initial-harbor-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Access Harbor UI at https://harbor.example.local</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Login: admin / &lt;password set at deploy&gt;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Change default admin password immediately</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Administration → Users → admin → Set Password</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Configure LDAP/OIDC (Administration → Configuration → Authentication)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Server: ldaps://ad.example.local:636</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Search DN: CN=svc-harbor,OU=Service Accounts,DC=example,DC=local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Access Harbor UI at https://harbor.example.local</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Login: admin / &lt;password set at deploy&gt;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Change default admin password immediately</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># Administration → Users → admin → Set Password</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Configure LDAP/OIDC (Administration → Configuration → Authentication)</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1"># Server: ldaps://ad.example.local:636</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1"># Search DN: CN=svc-harbor,OU=Service Accounts,DC=example,DC=local</span>
 </code></pre></div>
 <h3 id="install-ca-signed-certificate">Install CA-Signed Certificate<a class="headerlink" href="#install-ca-signed-certificate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Upload certificate via Harbor VAMI (port 443 or 8080)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Administration → Configuration → System Settings</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Registry Root Certificate: paste CA-signed cert PEM</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Registry Certificate: paste server cert PEM</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Registry Certificate Key: paste private key PEM</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># → Save</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Upload certificate via Harbor VAMI (port 443 or 8080)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Administration → Configuration → System Settings</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># Registry Root Certificate: paste CA-signed cert PEM</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Registry Certificate: paste server cert PEM</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="c1"># Registry Certificate Key: paste private key PEM</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># → Save</span>
 </code></pre></div>
 <h3 id="create-projects-and-robot-accounts">Create Projects and Robot Accounts<a class="headerlink" href="#create-projects-and-robot-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Create project via Harbor API</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;project_name&quot;:&quot;team-prod&quot;,&quot;public&quot;:false}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>https://harbor.example.local/api/v2.0/projects
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Create robot account for CI/CD pipeline</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;ci-pipeline&quot;,&quot;description&quot;:&quot;CI push account&quot;,&quot;permissions&quot;:[{&quot;kind&quot;:&quot;project&quot;,&quot;namespace&quot;:&quot;team-prod&quot;,&quot;access&quot;:[{&quot;resource&quot;:&quot;repository&quot;,&quot;action&quot;:&quot;push&quot;},{&quot;resource&quot;:&quot;repository&quot;,&quot;action&quot;:&quot;pull&quot;}]}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span>https://harbor.example.local/api/v2.0/robots
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Enable Trivy vulnerability scanning</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># Administration → Interrogation Services → Trivy → Edit → Enable</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Create project via Harbor API</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;project_name&quot;:&quot;team-prod&quot;,&quot;public&quot;:false}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span>https://harbor.example.local/api/v2.0/projects
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Create robot account for CI/CD pipeline</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;ci-pipeline&quot;,&quot;description&quot;:&quot;CI push account&quot;,&quot;permissions&quot;:[{&quot;kind&quot;:&quot;project&quot;,&quot;namespace&quot;:&quot;team-prod&quot;,&quot;access&quot;:[{&quot;resource&quot;:&quot;repository&quot;,&quot;action&quot;:&quot;push&quot;},{&quot;resource&quot;:&quot;repository&quot;,&quot;action&quot;:&quot;pull&quot;}]}]}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="w">  </span>https://harbor.example.local/api/v2.0/robots
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="c1"># Enable Trivy vulnerability scanning</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="c1"># Administration → Interrogation Services → Trivy → Edit → Enable</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>{&quot;project_id&quot;:100,&quot;project_name&quot;:&quot;team-prod&quot;,&quot;public&quot;:false,&quot;creation_time&quot;:&quot;2024-01-15T09:42:33.521Z&quot;,&quot;update_time&quot;:&quot;2024-01-15T09:42:33.521Z&quot;}
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>{&quot;id&quot;:23,&quot;name&quot;:&quot;ci-pipeline&quot;,&quot;description&quot;:&quot;CI push account&quot;,&quot;secret&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,&quot;creation_time&quot;:&quot;2024-01-15T09:43:12.847Z&quot;,&quot;expires_at&quot;:-1}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"errors":[{"code":"CONFLICT","message":"Project name already exists"}]}</code></strong> — Check if the project exists with <code>curl -u admin:&lt;password&gt; https://harbor.example.local/api/v2.0/projects?name=team-prod</code> and use a different name or delete the existing project first.
+<strong><code>{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}</code></strong> — Verify the admin password is correct and URL is accessible; test connectivity with <code>curl -k https://harbor.example.local/api/v2.0/health</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification for self-signed certs, or import the Harbor CA certificate into your system trust store.</p>
+</div>
 <hr />
 <h2 id="phase-6-end-to-end-validation">Phase 6 — End-to-End Validation<a class="headerlink" href="#phase-6-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks pass. Hand off to operations team.</p>
 <h3 id="cluster-node-health">Cluster Node Health<a class="headerlink" href="#cluster-node-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>prod-cluster
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># All nodes: Ready, correct Kubernetes version</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># No pods in CrashLoopBackOff or Pending state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>prod-cluster
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="c1"># All nodes: Ready, correct Kubernetes version</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># No pods in CrashLoopBackOff or Pending state</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Switched to context &quot;prod-cluster&quot;.
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>NAME                    STATUS   ROLES           AGE   VERSION        INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>prod-worker-01          Ready    worker          45d   v1.28.4         10.20.15.42      &lt;none&gt;        VMware Photon OS/Linux
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>prod-worker-02          Ready    worker          45d   v1.28.4         10.20.15.43      &lt;none&gt;        VMware Photon OS/Linux
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>prod-worker-03          Ready    worker          44d   v1.28.4         10.20.15.44      &lt;none&gt;        VMware Photon OS/Linux
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>prod-control-plane-01   Ready    control-plane   45d   v1.28.4         10.20.15.40      &lt;none&gt;        VMware Photon OS/Linux
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>prod-control-plane-02   Ready    control-plane   45d   v1.28.4         10.20.15.41      &lt;none&gt;        VMware Photon OS/Linux
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>NAMESPACE     NAME                                    READY   STATUS      RESTARTS   AGE
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>kube-system   coredns-5d78c0869f-2k8xm               1/1     Completed   0          45d
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>kube-system   etcd-prod-control-plane-01             1/1     Running     2          45d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: context "prod-cluster" does not exist</code></strong> — Run <code>kubectl config get-contexts</code> to list available contexts and use the correct name.
+<strong><code>Unable to connect to the server: dial tcp 10.20.15.40:6443: connection refused</code></strong> — Verify the control plane nodes are running and network connectivity exists; check <code>kubectl cluster-info</code> for endpoint status.</p>
+</div>
 <h3 id="pvc-provisioning-test">PVC Provisioning Test<a class="headerlink" href="#pvc-provisioning-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>pvc-test.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="s">apiVersion: v1</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="s">kind: PersistentVolumeClaim</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="s">metadata:</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="s">  name: pvc-test</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="s">  namespace: default</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="s">spec:</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="s">  accessModes:</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="s">  - ReadWriteOnce</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="s">  storageClassName: vsan-default</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="s">  resources:</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="s">    requests:</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="s">      storage: 5Gi</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="s">EOF</span>
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>pvc-test.yaml
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>pvc-test
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="c1"># Expected: STATUS = Bound (CSI provisioning confirmed)</span>
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>pvc-test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>pvc-test.yaml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="s">kind: PersistentVolumeClaim</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="s">metadata:</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="s">  name: pvc-test</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="s">  namespace: default</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="s">spec:</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="s">  accessModes:</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="s">  - ReadWriteOnce</span>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="s">  storageClassName: vsan-default</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="s">  resources:</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="s">    requests:</span>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="s">      storage: 5Gi</span>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="s">EOF</span>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>pvc-test.yaml
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>pvc-test
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a><span class="c1"># Expected: STATUS = Bound (CSI provisioning confirmed)</span>
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>pvc-test
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>persistentvolumeclaim/pvc-test created
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>pvc-test   Bound    pvc-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p   5Gi        RWO            vsan-default   2s
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>persistentvolumeclaim &quot;pvc-test&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): error when retrieving current configuration of the object before updating: persistentvolumeclaims "pvc-test" is not found</code></strong> — Ensure the namespace is correct and the PVC was successfully created before attempting to delete it.
+<strong><code>storageclass.storage.k8s.io "vsan-default" not found</code></strong> — Verify the storage class exists in your cluster with <code>kubectl get storageclass</code> and update the <code>storageClassName</code> field accordingly.
+<strong><code>PersistentVolumeClaim is in use by pod</code></strong> — Delete any pods using the PVC before attempting to delete the claim, or use <code>kubectl delete pvc pvc-test --grace-period=0 --force</code> if necessary.</p>
+</div>
 <h3 id="harbor-pushpull-test">Harbor Push/Pull Test<a class="headerlink" href="#harbor-pushpull-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Docker login with robot account credentials</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.example.local<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;robot$ci-pipeline&#39;</span><span class="w"> </span>-p<span class="w"> </span>&lt;robot-token&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Tag and push a test image</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>docker<span class="w"> </span>pull<span class="w"> </span>alpine:latest
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>docker<span class="w"> </span>tag<span class="w"> </span>alpine:latest<span class="w"> </span>harbor.example.local/team-prod/alpine:test
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.example.local/team-prod/alpine:test
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Verify image appears in Harbor UI and scan completes</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Harbor → Projects → team-prod → Repositories → alpine → test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Docker login with robot account credentials</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.example.local<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;robot$ci-pipeline&#39;</span><span class="w"> </span>-p<span class="w"> </span>&lt;robot-token&gt;
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Tag and push a test image</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>docker<span class="w"> </span>pull<span class="w"> </span>alpine:latest
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>docker<span class="w"> </span>tag<span class="w"> </span>alpine:latest<span class="w"> </span>harbor.example.local/team-prod/alpine:test
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.example.local/team-prod/alpine:test
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="c1"># Verify image appears in Harbor UI and scan completes</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="c1"># Harbor → Projects → team-prod → Repositories → alpine → test</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Login Succeeded
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>latest: Pulling from library/alpine
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Digest: sha256:eece025e432126ce23f223450a0326fbebde39cba518d143f6b05a849d08ce1f
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Status: Downloaded newer image for alpine:latest
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>(no output — command completes silently)
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>(no output — command completes silently)
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>The push refers to repository [harbor.example.local/team-prod/alpine]
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>test: digest: sha256:9c6e40b8664f8e1f4b3d7a2c9e5f1d8a4b6c2e9f1a3d5b7c9e2f4a6b8d0e1f3 size: 528
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>Digest: sha256:9c6e40b8664f8e1f4b3d7a2c9e5f1d8a4b6c2e9f1a3d5b7c9e2f4a6b8d0e1f3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority</code></strong> — Add Harbor's CA certificate to your Docker daemon trust store or use <code>--insecure-registry</code> if testing in non-production.
+<strong><code>denied: requested access to the resource is denied</code></strong> — Verify the robot account token is correct and has push permissions on the <code>team-prod</code> project in Harbor.
+<strong><code>Error response from daemon: Get "https://harbor.example.local/v2/team-prod/alpine/manifests/test": unauthorized: unauthorized to access repository</code></strong> — Confirm you are logged in with <code>docker login</code> and the robot account has the correct role (Developer or higher) assigned to the team-prod project.</p>
+</div>
 <h3 id="network-policy-test">Network Policy Test<a class="headerlink" href="#network-policy-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Confirm Antrea/NSX CNI is running</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;antrea|ncp&#39;</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Verify Supervisor API still reachable from within cluster</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>kubectl<span class="w"> </span>run<span class="w"> </span>nettest<span class="w"> </span>--image<span class="o">=</span>alpine<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span>wget<span class="w"> </span>-qO-<span class="w"> </span>https://&lt;supervisor-VIP&gt;:443/api/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Confirm Antrea/NSX CNI is running</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;antrea|ncp&#39;</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Verify Supervisor API still reachable from within cluster</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>kubectl<span class="w"> </span>run<span class="w"> </span>nettest<span class="w"> </span>--image<span class="o">=</span>alpine<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>wget<span class="w"> </span>-qO-<span class="w"> </span>https://&lt;supervisor-VIP&gt;:443/api/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>antrea-agent-2k8xj                      2/2     Running   0          14d
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>antrea-agent-5lmqp                      2/2     Running   0          14d
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>antrea-agent-9vwkl                      2/2     Running   0          14d
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>antrea-controller-0                     1/1     Running   0          14d
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>antrea-controller-1                     1/1     Running   0          14d
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>antrea-controller-2                     1/1     Running   0          14d
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>pod/nettest created
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>{
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>  &quot;kind&quot;: &quot;APIVersions&quot;,
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>  &quot;versions&quot;: [&quot;v1&quot;],
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>  &quot;serverAddressByClientCIDRs&quot;: [{&quot;clientCIDR&quot;: &quot;0.0.0.0/0&quot;, &quot;serverAddress&quot;: &quot;192.168.1.50:443&quot;}]
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>}
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>pod &quot;nettest&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: no matching resources found</code></strong> — Verify Antrea is installed on the cluster with <code>kubectl get ns kube-system</code> and check the CNI plugin deployment status.
+<strong><code>Connection timed out</code></strong> — Confirm the Supervisor VIP is reachable from worker nodes by replacing <code>&lt;supervisor-VIP&gt;</code> with the actual IP and testing with <code>ping</code> from a node first.</p>
+</div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9342,7 +9569,7 @@ End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

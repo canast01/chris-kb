@@ -9492,238 +9492,626 @@ Complete CLI reference for Aria Automation: vracli appliance management, kubectl
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Wait for all services to become healthy (useful after reboot)</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>vracli<span class="w"> </span>status<span class="w"> </span>--wait
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Service Status:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  vRA Portal                    [  OK  ]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  vRA Orchestrator              [  OK  ]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  vRA IaaS                       [  OK  ]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  vRA Catalog                    [  OK  ]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  PostgreSQL Database            [  OK  ]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  RabbitMQ Message Bus           [  OK  ]
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  vRA Configuration              [  OK  ]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Service Status (Detailed):
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  vRA Portal                    [  OK  ] - Running (PID: 4521, Memory: 1.2GB)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  vRA Orchestrator              [  OK  ] - Running (PID: 4389, Memory: 2.8GB)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  vRA IaaS                       [  OK  ] - Running (PID: 4156, Memory: 1.9GB)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  vRA Catalog                    [  OK  ] - Running (PID: 4712, Memory: 856MB)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  PostgreSQL Database            [  OK  ] - Running (PID: 3891, Memory: 3.4GB)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  RabbitMQ Message Bus           [  OK  ] - Running (PID: 3756, Memory: 512MB)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  vRA Configuration              [  OK  ] - Running (PID: 4023, Memory: 287MB)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>VMware Aria Automation Version Information:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  vRA Core Version:             8.13.2.0
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  vRA Orchestrator:             8.13.2.0
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  vRA IaaS:                     8.13.2.0
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  PostgreSQL:                   13.11
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  RabbitMQ:                     3.11.8
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  Build Number:                 22348901
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  Release Date:                 2024-01-15
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Waiting for all services to become healthy...
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>[████████████████████████████] 100% - All services healthy (elapsed: 47s)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure vRA is installed and <code>/opt/vmware/vra/bin</code> is in your PATH, or use the full path <code>/opt/vmware/vra/bin/vracli</code>.
+<strong><code>Error: Unable to connect to vRA service on localhost:5480</code></strong> — Verify vRA services are running with <code>systemctl status vra-*</code> and check network connectivity to the appliance.
+<strong><code>Timeout waiting for services after 300 seconds</code></strong> — Increase the wait timeout with <code>vracli status --wait --timeout 600</code> or investigate hung services with <code>vracli logs --service &lt;service-name&gt;</code>.</p>
+</div>
 <h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show current certificate info</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate a CSR for a custom certificate</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--generate<span class="w"> </span>--cn<span class="w"> </span><span class="s2">&quot;vra.corp.local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--org<span class="w"> </span><span class="s2">&quot;Corp&quot;</span><span class="w"> </span>--country<span class="w"> </span><span class="s2">&quot;US&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Import a signed certificate (PEM format)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--import<span class="w"> </span>--certificate<span class="w"> </span>/tmp/vra.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--private-key<span class="w"> </span>/tmp/vra.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--ca-cert<span class="w"> </span>/tmp/ca-chain.crt
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Trust an external CA certificate (for external vIDM, LDAP with TLS)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>trust<span class="w"> </span>add<span class="w"> </span>/tmp/external-ca.crt
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>trust<span class="w"> </span>list
-</code></pre></div>
-<h3 id="vidm-identity-configuration">vIDM (Identity) Configuration<a class="headerlink" href="#vidm-identity-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current vIDM / identity source config</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>vidm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current certificate info</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--show
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Configure external vIDM connection</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>vidm<span class="w"> </span>config<span class="w"> </span>--host<span class="w"> </span>vidm.corp.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--admin-user<span class="w"> </span>admin@vidm.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--admin-password<span class="w"> </span>&lt;pass&gt;
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Re-sync vIDM groups</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>vracli<span class="w"> </span>vidm<span class="w"> </span>refresh
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate a CSR for a custom certificate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--generate<span class="w"> </span>--cn<span class="w"> </span><span class="s2">&quot;vra.corp.local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--org<span class="w"> </span><span class="s2">&quot;Corp&quot;</span><span class="w"> </span>--country<span class="w"> </span><span class="s2">&quot;US&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Import a signed certificate (PEM format)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>ingress<span class="w"> </span>--import<span class="w"> </span>--certificate<span class="w"> </span>/tmp/vra.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--private-key<span class="w"> </span>/tmp/vra.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--ca-cert<span class="w"> </span>/tmp/ca-chain.crt
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Trust an external CA certificate (for external vIDM, LDAP with TLS)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>trust<span class="w"> </span>add<span class="w"> </span>/tmp/external-ca.crt
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>trust<span class="w"> </span>list
 </code></pre></div>
-<h3 id="proxy-and-network">Proxy and Network<a class="headerlink" href="#proxy-and-network" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show current proxy configuration</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>proxy
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set HTTP proxy for outbound connections (cloud account sync, extension repo)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--http<span class="w"> </span><span class="s2">&quot;http://proxy.corp.local:8080&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">                 </span>--https<span class="w"> </span><span class="s2">&quot;http://proxy.corp.local:8080&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">                 </span>--no-proxy<span class="w"> </span><span class="s2">&quot;localhost,127.0.0.1,.corp.local&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Remove proxy</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Show NTP config</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vracli<span class="w"> </span>ntp
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Set NTP servers</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span><span class="s2">&quot;ntp1.corp.local,ntp2.corp.local&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Current Certificate Information:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Subject: CN=vra.corp.local, O=Corp, C=US
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Issuer: CN=vra.corp.local, O=Corp, C=US
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Valid From: 2024-01-15T10:23:45Z
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Valid Until: 2025-01-15T10:23:45Z
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Thumbprint: A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Certificate Signing Request generated successfully.
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>CSR saved to: /tmp/vra.csr
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>CN: vra.corp.local
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Organization: Corp
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Country: US
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Certificate imported successfully.
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Certificate chain validated.
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Ingress certificate updated.
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Service restart scheduled.
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Trusted CA certificate added: external-ca.crt
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Thumbprint: F9E8D7C6B5A4Z3Y2X1W0V9U8T7S6R5Q4P3O2N1M0
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Trusted Certificates:
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  1. external-ca.crt (Thumbprint: F9E8D7C6B5A4Z3Y2X1W0V9U8T7S6R5Q4P3O2N1M0)
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  2. internal-root-ca.crt (Thumbprint: 1A2B3C4D5E6F7G8H9I0J1K2L3M4N5O6P7Q8R9S0)
 </code></pre></div>
-<h3 id="cluster-management-3-node-ha">Cluster Management (3-Node HA)<a class="headerlink" href="#cluster-management-3-node-ha" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show cluster node status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>status
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found: /tmp/vra.crt</code></strong> — Verify the certificate file path exists and is readable with <code>ls -la /tmp/vra.crt</code>.
+<strong><code>Error: Private key validation failed - key does not match certificate</code></strong> — Ensure the private key and certificate were generated as a pair and use the correct files.
+<strong><code>Error: Certificate chain validation failed - untrusted root CA</code></strong> — Add the root CA certificate to the trust store first using <code>vracli certificate trust add</code> before importing the signed certificate.</p>
+</div>
+<h3 id="vidm-identity-configuration">vIDM (Identity) Configuration<a class="headerlink" href="#vidm-identity-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current vIDM / identity source config</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>vidm
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add a second/third node to form HA cluster</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>join<span class="w"> </span>--master-node<span class="w"> </span>&lt;master-ip&gt;<span class="w"> </span>--join-token<span class="w"> </span>&lt;token&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Get join token from master node</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>token
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Configure external vIDM connection</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>vidm<span class="w"> </span>config<span class="w"> </span>--host<span class="w"> </span>vidm.corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--admin-user<span class="w"> </span>admin@vidm.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--admin-password<span class="w"> </span>&lt;pass&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Re-sync vIDM groups</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>vracli<span class="w"> </span>vidm<span class="w"> </span>refresh
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Current vIDM Configuration:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Host: vidm.corp.local
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Admin User: admin@vidm.local
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Status: Connected
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Last Sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Synced Groups: 847
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Synced Users: 3,421
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Configuring vIDM connection to vidm.corp.local...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>✓ Connection test successful
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>✓ Admin credentials validated
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>✓ Configuration saved to /etc/vra/vidm-config.json
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Configuration complete.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Refreshing vIDM groups and users...
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>✓ Sync started (Job ID: sync-2024-01-15-143645)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>✓ Fetched 847 groups
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>✓ Fetched 3,421 users
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>✓ Updated 12 group memberships
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Sync completed successfully in 45 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to vidm.corp.local:443 — Connection refused</code></strong> — Verify the vIDM host is reachable and the HTTPS port is open using <code>ping vidm.corp.local</code> and <code>telnet vidm.corp.local 443</code>.
+<strong><code>Error: Authentication failed for admin@vidm.local — Invalid credentials</code></strong> — Confirm the admin password is correct and the account has not been locked by running a manual login test against vIDM.
+<strong><code>Error: vracli: command not found</code></strong> — Ensure you are running this command on an Aria Automation appliance with vracli installed, or source the environment with <code>source /etc/profile.d/vra-cli.sh</code>.</p>
+</div>
+<h3 id="proxy-and-network">Proxy and Network<a class="headerlink" href="#proxy-and-network" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show current proxy configuration</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>proxy
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set HTTP proxy for outbound connections (cloud account sync, extension repo)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--http<span class="w"> </span><span class="s2">&quot;http://proxy.corp.local:8080&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">                 </span>--https<span class="w"> </span><span class="s2">&quot;http://proxy.corp.local:8080&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">                 </span>--no-proxy<span class="w"> </span><span class="s2">&quot;localhost,127.0.0.1,.corp.local&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Remove proxy</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Show NTP config</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>vracli<span class="w"> </span>ntp
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span><span class="s2">&quot;ntp1.corp.local,ntp2.corp.local&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Current proxy configuration:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  HTTP Proxy: Not configured
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  HTTPS Proxy: Not configured
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  No Proxy: Not configured
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Proxy configuration updated successfully.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>HTTP Proxy: http://proxy.corp.local:8080
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>HTTPS Proxy: http://proxy.corp.local:8080
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>No Proxy: localhost,127.0.0.1,.corp.local
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Proxy configuration cleared successfully.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Current NTP configuration:
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  NTP Servers: 0.pool.ntp.org, 1.pool.ntp.org
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  NTP Status: synchronized
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  Last sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>NTP servers updated successfully.
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>NTP Servers: ntp1.corp.local, ntp2.corp.local
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Configuration will take effect after service restart.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid proxy URL format. Expected http:// or https://</code></strong> — Ensure the proxy URL includes the protocol scheme (http:// or https://) and valid hostname.
+<strong><code>Error: Unable to resolve NTP server 'ntp1.corp.local': Name or service not known</code></strong> — Verify NTP server hostnames are resolvable from the Aria Automation appliance and reachable on port 123.
+<strong><code>Error: vracli command not found</code></strong> — Ensure you are logged into the Aria Automation appliance via SSH or execute the command from the appliance's shell environment.</p>
+</div>
+<h3 id="cluster-management-3-node-ha">Cluster Management (3-Node HA)<a class="headerlink" href="#cluster-management-3-node-ha" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show cluster node status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Add a second/third node to form HA cluster</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>join<span class="w"> </span>--master-node<span class="w"> </span>&lt;master-ip&gt;<span class="w"> </span>--join-token<span class="w"> </span>&lt;token&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Get join token from master node</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>token
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cluster Status:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Node Name: vra-master-01.corp.local
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Node IP: 192.168.1.45
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Cluster Status: HEALTHY
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Node Status: LEADER
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Etcd Status: healthy
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Cluster Size: 1
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Last Heartbeat: 2024-01-15T14:32:18Z
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Join Token Generated:
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub2RlX2lkIjoiYjQ3ZjNhMmMtOWQxYi00ZTk4LWI5ZjItMzJhYzU1ZGY4YzFhIiwiZXhwaXJlc19hdCI6IjIwMjQtMDEtMTVUMTU6MzI6MThafQ.x4kJ9mL2pQrS8vN3wXyZ1aB5cD7eF9gH
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Expires: 2024-01-15T15:32:18Z
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Master Node: 192.168.1.45
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Node vra-node-02 joining cluster:
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Status: IN_PROGRESS
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  Progress: 85%
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  Syncing etcd data...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: cluster join failed: invalid token or token expired</code></strong> — Regenerate a new token on the master node using <code>vracli cluster token</code> as tokens expire after one hour.
+<strong><code>error: unable to reach master node at &lt;ip&gt;: connection refused</code></strong> — Verify network connectivity and that the master node's vRA services are running with <code>vracli service status</code> on the master.
+<strong><code>error: node already part of a cluster</code></strong> — Reset the node to standalone state first by running <code>vracli cluster reset --force</code> before attempting to join a different cluster.</p>
+</div>
 <hr />
 <h2 id="kubectl-kubernetes-diagnostics">kubectl — Kubernetes Diagnostics<a class="headerlink" href="#kubectl-kubernetes-diagnostics" title="Permanent link">&para;</a></h2>
 <p>All vRA microservices run as pods in the <code>prelude</code> Kubernetes namespace inside the appliance.</p>
 <h3 id="pod-status">Pod Status<a class="headerlink" href="#pod-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all pods — healthy pods show Running/Completed, not CrashLoopBackOff/Error</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Get detailed info on a failing pod (shows events and resource limits)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show pods with resource usage</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all pods — healthy pods show Running/Completed, not CrashLoopBackOff/Error</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Get detailed info on a failing pod (shows events and resource limits)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Show pods with resource usage</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>aria-automation-api-7d4c9f2b1-kx9m2    1/1     Running   0          14d
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>aria-automation-ui-5b8e3a9c-jk2l4      1/1     Running   2          8d
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>aria-automation-db-init-job-abc123      0/1     Completed 0          12d
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>aria-automation-worker-2f6e8a1d-pq5r9  1/1     Running   0          3d
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>metrics-server-7c4d9b2e-mn8o3          1/1     Running   1          21d
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>aria-automation-cache-9k3l2m5n-vw6x7   0/1     CrashLoopBackOff 5   2h
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>NAME                                CPU(m)   MEMORY(Mi)
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>aria-automation-api-7d4c9f2b1-kx9m2    245      512
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>aria-automation-ui-5b8e3a9c-jk2l4      189      384
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>aria-automation-worker-2f6e8a1d-pq5r9  412      768
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>metrics-server-7c4d9b2e-mn8o3          78       156
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>aria-automation-cache-9k3l2m5n-vw6x7   0        0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "pods"</code></strong> — Verify the cluster context is set correctly with <code>kubectl config current-context</code> and the API server is accessible.
+<strong><code>error: metrics not available yet</code></strong> — Wait 1-2 minutes for metrics-server to initialize, then retry <code>kubectl top pods</code>.
+<strong><code>No resources found in namespace "prelude"</code></strong> — Confirm the namespace exists with <code>kubectl get namespaces</code> and Aria Automation is deployed in the correct namespace.</p>
+</div>
 <h3 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Stream logs for a specific pod</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Logs for a specific container within a pod</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Previous container logs (if pod restarted — shows why it crashed)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>--previous<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Common pods to check on failures:</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">#   catalog-service      → catalog and request issues</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1">#   provisioning         → deployment provisioning failures</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1">#   event-broker         → subscription/notification issues</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">#   blueprint-api        → template and blueprint issues</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1">#   abx-adapter          → ABX extensibility action issues</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Stream logs for a specific pod</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Logs for a specific container within a pod</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Previous container logs (if pod restarted — shows why it crashed)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>--previous<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Common pods to check on failures:</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1">#   catalog-service      → catalog and request issues</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1">#   provisioning         → deployment provisioning failures</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1">#   event-broker         → subscription/notification issues</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1">#   blueprint-api        → template and blueprint issues</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1">#   abx-adapter          → ABX extensibility action issues</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>2024-01-15T14:32:18.456Z INFO [catalog-service] Starting catalog synchronization cycle
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>2024-01-15T14:32:19.123Z DEBUG [catalog-service] Fetched 47 items from vSphere endpoint
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>2024-01-15T14:32:20.789Z INFO [catalog-service] Catalog sync completed successfully in 1.2s
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>2024-01-15T14:32:21.045Z INFO [catalog-service] Publishing 12 new catalog items to message broker
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>2024-01-15T14:32:22.567Z DEBUG [catalog-service] Item ID: 8f4a2c91-7e3d-4b9a-a1c2-5d8e9f3b2a1c published
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>2024-01-15T14:32:23.890Z INFO [catalog-service] Catalog update cycle complete
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></strong> — Verify the pod name with <code>kubectl get pods -n prelude</code> and ensure you're querying the correct namespace.
+<strong><code>error: a container name must be specified for pod &lt;pod-name&gt;, choose one of: [catalog-service init-config]</code></strong> — Use <code>kubectl get pods &lt;pod-name&gt; -n prelude -o jsonpath='{.spec.containers[*].name}'</code> to list available containers and specify the correct one with <code>-c</code>.
+<strong><code>error: previous terminated container "&lt;container-name&gt;" in pod "&lt;pod-name&gt;" not found</code></strong> — The pod has not restarted yet; use regular <code>kubectl logs</code> without <code>--previous</code> to view current logs instead.</p>
+</div>
 <h3 id="service-and-config">Service and Config<a class="headerlink" href="#service-and-config" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all services</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List config maps</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Get a specific config map</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-o<span class="w"> </span>yaml
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Restart a pod (delete it — Kubernetes re-creates it automatically)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># ⚠ Only delete one pod at a time; do not delete multiple simultaneously</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all services</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># List config maps</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Get a specific config map</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-o<span class="w"> </span>yaml
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Restart a pod (delete it — Kubernetes re-creates it automatically)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># ⚠ Only delete one pod at a time; do not delete multiple simultaneously</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAME                                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>aria-automation-api                 ClusterIP   10.96.45.123     &lt;none&gt;        8080/TCP          45d
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>aria-automation-ui                  ClusterIP   10.96.67.89      &lt;none&gt;        443/TCP           45d
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>postgres-service                    ClusterIP   10.96.102.15     &lt;none&gt;        5432/TCP          45d
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>redis-cache                         ClusterIP   10.96.201.44     &lt;none&gt;        6379/TCP          45d
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>nginx-ingress-controller            LoadBalancer 10.96.12.78     192.168.1.50  80:30080/TCP,...  42d
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>NAME                           DATA   AGE
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>aria-automation-config         8      45d
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>aria-automation-secrets        5      45d
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>postgres-init-script           1      45d
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>nginx-config                   3      42d
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>apiVersion: v1
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>kind: ConfigMap
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>metadata:
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  name: aria-automation-config
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  namespace: prelude
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>data:
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  api.properties: |
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    server.port=8080
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    database.url=jdbc:postgresql://postgres-service:5432/aria
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  log.level: INFO
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>  max.connections: &quot;100&quot;
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>pod &quot;aria-automation-api-7d4f9c2b1&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): configmaps "&lt;name&gt;" not found</code></strong> — Verify the ConfigMap name with <code>kubectl get configmap -n prelude</code> and use the exact name from the NAME column.
+<strong><code>error: resource name may not be empty</code></strong> — Replace <code>&lt;name&gt;</code> and <code>&lt;pod-name&gt;</code> placeholders with actual resource names; do not run the command with angle brackets.
+<strong><code>Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:prelude:default" cannot delete resource "pods"</code></strong> — Ensure your kubectl user has sufficient RBAC permissions; contact your cluster administrator to grant <code>pods/delete</code> verb.</p>
+</div>
 <hr />
 <h2 id="rest-api-authentication-and-token">REST API — Authentication and Token<a class="headerlink" href="#rest-api-authentication-and-token" title="Permanent link">&para;</a></h2>
 <p>All REST operations require a bearer token obtained from the identity service.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Authenticate and get a token (store in TOKEN variable)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.cspAuthToken&#39;</span><span class="k">)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">20</span><span class="si">}</span><span class="s2">...&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Helper function — use in scripts</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>get_token<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">VRA_HOST</span><span class="si">}</span><span class="s2">/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="si">${</span><span class="nv">VRA_USER</span><span class="si">}</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="si">${</span><span class="nv">VRA_PASS</span><span class="si">}</span><span class="s2">\&quot;,\&quot;domain\&quot;:\&quot;System Domain\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.cspAuthToken&#39;</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Authenticate and get a token (store in TOKEN variable)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.cspAuthToken&#39;</span><span class="k">)</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">20</span><span class="si">}</span><span class="s2">...&quot;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Helper function — use in scripts</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>get_token<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">VRA_HOST</span><span class="si">}</span><span class="s2">/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="si">${</span><span class="nv">VRA_USER</span><span class="si">}</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="si">${</span><span class="nv">VRA_PASS</span><span class="si">}</span><span class="s2">\&quot;,\&quot;domain\&quot;:\&quot;System Domain\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.cspAuthToken&#39;</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to &lt;aria-auto&gt; port 443: Connection refused</code></strong> — Verify the Aria Automation hostname/IP in the URL and ensure the appliance is running and network accessible.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "cspAuthToken"</code></strong> — Check that credentials are correct and the CSP gateway is responding; verify the JSON response contains <code>cspAuthToken</code> field using <code>curl -s ... | jq '.'</code> to inspect the full response.
+<strong><code>bash: jq: command not found</code></strong> — Install jq on the system with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS).</p>
+</div>
 <hr />
 <h2 id="rest-api-deployments">REST API — Deployments<a class="headerlink" href="#rest-api-deployments" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">VRA</span><span class="o">=</span><span class="s2">&quot;https://&lt;aria-auto&gt;&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># List all deployments</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments?size=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, status, projectId}&#39;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Get a specific deployment</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># List resources in a deployment</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[].name&#39;</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># Delete a deployment</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">VRA</span><span class="o">=</span><span class="s2">&quot;https://&lt;aria-auto&gt;&quot;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># List all deployments</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments?size=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, status, projectId}&#39;</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Get a specific deployment</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># List resources in a deployment</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[].name&#39;</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># Delete a deployment</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;name&quot;: &quot;prod-web-tier&quot;,
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  &quot;id&quot;: &quot;deployment-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;,
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  &quot;projectId&quot;: &quot;project-x9y8z7w6-v5u4-t3s2-r1q0-p9o8n7m6l5k4&quot;
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>}
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>{
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  &quot;name&quot;: &quot;dev-database-cluster&quot;,
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  &quot;id&quot;: &quot;deployment-f7g8h9i0-j1k2-l3m4-n5o6-p7q8r9s0t1u2&quot;,
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  &quot;projectId&quot;: &quot;project-x9y8z7w6-v5u4-t3s2-r1q0-p9o8n7m6l5k4&quot;
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>}
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>{
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  &quot;name&quot;: &quot;staging-app-server&quot;,
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  &quot;id&quot;: &quot;deployment-m3n4o5p6-q7r8-s9t0-u1v2-w3x4y5z6a7b8&quot;,
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>  &quot;status&quot;: &quot;UPDATE_FAILED&quot;,
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>  &quot;projectId&quot;: &quot;project-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>}
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>...
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>{
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>  &quot;name&quot;: &quot;archive-legacy-vm&quot;,
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>  &quot;id&quot;: &quot;deployment-z9y8x7w6-v5u4-t3s2-r1q0-p9o8n7m6l5k4&quot;,
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>  &quot;status&quot;: &quot;DELETE_IN_PROGRESS&quot;,
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>  &quot;projectId&quot;: &quot;project-x9y8z7w6-v5u4-t3s2-r1q0-p9o8n7m6l5k4&quot;
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>}
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>{
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>  &quot;id&quot;: &quot;deployment-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;,
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>  &quot;name&quot;: &quot;prod-web-tier&quot;,
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>  &quot;projectId&quot;: &quot;project-x9y8z7w6-v5u4-t3s2-r1q0-p9o8n7m6l5k4&quot;,
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>  &quot;createdAt&quot;: &quot;2024-01-15T09:23:47Z&quot;,
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>  &quot;lastModifiedAt&quot;: &quot;2024-01-15T09:45:12Z&quot;,
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>  &quot;inputs&quot;: {
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>    &quot;environment&quot;: &quot;production&quot;,
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>    &quot;instance_count&quot;: 3,
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>    &quot;vm_memory_mb&quot;: 4096
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>  }
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a>}
+<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>
+<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>nginx-lb-01
+<a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a>nginx-lb-02
+<a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a>postgresql-primary
+<a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a>postgresql-replica-01
+<a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a>postgresql-replica-02
+<a id="__codelineno-19-46" name="__codelineno-19-46" href="#__codelineno-19-46"></a>redis-cache-01
+<a id="__codelineno-19-47" name="__codelineno-19-47" href="#__codelineno-19-47"></a>...
+<a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>
+<a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to &lt;aria-auto&gt; port 443: Connection refused</code></strong> — Verify the VRA hostname is correct and the Aria Automation appliance is running and accessible on the network.
+<strong><code>{"status":401,"message":"Unauthorized"}</code></strong> — Ensure the $</p>
+</div>
 <hr />
 <h2 id="rest-api-blueprints-and-catalog">REST API — Blueprints and Catalog<a class="headerlink" href="#rest-api-blueprints-and-catalog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all blueprints (cloud templates)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/blueprint/api/blueprints&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, status}&#39;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Get blueprint YAML content</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/blueprint/api/blueprints/&lt;blueprint-id&gt;/content&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># List catalog items (self-service catalog)</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/catalog/api/items?size=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, type}&#39;</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Request a catalog item (create a deployment)</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/catalog/api/items/&lt;item-id&gt;/request&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="s1">    &quot;deploymentName&quot;: &quot;my-deployment&quot;,</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="s1">    &quot;projectId&quot;: &quot;&lt;project-id&gt;&quot;,</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="s1">    &quot;inputs&quot;: {}</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># List all blueprints (cloud templates)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/blueprint/api/blueprints&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, status}&#39;</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Get blueprint YAML content</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/blueprint/api/blueprints/&lt;blueprint-id&gt;/content&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># List catalog items (self-service catalog)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/catalog/api/items?size=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id, type}&#39;</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1"># Request a catalog item (create a deployment)</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/catalog/api/items/&lt;item-id&gt;/request&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="s1">    &quot;deploymentName&quot;: &quot;my-deployment&quot;,</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="s1">    &quot;projectId&quot;: &quot;&lt;project-id&gt;&quot;,</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="s1">    &quot;inputs&quot;: {}</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;name&quot;: &quot;Ubuntu-Web-Tier&quot;,
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  &quot;id&quot;: &quot;blueprint-8f4a2c91-7e3d-4b6f-9a1c-2d5e8b3f7a9c&quot;,
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  &quot;status&quot;: &quot;PUBLISHED&quot;
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>}
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>{
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  &quot;name&quot;: &quot;SQL-Database-Template&quot;,
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  &quot;id&quot;: &quot;blueprint-c3e9f1b2-5a7d-4e2c-8f6a-1b9d3c7e5a2f&quot;,
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  &quot;status&quot;: &quot;PUBLISHED&quot;
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>}
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>{
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  &quot;name&quot;: &quot;Kubernetes-Cluster&quot;,
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  &quot;id&quot;: &quot;blueprint-2b6f8a1d-9c4e-7f3a-5b2c-8e1a9d6f4c3b&quot;,
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;status&quot;: &quot;DRAFT&quot;
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>}
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>...
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>formatVersion: 1
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>name: Ubuntu-Web-Tier
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>inputs:
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>  environment:
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    type: string
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>    default: production
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>  instance_count:
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>    type: integer
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>    default: 2
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>resources:
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>  WebServer:
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>    type: Cloud.Machine
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>    properties:
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>      image: ubuntu-20.04-lts
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>      flavor: medium
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>{
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>  &quot;name&quot;: &quot;Deploy Ubuntu VM&quot;,
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>  &quot;id&quot;: &quot;item-5c8b2f9a-1d7e-4a3f-8c6b-9e2f5a1d7c4b&quot;,
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>  &quot;type&quot;: &quot;BLUEPRINT&quot;
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>}
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>{
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>  &quot;name&quot;: &quot;Provision SQL Server&quot;,
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>  &quot;id&quot;: &quot;item-7a9f3c1e-6b2d-5f8a-4e9c-1b7d3a5f2c8e&quot;,
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>  &quot;type&quot;: &quot;BLUEPRINT&quot;
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>}
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>{
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>  &quot;name&quot;: &quot;Request Storage Volume&quot;,
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>  &quot;id&quot;: &quot;item-2e4f7b9a-8c1d-3f5a-6b2e-9d1c4a7f3b5e&quot;,
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>  &quot;type&quot;: &quot;BLUEPRINT&quot;
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>}
+<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>
+<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>{
+<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>  &quot;id&quot;: &quot;request-9f2a7c1e-5b8d-4a3f-6e9c-2b1d7a5f8c3e&quot;,
+<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>  &quot;status&quot;: &quot;SUBMITTED&quot;,
+<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>  &quot;deploymentName&quot;: &quot;my-deployment&quot;,
+<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>  &quot;projectId&quot;: &quot;project-4c8f2b1a-9e3d-7f5a-1c6b-8d2e9a4f7c5b&quot;,
+<a id="__codelineno-21-55" name="__codelineno-21-55" href="#__codelineno-21-55"></a>  &quot;requestedBy&quot;: &quot;admin@company.local&quot;,
+<a id="__codelineno-21-56" name="__codelineno-21-56" href="#__codelineno-21-56"></a>  &quot;requestedOn&quot;: &quot;2024-01-15T14:32:18.456Z&quot;,
+<a id="__codelineno-21-57" name="__codelineno-21-57" href="#__codelineno-21-57"></a>  &quot;estimatedCompletionTime&quot;: &quot;2024-01-15T14:47:18.456Z&quot;
+<a id="__codelineno-21-58" name="__codelineno-21-58" href="#__codelineno-21-58"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to aria-automation.corp: Name or service not known</code></strong> — Verify the $VRA variable is set correctly with the full FQDN or IP address (e.g., <code>export VRA=https://aria-automation.corp:443</code>).
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API token in $TOKEN is valid and not expired; re-authenticate and regenerate the bearer token</p>
+</div>
 <hr />
 <h2 id="rest-api-projects-and-cloud-accounts">REST API — Projects and Cloud Accounts<a class="headerlink" href="#rest-api-projects-and-cloud-accounts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List projects</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/projects&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id}&#39;</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># List cloud accounts</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/cloud-accounts&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, cloudAccountType, id}&#39;</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Trigger data collection on a cloud account</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/cloud-accounts/&lt;id&gt;/schedule-data-collection&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List projects</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/projects&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, id}&#39;</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># List cloud accounts</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/cloud-accounts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name, cloudAccountType, id}&#39;</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1"># Trigger data collection on a cloud account</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$VRA</span><span class="s2">/iaas/api/cloud-accounts/&lt;id&gt;/schedule-data-collection&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>{
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  &quot;name&quot;: &quot;Production-Infra&quot;,
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  &quot;id&quot;: &quot;1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p&quot;
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>}
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>{
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  &quot;name&quot;: &quot;Dev-Environment&quot;,
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  &quot;id&quot;: &quot;2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q&quot;
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>}
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>{
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>  &quot;name&quot;: &quot;vSphere-Account-01&quot;,
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  &quot;cloudAccountType&quot;: &quot;vsphere&quot;,
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>  &quot;id&quot;: &quot;3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r&quot;
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>}
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>{
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>  &quot;name&quot;: &quot;AWS-Primary&quot;,
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>  &quot;cloudAccountType&quot;: &quot;aws&quot;,
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>  &quot;id&quot;: &quot;4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s&quot;
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>}
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>{
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>  &quot;name&quot;: &quot;Azure-Secondary&quot;,
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>  &quot;cloudAccountType&quot;: &quot;azure&quot;,
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>  &quot;id&quot;: &quot;5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t&quot;
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>}
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to aria-automation.corp.local port 443: Connection refused</code></strong> — Verify the $VRA variable is set correctly and the Aria Automation appliance is running and accessible on the network.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Check that the $TOKEN is valid and not expired; an invalid token returns HTML error pages instead of JSON.
+<strong><code>curl: (22) The requested URL returned error: 404 Not Found</code></strong> — Ensure the cloud account ID in the URL path is correct and the account still exists in the system.</p>
+</div>
 <hr />
 <h2 id="powervra-powershell-module">PowerVRA — PowerShell Module<a class="headerlink" href="#powervra-powershell-module" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Install</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PowerVRA</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Connect</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Connect-VRAServer</span> <span class="n">-Server</span> <span class="s2">&quot;aria-auto.corp.local&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># List deployments</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nb">Get-VRADeployment</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">ProjectName</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c"># Get a specific deployment</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="nb">Get-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;my-deployment&quot;</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c"># Request a catalog item</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nb">New-VRADeployment</span> <span class="n">-CatalogItemName</span> <span class="s2">&quot;Ubuntu 22.04&quot;</span> <span class="p">`</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>                  <span class="n">-DeploymentName</span> <span class="s2">&quot;web-prod-01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>                  <span class="n">-ProjectName</span> <span class="s2">&quot;Team-A&quot;</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c"># Delete a deployment</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="nb">Remove-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;web-prod-01&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c"># Disconnect</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="nb">Disconnect-VRAServer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c"># Install</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PowerVRA</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c"># Connect</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="nb">Connect-VRAServer</span> <span class="n">-Server</span> <span class="s2">&quot;aria-auto.corp.local&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c"># List deployments</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="nb">Get-VRADeployment</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">ProjectName</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c"># Get a specific deployment</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="nb">Get-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;my-deployment&quot;</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="c"># Request a catalog item</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="nb">New-VRADeployment</span> <span class="n">-CatalogItemName</span> <span class="s2">&quot;Ubuntu 22.04&quot;</span> <span class="p">`</span>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>                  <span class="n">-DeploymentName</span> <span class="s2">&quot;web-prod-01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>                  <span class="n">-ProjectName</span> <span class="s2">&quot;Team-A&quot;</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="c"># Delete a deployment</span>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="nb">Remove-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;web-prod-01&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="c"># Disconnect</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="nb">Disconnect-VRAServer</span>
 </code></pre></div>
 <hr />
 <h2 id="aria-orchestrator-admin-commands">Aria Orchestrator — Admin Commands<a class="headerlink" href="#aria-orchestrator-admin-commands" title="Permanent link">&para;</a></h2>
 <p>Aria Orchestrator (vRO) is embedded in Aria Automation and accessible via its control center.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># vRO Control Center — browser URL</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># https://&lt;aria-auto&gt;/vco/app   (Orchestrator UI)</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># https://&lt;aria-auto&gt;:8283/vco-controlcenter  (Admin/logs)</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Orchestrator API Swagger docs</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># https://&lt;aria-auto&gt;/vco/api/docs</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Download vRO server log from Control Center:</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># vRO Control Center → Logs → Download Server Log</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># REST API — list workflows</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/vco/api/workflows?maxResult=20&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.link[] | .attributes[] | select(.name==&quot;name&quot;) | .value&#39;</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Run a workflow via REST</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/vco/api/workflows/&lt;workflow-id&gt;/executions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;parameters&quot;: [{&quot;name&quot;: &quot;vmName&quot;, &quot;type&quot;: &quot;string&quot;, &quot;value&quot;: {&quot;string&quot;: {&quot;value&quot;: &quot;my-vm&quot;}}}]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># vRO Control Center — browser URL</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># https://&lt;aria-auto&gt;/vco/app   (Orchestrator UI)</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># https://&lt;aria-auto&gt;:8283/vco-controlcenter  (Admin/logs)</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Orchestrator API Swagger docs</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># https://&lt;aria-auto&gt;/vco/api/docs</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1"># Download vRO server log from Control Center:</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># vRO Control Center → Logs → Download Server Log</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1"># REST API — list workflows</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/vco/api/workflows?maxResult=20&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.link[] | .attributes[] | select(.name==&quot;name&quot;) | .value&#39;</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="c1"># Run a workflow via REST</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/vco/api/workflows/&lt;workflow-id&gt;/executions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;parameters&quot;: [{&quot;name&quot;: &quot;vmName&quot;, &quot;type&quot;: &quot;string&quot;, &quot;value&quot;: {&quot;string&quot;: {&quot;value&quot;: &quot;my-vm&quot;}}}]}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>&quot;Provision VM&quot;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>&quot;Decommission VM&quot;
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>&quot;Configure Network&quot;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>&quot;Backup VM&quot;
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>&quot;Health Check&quot;
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>&quot;Update Firmware&quot;
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>&quot;Generate Report&quot;
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>...
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>{&quot;id&quot;:&quot;dde52f47-0a3c-4f2a-b8e1-7c9d3f1a2b4c&quot;,&quot;execution-state&quot;:&quot;RUNNING&quot;,&quot;execution-id&quot;:&quot;exec-20240115-001&quot;,&quot;start-time&quot;:&quot;2024-01-15T14:32:18.000Z&quot;,&quot;parameters&quot;:[{&quot;name&quot;:&quot;vmName&quot;,&quot;type&quot;:&quot;string&quot;,&quot;value&quot;:{&quot;string&quot;:{&quot;value&quot;:&quot;my-vm&quot;}}}]}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the Aria Automation CA certificate into your system trust store.
+<strong><code>jq: parse error: Cannot index string with string "attributes"</code></strong> — Verify the API response structure matches your jq filter by running <code>curl ... | jq '.'</code> first to inspect the actual JSON format.
+<strong><code>{"error":"Invalid token","error_description":"The access token expired"}</code></strong> — Regenerate the Bearer token by re-authenticating to Aria Automation's OAuth endpoint before retrying the API call.</p>
+</div>
 <hr />
 <h2 id="vami-appliance-management-interface">VAMI — Appliance Management Interface<a class="headerlink" href="#vami-appliance-management-interface" title="Permanent link">&para;</a></h2>
 <p>VAMI is the browser-based appliance management UI at <code>https://&lt;aria-auto&gt;:5480</code>.</p>
@@ -9733,9 +10121,9 @@ Complete CLI reference for Aria Automation: vracli appliance management, kubectl
 - <strong>SSL certificate</strong> — view and replace the VAMI/appliance certificate
 - <strong>System</strong> — reboot, shutdown, update vRA appliance patches
 - <strong>Monitor</strong> — CPU, memory, disk usage of the appliance VM</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># VAMI is a web UI — access from browser:</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># https://&lt;aria-auto&gt;:5480</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Credentials: root / &lt;appliance-root-password&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># VAMI is a web UI — access from browser:</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1"># https://&lt;aria-auto&gt;:5480</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="c1"># Credentials: root / &lt;appliance-root-password&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9772,7 +10160,7 @@ Complete CLI reference for Aria Automation: vracli appliance management, kubectl
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

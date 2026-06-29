@@ -9403,19 +9403,57 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Bundle is written to /tmp/</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/vr-support*.zip
 </code></pre></div>
-<h3 id="3-collect-esxi-replication-logs-from-the-source-host">3. Collect ESXi replication logs from the source host<a class="headerlink" href="#3-collect-esxi-replication-logs-from-the-source-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to the source ESXi host as root</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@&lt;source-esxi-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># VR host-based log (shows per-VM replication traffic at the ESXi level)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-300<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception\|warn&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Host daemon log (general ESXi host operations)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|vr\|hbr&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Copy log off the host</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>scp<span class="w"> </span>root@&lt;source-esxi-ip&gt;:/var/log/hbr.log<span class="w"> </span>/tmp/hbr-<span class="k">$(</span>hostname<span class="k">)</span>.log
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@vra-prod-01:~# /etc/rc3.d/*vrms/scripts/vr-support.sh
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Generating VMware vSphere Replication support bundle...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Collecting system logs...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Collecting replication statistics...
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Collecting configuration data...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Support bundle generation completed successfully.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Bundle saved to: /tmp/vr-support-2024-01-15-143022.zip
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>root@vra-prod-01:~# ls -lh /tmp/vr-support*.zip
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-rw-r--r-- 1 root root 287M Jan 15 14:30 /tmp/vr-support-2024-01-15-143022.zip
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /etc/rc3.d/*vrms/scripts/vr-support.sh: No such file or directory</code></strong> — Verify the correct VRA version path with <code>find /etc -name "vr-support.sh" 2&gt;/dev/null</code> and adjust the script location accordingly.
+<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or have sudo privileges; if using a non-root account, prepend <code>sudo</code> to the command.
+<strong><code>/tmp: No space left on device</code></strong> — Free up disk space on the VRA appliance with <code>rm -rf /tmp/vr-support*.zip</code> to remove old bundles, or increase the /tmp partition size.</p>
+</div>
+<h3 id="3-collect-esxi-replication-logs-from-the-source-host">3. Collect ESXi replication logs from the source host<a class="headerlink" href="#3-collect-esxi-replication-logs-from-the-source-host" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the source ESXi host as root</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;source-esxi-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># VR host-based log (shows per-VM replication traffic at the ESXi level)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-300<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception\|warn&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Host daemon log (general ESXi host operations)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|vr\|hbr&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Copy log off the host</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>scp<span class="w"> </span>root@&lt;source-esxi-ip&gt;:/var/log/hbr.log<span class="w"> </span>/tmp/hbr-<span class="k">$(</span>hostname<span class="k">)</span>.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@esxi-prod-01:~# tail -300 /var/log/hbr.log | grep -i &quot;error\|fail\|exception\|warn&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:47:23.456Z warn hbr[2048]: [vm-123] Replication lag detected: 2.5 GB pending
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15T09:52:18.891Z error hbr[2048]: [vm-456] Failed to send checkpoint: Connection timeout to vSphere Replication Server
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T10:01:05.234Z warn hbr[2048]: [vm-789] Network bandwidth throttled to 50 Mbps
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15T10:15:42.567Z error hbr[2048]: [vm-123] Exception during snapshot creation: Insufficient storage on replica datastore
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>root@esxi-prod-01:~# tail -200 /var/log/hostd.log | grep -i &quot;replication\|vr\|hbr&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15T09:45:12.123Z info hostd[1024]: HBR agent initialized successfully
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15T09:46:33.456Z info hostd[1024]: Replication task started for vm-123 (UUID: 50123456-abcd-ef01-2345-6789abcdef01)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>2024-01-15T10:02:47.789Z warn hostd[1024]: vSphere Replication Server heartbeat delayed by 3.2 seconds
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15T10:18:55.012Z info hostd[1024]: Replication checkpoint completed: 847 MB transferred
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>root@esxi-prod-01:~# scp root@192.168.1.45:/var/log/hbr.log /tmp/hbr-esxi-prod-01.log
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>hbr.log                                          100%  2847KB   4.2MB/s   00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that root login is enabled on the ESXi host via DCUI or vSphere Client.
+<strong><code>No such file or directory</code></strong> — Confirm the ESXi host is running vSphere Replication Agent; if not installed, deploy it from the vSphere Replication appliance.
+<strong><code>Connection refused</code></strong> — Ensure the source ESXi host is reachable on the network and SSH service is running (check firewall rules and host connectivity).</p>
+</div>
 <h3 id="4-export-vcenter-system-logs">4. Export vCenter system logs<a class="headerlink" href="#4-export-vcenter-system-logs" title="Permanent link">&para;</a></h3>
 <p>In vSphere Client:
 1. Navigate to the vCenter → <strong>Actions</strong> → <strong>Export System Logs</strong>.
@@ -9428,22 +9466,22 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
 2. Take a screenshot showing the replication status of all VMs at the time of the issue.
 3. Note which VMs are in <strong>Error</strong>, <strong>RPO Violation</strong>, or any state other than <strong>OK</strong>.</p>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VR version: 8.8.0 build XXXXXXXX (protected site)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VR version: 8.8.0 build XXXXXXXX (recovery site)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vCenter (protected): vcenter-prod.corp.local (vSphere 8.0.2)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vCenter (recovery): vcenter-dr.corp.local (vSphere 8.0.2)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Issue first observed: 2026-06-14 08:00 UTC
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Last confirmed replication: 2026-06-14 06:00 UTC
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Changes in 24h before the issue:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - 07:00: vSphere 8.0.1 to 8.0.2 upgrade completed on protected-site vCenter
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  - 08:00: All 200 VMs show &quot;Not Configured&quot; replication status
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  - 08:10: VRA VAMI at protected site shows vCenter connection: Disconnected
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Steps already taken:
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  - VRA VAMI: vCenter server shows disconnected despite correct credentials
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  - vSphere Client: site pair shows &quot;Not Configured&quot; (was Connected before upgrade)
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  - Did NOT restart VRA or reconfigure the site pair
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Blast radius: All 200 VMs no longer replicating; DR capability at risk
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>SRM involvement: SRM 8.8 paired at both sites; SRM SR opened in parallel (case XXXXXXX)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VR version: 8.8.0 build XXXXXXXX (protected site)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>VR version: 8.8.0 build XXXXXXXX (recovery site)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vCenter (protected): vcenter-prod.corp.local (vSphere 8.0.2)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vCenter (recovery): vcenter-dr.corp.local (vSphere 8.0.2)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Issue first observed: 2026-06-14 08:00 UTC
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Last confirmed replication: 2026-06-14 06:00 UTC
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Changes in 24h before the issue:
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 07:00: vSphere 8.0.1 to 8.0.2 upgrade completed on protected-site vCenter
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 08:00: All 200 VMs show &quot;Not Configured&quot; replication status
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  - 08:10: VRA VAMI at protected site shows vCenter connection: Disconnected
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Steps already taken:
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  - VRA VAMI: vCenter server shows disconnected despite correct credentials
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - vSphere Client: site pair shows &quot;Not Configured&quot; (was Connected before upgrade)
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Did NOT restart VRA or reconfigure the site pair
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Blast radius: All 200 VMs no longer replicating; DR capability at risk
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>SRM involvement: SRM 8.8 paired at both sites; SRM SR opened in parallel (case XXXXXXX)
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -9504,24 +9542,24 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
 </ol>
 <hr />
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Step 1 — Open case at support.broadcom.com with both-site VRA bundles and ESXi hbr.log
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>         ↓
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Step 2 — T1 support engineer acknowledges (Sev1: &lt; 30 min; Sev2: &lt; 2 hr)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         ↓
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>         → Reply in case: &quot;Requesting escalation to vSphere Replication Senior Engineer&quot;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>         → State: &quot;[all replications down / active recovery failing / DR capability lost]&quot;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>         ↓
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Step 4 — VR T2 Senior Engineer is assigned
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>         → They will review hbrsrv.log and the site-pair configuration
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>         → Have VRA SSH access and vCenter credentials for both sites ready
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>         ↓
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Step 5 — If the issue is specific to the SRM + VR integration:
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>         → VMware handles SRM and VR under the same case (they coordinate internally)
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>         → Include the SRM recovery plan log in the case if SRM is also affected
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>         ↓
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Step 6 — For Sev1 with active recovery failing, unresolved after 2 hours:
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>         → Request CritSit escalation; contact your Broadcom TAM or Account Executive
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Step 1 — Open case at support.broadcom.com with both-site VRA bundles and ESXi hbr.log
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>         ↓
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Step 2 — T1 support engineer acknowledges (Sev1: &lt; 30 min; Sev2: &lt; 2 hr)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>         ↓
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>         → Reply in case: &quot;Requesting escalation to vSphere Replication Senior Engineer&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         → State: &quot;[all replications down / active recovery failing / DR capability lost]&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         ↓
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Step 4 — VR T2 Senior Engineer is assigned
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>         → They will review hbrsrv.log and the site-pair configuration
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>         → Have VRA SSH access and vCenter credentials for both sites ready
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>         ↓
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Step 5 — If the issue is specific to the SRM + VR integration:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>         → VMware handles SRM and VR under the same case (they coordinate internally)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>         → Include the SRM recovery plan log in the case if SRM is also affected
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>         ↓
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Step 6 — For Sev1 with active recovery failing, unresolved after 2 hours:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>         → Request CritSit escalation; contact your Broadcom TAM or Account Executive
 </code></pre></div>
 <hr />
 <h2 id="what-not-to-do">What NOT to Do<a class="headerlink" href="#what-not-to-do" title="Permanent link">&para;</a></h2>
@@ -9568,23 +9606,51 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to the VRA appliance as root — paste into every case update</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># VR appliance service status</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>service<span class="w"> </span>vmware-vrms<span class="w"> </span>status
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>service<span class="w"> </span>vmware-h4<span class="w"> </span>status
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># VRA server log (orchestration, site-pair, RPO tracking)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrsrv/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to the VRA appliance as root — paste into every case update</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># VR appliance service status</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>service<span class="w"> </span>vmware-vrms<span class="w"> </span>status
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>service<span class="w"> </span>vmware-h4<span class="w"> </span>status
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># VRA server log (orchestration, site-pair, RPO tracking)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrsrv/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to the source ESXi host as root</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Per-VM replication status at host level</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Replication vmkernel (ensure VR vmk is present)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|hbr&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vmware-vrms is running.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmware-h4 is running.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15 14:32:18.445 [pool-12-thread-4] ERROR com.vmware.hbr.server.replication.RpoTracker - RPO threshold exceeded for site-pair &#39;prod-to-dr&#39;: current RPO 3245s &gt; configured 1800s
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15 14:28:52.112 [pool-8-thread-2] WARN com.vmware.hbr.server.sync.SyncManager - Replication lag detected for VM &#39;web-prod-01&#39;: 2847 MB pending
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15 14:15:33.667 [pool-5-thread-1] ERROR com.vmware.hbr.server.connection.SitePairManager - Failed to authenticate with remote VRA at 10.42.18.55: javax.net.ssl.SSLHandshakeException: PKIX path validation failed
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-01-15 14:02:19.334 [pool-3-thread-6] EXCEPTION com.vmware.hbr.server.storage.SnapshotManager - Unable to create snapshot on datastore &#39;ds-repl-01&#39;: No space left on device
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2024-01-15 13:58:44.221 [pool-11-thread-9] ERROR com.vmware.hbr.server.network.Heartbeat - Heartbeat timeout from peer VRA (site-pair UUID: a7f2c1d8-9e4b-42a1-8c3f-5b6d2e9a1f4c)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to authenticate with remote VRA at &lt;IP&gt;: javax.net.ssl.SSLHandshakeException: PKIX path validation failed</code></strong> — Regenerate and re-exchange SSL certificates between VRA appliances using the vSphere Replication management interface or re-pair the sites.
+<strong><code>Unable to create snapshot on datastore: No space left on device</code></strong> — Expand the replication datastore capacity or reduce the number of concurrent replications to free up storage space.
+<strong><code>Heartbeat timeout from peer VRA</code></strong> — Verify network connectivity between VRA appliances on port 31031 and check firewall rules; restart vmware-h4 service if connectivity is confirmed.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to the source ESXi host as root</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Per-VM replication status at host level</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Replication vmkernel (ensure VR vmk is present)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|hbr&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>2024-01-15T09:47:23.456Z [ERROR] Replication of vm-prod-db-01 failed: Connection timeout to replica host 192.168.100.45
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>2024-01-15T09:48:12.789Z [WARN] Checkpoint for vm-web-02 delayed by 2.5 minutes
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>2024-01-15T09:49:01.234Z [ERROR] Failed to replicate snapshot: Insufficient space on replica datastore (2.1 GB required, 1.8 GB available)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>2024-01-15T09:50:44.567Z [ERROR] Authentication failed for replica host: Invalid credentials for user &#39;root@vsphere.local&#39;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset      VDS
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>vmk1    192.168.100.10    ::1           00:50:56:c0:00:01  1500 true     vSphere Replication  vds-prod
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vmk2    192.168.101.15    fe80::1       00:50:56:c0:00:02  1500 true     Management   vds-mgmt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/hbr.log' for reading: No such file or directory</code></strong> — Verify vSphere Replication is installed on the ESXi host by checking the VR extension in vCenter or reinstall the VR agent.
+<strong><code>Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset</code></strong> — If no replication vmkernel is listed, create a dedicated vmk interface tagged for vSphere Replication traffic in vCenter's host networking configuration.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9656,7 +9722,7 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

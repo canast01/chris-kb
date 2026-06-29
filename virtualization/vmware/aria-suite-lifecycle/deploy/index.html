@@ -9019,6 +9019,24 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span><span class="m">10</span>.10.10.40
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Both must resolve correctly before proceeding</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.10.10.1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.10.10.1#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   lcm.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 10.10.10.40
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Address: 10.10.10.41
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Server:     10.10.10.1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Address:    10.10.10.1#53
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>40.10.10.10.in-addr.arpa    name = lcm.example.local.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>40.10.10.10.in-addr.arpa    name = lcm-secondary.example.local.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find lcm.example.local: NXDOMAIN</code></strong> — Verify the DNS A record exists in your DNS server and check that your resolver is configured to query the correct nameserver.
+<strong><code>** server can't find 10.10.10.40.in-addr.arpa: NXDOMAIN</code></strong> — Ensure reverse DNS (PTR record) is configured for 10.10.10.40 on your DNS server.</p>
+</div>
 <h3 id="vcenter-service-account">vCenter Service Account<a class="headerlink" href="#vcenter-service-account" title="Permanent link">&para;</a></h3>
 <p>The LCM infrastructure account requires the following vCenter privileges:</p>
 <ul>
@@ -9107,15 +9125,35 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 </table>
 <p>Power on. First boot takes 5–10 minutes.</p>
 <h3 id="verify-lcm-is-accessible">Verify LCM Is Accessible<a class="headerlink" href="#verify-lcm-is-accessible" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># HTTPS reachable</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://lcm.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: HTTP 200 or 302 redirect to login</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># SSH to LCM appliance as root (use VAMI credentials)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ssh<span class="w"> </span>root@lcm.example.local
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>lcm-vmon
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Should show: Active (running)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># HTTPS reachable</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://lcm.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: HTTP 200 or 302 redirect to login</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># SSH to LCM appliance as root (use VAMI credentials)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>root@lcm.example.local
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>lcm-vmon
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Should show: Active (running)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>HTTP 302
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>root@lcm.example.local&#39;s password: 
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>● lcm-vmon.service - VMware Lifecycle Manager vMon Service
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     Loaded: loaded (/etc/systemd/system/lcm-vmon.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>     Active: active (running) since Wed 2024-01-17 14:23:45 UTC; 2h 14min ago
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       Docs: man:systemd.unit(5)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    Process: 2847 ExecStart=/opt/vmware/lcm/bin/vmon-service.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   Main PID: 2891 (java)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      Tasks: 47 (limit: 4915)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     Memory: 1.2G
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        CPU: 18min 34.231s
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>     CGroup: /system.slice/lcm-vmon.service
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>             └─2891 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java -Xmx2g...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the LCM certificate into your system CA bundle.
+<strong><code>ssh: connect to host lcm.example.local port 22 (Connection refused)</code></strong> — Verify the LCM appliance is powered on and SSH is enabled; check network connectivity with <code>ping lcm.example.local</code>.
+<strong><code>Unit lcm-vmon.service could not be found.</code></strong> — SSH into the appliance and verify the LCM service name with <code>systemctl list-units --all | grep lcm</code>, then use the correct service name.</p>
+</div>
 <h3 id="accept-eula-and-enter-licence">Accept EULA and Enter Licence<a class="headerlink" href="#accept-eula-and-enter-licence" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Browse to <code>https://lcm.example.local</code>.</li>
@@ -9129,36 +9167,47 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 <p><strong>Exit criterion:</strong> LCM UI served with a CA-trusted certificate; Locker operational with at least one certificate imported.</p>
 <h3 id="upload-ca-certificate-to-lcm-trust-store">Upload CA Certificate to LCM Trust Store<a class="headerlink" href="#upload-ca-certificate-to-lcm-trust-store" title="Permanent link">&para;</a></h3>
 <p>LCM → Locker → Certificates → Import CA Certificate</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Certificate Type:  CA Certificate
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Alias:             corp-root-ca
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Certificate:       (paste PEM of your root CA)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Certificate Type:  CA Certificate
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Alias:             corp-root-ca
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Certificate:       (paste PEM of your root CA)
 </code></pre></div>
 <p>If using a chain (root + intermediate), import both separately or as a bundle.</p>
 <h3 id="create-certificate-request-for-lcm-itself">Create Certificate Request for LCM Itself<a class="headerlink" href="#create-certificate-request-for-lcm-itself" title="Permanent link">&para;</a></h3>
 <p>LCM → Locker → Certificates → Generate CSR</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Common Name (CN):   lcm.example.local
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Organisation:       Example Corp
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Org Unit:           IT Infrastructure
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Country:            GB
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>SANs:               lcm.example.local, 10.10.10.40
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Key Size:           2048
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Common Name (CN):   lcm.example.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Organisation:       Example Corp
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Org Unit:           IT Infrastructure
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Country:            GB
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>SANs:               lcm.example.local, 10.10.10.40
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Key Size:           2048
 </code></pre></div>
 <p>Sign the generated CSR with your internal CA, then import the signed certificate back into LCM:</p>
 <p>LCM → Locker → Certificates → Import Signed Certificate → select the alias for the CSR.</p>
 <h3 id="assign-certificate-to-lcm-appliance">Assign Certificate to LCM Appliance<a class="headerlink" href="#assign-certificate-to-lcm-appliance" title="Permanent link">&para;</a></h3>
 <p>LCM → Settings → SSL Certificates → replace the self-signed cert with the newly imported CA-signed cert. LCM services restart (~2 minutes).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify cert after restart</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm.example.local:443<span class="w"> </span>-showcerts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># CN must match lcm.example.local; Issuer must be your internal CA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify cert after restart</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm.example.local:443<span class="w"> </span>-showcerts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># CN must match lcm.example.local; Issuer must be your internal CA</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>subject=CN = lcm.example.local, O = Example Corp, C = US
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>issuer=CN = Example Corp Internal CA, O = Example Corp, C = US
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>notBefore=Jan 15 10:22:33 2024 GMT
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>notAfter=Jan 15 10:22:33 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to get local issuer certificate</code></strong> — The internal CA certificate is not in the system trust store; add it to <code>/etc/pki/ca-trust/source/anchors/</code> and run <code>update-ca-trust</code>.
+<strong><code>Verify return code: 21 (unable to verify the first certificate)</code></strong> — The certificate chain is incomplete; ensure the intermediate CA certificate is installed on the LCM appliance in the certificate chain file.
+<strong><code>subject=CN = lcm.example.local</code> does not match expected hostname</strong> — Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy.</p>
+</div>
 <h3 id="configure-locker-passwords">Configure Locker Passwords<a class="headerlink" href="#configure-locker-passwords" title="Permanent link">&para;</a></h3>
 <p>LCM → Locker → Passwords → Add Password</p>
 <p>Add passwords for all service accounts that LCM will use to deploy products:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Alias:       vcenter-admin
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Username:    svc-lcm@vsphere.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Password:    ********
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Description: vCenter infra account for LCM deployments
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Alias:       vcenter-admin
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Username:    svc-lcm@vsphere.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Password:    ********
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Description: vCenter infra account for LCM deployments
 </code></pre></div>
 <hr />
 <h2 id="phase-4-depot-configuration-and-vcenter-integration">Phase 4 — Depot Configuration and vCenter Integration<a class="headerlink" href="#phase-4-depot-configuration-and-vcenter-integration" title="Permanent link">&para;</a></h2>
@@ -9166,33 +9215,50 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 <h3 id="configure-depot">Configure Depot<a class="headerlink" href="#configure-depot" title="Permanent link">&para;</a></h3>
 <h4 id="online-depot-requires-internet-or-proxy">Online Depot (requires internet or proxy)<a class="headerlink" href="#online-depot-requires-internet-or-proxy" title="Permanent link">&para;</a></h4>
 <p>LCM → Settings → System Details → Depot Settings</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Depot Type:   VMware Online
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>My VMware account credentials (Broadcom login)
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Proxy host/port if required
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Depot Type:   VMware Online
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>My VMware account credentials (Broadcom login)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Proxy host/port if required
 </code></pre></div>
 <h4 id="local-nfs-depot">Local NFS Depot<a class="headerlink" href="#local-nfs-depot" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Depot Type:   NFS
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>NFS Server:   nas.example.local
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>NFS Path:     /exports/aria-binaries
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Mount point auto-configured by LCM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Depot Type:   NFS
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>NFS Server:   nas.example.local
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>NFS Path:     /exports/aria-binaries
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Mount point auto-configured by LCM
 </code></pre></div>
 <h3 id="sync-product-binaries">Sync Product Binaries<a class="headerlink" href="#sync-product-binaries" title="Permanent link">&para;</a></h3>
 <p>LCM → Lifecycle Operations → Settings → Binary Mapping → Sync</p>
 <p>This downloads the product PAK catalogue. Download individual PAK files for products you intend to deploy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>LCM → Settings → Binary Mapping → Available Binaries
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Select: VMware Aria Operations 8.x.x PAK
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>→ Download to LCM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>LCM → Settings → Binary Mapping → Available Binaries
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Select: VMware Aria Operations 8.x.x PAK
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Download to LCM
 </code></pre></div>
 <p>Verify download complete:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>root@lcm.example.local
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/data/lcm/binary-store/
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># PAK files should be present with correct sizes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>root@lcm.example.local
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/data/lcm/binary-store/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># PAK files should be present with correct sizes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>root@lcm.example.local&#39;s password: 
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>total 18G
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>drwxr-xr-x  4 root root 4.0K Nov 15 10:23 .
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>drwxr-xr-x  3 root root 4.0K Nov 10 08:45 ..
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>-rw-r--r--  1 root root 4.2G Nov 15 09:12 vRealize-Automation-8.10.0-20231101.pak
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>-rw-r--r--  1 root root 3.8G Nov 15 09:18 vRealize-Operations-8.13.0-20231105.pak
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>-rw-r--r--  1 root root 2.1G Nov 15 09:25 vRealize-Log-Insight-8.14.0-20231108.pak
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>-rw-r--r--  1 root root 2.9G Nov 15 09:31 vRealize-Business-7.6.0-20231112.pak
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>-rw-r--r--  1 root root 4.7G Nov 15 09:42 vSAN-8.0.1-20231115.pak
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>drwxr-xr-x  2 root root 4.0K Nov 15 10:15 checksums
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that root login is enabled in /etc/ssh/sshd_config on the LCM appliance.
+<strong><code>ls: cannot access '/data/lcm/binary-store/': No such file or directory</code></strong> — Confirm the LCM appliance is fully deployed and the binary-store directory exists; check mount points with <code>df -h</code>.
+<strong><code>Connection refused</code></strong> — Ensure the LCM appliance is powered on and SSH service is running; verify network connectivity with <code>ping lcm.example.local</code>.</p>
+</div>
 <h3 id="add-vcenter-infrastructure-account">Add vCenter Infrastructure Account<a class="headerlink" href="#add-vcenter-infrastructure-account" title="Permanent link">&para;</a></h3>
 <p>LCM → Lifecycle Operations → Settings → My VMware vCenter Servers → Add vCenter</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vCenter FQDN:   vcenter.example.local
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Username:       svc-lcm@vsphere.local
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Password:       (select from Locker)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter FQDN:   vcenter.example.local
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Username:       svc-lcm@vsphere.local
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Password:       (select from Locker)
 </code></pre></div>
 <p>Test the connection — LCM will validate connectivity and browse inventory. Confirm it can see datastores, clusters, and networks.</p>
 <hr />
@@ -9200,37 +9266,56 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 <p><strong>Exit criterion:</strong> First product environment created; at least vIDM (Workspace ONE Access) deployed and healthy before adding other Aria products.</p>
 <h3 id="create-a-product-environment">Create a Product Environment<a class="headerlink" href="#create-a-product-environment" title="Permanent link">&para;</a></h3>
 <p>LCM → Lifecycle Operations → Environments → Create Environment</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Environment Name:   prod-aria-suite
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Datacenter:         select from vCenter inventory
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>vCenter:            vcenter.example.local (registered in Phase 4)
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Default password:   select from Locker
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Environment Name:   prod-aria-suite
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Datacenter:         select from vCenter inventory
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>vCenter:            vcenter.example.local (registered in Phase 4)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Default password:   select from Locker
 </code></pre></div>
 <h3 id="deploy-workspace-one-access-vidm-first">Deploy Workspace ONE Access (vIDM) First<a class="headerlink" href="#deploy-workspace-one-access-vidm-first" title="Permanent link">&para;</a></h3>
 <p>Workspace ONE Access (vIDM) must be deployed first. All other Aria products register SSO through vIDM.</p>
 <p>LCM → Environments → prod-aria-suite → Add Products → Workspace ONE Access</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Binary:           (select downloaded PAK)
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Deployment Size:  Small (lab) / Medium (production)
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>VM Name:          vidm-01
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>FQDN:             vidm.example.local
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>IP:               10.10.10.44
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Datastore:        (select from dropdown)
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Network:          (select management port group)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Binary:           (select downloaded PAK)
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Deployment Size:  Small (lab) / Medium (production)
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>VM Name:          vidm-01
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>FQDN:             vidm.example.local
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>IP:               10.10.10.44
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Datastore:        (select from dropdown)
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Network:          (select management port group)
 </code></pre></div>
 <p>Click <strong>Submit</strong> — LCM runs pre-checks and then deploys the OVA automatically. Monitor progress:</p>
 <p>LCM → Requests → most recent request → View Details</p>
 <h3 id="add-aria-products-to-the-environment">Add Aria Products to the Environment<a class="headerlink" href="#add-aria-products-to-the-environment" title="Permanent link">&para;</a></h3>
 <p>After vIDM is healthy, add additional products:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>LCM → Environments → prod-aria-suite → Add Products
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>→ VMware Aria Operations
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>   Binary: select PAK, FQDN: vrops.example.local, IP: 10.10.10.41
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>→ VMware Aria Operations for Logs
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>   Binary: select PAK, FQDN: vrli.example.local, IP: 10.10.10.42
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>LCM → Environments → prod-aria-suite → Add Products
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>→ VMware Aria Operations
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>   Binary: select PAK, FQDN: vrops.example.local, IP: 10.10.10.41
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>→ VMware Aria Operations for Logs
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>   Binary: select PAK, FQDN: vrli.example.local, IP: 10.10.10.42
 </code></pre></div>
 <p>LCM deploys each product sequentially. Each product is validated by LCM post-deploy before the next begins.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check LCM request log for progress</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh<span class="w"> </span>root@lcm.example.local
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/lcm/lcm-install.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check LCM request log for progress</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ssh<span class="w"> </span>root@lcm.example.local
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/lcm/lcm-install.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Connected to lcm.example.local.
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Last login: Wed Mar 15 14:32:18 2024 from 10.45.120.88
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>[root@lcm-prod-01 ~]# tail -f /var/log/vmware/lcm/lcm-install.log
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>2024-03-15T14:35:22.441Z [INFO] LCM Request ID: req-8f4c2a9b-7e1d-4f92-b8c3-2d5e9a1c3f7b
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>2024-03-15T14:35:23.156Z [INFO] Starting deployment of Aria Suite components
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>2024-03-15T14:35:45.892Z [INFO] Validating infrastructure prerequisites
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>2024-03-15T14:36:12.334Z [INFO] Configuring vCenter integration: vcenter.example.local
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>2024-03-15T14:36:58.721Z [INFO] Deploying Aria Automation appliance (aria-auto-01.example.local)
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>2024-03-15T14:37:15.443Z [INFO] Appliance network configuration: 10.45.120.45/24, GW: 10.45.120.1
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>2024-03-15T14:38:02.667Z [INFO] Deploying Aria Operations appliance (aria-ops-01.example.local)
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>2024-03-15T14:39:44.891Z [WARN] High memory utilization detected on ESXi host esx-04.example.local (87%)
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>2024-03-15T14:40:21.556Z [INFO] Configuring Aria Operations analytics cluster
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>2024-03-15T14:41:33.778Z [INFO] Deployment 45% complete - estimated 18 minutes remaining
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH key is loaded with <code>ssh-add</code> or use password authentication; confirm root account is enabled on LCM appliance.
+<strong><code>tail: cannot open '/var/log/vmware/lcm/lcm-install.log' for reading: No such file or directory</code></strong> — Confirm LCM deployment has started and the log directory exists; check actual log path with <code>find /var/log -name "*lcm*" -type f</code>.</p>
+</div>
 <hr />
 <h2 id="phase-6-post-deployment-validation">Phase 6 — Post-Deployment Validation<a class="headerlink" href="#phase-6-post-deployment-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> LCM environment health dashboard shows all products green; each product UI is accessible; Locker certificates valid.</p>
@@ -9238,23 +9323,45 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 <p>LCM → Lifecycle Operations → Environments → prod-aria-suite → Health Check</p>
 <p>Run a health check. All products should show <strong>Healthy</strong>. Investigate any product showing <strong>Warning</strong> or <strong>Error</strong> before handing to operations.</p>
 <h3 id="verify-product-uis">Verify Product UIs<a class="headerlink" href="#verify-product-uis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Aria Operations</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vrops.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Aria Ops for Logs</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vrli.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Workspace ONE Access (vIDM)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/auth/login<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Aria Operations</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vrops.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Aria Ops for Logs</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vrli.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Workspace ONE Access (vIDM)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/auth/login<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>HTTP 200
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>HTTP 200
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>HTTP 200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to vrops.example.local port 443: Connection refused</code></strong> — Verify the Aria Operations appliance is powered on and network connectivity exists using <code>ping vrops.example.local</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag should suppress this, but if it appears, ensure you're using curl version 7.10 or later with <code>curl --version</code>.
+<strong><code>HTTP 000</code></strong> — The appliance is reachable but the service hasn't fully initialized; wait 2-3 minutes after deployment and retry the health check.</p>
+</div>
 <p>All should return HTTP 200 or 302.</p>
 <h3 id="verify-locker-certificate-expiry">Verify Locker Certificate Expiry<a class="headerlink" href="#verify-locker-certificate-expiry" title="Permanent link">&para;</a></h3>
 <p>LCM → Locker → Certificates — confirm all certificates have at least 30 days validity remaining.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ssh<span class="w"> </span>root@lcm.example.local
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Check LCM&#39;s own certificate expiry</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ssh<span class="w"> </span>root@lcm.example.local
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Check LCM&#39;s own certificate expiry</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>depth=0 CN = lcm.example.local
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>verify error:num=18:self signed certificate
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>verify return:1
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>depth=0 CN = lcm.example.local
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>verify return:1
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>notAfter=Dec 15 09:23:47 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify LCM is running and listening on port 443 with <code>netstat -tlnp | grep 443</code> or check firewall rules blocking the connection.
+<strong><code>unable to load certificate</code></strong> — The SSL handshake failed or the certificate chain is incomplete; try adding <code>-showcerts</code> to <code>openssl s_client</code> to diagnose the full chain.</p>
+</div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9341,7 +9448,7 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

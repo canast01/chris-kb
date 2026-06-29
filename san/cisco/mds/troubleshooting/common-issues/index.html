@@ -7768,90 +7768,338 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># 7. Check domain IDs for conflict</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check reason</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Look for: &quot;Port is in error-disabled state&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check log for the triggering event</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;err\|disabled\|fc1/4&quot;</span>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Interface      IP Address      Status       Proto Status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Ethernet1/1    --              up           up
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Ethernet1/2    --              up           up
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Ethernet1/3    --              down         down
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Ethernet1/4    --              up           up
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>fc1/1          --              up           up
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>fc1/2          --              up           up
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>fc1/3          --              notConnected notConnected
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>FLOGI Database for VSAN 1:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>FCID           Port Name               Node Name               Interface
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>0x010001       50:00:14:40:1a:2b:3c:4d 50:00:14:40:1a:2b:3c:5e fc1/1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>0x010002       50:00:14:40:2d:3e:4f:5a 50:00:14:40:2d:3e:4f:6b fc1/2
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>0x010003       50:00:14:40:5f:6a:7b:8c 50:00:14:40:5f:6a:7b:9d fc1/4
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>2024 Jan 15 14:32:11 mds-switch-01 %ETHPORT-5-IF_DOWN_LINK_FAILURE: Interface Ethernet1/3 is down (Link failure)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2024 Jan 15 14:31:45 mds-switch-01 %ZONE-2-ZONE_MERGE_FAILED: Zone merge failed on VSAN 10
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>2024 Jan 15 14:25:03 mds-switch-01 %FABRIC-3-FABRIC_RECONFIGURATION: Fabric reconfiguration in progress
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Temp(C)       Voltage(V)    Current(mA)   Status
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>CPU Die       48.5          --            ok
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>System Inlet  42.1          --            ok
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>PSU-1         35.2          3.3V 3.28     ok
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>PSU-2         36.1          12V 11.95     ok
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Fan-1         --            --            ok
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Fan-2         --            --            ok
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>zoneset name PROD_ZONES vsan 10
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  zone name ZONE_STORAGE vsan 10
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    member pwwn 50:00:14:40:1a:2b:3c:4d
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    member pwwn 50:00:14:40:2d:3e:4f:5a
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  zone name ZONE_HOSTS vsan 10
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    member pwwn 50:00:14:40:5f:6a:7b:8c
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    member pwwn 50:00:14:40:7c:8d:9e:af
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>Fabric Topology:
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>Switch ID  WWN                    Model        Role
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>1          50:00:14:40:aa:bb:cc:dd MDS 9710    Principal
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>2          50:00:14:40:ee:ff:00:11 MDS 9710    Subordinate
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>Port-Channel Summary:
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>Group  Protocol  Ports
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>1      LACP      Eth1/1-2 (up)
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>2      LACP      Eth1/3-4 (up)
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>Domain List for VSAN 10:
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>Domain ID  WWN                    Principal  Status
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>1          50:00:14:
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>shutdown
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>no<span class="w"> </span>shutdown
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check reason</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Look for: &quot;Port is in error-disabled state&quot;</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm state returns to &#39;up&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check log for the triggering event</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;err\|disabled\|fc1/4&quot;</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fc1/4 is trunking
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Hardware is Fibre Channel, SFP is present
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Port WWN is 50:00:09:73:a1:2c:5d:41
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Admin port mode is F, Oper port mode is F
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Port is in error-disabled state
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Trunk mode is ON
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Speed is 16 Gbps
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Buffer Credit is 64
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  B2B Credit is 64
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024 Jan 15 14:32:18 +00:00 mds-switch-01 %MDS-4-FCPORT_DISABLED: fc1/4 disabled (link failure)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024 Jan 15 14:32:15 +00:00 mds-switch-01 %MDS-3-FCERROR: fc1/4 CRC error threshold exceeded (errors: 847)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2024 Jan 15 14:32:10 +00:00 mds-switch-01 %MDS-2-FCLINK_DOWN: fc1/4 link down
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Is the host HBA logged into the fabric?</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-pwwn&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. Is the storage target logged in?</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;storage-pwwn&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. Is there a zone pairing these two devices?</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span>&lt;host-pwwn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 4. Is the zoneset containing that zone currently active?</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 5. Are both ports in the same VSAN?</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;host-port&gt;
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;storage-port&gt;
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (should be <code>enable</code> mode); use <code>show ?</code> to list available commands.
+<strong><code>Port fc1/4 not found</code></strong> — Confirm the port number exists on this switch model with <code>show interface brief | grep fc1</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>shutdown
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>no<span class="w"> </span>shutdown
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Confirm state returns to &#39;up&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fc1/4 is up
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Hardware is Fibre Channel
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Port WWN is 50:00:09:73:00:12:a4:5f
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Admin port mode is F, Oper port mode is F
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Allowed speeds: 1 Gbps, 2 Gbps, 4 Gbps, 8 Gbps, 16 Gbps
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Speed is 8 Gbps
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Port mode is F
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Port vsan is 1
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Trunk mode is ON
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Trunk vsans (admin): 1-4094
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Trunk vsans (oper): 1-4094
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Last clearing of &quot;show interface&quot; counters: 1d2h
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (interface mode) before entering shutdown/no shutdown commands.
+<strong><code>fc1/4 is down (Administratively down)</code></strong> — Ensure the no shutdown command executed successfully; check for port hardware issues or SFP module problems if the port remains down after no shutdown.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Is the host HBA logged into the fabric?</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-pwwn&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Is the storage target logged in?</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;storage-pwwn&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Is there a zone pairing these two devices?</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span>&lt;host-pwwn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 4. Is the zoneset containing that zone currently active?</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. Are both ports in the same VSAN?</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;host-port&gt;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;storage-port&gt;
 </code></pre></div>
 <img alt="Kroki" src="https://kroki.io/d2/svg/eNqdUk1v2zAMvetXEL0Xg689bHCceCtQZMUCJMDgC2PRNlGbCiQhbTbsv4-W5u7iXXZ6MM33QVKWPbWRnTyA536IxpQPcPfFhQgtirgIgQhCdB57uoOfYcALaa-SUPqRfpnN0n85nfbA0kgY3Ct0o-sZLEY8Y6BP69RCudVA7QtcnFeriJEayZXjodwDhsC9TCRxKbd4Hgk-wKF-XtWsVPKQ4_5HoupvIvQebzkXim0k5ZloOpMPA19W6Vtlf3dC0DqJyMLSN3J2cQBLV24pAL1xiGHdfJvMPekS4Mes8srKxJE1bmiktBaiy38C6UJKPdz1vVlLq6q7JVPi4Mz5x_C72X_W0k7ARVxw0pv8Kd_PX3ANKLBf1ajT-nkcoUMedf51q3q2OpLn7gan0_M-wISxHRqpn75-fsyHozfNMN6Ww5MMKC3ZeVrVhcnZ97fyePwG3IHlriOvjyU9nrDqbEq4_wgbs0lQZKxMlaDIuDXbBEXGndklKDLWpk5QmN_irxX6?" />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check zone status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check for pending changes in enhanced mode</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Retry activate</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>&lt;zoneset-name&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check ISL port state</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1<span class="w"> </span>counters<span class="w"> </span>errors
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check trunk state and VSAN allowance</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>trunk
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check port-channel membership if applicable</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check for VSAN isolation reason</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>show<span class="w"> </span>vsan
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Identify flapping port</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;link down\|link up\|flogi&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check zone status</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check error counters on the suspect port</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>counters<span class="w"> </span>errors
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check for pending changes in enhanced mode</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check optical power levels</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>transceiver
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check overall CPU and memory</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>system<span class="w"> </span>resources
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Find top CPU consumers</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>processes<span class="w"> </span>cpu<span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check if caused by port flap storm (many FLOGI events)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-ci<span class="w"> </span><span class="s2">&quot;link down&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Always run this after every configuration change</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify startup config was updated</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>show<span class="w"> </span>startup-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;changed-item&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>checkpoint<span class="w"> </span>post-change
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>checkpoint<span class="w"> </span>summary
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Retry activate</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>&lt;zoneset-name&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VSAN: 10
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Zone Name                      Status       Type
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>------                         ------       ----
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>zone_prod_fc1                  Active       Standard
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>zone_prod_fc2                  Active       Standard
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>zone_test_01                   Active       Standard
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>zone_legacy_storage            Suspended    Standard
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Total zones: 4
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>Commit operation completed successfully for VSAN 10.
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Pending changes: 0
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Zoneset name: zoneset_prod_v2
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Activation status: SUCCESS
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>VSAN: 10
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Zoneset activated successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the zoneset name exists with <code>show zoneset</code> and confirm the VSAN number is correct.
+<strong><code>% Zoneset activation failed: Configuration locked by another user</code></strong> — Wait for the active session to complete or use <code>no zone lock</code> to release the lock if safe.
+<strong><code>% Commit failed: Pending zone changes conflict with active zoneset</code></strong> — Review pending changes with <code>show zone pending-changes vsan 10</code> and resolve conflicts before committing.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check ISL port state</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1<span class="w"> </span>counters<span class="w"> </span>errors
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check trunk state and VSAN allowance</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>show<span class="w"> </span>trunk
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check port-channel membership if applicable</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Check for VSAN isolation reason</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>show<span class="w"> </span>vsan
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Interface fc2/1 is trunking
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Hardware is Fibre Channel, SFP is present
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Port WWN is 50:00:d3:1a:2b:4c:5d:6e
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Admin port mode is F, Oper port mode is F
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Trunk mode is ON
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  Speed is 16 Gbps
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  Buffer credit is 64
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>fc2/1 Errors:
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  CRC errors: 0
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  Encoding disparity errors: 0
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  Link failures: 2
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  Sync losses: 0
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  Invalid transmission words: 0
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Trunk Information
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>  Port      Native-VSAN  Port-VSAN-Allowed
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  fc2/1     1            1,10,20,50-100
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>  fc3/1     1            1,10,20,50-100
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>  fc4/1     1            1,10-15,30
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Port-Channel Summary
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>  Group  Port-Channel  Type   Ports
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>  1      Po1           F      fc2/1(P) fc3/1(P)
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>  2      Po2           F      fc4/1(S) fc5/1(S)
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>VSAN Information
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>  VSAN ID  Name         State   Interoperability
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>  1        VSAN0001     active  default
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>  10       VSAN0010     active  default
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>  20       VSAN0020     active  default
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>  50       VSAN0050     active  default
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>...
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>VSAN 20 Information
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>  VSAN ID: 20
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>  VSAN Name: VSAN0020
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>  State: active
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>  Interoperability Mode: default
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>  Loadbalancing: src-id
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>  ---OUTPUT---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax for your MDS firmware version; use <code>show interface ?</code> to see available options.
+<strong><code>Port fc2/1 is suspended</code></strong> — Check for port faults with <code>show interface fc2/1 | include fault</code> and resolve hardware/SFP issues before the port will become operational.
+<strong><code>VSAN &lt;id&gt; does not exist</code></strong> — Confirm the VSAN ID is created and active with <code>show vsan</code> before attempting to display its detailed configuration.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>VSAN 10 Information
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>===================
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Virtual SAN ID: 10
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>State: Active
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Interop Mode: ON
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>FC Port Channel Load Balancing: Disabled
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Domain ID List for VSAN 10:
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Domain ID  | Principal | WWN              | FC Address | State
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>-----------|-----------|------------------|------------|-------
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>1          | Yes       | 50:00:14:40:1a:2b| 0x010000   | Active
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>2          | No        | 50:00:14:40:1c:3d| 0x020000   | Active
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>3          | No        | 50:00:14:40:2e:4f| 0x030000   | Active
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>5          | No        | 50:00:14:40:5a:6b| 0x050000   | Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact syntax matches your MDS OS version (some versions use <code>show fcdomain status vsan</code> instead).
+<strong><code>VSAN 10 does not exist</code></strong> — Confirm VSAN 10 is created and active with <code>show vsan</code> before querying domain information.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Identify flapping port</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;link down\|link up\|flogi&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check error counters on the suspect port</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>counters<span class="w"> </span>errors
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Check optical power levels</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>transceiver
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>2024 Jan 15 14:32:18 +00:00 mds9710-1 %MDS-4-LINK_DOWN: fc1/6 link down
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>2024 Jan 15 14:32:22 +00:00 mds9710-1 %MDS-4-LINK_UP: fc1/6 link down-&gt;up
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>2024 Jan 15 14:32:45 +00:00 mds9710-1 %MDS-4-LINK_DOWN: fc1/6 link down
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>2024 Jan 15 14:32:49 +00:00 mds9710-1 %MDS-4-LINK_UP: fc1/6 link down-&gt;up
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>2024 Jan 15 14:33:12 +00:00 mds9710-1 %MDS-4-FLOGI_REJECT: fc1/6 FLOGI rejected from 50:00:14:40:1a:2b:3c:4d
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Port fc1/6 -- Errors
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  CRC errors                    : 47
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  Disparity errors              : 12
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  Link failures                 : 8
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  Loss of signal                : 3
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  Loss of frame                 : 1
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  F_busy frames received        : 0
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>  P_busy frames received        : 0
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>fc1/6 transceiver information:
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  Transceiver is present
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>  type is SFP
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>  Part number is QSFP-100G-LR4-S
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>  Serial number is ABC1234567
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>  Nominal bitrate is 100 Gbps
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>  Link length supported for 50/125um OM3 fiber is 70 meters
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>  Link length supported for 9/125um SM fiber is 10 km
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>  Transmit power                : -2.1 dBm
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>  Receive power                 : -8.4 dBm
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>  Transceiver temperature       : 38.5 C
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>  Transceiver voltage           : 3.29 V
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax for your MDS firmware version; use <code>show logging last 200</code> without piping to grep if the device doesn't support grep in show commands.
+<strong><code>Port fc1/6 does not exist</code></strong> — Confirm the port number is valid for your MDS model (e.g., MDS 9710 has fc1/1 through fc1/48) using <code>show interface brief</code>.
+<strong><code>Receive power: -12.8 dBm (below threshold)</code></strong> — Replace the transceiver or check fiber connection for dirt/damage; optical power below -10 dBm typically indicates a failing SFP or bad cable.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check overall CPU and memory</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>show<span class="w"> </span>system<span class="w"> </span>resources
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Find top CPU consumers</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>show<span class="w"> </span>processes<span class="w"> </span>cpu<span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Check if caused by port flap storm (many FLOGI events)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-ci<span class="w"> </span><span class="s2">&quot;link down&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Load average: 1.2, 1.5, 1.8
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Memory Usage: 65% (4096 MB of 6291 MB used)
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>CPU Usage: 42%
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>PID    Process Name              CPU%    Memory
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>----   ----------------------    ----    ------
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>1247   feprom                    18.5    256 MB
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>892    syslogd                   12.3    128 MB
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>1156   snmp                      8.7     92 MB
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>734    kernel                    6.2     512 MB
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>1089   portd                     4.1     64 MB
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>...
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid command name 'show processes cpu sort'</code></strong> — Use the correct syntax <code>show processes cpu | sort</code> with a pipe instead of the sort keyword.
+<strong><code>grep: (standard input) is empty</code></strong> — Increase the log buffer with <code>show logging last 500</code> or check if logging is enabled with <code>show logging info</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Always run this after every configuration change</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Verify startup config was updated</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>show<span class="w"> </span>startup-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;changed-item&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Destination filename [startup-config]? 
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>1024 bytes copied in 1.234 secs (832 bytes/sec)
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>fcswitch# show startup-config | grep zone
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>zone name PROD_ZONE vsan 10
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>zone name TEST_ZONE vsan 20
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>zone member pwwn 50:00:09:73:a1:2b:3c:4d vsan 10
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>zone member pwwn 50:00:09:73:a1:2b:3c:5e vsan 20
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the device is in config mode and supports the <code>copy</code> command (some MDS versions require <code>copy running-config startup-config</code> without interactive prompts).
+<strong><code>% Startup config not found</code></strong> — Ensure the startup configuration file exists by running <code>dir bootflash:</code> and confirm the device has write permissions to the startup location.
+<strong><code>(no matching lines)</code></strong> — Confirm the exact spelling and context of <code>&lt;changed-item&gt;</code> matches what was configured, as <code>grep</code> is case-sensitive and searches the entire startup config output.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>checkpoint<span class="w"> </span>post-change
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>show<span class="w"> </span>checkpoint<span class="w"> </span>summary
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVU8Fq4zAQvfsrht5DsdtTD1scx1kMIWsIJLAYFsWe2KL2yEhySlr6XXvfL9uRujUUlMKe5qE3aJ7eGzVSY22logfQsu1sFKUPcJPewKvpxIh8yrSgtse3KI2ZMp16hlFpu6g7QYQ9mGkYhL5UtEctTxcYcDii9j1grLBoKso6rJ9gty5BUAO1OPYYHpHwiGK3gVvIf5XuhsKYCU2wecm9yzAzKz0bQf8UmU6OFflTqyd6qijtZUuw36Vb6KWxoAiOynaA1FyZ-D_yMu7NwswsT5JFfRI1Qq0mh9mrokGyzkjTq-dFo4UkaPAsa6woJ2fdZ8a-Bxie5ASXPELpQRCP-ULvyqlaxWHO3fMeos_Ve_bnt0-Uy_VAV3cfT31RhCBY6hnnVfFuHw7l1ni64UVRwyAtjByBpBbcjrXX9N7z1T8Vub4vnpVzVx5mAjGc6o9l3Zb7221Z7DkZOsl21rze_PheuFUZheagvB_h651nG9VySGsh-0lfEbjjtkMnLEgDtuNwL8No1fAYfrTLKMhEKSy-QRrzN_UgiZauLmP-DR4kUeZqFvP-eZBw5A6sZnDHeXlwH-Wu5jGb5EES_QWtymGO?" /></p>
@@ -7901,7 +8149,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

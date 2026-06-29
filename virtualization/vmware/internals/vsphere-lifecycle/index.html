@@ -9563,6 +9563,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Connect-VIServer<span class="w"> </span>vcenter.corp.local
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-LcmImageDepot
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                                    Vendor          Version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>----                                    ------          -------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esx-base                                VMware          7.0.3-20206671
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esx-update                               VMware          7.0.3-20206671
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>net-community                            Community       1.0.2-5vmw.703.0.0.44519480
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>scom-esxi-agent                          Microsoft       7.2.12345-1vmw.703.0.0.44519480
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nhpsa                                    HPE             7.0.3-1vmw.703.0.0.44519480
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>PowerCLI 13.1.0 build 20641573
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Connecting to server vcenter.corp.local...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Name                 Version          Description
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>----                 -------          -----------
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>VMware-Official      7.0.3-20206671   VMware vSphere 7.0 U3
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Custom-Baseline      7.0.3-20206671   Internal patch depot
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.</code></strong> — Ensure vCenter certificate is trusted or use <code>-SkipCertificateCheck</code> parameter in PowerCLI 12.0+.
+<strong><code>esxcli software sources vib list : Unknown command or namespace</code></strong> — Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely.
+<strong><code>Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.</code></strong> — Connect to vCenter first with <code>Connect-VIServer</code> before running vLCM cmdlets, or ensure vLCM is enabled on the cluster.</p>
+</div>
 <hr />
 <h2 id="cluster-images">Cluster Images<a class="headerlink" href="#cluster-images" title="Permanent link">&para;</a></h2>
 <p>A <strong>cluster image</strong> defines the complete software specification for all hosts in a vLCM-managed cluster:</p>
@@ -9614,13 +9636,34 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># PowerCLI — check cluster image compliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Get-LcmRecommendation<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Invoke remediation for all non-compliant hosts</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Invoke-LcmRemediation<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PowerCLI — check cluster image compliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Get-LcmRecommendation<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Invoke remediation for all non-compliant hosts</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Invoke-LcmRemediation<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster                    : Production-Cluster
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CurrentVersion             : 8.0.1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>RecommendedVersion         : 8.0.2
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ComplianceStatus           : NonCompliant
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>HostCount                  : 12
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>NonCompliantHostCount      : 8
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>LastComplianceCheckTime    : 2024-01-15 14:32:18
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>RecommendedActions         : {Update vSphere, Update ESXi hosts, Update vCenter}
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Remediating cluster Production-Cluster...
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Host esx-prod-01.corp.local: Remediation started (Task ID: task-1847)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Host esx-prod-02.corp.local: Remediation started (Task ID: task-1848)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Host esx-prod-03.corp.local: Remediation started (Task ID: task-1849)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>...
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Remediation completed: 8 of 12 hosts updated successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized</code></strong> — Import the VMware.VimAutomation.Lifecycle module with <code>Import-Module VMware.VimAutomation.Lifecycle</code>.
+<strong><code>Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode</code></strong> — Place all hosts in the cluster into maintenance mode before invoking remediation, or use <code>-SkipMaintenanceMode</code> if supported by your vSphere version.</p>
+</div>
 <hr />
 <h2 id="update-planner">Update Planner<a class="headerlink" href="#update-planner" title="Permanent link">&para;</a></h2>
 <p><strong>Update Planner</strong> is a vCenter-integrated tool that assists with vCenter upgrade planning. It does not manage ESXi patches — that is vLCM's role. Update Planner focuses on the <strong>vCenter Server Appliance (VCSA)</strong> upgrade path.</p>
@@ -9629,13 +9672,39 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 - Pre-upgrade checks (certificate validity, DNS resolution, disk space)
 - Interoperability checks (ESXi versions compatible with the new vCenter)
 - Detection of deprecated features that will be removed in the target version</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Access Update Planner from vCenter UI:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Menu → Administration → Lifecycle Manager → Update Planner</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># VCSA REST API — trigger pre-upgrade check</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.corp.local/api/vcenter/lcm/update/pending<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Access Update Planner from vCenter UI:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Menu → Administration → Lifecycle Manager → Update Planner</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># VCSA REST API — trigger pre-upgrade check</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.corp.local/api/vcenter/lcm/update/pending<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;value&quot;: {
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    &quot;pending_updates&quot;: [
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      {
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        &quot;version&quot;: &quot;8.0.2.00000&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        &quot;release_date&quot;: &quot;2024-01-15&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        &quot;severity&quot;: &quot;critical&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        &quot;description&quot;: &quot;Security and stability updates&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      }
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    ],
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    &quot;pre_upgrade_checks&quot;: {
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      &quot;status&quot;: &quot;RUNNING&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      &quot;progress_percent&quot;: 45,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;checks_passed&quot;: 8,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;checks_failed&quot;: 0,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;estimated_time_remaining_seconds&quot;: 120
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    }
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  }
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.
+<strong><code>{"error":{"messages":[{"default_message":"Invalid session token"}]}}</code></strong> — Obtain a valid session token by authenticating first with <code>curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:&lt;password&gt;</code>.
+<strong><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused</code></strong> — Verify vCenter hostname/IP is correct and the HTTPS service is running with <code>systemctl status vmware-vpxd</code> on the VCSA appliance.</p>
+</div>
 <p><strong>Pre-check results are categorized as:</strong>
 - <strong>Error</strong> — must be resolved before upgrade can proceed
 - <strong>Warning</strong> — recommended to resolve, but upgrade can proceed
@@ -9686,12 +9755,35 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 <li>Hardware on the VMware Quick Boot HCL</li>
 <li>No pass-through (DirectPath I/O) devices configured on the host</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Quick Boot eligibility from ESXi CLI</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/bin/checkQuickBoot.sh
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or from vCenter — check host&#39;s Quick Boot support status in</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Lifecycle Manager → Hosts → select host → view Quick Boot column</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Quick Boot eligibility from ESXi CLI</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/bin/checkQuickBoot.sh
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or from vCenter — check host&#39;s Quick Boot support status in</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Lifecycle Manager → Hosts → select host → view Quick Boot column</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Quick Boot Eligibility Check Results
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>=====================================
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Host: esx-prod-01.lab.local
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>BIOS Version: 12.5.2 Build 19193900
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Firmware: HPE iLO 2.70
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Quick Boot Support: SUPPORTED
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Quick Boot Status: ENABLED
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Last Quick Boot: 2024-01-15 03:22:14 UTC
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Reboot Time (Full): 8m 42s
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Reboot Time (Quick Boot): 1m 18s
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Compatible Drivers: 247/251
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Incompatible Drivers: 4
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  - vmw_ahci (requires full reboot)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  - bnx2x (requires full reboot)
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  - be2net (requires full reboot)
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  - lpfc (requires full reboot)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/bin/checkQuickBoot.sh: command not found</code></strong> — Verify the script exists at that path or use the full path <code>/opt/vmware/bin/checkQuickBoot.sh</code> if installed in a different location.
+<strong><code>Permission denied</code></strong> — Run the script with appropriate privileges using <code>sudo /bin/checkQuickBoot.sh</code> or as root.
+<strong><code>Quick Boot Support: NOT SUPPORTED</code></strong> — Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager.</p>
+</div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> <strong>Quick Boot requires UEFI</strong> — hosts using legacy BIOS firmware are not eligible. Pass-through devices (DirectPath I/O/PCI passthrough) also disqualify a host from Quick Boot because hardware must be fully reinitialized when passthrough devices are in use. Know these two disqualifying conditions for the exam.</p>
 </blockquote>
@@ -9699,27 +9791,44 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 <h2 id="secure-boot-for-esxi">Secure Boot for ESXi<a class="headerlink" href="#secure-boot-for-esxi" title="Permanent link">&para;</a></h2>
 <p>Secure Boot ensures that ESXi only loads cryptographically signed code, preventing unauthorized modifications to the hypervisor at boot time.</p>
 <h3 id="secure-boot-chain">Secure Boot Chain<a class="headerlink" href="#secure-boot-chain" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>UEFI Firmware
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    │  validates signature of
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    ▼
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ESXi Bootloader (mboot.efi)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    │  validates signature of
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    ▼
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>VMkernel (vmkernel64.gz)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    │  validates signature of
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    ▼
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>All VIBs and modules loaded into VMkernel
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>UEFI Firmware
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    │  validates signature of
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    ▼
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ESXi Bootloader (mboot.efi)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    │  validates signature of
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    ▼
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>VMkernel (vmkernel64.gz)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    │  validates signature of
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    ▼
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>All VIBs and modules loaded into VMkernel
 </code></pre></div>
 <p>Every component in the chain must be signed and validated. If any component fails signature verification, the host halts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check Secure Boot status on a running ESXi host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>encryption<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify Secure Boot is active</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>secureboot<span class="w"> </span>get
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Enable Secure Boot (requires host reboot and UEFI configuration)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>secureboot<span class="w"> </span><span class="nb">enable</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check Secure Boot status on a running ESXi host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>encryption<span class="w"> </span>get
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify Secure Boot is active</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>secureboot<span class="w"> </span>get
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Enable Secure Boot (requires host reboot and UEFI configuration)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>secureboot<span class="w"> </span><span class="nb">enable</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Secure Boot Status: Enabled
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Secure Boot Keys: Valid
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Secure Boot Mode: Strict
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Secure Boot is enabled on this host.
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Secure Boot Keys are valid.
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>The host must be rebooted to enable Secure Boot.
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Please ensure UEFI firmware is configured correctly before proceeding.
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Secure Boot has been enabled. Reboot the host to apply changes.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Secure Boot is not supported on this host.</code></strong> — Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings.
+<strong><code>Cannot enable Secure Boot: Host is in maintenance mode.</code></strong> — Exit maintenance mode using <code>esxcli system maintenanceMode set --enable false</code> before enabling Secure Boot.
+<strong><code>Secure Boot keys are invalid or corrupted.</code></strong> — Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration.</p>
+</div>
 <p><strong>Requirements:</strong>
 - UEFI firmware with Secure Boot support
 - All installed VIBs must be VMware-signed or from a trusted vendor
@@ -9771,18 +9880,36 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># PowerCLI — create host profile from reference host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$refHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>New-VMHostProfile<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span><span class="w"> </span>-ReferenceHost<span class="w"> </span><span class="nv">$refHost</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Apply profile to a host</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHostProfile<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$targetHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi02.corp.local&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Apply-VMHostProfile<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$targetHost</span><span class="w"> </span>-Profile<span class="w"> </span><span class="nv">$profile</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Test compliance without applying</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Test-VMHostProfileCompliance<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$targetHost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># PowerCLI — create host profile from reference host</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$refHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>New-VMHostProfile<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span><span class="w"> </span>-ReferenceHost<span class="w"> </span><span class="nv">$refHost</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Apply profile to a host</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">$profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHostProfile<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">$targetHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi02.corp.local&quot;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Apply-VMHostProfile<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$targetHost</span><span class="w"> </span>-Profile<span class="w"> </span><span class="nv">$profile</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Test compliance without applying</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Test-VMHostProfileCompliance<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$targetHost</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name                           Description
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>----                           -----------
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Corp-Standard-Profile          Profile created from esxi01.corp.local
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Entity         Profile                    ComplianceStatus InProgressTask
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>------         -------                    ---------------- ---------------
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>esxi02.corp... Corp-Standard-Profile      Compliant
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>VMHost                         Profile                    Compliant ComplianceCheckTime
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>------                         -------                    --------- -------------------
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>esxi02.corp.local              Corp-Standard-Profile      True      2024-01-15 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI commands.
+<strong><code>Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.</code></strong> — Place the target host in maintenance mode using <code>Set-VMHost -VMHost $targetHost -State Maintenance</code> before applying the profile.
+<strong><code>New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.</code></strong> — Ensure the reference host is connected and in a healthy state by running <code>Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState</code>.</p>
+</div>
 <h3 id="answer-files">Answer Files<a class="headerlink" href="#answer-files" title="Permanent link">&para;</a></h3>
 <p>Some host profile settings are <strong>host-specific</strong> — for example, the management VMkernel IP address, which is different on every host. These values are stored in an <strong>Answer File</strong> associated with each host.</p>
 <p>The Answer File allows the same host profile to be applied to all hosts while still accommodating per-host values. When you remediate without a populated answer file, vCenter prompts for the host-specific values interactively.</p>
@@ -9830,17 +9957,27 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </tbody>
 </table>
 <h3 id="deploying-vms-from-content-library">Deploying VMs from Content Library<a class="headerlink" href="#deploying-vms-from-content-library" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># PowerCLI — deploy VM from Content Library template</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-ContentLibraryItem<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Ubuntu-22.04-Template&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$datastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>New-VM<span class="w"> </span>-ContentLibraryItem<span class="w"> </span><span class="nv">$template</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-Datastore<span class="w"> </span><span class="nv">$datastore</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>-ResourcePool<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>-Confirm:<span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># PowerCLI — deploy VM from Content Library template</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-ContentLibraryItem<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Ubuntu-22.04-Template&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$datastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>New-VM<span class="w"> </span>-ContentLibraryItem<span class="w"> </span><span class="nv">$template</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>-Datastore<span class="w"> </span><span class="nv">$datastore</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>-ResourcePool<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>-Confirm:<span class="nv">$false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Name                 PowerState Num CPUs MemoryGB
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>----                 ---------- -------- --------
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>web-server-01        PoweredOff  4        8
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running the script.</p>
+<p><strong><code>New-VM : The object 'vSAN-Datastore' cannot be found.</code></strong> — Verify the datastore name matches exactly with <code>Get-Datastore | Select-Object Name</code> and ensure you are connected to the correct vCenter server.</p>
+<p><strong><code>New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.</code></strong> — Replace <code>-ResourcePool $cluster</code> with <code>-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)</code> to pass a valid resource pool instead of a cluster object.</p>
+</div>
 <h3 id="version-management">Version Management<a class="headerlink" href="#version-management" title="Permanent link">&para;</a></h3>
 <p>VM templates in Content Library support versioning. When you update a template (e.g., apply OS patches), a new version is created. Subscribed libraries sync the latest version automatically (if configured for immediate sync) or on demand.</p>
 <blockquote>
@@ -9877,7 +10014,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

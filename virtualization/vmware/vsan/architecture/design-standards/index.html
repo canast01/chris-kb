@@ -9423,6 +9423,22 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify MTU 9000 end-to-end</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;remote-vsan-vmk-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 192.168.100.45 (192.168.100.45): 8972 data bytes
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>8980 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=1.234 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>8980 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=1.156 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>8980 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=1.289 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>8980 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=1.198 ms
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>8980 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=1.267 ms
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>--- 192.168.100.45 statistics ---
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>round-trip min/avg/max = 1.156/1.229/1.289 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Fragmentation needed and DF set</code></strong> — Lower the packet size (try <code>-s 8972</code> instead of larger values) or verify MTU 9000 is configured on both the physical NIC and vSAN VMkernel port.
+<strong><code>No route to host</code></strong> — Verify the vSAN VMkernel interface (vmk2) is on the correct VLAN and has network connectivity to the remote vSAN cluster node.
+<strong><code>vmkping: Unknown host &lt;remote-vsan-vmk-ip&gt;</code></strong> — Replace <code>&lt;remote-vsan-vmk-ip&gt;</code> with an actual IP address (e.g., 192.168.100.45) or verify DNS resolution is working.</p>
+</div>
 <h3 id="stretched-cluster-requirements">Stretched Cluster Requirements<a class="headerlink" href="#stretched-cluster-requirements" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9640,13 +9656,32 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 <li>10% operational headroom</li>
 </ul>
 <p><strong>Monitoring commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cluster capacity from any ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># PowerCLI capacity overview</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-VsanSpaceUsage<span class="w"> </span>-Cluster<span class="w"> </span>&lt;clustername&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cluster capacity from any ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PowerCLI capacity overview</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Get-VsanSpaceUsage<span class="w"> </span>-Cluster<span class="w"> </span>&lt;clustername&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                           Capacity          Used              Available        
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vsan-disk-group-001            10.95 TB           3.24 TB            7.71 TB          
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vsan-disk-group-002            10.95 TB           2.89 TB            8.06 TB          
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vsan-disk-group-003            10.95 TB           4.12 TB            6.83 TB          
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Cluster UUID: 52d4a8f1-7c3e-4d2a-b1e9-8f6c2a9d3e1b
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Cluster Name: prod-vsan-cluster-01
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Node Count: 4
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Health Status: Healthy
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Stretched Cluster: false
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Cluster                Space Usage (GB)    Provisioned (GB)    Used (GB)    Available (GB)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>prod-vsan-cluster-01   18240               24576               10250        13990
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the vSAN cluster</code></strong> — Verify the ESXi host is part of a vSAN cluster and network connectivity exists to cluster members.
+<strong><code>Get-VsanSpaceUsage : The term 'Get-VsanSpaceUsage' is not recognized</code></strong> — Import the VMware.VimAutomation.Vsan module using <code>Import-Module VMware.VimAutomation.Vsan</code> before running PowerCLI commands.</p>
+</div>
 <p>Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.</p>
 <hr />
 <h2 id="sizing-guidance">Sizing Guidance<a class="headerlink" href="#sizing-guidance" title="Permanent link">&para;</a></h2>
@@ -9701,29 +9736,29 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 </table>
 <h3 id="cpu-sizing">CPU Sizing<a class="headerlink" href="#cpu-sizing" title="Permanent link">&para;</a></h3>
 <p>vSAN has minimal CPU overhead on each host (typically &lt; 5%). CPU sizing is driven by VM workload, not vSAN itself.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total vCPUs needed = VM count × average vCPUs per VM
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Target vCPU:pCPU ratio = 4:1 to 8:1 (compute-light) or 2:1 to 4:1 (compute-heavy)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Physical cores per host = Total vCPUs / ratio / number of hosts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Total vCPUs needed = VM count × average vCPUs per VM
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Target vCPU:pCPU ratio = 4:1 to 8:1 (compute-light) or 2:1 to 4:1 (compute-heavy)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Physical cores per host = Total vCPUs / ratio / number of hosts
 </code></pre></div>
 <p><strong>Example:</strong> 200 VMs × 4 vCPUs = 800 vCPUs. At 4:1 ratio across 6 hosts = 34 physical cores per host. A dual-socket host with 18 cores per socket (36 pCPU) satisfies this.</p>
 <h3 id="ram-sizing">RAM Sizing<a class="headerlink" href="#ram-sizing" title="Permanent link">&para;</a></h3>
 <p>vSAN reserves memory for its own processes (~5–8 GB per host for OSA; ~8–12 GB for ESA). Account for this in host RAM sizing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Total VM RAM = VM count × average RAM per VM
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vSAN overhead per host = 8 GB (add to host RAM requirement)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Target RAM per host = (Total VM RAM / hosts) + 8 GB vSAN overhead
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Total VM RAM = VM count × average RAM per VM
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vSAN overhead per host = 8 GB (add to host RAM requirement)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Target RAM per host = (Total VM RAM / hosts) + 8 GB vSAN overhead
 </code></pre></div>
 <p><strong>Example:</strong> 200 VMs × 16 GB = 3,200 GB total. Across 6 hosts = 534 GB per host + 8 GB overhead = 542 GB. Size to 512 GB or 768 GB DIMMs depending on available configurations.</p>
 <h3 id="storage-capacity-sizing">Storage Capacity Sizing<a class="headerlink" href="#storage-capacity-sizing" title="Permanent link">&para;</a></h3>
 <p>vSAN capacity is calculated after accounting for FTT overhead and the required 30% slack:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Raw storage per VM = usable storage × FTT overhead multiplier
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>FTT overhead:
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  RAID-1 (FTT=1): 2× (each object stored twice)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  RAID-5 (FTT=1): 1.33× (4 data + 1 parity stripe; 33% overhead)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  RAID-6 (FTT=2): 1.5×  (4 data + 2 parity; 50% overhead)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Total raw storage = VM count × storage per VM × FTT multiplier
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Add 30% slack: total_with_slack = total_raw / 0.70
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Capacity per host = total_with_slack / host count
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Raw storage per VM = usable storage × FTT overhead multiplier
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>FTT overhead:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  RAID-1 (FTT=1): 2× (each object stored twice)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  RAID-5 (FTT=1): 1.33× (4 data + 1 parity stripe; 33% overhead)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  RAID-6 (FTT=2): 1.5×  (4 data + 2 parity; 50% overhead)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Total raw storage = VM count × storage per VM × FTT multiplier
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Add 30% slack: total_with_slack = total_raw / 0.70
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Capacity per host = total_with_slack / host count
 </code></pre></div>
 <p><strong>Example (RAID-5, FTT=1):</strong>
 - 200 VMs × 200 GB = 40 TB usable
@@ -9758,12 +9793,12 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Total IOPS needed = VM count × peak IOPS per VM × write amplification
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Write amplification (RAID-1 FTT=1) = 2× (write goes to 2 hosts)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Write amplification (RAID-5 FTT=1) = ~1.33× (parity compute overhead)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>IOPS per host = total IOPS / host count
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Disk groups per host = IOPS per host / per-disk IOPS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Total IOPS needed = VM count × peak IOPS per VM × write amplification
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Write amplification (RAID-1 FTT=1) = 2× (write goes to 2 hosts)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Write amplification (RAID-5 FTT=1) = ~1.33× (parity compute overhead)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>IOPS per host = total IOPS / host count
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Disk groups per host = IOPS per host / per-disk IOPS
 </code></pre></div>
 <p>For most all-flash vSAN deployments, IOPS is not the bottleneck — latency and capacity are. Only size for IOPS if running extremely latency-sensitive workloads (OLTP databases, NVMe-backed VDI).</p>
 <h3 id="reference-cluster-sizes">Reference Cluster Sizes<a class="headerlink" href="#reference-cluster-sizes" title="Permanent link">&para;</a></h3>
@@ -9885,7 +9920,7 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

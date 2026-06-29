@@ -8597,163 +8597,503 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--desired-value<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
-<p>Track the request until it reaches <code>CASE_CLOSED</code> with the new limit applied:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-requested-service-quota-change<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--request-id<span class="w"> </span>&lt;request-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RequestedQuota.Status&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    &quot;RequestedQuota&quot;: {
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        &quot;Id&quot;: &quot;sq-req-0a7f8c2e9b1d4f6a&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        &quot;ServiceCode&quot;: &quot;ec2&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        &quot;ServiceName&quot;: &quot;Amazon Elastic Compute Cloud&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        &quot;QuotaCode&quot;: &quot;L-34B43A08&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        &quot;QuotaName&quot;: &quot;Running On-Demand Standard instances&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        &quot;DesiredValue&quot;: 6.0,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        &quot;Status&quot;: &quot;PENDING&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        &quot;CreatedDate&quot;: 1704067200.0,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        &quot;LastUpdatedDate&quot;: 1704067200.0,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        &quot;Requester&quot;: &quot;arn:aws:iam::123456789012:user/admin-user&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        &quot;QuotaArn&quot;: &quot;arn:aws:service-quotas:us-east-1:123456789012:ec2/L-34B43A08&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        &quot;GlobalQuota&quot;: false
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    }
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (AccessDenied) when calling the RequestServiceQuotaIncrease operation: User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: servicequotas:RequestServiceQuotaIncrease</code></strong> — Add the <code>servicequotas:RequestServiceQuotaIncrease</code> IAM permission to the user or role.
+<strong><code>An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-34B43A08</code></strong> — Verify the quota code is correct by running <code>aws service-quotas list-service-quotas --service-code ec2 --region us-east-1</code>.
+<strong><code>An error occurred (ServiceException) when calling the RequestServiceQuotaIncrease operation: The request rate exceeded the limit. Please retry after some time.</code></strong> — Wait a few seconds before retrying the quota increase request.</p>
+</div>
+<p>Track the request until it reaches <code>CASE_CLOSED</code> with the new limit applied:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-requested-service-quota-change<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--request-id<span class="w"> </span>&lt;request-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RequestedQuota.Status&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&quot;APPROVED&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (AccessDeniedException) when calling the GetRequestedServiceQuotaChange operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:GetRequestedServiceQuotaChange</code></strong> — Add the <code>servicequotas:GetRequestedServiceQuotaChange</code> permission to the IAM user or role's policy.
+<strong><code>An error occurred (ResourceNotFoundException) when calling the GetRequestedServiceQuotaChange operation: Request ID req-1234567890abcdef not found</code></strong> — Verify the request ID is correct and the quota increase request exists in your account.</p>
+</div>
 <h3 id="networking-prerequisites">Networking Prerequisites<a class="headerlink" href="#networking-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The VPC must have DNS resolution and DNS hostnames enabled. EVS relies on AWS-provided DNS for internal service discovery during bootstrapping.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create VPC with DNS enabled</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=vpc,Tags=[{Key=Name,Value=evs-vpc}]&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-support
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-hostnames
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Set DHCP options to point to your DNS server (required for VCF name resolution)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-dhcp-options<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--dhcp-configurations<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name-servers,Values=[10.0.0.2,169.254.169.253]&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name,Values=[vcf.internal]&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-dhcp-options<span class="w"> </span>--dhcp-options-id<span class="w"> </span>dopt-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Create required subnets</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/20<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-management}]&#39;</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.16.0/20<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-vtep}]&#39;</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Internet gateway — required for initial ESXi host provisioning even if you use Direct Connect</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=internet-gateway,Tags=[{Key=Name,Value=evs-igw}]&#39;</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>igw-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create VPC with DNS enabled</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=vpc,Tags=[{Key=Name,Value=evs-vpc}]&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-support
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-hostnames
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Set DHCP options to point to your DNS server (required for VCF name resolution)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-dhcp-options<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--dhcp-configurations<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name-servers,Values=[10.0.0.2,169.254.169.253]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name,Values=[vcf.internal]&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-dhcp-options<span class="w"> </span>--dhcp-options-id<span class="w"> </span>dopt-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Create required subnets</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/20<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-management}]&#39;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.16.0/20<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-vtep}]&#39;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Internet gateway — required for initial ESXi host provisioning even if you use Direct Connect</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=internet-gateway,Tags=[{Key=Name,Value=evs-igw}]&#39;</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>igw-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    &quot;Vpc&quot;: {
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        &quot;VpcId&quot;: &quot;vpc-0a7f3c2e1b9d4f6a8&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        &quot;CidrBlock&quot;: &quot;10.0.0.0/16&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        &quot;State&quot;: &quot;available&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        &quot;IsDefault&quot;: false,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        &quot;Tags&quot;: [
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            {
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                &quot;Key&quot;: &quot;Name&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                &quot;Value&quot;: &quot;evs-vpc&quot;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            }
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        ]
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    }
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>}
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>(no output — command completes silently)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>(no output — command completes silently)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>{
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    &quot;DhcpOptions&quot;: {
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        &quot;DhcpOptionsId&quot;: &quot;dopt-0c5a8e2f1b3d7a9c4&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        &quot;DhcpConfigurations&quot;: [
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            {
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                &quot;Key&quot;: &quot;domain-name-servers&quot;,
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>                &quot;Values&quot;: [
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>                    {
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>                        &quot;Value&quot;: &quot;10.0.0.2&quot;
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>                    },
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>                    {
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>                        &quot;Value&quot;: &quot;169.254.169.253&quot;
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>                    }
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>                ]
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>            },
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>            {
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>                &quot;Key&quot;: &quot;domain-name&quot;,
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>                &quot;Values&quot;: [
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>                    {
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>                        &quot;Value&quot;: &quot;vcf.internal&quot;
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>                    }
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>                ]
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>            }
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>        ]
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    }
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>}
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>{
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    &quot;AssociationId&quot;: &quot;dopt-assoc-0f2e8b1a3c5d7g9h2&quot;
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>}
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>{
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>    &quot;Subnet&quot;: {
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>        &quot;SubnetId&quot;: &quot;subnet-0e4b2c1f8a3d5g7h9&quot;,
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>        &quot;VpcId&quot;: &quot;vpc-0a7f3c2e1b9d4f6a8&quot;,
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>        &quot;CidrBlock&quot;: &quot;10.0.0.0/20&quot;,
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>        &quot;AvailabilityZone&quot;: &quot;us-east-1a&quot;,
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>        &quot;State&quot;: &quot;available&quot;,
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>        &quot;Tags&quot;: [
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>            {
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>                &quot;Key&quot;: &quot;Name&quot;,
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>                &quot;Value&quot;: &quot;evs-management&quot;
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>            }
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>        ]
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>    }
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>}
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>{
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>    &quot;Subnet&quot;: {
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>        &quot;SubnetId&quot;: &quot;subnet-0f5c3d2g9b4e6h8i1&quot;,
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>        &quot;VpcId&quot;: &quot;vpc-0a7f3c2e1b9d4f6a8&quot;,
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>        &quot;CidrBlock&quot;: &quot;10.0.16.0/20&quot;,
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>        &quot;AvailabilityZone&quot;: &quot;us-east-1a&quot;,
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a>        &quot;State&quot;: &quot;available&quot;,
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>        &quot;Tags&quot;: [
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>            {
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a>                &quot;Key&quot;: &quot;Name&quot;,
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a>                &quot;Value&quot;: &quot;evs-vtep&quot;
+<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a>            }
+<a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a>        ]
+<a id="__codelineno-5-74" name="__codelineno-5-74" href="#__codelineno-5-74"></a>    }
+<a id="__codelineno-5-75" name="__codelineno-5-75" href="#__codelineno-5-75"></a>}
+<a id="__codelineno-5-76" name="__codelineno-5-76" href="#__codelineno-5-76"></a>{
+<a id="__codelineno-5-77" name="__codelineno-5-77" href="#__codelineno-5-77"></a>    &quot;InternetGateway&quot;: {
+<a id="__codelineno-5-78" name="__codelineno-5-78" href="#__codelineno-5-78"></a>        &quot;InternetGatewayId&quot;: &quot;igw-0d6e4f3a2b1c8h5i7&quot;,
+<a id="__codelineno-5-79" name="__codelineno-5-79" href="#__codelineno-5-79"></a>        &quot;Attachments&quot;: [],
+<a id="__codelineno-5-80" name="__codelineno-5-80" href="#__codelineno-5-80"></a>        &quot;Tags&quot;: [
+<a id="__codelineno-5-81" name="__codelineno-5-81" href="#__codelineno-5-81"></a>            {
+<a id="__codelineno-5-82" name="__codelineno-5-82" href="#__codelineno-5-82"></a>                &quot;Key&quot;: &quot;Name&quot;,
+<a id="__codelineno-5-83" name="__codelineno-5-83" href="#__codelineno-5-83"></a>                &quot;Value&quot;: &quot;evs-igw&quot;
+<a id="__codelineno-5-84" name="__codelineno-5-84" href="#__codelineno-5-84"></a>            }
+<a id="__codelineno-5-85" name="__codelineno-5-85" href="#__codelineno-5-85"></a>        ]
+<a id="__codelineno-5-86" name="__codelineno-5-86" href="#__codelineno-5-86"></a>    }
+<a id="__codelineno-5-87" name="__codelineno-5-87" href="#__codelineno-5-87"></a>}
+<a id="__codelineno-5-88" name="__codelineno-5-88" href="#__codelineno-5-88"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p>**`An error occurred (InvalidVpcID.NotFound) when calling the ModifyVpcAttribute operation: The vpc ID 'vpc-xxx' does</p>
+</div>
 <h3 id="direct-connect-prerequisites">Direct Connect Prerequisites<a class="headerlink" href="#direct-connect-prerequisites" title="Permanent link">&para;</a></h3>
 <p>HCX requires low-latency connectivity between on-premises and EVS. Create a private VIF and attach it to your Virtual Gateway or Transit Gateway before starting HCX deployment. Test connectivity from on-premises to the EVS management subnet before proceeding.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify private VIF is in available state</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[?virtualInterfaceType==`private`].[virtualInterfaceId,virtualInterfaceState]&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm route is advertised to the EVS management subnet from your VGW</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span>vpc-xxx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[].Routes[?GatewayId!=null]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify private VIF is in available state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[?virtualInterfaceType==`private`].[virtualInterfaceId,virtualInterfaceState]&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Confirm route is advertised to the EVS management subnet from your VGW</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span>vpc-xxx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[].Routes[?GatewayId!=null]&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    [
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        &quot;vif-0a7c2e9f1b4d6e2a&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        &quot;available&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    ],
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    [
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        &quot;vif-1b8d3f0a2c5e7f3b&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        &quot;available&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    ]
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>]
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>[
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    {
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        &quot;DestinationCidrBlock&quot;: &quot;10.0.0.0/16&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        &quot;GatewayId&quot;: &quot;vgw-0c9e1a2b3d4f5e6a&quot;,
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>        &quot;State&quot;: &quot;active&quot;,
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>        &quot;Origin&quot;: &quot;CreateRouteTable&quot;
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    },
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    {
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        &quot;DestinationCidrBlock&quot;: &quot;192.168.0.0/16&quot;,
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>        &quot;GatewayId&quot;: &quot;vgw-0c9e1a2b3d4f5e6a&quot;,
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>        &quot;State&quot;: &quot;active&quot;,
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>        &quot;Origin&quot;: &quot;CreateVpnConnection&quot;
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    }
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid filter name</code></strong> — Verify the <code>--query</code> syntax uses backticks for string literals and check AWS CLI version supports JMESPath filtering.
+<strong><code>An error occurred (InvalidVpcID.NotFound) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxx' does not exist</code></strong> — Replace <code>vpc-xxx</code> with an actual VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.</p>
+</div>
 <h3 id="iam-prerequisites">IAM Prerequisites<a class="headerlink" href="#iam-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The user or role performing cluster operations needs the following minimum permissions. Attach this policy to your deployment role before running <code>create-environment</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">&quot;evs:*&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="s2">&quot;ec2:*&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="p">],</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">        </span><span class="s2">&quot;evs:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="s2">&quot;ec2:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
 </code></pre></div>
 <p>Create the EVS service-linked role manually if it does not already exist in the account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-service-linked-role<span class="w"> </span>--aws-service-name<span class="w"> </span>elasticvmwareservice.amazonaws.com
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Verify it was created</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>AWSServiceRoleForAmazonEVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.Arn&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-service-linked-role<span class="w"> </span>--aws-service-name<span class="w"> </span>elasticvmwareservice.amazonaws.com
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Verify it was created</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>AWSServiceRoleForAmazonEVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.Arn&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    &quot;Role&quot;: {
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        &quot;Path&quot;: &quot;/aws-service-role/&quot;,
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        &quot;RoleName&quot;: &quot;AWSServiceRoleForAmazonEVS&quot;,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        &quot;RoleId&quot;: &quot;AIDACKCEVSROLE12345678&quot;,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        &quot;Arn&quot;: &quot;arn:aws:iam::123456789012:role/aws-service-role/elasticvmwareservice.amazonaws.com/AWSServiceRoleForAmazonEVS&quot;,
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        &quot;CreateDate&quot;: &quot;2024-01-15T14:32:18+00:00&quot;,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        &quot;AssumeRolePolicyDocument&quot;: &quot;%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22elasticvmwareservice.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D&quot;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    }
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>}
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>&quot;arn:aws:iam::123456789012:role/aws-service-role/elasticvmwareservice.amazonaws.com/AWSServiceRoleForAmazonEVS&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: The service-linked role already exists.</code></strong> — The role exists; skip creation and proceed directly to verification with the get-role command.
+<strong><code>An error occurred (AccessDenied) when calling the CreateServiceLinkedRole operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: iam:CreateServiceLinkedRole</code></strong> — Attach the IAM policy <code>iam:CreateServiceLinkedRole</code> permission to your user or assume a role with sufficient privileges.</p>
+</div>
 <p>Security groups for EVS require specific ports. Create the management SG before cluster creation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--group-name<span class="w"> </span>evs-management-sg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;EVS Management Security Group&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-xxx
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Add minimum required ingress rules</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">SGID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span>evs-management-sg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[0].GroupId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$SGID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=902,ToPort=902,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=5671,ToPort=5671,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=8301,ToPort=8301,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--group-name<span class="w"> </span>evs-management-sg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;EVS Management Security Group&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-xxx
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Add minimum required ingress rules</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">SGID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span>evs-management-sg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[0].GroupId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$SGID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=902,ToPort=902,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=5671,ToPort=5671,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=8301,ToPort=8301,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    &quot;GroupId&quot;: &quot;sg-0a7f2c9e1b4d5f8k2&quot;,
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    &quot;GroupName&quot;: &quot;evs-management-sg&quot;,
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    &quot;Description&quot;: &quot;EVS Management Security Group&quot;,
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    &quot;OwnerId&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    &quot;VpcId&quot;: &quot;vpc-xxx&quot;,
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    &quot;Tags&quot;: []
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>}
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>{
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    &quot;Return&quot;: true,
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    &quot;SecurityGroupRules&quot;: [
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        {
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>            &quot;GroupId&quot;: &quot;sg-0a7f2c9e1b4d5f8k2&quot;,
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>            &quot;GroupOwnerId&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>            &quot;SecurityGroupRuleId&quot;: &quot;sgr-087a3f2b1c9d4e5f6&quot;,
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>            &quot;IpProtocol&quot;: &quot;tcp&quot;,
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>            &quot;FromPort&quot;: 443,
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>            &quot;ToPort&quot;: 443,
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>            &quot;CidrIpv4&quot;: &quot;10.0.0.0/8&quot;,
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>            &quot;Tags&quot;: []
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>        },
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>        {
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>            &quot;GroupId&quot;: &quot;sg-0a7f2c9e1b4d5f8k2&quot;,
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>            &quot;GroupOwnerId&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            &quot;SecurityGroupRuleId&quot;: &quot;sgr-092b4g3c2d0e5f6g7&quot;,
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            &quot;IpProtocol&quot;: &quot;tcp&quot;,
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>            &quot;FromPort&quot;: 902,
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>            &quot;ToPort&quot;: 902,
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>            &quot;CidrIpv4&quot;: &quot;10.0.0.0/8&quot;,
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>            &quot;Tags&quot;: []
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>        },
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>        {
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>            &quot;GroupId&quot;: &quot;sg-0a7f2c9e1b4d5f8k2&quot;,
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>            &quot;GroupOwnerId&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>            &quot;SecurityGroupRuleId&quot;: &quot;sgr-093c5h4d3e1f6g7h8&quot;,
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>            &quot;IpProtocol&quot;: &quot;tcp&quot;,
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>            &quot;FromPort&quot;: 5671,
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>            &quot;ToPort&quot;: 5671,
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>            &quot;CidrIpv4&quot;: &quot;10.0.0.0/8&quot;,
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>            &quot;Tags&quot;: []
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>        },
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>        {
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>            &quot;GroupId&quot;: &quot;sg-0a7f2c9e1b4d5f8k2&quot;,
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>            &quot;GroupOwnerId&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>            &quot;SecurityGroupRuleId&quot;: &quot;sgr-094d6i5e4f2g7h8i9&quot;,
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>            &quot;IpProtocol&quot;: &quot;tcp&quot;,
+<a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a>            &quot;FromPort&quot;: 8301,
+<a id="__codelineno-12-48" name="__codelineno-12-48" href="#__codelineno-12-48"></a>            &quot;ToPort&quot;: 8301,
+<a id="__codelineno-12-49" name="__codelineno-12-49" href="#__codelineno-12-49"></a>            &quot;CidrIpv4&quot;: &quot;10.0.0.0/8&quot;,
+<a id="__codelineno-12-50" name="__codelineno-12-50" href="#__codelineno-12-50"></a>            &quot;Tags&quot;: []
+<a id="__codelineno-12-51" name="__codelineno-12-51" href="#__codelineno-12-51"></a>        }
+<a id="__codelineno-12-52" name="__codelineno-12-52" href="#__codelineno-12-52"></a>    ]
+<a id="__codelineno-12-53" name="__codelineno-12-53" href="#__codelineno-12-53"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist</code></strong> — Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account (e.g., <code>vpc-0a1b2c3d4e5f6g7h8</code>).
+<strong><code>An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist</code></strong> — Add a short delay (`</p>
+</div>
 <p>Create the SSH key pair for ESXi DCUI access:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span>--key-name<span class="w"> </span>evs-cluster-key<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>evs-cluster-key.pem
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>evs-cluster-key.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span>--key-name<span class="w"> </span>evs-cluster-key<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>evs-cluster-key.pem
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>evs-cluster-key.pem
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>evs-cluster-key 07:a3:2f:9c:e1:5b:4d:8f:2a:6c:9e:1d:7f:4b:3a:c2 RSA
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key' already exists.</code></strong> — Delete the existing key pair with <code>aws ec2 delete-key-pair --key-name evs-cluster-key</code> before recreating it.
+<strong><code>Unable to locate credentials. You have not configured AWS credentials.</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+</div>
 <h2 id="create-evs-cluster-aws-cli">Create EVS Cluster (AWS CLI)<a class="headerlink" href="#create-evs-cluster-aws-cli" title="Permanent link">&para;</a></h2>
 <p>Submit the cluster with all required parameters. The <code>connectivityInfo</code> block references the VPC created in the previous step. The <code>initialVlanSubnetTags</code> tells EVS which existing subnets to use for management and VTEP traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--environment-name<span class="w"> </span>prod-evs-cluster-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--vcf-version<span class="w"> </span>VCF-5.1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--connectivity-info<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;vpcId&quot;: &quot;vpc-xxx&quot;,</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;privateRouteServerPeerings&quot;: [</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">      {</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">        &quot;routeServerId&quot;: &quot;rs-xxx&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      }</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">    ]</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--initial-vlan-subnet-tags<span class="w"> </span><span class="s1">&#39;[</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s1">    {</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s1">      &quot;value&quot;: &quot;evs-management&quot;</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s1">    },</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s1">    {</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">      &quot;value&quot;: &quot;evs-vtep&quot;</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s1">    }</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span>--hosts<span class="w"> </span><span class="s1">&#39;[</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;}</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span>--tags<span class="w"> </span><span class="s1">&#39;Environment=prod,Cluster=evs-01&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>--environment-name<span class="w"> </span>prod-evs-cluster-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--vcf-version<span class="w"> </span>VCF-5.1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>--connectivity-info<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="s1">    &quot;vpcId&quot;: &quot;vpc-xxx&quot;,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="s1">    &quot;privateRouteServerPeerings&quot;: [</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="s1">      {</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="s1">        &quot;routeServerId&quot;: &quot;rs-xxx&quot;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="s1">      }</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="s1">    ]</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span>--initial-vlan-subnet-tags<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="s1">    {</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="s1">      &quot;value&quot;: &quot;evs-management&quot;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="s1">    },</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="s1">    {</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="s1">      &quot;value&quot;: &quot;evs-vtep&quot;</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="s1">    }</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">  </span>--hosts<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;}</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">  </span>--tags<span class="w"> </span><span class="s1">&#39;Environment=prod,Cluster=evs-01&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    &quot;environmentId&quot;: &quot;env-0a7f2c9e1b4d5k3m&quot;,
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    &quot;environmentName&quot;: &quot;prod-evs-cluster-01&quot;,
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    &quot;vcfVersion&quot;: &quot;VCF-5.1&quot;,
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    &quot;status&quot;: &quot;CREATE_IN_PROGRESS&quot;,
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    &quot;creationTime&quot;: &quot;2024-01-15T14:32:47.123Z&quot;,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    &quot;connectivity&quot;: {
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>        &quot;vpcId&quot;: &quot;vpc-0f8a2c9e1b4d5k3m&quot;,
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>        &quot;privateRouteServerPeerings&quot;: [
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>            {
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>                &quot;routeServerId&quot;: &quot;rs-0a7f2c9e1b4d5k3m&quot;,
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>                &quot;status&quot;: &quot;PEERING_IN_PROGRESS&quot;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>            }
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>        ]
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>    },
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>    &quot;hosts&quot;: [
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>        {
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>            &quot;hostId&quot;: &quot;host-001&quot;,
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>            &quot;instanceType&quot;: &quot;i4i.metal&quot;,
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>            &quot;instanceId&quot;: &quot;i-0a7f2c9e1b4d5k3m&quot;,
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>            &quot;status&quot;: &quot;PROVISIONING&quot;
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>        },
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>        {
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>            &quot;hostId&quot;: &quot;host-002&quot;,
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>            &quot;instanceType&quot;: &quot;i4i.metal&quot;,
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>            &quot;instanceId&quot;: &quot;i-0b8g3d0f2c5e6l4n&quot;,
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>            &quot;status&quot;: &quot;PROVISIONING&quot;
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>        },
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>        {
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>            &quot;hostId&quot;: &quot;host-003&quot;,
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>            &quot;instanceType&quot;: &quot;i4i.metal&quot;,
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>            &quot;instanceId&quot;: &quot;i-0c9h4e1g3d6f7m5o&quot;,
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>            &quot;status&quot;: &quot;PROVISIONING&quot;
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>        }
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>    ],
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>    &quot;tags&quot;: {
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>        &quot;Environment&quot;: &quot;prod&quot;,
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a>        &quot;Cluster&quot;: &quot;evs-01&quot;
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a>    }
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: VPC vpc-xxx does not exist or is not accessible</code></strong> — Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.
+<strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Route server rs-xxx not found in VPC</code></strong> — Verify the route server ID exists in the specified VPC and is in an AVAILABLE state using <code>aws ec2 describe-route-servers</code>.
+<strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Key pair evs-cluster-key does not exist</code></strong> — Create the EC2 key pair first using <code>aws ec2 create-key-pair --key-name evs-cluster-key</code> or use an existing key name.</p>
+</div>
 <p>Capture the environment ID from the response, then poll until the state reaches <code>CREATED</code>. The transition from <code>CREATING</code> to <code>CREATED</code> normally takes 90-120 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environments[?name==`prod-evs-cluster-01`].environmentId&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="k">)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CREATED&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: still creating...&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">120</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">done</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cluster CREATED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environments[?name==`prod-evs-cluster-01`].environmentId&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CREATED&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: still creating...&quot;</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">120</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="k">done</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cluster CREATED&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>2024-01-15T09:42:33Z: still creating...
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>2024-01-15T10:44:33Z: still creating...
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>2024-01-15T11:46:33Z: still creating...
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Cluster CREATED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment prod-evs-cluster-01 not found</code></strong> — Verify the environment name matches exactly in your AWS account and region with <code>aws evs list-environments</code>.
+<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_PROFILE</code>, <code>AWS_ACCESS_KEY_ID</code>, and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+</div>
 <p>Verify all hosts reached the <code>CREATED</code> state before proceeding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].{HostId:hostId,State:state,InstanceType:instanceType}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].{HostId:hostId,State:state,InstanceType:instanceType}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>-------------------------------------------------------------------------------------------------
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>|                                    EnvironmentHosts                                          |
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>+--------------------------------+------------------+--------------------+
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>| HostId                         | State            | InstanceType       |
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>+--------------------------------+------------------+--------------------+
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>| host-0a7f3c2e9b1d4k5m         | RUNNING          | t3.xlarge          |
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>| host-1b8g4d3f0c2e5l6n         | RUNNING          | t3.xlarge          |
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>| host-2c9h5e4g1d3f6m7o         | STOPPED          | t3.large           |
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>| host-3d0i6f5h2e4g7n8p         | RUNNING          | t3.2xlarge         |
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>| host-4e1j7g6i3f5h8o9q         | PENDING          | t3.xlarge          |
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>+--------------------------------+------------------+--------------------
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></strong> — Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches the expected environment identifier format.
+<strong><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts</code></strong> — Add the <code>evs:ListEnvironmentHosts</code> permission to your IAM user or role's policy.</p>
+</div>
 <p>Retrieve the SDDC Manager URL from the environment details:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.sddcManagerUrl&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--output<span class="w"> </span>text
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.sddcManagerUrl&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>--output<span class="w"> </span>text
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>https://sddc-mgr-prod-01.us-west-2.vmware.cloud/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></strong> — Verify the <code>$ENV_ID</code> variable is set correctly with <code>echo $ENV_ID</code> and matches the expected UUID format.
+<strong><code>An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment</code></strong> — Ensure your AWS IAM user/role has the <code>evs:GetEnvironment</code> permission attached in the IAM policy.
+<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+</div>
 <h2 id="vcf-initial-configuration">VCF Initial Configuration<a class="headerlink" href="#vcf-initial-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="retrieve-credentials">Retrieve Credentials<a class="headerlink" href="#retrieve-credentials" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/vcenter-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/vcenter-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>{
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  &quot;username&quot;: &quot;sddc-admin@vsphere.local&quot;,
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>  &quot;password&quot;: &quot;Kx9$mP2@vL4#nQ8!rT5&quot;,
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>  &quot;hostname&quot;: &quot;sddc-manager.prod-evs-cluster-01.internal&quot;,
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  &quot;port&quot;: 443
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>}
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>{
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>  &quot;username&quot;: &quot;administrator@vsphere.local&quot;,
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>  &quot;password&quot;: &quot;Bw7&amp;dF3$jH6!kL9@pM2&quot;,
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>  &quot;hostname&quot;: &quot;vcenter.prod-evs-cluster-01.internal&quot;,
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>  &quot;port&quot;: 443,
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>  &quot;sso_domain&quot;: &quot;vsphere.local&quot;
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></strong> — Verify the secret ID path is correct and the secret exists in the same AWS region as your CLI configuration.
+<strong><code>An error occurred (AccessDeniedException) when calling the GetSecretValue operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: secretsmanager:GetSecretValue</code></strong> — Add the <code>secretsmanager:GetSecretValue</code> permission to the IAM user or role's policy.
+<strong><code>parse error: Invalid numeric literal at line 1, column 5</code></strong> — Remove the <code>| jq .</code> pipe if the secret value is not valid JSON, or ensure the secret was stored as properly formatted JSON.</p>
+</div>
 <h3 id="access-sddc-manager-and-vcenter">Access SDDC Manager and vCenter<a class="headerlink" href="#access-sddc-manager-and-vcenter" title="Permanent link">&para;</a></h3>
 <p>Log in to SDDC Manager at the URL returned above. Change the default passwords immediately after first login. The vCenter URL is visible under SDDC Manager → vCenters; use <code>administrator@vsphere.local</code> with the password from Secrets Manager.</p>
 <h3 id="configure-ntp-servers">Configure NTP Servers<a class="headerlink" href="#configure-ntp-servers" title="Permanent link">&para;</a></h3>
@@ -8761,20 +9101,51 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <p>SDDC Manager UI path: Administration → Network Settings → NTP Configuration → Add NTP Server</p>
 <p>Use at minimum two NTP sources. Prefer AWS Time Sync Service (<code>169.254.169.123</code>) as the primary source for EVS environments.</p>
 <p>Verify all hosts are synchronized after applying:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span><span class="w"> </span>HOST<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].hostId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Host: </span><span class="nv">$HOST</span><span class="s2">&quot;</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment-host<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>--host-id<span class="w"> </span><span class="nv">$HOST</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;environmentHost.ipAddress&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">for</span><span class="w"> </span>HOST<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].hostId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Host: </span><span class="nv">$HOST</span><span class="s2">&quot;</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment-host<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">    </span>--host-id<span class="w"> </span><span class="nv">$HOST</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;environmentHost.ipAddress&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="k">done</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Host: host-0a1b2c3d4e5f6g7h
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>10.42.128.15
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Host: host-1f2e3d4c5b6a7g8h
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>10.42.128.22
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Host: host-2g3h4i5j6k7l8m9n
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>10.42.128.31
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>Host: host-3h4i5j6k7l8m9n0o
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>10.42.128.44
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID</code></strong> — Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches an existing environment in your AWS account.
+<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or ensure <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables are exported.
+<strong><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation</code></strong> — Add <code>evs:ListEnvironmentHosts</code> and <code>evs:GetEnvironmentHost</code> permissions to your IAM user or role policy.</p>
+</div>
 <p>SSH to each ESXi host and confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Get the system time:
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>2024-11-15T14:32:47Z
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>Query NTP peers:
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>==============================================================================
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>*ntp.ubuntu.com  132.163.96.1     2 u   64 1024  377   45.231   -2.145   3.821
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>+time.google.com 216.239.35.12    2 u  128 1024  377   38.912    1.203   2.456
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>-ntp.apple.com   17.253.34.125    2 u  256 1024  377   92.445   15.632   8.901
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>+pool.ntp.org    203.0.113.45     3 u  512 1024  377   67.123   -0.876   4.234
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: ntpq</code></strong> — Install the ntp or chrony package (e.g., <code>apt-get install ntp</code> on Debian/Ubuntu or <code>yum install ntp</code> on RHEL).
+<strong><code>Connection refused</code></strong> — Ensure the NTP daemon is running with <code>systemctl start ntp</code> or <code>systemctl start chrony</code>.</p>
+</div>
 <h3 id="configure-dns-entries">Configure DNS Entries<a class="headerlink" href="#configure-dns-entries" title="Permanent link">&para;</a></h3>
 <p>Create forward and reverse DNS records for all VCF components before running any SDDC Manager workflows. Missing DNS entries cause workflow failures during domain deployment and certificate generation.</p>
 <p>Required records (adjust IPs to match your management subnet allocations):</p>
@@ -8809,14 +9180,37 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </tbody>
 </table>
 <p>Verify DNS resolution is functional from within the EVS management subnet before proceeding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>nslookup<span class="w"> </span>nsx-mgr-01.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>nslookup<span class="w"> </span>nsx-mgr-01.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Server:     10.0.0.53
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Address:    10.0.0.53#53
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>Name:   sddc-manager.vcf.internal
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>Address: 192.168.1.45
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>Server:     10.0.0.53
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>Address:    10.0.0.53#53
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>Name:   vcenter.vcf.internal
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>Address: 192.168.1.50
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>Server:     10.0.0.53
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>Address:    10.0.0.53#53
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>Name:   nsx-mgr-01.vcf.internal
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a>Address: 192.168.1.55
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find sddc-manager.vcf.internal: NXDOMAIN</code></strong> — Verify the hostname is correctly spelled and exists in DNS, or check that your DNS server IP is correct.
+<strong><code>nslookup: couldn't get address for '&lt;your-dns-server&gt;': not known</code></strong> — Replace <code>&lt;your-dns-server&gt;</code> with an actual DNS server IP address (e.g., <code>10.0.0.53</code>).</p>
+</div>
 <h3 id="verify-vsan-cluster-health">Verify vSAN Cluster Health<a class="headerlink" href="#verify-vsan-cluster-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># vCenter → Cluster → vSAN → Skyline Health</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># All checks must pass before deploying workloads</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Pay attention to: disk balance, capacity, network health, and data integrity</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># vCenter → Cluster → vSAN → Skyline Health</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># All checks must pass before deploying workloads</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1"># Pay attention to: disk balance, capacity, network health, and data integrity</span>
 </code></pre></div>
 <h3 id="enable-vsphere-ha">Enable vSphere HA<a class="headerlink" href="#enable-vsphere-ha" title="Permanent link">&para;</a></h3>
 <p>Enable HA on the cluster immediately after verifying vSAN health. Configure admission control to reserve capacity for at least one host failure.</p>
@@ -8837,19 +9231,19 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <li>Apply to: all vSAN datastores in the cluster</li>
 </ul>
 <h2 id="hcx-deployment-on-premises-side">HCX Deployment (On-Premises Side)<a class="headerlink" href="#hcx-deployment-on-premises-side" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 1. Download HCX OVA from EVS console → HCX tab</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># 2. Deploy HCX Manager OVA on on-premises vCenter</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">#    - Assign management IP, DNS, NTP</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">#    - Activate with HCX license key from EVS console</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># 3. Pair on-prem HCX Manager with EVS HCX Cloud</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1">#    - HCX Manager UI → Site Pairing → Add Site</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1">#    - URL: https://&lt;evs-hcx-cloud-ip&gt;</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1">#    - Credentials from EVS Secrets Manager</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># 4. Create Service Mesh (compute profile + service mesh)</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="c1">#    - Compute profile: select on-prem hosts and datastores</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1">#    - Service mesh: pair with EVS site → deploys IX, WAN opt, NE appliances</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># 1. Download HCX OVA from EVS console → HCX tab</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># 2. Deploy HCX Manager OVA on on-premises vCenter</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1">#    - Assign management IP, DNS, NTP</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1">#    - Activate with HCX license key from EVS console</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1"># 3. Pair on-prem HCX Manager with EVS HCX Cloud</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1">#    - HCX Manager UI → Site Pairing → Add Site</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="c1">#    - URL: https://&lt;evs-hcx-cloud-ip&gt;</span>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="c1">#    - Credentials from EVS Secrets Manager</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="c1"># 4. Create Service Mesh (compute profile + service mesh)</span>
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="c1">#    - Compute profile: select on-prem hosts and datastores</span>
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="c1">#    - Service mesh: pair with EVS site → deploys IX, WAN opt, NE appliances</span>
 </code></pre></div>
 <h2 id="network-extension-setup">Network Extension Setup<a class="headerlink" href="#network-extension-setup" title="Permanent link">&para;</a></h2>
 <p>Create a Network Extension before migrating any VMs that cannot be re-IPed. NE stretches a Layer 2 segment between on-premises and EVS so that VMs retain their original IP addresses after migration. The NE appliance is deployed as part of the HCX Service Mesh.</p>
@@ -8862,25 +9256,68 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <li>Submit — the extension deploys in 3-5 minutes</li>
 </ol>
 <p>Verify the extension status from HCX Manager:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># HCX Manager REST API — retrieve NE status</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;hcx-manager-ip&gt;/hybridity/api/networks/extension&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[] | {network: .displayName, state: .state}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># HCX Manager REST API — retrieve NE status</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;hcx-manager-ip&gt;/hybridity/api/networks/extension&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[] | {network: .displayName, state: .state}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>{
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>  &quot;network&quot;: &quot;Production-VLAN-101&quot;,
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>  &quot;state&quot;: &quot;UP&quot;
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>}
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>{
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>  &quot;network&quot;: &quot;DR-VLAN-202&quot;,
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>  &quot;state&quot;: &quot;UP&quot;
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>}
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>{
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>  &quot;network&quot;: &quot;Management-VLAN-50&quot;,
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>  &quot;state&quot;: &quot;DOWN&quot;
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>}
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>{
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>  &quot;network&quot;: &quot;Stretched-VLAN-300&quot;,
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>  &quot;state&quot;: &quot;UP&quot;
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify HCX Manager IP and HTTPS connectivity on port 443).
+<strong><code>jq: parse error: Cannot index number with string "displayName"</code></strong> — The API response structure differs from expected; run the curl command without <code>jq</code> to inspect raw JSON and confirm <code>.data[]</code> contains objects with <code>displayName</code> and <code>state</code> fields.
+<strong><code>curl: (401) Unauthorized</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; test credentials directly in HCX Manager UI first.</p>
+</div>
 <p>Expected state: <code>UP</code>. A state of <code>DEGRADED</code> indicates a connectivity issue between the NE appliances. Check that UDP 4500 (IPSEC NAT-T) and TCP 443 are open between the on-premises HCX appliance and the EVS HCX Cloud appliance.</p>
 <h2 id="post-deploy-validation-checklist">Post-Deploy Validation Checklist<a class="headerlink" href="#post-deploy-validation-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="check-1-evs-environment-state">Check 1: EVS Environment State<a class="headerlink" href="#check-1-evs-environment-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--output<span class="w"> </span>text
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>--output<span class="w"> </span>text
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>RUNNING
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></strong> — Ensure <code>$ENV_ID</code> is set to a valid environment identifier (e.g., <code>aws evs list-environments</code> to find valid IDs).
+<strong><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment not found</code></strong> — Verify the environment exists in the current AWS region and account; check with <code>aws evs list-environments --region &lt;region&gt;</code>.</p>
+</div>
 <p>Expected output: <code>CREATED</code>. Any other state requires investigation in AWS CloudTrail and SDDC Manager logs.</p>
 <h3 id="check-2-all-hosts-connected-in-vcenter">Check 2: All Hosts Connected in vCenter<a class="headerlink" href="#check-2-all-hosts-connected-in-vcenter" title="Permanent link">&para;</a></h3>
 <p>Log in to vCenter and navigate to the cluster. All three ESXi hosts must appear in <code>Connected</code> state. A host in <code>Disconnected</code> or <code>Not Responding</code> state indicates a management network or DNS issue.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># PowerCLI equivalent (run from a jump host with network access to vCenter)</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-AutoSize
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># PowerCLI equivalent (run from a jump host with network access to vCenter)</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-AutoSize
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Name                           ConnectionState PowerState
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>----                           --------------- ----------
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>esx-prod-01.dc1.internal       Connected       PoweredOn
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>esx-prod-02.dc1.internal       Connected       PoweredOn
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>esx-prod-03.dc1.internal       Connected       PoweredOn
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>esx-staging-01.dc2.internal    Connected       PoweredOn
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>esx-dev-01.dc2.internal        Disconnected    PoweredOff
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code>.
+<strong><code>Connect-VIServer : Cannot connect to vCenter server. The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Add the vCenter certificate to the trusted store or use <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</p>
+</div>
 <h3 id="check-3-vsan-health-green">Check 3: vSAN Health Green<a class="headerlink" href="#check-3-vsan-health-green" title="Permanent link">&para;</a></h3>
 <p>vCenter → Cluster → Monitor → vSAN → Skyline Health. Every health check must show green before deploying workload VMs. Pay particular attention to:</p>
 <ul>
@@ -8892,32 +9329,82 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <p>NSX Manager UI → System → Overview. All three NSX Manager nodes must show <code>Stable</code>. Transport nodes (the ESXi hosts) must show <code>Success</code> under the Transport Nodes tab.</p>
 <h3 id="check-5-test-vm-internet-reachability">Check 5: Test VM Internet Reachability<a class="headerlink" href="#check-5-test-vm-internet-reachability" title="Permanent link">&para;</a></h3>
 <p>Deploy a minimal test VM on the vSAN datastore and verify it can reach the internet through the T0 router. This confirms the NSX-T uplink, T0, and T1 routing are functional end-to-end.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># From the test VM</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://ifconfig.me
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># From the test VM</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://ifconfig.me
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>64 bytes from 8.8.8.8: icmp_seq=1 time=24.3 ms
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>64 bytes from 8.8.8.8: icmp_seq=2 time=23.8 ms
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>64 bytes from 8.8.8.8: icmp_seq=3 time=24.1 ms
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>64 bytes from 8.8.8.8: icmp_seq=4 time=23.9 ms
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>rtt min/avg/max/stddev = 23.8/24.0/24.3/0.2 ms
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a>203.0.113.45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: connect: Network is unreachable</code></strong> — Verify the test VM has a default route configured with <code>ip route show</code> and the security group allows outbound traffic.
+<strong><code>curl: (7) Failed to connect to ifconfig.me port 443: Connection timed out</code></strong> — Check that DNS resolution works with <code>nslookup ifconfig.me</code> and that the security group permits HTTPS outbound on port 443.
+<strong><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></strong> — Update the CA certificate bundle with <code>apt-get install ca-certificates</code> or use <code>curl -k</code> to skip verification for testing only.</p>
+</div>
 <h3 id="check-6-hcx-service-mesh-status">Check 6: HCX Service Mesh Status<a class="headerlink" href="#check-6-hcx-service-mesh-status" title="Permanent link">&para;</a></h3>
 <p>HCX Manager → Interconnect → Service Mesh. All appliances (IX, WAN Opt, NE) must show <code>Green</code> under the Status column. A yellow or red status requires checking the HCX system events log.</p>
 <h3 id="check-7-secrets-rotation-verification">Check 7: Secrets Rotation Verification<a class="headerlink" href="#check-7-secrets-rotation-verification" title="Permanent link">&para;</a></h3>
 <p>Verify that SDDC Manager can rotate VCF component passwords. This confirms Secrets Manager integration is functioning and that SDDC Manager has the credentials it needs to manage all components.</p>
 <p>SDDC Manager UI path: Security → Password Management → Rotate</p>
 <p>Select one non-critical component (for example, an NSX Manager local account) and run a test rotation. Confirm the new credential is reflected in AWS Secrets Manager after the rotation completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecretString&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.lastRotated
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecretString&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.lastRotated
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>&quot;2024-01-15T09:47:32Z&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></strong> — Verify the secret name matches exactly and exists in the current AWS region with <code>aws secretsmanager list-secrets</code>.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — The secret value is not valid JSON; remove the <code>| jq .lastRotated</code> pipe and inspect the raw output with <code>--query 'SecretString' --output text</code> alone.</p>
+</div>
 <h3 id="check-8-bidirectional-dns-resolution">Check 8: Bidirectional DNS Resolution<a class="headerlink" href="#check-8-bidirectional-dns-resolution" title="Permanent link">&para;</a></h3>
 <p>Verify DNS works in both directions: from a VM inside EVS to on-premises hostnames, and from on-premises hosts to EVS component names.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># From a test VM inside EVS — resolve on-premises hostname</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>nslookup<span class="w"> </span>&lt;on-prem-hostname&gt;<span class="w"> </span>&lt;on-prem-dns-server-ip&gt;
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># From on-premises jump host — resolve EVS components</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1"># Verify vCenter is reachable from on-premises over Direct Connect</span>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.vcf.internal/ui/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># From a test VM inside EVS — resolve on-premises hostname</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>nslookup<span class="w"> </span>&lt;on-prem-hostname&gt;<span class="w"> </span>&lt;on-prem-dns-server-ip&gt;
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># From on-premises jump host — resolve EVS components</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="c1"># Verify vCenter is reachable from on-premises over Direct Connect</span>
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.vcf.internal/ui/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>Server:     10.50.20.10
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>Address:    10.50.20.10#53
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>Name:   db-app-prod-01.corp.local
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>Address:    192.168.10.45
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a>Server:     172.31.0.53
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>Address:    172.31.0.53#53
+<a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a>
+<a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a>Name:   vcenter.vcf.internal
+<a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a>Address:    172.31.1.25
+<a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>
+<a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a>Server:     172.31.0.53
+<a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a>Address:    172.31.0.53#53
+<a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a>
+<a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a>Name:   sddc-manager.vcf.internal
+<a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a>Address:    172.31.1.26
+<a id="__codelineno-44-18" name="__codelineno-44-18" href="#__codelineno-44-18"></a>
+<a id="__codelineno-44-19" name="__codelineno-44-19" href="#__codelineno-44-19"></a>200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find &lt;on-prem-hostname&gt;: NXDOMAIN</code></strong> — Verify the hostname spelling and confirm the on-premises DNS server IP is correct and reachable.
+<strong><code>curl: (7) Failed to connect to vcenter.vcf.internal port 443: Connection timed out</code></strong> — Confirm the Direct Connect virtual interface is active and the security group/firewall rules allow HTTPS traffic from on-premises to the EVS vCenter IP.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to the curl command to skip certificate validation, or import the vCenter's self-signed certificate into your system's trusted store.</p>
+</div>
 <p>Expected: <code>200</code> for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.</p>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8954,7 +9441,7 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

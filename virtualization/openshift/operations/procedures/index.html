@@ -7740,218 +7740,473 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># 8. Verify pods reschedule back if needed</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;node-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NAME                                       DESIRED   CURRENT   UPDATED   AVAILABLE   AGE
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>authentication                             1         1         1         1           45d
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>baremetal                                  1         1         1         1           45d
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cloud-credential                           1         1         1         1           45d
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cluster-autoscaler                         1         1         1         1           45d
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>NAME          STATUS   ROLES           AGE   VERSION
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>worker-01     Ready    worker          30d   v1.27.8+4fab27b
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>worker-02     Ready    worker          30d   v1.27.8+4fab27b
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>master-01     Ready    control-plane   45d   v1.27.8+4fab27b
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>node &quot;worker-01&quot; cordoned
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pod &quot;nginx-deployment-66b6c48dd5-7k2m9&quot; evicted
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>pod &quot;redis-cache-0&quot; evicted
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>pod &quot;app-backend-5d8f4c2b1-9xqrs&quot; evicted
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Drained node worker-01 successfully
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>NAME                    READY   STATUS    RESTARTS   AGE       IP            NODE        NOMINATED NODE
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>(no pods remain on worker-01)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>node &quot;worker-01&quot; uncordoned
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>NAME          STATUS   ROLES    AGE   VERSION
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>worker-01     Ready    worker   30d   v1.27.8+4fab27b
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>NAME                    READY   STATUS    RESTARTS   AGE       IP             NODE
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>nginx-deployment-66b6c48dd5-7k2m9     1/1     Running   0          2m        10.128.2.14    worker-01
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>redis-cache-0                         1/1     Running   0          1m        10.128.2.15    worker-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to drain node "worker-01", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore): openshift-sdn/sdn-xxxxx]</code></strong> — Add the <code>--ignore-daemonsets</code> flag to the drain command to skip DaemonSet pods.
+<strong><code>error: cannot delete Pods with local storage (use --delete-emptydir-data to override): [namespace/pod-name]</code></strong> — Add the <code>--delete-emptydir-data</code> flag to allow eviction of pods using emptyDir volumes.
+<strong><code>error: timed out waiting for pod "app-xyz" to be evicted</code></strong> — Increase the <code>--timeout</code> value (e.g., <code>--timeout=600s</code>) or manually delete the problematic pod with <code>oc delete pod &lt;pod-name&gt; -n &lt;namespace&gt; --grace-period=0 --force</code>.</p>
+</div>
 <h2 id="scale-workers-via-machineset">Scale Workers via MachineSet<a class="headerlink" href="#scale-workers-via-machineset" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List MachineSets</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Scale up</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>&lt;machineset-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Monitor new machine provisioning</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>get<span class="w"> </span>machine<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>-w
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Approve new worker CSRs (if auto-approval not configured)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr-name&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Approve all pending at once:</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Scale down (deletes nodes gracefully)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>&lt;machineset-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
-</code></pre></div>
-<h2 id="add-new-machineset">Add New MachineSet<a class="headerlink" href="#add-new-machineset" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export existing MachineSet as template</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>&lt;existing-ms&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>new-ms.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List MachineSets</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Edit: change name, zone/AZ, and any node-specific settings</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Key fields to update:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   metadata.name</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   spec.template.metadata.labels.machine.openshift.io/cluster-api-machineset</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   spec.template.spec.providerSpec.value.network (if different)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Scale up</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>&lt;machineset-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Monitor new machine provisioning</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>get<span class="w"> </span>machine<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>-w
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>new-ms.yaml
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Approve new worker CSRs (if auto-approval not configured)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr-name&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Approve all pending at once:</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Scale down (deletes nodes gracefully)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>&lt;machineset-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
 </code></pre></div>
-<h2 id="add-infra-node-role">Add Infra Node Role<a class="headerlink" href="#add-infra-node-role" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Create infra MachineSet (copy from worker MS, add infra label)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 2. Label existing or new node</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 3. Taint to prevent regular workloads</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME                                    DESIRED   CURRENT   READY   UPDATED   AVAILABLE   AGE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>worker-us-east-1a                       3         3         3       3         3           45d
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>worker-us-east-1b                       3         3         3       3         3           45d
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>worker-us-east-1c                       2         2         2       2         2           45d
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>machineset.machine.openshift.io/worker-us-east-1a scaled
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 4. Move router (ingress controller) to infra nodes</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>oc<span class="w"> </span>patch<span class="w"> </span>ingresscontroller/default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;nodePlacement&quot;:{&quot;nodeSelector&quot;:{&quot;matchLabels&quot;:{&quot;node-role.kubernetes.io/infra&quot;:&quot;&quot;}},&quot;tolerations&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}}}&#39;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>NAME                                    STATE         TYPE   AGE
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>worker-us-east-1a-abcd1                 Provisioning  node   12s
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>worker-us-east-1a-efgh2                 Running       node   45s
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>worker-us-east-1b-ijkl3                 Provisioned   node   8s
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 5. Move monitoring</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">apiVersion: v1</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">kind: ConfigMap</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">metadata:</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s">  name: cluster-monitoring-config</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">  namespace: openshift-monitoring</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s">data:</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s">  config.yaml: |</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s">    prometheusOperator:</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s">      nodeSelector:</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="s">      tolerations:</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="s">        effect: NoSchedule</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="s">    prometheusK8s:</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="s">      nodeSelector:</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="s">      tolerations:</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="s">        effect: NoSchedule</span>
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="s">EOF</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>NAME                STATUS   ROLES    AGE   VERSION
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>worker-1.example   Ready    worker   2m    v1.27.3
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>worker-2.example   Ready    worker   45d   v1.27.3
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>worker-3.example   NotReady worker   1m    v1.27.3
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>system:serviceaccount:openshift-machine-config-operator:default   Pending   1h
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>system:node:worker-us-east-1a-abcd1                                Pending   45s
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>system:node:worker-us-east-1a-efgh2                                Pending   30s
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>certificatesigningrequest.certificates.k8s.io/system:node:worker-us-east-1a-abcd1 approved
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>certificatesigningrequest.certificates.k8s.io/system:node:worker-us-east-1a-efgh2 approved
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>certificatesigningrequest.certificates.k8s.io/system:serviceaccount:openshift-machine-config-operator:default approved
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>machineset.machine.openshift.io/worker-us-east-1a scaled
 </code></pre></div>
-<h2 id="scale-deployment-and-rollout-management">Scale Deployment and Rollout Management<a class="headerlink" href="#scale-deployment-and-rollout-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Scale a deployment</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>scale<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): machinesets.machine.openshift.io "&lt;machineset-name&gt;" not found</code></strong> — Replace <code>&lt;machineset-name&gt;</code> with an actual MachineSet name from the <code>oc get machineset</code> output.
+<strong><code>error: no objects passed to approve</code></strong> — Ensure pending CSRs exist before running the approve command; check with <code>oc get csr | grep Pending</code> first.
+<strong><code>Error: unable to drain node "worker-1.example": cannot delete Pods not managed by ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet</code></strong> — Add <code>--ignore-daemonsets --delete-emptydir-data</code> flags to the drain command if scaling down encounters pod eviction issues.</p>
+</div>
+<h2 id="add-new-machineset">Add New MachineSet<a class="headerlink" href="#add-new-machineset" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export existing MachineSet as template</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>&lt;existing-ms&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>new-ms.yaml
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Watch rollout progress</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Rollout history</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>oc<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Undo last rollout (revert to previous ReplicaSet)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Undo to a specific revision</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>oc<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--to-revision<span class="o">=</span><span class="m">2</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Pause / resume a rolling update</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>oc<span class="w"> </span>rollout<span class="w"> </span>pause<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>rollout<span class="w"> </span>resume<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Force a restart of all pods in a deployment (e.g. to pick up new secrets)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>oc<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Edit: change name, zone/AZ, and any node-specific settings</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Key fields to update:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#   metadata.name</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#   spec.template.metadata.labels.machine.openshift.io/cluster-api-machineset</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">#   spec.template.spec.providerSpec.value.network (if different)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>new-ms.yaml
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>apiVersion: machine.openshift.io/v1beta1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kind: MachineSet
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>metadata:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  name: worker-us-east-1a
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  namespace: openshift-machine-api
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  labels:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    machine.openshift.io/cluster-api-cluster: ocp-prod-4x2k9
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>spec:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  replicas: 3
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  selector:
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    matchLabels:
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      machine.openshift.io/cluster-api-machineset: worker-us-east-1a
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  template:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    metadata:
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      labels:
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        machine.openshift.io/cluster-api-machineset: worker-us-east-1a
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    spec:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      providerSpec:
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        value:
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>          network:
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            subnets:
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>            - id: subnet-0a7f2c8d9e1b4f5a2
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>machinesets.machine.openshift.io/worker-us-east-1a created
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>NAME                    DESIRED   CURRENT   READY   AVAILABLE   AGE
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>worker-us-east-1a       3         3         2       2           45s
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>worker-us-east-1b       3         3         3       3           8d
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>worker-us-east-1c       3         3         3       3           8d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: failed to create new MachineSet: machinesets.machine.openshift.io "worker-us-east-1a" already exists</code></strong> — Change the metadata.name field in new-ms.yaml to a unique value that doesn't already exist in the cluster.
+<strong><code>error validating data: data[spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset]: Invalid value: "worker-us-east-1a": does not match spec.template.metadata.labels</code></strong> — Ensure the selector matchLabels and template metadata labels both reference the same MachineSet name.</p>
+</div>
+<h2 id="add-infra-node-role">Add Infra Node Role<a class="headerlink" href="#add-infra-node-role" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Create infra MachineSet (copy from worker MS, add infra label)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 2. Label existing or new node</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 3. Taint to prevent regular workloads</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 4. Move router (ingress controller) to infra nodes</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>oc<span class="w"> </span>patch<span class="w"> </span>ingresscontroller/default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;nodePlacement&quot;:{&quot;nodeSelector&quot;:{&quot;matchLabels&quot;:{&quot;node-role.kubernetes.io/infra&quot;:&quot;&quot;}},&quot;tolerations&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}}}&#39;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. Move monitoring</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s">kind: ConfigMap</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s">metadata:</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s">  name: cluster-monitoring-config</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s">  namespace: openshift-monitoring</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s">data:</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s">  config.yaml: |</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s">    prometheusOperator:</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s">      nodeSelector:</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s">      tolerations:</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="s">        effect: NoSchedule</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="s">    prometheusK8s:</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="s">      nodeSelector:</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="s">      tolerations:</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="s">        effect: NoSchedule</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="s">EOF</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>node/worker-2.infra.example.com labeled
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>node/worker-2.infra.example.com tainted
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ingresscontroller.operator.openshift.io/default patched
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>configmap/cluster-monitoring-config created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: taint "node-role.kubernetes.io/infra=reserved:NoSchedule" must have one of the following effects: NoSchedule, PreferNoSchedule, NoExecute</code></strong> — Change the taint effect to <code>NoSchedule</code> (remove <code>reserved:</code> prefix, as it is not a valid taint key component).
+<strong><code>Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found</code></strong> — Verify the IngressController exists with <code>oc get ingresscontroller -n openshift-ingress-operator</code> and use the correct name.</p>
+</div>
+<h2 id="scale-deployment-and-rollout-management">Scale Deployment and Rollout Management<a class="headerlink" href="#scale-deployment-and-rollout-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Scale a deployment</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>scale<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Watch rollout progress</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>oc<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Rollout history</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>oc<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Undo last rollout (revert to previous ReplicaSet)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>oc<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Undo to a specific revision</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>oc<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--to-revision<span class="o">=</span><span class="m">2</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Pause / resume a rolling update</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>oc<span class="w"> </span>rollout<span class="w"> </span>pause<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>oc<span class="w"> </span>rollout<span class="w"> </span>resume<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Force a restart of all pods in a deployment (e.g. to pick up new secrets)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>oc<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>deployment.apps/api-service scaled
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Waiting for deployment spec update to be observed...
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Waiting for deployment &quot;api-service&quot; rollout to finish: 1 out of 3 new replicas have updated...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Waiting for deployment &quot;api-service&quot; rollout to finish: 2 out of 3 new replicas have updated...
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Waiting for deployment &quot;api-service&quot; rollout to finish: 3 out of 3 new replicas have updated...
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Waiting for deployment &quot;api-service&quot; rollout to finish: 1 old replicas are pending termination...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>deployment &quot;api-service&quot; successfully rolled out
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>REVISION  CHANGE-CAUSE
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>1         &lt;none&gt;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>2         &lt;none&gt;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>3         &lt;none&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>deployment.apps/api-service rolled back to revision 2
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>deployment.apps/api-service rolled back to revision 2
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>deployment.apps/api-service paused
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>deployment.apps/api-service resumed
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>deployment.apps/api-service restarted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): deployments.apps "&lt;name&gt;" not found</code></strong> — Verify the deployment name is correct and exists in the specified namespace with <code>oc get deploy -n &lt;ns&gt;</code>.
+<strong><code>error: the server doesn't have a resource type "deploy"</code></strong> — Use the full resource name <code>deployment</code> instead of the alias <code>deploy</code>, or ensure your OpenShift CLI version supports the shorthand.
+<strong><code>Error from server (Forbidden): deployments.apps "&lt;name&gt;" is forbidden: User "&lt;user&gt;" cannot patch resource "deployments" in API group "apps"</code></strong> — Ensure your user has sufficient RBAC permissions to modify deployments in the target namespace.</p>
+</div>
 <h2 id="emergency-etcd-member-recovery">Emergency etcd Member Recovery<a class="headerlink" href="#emergency-etcd-member-recovery" title="Permanent link">&para;</a></h2>
 <p>Use when one etcd member has failed but quorum (2 of 3) is still intact.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Check etcd pod status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Identify failed member — exec into a healthy etcd pod</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>etcdctl<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-&lt;node&gt;.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-&lt;node&gt;.key
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 3. Remove the failed member (using the ID from step 2)</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>etcdctl<span class="w"> </span>member<span class="w"> </span>remove<span class="w"> </span>&lt;member-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 4. Delete the etcd pod on the failed node — MCO will re-add the member</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;failed-node&gt;
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 5. Monitor new pod starting and member re-joining</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-w
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># 6. Confirm three members</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span>...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Check etcd pod status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Identify failed member — exec into a healthy etcd pod</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>etcdctl<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-&lt;node&gt;.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-&lt;node&gt;.key
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># 3. Remove the failed member (using the ID from step 2)</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>etcdctl<span class="w"> </span>member<span class="w"> </span>remove<span class="w"> </span>&lt;member-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 4. Delete the etcd pod on the failed node — MCO will re-add the member</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;failed-node&gt;
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># 5. Monitor new pod starting and member re-joining</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-w
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># 6. Confirm three members</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list<span class="w"> </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span>...
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAME                                READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>etcd-master-0                       1/1     Running   0          45d
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>etcd-master-1                       1/1     Running   0          45d
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>etcd-master-2                       1/1     Running   2          12h
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>member 3a26a27c936d0971: name=master-2 peerURLs=https://10.0.1.45:2380 clientURLs=https://10.0.1.45:2379 isLeader=false
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>member 5b8c1d9e2f4a7c63: name=master-0 peerURLs=https://10.0.1.32:2380 clientURLs=https://10.0.1.32:2379 isLeader=true
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>member 7d4f9a1b5e2c8d34: name=master-1 peerURLs=https://10.0.1.38:2380 clientURLs=https://10.0.1.38:2379 isLeader=false
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Member 3a26a27c936d0971 removed
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>pod &quot;etcd-master-2&quot; deleted
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>NAME                                READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>etcd-master-0                       1/1     Running   0          45d
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>etcd-master-1                       1/1     Running   0          45d
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>etcd-master-2                       0/1     Pending   0          2s
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>etcd-master-2                       0/1     ContainerCreating   0          3s
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>etcd-master-2                       1/1     Running             0          18s
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>member 5b8c1d9e2f4a7c63: name=master-0 peerURLs=https://10.0.1.32:2380 clientURLs=https://10.0.1.32:2379 isLeader=true
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>member 7d4f9a1b5e2c8d34: name=master-1 peerURLs=https://10.0.1.38:2380 clientURLs=https://10.0.1.38:2379 isLeader=false
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>member 9c2e7f3a1d5b4c89: name=master-2 peerURLs=https://10.0.1.45:2380 clientURLs=https://10.0.1.45:2379 isLeader=false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: context deadline exceeded</code></strong> — Increase the timeout with <code>--command-timeout=30s</code> flag or verify etcd pod is fully running before executing etcdctl commands.
+<strong><code>Error: certificate signed by unknown authority</code></strong> — Verify the cacert path is correct and matches the current etcd CA; check <code>/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/</code> exists in the pod.
+<strong><code>Error: etcdctl: command not found</code></strong> — The etcdctl binary is located at <code>/usr/bin/etcdctl</code> in the etcd pod; use the full path or check the pod image version supports the command.</p>
+</div>
 <h2 id="certificate-expiry-check">Certificate Expiry Check<a class="headerlink" href="#certificate-expiry-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check kube-controller-manager client cert expiry</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-controller-manager-client-cert-key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config-managed<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Check all API server certs</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Decode a cert from a file</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check pending CSRs (nodes needing cert approval)</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>oc<span class="w"> </span>get<span class="w"> </span>csr
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Approve all pending CSRs</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># After cert rotation: verify new expiry</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check kube-controller-manager client cert expiry</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-controller-manager-client-cert-key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config-managed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Check all API server certs</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Decode a cert from a file</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Check pending CSRs (nodes needing cert approval)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>oc<span class="w"> </span>get<span class="w"> </span>csr
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># Approve all pending CSRs</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># After cert rotation: verify new expiry</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>notBefore=Jan 15 08:23:45 2024 GMT
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>notAfter=Jan 14 08:23:45 2025 GMT
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>enddate=Jan 14 08:23:45 2025 GMT
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>notBefore=Feb  1 12:00:00 2024 GMT
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>notAfter=Feb  1 12:00:00 2025 GMT
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>enddate=Feb  1 12:00:00 2025 GMT
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>NAME                                                   AGE     SIGNERNAME                                    REQUESTOR                                        REQUESTEDDURATION   CONDITION
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>node-csr-abc123def456ghi789jkl012mno345pqr678stu   2m      kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   &lt;none&gt;              Pending
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>node-csr-xyz987wvu654tsr321qpo098nml765kji432hgf   1m      kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   &lt;none&gt;              Pending
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>certificatesigningrequest.certificates.k8s.io/node-csr-abc123def456ghi789jkl012mno345pqr678stu approved
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>certificatesigningrequest.certificates.k8s.io/node-csr-xyz987wvu654tsr321qpo098nml765kji432hgf approved
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>enddate=Jan 14 08:23:45 2026 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "secret" in API group ""</code></strong> — Verify the secret exists in the correct namespace with <code>oc get secrets -n openshift-config-managed | grep kube-controller-manager</code>.
+<strong><code>unable to load certificate</code></strong> — Ensure the base64-decoded output is valid by checking the secret data field contains a properly formatted PEM certificate.
+<strong><code>No resources found</code></strong> — Run <code>oc get csr</code> first to confirm pending CSRs exist before attempting approval with xargs.</p>
+</div>
 <h2 id="rotating-kubeadmin">Rotating kubeadmin<a class="headerlink" href="#rotating-kubeadmin" title="Permanent link">&para;</a></h2>
 <p>Remove the kubeadmin emergency credential after configuring a proper identity provider with at least one cluster-admin user. This is a one-way operation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Confirm you have cluster-admin access via another identity (NOT kubeadmin)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span>login<span class="w"> </span>-u<span class="w"> </span>&lt;your-idp-admin&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>oc<span class="w"> </span>whoami<span class="w">    </span><span class="c1"># must NOT be kubeadmin</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 2. Verify the IDP-backed user has cluster-admin</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterrolebinding<span class="w"> </span>cluster-admin<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>subjects
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># 3. Delete the kubeadmin secret</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>oc<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>kubeadmin<span class="w"> </span>-n<span class="w"> </span>kube-system
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># 4. Verify deletion</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kubeadmin<span class="w"> </span>-n<span class="w"> </span>kube-system
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Expected: Error from server (NotFound): secrets &quot;kubeadmin&quot; not found</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Confirm you have cluster-admin access via another identity (NOT kubeadmin)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>oc<span class="w"> </span>login<span class="w"> </span>-u<span class="w"> </span>&lt;your-idp-admin&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>oc<span class="w"> </span>whoami<span class="w">    </span><span class="c1"># must NOT be kubeadmin</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># 2. Verify the IDP-backed user has cluster-admin</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterrolebinding<span class="w"> </span>cluster-admin<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>subjects
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># 3. Delete the kubeadmin secret</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>oc<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>kubeadmin<span class="w"> </span>-n<span class="w"> </span>kube-system
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># 4. Verify deletion</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kubeadmin<span class="w"> </span>-n<span class="w"> </span>kube-system
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Expected: Error from server (NotFound): secrets &quot;kubeadmin&quot; not found</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Authentication successful
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>idp-admin
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>subjects:
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>- apiGroup: rbac.authorization.k8s.io
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  kind: User
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  name: idp-admin
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>- apiGroup: rbac.authorization.k8s.io
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  kind: Group
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  name: cluster-admins
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>secret &quot;kubeadmin&quot; deleted
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Error from server (NotFound): secrets &quot;kubeadmin&quot; not found
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to read client-cert /home/user/.kube/config from disk</code></strong> — Ensure your kubeconfig file exists and is readable with <code>ls -la ~/.kube/config</code>.
+<strong><code>Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "idp-admin" cannot get resource "clusterrolebindings"</code></strong> — Verify the IDP user has cluster-admin role assigned before attempting deletion by checking <code>oc describe clusterrolebinding cluster-admin</code>.
+<strong><code>Error from server (Forbidden): secrets is forbidden: User "kubeadmin" cannot delete resource "secrets" in API group "" in the namespace "kube-system"</code></strong> — Log in with your IDP admin account instead of kubeadmin; kubeadmin cannot delete itself.</p>
+</div>
 <h2 id="image-pull-secret-rotation">Image Pull Secret Rotation<a class="headerlink" href="#image-pull-secret-rotation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Obtain new pull secret JSON from console.redhat.com (OpenShift cluster manager)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># 2. Update the global pull secret</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>oc<span class="w"> </span><span class="nb">set</span><span class="w"> </span>data<span class="w"> </span>secret/pull-secret<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--from-file<span class="o">=</span>.dockerconfigjson<span class="o">=</span>&lt;path-to-new-pull-secret.json&gt;
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># 3. Verify the update was applied</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>pull-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.\.dockerconfigjson}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># 4. MCO will roll out the change to all nodes (monitor MCP)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Obtain new pull secret JSON from console.redhat.com (OpenShift cluster manager)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># 2. Update the global pull secret</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>oc<span class="w"> </span><span class="nb">set</span><span class="w"> </span>data<span class="w"> </span>secret/pull-secret<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>--from-file<span class="o">=</span>.dockerconfigjson<span class="o">=</span>&lt;path-to-new-pull-secret.json&gt;
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># 3. Verify the update was applied</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>pull-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.\.dockerconfigjson}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># 4. MCO will roll out the change to all nodes (monitor MCP)</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>secret/pull-secret data updated
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>{
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  &quot;auths&quot;: {
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    &quot;cloud.openshift.com&quot;: {
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>      &quot;auth&quot;: &quot;b3BlbnNoaWZ0K2NsdXN0ZXI6MjRkMzU2ZjctNWE5Yi00YzAxLWI4ZjItOWU3YzNhYmM0ZDU2&quot;,
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>      &quot;email&quot;: &quot;user@example.com&quot;
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    },
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    &quot;quay.io&quot;: {
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>      &quot;auth&quot;: &quot;cXVheS1jbHVzdGVyOmV5SmhiR2NpT2lKSVV6STFOaUo5LkV5SmtiV1Z1SWpwMGNuVmxMQ0psZW1GdGNHeGxJanBiSW1SdmJTSXNJbU55ZGlJNklrRkJRVTVCVFVsUFUwVlNJaXdpWlhobGNtRm5aU0k2SWtGQlFVNUJUVWxQVTBWU0lsMC5zVzFoWjI5dVoyOXZaMnhMYjI1SFlXZGxiV1Z1ZEhNdVkyOXQ=&quot;,
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>      &quot;email&quot;: &quot;user@example.com&quot;
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    }
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  }
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>}
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>NAME                                       READY   UPDATED   DEGRADED   UNAVAILABLE
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>master                                     3       3         0          0
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>worker                                     5       5         0          0
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>worker-gpu                                 2       1         0          1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: no objects matched "pull-secret"</code></strong> — Verify the secret exists in openshift-config namespace with <code>oc get secrets -n openshift-config | grep pull-secret</code>.
+<strong><code>command not found: jq</code></strong> — Install jq on the bastion host with <code>sudo yum install -y jq</code> or use <code>python3 -m json.tool</code> instead.
+<strong><code>base64: invalid input</code></strong> — Ensure the pull-secret file path is correct and the secret data is not corrupted; re-download from console.redhat.com.</p>
+</div>
 <h2 id="certificate-rotation">Certificate Rotation<a class="headerlink" href="#certificate-rotation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check certificate expiry</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Force ingress cert rotation</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>secret<span class="w"> </span>router-certs-default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/data/tls.crt&quot;}]&#39;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Rotate etcd peer certs (if expired)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Use the etcd-cert-recovery procedure from Red Hat KCS</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>oc<span class="w"> </span>get<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>etcd
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># After cert rotation: approve new CSRs</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check certificate expiry</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver-operator<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>kube-apiserver-to-kubelet-signer<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Force ingress cert rotation</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>secret<span class="w"> </span>router-certs-default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/data/tls.crt&quot;}]&#39;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Rotate etcd peer certs (if expired)</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Use the etcd-cert-recovery procedure from Red Hat KCS</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>oc<span class="w"> </span>get<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>etcd
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># After cert rotation: approve new CSRs</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>notBefore=Jan 15 09:23:45 2024 GMT
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>notAfter=Jan 14 09:23:45 2025 GMT
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>secret/router-certs-default patched
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>NAME                                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>etcd-ip-10-0-145-87.us-east-2.compute.internal         3/3     Running   0          45d
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>etcd-ip-10-0-156-203.us-east-2.compute.internal        3/3     Running   0          45d
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>etcd-ip-10-0-167-41.us-east-2.compute.internal         3/3     Running   0          45d
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>NAME                                      AGE   SIGNERNAME                                    REQUESTOR                                                         CONDITION
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>csr-8k4m2                                  2m    kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   Pending
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>csr-9p7x1                                  1m    kubernetes.io/kubelet-serving                  system:node:worker-1.us-east-2.compute.internal                  Pending
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>certificatesigningrequest.certificates.k8s.io/csr-8k4m2 approved
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "secret" in group "core" in the namespace "openshift-kube-apiserver-operator"</code></strong> — Verify the secret name matches your cluster version with <code>oc get secret -n openshift-kube-apiserver-operator | grep signer</code>.
+<strong><code>error: unable to decode base64</code></strong> — Ensure the certificate data exists in the secret; if the secret was recently deleted, restore it from etcd backup or re-run the cert rotation procedure.</p>
+</div>
 <h2 id="apply-machineconfig-os-configuration">Apply MachineConfig (OS Configuration)<a class="headerlink" href="#apply-machineconfig-os-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Example: add custom kernel argument</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">apiVersion: machineconfiguration.openshift.io/v1</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">kind: MachineConfig</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">metadata:</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">  labels:</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">    machineconfiguration.openshift.io/role: worker</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">  name: 99-worker-custom-kernel-arg</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">spec:</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">  kernelArguments:</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">  - hugepagesz=1G</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s">  - hugepages=16</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s">EOF</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Monitor MCO applying the config (nodes will drain+reboot one by one)</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w">   </span><span class="c1"># MachineConfigPool — watch UPDATED / UPDATING / DEGRADED</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Example: add custom kernel argument</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="s">apiVersion: machineconfiguration.openshift.io/v1</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="s">kind: MachineConfig</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s">metadata:</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s">  labels:</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s">    machineconfiguration.openshift.io/role: worker</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s">  name: 99-worker-custom-kernel-arg</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s">spec:</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="s">  kernelArguments:</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="s">  - hugepagesz=1G</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="s">  - hugepages=16</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="s">EOF</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1"># Monitor MCO applying the config (nodes will drain+reboot one by one)</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w">   </span><span class="c1"># MachineConfigPool — watch UPDATED / UPDATING / DEGRADED</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>machineconfig.machineconfiguration.openshift.io/99-worker-custom-kernel-arg created
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>NAME                                    CONFIG                                   UPDATED   UPDATING   DEGRADED   NODES
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>master                                  rendered-master-b4c8a2f1e9d7c3k2       True      False      False      3
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>worker                                  rendered-worker-a7f2e1d9c4b8k5m3       False     True       False      2
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>NAME                                    STATUS                   ROLES           AGE       VERSION
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>worker-node-01.ocp.example.com         NotReady,SchedulingDisabled   worker          45d       v1.27.6
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>worker-node-02.ocp.example.com         Ready                    worker          45d       v1.27.6
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>worker-node-03.ocp.example.com         Ready                    worker          45d       v1.27.6
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>master-node-01.ocp.example.com         Ready                    control-plane   45d       v1.27.6
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>master-node-02.ocp.example.com         Ready                    control-plane   45d       v1.27.6
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>master-node-03.ocp.example.com         Ready                    control-plane   45d       v1.27.6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to recognize "STDIN": no matches for kind "MachineConfig" in version "machineconfiguration.openshift.io/v1"</code></strong> — Verify the Machine Config Operator is installed with <code>oc get operator machine-config</code> and check your OpenShift version supports this API.
+<strong><code>Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-custom-kernel-arg" is invalid: spec.kernelArguments: Invalid value: "hugepagesz=1G": kernel argument format must be key=value</code></strong> — Use proper kernel argument syntax; some arguments like hugepagesz require specific formatting or may need to be set via GRUB instead.
+<strong><code>The MachineConfigPool "worker" is degraded</code></strong> — Check node status with <code>oc describe node &lt;node-name&gt;</code> and MCO logs with <code>oc logs -n openshift-machine-config-operator -l k8s-app=machine-config-operator -f</code> to identify why the config failed to apply.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7987,7 +8242,7 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

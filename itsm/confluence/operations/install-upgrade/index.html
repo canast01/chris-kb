@@ -7710,131 +7710,271 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.plugins[] | {key: .key, version: .version, enabled: .enabled}&#39;</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Back up the install directory</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/opt/atlassian/confluence<span class="w"> </span>/opt/atlassian/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Back up the local home</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/var/atlassian/application-data/confluence<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup created: confluence_backup_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;version&quot;: &quot;7.19.17&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;buildNumber&quot;: &quot;9127&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>}
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>{
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;key&quot;: &quot;com.atlassian.confluence.extra.widgetconnector&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;version&quot;: &quot;1.5.2&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;enabled&quot;: true
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>}
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;key&quot;: &quot;com.atlassian.confluence.extra.sharepoint&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;version&quot;: &quot;6.8.1&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;enabled&quot;: true
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>}
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>{
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;key&quot;: &quot;com.atlassian.upm.atlassian-universal-plugin-manager-plugin&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;version&quot;: &quot;4.4.15&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;enabled&quot;: true
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>}
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;key&quot;: &quot;com.atlassian.confluence.plugins.confluence-mobile-app-plugin&quot;,
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;version&quot;: &quot;2.3.8&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;enabled&quot;: false
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Make the installer executable</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>atlassian-confluence-9.x.x-x64.bin
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run the installer (interactive)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>./atlassian-confluence-9.x.x-x64.bin
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># The installer will:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 1. Detect existing installation</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># 2. Offer &quot;Upgrade existing installation&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 3. Confirm install directory and home directory</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 4. Upgrade application files</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># For unattended/automated upgrades, use a response file:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>./atlassian-confluence-9.x.x-x64.bin<span class="w"> </span>-q<span class="w"> </span>-varfile<span class="w"> </span>response.varfile
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence hostname/URL is correct and the service is running with <code>systemctl status confluence</code>.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure <code>$CF_TOKEN</code> is valid and the API endpoint is accessible; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/settings/systemInfo"</code> to see the actual response.
+<strong><code>curl: (401) Unauthorized</code></strong> — Regenerate the API token in Confluence user settings and confirm it has admin permissions for REST API access.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Back up the install directory</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/opt/atlassian/confluence<span class="w"> </span>/opt/atlassian/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Back up the local home</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/var/atlassian/application-data/confluence<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup created: confluence_backup_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">app.install.service$Boolean</span><span class="o">=</span><span class="s">true</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">existingInstallationDir</span><span class="o">=</span><span class="s">/opt/atlassian/confluence</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">sys.confirmedUpdateInstallationString</span><span class="o">=</span><span class="s">true</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">launch.application$Boolean</span><span class="o">=</span><span class="s">false</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Backup created: confluence_backup_20240315_143827
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">INSTALL_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence_backup_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot open '/opt/atlassian/confluence' for reading: No such file or directory</code></strong> — Verify Confluence is installed at <code>/opt/atlassian/confluence</code> or adjust the path to match your installation directory.
+<strong><code>cp: cannot create directory '/opt/atlassian/confluence_backup_20240315_143827': Permission denied</code></strong> — Run the script with <code>sudo</code> or ensure the user has write permissions to <code>/opt/atlassian/</code>.
+<strong><code>cp: cannot open '/var/atlassian/application-data/confluence' for reading: No such file or directory</code></strong> — Check that the Confluence home directory exists at the specified path, or update it to match your <code>confluence.home</code> configuration.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Make the installer executable</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>atlassian-confluence-9.x.x-x64.bin
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Compare and restore JVM settings</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>diff<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/bin/setenv.sh&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span><span class="s2">/bin/setenv.sh&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Manually apply custom -Xmx, -Xms, -D flags to the new setenv.sh</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Compare and restore server.xml</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>diff<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/conf/server.xml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span><span class="s2">/conf/server.xml&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Re-apply: port overrides, TLS config, AJP settings, proxyName/proxyPort</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Run the installer (interactive)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>./atlassian-confluence-9.x.x-x64.bin
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># The installer will:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 1. Detect existing installation</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 2. Offer &quot;Upgrade existing installation&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 3. Confirm install directory and home directory</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Upgrade application files</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># For unattended/automated upgrades, use a response file:</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>./atlassian-confluence-9.x.x-x64.bin<span class="w"> </span>-q<span class="w"> </span>-varfile<span class="w"> </span>response.varfile
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Start the application</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Tail the startup log</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># For Data Center: Confluence will run database schema migrations on first start</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># This can take 10–60 minutes for large databases — do NOT interrupt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">app.install.service$Boolean</span><span class="o">=</span><span class="s">true</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">existingInstallationDir</span><span class="o">=</span><span class="s">/opt/atlassian/confluence</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">sys.confirmedUpdateInstallationString</span><span class="o">=</span><span class="s">true</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">launch.application$Boolean</span><span class="o">=</span><span class="s">false</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>INFO  [main] [DatabaseUpgradeTask] Running upgrade task: UpgradeTask_Build_XXXXX
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>INFO  [main] [DatabaseUpgradeTask] Upgrade task completed in 12345ms
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>INFO  [main] [ConfluenceBootstrapManager] Bootstrap complete
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On each remaining node:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 1. Run installer (same procedure as above)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># 2. Start Confluence</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 3. Verify it joins the cluster: Admin &gt; Clustering</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Verify cluster membership via REST</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {address, state}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View upgrade task history in the database</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT classname, ranon FROM JIRAACTION ORDER BY ranon DESC LIMIT 20;&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check for failed upgrade tasks</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(UpgradeTask.*FAILED|upgrade.*failed)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Export current plugin list with versions</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.plugins[] | select(.userInstalled == true) | &quot;\(.key)\t\(.version)\t\(.enabled)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>&gt;<span class="w"> </span>plugins_before_upgrade.tsv
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>cat<span class="w"> </span>plugins_before_upgrade.tsv
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check for plugins that failed to start post-upgrade</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Plugin.*FAILED|PluginException|osgi.*error)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>plugin<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Admin UI: Admin &gt; Manage Apps — filter by &quot;Needs update&quot; or &quot;Incompatible&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Disable a plugin</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/plugins/com.example.plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: false}&#39;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Re-enable</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/plugins/com.example.plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: true}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Stop Confluence on all nodes</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Restore the application install directory</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/opt/atlassian/confluence
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/opt/atlassian/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="w"> </span>/opt/atlassian/confluence
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># 3. Restore the database (if schema was mutated)</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE confluencedb;&quot;</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE confluencedb OWNER confluence ENCODING &#39;UTF8&#39;;&quot;</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>pg_restore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span>--host<span class="o">=</span>db.internal.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>--dbname<span class="o">=</span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>--jobs<span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>/backup/confluence/db/confluence_pre_upgrade.dump
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># 4. Restore shared home if attachments changed (usually not needed for rollback)</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># rsync /backup/confluence/shared-home/pre_upgrade/ /mnt/confluence-shared/</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># 5. Start Confluence on the primary node</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>/opt/atlassian/confluence/bin/start-confluence.sh
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="c1"># 6. Verify service returns to RUNNING state</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://confluence.example.com/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.state&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">INSTALL_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence_backup_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Compare and restore JVM settings</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>diff<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/bin/setenv.sh&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span><span class="s2">/bin/setenv.sh&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Manually apply custom -Xmx, -Xms, -D flags to the new setenv.sh</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Compare and restore server.xml</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>diff<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/conf/server.xml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span><span class="s2">/conf/server.xml&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Re-apply: port overrides, TLS config, AJP settings, proxyName/proxyPort</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>--- /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>+++ /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>@@ -12,7 +12,7 @@
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> # JVM memory settings
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>-CATALINA_OPTS=&quot;-Xms2048m -Xmx4096m -XX:+UseG1GC&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>+CATALINA_OPTS=&quot;-Xms1024m -Xmx2048m -XX:+UseG1GC&quot;
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a> # Custom properties
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>-CATALINA_OPTS=&quot;${CATALINA_OPTS} -Dconfluence.home=/var/atlassian/confluence&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>+CATALINA_OPTS=&quot;${CATALINA_OPTS} -Dconfluence.home=/mnt/confluence-data&quot;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>--- /opt/atlassian/confluence_backup_20240115_143022/conf/server.xml
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>+++ /opt/atlassian/confluence_backup_20240115_143022/conf/server.xml
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>@@ -45,8 +45,8 @@
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>     &lt;Connector port=&quot;8090&quot; protocol=&quot;HTTP/1.1&quot;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>                connectionTimeout=&quot;20000&quot;
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>-               proxyName=&quot;confluence.internal.corp&quot;
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>-               proxyPort=&quot;443&quot;
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>+               proxyName=&quot;confluence.prod.example.com&quot;
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>+               proxyPort=&quot;8090&quot;
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>                redirectPort=&quot;8443&quot; /&gt;
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>     &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>diff: /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh: No such file or directory</code></strong> — Verify the TIMESTAMP variable is set correctly and the backup directory exists with <code>ls -la "${BACKUP_DIR}"</code>.
+<strong><code>Permission denied</code></strong> — Run the diff commands with <code>sudo</code> or ensure the confluence system user has read access to both backup and installation directories.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start the application</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Tail the startup log</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># For Data Center: Confluence will run database schema migrations on first start</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># This can take 10–60 minutes for large databases — do NOT interrupt</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>INFO  [main] [DatabaseUpgradeTask] Running upgrade task: UpgradeTask_Build_XXXXX
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>INFO  [main] [DatabaseUpgradeTask] Upgrade task completed in 12345ms
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>INFO  [main] [ConfluenceBootstrapManager] Bootstrap complete
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On each remaining node:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 1. Run installer (same procedure as above)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># 2. Start Confluence</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 3. Verify it joins the cluster: Admin &gt; Clustering</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Verify cluster membership via REST</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {address, state}&#39;</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;address&quot;: &quot;10.42.18.5:8091&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;state&quot;: &quot;JOINED&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>}
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>{
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;address&quot;: &quot;10.42.18.6:8091&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  &quot;state&quot;: &quot;JOINED&quot;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>}
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>{
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  &quot;address&quot;: &quot;10.42.18.7:8091&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  &quot;state&quot;: &quot;JOINED&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence service is running on the target node with <code>systemctl status confluence</code> and check network connectivity to the cluster endpoint.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API token in <code>$CF_TOKEN</code> is valid and has cluster API permissions; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/cluster/nodes"</code> without piping to jq first.
+<strong><code>"state": "JOINING"</code></strong> — The node is still synchronizing with the cluster; wait 2-3 minutes and retry the curl command, as initial state synchronization can take time.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View upgrade task history in the database</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT classname, ranon FROM JIRAACTION ORDER BY ranon DESC LIMIT 20;&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check for failed upgrade tasks</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(UpgradeTask.*FAILED|upgrade.*failed)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>classname                          | ranon
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>------------------------------------+----------------------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230815 | 2024-01-15 14:32:18.547
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230801 | 2024-01-15 14:31:45.223
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230715 | 2024-01-15 14:31:12.891
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230620 | 2024-01-15 14:30:38.556
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230501 | 2024-01-15 14:29:55.334
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a> com.atlassian.confluence.upgrade.UpgradeTask_20230315 | 2024-01-15 14:29:12.778
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>(6 rows)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>2024-01-15 14:35:22,156 INFO [UpgradeTask_20230815] Upgrade task completed successfully
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>2024-01-15 14:31:45,223 INFO [UpgradeTask_20230801] Upgrade task completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "db.internal.example.com" (10.45.67.89), port 5432 failed: Connection refused</code></strong> — Verify the PostgreSQL service is running on the database host and the hostname/port are correct.
+<strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Confirm Confluence is installed and the log directory path matches your installation; check the CONFLUENCE_HOME environment variable.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Export current plugin list with versions</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.plugins[] | select(.userInstalled == true) | &quot;\(.key)\t\(.version)\t\(.enabled)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>&gt;<span class="w"> </span>plugins_before_upgrade.tsv
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>cat<span class="w"> </span>plugins_before_upgrade.tsv
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>com.atlassian.confluence.extra.confluence-mobile-app    7.19.0  true
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>com.atlassian.confluence.extra.office-connector 5.3.4   true
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>com.gliffy.confluence.plugins.gliffy-diagram    2.8.15  true
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>com.atlassian.jira.confluence   3.9.12  true
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>com.atlassian.upm.atlassian-universal-plugin-manager    4.4.8   true
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>com.atlassian.confluence.extra.webdav   5.1.2   false
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>com.atlassian.confluence.plugins.confluence-content-formatting-macros   1.5.3   true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence server hostname is correct and the instance is running and accessible from your network.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API token in <code>$CF_TOKEN</code> is valid and has the <code>read:plugins</code> permission scope.
+<strong><code>curl: (401) Unauthorized</code></strong> — Regenerate the API token in Confluence and verify it's exported correctly with <code>echo $CF_TOKEN</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check for plugins that failed to start post-upgrade</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Plugin.*FAILED|PluginException|osgi.*error)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>plugin<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Admin UI: Admin &gt; Manage Apps — filter by &quot;Needs update&quot; or &quot;Incompatible&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>2024-01-15 09:47:23,521 ERROR [http-nio-8090-exec-12] [com.atlassian.plugin.osgi.container.OsgiContainerManager] Plugin com.atlassian.confluence.extra.officeconnector failed to start
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15 09:47:24,103 ERROR [http-nio-8090-exec-12] [com.atlassian.plugin.manager.DefaultPluginManager] PluginException: Unable to load plugin descriptor for com.atlassian.confluence.extra.officeconnector
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15 09:47:25,667 WARN [http-nio-8090-exec-15] [com.atlassian.plugin.osgi.container.PackageExports] osgi.container error: Missing required bundle com.atlassian.confluence.extra.officeconnector v5.1.4
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15 09:47:26,441 ERROR [http-nio-8090-exec-18] [com.atlassian.plugin.classloader.PluginClassLoader] Plugin com.example.custom-macro FAILED - ClassNotFoundException: com.example.CustomMacroImpl
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15 09:47:27,892 WARN [http-nio-8090-exec-20] [com.atlassian.plugin.osgi.factory.OsgiPluginFactory] Plugin state FAILED for com.atlassian.confluence.extra.sharepoint-connector
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15 09:47:28,156 ERROR [http-nio-8090-exec-22] [com.atlassian.plugin.manager.DefaultPluginManager] PluginException: Incompatible plugin version detected: com.atlassian.confluence.extra.officeconnector requires Confluence 7.19+ but running 7.18.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Verify the Confluence installation path and log directory location with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.
+<strong><code>No matches found</code></strong> — This indicates no plugin failures were detected in the logs; if plugins appear broken in the UI, check the full log with <code>tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log</code> to see startup warnings.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Disable a plugin</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/plugins/com.example.plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: false}&#39;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Re-enable</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/plugins/1.0/plugins/com.example.plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: true}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{&quot;enabled&quot;:false}
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>{&quot;enabled&quot;:true}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence server is running and accessible at the correct hostname/port.
+<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure <code>$CF_TOKEN</code> is set to a valid API token with plugin administration permissions.
+<strong><code>{"statusCode":404,"message":"Plugin not found"}</code></strong> — Confirm the plugin key <code>com.example.plugin</code> exists and is installed by checking the Plugins menu in Confluence.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># 1. Stop Confluence on all nodes</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># 2. Restore the application install directory</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/opt/atlassian/confluence
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>cp<span class="w"> </span>-rp<span class="w"> </span>/opt/atlassian/confluence_backup_<span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="w"> </span>/opt/atlassian/confluence
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># 3. Restore the database (if schema was mutated)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE confluencedb;&quot;</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE confluencedb OWNER confluence ENCODING &#39;UTF8&#39;;&quot;</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>pg_restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span>--host<span class="o">=</span>db.internal.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">  </span>--dbname<span class="o">=</span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">  </span>--jobs<span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">  </span>/backup/confluence/db/confluence_pre_upgrade.dump
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="c1"># 4. Restore shared home if attachments changed (usually not needed for rollback)</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="c1"># rsync /backup/confluence/shared-home/pre_upgrade/ /mnt/confluence-shared/</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="c1"># 5. Start Confluence on the primary node</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>/opt/atlassian/confluence/bin/start-confluence.sh
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="c1"># 6. Verify service returns to RUNNING state</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://confluence.example.com/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.state&#39;</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUijKTM8o4eIqyEkEcpQCgJSSQnVxRmJBqpVCflliTi1XWWpRZlolUDIMzEBIg8xIzEvPSQWqSczJTEksSQWpgjLRjQFboaBrpwAxD2osWACqgwsAnxk0Lw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7878,7 +8018,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

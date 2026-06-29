@@ -9448,17 +9448,61 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Interface    IP Address      Status    MTU
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>eth0         192.168.1.45    up        1500
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>eth1         10.0.0.12       up        1500
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>eth2         169.254.1.1     up        1500
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>lo           127.0.0.1       up        65536
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Service dataplane is running (PID: 2847, uptime: 18d 4h 22m)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Service router is running (PID: 2851, uptime: 18d 4h 21m)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Command 'get interfaces' not found</code></strong> — Ensure you are logged into the NSX Edge node CLI (not the host shell); use <code>ssh admin@&lt;edge-ip&gt;</code> and verify the prompt shows the Edge device name.
+<strong><code>Service dataplane is stopped</code></strong> — Restart the dataplane service with <code>restart service dataplane</code> and verify routing connectivity is restored.
+<strong><code>Service router is stopped</code></strong> — Restart the router service with <code>restart service router</code> and check for configuration errors in the routing table with <code>get route</code>.</p>
+</div>
 <hr />
 <h2 id="geneve-encapsulation">Geneve Encapsulation<a class="headerlink" href="#geneve-encapsulation" title="Permanent link">&para;</a></h2>
 <p>NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segment a packet belongs to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
 </code></pre></div>
 <p>Geneve carries extensible metadata (security group tags, service chain IDs) inline — not possible with VXLAN.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxcli
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NSX CLI (version 3.2.1.0)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&gt; get tunnel status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Tunnel Status Summary:
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Total Tunnels: 24
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Up: 23
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Down: 1
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Degraded: 0
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Tunnel Details:
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.46 | Status: UP | RTT: 2.3ms
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.47 | Status: UP | RTT: 2.1ms
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.48 | Status: DOWN | RTT: N/A
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.49 | Status: UP | RTT: 2.4ms
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  ...
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>&gt; get tunnel status 192.168.100.48
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Tunnel Status for Remote TEP 192.168.100.48:
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  Status: DOWN
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  Last State Change: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  Failure Reason: Network unreachable
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  Packets Sent: 1245
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>  Packets Received: 0
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  Packet Loss: 100%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: nsxcli</code></strong> — Ensure you are logged into an NSX Manager appliance via SSH and that the NSX CLI is available in the PATH.
+<strong><code>Error: Invalid remote TEP IP format</code></strong> — Verify the remote TEP IP address is valid and reachable; use <code>get tunnel status</code> without arguments first to list all tunnel endpoints.</p>
+</div>
 <hr />
 <h2 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h2>
 <p>Transport Zones define which transport nodes can host VMs on a given segment.</p>
@@ -9540,13 +9584,34 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check HA state from Edge node</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check HA state from Edge node</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Edge Cluster Status:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Cluster ID: edge-cluster-01
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Active Node: esg-edge-01.lab.local (192.168.1.45)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Standby Node: esg-edge-02.lab.local (192.168.1.46)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  HA Status: ACTIVE
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Last Heartbeat: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Failover Count: 2
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Health: HEALTHY
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Initiating failover from esg-edge-01 to esg-edge-02...
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Failover in progress: 45%
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Failover completed successfully
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>New Active Node: esg-edge-02.lab.local (192.168.1.46)
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Standby Node: esg-edge-01.lab.local (192.168.1.45)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: edge-cluster-01 not found in inventory</code></strong> — Verify the edge cluster name matches your NSX deployment with <code>list edge-clusters</code>.
+<strong><code>Error: Cannot failover - standby node is UNHEALTHY</code></strong> — Check standby node connectivity and NSX agent status before attempting failover.
+<strong><code>Error: Failover already in progress</code></strong> — Wait for the current failover operation to complete before issuing another failover command.</p>
+</div>
 <h3 id="routing-flow-vm-to-external">Routing Flow — VM to External<a class="headerlink" href="#routing-flow-vm-to-external" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
 </code></pre></div>
 <hr />
 <h2 id="edge-cluster">Edge Cluster<a class="headerlink" href="#edge-cluster" title="Permanent link">&para;</a></h2>
@@ -9635,18 +9700,45 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </table>
 <p>Default rule (65535): <strong>DROP</strong> — do not change.</p>
 <h3 id="dfw-inspection-on-esxi-host">DFW Inspection on ESXi Host<a class="headerlink" href="#dfw-inspection-on-esxi-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>summarize-dvfilter
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show rule hit counts</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Show security groups (address sets) in use</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>summarize-dvfilter
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Show rule hit counts</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Show security groups (address sets) in use</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>DFW Filter Summary:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Filter: nic-12345-eth0-vmware-sfw.2 (VM: prod-web-01, vNIC: eth0)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Filter: nic-12346-eth1-vmware-sfw.2 (VM: prod-web-02, vNIC: eth1)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Filter: nic-12347-eth0-vmware-sfw.2 (VM: prod-db-01, vNIC: eth0)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Total filters: 3
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Rules for nic-12345-eth0-vmware-sfw.2:
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Rule 1: ALLOW TCP 10.0.0.0/8 -&gt; 0.0.0.0/0 port 443
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Rule 2: ALLOW TCP 10.0.0.0/8 -&gt; 0.0.0.0/0 port 80
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Rule 3: DROP IP 0.0.0.0/0 -&gt; 0.0.0.0/0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Statistics for nic-12345-eth0-vmware-sfw.2:
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Rule 1: 2847392 hits
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Rule 2: 1923847 hits
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Rule 3: 156 hits
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Address Sets for nic-12345-eth0-vmware-sfw.2:
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  SG-WEB-TIER: 10.20.1.0/24, 10.20.2.0/24
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  SG-APP-TIER: 10.30.0.0/24
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  SG-MGMT: 192.168.1.0/25
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command on an NSX Manager or ESXi host with NSX Agent installed, not a standard Linux VM.
+<strong><code>Error: filter nic-12345-eth0-vmware-sfw.2 not found</code></strong> — Verify the vNIC filter name matches exactly using <code>summarize-dvfilter</code> first, as filter names are case-sensitive and include the full suffix.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root, as DFW filter inspection requires elevated privileges.</p>
+</div>
 <hr />
 <h2 id="segments">Segments<a class="headerlink" href="#segments" title="Permanent link">&para;</a></h2>
 <p>Segments are NSX Layer 2 logical networks. VMs on the same segment communicate without crossing a gateway, regardless of physical host.</p>
@@ -9671,30 +9763,144 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find the VNI of a segment</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Find the VNI of a segment</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nsxcli
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NSX CLI (build 20230915.1.0.21213456)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Connected to: nsx-manager-01.lab.local (192.168.1.50)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>segment-id: segment-web-prod
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  VNI: 5000
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  name: web-production
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  transport-zone: tz-overlay-01
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  admin-state: UP
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  replication-mode: mtep
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>segment &lt;segment-id&gt; not found</code></strong> — Verify the segment ID exists with <code>get logical-switch list</code> and use the correct identifier from the output.
+<strong><code>error: not authenticated</code></strong> — Ensure you have logged into NSX Manager with valid credentials before running nsxcli commands.</p>
+</div>
 <hr />
 <h2 id="ipam-and-dhcp">IPAM and DHCP<a class="headerlink" href="#ipam-and-dhcp" title="Permanent link">&para;</a></h2>
 <p>NSX includes built-in IPAM for IP pool management and a distributed DHCP server running on ESXi hosts — no dedicated DHCP VM required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List IP pools</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check pool allocations</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List IP pools</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check pool allocations</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    {
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>      &quot;id&quot;: &quot;pool-1&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>      &quot;display_name&quot;: &quot;Management-Pool&quot;,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>      &quot;subnets&quot;: [
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        {
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>          &quot;cidr&quot;: &quot;10.20.0.0/24&quot;,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>          &quot;allocation_ranges&quot;: [
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>            {
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>              &quot;start&quot;: &quot;10.20.0.10&quot;,
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>              &quot;end&quot;: &quot;10.20.0.250&quot;
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>            }
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>          ]
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        }
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>      ],
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>      &quot;resource_type&quot;: &quot;IpAddressPool&quot;
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    },
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    {
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>      &quot;id&quot;: &quot;pool-2&quot;,
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>      &quot;display_name&quot;: &quot;Workload-Pool&quot;,
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>      &quot;subnets&quot;: [
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>        {
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>          &quot;cidr&quot;: &quot;172.16.0.0/22&quot;,
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>          &quot;allocation_ranges&quot;: [
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>            {
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>              &quot;start&quot;: &quot;172.16.0.5&quot;,
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>              &quot;end&quot;: &quot;172.16.3.250&quot;
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>            }
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>          ]
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>        }
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>      ],
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>      &quot;resource_type&quot;: &quot;IpAddressPool&quot;
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>    }
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>  ],
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>  &quot;result_count&quot;: 2
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>}
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>{
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>  &quot;results&quot;: [
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>    {
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>      &quot;ip_address&quot;: &quot;10.20.0.15&quot;,
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>      &quot;allocation_id&quot;: &quot;alloc-8f2c9a1b&quot;,
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>      &quot;owner&quot;: &quot;nsx-edge-node-01&quot;
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>    },
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>    {
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>      &quot;ip_address&quot;: &quot;10.20.0.16&quot;,
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>      &quot;allocation_id&quot;: &quot;alloc-7d4e5f2a&quot;,
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>      &quot;owner&quot;: &quot;nsx-edge-node-02&quot;
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>    },
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>    {
+<a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a>      &quot;ip_address&quot;: &quot;10.20.0.17&quot;,
+<a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a>      &quot;allocation_id&quot;: &quot;alloc-6b1a3c9d&quot;,
+<a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a>      &quot;owner&quot;: &quot;logical-router-dr-01&quot;
+<a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a>    }
+<a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a>  ],
+<a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a>  &quot;result_count&quot;: 3
+<a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname resolves correctly).
+<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the user has API access permissions in NSX Manager.
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm NSX Manager is running and reachable at the specified hostname/IP on port 443.</p>
+</div>
 <hr />
 <h2 id="vpn-services">VPN Services<a class="headerlink" href="#vpn-services" title="Permanent link">&para;</a></h2>
 <p>NSX supports IPsec site-to-site VPN and L2 VPN on Edge nodes (T0 or T1 with Edge cluster).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check L2 VPN sessions</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check L2 VPN sessions</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>IPsec Sessions:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Session ID: ipsec-session-01
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Peer IP: 192.168.100.50
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Status: UP
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Encryption: AES-256
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Authentication: SHA-256
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Bytes In: 1,847,293,456
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Bytes Out: 2,156,734,821
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Uptime: 45 days 12:34:56
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Session ID: ipsec-session-02
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Peer IP: 10.50.20.15
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Status: DOWN
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Encryption: AES-128
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Authentication: SHA-1
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Bytes In: 0
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Bytes Out: 0
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Uptime: 0 days 00:00:00
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>L2 VPN Sessions:
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Session ID: l2vpn-session-01
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Peer IP: 172.16.50.100
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>Status: UP
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Stretched Network: vlan-100
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>MTU: 1500
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>Packets In: 5,234,821
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Packets Out: 4,987,654
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Uptime: 23 days 08:15:22
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: vpn command not found</code></strong> — Verify you are connected to the NSX Edge CLI with proper administrative credentials and that VPN services are enabled on the edge device.
+<strong><code>error: session list unavailable - vpn service not running</code></strong> — Restart the VPN service on the NSX Edge using <code>restart vpn</code> or check edge device connectivity and licensing.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9810,9 +10016,27 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 <li><code>/var/log/vmware/nsx-controller/</code> — control plane logs</li>
 </ul>
 <p><strong>Edge node logs (SSH):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>2024-01-15T14:32:18.456Z [NSX-MANAGER-01] nsx-manager: INFO: API request from 192.168.1.45 - GET /api/v1/transport-zones
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15T14:32:19.123Z [NSX-MANAGER-01] nsx-manager: DEBUG: TLS handshake completed with edge-node-03.lab.local
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15T14:32:20.789Z [NSX-MANAGER-01] nsx-manager: INFO: Fabric node heartbeat received from 10.0.50.12
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15T14:32:21.456Z [NSX-MANAGER-01] nsx-manager: WARNING: Connection timeout to controller-02 (attempt 2/3)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15T14:32:22.234Z [NSX-MANAGER-01] nsx-manager: INFO: Logical switch ls-prod-01 status: UP
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>(following syslog — press Ctrl+C to exit)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Jan 15 14:32:15 nsx-manager-01 sshd[4521]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2: RSA SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uv
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Jan 15 14:32:18 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/nsxcli
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Jan 15 14:32:22 nsx-manager-01 sshd[4523]: Failed password for invalid user operator from 203.0.113.55 port 49876 ssh2
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Jan 15 14:32:25 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/get log-file auth.log
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Jan 15 14:32:27 nsx-manager-01 sshd[4525]: Accepted publickey for root from 192.168.1.100 port 54322 ssh2: ECDSA SHA256:xYz9876aBcD5432efGH1098ijKL7654mnOP3210qrST
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: log file not found or insufficient permissions</code></strong> — Verify the user has admin/root privileges and the log file path exists with <code>ls -la /var/log/syslog</code>.
+<strong><code>Error: follow mode not supported on this platform</code></strong> — Remove the <code>follow</code> keyword and use <code>get log-file syslog | tail -f</code> instead for live tailing.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../design-standards/">NSX — Design Standards</a></li>
@@ -9841,7 +10065,7 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

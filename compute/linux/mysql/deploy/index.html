@@ -7977,45 +7977,184 @@ MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Get temporary root password</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;temporary password&#39;</span><span class="w"> </span>/var/log/mysqld.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Last metadata expiration check: 0:00:15 ago on Thu Dec 19 14:32:18 2024.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mysql80-community-release-el9-1.noarch.rpm                                   45 kB/s |  18 kB     00:00
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Dependencies resolved.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>================================================================================
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> Package                    Architecture  Version              Repository  Size
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>================================================================================
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Installing:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> mysql-community-server     x86_64        8.0.35-0.el9         mysql80-c  500 MB
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Transaction Summary
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>================================================================================
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Install  1 Package
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Total download size: 500 MB
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Installed size: 2.2 GB
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Downloading Packages:
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mysql-community-server-8.0.35-0.el9.x86_64.rpm              2.3 MB/s | 500 MB     03:42
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Running transaction
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Preparing        :                                                        1/1
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Installing       : mysql-community-server-8.0.35-0.el9.x86_64             1/1
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Verifying        : mysql-community-server-8.0.35-0.el9.x86_64             1/1
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Complete!
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Created symlink /etc/systemd/system/multi-user.target.wants/mysqld.service → /usr/lib/systemd/system/mysqld.service.
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>2024-12-19T14:35:22.847392Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.35) initializing of server in progress as process 4521
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>2024-12-19T14:35:28.392847Z 6 [Note] [MY-000000] [Server] A temporary password is generated for root@localhost: Kx#mP9$vL2wQ
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Failed to download repository metadata</code></strong> — Verify internet connectivity and ensure the MySQL repository URL is accessible from your network.
+<strong><code>grep: /var/log/mysqld.log: No such file or directory</code></strong> — Wait 10-15 seconds after <code>systemctl enable --now mysqld</code> completes for the log file to be created, or check <code>/var/log/mysql/mysqld.log</code> if using a custom log path.</p>
+</div>
 <h2 id="install-on-ubuntu-debian">Install on Ubuntu / Debian<a class="headerlink" href="#install-on-ubuntu-debian" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mysql-server
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>mysql
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mysql-server
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>mysql
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Get:1 http://archive.ubuntu.com/ubuntu focal InRelease [265 kB]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Get:3 http://archive.ubuntu.com/ubuntu focal-security InRelease [114 kB]
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Fetched 493 kB in 2s (246 kB/s)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Reading package lists... Done
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Reading state information... Done
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>The following NEW packages will be installed:
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  mysql-server mysql-client mysql-common libmysqlclient21
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Processing triggers for systemd (245.4-4ubuntu3.6) ...
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Setting up mysql-server (8.0.23-0ubuntu0.20.04.1) ...
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Created symlink /etc/systemd/system/multi-user.target.wants/mysql.service → /lib/systemd/system/mysql.service.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the command with <code>sudo</code> or ensure your user has passwordless sudo configured.
+<strong><code>Unit mysql.service could not be found.</code></strong> — Install mysql-server first before enabling the service, or verify the package name matches your distribution (use <code>apt search mysql-server</code>).</p>
+</div>
 <h2 id="post-install-hardening">Post-Install Hardening<a class="headerlink" href="#post-install-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run secure installation wizard</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>mysql_secure_installation
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Prompts: set root password, remove anonymous users, disallow remote root, remove test DB</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run secure installation wizard</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>mysql_secure_installation
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Prompts: set root password, remove anonymous users, disallow remote root, remove test DB</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Securing the MySQL server deployment.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Enter password for user root: 
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>The &#39;validate_password&#39; component is installed on the server.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>The subsequent steps will run with the default Low Level of checks.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Please set the password for root here.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>New password: 
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Re-enter new password: 
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>By default, a MySQL installation has an anonymous user, allowing anyone
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>to log into MySQL without having to have a user account. This is intended
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>only for testing, and to make the installation go a bit smoother
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>you should remove them before moving into a production environment.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a> ... Success!
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Normally, root should only be allowed to connect from &#39;localhost&#39;. This
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>ensures that someone cannot guess at the root password over the network.
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a> ... Success!
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>By default, MySQL comes with a database named &#39;test&#39; that anyone can
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>access. This should be removed before moving into a production environment.
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a> ... Success!
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Reloading the privilege tables will ensure that all changes made so far
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>will take effect immediately.
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a> ... Success!
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>All done!
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password you entered matches what you typed in the confirmation prompt, or reset it with <code>sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"</code>
+<strong><code>Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)</code></strong> — Ensure the MySQL service is running with <code>sudo systemctl start mysql</code> before running the secure installation wizard.</p>
+</div>
 <h2 id="initial-configuration-etcmysqlmysqlconfdmysqldcnf">Initial Configuration (<code>/etc/mysql/mysql.conf.d/mysqld.cnf</code>)<a class="headerlink" href="#initial-configuration-etcmysqlmysqlconfdmysqldcnf" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">[mysqld]</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">bind-address</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s">127.0.0.1</span><span class="w">   </span><span class="c1"># or specific IP; never 0.0.0.0 without firewall</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">max_connections</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s">200</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">innodb_buffer_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2G</span><span class="w">          </span><span class="c1"># adjust to 70% of RAM</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="na">innodb_log_file_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">512M</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="na">slow_query_log</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="na">slow_query_log_file</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/mysql/slow.log</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="na">long_query_time</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">[mysqld]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">bind-address</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s">127.0.0.1</span><span class="w">   </span><span class="c1"># or specific IP; never 0.0.0.0 without firewall</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">max_connections</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s">200</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">innodb_buffer_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2G</span><span class="w">          </span><span class="c1"># adjust to 70% of RAM</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">innodb_log_file_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">512M</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="na">slow_query_log</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="na">slow_query_log_file</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">/var/log/mysql/slow.log</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="na">long_query_time</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 </code></pre></div>
 <h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Allow MySQL only from app server subnet</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=ipv4 source address=10.0.1.0/24 port port=3306 protocol=tcp accept&#39;</span><span class="w"> </span>--permanent
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Allow MySQL only from app server subnet</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=ipv4 source address=10.0.1.0/24 port port=3306 protocol=tcp accept&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>success
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=3306 protocol=tcp accept: bad attribute</code></strong> — Remove the duplicate "port" keyword; the correct syntax is <code>source address=10.0.1.0/24 port protocol=tcp port=3306 accept</code>.
+<strong><code>Error: COMMAND_FAILED: '/usr/sbin/firewall-cmd --add-rich-rule=...' exited with status 1: org.fedoraproject.FirewallD1.Exception: INVALID_RULE</code></strong> — Ensure firewalld is running with <code>sudo systemctl start firewalld</code> before adding rules.</p>
+</div>
 <h2 id="first-connection-validation">First-Connection Validation<a class="headerlink" href="#first-connection-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT version(); SHOW VARIABLES LIKE &#39;innodb_buffer_pool_size&#39;;&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Expect: 8.x.x and configured value</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT version(); SHOW VARIABLES LIKE &#39;innodb_buffer_pool_size&#39;;&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Expect: 8.x.x and configured value</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mysql: [Warning] Using a password on the command line interface can be insecure.
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>+-----------+
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>| version() |
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>+-----------+
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>| 8.0.35-0ubuntu0.20.04.1 |
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>+-----------+
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>+---------------------------+----------------------+
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>| Variable_name             | Value                |
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>+---------------------------+----------------------+
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>| innodb_buffer_pool_size   | 1073741824           |
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>+---------------------------+----------------------+
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the MySQL service is running with <code>systemctl status mysql</code>.
+<strong><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></strong> — Start the MySQL service with <code>systemctl start mysql</code> and confirm the socket file exists.</p>
+</div>
 <h2 id="create-application-user">Create Application User<a class="headerlink" href="#create-application-user" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;appuser&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.1.%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;&lt;strong-password&gt;&#39;</span><span class="p">;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">app_prod</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;appuser&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.1.%&#39;</span><span class="p">;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;appuser&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.1.%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;&lt;strong-password&gt;&#39;</span><span class="p">;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">app_prod</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;appuser&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.1.%&#39;</span><span class="p">;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>● mysql.service - MySQL Community Server
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>     Loaded: loaded (/usr/lib/systemd/system/mysql.service; enabled; vendor preset: disabled)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>       Docs: man:mysqld(8)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>   Main PID: 3847 (mysqld)
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>      Tasks: 27 (limit: 4915)
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>     Memory: 287.4M
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        CPU: 2min 34.821s
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>     CGroup: /system.slice/mysql.service
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>             └─3847 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysql/mysql.pid
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Jan 15 14:32:18 db-prod-01 systemd[1]: Started MySQL Community Server.
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Jan 15 14:32:19 db-prod-01 mysqld[3847]: 2024-01-15T14:32:19.234567Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld: ready for connections.
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Jan 15 14:32:20 db-prod-01 mysqld[3847]: 2024-01-15T14:32:20.456789Z 2 [Note] [MY-000000] [Server] Event Scheduler: Loaded 3 events
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>LISTEN     0      80                 127.0.0.1:3306            0.0.0.0:*      users:((&quot;mysqld&quot;,pid=3847,fd=42))
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Active: inactive (dead)</code></strong> — Run <code>systemctl start mysql</code> to start the service, then verify with <code>systemctl status mysql</code>.
+<strong><code>Job for mysql.service failed because the control process exited with error code</code></strong> — Check <code>/var/log/mysql/error.log</code> for startup errors and ensure <code>/var/lib/mysql</code> has correct permissions (<code>chown -R mysql:mysql /var/lib/mysql</code>).
+<strong><code>Address already in use</code></strong> — Verify no other MySQL instance is running on port 3306 with <code>lsof -i :3306</code> and kill conflicting processes if needed.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8045,7 +8184,7 @@ MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

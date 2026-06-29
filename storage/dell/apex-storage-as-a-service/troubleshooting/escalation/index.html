@@ -8967,66 +8967,113 @@ Dell APEX Storage-as-a-Service escalation: how to collect multipath, SCG, and Cl
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checked: </span><span class="nv">$disk</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/smart-errors.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mpatha (360014056b2d45e00001000000010001) dm-0 DELL,COMPELLENT
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| |- 2:0:0:0 sda 8:0   active ready running
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `- 3:0:0:0 sdb 8:16  active ready running
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  |- 4:0:0:0 sdc 8:32  active ready running
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  `- 5:0:0:0 sdd 8:48  active ready running
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>mpathb (360014056b2d45e00001000000010002) dm-1 DELL,COMPELLENT
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>size=1.5T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| `- 2:0:1:0 sde 8:64  active ready running
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  `- 3:0:1:0 sdf 8:80  active ready running
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>[  142.556234] sd 2:0:0:0: [sda] Assuming drive cache: write through
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>[  156.234891] device-mapper: core: 4.47.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>[  201.445123] scsi 4:0:0:0: Direct-Access-RDisk DELL COMPELLENT 0001 PQ: 0 ANSI: 5
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>[ 2847.123456] multipathd: sdc: path reinstated
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>[ 3021.987654] iscsid: Connection1:0: detected conn error (1011)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Nov 15 10:23:45 storage-node-01 multipathd[1234]: dm-0: size change detected: old 2097152000 new 2097152000
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Nov 15 10:24:12 storage-node-01 iscsid: Connection1:0: login negotiation failed
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Nov 15 10:25:33 storage-node-01 kernel: [scsi_eh_0]: scsi_eh_0 timed out after 180 seconds
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Nov 15 10:26:01 storage-node-01 multipathd[1234]: mpatha: load table [0 4194304000 multipath 1 queue_if_no_path 0 1 1 service-time 0 1 1 8:0 1 1]
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Nov 15 10:27:15 storage-node-01 fcoe: [fcoe_ctlr_mode_set]: ENABLED
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>=== /sys/class/fc_host/host2 ===
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>0x500143800012a4b1
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Online
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>16 Gbit
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>=== /sys/class/fc_host/host3 ===
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>0x500143800012a4
+</code></pre></div>
 <h3 id="2-collect-host-side-diagnostics-windows">2. Collect host-side diagnostics (Windows)<a class="headerlink" href="#2-collect-host-side-diagnostics-windows" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Multipath status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">mpclaim</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmmss</span><span class="p">).</span><span class="n">txt</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Disk management state</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span> <span class="p">|</span> <span class="p">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">disks</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Event log for disk errors (last 4 hours)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">$start</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">4</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="n">7</span><span class="p">,</span><span class="n">11</span><span class="p">,</span><span class="n">15</span><span class="p">,</span><span class="n">51</span><span class="p">,</span><span class="n">52</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*Disk*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">disk-events</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># iSCSI sessions (if iSCSI)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Get-IscsiSession</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">iscsi-sessions</span><span class="p">.</span><span class="n">txt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Multipath status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">mpclaim</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmmss</span><span class="p">).</span><span class="n">txt</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Disk management state</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span> <span class="p">|</span> <span class="p">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">disks</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Event log for disk errors (last 4 hours)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">$start</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">4</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="n">7</span><span class="p">,</span><span class="n">11</span><span class="p">,</span><span class="n">15</span><span class="p">,</span><span class="n">51</span><span class="p">,</span><span class="n">52</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*Disk*&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">disk-events</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c"># iSCSI sessions (if iSCSI)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">Get-IscsiSession</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">iscsi-sessions</span><span class="p">.</span><span class="n">txt</span>
 </code></pre></div>
 <h3 id="3-collect-scg-and-cloudiq-diagnostics">3. Collect SCG and CloudIQ diagnostics<a class="headerlink" href="#3-collect-scg-and-cloudiq-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SCG log bundle (SSH to SCG appliance)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;scg-hostname&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>scg<span class="w"> </span>logs<span class="w"> </span>collect<span class="w"> </span>--output<span class="w"> </span>/tmp/scg-logs-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.zip
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># OR: SCG web UI → Admin → Support Bundle → Download</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># CloudIQ diagnostic bundle</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Navigate to: CloudIQ → Monitoring → select the affected system → Actions → Download Diagnostics</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Save as: cloudiq-diagnostics-&lt;system-name&gt;-&lt;date&gt;.zip</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># APEX Console events</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Navigate to: APEX Console → Subscriptions → &lt;your subscription&gt; → Events</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Export the last 7 days of events as CSV</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SCG log bundle (SSH to SCG appliance)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@&lt;scg-hostname&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>scg<span class="w"> </span>logs<span class="w"> </span>collect<span class="w"> </span>--output<span class="w"> </span>/tmp/scg-logs-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.zip
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># OR: SCG web UI → Admin → Support Bundle → Download</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># CloudIQ diagnostic bundle</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Navigate to: CloudIQ → Monitoring → select the affected system → Actions → Download Diagnostics</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Save as: cloudiq-diagnostics-&lt;system-name&gt;-&lt;date&gt;.zip</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># APEX Console events</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Navigate to: APEX Console → Subscriptions → &lt;your subscription&gt; → Events</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Export the last 7 days of events as CSV</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>admin@scg-prod-01&#39;s password: 
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Collecting SCG logs...
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Gathering system logs from /var/log/scg/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Collecting configuration data...
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Compressing diagnostic bundle...
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Log bundle created successfully: /tmp/scg-logs-2024-01-15.zip
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Bundle size: 287 MB
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Timestamp: 2024-01-15T14:32:18Z
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>SCG Version: 2.4.1.0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the SCG hostname is correct and your SSH credentials are valid; check with your infrastructure team if the admin account is locked.
+<strong><code>scg: command not found</code></strong> — Ensure you are logged into the SCG appliance itself (not a different host) and that the scg CLI tool is installed in the PATH.
+<strong><code>Disk space insufficient for log collection (need 500 MB, have 120 MB available).</code></strong> — Increase available space on the SCG appliance or specify an alternate output path on a mounted external volume.</p>
+</div>
 <h3 id="4-write-the-timeline">4. Write the timeline<a class="headerlink" href="#4-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>APEX STaaS subscription: APEX-SUB-12345 (from APEX Console)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Affected storage system: PowerStore 1000T SN: PST00xxxxxxxx
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SCG version: 5.18.0.1
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Affected hosts:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  - linux-host-01.corp.local (RHEL 8.6) — 4 volumes
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  - linux-host-02.corp.local (RHEL 8.6) — 4 volumes
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Issue first observed: 2026-06-15 06:00 UTC
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Last known good I/O: 2026-06-15 05:45 UTC
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Error observed:
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  - multipath -ll shows all paths &quot;faulty&quot; for dm-2 and dm-3 (volumes prod-vol-01 and prod-vol-02)
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  - dmesg shows: &quot;sd 2:0:0:0: [sdb] tag#0 FAILED Result: hostbyte=DID_NO_CONNECT driverbyte=DRIVER_OK&quot;
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  - CloudIQ shows port NAS-A offline since 06:02 UTC
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Steps already taken:
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  - Verified SFP cables seated on both host HBAs
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  - Confirmed array management IP reachable from host
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  - Confirmed iSCSI target IP reachable (ping OK; iSCSI login failing)
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Changes in prior 24h:
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  - No host changes
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  - Dell notified us of a scheduled firmware update window — update was applied at 05:30 UTC
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Blast radius:
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  - 2 volumes inaccessible to 2 production hosts
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  - Database on prod-vol-01 offline
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>APEX STaaS subscription: APEX-SUB-12345 (from APEX Console)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Affected storage system: PowerStore 1000T SN: PST00xxxxxxxx
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>SCG version: 5.18.0.1
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Affected hosts:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - linux-host-01.corp.local (RHEL 8.6) — 4 volumes
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - linux-host-02.corp.local (RHEL 8.6) — 4 volumes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Issue first observed: 2026-06-15 06:00 UTC
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Last known good I/O: 2026-06-15 05:45 UTC
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Error observed:
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - multipath -ll shows all paths &quot;faulty&quot; for dm-2 and dm-3 (volumes prod-vol-01 and prod-vol-02)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - dmesg shows: &quot;sd 2:0:0:0: [sdb] tag#0 FAILED Result: hostbyte=DID_NO_CONNECT driverbyte=DRIVER_OK&quot;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  - CloudIQ shows port NAS-A offline since 06:02 UTC
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Steps already taken:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  - Verified SFP cables seated on both host HBAs
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  - Confirmed array management IP reachable from host
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  - Confirmed iSCSI target IP reachable (ping OK; iSCSI login failing)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Changes in prior 24h:
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  - No host changes
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  - Dell notified us of a scheduled firmware update window — update was applied at 05:30 UTC
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Blast radius:
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  - 2 volumes inaccessible to 2 production hosts
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  - Database on prod-vol-01 offline
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-an-apex-support-case">How to Open an APEX Support Case<a class="headerlink" href="#how-to-open-an-apex-support-case" title="Permanent link">&para;</a></h2>
@@ -9089,27 +9136,66 @@ Dell APEX Storage-as-a-Service escalation: how to collect multipath, SCG, and Cl
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Quick state snapshot — paste into every case update</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|error\|path&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not using iSCSI&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># CloudIQ: get system health via API</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-cloudiq-api-key&gt;&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/cloudiq/api/v1/systems&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">for s in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    print(f\&quot;{s[&#39;system_name&#39;]}: health={s.get(&#39;system_health_score&#39;)} last_seen={s.get(&#39;last_seen_timestamp&#39;)}\&quot;)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Test connectivity to iSCSI target IP</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;iscsi-target-ip&gt;
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;iscsi-target-ip&gt;<span class="w"> </span><span class="m">3260</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Test FC path connectivity</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;node_name|port_name|port_state|speed&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Quick state snapshot — paste into every case update</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|error\|path&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not using iSCSI&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># CloudIQ: get system health via API</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-cloudiq-api-key&gt;&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/cloudiq/api/v1/systems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">for s in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">    print(f\&quot;{s[&#39;system_name&#39;]}: health={s.get(&#39;system_health_score&#39;)} last_seen={s.get(&#39;last_seen_timestamp&#39;)}\&quot;)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Test connectivity to iSCSI target IP</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;iscsi-target-ip&gt;
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;iscsi-target-ip&gt;<span class="w"> </span><span class="m">3260</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Test FC path connectivity</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;node_name|port_name|port_state|speed&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mpatha (36006016054d024002688c37e8e2e911) dm-0 DELL,APEX Storage
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>| |- 2:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>| `- 3:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  |- 4:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  `- 5:0:0:0 sdd 8:48 active ready running
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>[  245.123456] sd 2:0:0:0: [sda] Assuming drive cache: write through
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>[  512.987654] scsi 3:0:0:0: Device offlined - not ready after error recovery
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>[  1024.456789] Path sdb reinstated: fc_host3
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>[  2048.112233] iSCSI: connection restored to 10.50.12.44:3260
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>iscsi: iscsid is running
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>iscsiadm: No active sessions.
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>system-prod-01: health=95 last_seen=2024-01-15T14:32:18Z
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>system-dr-02: health=78 last_seen=2024-01-15T14:28:05Z
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>PING 10.50.12.44 (10.50.12.44) 56(84) bytes of data.
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>64 bytes from 10.50.12.44: icmp_seq=1 time=2.14 ms
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>64 bytes from 10.50.12.44: icmp_seq=2 time=2.08 ms
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>64 bytes from 10.50.12.44: icmp_seq=3 time=2.11 ms
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>64 bytes from 10.50.12.44: icmp_seq=4 time=2.09 ms
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>--- 10.50.12.44 statistics ---
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Connection to 10.50.12.44 3260 port [tcp/*] succeeded!
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>node_name=0x5001405abcd12345
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>port_name=0x5001405abcd12346
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>port_state=Online
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>speed=16Gbit
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>node_name=0x5001405abcd12347
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>port_name=0x5001405abcd12348
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>port_state=Online
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>speed=16Gbit
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the CloudIQ CA certificate into your system trust store.
+<strong><code>iscsiadm: No active sessions.</code></strong> — Verify iSCSI discovery is configured with <code>iscsiadm -m discovery -t sendtargets -p &lt;target-ip&gt;</code> and log in with <code>iscsiadm -m node --login</code>.
+<strong><code>nc: connect to 10.50.12.44 port 3260 (tcp) failed: No route to host</code></strong></p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9147,7 +9233,7 @@ Dell APEX Storage-as-a-Service escalation: how to collect multipath, SCG, and Cl
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:34:19 UTC"><span class="timeago" datetime="2026-06-29T03:34:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:34:19 UTC">2026-06-29</span>
   </span>
 
     

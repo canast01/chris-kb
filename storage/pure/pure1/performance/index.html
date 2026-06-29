@@ -8550,6 +8550,32 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--filename<span class="o">=</span>/dev/sdX<span class="w"> </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--time_based<span class="w"> </span>--lat_percentiles<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--percentile_list<span class="o">=</span><span class="m">50</span>,90,99,99.9
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>seqread: (g=0): rw=read, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, bs=1024KiB-1024KiB, bs_is_seq=on, ioengine=libaio, iodepth=32
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>...
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>seqread: Laying out IO file (1 file / 10240MiB)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>seqread: Starting 4 processes
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>seqread: Jobs: 4 (f=4): [R(4)][100.0%][1247MiB/s][1247 IOPS][eta 00m:00s]
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>seqread: (groupid=0, jobs=4): io=40960MiB, aggrb=1247.3MiB/s, minb=311.8MiB/s, maxb=311.9MiB/s, mint=32827ms, maxt=32827ms
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  read: IOPS=1247, BW=1247MiB/s (1308MB/s), aggrb=1247.3MiB/s
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  lat (msec): min=25.4, max=156.2, avg=102.3, stdev=18.7
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  percentiles (msec):
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>     |  1.00th=[  28.3],  5.00th=[  45.2], 10.00th=[  62.1], 20.00th=[  78.4],
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>     | 50.00th=[ 102.1], 90.00th=[ 128.6], 99.00th=[ 148.9], 99.90th=[ 155.3]
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>randread_lat: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, bs=4096B-4096B, ioengine=libaio, iodepth=1
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>...
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>randread_lat: Starting 1 process
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>randread_lat: Jobs: 1 (f=1): [r(1)][100.0%][2847 IOPS][11.4MiB/s][eta 00m:00s]
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>randread_lat: (groupid=0, jobs=1): io=10240MiB, aggrb=170.7MiB/s, minb=170.7MiB/s, maxb=170.7MiB/s, mint=59968ms, maxt=59968ms
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  read: IOPS=43700, BW=170.7MiB/s (179MB/s), aggrb=170.7MiB/s
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  lat (usec): min=18, max=8942, avg=22.8, stdev=156.3
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  percentiles (usec):
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>     | 50.00th=[   21], 90.00th=[   24], 99.00th=[   31], 99.90th=[  187]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fio: filename=/dev/sdX: No such file or directory</code></strong> — Replace <code>/dev/sdX</code> with the actual device path (e.g., <code>/dev/sda</code>, <code>/dev/nvme0n1</code>, or</p>
+</div>
 <h2 id="common-performance-issues">Common Performance Issues<a class="headerlink" href="#common-performance-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8614,7 +8640,7 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

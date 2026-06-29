@@ -8311,6 +8311,26 @@ Pure Storage Controller Upgrades reference covering How Controller Upgrades Work
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purecli<span class="w"> </span>drive<span class="w"> </span>list
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>purecli<span class="w"> </span>alert<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Status    Version      Capacity
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pure-array-01                 Healthy   6.4.2        50.0TB
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pure-array-02                 Healthy   6.4.2        50.0TB
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pure-array-03                 Healthy   6.4.1        50.0TB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Drive                         Array              Status    Capacity
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SSD-001                       pure-array-01      Healthy   1.92TB
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>SSD-002                       pure-array-01      Healthy   1.92TB
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>SSD-003                       pure-array-02      Healthy   1.92TB
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Severity    Code    Message                              Timestamp
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>warning     PUR-001 Controller temperature elevated      2024-01-15T09:23:45Z
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>info        PUR-002 Snapshot scheduled maintenance      2024-01-15T08:00:00Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purecli: command not found</code></strong> — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
+<strong><code>Error: Unable to connect to array at &lt;ip&gt;: Connection refused</code></strong> — Verify array management IP is reachable and purecli is configured with correct credentials in ~/.purerc or environment variables.</p>
+</div>
 <p>Or via Pure1 / Purity GUI:
 - <strong>Storage → Array</strong> — confirm all drives healthy
 - <strong>Analysis → Alerts</strong> — no active critical alerts</p>
@@ -8323,21 +8343,69 @@ Pure Storage Controller Upgrades reference covering How Controller Upgrades Work
 </ul>
 <h2 id="verifying-paths-duringafter-upgrade">Verifying Paths During/After Upgrade<a class="headerlink" href="#verifying-paths-duringafter-upgrade" title="Permanent link">&para;</a></h2>
 <p><strong>On the host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux with multipath</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Windows PowerShell (MPIO)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mpclaim<span class="w"> </span>-s<span class="w"> </span>-d
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># VMware</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux with multipath</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Windows PowerShell (MPIO)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mpclaim<span class="w"> </span>-s<span class="w"> </span>-d
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># VMware</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Linux with multipath
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| `- 2:0:0:0 sdb 65:0  active ready running
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  `- 3:0:0:0 sdc 65:32 active ready running
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a># Windows PowerShell (MPIO)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>MPIO is installed and operational.
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Number of MPIO disks: 4
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Disk mpd0: 2 paths, Round Robin
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Disk mpd1: 2 paths, Round Robin
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Disk mpd2: 4 paths, Round Robin
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Disk mpd3: 2 paths, Round Robin
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a># VMware
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Device: naa.6001405abcdef1234567890123456789
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>   Storage Array Type: PURE FlashArray
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>   Storage Array Type Device Config: PURE FlashArray
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>   Path Selection Policy: VMW_PSP_RR
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>   Paths: vmhba2:C0:T0:L0, vmhba3:C0:T0:L0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath package with <code>apt-get install device-mapper-multipath</code> or <code>yum install device-mapper-multipath</code>.
+<strong><code>MPIO is not installed on this computer</code></strong> — Enable MPIO through Windows Features or install via <code>Enable-WindowsOptionalFeature -FeatureName MultipathIO -Online</code>.
+<strong><code>Unknown command or namespace</code></strong> — Verify ESXi version supports the command and run with <code>esxcli storage nmp device list</code> from the ESXi console or SSH session.</p>
+</div>
 <p>Confirm all expected paths are active after the upgrade completes.</p>
 <h2 id="post-upgrade-verification">Post-Upgrade Verification<a class="headerlink" href="#post-upgrade-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purecli<span class="w"> </span>array<span class="w"> </span>list<span class="w">     </span><span class="c1"># Confirm new controller hardware</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purecli<span class="w"> </span>hardware<span class="w"> </span>list<span class="w">  </span><span class="c1"># All components healthy</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purecli<span class="w"> </span>alert<span class="w"> </span>list<span class="w">     </span><span class="c1"># No post-upgrade alerts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purecli<span class="w"> </span>array<span class="w"> </span>list<span class="w">     </span><span class="c1"># Confirm new controller hardware</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purecli<span class="w"> </span>hardware<span class="w"> </span>list<span class="w">  </span><span class="c1"># All components healthy</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purecli<span class="w"> </span>alert<span class="w"> </span>list<span class="w">     </span><span class="c1"># No post-upgrade alerts</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                          Status    Version
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray-prod-01             Online    6.4.2
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purearray-prod-02             Online    6.4.2
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Component                     Status    Model              Serial
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Controller-A                  Healthy   FA-405            PUREFC1A2B3C4D
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Controller-B                  Healthy   FA-405            PUREFC1A2B3E5F
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>NVMe-Shelf-1                  Healthy   NVMe-Shelf        PURE2024001
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>NVMe-Shelf-2                  Healthy   NVMe-Shelf        PURE2024002
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Severity    Code    Message                           Timestamp
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>---OUTPUT---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purecli: command not found</code></strong> — Ensure the Pure Storage CLI is installed and the PATH environment variable includes its bin directory.
+<strong><code>Error: Unable to connect to array at &lt;ip&gt;. Connection refused</code></strong> — Verify the array management IP is reachable and the purecli credentials are configured in ~/.purerc or via environment variables.
+<strong><code>Error: Authentication failed. Invalid API token</code></strong> — Regenerate and update your Pure Storage API token using <code>purecli login</code> or refresh credentials in the configuration file.</p>
+</div>
 <h2 id="common-considerations">Common Considerations<a class="headerlink" href="#common-considerations" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8391,7 +8459,7 @@ Pure Storage Controller Upgrades reference covering How Controller Upgrades Work
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

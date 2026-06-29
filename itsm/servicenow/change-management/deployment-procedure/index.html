@@ -8551,36 +8551,78 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Remove temporary files and pre-change backups (after soak period)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>rm<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w">   </span><span class="c1"># only after validation passes</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Update ITSM ticket: outcome, duration, any deviations</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p/resourceGroups/prod-rg-01/providers/Microsoft.Compute/snapshots/vm-app-pre-change-20240115&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;name&quot;: &quot;vm-app-pre-change-20240115&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;resourceGroup&quot;: &quot;prod-rg-01&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;timeCreated&quot;: &quot;2024-01-15T14:32:18.456789+00:00&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>}
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>{
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;SnapshotIds&quot;: [
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;snap-0a1b2c3d4e5f6g7h8&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  ],
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;ResponseMetadata&quot;: {
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &quot;RequestId&quot;: &quot;a1b2c3d4-e5f6-4g7h-8i9j&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;HTTPStatusCode&quot;: 200
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  }
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>}
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>pre-change-config-20240115.tar.gz
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>● nginx.service - The NGINX HTTP and reverse proxy server
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>     Active: active (running) since Mon 2024-01-15 14:28:03 UTC; 4min 15s ago
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>       Docs: man:nginx(1)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   Main PID: 2847 (nginx)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>      Tasks: 3 (limit: 4915)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>     Memory: 12.4M
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        CPU: 145ms
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>     CGroup: /system.slice/nginx.service
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>             ├─2847 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>             └─2851 nginx: worker process
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>{&quot;status&quot;:&quot;healthy&quot;,&quot;uptime&quot;:&quot;14h23m&quot;,&quot;version&quot;:&quot;1.24.0&quot;}
 </code></pre></div>
-<img alt="Deployment Procedure — Diagram" src="../../../../assets/itsm-servicenow-change-management-deployment-procedure-diagram.svg" />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restore config from backup</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w"> </span>/etc/&lt;service&gt;.conf
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Rollback package to previous version</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;prev-version&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Rollback DB migration</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-f<span class="w"> </span>migration_XXXX_down.sql
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Re-validate after rollback (same checks as Phase 3)</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.</code></strong> — Verify the correct Azure subscription is active with <code>az account show</code> and switch if needed using <code>az account set --subscription &lt;subscription-id&gt;</code>.
+<strong><code>An error occurred (InvalidVolume.NotFound) when calling the CreateSnapshot operation: The volume 'vol-xxxxxxxx' does not exist</code></strong> — Confirm the volume ID is correct and exists in the target AWS region with <code>aws ec2 describe-volumes --volume-ids &lt;vol-id&gt;</code>.
+<strong><code>curl: (7) Failed to connect to localhost port 8080: Connection refused</code></strong> — Verify the service is listening on the correct port with <code>netstat -tlnp | grep &lt;service&gt;</code> or check service logs with <code>journalctl -u &lt;service&gt; -n 20</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Remove temporary files and pre-change backups (after soak period)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rm<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w">   </span><span class="c1"># only after validation passes</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Update ITSM ticket: outcome, duration, any deviations</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Change:        ITSM-XXXX
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Date/Time:     2026-05-06 22:00 UTC
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Implementer:   &lt;name&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Window:        22:00 – 23:00 UTC
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Restart:           Service restarted 22:05 UTC; came up in 8 seconds
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Validation:        Health check OK; error rate 0%; latency normal
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Outcome:           Success
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Ticket closed:     22:42 UTC
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rm: cannot remove '/etc/&lt;service&gt;.conf.pre-&lt;date&gt;': No such file or directory</code></strong> — Verify the exact filename and date format match what was created during the pre-change backup step.
+<strong><code>rm: cannot remove '/etc/&lt;service&gt;.conf.pre-&lt;date&gt;': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has write permissions to the <code>/etc/</code> directory.</p>
+</div>
+<p><img alt="Deployment Procedure — Diagram" src="../../../../assets/itsm-servicenow-change-management-deployment-procedure-diagram.svg" />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore config from backup</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w"> </span>/etc/&lt;service&gt;.conf
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Rollback package to previous version</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;prev-version&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Rollback DB migration</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-f<span class="w"> </span>migration_XXXX_down.sql
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Re-validate after rollback (same checks as Phase 3)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Change:        ITSM-XXXX
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Date/Time:     2026-05-06 22:00 UTC
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Implementer:   &lt;name&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Window:        22:00 – 23:00 UTC
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Restart:           Service restarted 22:05 UTC; came up in 8 seconds
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Validation:        Health check OK; error rate 0%; latency normal
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Outcome:           Success
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Ticket closed:     22:42 UTC
 </code></pre></div></p>
 
 
@@ -8604,7 +8646,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

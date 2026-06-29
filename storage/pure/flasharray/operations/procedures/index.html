@@ -8700,57 +8700,144 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purehost<span class="w"> </span>list
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">   </span><span class="c1"># show volume connections</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Address          Personality
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>host-prod-01                  10.42.18.55      Linux
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>host-prod-02                  10.42.18.56      Linux
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>host-dev-01                   10.42.19.10      Linux
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>host-backup-01                10.42.20.5       ESXi
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>host-backup-02                10.42.20.6       ESXi
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>...
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Name                          Address          Personality      Volume              LUN
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>host-prod-01                  10.42.18.55      Linux            prod-db-vol-01      0
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>host-prod-01                  10.42.18.55      Linux            prod-db-vol-02      1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>host-prod-02                  10.42.18.56      Linux            prod-app-vol-01     0
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>host-dev-01                   10.42.19.10      Linux            dev-test-vol-01     0
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>host-backup-01                10.42.20.5       ESXi             backup-datastore-01 0
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Array connection failed</code></strong> — Verify the array IP/hostname is reachable and your credentials are configured in <code>~/.purerc</code> or via <code>PURE_HOST</code> environment variable.
+<strong><code>Error: No hosts found</code></strong> — Confirm hosts have been registered on the FlashArray; use <code>purehost add</code> to register new hosts before listing.</p>
+</div>
 <h3 id="create-a-host">Create a Host<a class="headerlink" href="#create-a-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Host" src="../../../../../assets/flasharray-proc-create-a-host.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create host with FC WWNs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn1,wwn2&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create host with iSCSI IQNs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqns<span class="w"> </span>&lt;iqn1&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create host with NVMe NQNs</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--nqns<span class="w"> </span>&lt;nqn1&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create host with FC WWNs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn1,wwn2&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create host with iSCSI IQNs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqns<span class="w"> </span>&lt;iqn1&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create host with NVMe NQNs</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--nqns<span class="w"> </span>&lt;nqn1&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Created host myserver01 with 2 FC WWNs
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Created host dbhost02 with 1 iSCSI IQN
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Created host nvmehost03 with 1 NVMe NQN
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host myserver01 already exists</code></strong> — Use <code>purehost list</code> to verify the hostname doesn't already exist, or choose a different hostname.
+<strong><code>Error: Invalid WWN format &lt;wwn1&gt;</code></strong> — Ensure WWNs are in the correct format (16 hex characters, e.g., <code>50:00:14:40:12:34:56:78</code>).
+<strong><code>Error: Connection failed to array &lt;array_name&gt;</code></strong> — Verify the Pure Storage array is reachable and your authentication credentials are valid with <code>pureadmin list</code>.</p>
+</div>
 <h3 id="add-initiators-to-an-existing-host">Add Initiators to an Existing Host<a class="headerlink" href="#add-initiators-to-an-existing-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Add Initiators to an Existing Host" src="../../../../../assets/flasharray-proc-add-initiators-to-an-existing-host.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add WWN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addwwnlist<span class="w"> </span>&lt;new_wwn&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add IQN</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addiqnlist<span class="w"> </span>&lt;new_iqn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add WWN</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addwwnlist<span class="w"> </span>&lt;new_wwn&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add IQN</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addiqnlist<span class="w"> </span>&lt;new_iqn&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host '&lt;hostname&gt;' not found</code></strong> — Verify the hostname exists on the array with <code>purehost list</code> and use the correct name.
+<strong><code>Error: Invalid WWN format '&lt;new_wwn&gt;'</code></strong> — Ensure the WWN is in valid format (typically 16 hex characters prefixed with '0x' or standard WWN notation like '50:00:09:73:xx:xx:xx:xx').
+<strong><code>Error: IQN '&lt;new_iqn&gt;' already exists</code></strong> — Check if the IQN is already assigned to another host using <code>purehost list --iqn</code> and use a unique IQN.</p>
+</div>
 <h3 id="connect-a-volume-to-a-host">Connect a Volume to a Host<a class="headerlink" href="#connect-a-volume-to-a-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Connect a Volume to a Host" src="../../../../../assets/flasharray-proc-connect-a-volume-to-a-host.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Connected to host prod-db-01 (10.42.18.55)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Volume: data-prod-01 (1.2TB)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>LUN: 0
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>iSCSI Target: iqn.2010-06.com.purestorage:flasharray.abc123def456
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Connection Status: Active
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Path Count: 2
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ALUA Mode: Enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host 'prod-db-01' not found on array</code></strong> — Verify the hostname exists on the FlashArray with <code>purehost list</code> and check spelling.
+<strong><code>Error: Volume 'data-prod-01' is already connected to host 'prod-app-02'</code></strong> — Disconnect the volume from the other host first using <code>purehost disconnect</code> or change the volume name.
+<strong><code>Error: Connection timeout (10.42.18.1:443)</code></strong> — Verify network connectivity to the FlashArray management IP and confirm credentials are set with <code>purehost login</code>.</p>
+</div>
 <p>This creates the host-to-volume connection (analogous to LUN masking on traditional arrays).</p>
 <h3 id="disconnect-a-volume-from-a-host">Disconnect a Volume from a Host<a class="headerlink" href="#disconnect-a-volume-from-a-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Disconnect a Volume from a Host" src="../../../../../assets/flasharray-proc-disconnect-a-volume-from-a-host.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Disconnected host &lt;hostname&gt; from volume &lt;volume_name&gt;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Volume &lt;volume_name&gt; is no longer accessible from host &lt;hostname&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host '&lt;hostname&gt;' not found</code></strong> — Verify the hostname exists on the array with <code>purehost list</code> and use the correct name.
+<strong><code>Error: Volume '&lt;volume_name&gt;' not found</code></strong> — Confirm the volume name is correct and exists on the array with <code>purevolume list</code>.
+<strong><code>Error: Host '&lt;hostname&gt;' is not connected to volume '&lt;volume_name&gt;'</code></strong> — Check current connections with <code>purehost list --vol &lt;volume_name&gt;</code> before attempting disconnection.</p>
+</div>
 <h3 id="host-groups">Host Groups<a class="headerlink" href="#host-groups" title="Permanent link">&para;</a></h3>
 <p><img alt="Host Groups" src="../../../../../assets/flasharray-proc-host-groups.svg" /></p>
 <p>For clustered hosts (e.g., ESXi cluster), use host groups so volumes can be connected to all members:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create host group</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>&lt;hostgroup_name&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Add hosts to group</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--addhostlist<span class="w"> </span>&lt;hostname1,hostname2&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Connect volume to host group</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># List host group connections</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create host group</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>&lt;hostgroup_name&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Add hosts to group</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--addhostlist<span class="w"> </span>&lt;hostname1,hostname2&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Connect volume to host group</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># List host group connections</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Created host group: prod-webservers
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Host group prod-webservers: added hosts web01, web02
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Connected volume: prod-db-vol to host group prod-webservers
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Name                  Hosts  Volumes  Connected
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>prod-webservers       2      1        True
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>prod-appservers       3      2        True
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>dev-testgroup         1      0        False
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host group 'prod-webservers' already exists</code></strong> — Use <code>purehgroup list</code> to verify the name doesn't exist, or choose a different hostgroup name.
+<strong><code>Error: Host 'web03' not found in array</code></strong> — Ensure the hostname is registered on the Pure FlashArray using <code>purehost list</code> before adding it to a host group.
+<strong><code>Error: Volume 'prod-db-vol' is already connected to another host group</code></strong> — Disconnect the volume from its current host group with <code>purehgroup disconnect</code> before connecting it elsewhere, or use a different volume.</p>
+</div>
 <h3 id="delete-a-host">Delete a Host<a class="headerlink" href="#delete-a-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete a Host" src="../../../../../assets/flasharray-proc-delete-a-host.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disconnect all volumes first</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Delete host</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Disconnect all volumes first</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Delete host</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Disconnected volume &#39;prod-db-01&#39; from host &#39;web-server-03&#39;.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Disconnected volume &#39;prod-db-02&#39; from host &#39;web-server-03&#39;.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Disconnected volume &#39;backup-vol&#39; from host &#39;web-server-03&#39;.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Host &#39;web-server-03&#39; deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host 'web-server-03' not found</code></strong> — Verify the hostname exists on the FlashArray using <code>purehost list</code> and check for typos.
+<strong><code>Error: Cannot delete host with connected volumes</code></strong> — Ensure all volumes are disconnected before deletion; re-run the disconnect command for any remaining volumes.</p>
+</div>
 <h3 id="host-common-issues">Host Common Issues<a class="headerlink" href="#host-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Host Common Issues" src="../../../../../assets/flasharray-proc-host-common-issues.svg" /></p>
 <table>
@@ -8788,65 +8875,198 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 <h2 id="volume-management">Volume Management<a class="headerlink" href="#volume-management" title="Permanent link">&para;</a></h2>
 <h3 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h3>
 <p><img alt="List Volumes" src="../../../../../assets/flasharray-proc-list-volumes.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purevol<span class="w"> </span>list
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w">      </span><span class="c1"># includes capacity and data reduction stats</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--details<span class="w">    </span><span class="c1"># includes host connections and QoS settings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>purevol<span class="w"> </span>list
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w">      </span><span class="c1"># includes capacity and data reduction stats</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--details<span class="w">    </span><span class="c1"># includes host connections and QoS settings</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name                                Size      Source
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vol-prod-db-01                      2.0T      -
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>vol-prod-db-02                      2.0T      -
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>vol-staging-app                     500G      -
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vol-backup-archive                  10T       -
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>vol-dev-test                        1.0T      -
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Name                                Size      Used      Data Reduction
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>vol-prod-db-01                      2.0T      1.8T      2.3x
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>vol-prod-db-02                      2.0T      1.5T      2.1x
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>vol-staging-app                     500G      320G      1.8x
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>vol-backup-archive                  10T       8.2T      1.4x
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>vol-dev-test                        1.0T      650G      2.0x
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Name                                Size      Hosts                    QoS Limit
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>vol-prod-db-01                      2.0T      db-server-01,db-server-02  500MB/s
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>vol-prod-db-02                      2.0T      db-server-03             500MB/s
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>vol-staging-app                     500G      app-staging-01           200MB/s
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>vol-backup-archive                  10T       backup-client-01         100MB/s
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>vol-dev-test                        1.0T      (unattached)             unlimited
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid option '--space' for command 'purevol list'</code></strong> — Use the correct flag syntax for your Pure OS version; check <code>purevol list --help</code> to confirm available options.
+<strong><code>Error: Connection refused to management IP 192.168.1.100:8084</code></strong> — Verify the FlashArray management IP is reachable and the Pure API service is running with <code>ping</code> and SSH access to the array.</p>
+</div>
 <h3 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Volume" src="../../../../../assets/flasharray-proc-create-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purevol<span class="w"> </span>create<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>1T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>purevol<span class="w"> </span>create<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>1T
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&lt;volume_name&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: array not reachable</code></strong> — Verify the FlashArray management IP is configured and accessible with <code>ping</code> or check your <code>PURE_API_TOKEN</code> and array hostname environment variables.
+<strong><code>Error: volume &lt;volume_name&gt; already exists</code></strong> — Choose a unique volume name or delete the existing volume with <code>purevol destroy &lt;volume_name&gt;</code> before recreating it.
+<strong><code>Error: insufficient space</code></strong> — Reduce the requested size or check available capacity on the array with <code>purearray list --space</code>.</p>
+</div>
 <p>Size suffixes: <code>K</code>, <code>M</code>, <code>G</code>, <code>T</code>, <code>P</code>.</p>
 <h3 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Resize a Volume" src="../../../../../assets/flasharray-proc-resize-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>2T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>2T
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Volume updated. &lt;volume_name&gt;
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Size: 2.0T
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Provisioned: 2.0T
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: volume &lt;volume_name&gt; not found</code></strong> — Verify the volume name is correct and exists on the array using <code>purevol list</code>.
+<strong><code>Error: size must be larger than current size</code></strong> — The new size must be greater than the current volume size; use a larger value or check current size with <code>purevol list --verbose</code>.</p>
+</div>
 <p>Volumes can only be grown, not shrunk.</p>
 <h3 id="connect-and-disconnect-a-volume">Connect and Disconnect a Volume<a class="headerlink" href="#connect-and-disconnect-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Connect and Disconnect a Volume" src="../../../../../assets/flasharray-proc-connect-and-disconnect-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Connect to host</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Disconnect from host</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Connect to host</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Disconnect from host</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Connected to host prod-db-01 with volume data-vol-prod
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Volume data-vol-prod is now accessible at /dev/mapper/mpatha
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Multipath device configured successfully
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Disconnected host prod-db-01 from volume data-vol-prod
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Volume data-vol-prod removed from host configuration
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Multipath device cleaned up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host 'prod-db-01' not found in FlashArray inventory</code></strong> — Verify the hostname exists on the FlashArray using <code>purehost list</code> and ensure it matches exactly (case-sensitive).
+<strong><code>Error: Volume 'data-vol-prod' is not connected to host 'prod-db-01'</code></strong> — Confirm the volume is currently connected to the host before attempting disconnect using <code>purehost show &lt;hostname&gt;</code>.
+<strong><code>Error: Connection timeout to FlashArray management interface</code></strong> — Check network connectivity to the FlashArray management IP and verify credentials with <code>purehost login</code>.</p>
+</div>
 <h3 id="snapshot-a-volume">Snapshot a Volume<a class="headerlink" href="#snapshot-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Snapshot a Volume" src="../../../../../assets/flasharray-proc-snapshot-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create a snapshot</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purevol<span class="w"> </span>snap<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_suffix&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List snapshots for a volume</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>&lt;volume_name&gt;.*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purevol<span class="w"> </span>snap<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_suffix&gt;
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># List snapshots for a volume</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>&lt;volume_name&gt;.*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Creating snapshot of volume &#39;prod-db-01&#39;...
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Snapshot &#39;prod-db-01.daily-backup-20240115&#39; created successfully.
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Created: 2024-01-15T14:32:18Z
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Size: 847.3 GB
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>prod-db-01.daily-backup-20240115
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>prod-db-01.hourly-20240115-1400
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>prod-db-01.hourly-20240115-1300
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>prod-db-01.weekly-20240108
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>prod-db-01.monthly-202312
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: volume '&lt;volume_name&gt;' not found</code></strong> — Verify the volume name with <code>purevol list</code> and ensure it exists on the array.
+<strong><code>Error: Insufficient space for snapshot</code></strong> — Check available capacity on the array with <code>purearray list --space</code> and delete old snapshots if needed.</p>
+</div>
 <h3 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h3>
 <p><img alt="Restore from Snapshot" src="../../../../../assets/flasharray-proc-restore-from-snapshot.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Overwrite volume with snapshot content</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;volume_name&gt;.&lt;snap_suffix&gt;<span class="w"> </span>--overwrite<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Overwrite volume with snapshot content</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;volume_name&gt;.&lt;snap_suffix&gt;<span class="w"> </span>--overwrite<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Volume copy started
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Source: volume_prod.snap_20240115_1430
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Destination: volume_prod
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Overwrite: enabled
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Copy progress: 100%
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Copy completed successfully
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Snapshot content restored to volume_prod
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume &lt;volume_name&gt; not found</code></strong> — Verify the volume exists with <code>purevol list</code> and use the correct volume name.
+<strong><code>Error: Snapshot &lt;volume_name&gt;.&lt;snap_suffix&gt; not found</code></strong> — Confirm the snapshot exists with <code>purevol snap --volume &lt;volume_name&gt;</code> before attempting the copy.
+<strong><code>Error: Volume &lt;volume_name&gt; is in use or locked</code></strong> — Ensure no hosts have the volume mounted or in active I/O before overwriting.</p>
+</div>
 <h3 id="create-a-clone">Create a Clone<a class="headerlink" href="#create-a-clone" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Clone" src="../../../../../assets/flasharray-proc-create-a-clone.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span>&lt;clone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span>&lt;clone_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Volume cloned successfully.
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Clone name: prod-db-clone-001
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Source volume: prod-db-vol
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Clone size: 500GB
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Created: 2024-01-15T09:42:17Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Source volume '&lt;source_vol&gt;' not found</code></strong> — Verify the source volume name exists with <code>purevol list</code> and use the exact volume name.
+<strong><code>Error: Clone name '&lt;clone_name&gt;' already exists</code></strong> — Choose a unique clone name or delete the existing clone with <code>purevol destroy &lt;clone_name&gt;</code> first.</p>
+</div>
 <h3 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete a Volume" src="../../../../../assets/flasharray-proc-delete-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Volumes go to the destroyed state first (recoverable for 24 hours)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Permanently delete (eradicate)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Volumes go to the destroyed state first (recoverable for 24 hours)</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Permanently delete (eradicate)</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Volume destroyed: volume-prod-db-01
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Volume eradicated: volume-prod-db-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume 'volume-prod-db-01' not found</code></strong> — Verify the volume name is correct and exists on the array using <code>purevol list</code>.
+<strong><code>Error: Volume 'volume-prod-db-01' is not in destroyed state</code></strong> — Run <code>purevol destroy &lt;volume_name&gt;</code> first before attempting to eradicate, or wait for the 24-hour recovery window to pass.</p>
+</div>
 <h3 id="recover-a-destroyed-volume">Recover a Destroyed Volume<a class="headerlink" href="#recover-a-destroyed-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Recover a Destroyed Volume" src="../../../../../assets/flasharray-proc-recover-a-destroyed-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>purevol<span class="w"> </span>recover<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>purevol<span class="w"> </span>recover<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Recovering volume &#39;prod-db-01&#39;...
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Volume &#39;prod-db-01&#39; (3.2TB) recovery initiated
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Recovery progress: 45%
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>Recovery progress: 89%
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Volume &#39;prod-db-01&#39; recovered successfully
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>Recovery completed in 2m 34s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume 'prod-db-01' not found</code></strong> — Verify the volume name exists with <code>purevol list</code> and use the correct name.
+<strong><code>Error: Volume 'prod-db-01' is not in a recoverable state</code></strong> — Check volume status with <code>purevol show &lt;volume_name&gt;</code> to confirm it's deleted or offline before attempting recovery.
+<strong><code>Error: Authentication failed</code></strong> — Ensure you are authenticated to the Pure FlashArray with valid credentials using <code>pureauthenticate</code> or check your API token.</p>
+</div>
 <h3 id="volume-tags">Volume Tags<a class="headerlink" href="#volume-tags" title="Permanent link">&para;</a></h3>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpNjcEKgDAMQ-_7iuLdHxjoV4gnL0XLLNZNtjkY4r9rPXkKJC_JwpHmzMFbiOzWbEoQC80Y5NypgSuteJCFuQr7heJtMro3H9BNfqPaFZTzx-kYeid06xC0PXx8ovyqdtX6LoSTesk8z3otYg==?" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Set a tag on a volume</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purevol<span class="w"> </span>settag<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--tag-name<span class="w"> </span>&lt;key&gt;<span class="w"> </span>--tag-value<span class="w"> </span>&lt;value&gt;
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># List tags</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>purevol<span class="w"> </span>listtags<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Set a tag on a volume</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>purevol<span class="w"> </span>settag<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--tag-name<span class="w"> </span>&lt;key&gt;<span class="w"> </span>--tag-value<span class="w"> </span>&lt;value&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># List tags</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>purevol<span class="w"> </span>listtags<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Setting tag on volume prod-db-01...
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Tag &#39;environment&#39; set to &#39;production&#39; on volume prod-db-01
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Tag &#39;cost-center&#39; set to &#39;cc-4521&#39; on volume prod-db-01
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>Volume: prod-db-01
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>  environment: production
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>  cost-center: cc-4521
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>  backup-policy: daily
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>  tier: premium
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume 'prod-db-01' not found</code></strong> — Verify the volume name exists with <code>purevol list</code> and check for typos.
+<strong><code>Error: Authentication failed. Check credentials.</code></strong> — Ensure your Pure Storage API token is valid and set in your environment or configuration file.</p>
+</div>
 <h3 id="volume-common-issues">Volume Common Issues<a class="headerlink" href="#volume-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Common Issues" src="../../../../../assets/flasharray-proc-volume-common-issues.svg" /></p>
 <table>
@@ -8885,54 +9105,175 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 <p>Protection groups (pgroups) define sets of volumes for consistent snapshot and replication operations.</p>
 <h3 id="list-protection-groups">List Protection Groups<a class="headerlink" href="#list-protection-groups" title="Permanent link">&para;</a></h3>
 <p><img alt="List Protection Groups" src="../../../../../assets/flasharray-proc-list-protection-groups.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>purepgroup<span class="w"> </span>list
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>purepgroup<span class="w"> </span>list
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Name                          Source
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>pgroup-prod-daily             -
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>pgroup-backup-hourly          -
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>pgroup-archive-weekly         -
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>pgroup-test-sync              -
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>pgroup-dr-replication         -
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>Name                          Repeat      Snapshots   Enabled
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>pgroup-prod-daily             1d          8           True
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>pgroup-backup-hourly          1h          24          True
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>pgroup-archive-weekly         7d          4           True
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>pgroup-test-sync              12h         6           False
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>pgroup-dr-replication         6h          12          True
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>Name                          Physical (GB)  Virtual (GB)  Snapshots (GB)
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>pgroup-prod-daily             2048.5         5120.3        512.1
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>pgroup-backup-hourly          1024.2         2560.8        256.4
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>pgroup-archive-weekly         4096.0         8192.5        1024.2
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a>pgroup-test-sync              512.3          1024.1        128.5
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>pgroup-dr-replication         3072.1         6144.2        768.3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid option '--schedule'</code></strong> — Use the correct flag syntax; check <code>purepgroup list --help</code> for available options specific to your Pure OS version.
+<strong><code>Error: Connection refused to management IP</code></strong> — Verify the Pure array management IP is reachable and the <code>PURE_IP</code> environment variable or configuration file is correctly set.</p>
+</div>
 <h3 id="view-protection-group-members">View Protection Group Members<a class="headerlink" href="#view-protection-group-members" title="Permanent link">&para;</a></h3>
 <p><img alt="View Protection Group Members" src="../../../../../assets/flasharray-proc-view-protection-group-members.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>purepgroup<span class="w"> </span>listobj<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--member-type<span class="w"> </span>volume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>purepgroup<span class="w"> </span>listobj<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--member-type<span class="w"> </span>volume
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Name                          Serial                        Bandwidth      Latency
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>prod-db-vol-01                1e348f92-a1c2-4d3e-9f2b-7c5a1b9d2e4f  2.3GB/s        0.8ms
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>prod-db-vol-02                2f459g03-b2d3-5e4f-0g3c-8d6b2c0e3f5g  1.9GB/s        1.2ms
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>backup-archive-vol            3g56ah14-c3e4-6f5g-1h4d-9e7c3d1f4g6h  0.4GB/s        2.1ms
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>cache-tier-vol                4h67bi25-d4f5-7g6h-2i5e-0f8d4e2g5h7i  3.1GB/s        0.6ms
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>repl-target-vol               5i78cj36-e5g6-8h7i-3j6f-1g9e5f3h6i8j  1.5GB/s        1.8ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid protection group name '&lt;pg_name&gt;'</code></strong> — Replace <code>&lt;pg_name&gt;</code> with an actual protection group name from your array (verify with <code>purepgroup list</code>).
+<strong><code>Error: Pure1 session not authenticated</code></strong> — Authenticate to the FlashArray first using <code>pureadmin login</code> or ensure your session token is valid.</p>
+</div>
 <h3 id="create-a-protection-group">Create a Protection Group<a class="headerlink" href="#create-a-protection-group" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Protection Group" src="../../../../../assets/flasharray-proc-create-a-protection-group.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Created protection group &lt;pg_name&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group &lt;pg_name&gt; already exists</code></strong> — Use a unique protection group name or delete the existing group with <code>purepgroup destroy &lt;pg_name&gt;</code> first.
+<strong><code>Error: Command requires authentication</code></strong> — Authenticate to the Pure FlashArray with <code>pureadmin login</code> or ensure your session token is valid.</p>
+</div>
 <h3 id="add-volumes-to-a-protection-group">Add Volumes to a Protection Group<a class="headerlink" href="#add-volumes-to-a-protection-group" title="Permanent link">&para;</a></h3>
 <p><img alt="Add Volumes to a Protection Group" src="../../../../../assets/flasharray-proc-add-volumes-to-a-protection-group.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--vollist<span class="w"> </span>&lt;vol1&gt;,&lt;vol2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--vollist<span class="w"> </span>&lt;vol1&gt;,&lt;vol2&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>Volume group &#39;production-pg&#39; successfully created
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>Added volumes: vol1, vol2
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>Total volumes in group: 2
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>Replication enabled: yes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Volume group '&lt;pg_name&gt;' already exists</code></strong> — Use a different protection group name or delete the existing group with <code>purepgroup destroy &lt;pg_name&gt;</code> first.
+<strong><code>Error: Volume '&lt;vol1&gt;' not found</code></strong> — Verify the volume exists with <code>puredb list --volumes</code> and use the correct volume name.
+<strong><code>Error: Connection refused to management IP</code></strong> — Ensure the FlashArray management IP is reachable and you have valid credentials configured in your Pure Storage CLI session.</p>
+</div>
 <h3 id="configure-snapshot-schedule">Configure Snapshot Schedule<a class="headerlink" href="#configure-snapshot-schedule" title="Permanent link">&para;</a></h3>
 <p><img alt="Configure Snapshot Schedule" src="../../../../../assets/flasharray-proc-configure-snapshot-schedule.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Set snapshot schedule (every 1 hour, retain 24 per day, 7 days)</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span>--snap-per-day<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Set snapshot schedule (every 1 hour, retain 24 per day, 7 days)</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="w">    </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="w">    </span>--snap-per-day<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="w">    </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Snapshot schedule for protection group &#39;prod-db-pg&#39; configured successfully.
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Schedule Details:
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>  Enabled: true
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>  Frequency: 3600 seconds (1 hour)
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>  Snapshots per day: 24
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>  Retention days: 7
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>  Total snapshots retained: 168
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>  Next snapshot: 2024-01-15T14:00:00Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-db-pg' not found</code></strong> — Verify the protection group name exists with <code>purepgroup list</code> and use the correct name.
+<strong><code>Error: Invalid snap-frequency value. Must be between 300 and 86400 seconds</code></strong> — Adjust the frequency to a value between 5 minutes (300s) and 24 hours (86400s).</p>
+</div>
 <h3 id="configure-replication-schedule-async-to-remote">Configure Replication Schedule (Async to Remote)<a class="headerlink" href="#configure-replication-schedule-async-to-remote" title="Permanent link">&para;</a></h3>
 <p><img alt="Configure Replication Schedule (Async to Remote)" src="../../../../../assets/flasharray-proc-configure-replication-schedule-async-to-remote.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Enable replication target</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;remote_array_name&gt;
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Set replication schedule</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">3600</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Enable replication target</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;remote_array_name&gt;
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Set replication schedule</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">3600</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>Connecting protection group &#39;prod-db-pg&#39; to remote array &#39;flasharray-dr&#39;...
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>Connection established successfully.
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>Replication target: flasharray-dr (192.168.1.50)
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>Protection group &#39;prod-db-pg&#39; replication schedule updated.
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>Replication frequency: 3600 seconds (1 hour)
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>Replication enabled: true
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>Next scheduled replication: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group '&lt;pg_name&gt;' not found on array</code></strong> — Verify the protection group exists with <code>purepgroup list</code> and use the correct name.
+<strong><code>Error: Target array '&lt;remote_array_name&gt;' is unreachable or not configured</code></strong> — Confirm the remote array is registered and network connectivity exists using <code>purearray list --remote</code>.
+<strong><code>Error: Replication license not enabled on source or target array</code></strong> — Purchase and enable the replication license on both arrays via the management console or contact Pure support.</p>
+</div>
 <h3 id="take-a-manual-snapshot">Take a Manual Snapshot<a class="headerlink" href="#take-a-manual-snapshot" title="Permanent link">&para;</a></h3>
 <p><img alt="Take a Manual Snapshot" src="../../../../../assets/flasharray-proc-take-a-manual-snapshot.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>Created protection group snapshot: pg-prod-01.pg-prod-01--backup-20240115
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>Snapshot UUID: 8f4c2e91-7a3f-4d8b-9c1a-5e6f2b3d4a9c
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>Size: 2.3 TB
+<a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>Created: 2024-01-15T14:32:47Z
+<a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>Source Protection Group: pg-prod-01
+<a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>Replication Status: Synced
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'pg-prod-01' not found</code></strong> — Verify the protection group name with <code>purepgroup list</code> and ensure it exists on the array.
+<strong><code>Error: Insufficient space for snapshot (required: 500GB, available: 120GB)</code></strong> — Free up space on the array or delete older snapshots before creating new ones.
+<strong><code>Error: Protection group 'pg-prod-01' is in replication, cannot snapshot</code></strong> — Wait for the current replication cycle to complete before attempting to create a snapshot.</p>
+</div>
 <h3 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h3>
 <p><img alt="List Snapshots" src="../../../../../assets/flasharray-proc-list-snapshots.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>Name                                             Created                 Size      Source
+<a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>pg-prod-01.2024-01-15-14:30:22                   2024-01-15 14:30:22    2.3 TB    pg-prod-01
+<a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>pg-prod-01.2024-01-15-10:15:08                   2024-01-15 10:15:08    2.3 TB    pg-prod-01
+<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>pg-prod-01.2024-01-14-22:45:33                   2024-01-14 22:45:33    2.3 TB    pg-prod-01
+<a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a>pg-prod-01.2024-01-14-18:20:11                   2024-01-14 18:20:11    2.3 TB    pg-prod-01
+<a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>pg-prod-01.2024-01-14-14:05:47                   2024-01-14 14:05:47    2.3 TB    pg-prod-01
+<a id="__codelineno-49-7" name="__codelineno-49-7" href="#__codelineno-49-7"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group '&lt;pg_name&gt;' not found</code></strong> — Verify the protection group name with <code>purepgroup list</code> and use the correct name.
+<strong><code>Error: You must be authenticated to perform this operation</code></strong> — Authenticate to the FlashArray with <code>pureadmin login</code> before running the command.</p>
+</div>
 <h3 id="delete-a-protection-group">Delete a Protection Group<a class="headerlink" href="#delete-a-protection-group" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete a Protection Group" src="../../../../../assets/flasharray-proc-delete-a-protection-group.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>purepgroup<span class="w"> </span>destroy<span class="w"> </span>&lt;pg_name&gt;
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>purepgroup<span class="w"> </span>eradicate<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>purepgroup<span class="w"> </span>destroy<span class="w"> </span>&lt;pg_name&gt;
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>purepgroup<span class="w"> </span>eradicate<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>Destroying protection group &#39;prod-db-pg&#39;...
+<a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>Protection group &#39;prod-db-pg&#39; destroyed successfully.
+<a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>Eradicating protection group &#39;prod-db-pg&#39;...
+<a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a>Protection group &#39;prod-db-pg&#39; eradicated successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-db-pg' not found</code></strong> — Verify the protection group name exists with <code>purepgroup list</code> before attempting destruction.
+<strong><code>Error: Cannot destroy protection group with active snapshots</code></strong> — Delete all snapshots in the protection group using <code>purepgsnap destroy</code> before destroying the group.
+<strong><code>Error: Permission denied</code></strong> — Ensure your Pure Storage user account has admin or appropriate role privileges to destroy protection groups.</p>
+</div>
 <h3 id="protection-group-common-issues">Protection Group Common Issues<a class="headerlink" href="#protection-group-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Protection Group Common Issues" src="../../../../../assets/flasharray-proc-protection-group-common-issues.svg" /></p>
 <table>
@@ -9002,7 +9343,7 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:58:32 UTC"><span class="timeago" datetime="2026-06-29T05:58:32+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:58:32 UTC">2026-06-29</span>
   </span>
 
     

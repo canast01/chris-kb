@@ -8420,6 +8420,33 @@ Firewall port reference for Superna Eyeglass (PowerScale / Isilon DR orchestrati
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From admin workstation — test Eyeglass UI</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;eyeglass-ip&gt;:8081/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>200
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a># extended LDIF
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>#
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># LDAPv3
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a># base &lt;dc=domain,dc=com&gt; with scope subtlevel
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a># filter: (cn=*)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># requesting: cn
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>#
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>dn: cn=Administrator,cn=Users,dc=domain,dc=com
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cn: Administrator
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>dn: cn=Guest,cn=Users,dc=domain,dc=com
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>cn: Guest
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>dn: cn=Eyeglass-Service,ou=ServiceAccounts,dc=domain,dc=com
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>cn: Eyeglass-Service
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>OneFS 9.4.0.0 (Build 9.4.0.0_1234567890)
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification (already present in examples above; verify flag is included).
+<strong><code>ldapsearch: error (49) Invalid Credentials</code></strong> — Verify AD service account credentials and ensure the bind DN format matches your domain structure (e.g., <code>cn=Eyeglass-Service,ou=ServiceAccounts,dc=domain,dc=com</code>).
+<strong><code>ssh: connect to host &lt;powerscale-mgmt&gt; port 22: Connection refused</code></strong> — Confirm SSH is enabled on PowerScale cluster and the management IP is reachable; check firewall rules allowing port 22 from Eyeglass appliance.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../how-it-works/">Superna Eyeglass — Architecture</a></li>
@@ -8448,7 +8475,7 @@ Firewall port reference for Superna Eyeglass (PowerScale / Isilon DR orchestrati
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

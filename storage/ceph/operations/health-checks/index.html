@@ -7776,38 +7776,110 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 <a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Summary: PASS=</span><span class="nv">$PASS</span><span class="s2"> WARN=</span><span class="nv">$WARN</span><span class="s2"> FAIL=</span><span class="nv">$FAIL</span><span class="s2"> ===&quot;</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$FAIL</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 </code></pre></div>
-<h2 id="comprehensive-manual-checks">Comprehensive Manual Checks<a class="headerlink" href="#comprehensive-manual-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Overall cluster health — always start here</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>-s
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. OSD status — all should be up and in</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;down|out&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Any &quot;down&quot; or &quot;out&quot; entry requires immediate investigation</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>=== Ceph Health Check 2024-01-15 ===
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[Overall Status]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  [OK]  Cluster health: HEALTH_OK
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>[OSD Status]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  [OK]  OSDs up: 12/12
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  [OK]  OSDs in: 12/12
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 3. PG summary — look for non active+clean states</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">    </span><span class="c1"># show stuck PGs (inactive/unclean/undersized)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive<span class="w">      </span><span class="c1"># detail on PGs that cannot service I/O</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean<span class="w">       </span><span class="c1"># PGs with incorrect replica count</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 4. MON quorum — all MONs must be in quorum</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;quorum_leader_name|quorum\b&quot;</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># 5. Capacity — check per-pool and per-OSD utilisation</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>ceph<span class="w"> </span>df
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail<span class="w">                              </span><span class="c1"># per-pool usage with quota info</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w"> </span><span class="c1"># top OSDs by usage %</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># 6. Recovery progress (if any)</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recover
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;health|pgs|recover&#39;&quot;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># 7. Recent errors in cluster log</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>ceph<span class="w"> </span>log<span class="w"> </span>last<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|warn|failed&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>[PG Status]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  [OK]  No unclean PGs
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  [OK]  No inactive PGs
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>[Capacity]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  [WARN] Total usage: 78% — approaching nearfull
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>[MON Quorum]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  [OK]  MON quorum: 3 mons
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>[Recovery Progress]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  [OK]  No recovery in progress
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>=== Summary: PASS=7 WARN=1 FAIL=0 ===
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: ceph</code></strong> — Ensure the Ceph CLI tools are installed and the <code>ceph</code> command is in your PATH, or run the script on a Ceph admin node.
+<strong><code>Error: error connecting to the cluster</code></strong> — Verify your Ceph cluster is running and <code>/etc/ceph/ceph.conf</code> exists with correct permissions, or set <code>CEPH_ARGS</code> environment variable.
+<strong><code>grep: (standard input) is empty</code></strong> — Some <code>ceph</code> commands may return empty output if the cluster is severely degraded; add error handling with <code>|| true</code> to prevent script failure on edge cases.</p>
+</div>
+<h2 id="comprehensive-manual-checks">Comprehensive Manual Checks<a class="headerlink" href="#comprehensive-manual-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Overall cluster health — always start here</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>-s
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. OSD status — all should be up and in</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;down|out&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Any &quot;down&quot; or &quot;out&quot; entry requires immediate investigation</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 3. PG summary — look for non active+clean states</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">    </span><span class="c1"># show stuck PGs (inactive/unclean/undersized)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive<span class="w">      </span><span class="c1"># detail on PGs that cannot service I/O</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean<span class="w">       </span><span class="c1"># PGs with incorrect replica count</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># 4. MON quorum — all MONs must be in quorum</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;quorum_leader_name|quorum\b&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># 5. Capacity — check per-pool and per-OSD utilisation</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>ceph<span class="w"> </span>df
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail<span class="w">                              </span><span class="c1"># per-pool usage with quota info</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w"> </span><span class="c1"># top OSDs by usage %</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># 6. Recovery progress (if any)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recover
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;health|pgs|recover&#39;&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># 7. Recent errors in cluster log</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>ceph<span class="w"> </span>log<span class="w"> </span>last<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|warn|failed&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    id:     a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    health: HEALTH_OK
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mon: 3 mons at {mon01=10.0.1.10:6789/0,mon02=10.0.1.11:6789/0,mon03=10.0.1.12:6789/0}
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        election epoch 156, quorum 0,1,2 [mon01,mon02,mon03], out of quorum: none
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    mgr: mgr01(active, since 8d), standbys: mgr02, mgr03
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    mds: cephfs:1 {0=mds01=up:active} 2 up:standby
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    osd: 12 osds: 12 up (since 3d), 12 in (since 3d); flags sortbitwise,require_jewel_osds,require_kraken_osds
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  pools:   4 pools, 256 pgs
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  objects: 2.34M objects, 4.56 TiB
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  usage:   6.78 TiB used, 18.22 TiB / 25 TiB avail
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  pgs:     256 active+clean
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a> +++ HEALTH DETAIL +++
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>HEALTH_OK
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a> +++ OSD STAT +++
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>12 osds: 12 up, 12 in
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a> +++ PG STAT +++
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>256 pgs: 256 active+clean; 0 B data, 6.78 TiB used, 18.22 TiB / 25 TiB avail
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a> +++ MON STAT +++
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>e3: 3 mons at {mon01=10.0.1.10:6789/0,mon02=10.0.1.11:6789/0,mon03=10.0.1.12:6789/0}, election epoch 156, quorum 0,1,2 [mon01,mon02,mon03], out of quorum: none
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a> +++ CAPACITY (ceph df) +++
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>CLASS     SIZE       AVAIL      USED       RAW USED   %RAW USED
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>all       25 TiB     18.22 TiB  6.78 TiB   6.78 TiB       27.12
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>ssd       25 TiB     18.22 TiB  6.78 TiB   6.78 TiB       27.12
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>--- Per-Pool Usage ---
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>POOL                 ID     USED      %USED     MAX AVAIL     OBJECTS
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>rbd-pool             1      2.34 TiB   9.36     18.22 TiB     1.2M
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>cephfs_data          2      1.89 TiB   7.56     18.22 TiB     890K
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>cephfs_metadata      3      45 GiB    0.18     18.22 TiB     234K
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>rgw.buckets.data     4      2.10 TiB   8.40     18.22 TiB     567K
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>--- Top 10 OSDs by Usage ---
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>ID  CLASS
 </code></pre></div>
 <h2 id="health_warn-triage">HEALTH_WARN Triage<a class="headerlink" href="#health_warn-triage" title="Permanent link">&para;</a></h2>
 <table>
@@ -7872,47 +7944,126 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 </tbody>
 </table>
 <h2 id="osd-specific-checks">OSD-Specific Checks<a class="headerlink" href="#osd-specific-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check slow ops — OSD latency issues</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Sort by commit latency (column 3); highest values = slowest OSDs</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Dump in-flight ops on a specific OSD (useful when SLOW_OPS warning is active)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>dump_ops_in_flight
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Look for ops with age &gt; 30 s; indicates slow disk or network</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check OSD configuration at runtime</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;osd_op_timeout|osd_disk_threads&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check OSD disk device health (if smartmontools installed)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>device<span class="w"> </span>get-health-metrics<span class="w"> </span>&lt;device-id&gt;
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>device<span class="w"> </span>ls<span class="w">    </span><span class="c1"># list device IDs known to the cluster</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Mark an OSD out manually before replacing it</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.&lt;id&gt;
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Wait for rebalance to complete, then:</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>down<span class="w"> </span>osd.&lt;id&gt;
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>--yes-i-really-mean-it
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check slow ops — OSD latency issues</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Sort by commit latency (column 3); highest values = slowest OSDs</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Dump in-flight ops on a specific OSD (useful when SLOW_OPS warning is active)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>dump_ops_in_flight
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Look for ops with age &gt; 30 s; indicates slow disk or network</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check OSD configuration at runtime</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;osd_op_timeout|osd_disk_threads&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check OSD disk device health (if smartmontools installed)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ceph<span class="w"> </span>device<span class="w"> </span>get-health-metrics<span class="w"> </span>&lt;device-id&gt;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ceph<span class="w"> </span>device<span class="w"> </span>ls<span class="w">    </span><span class="c1"># list device IDs known to the cluster</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Mark an OSD out manually before replacing it</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.&lt;id&gt;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Wait for rebalance to complete, then:</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>down<span class="w"> </span>osd.&lt;id&gt;
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span>osd.&lt;id&gt;<span class="w"> </span>--yes-i-really-mean-it
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>osd  commit_latency  apply_latency  commit_latency_ns  apply_latency_ns
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>       5        0.045821       0.031245          45821000         31245000
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>       2        0.038912       0.027654          38912000         27654000
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       8        0.032156       0.024891          32156000         24891000
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>       1        0.028743       0.021567          28743000         21567000
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>       7        0.019234       0.015432          19234000         15432000
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>       4        0.015678       0.012345          15678000         12345000
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>       3        0.012456       0.009876          12456000          9876000
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>       6        0.008932       0.007123           8932000          7123000
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>{
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  &quot;ops&quot;: [
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    {
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;description&quot;: &quot;osd_op(client.12345.0:1 rbd_data.1a2b3c4d5e6f7g8h9i0j_0000000000000001 [write 0~4194304] snapc 0=[] ack+commit e12345:1234 0.000000)&quot;,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;initiated_at&quot;: &quot;2024-01-15T14:32:18.456789+0000&quot;,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;age&quot;: 2.345,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      &quot;type&quot;: &quot;write&quot;
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    }
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  ]
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>osd_op_timeout = 30
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>osd_disk_threads = 4
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Health metrics for device nvme-SAMSUNG_PM1735_S6XNNS0R700000_1:
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  life_expectancy_min: 100
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  predicted_life_expectancy_min: 100
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  wear_level: 5
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>DEVICE                                                                DAEMONS  SIZE
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>nvme-SAMSUNG_PM1735_S6XNNS0R700000_1                                 osd.5    1.7T
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>nvme-SAMSUNG_PM1735_S6XNNS0R700000_2                                 osd.2    1.7T
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>sda                                                                   osd.8    2.0T
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>...
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>osd.5 marked out.
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>osd.5 marked down.
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>purged osd.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: osd.&lt;id&gt; does not exist</code></strong> — Verify the OSD ID exists with <code>ceph osd tree</code> before running daemon commands.
+<strong><code>Error: unable to get device health metrics: (22) Invalid argument</code></strong> — Ensure smartmontools is installed on the OSD host and the device ID matches output from <code>ceph device ls</code>.
+<strong><code>Error EBUSY: osd.&lt;id&gt; is still in use</code></strong> — Wait for the rebalance to fully complete after <code>ceph osd out</code> using <code>ceph -w</code> before attempting <code>ceph osd purge</code>.</p>
+</div>
 <h2 id="recovery-monitoring">Recovery Monitoring<a class="headerlink" href="#recovery-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Live recovery progress — updates every 5 s</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;health|pgs|recover|backfill&#39;&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Detailed stuck PG information</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>degraded
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Force recovery priority (speeds up recovery at cost of client I/O)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nobackfill<span class="w">        </span><span class="c1"># pause backfill, keep recovery</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>recovery_priority<span class="w"> </span><span class="m">10</span><span class="w">  </span><span class="c1"># increase (default 5)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Throttle recovery if impacting client I/O</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-max-backfills 1&#39;</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-recovery-max-active 1&#39;</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Watch bytes remaining</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>watch<span class="w"> </span>-n10<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;misplaced|degraded|recovering&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Live recovery progress — updates every 5 s</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;health|pgs|recover|backfill&#39;&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Detailed stuck PG information</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>degraded
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Force recovery priority (speeds up recovery at cost of client I/O)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nobackfill<span class="w">        </span><span class="c1"># pause backfill, keep recovery</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>recovery_priority<span class="w"> </span><span class="m">10</span><span class="w">  </span><span class="c1"># increase (default 5)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Throttle recovery if impacting client I/O</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-max-backfills 1&#39;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-recovery-max-active 1&#39;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Watch bytes remaining</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>watch<span class="w"> </span>-n10<span class="w"> </span><span class="s2">&quot;ceph -s | grep -E &#39;misplaced|degraded|recovering&#39;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Every 5.0s: ceph -s | grep -E &#39;health|pgs|recover|backfill&#39;                                    Mon Dec 18 14:32:47 2023
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    health: HEALTH_WARN 1 pg degraded; 1 pg stuck degraded
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    pgs:     1 active+degraded
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    recovery io 12 MB/s, 847 GB/s avg, 2.3 GB remaining
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    backfill io 0 B/s, 0 B/s avg
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>PG_STUCK DEGRADED
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>PG             STATE           UP      ACTING  OBJECTS  BYTES
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>1.a2           active+degraded [0,2]   [0,2]   4521     18 GB
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>PG_STUCK UNCLEAN
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>(no unclean PGs)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>PG_STUCK INACTIVE
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>(no inactive PGs)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>(no output — command completes silently)
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>(no output — command completes silently)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>osd.0: injectargs: osd-max-backfills = &#39;1&#39;
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>osd.1: injectargs: osd-max-backfills = &#39;1&#39;
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>osd.2: injectargs: osd-max-backfills = &#39;1&#39;
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Every 10.0s: ceph -s | grep -E &#39;misplaced|degraded|recovering&#39;                                 Mon Dec 18 14:33:02 2023
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    1 pg degraded
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    847 GB/s avg, 1.9 GB remaining
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: pg dump_stuck: unknown command</code></strong> — Verify Ceph version supports <code>pg dump_stuck</code> (added in Luminous); use <code>ceph pg stat</code> as fallback on older versions.
+<strong><code>Error: HEALTH_ERR: 1 pg stuck degraded; recovery blocked</code></strong> — Check for full OSDs with <code>ceph df</code> and delete non-essential data, or add capacity before recovery can proceed.
+<strong><code>Error: osd.X: injectargs: unknown option 'osd-max-backfills'</code></strong> — Confirm the OSD daemon version matches your Ceph cluster version, as option names vary between releases.</p>
+</div>
 <h2 id="capacity-thresholds">Capacity Thresholds<a class="headerlink" href="#capacity-thresholds" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7944,37 +8095,76 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check current threshold settings</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;nearfull|full_ratio|backfillfull&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Adjust nearfull threshold (example: lower to 80% for earlier warning)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-nearfull-ratio<span class="w"> </span><span class="m">0</span>.80
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-full-ratio<span class="w"> </span><span class="m">0</span>.90
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-backfillfull-ratio<span class="w"> </span><span class="m">0</span>.85
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># View per-OSD utilisation sorted by % used</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Column 7 = % used; top entries are the fullest OSDs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check current threshold settings</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;nearfull|full_ratio|backfillfull&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Adjust nearfull threshold (example: lower to 80% for earlier warning)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-nearfull-ratio<span class="w"> </span><span class="m">0</span>.80
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-full-ratio<span class="w"> </span><span class="m">0</span>.90
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-backfillfull-ratio<span class="w"> </span><span class="m">0</span>.85
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># View per-OSD utilisation sorted by % used</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Column 7 = % used; top entries are the fullest OSDs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nearfull_ratio 0.85
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>full_ratio 0.95
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>backfillfill_ratio 0.90
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>(no output — command completes silently)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>(no output — command completes silently)
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>(no output — command completes silently)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ID  CLASS WEIGHT  REWEIGHT SIZE    RAW USE %USE  %AVAIL PG_NUM STATUS
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a> 0   ssd  1.00000  1.00000 1099.5G 879.6G 80.0  20.0   256   up
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> 1   ssd  1.00000  1.00000 1099.5G 912.3G 82.9  17.1   256   up
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a> 2   ssd  1.00000  1.00000 1099.5G 845.2G 76.8  23.2   256   up
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> 3   hdd  3.00000  1.00000 3298.6G 2847.1G 86.3  13.7   512   up
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 4   hdd  3.00000  1.00000 3298.6G 2756.4G 83.5  16.5   512   up
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a> 5   hdd  3.00000  1.00000 3298.6G 2934.8G 89.0  11.0   512   up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: insufficient capabilities to set osd options</code></strong> — Run the command with appropriate admin privileges or ensure your keyring has <code>osd</code> capability.
+<strong><code>Error: invalid value '0.80': must be between 0.0 and 1.0</code></strong> — Use decimal ratios between 0 and 1 (e.g., 0.80 for 80%), not percentages.</p>
+</div>
 <h2 id="manual-spot-checks">Manual Spot Checks<a class="headerlink" href="#manual-spot-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Cluster I/O rates — real-time read/write throughput</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;client:&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Slow OSD requests (&gt; 30 s default threshold)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>slow
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Clock skew check</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ceph<span class="w"> </span>time-sync-status
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Scrub progress (background data integrity check)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>scrubbing
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>scrub<span class="w"> </span>osd.5<span class="w">    </span><span class="c1"># trigger scrub on specific OSD</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>deep-scrub<span class="w"> </span>osd.5<span class="w">   </span><span class="c1"># trigger deep scrub (checksums)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Backfill/recovery progress</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;degraded|recovering|backfilling&quot;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>degraded<span class="w">   </span><span class="c1"># show degraded PG details</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Cluster I/O rates — real-time read/write throughput</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;client:&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Slow OSD requests (&gt; 30 s default threshold)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>slow
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Clock skew check</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ceph<span class="w"> </span>time-sync-status
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Scrub progress (background data integrity check)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>scrubbing
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>scrub<span class="w"> </span>osd.5<span class="w">    </span><span class="c1"># trigger scrub on specific OSD</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>deep-scrub<span class="w"> </span>osd.5<span class="w">   </span><span class="c1"># trigger deep scrub (checksums)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Backfill/recovery progress</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>ceph<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;degraded|recovering|backfilling&quot;</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>degraded<span class="w">   </span><span class="c1"># show degraded PG details</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>client: 512 MiB/s rd, 256 MiB/s wr, 1.2k op/s
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>HEALTH_WARN Slow OSD requests 12
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  OSD_SLOW_PING_TIME_FRONT Host osd.3 is slow to respond on front network
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  OSD_SLOW_PING_TIME_BACK Host osd.7 is slow to respond on back network
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>osd.0: SYNCHRONIZED, age 47s, last updated 2024-01-15T09:23:15.847392+00:00
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>osd.1: SYNCHRONIZED, age 48s, last updated 2024-01-15T09:23:14.921847+00:00
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>osd.2: SYNCHRONIZED, age 46s, last updated 2024-01-15T09:23:16.102561+00:00
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>12
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>instructing osd.5 to scrub
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>instructing osd.5 to deep-scrub
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>degraded+peering, 24 pg degraded, 18 pg recovering
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>PG_STAT OBJECTS MISSING_ON_PRIMARY DEGRADED MISPLACED UNDERSIZE PEERING STATE
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>1.a4        512         0           8         0         0 [3,7,2]p8 degraded+peering
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>1.b2        768         2          16         4         0 [5,1,4]p5 degraded+peering
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: error calling ceph_mon_command</code></strong> — Ensure the Ceph cluster is running and the admin keyring is properly configured in <code>/etc/ceph/ceph.client.admin.keyring</code>.
+<strong><code>HEALTH_ERR: [WRN] SLOW_OSD_REQUESTS</code></strong> — Investigate slow OSDs with <code>ceph osd perf</code> and check network latency, disk I/O, or CPU contention on affected nodes.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8010,7 +8200,7 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

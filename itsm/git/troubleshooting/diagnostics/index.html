@@ -7560,236 +7560,589 @@ Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-l
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Full curl trace including auth headers (redact before sharing)</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nv">GIT_TRACE_CURL</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/Authorization: Basic .*/Authorization: Basic &lt;REDACTED&gt;/&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>trace: built-in: git &#39;fetch&#39; &#39;origin&#39;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>trace: run_command: &#39;ssh&#39; &#39;-o&#39; &#39;SendEnv=GIT_PROTOCOL&#39; &#39;git@github.com&#39; &#39;git-upload-pack &#39;\&#39;&#39;/myorg/myrepo.git&#39;\&#39;&#39;&#39;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>trace: exec: &#39;ssh&#39; &#39;-o&#39; &#39;SendEnv=GIT_PROTOCOL&#39; &#39;git@github.com&#39; &#39;git-upload-pack &#39;\&#39;&#39;/myorg/myrepo.git&#39;\&#39;&#39;&#39;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>From github.com:myorg/myrepo
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   a3f8c21..9e2d1b4  main       -&gt; origin/main
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   5c7a9e1..6d4b2f8  develop    -&gt; origin/develop
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>trace: performance: 0.042000 s: git command: &#39;fetch&#39; &#39;origin&#39;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>trace: setup: git_dir: .git
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>trace: setup: worktree: /home/user/myrepo
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>trace: setup: cwd: /home/user/myrepo
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>trace: setup: prefix: (null)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>performance: 0.156 s: read-tree
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>performance: 0.089 s: traverse_trees
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>performance: 0.034 s: diff-index
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>* 0000000000000000000000000000000000000000 9e2d1b4f8c3a5d7e1f2b4c6a8d9e1f2b3c4d5e6f refs/heads/main
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>* 5c7a9e1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f 6d4b2f8a9c1d3e5f7a9b0c1d2e3f4a5b6c7d8e9 refs/heads/develop
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: could not read Username for 'https://github.com': No such file or directory</code></strong> — Configure SSH keys or use a personal access token with <code>git config --global credential.helper store</code>.
+<strong><code>fatal: The remote end hung up unexpectedly</code></strong> — Check network connectivity and SSH key permissions with <code>ssh -T git@github.com</code>; increase timeout with <code>git config --global http.postBuffer 524288000</code>.
+<strong><code>trace: run_command: 'ssh' ... fatal: Could not resolve hostname</code></strong> — Verify DNS resolution with <code>nslookup github.com</code> and check SSH config in <code>~/.ssh/config</code> for correct Host entries.</p>
+</div>
 <hr />
 <h2 id="step-2-verify-remote-connectivity">Step 2 — Verify remote connectivity<a class="headerlink" href="#step-2-verify-remote-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show all remotes with fetch and push URLs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>remote<span class="w"> </span>-v
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># origin  git@github.com:org/repo.git (fetch)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># origin  git@github.com:org/repo.git (push)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Show full remote configuration</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>git<span class="w"> </span>remote<span class="w"> </span>show<span class="w"> </span>origin
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test that the remote is reachable and list its refs (confirms auth + connectivity)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check if a specific ref exists on the remote</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span>refs/heads/main
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span>refs/tags/v1.0.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show all remotes with fetch and push URLs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>remote<span class="w"> </span>-v
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># origin  git@github.com:org/repo.git (fetch)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># origin  git@github.com:org/repo.git (push)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Show full remote configuration</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>git<span class="w"> </span>remote<span class="w"> </span>show<span class="w"> </span>origin
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test that the remote is reachable and list its refs (confirms auth + connectivity)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check if a specific ref exists on the remote</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span>refs/heads/main
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span>refs/tags/v1.0.0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>origin  git@github.com:acme-corp/infra-automation.git (fetch)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>origin  git@github.com:acme-corp/infra-automation.git (push)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>* remote origin
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Fetch URL: git@github.com:acme-corp/infra-automation.git
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Push  URL: git@github.com:acme-corp/infra-automation.git
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  HEAD branch: main
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Remote branches:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    develop tracked
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    main    tracked
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    release/v2.1.0 tracked
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Local branches configured for &#39;git pull&#39;:
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    main merges with remote main
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    develop merges with remote develop
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Local refs configured for &#39;git push&#39;:
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    main pushes to main (up to date)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    develop pushes to develop (up to date)
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>5f8c3a2e9b1d4f6a7c8e9f0a1b2c3d4e5f6a7b8c    HEAD
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>a9f2e1d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2    refs/heads/develop
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>7c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d    refs/heads/main
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a    refs/tags/v1.9.5
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d    refs/tags/v2.0.0
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d    refs/tags/v2.1.0
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>a9f2e1d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2    refs/heads/main
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>(no output — ref does not exist on remote)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: 'origin' does not appear to be a 'git' repository</code></strong> — Verify you are in a git repository root directory with <code>git rev-parse --git-dir</code>.
+<strong><code>Permission denied (publickey). fatal: Could not read from remote repository.</code></strong> — Ensure your SSH key is added to the SSH agent with <code>ssh-add ~/.ssh/id_rsa</code> and registered in your GitHub account.
+<strong><code>fatal: repository not found</code></strong> — Confirm the remote URL is correct and you have access to the repository with <code>git remote set-url origin &lt;correct-url&gt;</code>.</p>
+</div>
 <p><code>git ls-remote origin</code> is the fastest test — it authenticates and fetches the remote ref list. If this succeeds, the auth and network path are working. If it fails, the error message narrows the problem to DNS, firewall, auth, or permissions.</p>
 <hr />
 <h2 id="step-3-inspect-git-configuration">Step 3 — Inspect git configuration<a class="headerlink" href="#step-3-inspect-git-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all effective config (merged: system → global → local → worktree)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>config<span class="w"> </span>--list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show config with source file for each key</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show only local repo config</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>git<span class="w"> </span>config<span class="w"> </span>--local<span class="w"> </span>--list
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show only global user config</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>--list
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Get a specific key</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>git<span class="w"> </span>config<span class="w"> </span>user.email
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>git<span class="w"> </span>config<span class="w"> </span>--get<span class="w"> </span>remote.origin.url
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>git<span class="w"> </span>config<span class="w"> </span>--get<span class="w"> </span>core.sshCommand
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Key config items to verify during troubleshooting</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>git<span class="w"> </span>config<span class="w"> </span>user.name
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>git<span class="w"> </span>config<span class="w"> </span>user.email
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>git<span class="w"> </span>config<span class="w"> </span>core.autocrlf
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslVerify
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>git<span class="w"> </span>config<span class="w"> </span>credential.helper
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>git<span class="w"> </span>config<span class="w"> </span>core.sshCommand
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Safe config dump — redact secrets before sharing</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;password\|secret\|token\|key&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all effective config (merged: system → global → local → worktree)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>config<span class="w"> </span>--list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show config with source file for each key</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show only local repo config</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>git<span class="w"> </span>config<span class="w"> </span>--local<span class="w"> </span>--list
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Show only global user config</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>--list
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Get a specific key</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>git<span class="w"> </span>config<span class="w"> </span>user.email
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>git<span class="w"> </span>config<span class="w"> </span>--get<span class="w"> </span>remote.origin.url
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>git<span class="w"> </span>config<span class="w"> </span>--get<span class="w"> </span>core.sshCommand
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Key config items to verify during troubleshooting</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>git<span class="w"> </span>config<span class="w"> </span>user.name
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>git<span class="w"> </span>config<span class="w"> </span>user.email
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>git<span class="w"> </span>config<span class="w"> </span>core.autocrlf
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslVerify
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>git<span class="w"> </span>config<span class="w"> </span>credential.helper
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>git<span class="w"> </span>config<span class="w"> </span>core.sshCommand
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># Safe config dump — redact secrets before sharing</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;password\|secret\|token\|key&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>user.name=Alice Chen
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>user.email=alice.chen@company.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>core.repositoryformatversion=0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>core.filemode=true
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>core.bare=false
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>core.logallrefupdates=true
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>core.ignorecase=false
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>core.autocrlf=input
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>http.sslVerify=true
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>credential.helper=osxkeychain
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>remote.origin.url=https://github.com/company/infrastructure.git
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>core.sshCommand=ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>branch.main.remote=origin
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>branch.main.merge=refs/heads/main
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>file:/etc/gitconfig core.autocrlf=false
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>file:/home/alice/.gitconfig user.name=Alice Chen
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>file:/home/alice/.gitconfig user.email=alice.chen@company.com
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>file:/home/alice/.gitconfig credential.helper=osxkeychain
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>file:.git/config    remote.origin.url=https://github.com/company/infrastructure.git
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>file:.git/config    core.sshCommand=ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>user.name=Alice Chen
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>user.email=alice.chen@company.com
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>remote.origin.url=https://github.com/company/infrastructure.git
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>core.sshCommand=ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>user.name=Alice Chen
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>user.email=alice.chen@company.com
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>credential.helper=osxkeychain
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>alice.chen@company.com
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>https://github.com/company/infrastructure.git
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>Alice Chen
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>alice.chen@company.com
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>input
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>(not set)
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>true
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>osxkeychain
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>file:/etc/gitconfig core.autocrlf=false
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>file:/home/alice/.gitconfig user.name=Alice Chen
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>file:/home/alice/.gitconfig user.email=alice.chen@company.com
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>file:/home/alice/.gitconfig credential.helper=osxkeychain
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>file:.git/config    remote.origin.url=https://github.com/company/infrastructure.git
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>file:.git/config    core.sshCommand=ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChecking=accept-new
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: key does not contain a section: user.email</code></strong> — Ensure you're running <code>git config</code> inside a valid git repository or use <code>--global</code> flag for user-level config.
+<strong><code>fatal: not a git repository (or any of the parent directories): .git</code></strong> — Navigate to the root of a git repository before running config commands, or use <code>--global</code> to query system-wide settings.</p>
+</div>
 <hr />
 <h2 id="step-4-diagnose-ssh-authentication">Step 4 — Diagnose SSH authentication<a class="headerlink" href="#step-4-diagnose-ssh-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Basic verbose SSH test to GitHub</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>-vT<span class="w"> </span>git@github.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Triple-verbose for full protocol trace</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>git@github.com
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Test to GitLab</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>git@gitlab.example.com
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Test to GitLab on a non-standard port</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>-p<span class="w"> </span><span class="m">2222</span><span class="w"> </span>git@gitlab.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Basic verbose SSH test to GitHub</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>-vT<span class="w"> </span>git@github.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Triple-verbose for full protocol trace</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>git@github.com
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Test to GitLab</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>git@gitlab.example.com
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Test to GitLab on a non-standard port</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ssh<span class="w"> </span>-vvvT<span class="w"> </span>-p<span class="w"> </span><span class="m">2222</span><span class="w"> </span>git@gitlab.example.com
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>OpenSSH_8.2p1 Ubuntu 4ubuntu0.7, OpenSSL 1.1.1f  31 Mar 2020
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>debug1: Reading configuration data /home/devops/.ssh/config
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>debug1: No more authentication methods to try.
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Permission denied (publickey).
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>debug1: Authentications that can continue: publickey
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>debug1: Next authentication method: publickey
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>debug1: Offering public key: /home/devops/.ssh/id_rsa RSA SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdE
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>debug1: Server accepted our key
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Hi octocat! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Connection to github.com closed.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>debug1: Reading configuration data /home/devops/.ssh/config
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>debug1: Authentications that can continue: publickey
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>debug1: Offering public key: /home/devops/.ssh/id_rsa RSA SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdE
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>debug1: Server accepted our key
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Hi devops-team! You&#39;ve successfully authenticated, but GitLab does not provide shell access.
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Connection to gitlab.example.com closed.
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>debug1: Connecting to gitlab.example.com [192.168.1.42] port 2222.
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>debug1: Connection established.
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>debug1: Authentications that can continue: publickey
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>debug1: Offering public key: /home/devops/.ssh/id_rsa RSA SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdE
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>debug1: Server accepted our key
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Hi devops-team! You&#39;ve successfully authenticated, but GitLab does not provide shell access.
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Connection to gitlab.example.com port 2222 closed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify the public key is added to your Git provider account and the private key path in ~/.ssh/config matches your actual key file.
+<strong><code>ssh: connect to host gitlab.example.com port 2222: Connection refused</code></strong> — Confirm the GitLab SSH service is running on port 2222 and any firewall rules allow outbound connections to that port.
+<strong><code>Could not resolve hostname gitlab.example.com: Name or service not known</code></strong> — Check DNS resolution with <code>nslookup gitlab.example.com</code> and verify the hostname is correct in your SSH config.</p>
+</div>
 <p>Key signatures in <code>ssh -vvvT</code> output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Key being offered</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">debug1: Offering public key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/user/.ssh/id_ed25519 ED25519</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Platform&#39;s response to the offered key:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">debug1: Authentications that can continue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publickey</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Successful auth:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">debug1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Authentication succeeded (publickey).</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Common failure signatures:</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># &quot;Permission denied (publickey)&quot; — key not registered on remote</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># &quot;No supported authentication methods available&quot; — server config issue</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># &quot;Host key verification failed&quot; — known_hosts mismatch</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># &quot;Connection refused&quot; — wrong host/port or firewall block</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># &quot;Connection timed out&quot; — firewall or network routing issue</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Key being offered</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">debug1: Offering public key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/user/.ssh/id_ed25519 ED25519</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Platform&#39;s response to the offered key:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">debug1: Authentications that can continue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publickey</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Successful auth:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">debug1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Authentication succeeded (publickey).</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Common failure signatures:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># &quot;Permission denied (publickey)&quot; — key not registered on remote</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># &quot;No supported authentication methods available&quot; — server config issue</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># &quot;Host key verification failed&quot; — known_hosts mismatch</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># &quot;Connection refused&quot; — wrong host/port or firewall block</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># &quot;Connection timed out&quot; — firewall or network routing issue</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check the SSH config being applied</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>-G<span class="w"> </span>git@github.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(hostname|user|port|identityfile|identitiesonly)&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List keys currently loaded in the SSH agent</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh-add<span class="w"> </span>-l
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># If no agent is running or no keys loaded:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ssh-agent<span class="w"> </span>-s<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ssh-add<span class="w"> </span>~/.ssh/id_ed25519
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Test with explicit key (bypass agent)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>-vT<span class="w"> </span>git@github.com
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Check known_hosts</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ssh-keygen<span class="w"> </span>-F<span class="w"> </span>github.com
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ssh-keygen<span class="w"> </span>-F<span class="w"> </span>gitlab.example.com
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Regenerate known_hosts entry if server key changed (after verifying legitimacy)</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>ssh-keygen<span class="w"> </span>-R<span class="w"> </span>github.com
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>ssh-keyscan<span class="w"> </span>-H<span class="w"> </span>github.com<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/known_hosts
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Use custom SSH flags for a single git command</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="nv">GIT_SSH_COMMAND</span><span class="o">=</span><span class="s2">&quot;ssh -vvv -i ~/.ssh/id_ed25519&quot;</span><span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>origin
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Set permanently in repo config for troubleshooting session</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>git<span class="w"> </span>config<span class="w"> </span>core.sshCommand<span class="w"> </span><span class="s2">&quot;ssh -vvv -i ~/.ssh/id_ed25519&quot;</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># Remember to unset when done</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>git<span class="w"> </span>config<span class="w"> </span>--unset<span class="w"> </span>core.sshCommand
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check the SSH config being applied</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ssh<span class="w"> </span>-G<span class="w"> </span>git@github.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(hostname|user|port|identityfile|identitiesonly)&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># List keys currently loaded in the SSH agent</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ssh-add<span class="w"> </span>-l
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># If no agent is running or no keys loaded:</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ssh-agent<span class="w"> </span>-s<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ssh-add<span class="w"> </span>~/.ssh/id_ed25519
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Test with explicit key (bypass agent)</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>-vT<span class="w"> </span>git@github.com
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Check known_hosts</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ssh-keygen<span class="w"> </span>-F<span class="w"> </span>github.com
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>ssh-keygen<span class="w"> </span>-F<span class="w"> </span>gitlab.example.com
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Regenerate known_hosts entry if server key changed (after verifying legitimacy)</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>ssh-keygen<span class="w"> </span>-R<span class="w"> </span>github.com
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>ssh-keyscan<span class="w"> </span>-H<span class="w"> </span>github.com<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/known_hosts
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="c1"># Use custom SSH flags for a single git command</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="nv">GIT_SSH_COMMAND</span><span class="o">=</span><span class="s2">&quot;ssh -vvv -i ~/.ssh/id_ed25519&quot;</span><span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>origin
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># Set permanently in repo config for troubleshooting session</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>git<span class="w"> </span>config<span class="w"> </span>core.sshCommand<span class="w"> </span><span class="s2">&quot;ssh -vvv -i ~/.ssh/id_ed25519&quot;</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="c1"># Remember to unset when done</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>git<span class="w"> </span>config<span class="w"> </span>--unset<span class="w"> </span>core.sshCommand
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>hostname github.com
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>user git
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>port 22
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>identityfile ~/.ssh/id_ed25519
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>identitiesonly yes
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>2048 SHA256:nThbg6kXUpJWGl7E1IGOCspRQsbqNsZc5zcA7xHCVNU git@github.com (RSA)
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>SSH_AUTH_SOCK=/tmp/ssh-XXXX1a2b3c/agent.12345; export SSH_AUTH_SOCK;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>SSH_AGENT_PID=12346; export SSH_AGENT_PID;
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Identity added: /home/ubuntu/.ssh/id_ed25519 (user@workstation)
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>OpenSSH_8.2p1 Ubuntu 4ubuntu0.7, OpenSSL 1.1.1f  31 Mar 2020
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>debug1: Reading configuration data /home/ubuntu/.ssh/config
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>debug1: Offering public key: /home/ubuntu/.ssh/id_ed25519 ED25519 SHA256:aBcD1e2fGhIjKlMnOpQrStUvWxYz3a4B5c6DeF7gHiJ
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>debug1: Server accepts key: /home/ubuntu/.ssh/id_ed25519 ED25519 SHA256:aBcD1e2fGhIjKlMnOpQrStUvWxYz3a4B5c6DeF7gHiJ
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>debug1: Authentication succeeded (publickey).
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>Hi username! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a># github.com:22 SSH-2.0-libssh_0.8.9
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>github.com found in /home/ubuntu/.ssh/known_hosts:1
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>gitlab.example.com not found in /home/ubuntu/.ssh/known_hosts
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>Host key verification changed. Offending RSA key in /home/ubuntu/.ssh/known_hosts:5
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>/home/ubuntu/.ssh/known_hosts updated successfully.
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a># github.com:22 SSH-2.0-libssh_0.8.9
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>github.com|1|AbCdEfGhIjKlMnOpQrStUvWxYz=|1a2b3c4d5e6f7g8h9i0j= ecdsa-sha2-nistp256 AAAA...
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>remote: Enumerating objects: 42, done.
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>remote: Counting objects: 100% (42/42), done.
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>remote: Compressing objects: 100% (28/28), done.
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>Receiving objects: 100% (42/42), 15.23 KiB | 2.54 MiB/s, done.
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>(no output — command completes silently)
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify the private key path is correct and readable (<code>ls -la ~/.ssh/id_ed25519</code>), then confirm the public key is added to your Git hosting provider's SSH keys.
+<strong><code>Could not open a connection to your authentication agent.</code></strong> — Start the SSH agent with <code>eval "$(ssh-agent -s)"</code> before running <code>ssh-add</code>.
+<strong><code>Host key verification failed.</code></strong> — Run `ssh-keyscan -H github.com &gt;&gt; ~/.ssh/</p>
+</div>
 <hr />
 <h2 id="step-5-diagnose-https-authentication-and-proxy">Step 5 — Diagnose HTTPS authentication and proxy<a class="headerlink" href="#step-5-diagnose-https-authentication-and-proxy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show HTTP credential helper in use</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>config<span class="w"> </span>credential.helper
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Test HTTPS connectivity with full header trace</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">GIT_TRACE_CURL</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^&gt; |^&lt; HTTP&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check if a proxy is set (relevant in corporate environments)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$http_proxy</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$https_proxy</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Test HTTPS through a proxy explicitly</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy<span class="w"> </span>http://proxy.corp.example.com:8080
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w">   </span><span class="c1"># test</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>git<span class="w"> </span>config<span class="w"> </span>--unset<span class="w"> </span>http.proxy<span class="w">   </span><span class="c1"># revert</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># SSL verification</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslVerify<span class="w">       </span><span class="c1"># should be true</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslCAInfo<span class="w">       </span><span class="c1"># custom CA bundle path if set</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Disable SSL verify temporarily to test if cert is the issue (TESTING ONLY — revert immediately)</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>git<span class="w"> </span>-c<span class="w"> </span>http.sslVerify<span class="o">=</span><span class="nb">false</span><span class="w"> </span>ls-remote<span class="w"> </span>origin
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Refresh GitHub PAT credential</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>git<span class="w"> </span>credential<span class="w"> </span>reject<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="s">protocol=https</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="s">host=github.com</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="s">EOF</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1"># Next git operation will prompt for new credentials</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Show HTTP credential helper in use</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>git<span class="w"> </span>config<span class="w"> </span>credential.helper
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Test HTTPS connectivity with full header trace</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">GIT_TRACE_CURL</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^&gt; |^&lt; HTTP&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check if a proxy is set (relevant in corporate environments)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$http_proxy</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$https_proxy</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Test HTTPS through a proxy explicitly</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>git<span class="w"> </span>config<span class="w"> </span>http.proxy<span class="w"> </span>http://proxy.corp.example.com:8080
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>origin<span class="w">   </span><span class="c1"># test</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>git<span class="w"> </span>config<span class="w"> </span>--unset<span class="w"> </span>http.proxy<span class="w">   </span><span class="c1"># revert</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># SSL verification</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslVerify<span class="w">       </span><span class="c1"># should be true</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>git<span class="w"> </span>config<span class="w"> </span>http.sslCAInfo<span class="w">       </span><span class="c1"># custom CA bundle path if set</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># Disable SSL verify temporarily to test if cert is the issue (TESTING ONLY — revert immediately)</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>git<span class="w"> </span>-c<span class="w"> </span>http.sslVerify<span class="o">=</span><span class="nb">false</span><span class="w"> </span>ls-remote<span class="w"> </span>origin
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c1"># Refresh GitHub PAT credential</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>git<span class="w"> </span>credential<span class="w"> </span>reject<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="s">protocol=https</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="s">host=github.com</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="s">EOF</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="c1"># Next git operation will prompt for new credentials</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>store
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>* Connected to github.com (140.82.113.3) port 443 (#0)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>&gt; GET /repos/acme-corp/infrastructure.git/info/refs?service=git-upload-pack HTTP/1.1
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>&lt; HTTP/1.1 200 OK
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>http://proxy.corp.example.com:8080
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>http://proxy.corp.example.com:8080
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>https://proxy.corp.example.com:8080
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Fetching refs from origin...
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>true
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>/etc/ssl/certs/custom-ca-bundle.crt
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>* Connected to github.com (140.82.113.3) port 443 (#0)
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>&gt; GET /repos/acme-corp/infrastructure.git/info/refs?service=git-upload-pack HTTP/1.1
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>&lt; HTTP/1.1 200 OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: unable to access 'https://github.com/...': Could not resolve host: github.com</code></strong> — Check DNS resolution with <code>nslookup github.com</code> and verify network connectivity; if behind a proxy, ensure <code>git config http.proxy</code> is set correctly.
+<strong><code>fatal: unable to access 'https://github.com/...': SSL certificate problem: self signed certificate</code></strong> — Verify the certificate with <code>openssl s_client -connect github.com:443</code> and either update your CA bundle path via <code>git config http.sslCAInfo /path/to/ca-bundle.crt</code> or contact your security team if using a corporate proxy.
+<strong><code>fatal: unable to access 'https://github.com/...': The requested URL returned error: 401</code></strong> — Refresh your GitHub PAT credentials by running the <code>git credential reject</code> block above, then retry the operation to be prompted for new credentials.</p>
+</div>
 <hr />
 <h2 id="step-6-recover-lost-work">Step 6 — Recover lost work<a class="headerlink" href="#step-6-recover-lost-work" title="Permanent link">&para;</a></h2>
 <h3 id="recover-a-lost-commit">Recover a lost commit<a class="headerlink" href="#recover-a-lost-commit" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># See what HEAD was before the reset</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># abc1234 HEAD@{0}: reset: moving to HEAD~1</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># def5678 HEAD@{1}: commit: Add important feature   &lt;-- this is the lost commit</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Show reflog with timestamps</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>git<span class="w"> </span>reflog<span class="w"> </span>--format<span class="o">=</span><span class="s1">&#39;%C(auto)%h %gd %gs %cr%Creset&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Restore it</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>def5678
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># or create a branch at that point</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>git<span class="w"> </span>branch<span class="w"> </span>recover/lost-commit<span class="w"> </span>def5678
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># See what HEAD was before the reset</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># abc1234 HEAD@{0}: reset: moving to HEAD~1</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># def5678 HEAD@{1}: commit: Add important feature   &lt;-- this is the lost commit</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Show reflog with timestamps</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>git<span class="w"> </span>reflog<span class="w"> </span>--format<span class="o">=</span><span class="s1">&#39;%C(auto)%h %gd %gs %cr%Creset&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Restore it</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>def5678
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># or create a branch at that point</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>git<span class="w"> </span>branch<span class="w"> </span>recover/lost-commit<span class="w"> </span>def5678
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>abc1234 HEAD@{0}: reset: moving to HEAD~1
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>def5678 HEAD@{1}: commit: Add important feature
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>9f2c1e0 HEAD@{2}: commit: Update documentation
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>4a7b3d2 HEAD@{3}: commit: Fix bug in auth module
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>8e9f5c1 HEAD@{4}: clone: clone from origin/main
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>c3d2e1f HEAD@{5}: initial commit
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>abc1234 HEAD@{0}: reset: moving to HEAD~1 2 minutes ago
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>def5678 HEAD@{1}: commit: Add important feature 5 minutes ago
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>9f2c1e0 HEAD@{2}: commit: Update documentation 12 minutes ago
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>4a7b3d2 HEAD@{3}: commit: Fix bug in auth module 25 minutes ago
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>8e9f5c1 HEAD@{4}: clone: clone from origin/main 2 hours ago
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>[main abc1234] Add important feature
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a> Date: Thu Jan 16 14:32:18 2025 +0000
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a> 2 files changed, 47 insertions(+), 3 deletions(-)
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a> create mode 100644 src/features/new-feature.py
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>Branch &#39;recover/lost-commit&#39; set up to track &#39;def5678&#39;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: bad revision 'def5678'</code></strong> — Verify the commit hash from <code>git reflog</code> output is correct and hasn't been garbage collected by running <code>git gc --aggressive</code> to preserve reflog entries.
+<strong><code>error: commit def5678 is not an ancestor of HEAD</code></strong> — Use <code>git cherry-pick def5678</code> instead of <code>git rebase</code> if the commit is not in the current branch's history.</p>
+</div>
 <h3 id="recover-a-deleted-branch">Recover a deleted branch<a class="headerlink" href="#recover-a-deleted-branch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find the commit the branch pointed to</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;checkout: moving from deleted-branch&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># or search by branch name</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>git<span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deleted-branch<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Recreate the branch</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>git<span class="w"> </span>branch<span class="w"> </span>recovered-branch<span class="w"> </span>&lt;sha-from-reflog&gt;
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>git<span class="w"> </span>switch<span class="w"> </span>recovered-branch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Find the commit the branch pointed to</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;checkout: moving from deleted-branch&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># or search by branch name</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>git<span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deleted-branch<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Recreate the branch</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>git<span class="w"> </span>branch<span class="w"> </span>recovered-branch<span class="w"> </span>&lt;sha-from-reflog&gt;
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>git<span class="w"> </span>switch<span class="w"> </span>recovered-branch
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>0a1f2c3 HEAD@{0}: checkout: moving from main to deleted-branch
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>5e7d8b9 HEAD@{1}: checkout: moving from deleted-branch to main
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>0a1f2c3 HEAD@{2}: commit: Add authentication module
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>7c4e9f1 HEAD@{3}: commit: Update dependencies
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>a2b3c4d HEAD@{4}: checkout: moving from deleted-branch to feature/auth
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>0a1f2c3 deleted-branch@{0}: commit: Add authentication module
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>5e7d8b9 deleted-branch@{1}: checkout: moving from main to deleted-branch
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>Created branch &#39;recovered-branch&#39; based on 0a1f2c3
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>Switched to branch &#39;recovered-branch&#39;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: your current branch 'deleted-branch' does not have any commits yet</code></strong> — Run <code>git reflog --all</code> instead of <code>git reflog</code> to search across all refs, not just HEAD.
+<strong><code>error: pathspec '0a1f2c3' did not match any file(s) known to git</code></strong> — Ensure you copied the full SHA from reflog output (at least 7 characters) and use it directly in <code>git branch recovered-branch &lt;sha&gt;</code> without quotes or extra whitespace.</p>
+</div>
 <h3 id="recover-a-dropped-stash">Recover a dropped stash<a class="headerlink" href="#recover-a-dropped-stash" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List unreachable commits (includes dropped stashes)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--unreachable<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>commit<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>xargs<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--merges<span class="w"> </span>--no-walk<span class="w"> </span>--oneline
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Apply a recovered stash by SHA</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>&lt;sha&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># List unreachable commits (includes dropped stashes)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--unreachable<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>commit<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>xargs<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--merges<span class="w"> </span>--no-walk<span class="w"> </span>--oneline
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Apply a recovered stash by SHA</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>&lt;sha&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>commit 3f8a2e1c9d7b4a6f5e2c1a9d8b7f6e5d4c3b2a1f
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>commit 7e5d4c3b2a1f9e8d7c6b5a4f3e2d1c0b9a8f7e6d
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>commit 2a1f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>commit 9d8b7f6e5d4c3b2a1f9e8d7c6b5a4f3e2d1c0b9
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>commit 5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>WIP on develop: 4f3e2d1c Merge pull request #847 from feature/auth-refactor
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>index 1a2b3c4d..5e6f7g8h 100644
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>--- a/src/auth.js
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>+++ b/src/auth.js
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>@@ -12,3 +12,7 @@ function validateToken(token) {
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>+  // Recovery successful
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: Not a valid object name</code></strong> — Verify the SHA exists in <code>git fsck --unreachable</code> output and copy it exactly without truncation.
+<strong><code>No stash entries found</code></strong> — Ensure you're using a commit SHA from the unreachable list, not a stash reference; use <code>git stash apply &lt;sha&gt;</code> only for stashes recovered via fsck.</p>
+</div>
 <h3 id="recover-staged-content-discarded-by-checkout">Recover staged content discarded by checkout<a class="headerlink" href="#recover-staged-content-discarded-by-checkout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># If content was staged (git add) before checkout:</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--lost-found
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ls<span class="w"> </span>.git/lost-found/other/<span class="w">   </span><span class="c1"># blobs that were staged but not committed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># If content was staged (git add) before checkout:</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--lost-found
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ls<span class="w"> </span>.git/lost-found/other/<span class="w">   </span><span class="c1"># blobs that were staged but not committed</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Checking object database for consistency...
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Checking commits...
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Checking trees...
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Checking blobs...
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Checking refs...
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>dangling blob 3a7f9e2c1b4d8f6a9e2c1b4d8f6a9e2c
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>dangling blob 5f2e8d1c9b4a7f6e3d2c1b0a9f8e7d6c
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>dangling blob 8c9b2a1f7e6d5c4b3a2f1e0d9c8b7a6f
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>ls: cannot access &#39;.git/lost-found/other/&#39;: No such file or directory
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ls: cannot access '.git/lost-found/other/': No such file or directory</code></strong> — Run <code>git fsck --lost-found</code> first to populate the lost-found directory, or check that you're in the root of a Git repository.
+<strong><code>fatal: Not a git repository (or any of the parent directories): .git</code></strong> — Navigate to the root directory of your Git repository before running these commands.</p>
+</div>
 <hr />
 <h2 id="step-7-collect-diagnostic-bundle">Step 7 — Collect diagnostic bundle<a class="headerlink" href="#step-7-collect-diagnostic-bundle" title="Permanent link">&para;</a></h2>
 <p>Run this script from within the affected repository. Review the output before sharing — it sanitises secrets but verify manually.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="ch">#!/usr/bin/env bash</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># collect-git-diagnostics.sh — run from within the affected repository</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">OUTPUT_FILE</span><span class="o">=</span><span class="s2">&quot;git-diagnostics-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">.txt&quot;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="o">{</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Git Diagnostics ===&quot;</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collected: </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Git Version ---&quot;</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>git<span class="w"> </span>version
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Config (sanitized) ---&quot;</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;password|secret|token|key&quot;</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Remote URLs ---&quot;</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">  </span>git<span class="w"> </span>remote<span class="w"> </span>-v
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Branch Status ---&quot;</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">  </span>git<span class="w"> </span>branch<span class="w"> </span>-vv
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Last 10 Reflog Entries ---&quot;</span>
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">  </span>git<span class="w"> </span>reflog<span class="w"> </span>-10
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>
-<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Object Count ---&quot;</span>
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">  </span>git<span class="w"> </span>count-objects<span class="w"> </span>-vH
-<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
-<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- SSH Config ---&quot;</span>
-<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="w">  </span>ssh<span class="w"> </span>-G<span class="w"> </span>git@github.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(hostname|user|port|identityfile)&quot;</span>
-<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>
-<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- SSH Keys in Agent ---&quot;</span>
-<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="w">  </span>ssh-add<span class="w"> </span>-l<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>
-<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Network: github.com ---&quot;</span>
-<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="w">  </span>curl<span class="w"> </span>-sv<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://github.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
-<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>
-<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>
-<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics written to: </span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review before sharing to ensure no secrets are present.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># collect-git-diagnostics.sh — run from within the affected repository</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">OUTPUT_FILE</span><span class="o">=</span><span class="s2">&quot;git-diagnostics-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="o">{</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Git Diagnostics ===&quot;</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collected: </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Git Version ---&quot;</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span>git<span class="w"> </span>version
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Config (sanitized) ---&quot;</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">  </span>git<span class="w"> </span>config<span class="w"> </span>--list<span class="w"> </span>--show-origin<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;password|secret|token|key&quot;</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Remote URLs ---&quot;</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="w">  </span>git<span class="w"> </span>remote<span class="w"> </span>-v
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Branch Status ---&quot;</span>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="w">  </span>git<span class="w"> </span>branch<span class="w"> </span>-vv
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Last 10 Reflog Entries ---&quot;</span>
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a><span class="w">  </span>git<span class="w"> </span>reflog<span class="w"> </span>-10
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Object Count ---&quot;</span>
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a><span class="w">  </span>git<span class="w"> </span>count-objects<span class="w"> </span>-vH
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- SSH Config ---&quot;</span>
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a><span class="w">  </span>ssh<span class="w"> </span>-G<span class="w"> </span>git@github.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(hostname|user|port|identityfile)&quot;</span>
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- SSH Keys in Agent ---&quot;</span>
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a><span class="w">  </span>ssh-add<span class="w"> </span>-l<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Network: github.com ---&quot;</span>
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a><span class="w">  </span>curl<span class="w"> </span>-sv<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://github.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics written to: </span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review before sharing to ensure no secrets are present.&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>=== Git Diagnostics ===
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Collected: 2024-01-15 14:32:47 UTC
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>--- Git Version ---
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>git version 2.43.0
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>--- Config (sanitized) ---
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>file:/etc/gitconfig core.editor=vim
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>file:/home/devops/.gitconfig    user.name=DevOps Team
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>file:/home/devops/.gitconfig    user.email=devops@company.internal
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>file:.git/config    remote.origin.url=git@github.com:company/repo.git
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>file:.git/config    core.bare=false
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>--- Remote URLs ---
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>origin  git@github.com:company/repo.git (fetch)
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>origin  git@github.com:company/repo.git (push)
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>--- Branch Status ---
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>* main                    a7f3e2c [origin/main] Merge pull request #847
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>  develop                 c1b9d44 [origin/develop: ahead 3] Update CI pipeline
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>  hotfix/sec-patch        8e2f1a9 [origin/hotfix/sec-patch] Security patch for CVE-2024-1234
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>--- Last 10 Reflog Entries ---
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>a7f3e2c HEAD@{0}: pull: Fast-forward
+<a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a>c1b9d44 HEAD@{1}: checkout: moving from develop to main
+<a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a>8e2f1a9 HEAD@{2}: rebase -i (finish): returning to refs/heads/develop
+<a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a>...
+<a id="__codelineno-22-28" name="__codelineno-22-28" href="#__codelineno-22-28"></a>
+<a id="__codelineno-22-29" name="__codelineno-22-29" href="#__codelineno-22-29"></a>--- Object Count ---
+<a id="__codelineno-22-30" name="__codelineno-22-30" href="#__codelineno-22-30"></a>count: 4521
+<a id="__codelineno-22-31" name="__codelineno-22-31" href="#__codelineno-22-31"></a>size: 18.42 MiB
+<a id="__codelineno-22-32" name="__codelineno-22-32" href="#__codelineno-22-32"></a>in-pack: 4156
+<a id="__codelineno-22-33" name="__codelineno-22-33" href="#__codelineno-22-33"></a>packs: 2
+<a id="__codelineno-22-34" name="__codelineno-22-34" href="#__codelineno-22-34"></a>size-pack: 17.89 MiB
+<a id="__codelineno-22-35" name="__codelineno-22-35" href="#__codelineno-22-35"></a>prune-packable: 0
+<a id="__codelineno-22-36" name="__codelineno-22-36" href="#__codelineno-22-36"></a>garbage: 0
+<a id="__codelineno-22-37" name="__codelineno-22-37" href="#__codelineno-22-37"></a>size-garbage: 0 bytes
+<a id="__codelineno-22-38" name="__codelineno-22-38" href="#__codelineno-22-38"></a>
+<a id="__codelineno-22-39" name="__codelineno-22-39" href="#__codelineno-22-39"></a>--- SSH Config ---
+<a id="__codelineno-22-40" name="__codelineno-22-40" href="#__codelineno-22-40"></a>hostname github.com
+<a id="__codelineno-22-41" name="__codelineno-22-41" href="#__codelineno-22-41"></a>user git
+<a id="__codelineno-22-42" name="__codelineno-22-42" href="#__codelineno-22-42"></a>port 22
+<a id="__codelineno-22-43" name="__codelineno-22-43" href="#__codelineno-22-43"></a>identityfile /home/devops/.ssh/id_rsa
+<a id="__codelineno-22-44" name="__codelineno-22-44" href="#__codelineno-22-44"></a>identityfile /home/devops/.ssh/id_ed25519
+<a id="__codelineno-22-45" name="__codelineno-22-45" href="#__codelineno-22-45"></a>
+<a id="__codelineno-22-46" name="__codelineno-22-46" href="#__codelineno-22-46"></a>--- SSH Keys in Agent ---
+<a id="__codelineno-22-47" name="__codelineno-22-47" href="#__codelineno-22-47"></a>2048 SHA256:nThgk45Cby5aj8FD3aPEb7W8osSAkNRy2K1Xj9mK4vQ /home/devops/.ssh/id_rsa (RSA)
+<a id="__codelineno-22-48" name="__codelineno-22-48" href="#__codelineno-22-48"></a>256 SHA256:jL8nM2pQ9vX3yZ1aBcDeFgHiJkLmNoPqRsTuVwXyZaB /home/devops/.ssh/id_ed25519 (ED25519)
+<a id="__codelineno-22-49" name="__codelineno-22-49" href="#__codelineno-22-49"></a>
+<a id="__codelineno-22-50" name="__codelineno-22-50" href="#__codelineno-22-50"></a>--- Network: github.com ---
+<a id="__codelineno-22-51" name="__codelineno-22-51" href="#__codelineno-22-51"></a>*   Trying 140.82.113.3:443...
+<a id="__codelineno-22-52" name="__codelineno-22-52" href="#__codelineno-22-52"></a>* Connected to github.com (140.82.113.3) port 443 (#0)
+<a id="__codelineno-22-53" name="__codelineno-22-53" href="#__codelineno-22-53"></a>* TLS 1.3 connection using TLS_AES_128_GCM_SHA256
+<a id="__codelineno-22-54" name="__codelineno-22-54" href="#__codelineno-22-54"></a>* Server certificate: sha256/WoiWtaLaL7z1yP8IqJ4xwQa307gCHMx3V8zI2fV4ucU=
+<a id="__codelineno-22-55" name="__codelineno-22-55" href="#__codelineno-22-55"></a>HTTP/2 200
+<a id="__codelineno-22-56" name="__codelineno-22-56" href="#__codelineno-22-56"></a>...
+<a id="__codelineno-22-57" name="__codelineno-22-57" href="#__codelineno-22-57"></a>
+<a id="__codelineno-22-58" name="__codelineno-22-58" href="#__codelineno-22-58"></a>Diagnostics written to: git-diagnostics-20240115-143247.txt
+<a id="__codelineno-22-59" name="__codelineno-22-59" href="#__codelineno-22-59"></a>Review before sharing to ensure no secrets are present.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: not a git repository (or any of the parent directories): .git</code></strong> — Ensure the script is</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -7880,7 +8233,7 @@ Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-l
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

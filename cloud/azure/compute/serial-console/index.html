@@ -8660,54 +8660,96 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;consoleLogBlobUri&quot;: &quot;https://bootdiagstg12345.blob.core.windows.net/bootdiagnostics-myvm/myvm.serialconsole.log?sv=2021-06-08&amp;sig=AbCdEfGhIjKlMnOpQrStUvWxYz1234567890%3D&amp;se=2024-01-15T18%3A30%3A00Z&amp;sr=b&amp;sp=r&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;serialConsoleLogBlobUri&quot;: &quot;https://bootdiagstg12345.blob.core.windows.net/bootdiagnostics-myvm/myvm.serialconsole.log?sv=2021-06-08&amp;sig=XyZ9876543210AbCdEfGhIjKlMnOpQrStUvWx%3D&amp;se=2024-01-15T18%3A30%3A00Z&amp;sr=b&amp;sp=r&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the VM name and resource group name are correct and the VM exists in that region.
+<strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;vm-name&gt;'.</code></strong> — Ensure your Azure account has at least Reader role on the VM or resource group.
+<strong><code>InvalidParameter: Boot diagnostics is not enabled on this VM.</code></strong> — Enable boot diagnostics on the VM by running <code>az vm boot-diagnostics enable --resource-group &lt;rg&gt; --name &lt;vm-name&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="linux-serial-console">Linux Serial Console<a class="headerlink" href="#linux-serial-console" title="Permanent link">&para;</a></h2>
 <p>On Linux VMs, the serial console presents a login prompt on <code>ttyS0</code>. Common use cases:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After logging in via the serial console (in-console commands):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check filesystem for errors (run from single-user mode)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>fsck<span class="w"> </span>-y<span class="w"> </span>/dev/sda1
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Edit fstab if the VM won&#39;t boot due to bad mount entry</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>mount<span class="w"> </span>-o<span class="w"> </span>remount,rw<span class="w"> </span>/
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vi<span class="w"> </span>/etc/fstab
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Unlock an SSH user (if locked out)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>passwd<span class="w"> </span>azureuser
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check network configuration</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>cat<span class="w"> </span>/etc/netplan/*.yaml
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Restart networking</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-networkd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After logging in via the serial console (in-console commands):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check filesystem for errors (run from single-user mode)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>fsck<span class="w"> </span>-y<span class="w"> </span>/dev/sda1
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Edit fstab if the VM won&#39;t boot due to bad mount entry</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>mount<span class="w"> </span>-o<span class="w"> </span>remount,rw<span class="w"> </span>/
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vi<span class="w"> </span>/etc/fstab
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unlock an SSH user (if locked out)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>passwd<span class="w"> </span>azureuser
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check network configuration</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>cat<span class="w"> </span>/etc/netplan/*.yaml
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Restart networking</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-networkd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fsck from util-linux 2.37.2
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>e2fsck 1.46.2 (28-Feb-2021)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/dev/sda1: clean, 45821/524288 files, 892156/2097152 blocks
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>(no output — command completes silently)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>New password: 
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Retype new password: 
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>passwd: password updated successfully
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>1: lo: &lt;LOOPBACK,UP,RUNNING&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    inet 127.0.0.1/8 scope host lo
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2: eth0: &lt;BROADCAST,MULTICAST,UP,RUNNING&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    link/ether 60:45:bd:a2:c1:f8 brd ff:ff:ff:ff:ff:ff
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    inet 10.0.1.42/24 brd 10.0.1.255 scope global eth0
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>network:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  version: 2
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  ethernets:
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    eth0:
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      dhcp4: true
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fsck: /dev/sda1 is mounted</code></strong> — Run fsck only in single-user mode or from a recovery environment; reboot into single-user mode with <code>systemctl rescue</code>.
+<strong><code>E325: ATTENTION: Found a swap file by the name "/etc/fstab.swp"</code></strong> — Delete the swap file with <code>rm /etc/fstab.swp</code> before editing, or use <code>vi -r</code> to recover unsaved changes.
+<strong><code>Job for systemd-networkd.service failed because the control process exited with error code</code></strong> — Check for syntax errors in <code>/etc/netplan/*.yaml</code> with <code>netplan validate</code> and correct the YAML formatting.</p>
+</div>
 <p>To access GRUB on Linux via serial console, the VM must have <code>console=ttyS0</code> in its kernel command line. Most Azure marketplace images include this by default.</p>
 <hr />
 <h2 id="windows-serial-console-sac">Windows Serial Console — SAC<a class="headerlink" href="#windows-serial-console-sac" title="Permanent link">&para;</a></h2>
 <p>On Windows VMs, the Serial Console connects to the Special Administration Console (SAC). SAC requires EMS (Emergency Management Services) to be enabled.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># From within SAC (entered after connecting via portal Serial Console):
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a># List running processes
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>cmd
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a># After &#39;cmd&#39;, switch to the command prompt channel
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ch -si 1
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a># Inside the SAC cmd channel:
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a># Check disk
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>chkdsk C: /f
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a># View event logs
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>wevtutil qe System /c:20 /f:text
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a># Reset admin password
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>net user Administrator &lt;NewPassword&gt;
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a># Check network
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>ipconfig /all
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>netsh advfirewall show allprofiles
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># From within SAC (entered after connecting via portal Serial Console):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a># List running processes
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>cmd
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a># After &#39;cmd&#39;, switch to the command prompt channel
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ch -si 1
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a># Inside the SAC cmd channel:
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a># Check disk
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>chkdsk C: /f
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a># View event logs
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>wevtutil qe System /c:20 /f:text
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a># Reset admin password
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>net user Administrator &lt;NewPassword&gt;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a># Check network
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>ipconfig /all
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>netsh advfirewall show allprofiles
 </code></pre></div>
 <table>
 <thead>
@@ -8745,13 +8787,34 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
 </table>
 <hr />
 <h2 id="enabling-sac-on-windows-if-not-pre-enabled">Enabling SAC on Windows (if not pre-enabled)<a class="headerlink" href="#enabling-sac-on-windows-if-not-pre-enabled" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run via az vm run-command if the VM is still reachable via RDP/PowerShell</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>vm<span class="w"> </span>run-command<span class="w"> </span>invoke<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;win-vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--command-id<span class="w"> </span>RunPowerShellScript<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--scripts<span class="w"> </span><span class="s2">&quot;bcdedit /ems {current} on; bcdedit /emssettings EMSPORT:1 EMSBAUDRATE:115200; bcdedit /bootems {current} on&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run via az vm run-command if the VM is still reachable via RDP/PowerShell</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>vm<span class="w"> </span>run-command<span class="w"> </span>invoke<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;win-vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--command-id<span class="w"> </span>RunPowerShellScript<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--scripts<span class="w"> </span><span class="s2">&quot;bcdedit /ems {current} on; bcdedit /emssettings EMSPORT:1 EMSBAUDRATE:115200; bcdedit /bootems {current} on&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;value&quot;: [
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    {
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>      &quot;code&quot;: &quot;ProvisioningState/succeeded&quot;,
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>      &quot;displayStatus&quot;: &quot;Provision succeeded&quot;,
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>      &quot;message&quot;: &quot;The operation completed successfully.&quot;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    },
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    {
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>      &quot;code&quot;: &quot;ComponentStatus/stdout/succeeded&quot;,
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>      &quot;displayStatus&quot;: &quot;Stdout succeeded&quot;,
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>      &quot;message&quot;: &quot;The operation completed successfully.\nThe boot configuration has been successfully modified.\nEMS settings configured for port 1 at 115200 baud.\nBoot EMS enabled for current boot entry.&quot;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    }
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  ]
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'</code></strong> — Ensure your user account has the Contributor or Virtual Machine Contributor role on the resource group or VM.
+<strong><code>The resource group '&lt;rg&gt;' could not be found.</code></strong> — Verify the resource group name is correct and exists in your current Azure subscription using <code>az group list</code>.
+<strong><code>The virtual machine '&lt;win-vm-name&gt;' could not be found in resource group '&lt;rg&gt;'.</code></strong> — Confirm the VM name is spelled correctly and belongs to the specified resource group using <code>az vm list --resource-group &lt;rg&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="troubleshooting-common-scenarios">Troubleshooting Common Scenarios<a class="headerlink" href="#troubleshooting-common-scenarios" title="Permanent link">&para;</a></h2>
 <table>
@@ -8788,11 +8851,20 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># After fixing the issue remotely, force VM restart</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>vm<span class="w"> </span>restart<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># After fixing the issue remotely, force VM restart</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>vm<span class="w"> </span>restart<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Command group &#39;vm&#39; is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>(no output — command completes silently)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>VM restart initiated successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the resource group name and VM name are correct using <code>az vm list --resource-group &lt;rg&gt;</code>.
+<strong><code>AuthorizationFailed : The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/restart/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;vm-name&gt;'.</code></strong> — Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group or VM.</p>
+</div>
 
 
 
@@ -8815,7 +8887,7 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

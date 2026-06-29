@@ -8899,34 +8899,92 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify banner</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span>login-banner
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Login banner set successfully.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>login-banner: AUTHORISED ACCESS ONLY. This system is monitored. Unauthorised access is prohibited and will be prosecuted.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>banner-enabled: true
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>banner-display-timeout: 30
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>adminaccess: command not found</code></strong> — Ensure you are logged into the Data Domain management interface (via SSH to the system's management IP) or use the correct CLI tool for your DD OS version.
+<strong><code>Error: Login banner exceeds maximum length of 256 characters</code></strong> — Reduce the banner text to 256 characters or fewer, including spaces and punctuation.</p>
+</div>
 <h3 id="protocol-restrictions">Protocol Restrictions<a class="headerlink" href="#protocol-restrictions" title="Permanent link">&para;</a></h3>
 <p>Disable protocols that are not in use on the specific appliance. An unused protocol is an unnecessary attack surface.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check which protocols are currently enabled</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ddboost<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nfs<span class="w"> </span>status
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cifs<span class="w"> </span>show
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vtl<span class="w"> </span>status
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Disable CIFS if not used</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cifs<span class="w"> </span>disable
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Disable VTL if not used</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vtl<span class="w"> </span>disable
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Disable NFS if DDBoost is the only access method</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nfs<span class="w"> </span>disable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check which protocols are currently enabled</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nfs<span class="w"> </span>status
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>cifs<span class="w"> </span>show
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disable CIFS if not used</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cifs<span class="w"> </span>disable
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Disable VTL if not used</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vtl<span class="w"> </span>disable
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Disable NFS if DDBoost is the only access method</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>nfs<span class="w"> </span>disable
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>DDBoost Status: ENABLED
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Version: 7.2.1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Active Sessions: 3
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Throughput: 2.4 GB/s
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>NFS Status: ENABLED
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Version: NFSv3, NFSv4
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Active Mounts: 2
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Exports: 5
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>CIFS Status: ENABLED
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Version: SMB 3.1.1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Active Sessions: 0
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Shares: 3
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>VTL Status: ENABLED
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Virtual Tape Libraries: 2
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Virtual Tapes: 847
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Active Jobs: 1
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>CIFS disabled successfully
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>VTL disabled successfully
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>NFS disabled successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot disable NFS - active mount sessions detected (2 sessions)</code></strong> — Disconnect all NFS clients before disabling the protocol with <code>nfs disconnect all</code> or wait for sessions to complete.
+<strong><code>Error: CIFS disable failed - operation not permitted (insufficient privileges)</code></strong> — Ensure you are logged in with administrative credentials or use <code>sudo</code> if required by your system configuration.</p>
+</div>
 <p>Only disable protocols after confirming with backup application teams that no backup jobs depend on them.</p>
 <h3 id="network-access-restrictions">Network Access Restrictions<a class="headerlink" href="#network-access-restrictions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict management access to specific subnets</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>adminaccess<span class="w"> </span>add<span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;mgmt-subnet&gt;/&lt;prefix&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show current access list</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>adminaccess<span class="w"> </span>show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify management interface is on a dedicated management VLAN</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>net<span class="w"> </span>show<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vlan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restrict management access to specific subnets</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>adminaccess<span class="w"> </span>add<span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;mgmt-subnet&gt;/&lt;prefix&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show current access list</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>adminaccess<span class="w"> </span>show
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify management interface is on a dedicated management VLAN</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>net<span class="w"> </span>show<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vlan
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>adminaccess show
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Allowed hosts:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  10.50.0.0/24
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  10.51.0.0/24
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  192.168.100.0/25
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>net show config | grep -i vlan
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Management VLAN ID: 100
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Data VLAN ID: 200
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Replication VLAN ID: 201
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Management interface: eth0 (VLAN 100, 10.50.10.45/24)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>adminaccess: invalid subnet format</code></strong> — Ensure the subnet is specified in CIDR notation (e.g., 10.50.0.0/24) with a valid prefix length between /1 and /32.
+<strong><code>Error: Management interface not on dedicated VLAN</code></strong> — Configure the management interface on a separate VLAN from data traffic using <code>net config mgmt-vlan &lt;vlan-id&gt;</code>.</p>
+</div>
 <p><strong>Network architecture recommendations:</strong></p>
 <table>
 <thead>
@@ -8961,19 +9019,46 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 <hr />
 <h2 id="audit-logging-and-syslog">Audit Logging and Syslog<a class="headerlink" href="#audit-logging-and-syslog" title="Permanent link">&para;</a></h2>
 <p>All administrative actions must be logged and forwarded to a centralised SIEM. The audit log alone is insufficient — DD local logs can be modified if the system is compromised.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure syslog forwarding to centralised log collector</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;<span class="w"> </span>port<span class="w"> </span><span class="m">514</span><span class="w"> </span>protocol<span class="w"> </span>udp<span class="w">  </span><span class="c1"># or TCP for reliability</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify syslog is configured</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>log<span class="w"> </span>host<span class="w"> </span>show
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Test syslog delivery</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>log<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;syslog-server-ip&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># View the local audit log</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>log<span class="w"> </span>view<span class="w"> </span>audit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure syslog forwarding to centralised log collector</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;<span class="w"> </span>port<span class="w"> </span><span class="m">514</span><span class="w"> </span>protocol<span class="w"> </span>udp<span class="w">  </span><span class="c1"># or TCP for reliability</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify syslog is configured</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Test syslog delivery</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>log<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># View the local audit log</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>log<span class="w"> </span>view<span class="w"> </span>audit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Log host added successfully.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Log host added successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Log Hosts:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Host: 192.168.100.50
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Port: 514
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    Protocol: udp
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Host: 192.168.100.50
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    Port: 514
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    Protocol: tcp
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Testing syslog delivery to 192.168.100.50:514...
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Test message sent successfully. Verify receipt on syslog server.
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Audit Log (last 20 entries):
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>2024-01-15 14:32:18 +00:00 | admin | login | success | 192.168.1.100
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2024-01-15 14:31:45 +00:00 | system | config_change | success | local
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-15 14:30:12 +00:00 | admin | replication_enable | success | local
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>2024-01-15 14:29:33 +00:00 | backup_user | snapshot_create | success | 192.168.1.105
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>2024-01-15 14:28:01 +00:00 | admin | ntp_sync | success | local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid IP address format</code></strong> — Verify the syslog server IP is in valid dotted-decimal notation (e.g., 192.168.100.50).
+<strong><code>Error: Connection refused on port 514</code></strong> — Confirm the syslog server is running and listening on the specified port, and that network connectivity exists between Data Domain and the syslog server.
+<strong><code>Error: Log host already exists</code></strong> — Remove the duplicate entry using <code>log host remove &lt;syslog-server-ip&gt;</code> before re-adding it with different parameters.</p>
+</div>
 <h3 id="audit-log-content">Audit Log Content<a class="headerlink" href="#audit-log-content" title="Permanent link">&para;</a></h3>
 <p>The DDOS audit log captures:
 - User logins and logouts (including failed login attempts)
@@ -8986,63 +9071,163 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 <hr />
 <h2 id="snmp-security">SNMP Security<a class="headerlink" href="#snmp-security" title="Permanent link">&para;</a></h2>
 <p>If SNMP is used for monitoring, restrict it to SNMPv3 where possible. SNMPv2c uses community strings transmitted in plaintext.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMPv3 user (preferred)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmp<span class="w"> </span>add<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>auth-protocol<span class="w"> </span>sha<span class="w"> </span>auth-password<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>priv-protocol<span class="w"> </span>aes<span class="w"> </span>priv-password<span class="w"> </span>&lt;priv-pass&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Add trap destination with SNMPv3</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>v3<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># If SNMPv2c is required, use a non-default community string</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>community<span class="w"> </span>&lt;non-default-community&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Restrict SNMP access to the monitoring server IP only</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;monitor-server-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Configure SNMPv3 user (preferred)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snmp<span class="w"> </span>add<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>auth-protocol<span class="w"> </span>sha<span class="w"> </span>auth-password<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>priv-protocol<span class="w"> </span>aes<span class="w"> </span>priv-password<span class="w"> </span>&lt;priv-pass&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Add trap destination with SNMPv3</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>v3<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># If SNMPv2c is required, use a non-default community string</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>community<span class="w"> </span>&lt;non-default-community&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Restrict SNMP access to the monitoring server IP only</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;monitor-server-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SNMPv3 user &#39;monitoring_user&#39; created successfully
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Trap destination added: 192.168.45.12 (SNMPv3)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Trap destination added: 192.168.45.12 (SNMPv2c)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>SNMP Configuration:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Engine ID: 800007E5-03-6B-4A-2C-9F-E1-D2-A8
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  SNMPv3 Users:
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    monitoring_user (auth: SHA, priv: AES)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Trap Destinations:
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    192.168.45.12 (v3, user: monitoring_user)
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    192.168.45.12 (v2c, community: M0n1t0r!ng)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Allowed Hosts: 192.168.45.12/32
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>SNMP access restricted to: 192.168.45.12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'monitoring_user' already exists</code></strong> — Delete the existing user with <code>snmp remove user &lt;username&gt;</code> before recreating it.
+<strong><code>Error: Invalid IP address '&lt;monitor-server-ip&gt;'</code></strong> — Verify the IP address format is valid (e.g., 192.168.45.12) and rerun the command.
+<strong><code>Error: Trap destination already exists for host &lt;monitor-host&gt;</code></strong> — Use <code>snmp remove trapdest &lt;monitor-host&gt;</code> to delete the duplicate before adding a new one.</p>
+</div>
 <p>Disable SNMP entirely if the monitoring platform supports REST API polling instead:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snmp<span class="w"> </span>disable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>snmp<span class="w"> </span>disable
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>snmp: command not found</code></strong> — Verify you are logged into the Data Domain management interface (SSH/Telnet) and not a standard Linux shell; use <code>sysconfig</code> or <code>ndu</code> commands instead.
+<strong><code>Permission denied</code></strong> — Ensure your user account has administrative privileges; log in as <code>sysadmin</code> or a user with root-equivalent Data Domain permissions.</p>
+</div>
 <hr />
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
 <p>Replace self-signed certificates with CA-signed certificates for all management interfaces.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current certificate</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Generate a CSR</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span>common-name<span class="w"> </span>&lt;dd-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>org<span class="w"> </span><span class="s2">&quot;&lt;Organisation Name&gt;&quot;</span><span class="w"> </span>country<span class="w"> </span>&lt;CC&gt;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Submit the CSR to your internal CA and receive the signed certificate</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Install the signed certificate</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>pem<span class="w"> </span>&lt;path-to-signed-cert.pem&gt;
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Restart the management service to apply the new certificate</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># (Note: briefly interrupts System Manager GUI access)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>adminaccess<span class="w"> </span>restart<span class="w"> </span>https
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Verify the new certificate is in place</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check current certificate</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Generate a CSR</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span>common-name<span class="w"> </span>&lt;dd-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>org<span class="w"> </span><span class="s2">&quot;&lt;Organisation Name&gt;&quot;</span><span class="w"> </span>country<span class="w"> </span>&lt;CC&gt;
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Submit the CSR to your internal CA and receive the signed certificate</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Install the signed certificate</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>pem<span class="w"> </span>&lt;path-to-signed-cert.pem&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Restart the management service to apply the new certificate</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># (Note: briefly interrupts System Manager GUI access)</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>adminaccess<span class="w"> </span>restart<span class="w"> </span>https
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># Verify the new certificate is in place</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Current Certificate Information:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  Subject: CN=dd-backup-01.corp.local,O=Acme Corp,C=US
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  Issuer: CN=Acme Internal CA,O=Acme Corp,C=US
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  Valid From: 2023-11-15 10:22:33 UTC
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  Valid Until: 2025-11-15 10:22:33 UTC
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  Fingerprint (SHA256): a7:b2:c4:d9:e1:f3:2a:5b:6c:7d:8e:9f:0a:1b:2c:3d:4e:5f:6a:7b
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Generating Certificate Signing Request...
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>CSR generated successfully.
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>CSR saved to: /var/tmp/dd-backup-01.corp.local.csr
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>[After CA signing and certificate receipt]
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Installing certificate from /opt/certs/dd-backup-01.corp.local.pem...
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Certificate installed successfully.
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Fingerprint (SHA256): b8:c3:d5:e0:f2:3b:4c:5d:6e:7f:8a:9b:0c:1d:2e:3f:4a:5b:6c:7d
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Restarting HTTPS service...
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>HTTPS service restarted successfully.
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Management service will be briefly unavailable.
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Current Certificate Information:
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>  Subject: CN=dd-backup-01.corp.local,O=Acme Corp,C=US
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>  Issuer: CN=Acme Internal CA,O=Acme Corp,C=US
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  Valid From: 2024-12-10 14:35:22 UTC
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  Valid Until: 2026-12-10 14:35:22 UTC
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>  Fingerprint (SHA256): b8:c3:d5:e0:f2:3b:4c:5d:6e:7f:8a:9b:0c:1d:2e:3f:4a:5b:6c:7d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at &lt;path-to-signed-cert.pem&gt;</code></strong> — Verify the certificate file path is correct and the file exists with read permissions for the admin user.
+<strong><code>Error: Certificate validation failed - certificate does not match CSR</code></strong> — Ensure the signed certificate from your CA matches the CSR that was generated (check the common name and organization fields).
+<strong><code>Error: HTTPS service restart failed - certificate already in use</code></strong> — Wait 30 seconds for the previous HTTPS session to fully close, then retry the restart command.</p>
+</div>
 <hr />
 <h2 id="encryption-hardening">Encryption Hardening<a class="headerlink" href="#encryption-hardening" title="Permanent link">&para;</a></h2>
 <p>See the <a href="encryption/index.md">Encryption</a> page for full D@RE configuration. Key hardening requirements:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm D@RE is enabled</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>encryption<span class="w"> </span>status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm FIPS mode is active</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Confirm key manager is not using the default internal key without a backup</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Confirm D@RE is enabled</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Confirm FIPS mode is active</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Confirm key manager is not using the default internal key without a backup</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Encryption Status: Enabled
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Encryption Algorithm: AES-256
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Encryption Mode: D@RE (Data at Rest Encryption)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Key Manager: Active
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>FIPS Mode: Enabled
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Last Key Rotation: 2024-01-15 09:32:14 UTC
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>FIPS Mode: Enabled
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Encryption Configuration:
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  D@RE Status: Enabled
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  Algorithm: AES-256
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  Key Manager Type: External (Thales HSM)
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  HSM Connection: Active
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  Internal Backup Key: Configured
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  Key Rotation Policy: 90 days
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  Last Rotation: 2024-01-15 09:32:14 UTC
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  Next Rotation: 2024-04-15 09:32:14 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>encryption: command not found</code></strong> — Verify you are logged into the Data Domain management interface (SSH to the system's management IP) and have appropriate admin privileges.
+<strong><code>FIPS Mode: Disabled</code></strong> — Enable FIPS mode via the Data Domain web UI under System &gt; Security &gt; FIPS, or contact your security team to verify compliance requirements.
+<strong><code>Key Manager Type: Internal (No Backup)</code></strong> — Configure an external key manager (HSM) or enable encrypted backup of the internal key immediately to meet security policy requirements.</p>
+</div>
 <p><strong>Internal key manager warning:</strong> If using the internal key manager, the encryption keys are stored on the DD appliance itself. If the appliance is destroyed in a disaster without a key backup, encrypted data cannot be recovered. Export and securely vault the internal key backup as part of the commissioning process:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Export the internal key backup (store in a secure offline vault)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>encryption<span class="w"> </span>embedded-key-manager<span class="w"> </span>export-key-backup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Export the internal key backup (store in a secure offline vault)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>encryption<span class="w"> </span>embedded-key-manager<span class="w"> </span>export-key-backup
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Exporting embedded key manager backup...
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Backup file: /var/log/datasec/ekm_backup_20240115_143022.enc
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Backup size: 2.4 MB
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Checksum (SHA-256): a7f3e9c2b1d4f8e6a9c3b2e1f7d4a9c2b1e3f6a9d2c5e8b1f4a7d0c3e6f9a2
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Backup timestamp: 2024-01-15T14:30:22Z
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Status: SUCCESS
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Key backup exported successfully. Store offline in secure location.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Embedded Key Manager not initialized</code></strong> — Run <code>encryption embedded-key-manager init</code> to initialize the EKM before exporting backups.
+<strong><code>Error: Insufficient permissions to export key backup</code></strong> — Ensure your user account has sysadmin or security-admin role privileges.</p>
+</div>
 <hr />
 <h2 id="firmware-and-software-currency">Firmware and Software Currency<a class="headerlink" href="#firmware-and-software-currency" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9050,12 +9235,25 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 <li>Apply security patches within 30 days of release (or per your change management policy)</li>
 <li>Subscribe to Dell Security Advisories for Data Domain (available via Dell Support)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check current DDOS version</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>system<span class="w"> </span>show<span class="w"> </span>version
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check for available updates in System Manager</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># System Manager → Maintenance → Upgrade</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check current DDOS version</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>system<span class="w"> </span>show<span class="w"> </span>version
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Check for available updates in System Manager</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># System Manager → Maintenance → Upgrade</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Data Domain OS 7.15.1.10
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Build: 7.15.1.10-649387
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>System Serial Number: DD9300-123456789
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>System Model: DD9300
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Installed Memory: 368 GB
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>System Uptime: 45 days 12 hours 23 minutes
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Last Configuration Backup: 2024-01-15 14:32:15 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>system: command not found</code></strong> — Ensure you are connected to the Data Domain CLI (SSH to the management IP) rather than a local shell.
+<strong><code>Permission denied</code></strong> — Verify your user account has administrative privileges; contact your Data Domain administrator to grant CLI access.</p>
+</div>
 <hr />
 <h2 id="vulnerability-scanning-and-penetration-testing">Vulnerability Scanning and Penetration Testing<a class="headerlink" href="#vulnerability-scanning-and-penetration-testing" title="Permanent link">&para;</a></h2>
 <p>Data Domain management interfaces should be included in regular vulnerability scans. Key considerations:</p>
@@ -9068,31 +9266,130 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 <hr />
 <h2 id="hardening-validation-commands-summary">Hardening Validation — Commands Summary<a class="headerlink" href="#hardening-validation-commands-summary" title="Permanent link">&para;</a></h2>
 <p>Run these commands after hardening to document the baseline state. Save the output as evidence for security audits.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Access controls and authentication</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>adminaccess<span class="w"> </span>show
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>user<span class="w"> </span>list
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>auth<span class="w"> </span>show
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Protocol status</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>nfs<span class="w"> </span>status
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>cifs<span class="w"> </span>show
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>ddboost<span class="w"> </span>status
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>vtl<span class="w"> </span>status
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Encryption</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>encryption<span class="w"> </span>status
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Logging</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>log<span class="w"> </span>host<span class="w"> </span>show
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="c1"># Network access</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>allowed
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>net<span class="w"> </span>show<span class="w"> </span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Access controls and authentication</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>adminaccess<span class="w"> </span>show
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>user<span class="w"> </span>list
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>auth<span class="w"> </span>show
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Protocol status</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>nfs<span class="w"> </span>status
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>cifs<span class="w"> </span>show
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1"># Encryption</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="c1"># Logging</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="c1"># Network access</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>allowed
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>net<span class="w"> </span>show<span class="w"> </span>all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Admin Access Configuration
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>=========================
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>adminaccess: enabled
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>adminaccess timeout: 30 minutes
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>adminaccess lockout threshold: 5 attempts
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>adminaccess lockout duration: 15 minutes
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Users
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>=====
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>admin                 enabled    local
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>backup_user           enabled    local
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>monitoring_user       enabled    local
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>replication_user      enabled    local
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>Password Policy
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>===============
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>minimum length: 8
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>complexity required: yes
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>expiration days: 90
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>history count: 5
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>lockout threshold: 5
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>Authentication
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>==============
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>auth method: local
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>radius enabled: no
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>ldap enabled: yes
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>ldap server: ldap.corp.local
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>ldap port: 389
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>Protocol Status
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>===============
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>NFS Status: enabled
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>  version: NFSv3, NFSv4
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>  active connections: 12
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>CIFS Configuration
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>==================
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>cifs enabled: yes
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>cifs version: 3.1.1
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>active sessions: 8
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>DDBoost Status
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>==============
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>ddboost enabled: yes
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>ddboost version: 7.2.0.0
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>active connections: 3
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>
+<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>VTL Status
+<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>==========
+<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>vtl enabled: no
+<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>vtl cartridges: 0
+<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>
+<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>SNMP Configuration
+<a id="__codelineno-21-55" name="__codelineno-21-55" href="#__codelineno-21-55"></a>==================
+<a id="__codelineno-21-56" name="__codelineno-21-56" href="#__codelineno-21-56"></a>snmp version: v2c, v3
+<a id="__codelineno-21-57" name="__codelineno-21-57" href="#__codelineno-21-57"></a>snmp community: public (read-only)
+<a id="__codelineno-21-58" name="__codelineno-21-58" href="#__codelineno-21-58"></a>snmp trap host: 192.168.1.50
+<a id="__codelineno-21-59" name="__codelineno-21-59" href="#__codelineno-21-59"></a>snmp trap port: 162
+<a id="__codelineno-21-60" name="__codelineno-21-60" href="#__codelineno-21-60"></a>
+<a id="__codelineno-21-61" name="__codelineno-21-61" href="#__codelineno-21-61"></a>Encryption Status
+<a id="__codelineno-21-62" name="__codelineno-21-62" href="#__codelineno-21-62"></a>=================
+<a id="__codelineno-21-63" name="__codelineno-21-63" href="#__codelineno-21-63"></a>encryption enabled: yes
+<a id="__codelineno-21-64" name="__codelineno-21-64" href="#__codelineno-21-64"></a>encryption algorithm: AES-256
+<a id="__codelineno-21-65" name="__codelineno-21-65" href="#__codelineno-21-65"></a>encryption key rotation: 90 days
+<a id="__codelineno-21-66" name="__codelineno-21-66" href="#__codelineno-21-66"></a>
+<a id="__codelineno-21-67" name="__codelineno-21-67" href="#__codelineno-21-67"></a>Encryption Configuration
+<a id="__codelineno-21-68" name="__codelineno-21-68" href="#__codelineno-21-68"></a>========================
+<a id="__codelineno-21-69" name="__codelineno-21-69" href="#__codelineno-21-69"></a>data at rest: enabled
+<a id="__codelineno-21-70" name="__codelineno-21-70" href="#__codelineno-21-70"></a>data in transit: enabled
+<a id="__codelineno-21-71" name="__codelineno-21-71" href="#__codelineno-21-71"></a>key management: local
+<a id="__codelineno-21-72" name="__codelineno-21-72" href="#__codelineno-21-72"></a>
+<a id="__codelineno-21-73" name="__codelineno-21-73" href="#__codelineno-21-73"></a>Certificate Information
+<a id="__codelineno-21-74" name="__codelineno-21-74" href="#__codelineno-21-74"></a>=======================
+<a id="__codelineno-21-75" name="__codelineno-21-75" href="#__codelineno-21-75"></a>certificate subject: CN=data-domain.corp.local
+<a id="__codelineno-21-76" name="__codelineno-21-76" href="#__codelineno-21-76"></a>certificate issuer: CN=Internal CA
+<a id="__codelineno-21-77" name="__codelineno-21-77" href="#__codelineno-21-77"></a>certificate expiry: 2025-12-15
+<a id="__codelineno-21-78" name="__codelineno-21-78" href="#__codelineno-21-78"></a>certificate fingerprint: a7:3f:2e:b1:9c:4d:8f:6a:e2:c1:5b:9d:7a:4e:3f:2c
+<a id="__codelineno-21-79" name="__codelineno-21-79" href="#__codelineno-21-79"></a>
+<a id="__codelineno-21-80" name="__codelineno-21-80" href="#__codelineno-21-80"></a>Logging Configuration
+<a id="__codelineno-21-81" name="__codelineno-21-81" href="#__codelineno-21-81"></a>=====================
+<a id="__codelineno-21-82" name="__codelineno-21-82" href="#__codelineno-21-82"></a>log host: syslog.corp.local
+<a id="__codelineno-21-83" name="__codelineno-21-83" href="#__codelineno-21-83"></a>log port: 514
+<a id="__codelineno-21-84" name="__codelineno-21-84" href="#__codelineno-21-84"></a>log facility: local0
+<a id="__codelineno-21-85" name="__codelineno-21-85" href="#__codelineno-21-85"></a>log level: info
+<a id="__codelineno-21-86" name="__codelineno-21-86" href="#__codelineno-21-86"></a>
+<a id="__codelineno-21-87" name="__codelineno-21-87" href="#__codelineno-21-87"></a>Network Configuration
+<a id="__codelineno-21-88" name="__codelineno-21-88" href="#__codelineno-21-88"></a>=====================
+<a id="__codelineno-21-89" name="__codelineno-21-89" href="#__codelineno-21-89"></a>interface eth0: 10.20.30.45/24 (active)
+<a id="__codelineno-21-90" name="__codelineno-21-90" href="#__codelineno-21-90"></a>interface eth1: 10.20.30.46/24 (active)
+<a id="__codelineno-21-91" name="__codelineno-21-91" href="#__codelineno-21-91"></a>gateway: 10.20.30.1
+<a id="__codelineno-21-92" name="__codelineno-21-92" href="#__codelineno-21-92"></a>dns servers: 8.8.8.8, 8.8.4.4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>adminaccess: command not found</code></strong> — Verify you are logged in as root or with sufficient administrative privileges; some Data Domain models require <code>sysconfig</code> prefix.
+<strong><code>LDAP connection failed: Connection refused</code></strong> — Check that the LDAP server is reachable on the configured port (389) and that firewall rules allow outbound connections from the Data Domain appliance.
+<strong><code>certificate: expiry date within 30 days</code></strong> — Renew the SSL certificate immediately through the administrative interface to prevent authentication failures on client connections.</p>
+</div>
 <hr />
 <h2 id="hardening-reference-table">Hardening Reference Table<a class="headerlink" href="#hardening-reference-table" title="Permanent link">&para;</a></h2>
 <table>
@@ -9215,7 +9512,7 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:51:28 UTC"><span class="timeago" datetime="2026-06-29T03:51:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:51:28 UTC">2026-06-29</span>
   </span>
 
     

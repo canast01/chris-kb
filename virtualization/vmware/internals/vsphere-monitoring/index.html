@@ -9604,6 +9604,37 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Timestamp,<span class="w"> </span>Value
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># esxtop interactive mode (press &#39;c&#39; for CPU view)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ESXTOP for VMware ESXi 7.0.3 build-19482429 — 14:32:15
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>GID  NAME                NWLD %USED  %RDY %SYS %WAIT %IDLE
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  1  web-server-01        4   18.5   2.3  0.8  1.2  77.2
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  2  db-primary-03        8   42.1   5.7  1.1  3.2  48.0
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  3  app-cache-02         2    8.9   0.4  0.3  0.1  90.3
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  4  monitoring-vm        1   12.4   1.1  0.5  0.8  85.2
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  5  backup-staging       6   31.2   4.2  0.9  2.1  61.6
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># esxtop batch mode output (first 5 lines of /tmp/cpu_stats.csv)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>&quot;GID&quot;,&quot;NAME&quot;,&quot;NWLD&quot;,&quot;%USED&quot;,&quot;%RDY&quot;,&quot;%SYS&quot;,&quot;%WAIT&quot;,&quot;%IDLE&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>1,&quot;web-server-01&quot;,4,18.5,2.3,0.8,1.2,77.2
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>1,&quot;web-server-01&quot;,4,19.1,2.8,0.9,1.3,75.9
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>1,&quot;web-server-01&quot;,4,17.8,1.9,0.7,1.1,78.5
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>1,&quot;web-server-01&quot;,4,20.3,3.1,1.0,1.4,74.2
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>...
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># PowerCLI output
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Timestamp           Value
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>---------           -----
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>2024-01-15 14:32:10 1847
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>2024-01-15 14:52:10 2156
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>2024-01-15 15:12:10 1923
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>2024-01-15 15:32:10 2341
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxtop: command not found</code></strong> — Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station.
+<strong><code>Get-Stat : The term 'Get-Stat' is not recognized</code></strong> — Install VMware PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it via <code>Import-Module VMware.PowerCLI</code>.
+<strong><code>Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.</code></strong> — Ensure you are connected to vCenter with <code>Connect-VIServer -Server vcenter.example.com</code> before running Get-Stat.</p>
+</div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> <strong>CPU Ready threshold is typically &gt; 10 ms per 20-second interval</strong> (or expressed as &gt; 5% in some older references). CPU Ready is caused by too many vCPUs competing for too few physical cores — common with over-provisioned VMs. The fix is to reduce the number of vCPUs on VMs that don't need them, not to add more hosts. <strong>CPU Co-Stop</strong> is specific to Fault Tolerance VMs — it measures synchronization pauses between primary and secondary VMs.</p>
 </blockquote>
@@ -9658,16 +9689,37 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 2. <strong>Balloon</strong> — ask the guest to free memory via balloon driver
 3. <strong>Compression</strong> — compress pages into memory compression cache
 4. <strong>Swap</strong> — write pages to .vswp disk file (most disruptive)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ESXTOP — view memory metrics (press &#39;m&#39;)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Key columns: MCTLSZ (balloon size MB), SWPWRT/SWPRD (swap activity)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># PowerCLI — get balloon metric</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ESXTOP — view memory metrics (press &#39;m&#39;)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Key columns: MCTLSZ (balloon size MB), SWPWRT/SWPRD (swap activity)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PowerCLI — get balloon metric</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Loaded plugin &#39;vsanObserver&#39;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ESXTOP started — press &#39;m&#39; for memory view
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>GID  NAME             MCTLSZ  SWPWRT  SWPRD  TCHD   NCHD   PSHP   SHPS
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  1  VM-web-01        512.0   0.0     0.0    4096   2048   1024   512
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  2  VM-db-prod       2048.5  128.3   64.1   8192   6144   2560   1280
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  3  VM-app-cache     256.2   0.0     0.0    2048   1024   512    256
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  4  VM-backup        1024.1  256.7   192.4  4096   3072   1536   768
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Timestamp                     Entity         Metric                 Value
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>---------                     ------         ------                 -----
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15 14:32:00 -05:00    esxi01.corp... mem.vmmemctl.average   384.50
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15 14:37:00 -05:00    esxi01.corp... mem.vmmemctl.average   412.25
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2024-01-15 14:42:00 -05:00    esxi01.corp... mem.vmmemctl.average   398.75
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2024-01-15 14:47:00 -05:00    esxi01.corp... mem.vmmemctl.average   425.10
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>2024-01-15 14:52:00 -05:00    esxi01.corp... mem.vmmemctl.average   441.80
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Add <code>-SkipCertificateCheck</code> parameter or import the vCenter certificate into PowerCLI's certificate store.
+<strong><code>Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.</code></strong> — Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host.</p>
+</div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> Know what each memory metric means and the reclamation order. <strong>Balloon</strong> means the VMkernel is asking guests to return memory. <strong>Swap</strong> means memory is being written to disk — this indicates severe pressure and will cause noticeable VM performance degradation. <strong>Active memory</strong> is the most accurate measure of a VM's true memory need — a VM with 8 GB allocated but only 500 MB active is a candidate for reclamation.</p>
 </blockquote>
@@ -9708,13 +9760,34 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 - High DAVG, low KAVG → problem is in the storage array or fabric
 - High KAVG, low DAVG → problem is VMkernel queuing (queue depth, too many concurrent I/Os)
 - High GAVG with both DAVG and KAVG normal → investigate in-guest I/O patterns</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ESXTOP — view disk metrics (press &#39;u&#39; for storage adapter, &#39;d&#39; for disk)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># DAVG, KAVG, GAVG visible in disk device view</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># esxcli — check storage path latency</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>--device<span class="w"> </span>naa.xxxxxx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># ESXTOP — view disk metrics (press &#39;u&#39; for storage adapter, &#39;d&#39; for disk)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># DAVG, KAVG, GAVG visible in disk device view</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># esxcli — check storage path latency</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>--device<span class="w"> </span>naa.xxxxxx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># ESXTOP — view disk metrics (press &#39;u&#39; for storage adapter, &#39;d&#39; for disk)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxtop
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(esxtop interactive terminal interface launches — real-time monitoring display with columns: DAVG, KAVG, GAVG, CMDS/s, MB/s)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a># esxcli — check storage path latency
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli storage core device stats get --device naa.6001405abcdef1234567890123456789
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Device naa.6001405abcdef1234567890123456789 Statistics:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Read Commands: 45821
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Write Commands: 12340
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Read Bytes: 2147483648
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Write Bytes: 536870912
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Read Latency (us): 1240
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Write Latency (us): 890
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  IOPS: 1523
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Throughput (MB/s): 287.4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown device naa.xxxxxx</code></strong> — Replace <code>naa.xxxxxx</code> with the actual NAA identifier from <code>esxcli storage core device list</code>.
+<strong><code>Error: esxtop: command not found</code></strong> — Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter.</p>
+</div>
 <h3 id="network-metrics">Network Metrics<a class="headerlink" href="#network-metrics" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9847,50 +9920,129 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> Key log file associations to memorize: <strong>fdm.log → vSphere HA</strong>. <strong>vpxa.log → ESXi-to-vCenter agent communication</strong>. <strong>vpxd.log → vCenter main service</strong>. <strong>vobd.log → hardware events via CIM</strong>. These are common exam targets. On ESXi, most logs are in <code>/var/log/</code>. On VCSA, most vCenter-specific logs are in <code>/var/log/vmware/</code>.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View recent HA events on an ESXi host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/fdm.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Filter for storage errors in vmkernel log</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># View hostd log for specific VM operations</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List services and their status on ESXi</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View recent HA events on an ESXi host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/fdm.log
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Filter for storage errors in vmkernel log</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># View hostd log for specific VM operations</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>grep<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List services and their status on ESXi</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>2024-01-15T14:32:18.045Z [7F4A2C1B] HA: Received heartbeat from host-02.lab.local (10.20.30.45)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2024-01-15T14:32:22.112Z [7F4A2C1C] HA: Master election in progress, candidate host-01.lab.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15T14:32:25.891Z [7F4A2C1D] HA: Cluster reconfiguration completed, 4 hosts active
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15T14:32:31.456Z [7F4A2C1E] HA: Heartbeat timeout from host-03.lab.local, isolation detected
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15T14:32:35.223Z [7F4A2C1F] HA: VM restart initiated for prod-db-01 on host-01.lab.local
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>^C
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2024-01-15T10:15:42.123Z cpu0:2048)WARNING: NFS: NFS server 10.50.60.10 not responding
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-01-15T10:16:01.456Z cpu1:2049)ERROR: ScsiDeviceIO: Command 0x28 failed: H:0x0 D:0x2 P:0x0
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-01-15T10:16:15.789Z cpu2:2050)WARNING: VMFS: Heartbeat failed on volume datastore-03
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15T10:16:28.234Z cpu0:2051)ERROR: PSA: Path failover initiated for device naa.60000000000000001
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15T10:16:42.567Z cpu3:2052)FAIL: iSCSI session timeout to target iqn.2020-01.local:storage-01
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>...
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>2024-01-15T09:45:12.234Z [hostd.pl] web-server-01: VM power on initiated by admin@vsphere.local
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>2024-01-15T09:45:15.567Z [hostd.pl] web-server-01: CPU reservation 4000 MHz allocated
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2024-01-15T09:45:18.891Z [hostd.pl] web-server-01: Memory reservation 8192 MB allocated
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-15T09:45:22.123Z [hostd.pl] web-server-01: vNIC 0 connected to vSwitch0
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>2024-01-15T09:45:25.456Z [hostd.pl] web-server-01: VM power on completed successfully
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>...
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>   PID    Name                                   World ID Busy CPU Sys CPU
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  2048    vmkernel                                    1    0.0%   0.0%
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  2156    hostd                                    2048    1.2%   0.8%
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  2234    vpxa                                     2049    0.5%   0.3%
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  2312    syslog                                   2050    0.1%   0.0%
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  2401    vobd                                     2051    0.3%   0.2%
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>  2489    wsman                                    2052    0.2%   0.1%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p>**`tail</p>
+</div>
 <hr />
 <h2 id="log-bundle-generation">Log Bundle Generation<a class="headerlink" href="#log-bundle-generation" title="Permanent link">&para;</a></h2>
 <h3 id="esxi-support-bundle">ESXi Support Bundle<a class="headerlink" href="#esxi-support-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate support bundle from ESXi CLI (creates .tgz in /var/tmp)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vm-support
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate and specify output location</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/vmfs/volumes/datastore1/
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># From vCenter UI: Host → Monitor → Support → Export System Logs</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># This calls vm-support remotely and downloads the bundle</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Using vim-cmd</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>vim-cmd<span class="w"> </span>hostsvc/advopt/view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>diagnostic
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Alternative — use the ESXi DCUI or direct SSH</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ssh<span class="w"> </span>root@esxi01.corp.local<span class="w"> </span><span class="s2">&quot;vm-support&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>scp<span class="w"> </span>root@esxi01.corp.local:/var/tmp/esx-*.tgz<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate support bundle from ESXi CLI (creates .tgz in /var/tmp)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vm-support
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Generate and specify output location</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/vmfs/volumes/datastore1/
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># From vCenter UI: Host → Monitor → Support → Export System Logs</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># This calls vm-support remotely and downloads the bundle</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Using vim-cmd</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vim-cmd<span class="w"> </span>hostsvc/advopt/view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>diagnostic
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Alternative — use the ESXi DCUI or direct SSH</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ssh<span class="w"> </span>root@esxi01.corp.local<span class="w"> </span><span class="s2">&quot;vm-support&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>scp<span class="w"> </span>root@esxi01.corp.local:/var/tmp/esx-*.tgz<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Generating support bundle, this may take a few minutes...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Collecting system logs...
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Collecting system state information...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Collecting sar data...
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Collecting disk information...
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Collecting network information...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Support bundle completed successfully.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Bundle location: /var/tmp/esx-esxi01-2024-01-15-14-32-45.tgz
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Bundle size: 287 MB
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>diagnostic.coreMaxSize = &quot;110&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>diagnostic.coreMaxFiles = &quot;100&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>diagnostic.enableFencingClockHosts = &quot;true&quot;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>diagnostic.heapMaxSize = &quot;512&quot;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>esx-esxi01-2024-01-15-14-32-45.tgz                    100%  287MB   4.2MB/s   01:08
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vm-support: error: insufficient space on /var/tmp</code></strong> — Specify an alternate writable datastore path with <code>-w /vmfs/volumes/datastore_name/</code> or free space on the host.
+<strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound.
+<strong><code>vim-cmd: Unknown command</code></strong> — Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use <code>esxcli system syslog config get</code> instead.</p>
+</div>
 <h3 id="vcsa-support-bundle">VCSA Support Bundle<a class="headerlink" href="#vcsa-support-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From VAMI (port 5480): Administration → Support → Create Support Bundle</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Download from the VAMI browser interface after generation</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># From VCSA API</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.corp.local/api/appliance/support-bundle&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># From VCSA shell</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vc-support.sh
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Output: /var/tmp/vc-support-*.tgz</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From VAMI (port 5480): Administration → Support → Create Support Bundle</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Download from the VAMI browser interface after generation</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># From VCSA API</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.corp.local/api/appliance/support-bundle&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># From VCSA shell</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>vc-support.sh
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Output: /var/tmp/vc-support-*.tgz</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>% curl -X POST \
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;https://vcenter.corp.local/api/vcenter/support-bundle&quot; \
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  -H &quot;vmware-api-session-id: 52b20672-3dcc-4a00-8000-000000000001&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>{
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  &quot;value&quot;: &quot;support-bundle-vcenter.corp.local-2024.01.15-14.32.45.tgz&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>}
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>% vc-support.sh
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Generating support bundle for vCenter Server 8.0.1.00000...
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Collecting system logs...
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Collecting vCenter services status...
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Collecting database information...
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Collecting network configuration...
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Support bundle created: /var/tmp/vc-support-2024.01.15-14.32.45.tgz
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Bundle size: 487 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN.
+<strong><code>HTTP/1.1 401 Unauthorized</code></strong> — Ensure the session token is valid and not expired; obtain a fresh token via <code>/api/session</code> endpoint with valid vCenter credentials.
+<strong><code>vc-support.sh: command not found</code></strong> — Run the command from the vCenter shell (SSH to VCSA) or use the full path <code>/usr/lib/vmware-vmafd/bin/vc-support.sh</code>.</p>
+</div>
 <hr />
 <h2 id="vsphere-cluster-services-vcls-retreat-mode">vSphere Cluster Services (vCLS) Retreat Mode<a class="headerlink" href="#vsphere-cluster-services-vcls-retreat-mode" title="Permanent link">&para;</a></h2>
 <p><strong>vSphere Cluster Services (vCLS)</strong> are agent VMs that vCenter automatically deploys into clusters to maintain DRS and HA functionality. Even if vCenter becomes unavailable, vCLS agent VMs keep cluster services running.</p>
@@ -9898,21 +10050,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 <h3 id="retreat-mode">Retreat Mode<a class="headerlink" href="#retreat-mode" title="Permanent link">&para;</a></h3>
 <p><strong>Retreat mode</strong> temporarily disables vCLS and removes the agent VMs from a cluster. This is used exclusively for troubleshooting scenarios where vCLS VMs are causing problems (e.g., interfering with maintenance, consuming resources in a resource-constrained environment during troubleshooting).</p>
 <p><strong>Enabling retreat mode (per cluster):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find the cluster&#39;s MoRef ID</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># From PowerCLI:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">$cluster</span>.ExtensionData.MoRef.Value
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Example output: domain-c123</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Enable retreat mode by modifying cluster advanced setting</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># vCenter UI: Cluster → Configure → vSphere Cluster Service → Retreat Mode</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Or via API — set config.retreatMode = true on the cluster</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># PowerCLI approach</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">$clusterView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span><span class="nv">$cluster</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.ClusterConfigSpecEx
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># retreatMode is set via cluster configuration API</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Find the cluster&#39;s MoRef ID</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># From PowerCLI:</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">$cluster</span>.ExtensionData.MoRef.Value
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Example output: domain-c123</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Enable retreat mode by modifying cluster advanced setting</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># vCenter UI: Cluster → Configure → vSphere Cluster Service → Retreat Mode</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Or via API — set config.retreatMode = true on the cluster</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># PowerCLI approach</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nv">$clusterView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span><span class="nv">$cluster</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.ClusterConfigSpecEx
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># retreatMode is set via cluster configuration API</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>domain-c123
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code>.
+<strong><code>You do not have permission to perform this operation.</code></strong> — Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster.</p>
+</div>
 <p><strong>Impact of retreat mode:</strong>
 - vCLS agent VMs are powered off and removed
 - <strong>DRS enters manual mode</strong> — automated load balancing stops
@@ -9962,15 +10121,29 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 - API access for automation
 - Trending analysis and executive-level reporting</p>
 <h3 id="configuring-skyline-data-collection">Configuring Skyline Data Collection<a class="headerlink" href="#configuring-skyline-data-collection" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Skyline Collector is a virtual appliance deployed in your environment</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Configuration is done via the Skyline Collector VAMI (port 5480)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify Skyline Collector connectivity to VMware cloud endpoints</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sc-collector.vmware.com/ping
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># PowerCLI — check if Skyline health is enabled</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="o">(</span>Get-View<span class="w"> </span>ServiceInstance<span class="o">)</span>.Content.Health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Skyline Collector is a virtual appliance deployed in your environment</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Configuration is done via the Skyline Collector VAMI (port 5480)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify Skyline Collector connectivity to VMware cloud endpoints</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sc-collector.vmware.com/ping
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># PowerCLI — check if Skyline health is enabled</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="o">(</span>Get-View<span class="w"> </span>ServiceInstance<span class="o">)</span>.Content.Health
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{&quot;status&quot;:&quot;pong&quot;,&quot;timestamp&quot;:&quot;2024-01-15T09:42:33Z&quot;,&quot;collector_id&quot;:&quot;sc-collector-prod-us-west-2&quot;,&quot;version&quot;:&quot;8.7.2&quot;}
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>HealthSystemManager
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Key                 Value
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>---                 -----
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>systemHealthManager HealthSystemManager
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>numericSensorInfo   {NumericSensorInfo, NumericSensorInfo, NumericSensorInfo...}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the collector's CA certificate into your system trust store.
+<strong><code>The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Load the VMware.VimAutomation.Core PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running Get-View commands.
+<strong><code>Unable to connect to the remote server</code></strong> — Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com.</p>
+</div>
 <h3 id="relationship-to-aria-operations">Relationship to Aria Operations<a class="headerlink" href="#relationship-to-aria-operations" title="Permanent link">&para;</a></h3>
 <p>VMware Aria Operations (formerly vRealize Operations) and Skyline serve different purposes:
 - <strong>Skyline</strong> — vendor-managed proactive support; VMware analyzes your telemetry against their global knowledge base
@@ -10025,44 +10198,115 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Interactive ESXTOP</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxtop
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Batch mode — 30 samples at 2-second intervals, write to CSV</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/perf_data.csv
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Replay mode — analyze a previously captured batch file</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxtop<span class="w"> </span>-R<span class="w"> </span>/tmp/perf_data.csv
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Filter to specific VM (useful in busy environments)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>esxtop<span class="w">   </span><span class="c1"># then press &#39;e&#39; to expand, search by VM name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Interactive ESXTOP</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxtop
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Batch mode — 30 samples at 2-second intervals, write to CSV</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/perf_data.csv
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Replay mode — analyze a previously captured batch file</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>esxtop<span class="w"> </span>-R<span class="w"> </span>/tmp/perf_data.csv
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Filter to specific VM (useful in busy environments)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>esxtop<span class="w">   </span><span class="c1"># then press &#39;e&#39; to expand, search by VM name</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Batch mode output (esxtop -b -d 2 -n 30 &gt; /tmp/perf_data.csv):
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>(no output — command completes silently)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Replay mode output (esxtop -R /tmp/perf_data.csv):
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ESXTOP REPLAY MODE
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Replaying from: /tmp/perf_data.csv
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Sample 1 of 30 (timestamp: 2024-01-15T14:32:45Z)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  CPU%USED: 18.5  MEM%USED: 62.3  DISK RD: 1245 MB/s  DISK WR: 342 MB/s
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  VM: prod-web-01  CPU: 12.3%  MEM: 4096 MB  READY: 2.1%
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  VM: prod-db-02   CPU: 5.2%   MEM: 8192 MB  READY: 0.8%
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  VM: test-app-03  CPU: 0.9%   MEM: 2048 MB  READY: 0.1%
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Sample 2 of 30 (timestamp: 2024-01-15T14:32:47Z)
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  CPU%USED: 19.1  MEM%USED: 62.5  DISK RD: 1267 MB/s  DISK WR: 358 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot open batch file /tmp/perf_data.csv</code></strong> — Verify the batch file exists and was created successfully with <code>ls -la /tmp/perf_data.csv</code>.
+<strong><code>Error: esxtop: command not found</code></strong> — Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station.
+<strong><code>Error: Permission denied writing to /tmp/perf_data.csv</code></strong> — Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory.</p>
+</div>
 <h3 id="resxtop">RESXTOP<a class="headerlink" href="#resxtop" title="Permanent link">&para;</a></h3>
 <p>RESXTOP is ESXTOP accessed remotely without SSH, using the vSphere CLI. It connects to a host via the vSphere API and presents the same interface as ESXTOP.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># RESXTOP from a remote system with vSphere CLI installed</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--username<span class="w"> </span>root
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Batch mode collection remotely</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--batch<span class="w"> </span>output.csv<span class="w"> </span>--samples<span class="w"> </span><span class="m">30</span><span class="w"> </span>--interval<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># RESXTOP from a remote system with vSphere CLI installed</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--username<span class="w"> </span>root
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Batch mode collection remotely</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--batch<span class="w"> </span>output.csv<span class="w"> </span>--samples<span class="w"> </span><span class="m">30</span><span class="w"> </span>--interval<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Connected to esxi01.corp.local
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Authenticating as root...
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Authentication successful.
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>RESXTOP 7.0.3 build-19482429
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Press &#39;q&#39; to quit, &#39;h&#39; for help
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>   PCPU USED(%): 12.45  PCPU RUN QUEUE: 2.3
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>   MEMORY USAGE(%): 68.92  SWAP USED(MB): 0
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>   DISK READ(MB/s): 45.23  DISK WRITE(MB/s): 12.67
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>   NET RECV(Mbps): 234.5  NET XMIT(Mbps): 89.3
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Sample 1/30 collected at 2024-01-15 14:32:18
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Sample 2/30 collected at 2024-01-15 14:32:23
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>Sample 3/30 collected at 2024-01-15 14:32:28
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>...
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>Sample 30/30 collected at 2024-01-15 14:34:13
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Data written to output.csv
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to host esxi01.corp.local on port 443</code></strong> — Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443.
+<strong><code>Error: Authentication failed for user root</code></strong> — Confirm the root password is correct and the account is not locked; use <code>--password</code> flag or enter interactively when prompted.
+<strong><code>Error: resxtop: command not found</code></strong> — Install the vSphere CLI package (e.g., <code>apt-get install vmware-vsphere-cli</code> on Linux or download from VMware) and ensure it is in your PATH.</p>
+</div>
 <h3 id="powercli-get-stat">PowerCLI Get-Stat<a class="headerlink" href="#powercli-get-stat" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get CPU Ready for a VM over the last hour (20s intervals)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;db-server-01&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="w"> </span>-Maximum
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Get memory balloon for all hosts in a cluster</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Get-VMHost<span class="w"> </span>-Location<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span><span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$_</span><span class="w"> </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>EntityId,<span class="w"> </span>Timestamp,<span class="w"> </span>Value<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>Value<span class="w"> </span>-Descending
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Get disk DAVG for a datastore</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>-Stat<span class="w"> </span>datastore.totalReadLatency.average<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-4<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Get CPU Ready for a VM over the last hour (20s intervals)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;db-server-01&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="w"> </span>-Maximum
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Get memory balloon for all hosts in a cluster</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Get-VMHost<span class="w"> </span>-Location<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span><span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$_</span><span class="w"> </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">    </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>EntityId,<span class="w"> </span>Timestamp,<span class="w"> </span>Value<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>Value<span class="w"> </span>-Descending
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Get disk DAVG for a datastore</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">  </span>-Stat<span class="w"> </span>datastore.totalReadLatency.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-4<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Count             : 180
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Average           : 1247.33
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Maximum           : 8934
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>EntityId                             Timestamp            Value
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>--------                             ---------            -----
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>HostSystem-host-42                   2024-01-15 14:32:00  2847.5
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>HostSystem-host-38                   2024-01-15 14:27:00  1923.2
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>HostSystem-host-41                   2024-01-15 14:22:00  1456.8
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>HostSystem-host-39                   2024-01-15 14:17:00   892.3
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>HostSystem-host-40                   2024-01-15 14:12:00   445.1
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>Timestamp            Value
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>---------            -----
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>2024-01-15 14:45:30  3.847
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>2024-01-15 14:40:30  3.621
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>2024-01-15 14:35:30  2.934
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>2024-01-15 14:30:30  2.156
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>2024-01-15 14:25:30  1.823
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VM : The term 'Get-VM' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running these commands.
+<strong><code>You are not currently connected to any vCenter servers</code></strong> — Connect to vCenter first using <code>Connect-VIServer -Server &lt;vcenter-fqdn&gt;</code> with appropriate credentials.
+<strong><code>Get-Stat : A parameter cannot be found that matches parameter name 'Interval'</code></strong> — Use <code>-IntervalSecs</code> instead of <code>-Interval</code> for the time period in seconds.</p>
+</div>
 <h3 id="key-metrics-summary-table">Key Metrics Summary Table<a class="headerlink" href="#key-metrics-summary-table" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -10149,7 +10393,7 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

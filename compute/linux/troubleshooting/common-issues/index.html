@@ -7835,125 +7835,361 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Growing log files</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Linux 5.15.0-1234-aws (ip-10-42-8-15)   01/15/2025  _x86_64_    (8 CPU)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>           12.45    0.00   8.32   34.21    0.00   45.02
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Device            r/s     w/s     rMB/s     wMB/s   %util  await
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>sda             156.2   89.4      2.14      1.87   92.15  18.34
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sdb              45.1   12.3      0.56      0.09   38.42   6.21
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>PID  USER     DISK READ  DISK WRITE  SWAPIN  IO&gt;    COMMAND
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2847 postgres   1.23 M    4.56 M      0.0 %  98.2 % postgres: writer
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>1923 root       0.34 M    2.11 M      0.0 % 45.1 % rsync --daemon
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>3421 mysql      0.12 M    0.89 M      0.0 % 12.3 % mysqld
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>/dev/mapper/vg0-root  100G   89G   11G   89% /
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>/dev/sdb1             500G  487G   13G   97% /data
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Jan 15 14:23:45 ip-10-42-8-15 kernel: [12847.234521] EXT4-fs warning (device dm-0): ext4_end_bio:4892: I/O error -28
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Jan 15 14:24:12 ip-10-42-8-15 kernel: [12874.456123] EXT4-fs error (device dm-0): ext4_journal_check_start:61: Filesystem has errors, running e2fsck is recommended
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>/tmp/backup_20250115.tar.gz  245M
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>/var/tmp/cache_dump.bin      156M
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>/var/log/syslog                 2.3G
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>/var/log/auth.log               1.8G
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>/var/log/apache2/access.log     892M
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/var/log/mysql/error.log        456M
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>/var/log/postgresql/postgresql.log  234M
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iotop: command not found</code></strong> — Install iotop with <code>apt-get install iotop</code> (Debian/Ubuntu) or <code>yum install iotop</code> (RHEL/CentOS).
+<strong><code>find: '/tmp': Permission denied</code></strong> — Run the find command with <code>sudo</code> or check directory permissions with <code>ls -ld /tmp</code>.
+<strong><code>awk: syntax error at source line 1</code></strong> — Use proper quoting: <code>df -h | awk '$5+0 &gt; 85 {print}'</code> to ensure the pattern is correctly interpreted.</p>
+</div>
 <h2 id="network-connectivity-issues">Network Connectivity Issues<a class="headerlink" href="#network-connectivity-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1 — Is the interface up?</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;state UP|state DOWN&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Step 2 — Does the IP and route exist?</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Step 3 — Can we reach the gateway?</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="k">$(</span>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Step 4 — Can we reach DNS?</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>dig<span class="w"> </span>+short<span class="w"> </span>google.com<span class="w"> </span>@8.8.8.8
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Step 5 — Is the local port open?</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Step 6 — Is firewall blocking?</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP<span class="w">    </span><span class="c1"># Direct iptables</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Step 7 — Packet capture to confirm traffic flow</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>host<span class="w"> </span>&lt;remote-ip&gt;<span class="w"> </span>and<span class="w"> </span>port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
-</code></pre></div>
-<h2 id="service-not-starting">Service Not Starting<a class="headerlink" href="#service-not-starting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check the exact error</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-l
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check dependencies</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>list-dependencies<span class="w"> </span>&lt;service&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>failed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Is the interface up?</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;state UP|state DOWN&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Step 2 — Does the IP and route exist?</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ip<span class="w"> </span>route<span class="w"> </span>show
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Validate unit file</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>systemd-analyze<span class="w"> </span>verify<span class="w"> </span>/etc/systemd/system/&lt;service&gt;.service
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 3 — Can we reach the gateway?</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="k">$(</span>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check if port is already in use</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Step 4 — Can we reach DNS?</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>dig<span class="w"> </span>+short<span class="w"> </span>google.com<span class="w"> </span>@8.8.8.8
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Test the command manually</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>sudo<span class="w"> </span>-u<span class="w"> </span>&lt;service-user&gt;<span class="w"> </span>&lt;ExecStart-command&gt;<span class="w"> </span>--dry-run
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Step 5 — Is the local port open?</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Step 6 — Is firewall blocking?</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP<span class="w">    </span><span class="c1"># Direct iptables</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Step 7 — Packet capture to confirm traffic flow</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>host<span class="w"> </span>&lt;remote-ip&gt;<span class="w"> </span>and<span class="w"> </span>port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2: inet 192.168.1.45/24 brd 192.168.1.255 scope global eth0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   inet 127.0.0.1/8 scope host lo
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   default via 192.168.1.1 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>3: PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.11 ms
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=1.95 ms
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   --- 192.168.1.1 statistics ---
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>4: 142.250.185.46
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>5: LISTEN    0      128                 0.0.0.0:22              0.0.0.0:*    users:((&quot;sshd&quot;,pid=1247,fd=3))
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>6: public (active)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>     ports: 22/tcp 80/tcp 443/tcp
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   Status: active
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>     Default incoming: deny
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>     Default outgoing: allow
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>   Chain INPUT (policy DROP 0 packets, 0 bytes)
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>     0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>7: tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>   14:32:15.847291 IP 192.168.1.45.54821 &gt; 10.0.2.8.443: Flags [S], seq 1234567890, win 65535, length 0
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>   14:32:15.849102 IP 10.0.2.8.443 &gt; 192.168.1.45.54821: Flags [S.], seq 987654321, ack 1234567891, win 32768, length 0
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>   14:32:15.850445 IP 192.168.1.45.54821 &gt; 10.0.2.8.443: Flags [.], ack 987654322, win 65535, length 0
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>   50 packets captured
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: google.com: Name or service not known</code></strong> — DNS resolution failed; verify nameserver in <code>/etc/resolv.conf</code> and check connectivity to 8.8.8.8 with <code>ping 8.8.8.8</code>.
+<strong><code>ss: No such file or directory</code></strong> — <code>ss</code> command not found; install with <code>apt install iproute2</code> (Ubuntu) or <code>yum install iproute</code></p>
+</div>
+<h2 id="service-not-starting">Service Not Starting<a class="headerlink" href="#service-not-starting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check the exact error</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-l
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check dependencies</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>list-dependencies<span class="w"> </span>&lt;service&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>failed
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Validate unit file</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>systemd-analyze<span class="w"> </span>verify<span class="w"> </span>/etc/systemd/system/&lt;service&gt;.service
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check if port is already in use</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Test the command manually</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>sudo<span class="w"> </span>-u<span class="w"> </span>&lt;service-user&gt;<span class="w"> </span>&lt;ExecStart-command&gt;<span class="w"> </span>--dry-run
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>● nginx.service - The NGINX HTTP and reverse proxy server
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>     Loaded: loaded (/etc/systemd/system/nginx.service; enabled; vendor preset: enabled)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>     Active: failed (Result: exit-code) since Thu 2024-01-18 14:32:15 UTC; 2min 43s ago
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       Docs: man:nginx(1)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    Process: 8742 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=1)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   Main PID: 8742 (code=exited, status=1)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      Error: &#39;address already in use&#39;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Jan 18 14:32:15 web-prod-01 nginx[8742]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Jan 18 14:32:15 web-prod-01 nginx[8742]: nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Jan 18 14:32:15 web-prod-01 nginx[8742]: nginx: [emerg] Aborting due to port conflict.
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>nginx.service
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>└─ openssl.service (active)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>(no output — unit file is valid)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>LISTEN    0         128          0.0.0.0:80            0.0.0.0:*    users:((&quot;apache&quot;,pid=5821,fd=4))
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>LISTEN    0         128             [::]:80               [::]:*    users:((&quot;apache&quot;,pid=5821,fd=4))
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>nginx: [alert] master process terminated with code 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)</code></strong> — Stop the conflicting service (e.g., <code>systemctl stop apache2</code>) or change nginx's listen port in <code>/etc/nginx/nginx.conf</code>.
+<strong><code>Job for nginx.service failed because the control process exited with error code.</code></strong> — Run <code>sudo nginx -t</code> to validate the configuration syntax and check <code>/var/log/nginx/error.log</code> for parsing errors.
+<strong><code>Unit nginx.service not found.</code></strong> — Verify the service file exists at <code>/etc/systemd/system/nginx.service</code> and run <code>systemctl daemon-reload</code> after creating or modifying it.</p>
+</div>
 <h2 id="ssh-access-denied">SSH Access Denied<a class="headerlink" href="#ssh-access-denied" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check sshd is running</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sshd
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check sshd config for auth method restrictions</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check PAM for account restrictions</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed\|error\|pam&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check if account is locked</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>passwd<span class="w"> </span>-S<span class="w"> </span>&lt;username&gt;<span class="w">   </span><span class="c1"># L = locked</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w">    </span><span class="c1"># Check failed login counter</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset<span class="w">    </span><span class="c1"># Reset counter</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># SELinux blocking SSH (non-standard port)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>-c<span class="w"> </span>sshd<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check sshd is running</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sshd
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check sshd config for auth method restrictions</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check PAM for account restrictions</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed\|error\|pam&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check if account is locked</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>passwd<span class="w"> </span>-S<span class="w"> </span>&lt;username&gt;<span class="w">   </span><span class="c1"># L = locked</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w">    </span><span class="c1"># Check failed login counter</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset<span class="w">    </span><span class="c1"># Reset counter</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># SELinux blocking SSH (non-standard port)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>-c<span class="w"> </span>sshd<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>● sshd.service - OpenSSH Daemon
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>     Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       Docs: man:sshd(8) man:sshd_config(5)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>     Process: 2847 ExecStart=/usr/sbin/sshd -D $OPTIONS (code=exited, status=0/SUCCESS)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Main PID: 2848 (sshd)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>       Tasks: 1 (limit: 2048)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      Memory: 5.2M
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>         CPU: 142ms
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>      CGroup: /system.slice/sshd.service
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>              └─2848 /usr/sbin/sshd -D
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>PasswordAuthentication yes
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>PubkeyAuthentication yes
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>AllowUsers admin@10.0.0.0/24 deploy
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>MaxAuthTries 6
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Jan 18 14:45:22 prod-web-01 sshd[5621]: Failed password for invalid user testuser from 192.168.1.105 port 54321 ssh2
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Jan 18 14:46:01 prod-web-01 sshd[5634]: error: PAM: Authentication failure for user admin from 192.168.1.110
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Jan 18 14:47:15 prod-web-01 sshd[5645]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.115 user=admin
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Jan 18 14:48:33 prod-web-01 sshd[5667]: Failed password for user deploy from 192.168.1.120 port 54389 ssh2
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Jan 18 14:49:10 prod-web-01 sshd[5678]: pam_faillock(sshd:auth): Consecutive login failures for user &quot;deploy&quot; (3)
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>admin                PS      2024-01-15 14:22:10 +0000 3 0 0 0 0
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>deploy               L       2024-01-18 13:45:22 +0000 0 0 0 0 0
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>User:     deploy
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>When:     Thu Jan 18 13:45:22 UTC 2024
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Type:     RHOST
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>Source:   192.168.1.125
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>Valid:    Thu Jan 18 14:45:22 UTC 2024
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>type=AVC msg=audit(1705594815.234:8921): avc:  denied  { name_connect } for  pid=2848 comm=&quot;sshd&quot; name=&quot;2222&quot; scontext=system_u:system_r:sshd_t:s0-s0:c0.c1023 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>type=AVC msg=audit(1705594816.445:8922): avc:  denied  { read } for  pid=2848 comm=&quot;sshd&quot; name=&quot;authorized_keys&quot; dev=&quot;dm-0&quot; ino=
 </code></pre></div>
 <h2 id="selinux-apparmor-mac-flow">SELinux / AppArmor MAC Flow<a class="headerlink" href="#selinux-apparmor-mac-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUD2PwjAM3fsrLCYW2r0DEh_HhEQlpJu65BIrDUROlaYcCN3vuv1-GU4CEjp1if0cv-dnK-NRBuOoBm90F4piGL9OXKphdsxZS413EocB5ljqEroQejWD-9CJHpnGLYK0xZ-id9bI26ZDeWZ6kxAk2JIYlQkK_n7h-LE3NF4hd8N2PaklrHXfrLKKsaWVTA60FxRwerp7-T48be-MxTTQyTOGmDXOh0muQroxc8uBZ31ugAtGWLBOa1QtVRfhKwZVWiO_JeNJsdcJYbGEt5O8nyd-pQ3znhFm-_-borHiATsolqk=?" /></p>
 <h2 id="disk-full-emergency">Disk Full — Emergency<a class="headerlink" href="#disk-full-emergency" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Find the full filesystem</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 90&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Largest directories</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Large log files</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>find<span class="w"> </span>/var/log<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Truncate (don&#39;t delete — running process may hold FD open)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>&gt;<span class="w"> </span>/var/log/large-logfile.log
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Open but deleted files still consuming space</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>lsof<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deleted<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Restart the holding process to release inodes</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Force journal vacuum</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find the full filesystem</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 90&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Largest directories</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Large log files</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>find<span class="w"> </span>/var/log<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Truncate (don&#39;t delete — running process may hold FD open)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>&gt;<span class="w"> </span>/var/log/large-logfile.log
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Open but deleted files still consuming space</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>lsof<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deleted<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Restart the holding process to release inodes</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Force journal vacuum</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/dev/sda1       50G   47G  1.2G  95% /
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/dev/sda2      100G   89G   8.2G  91% /var
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/var              18G
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>/usr              12G
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>/home             8.5G
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>/opt              4.2G
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>/srv              2.1G
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>/lib              1.8G
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>/boot             512M
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>/root             256M
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>...
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>/var/log           6.2G
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>/var/cache         4.1G
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>/var/lib           3.8G
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>/var/spool         2.3G
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>/var/tmp           1.9G
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>/var/backups       892M
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>...
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>/var/log/audit/audit.log
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>/var/log/syslog
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>/var/log/kern.log
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>(no output — command completes silently)
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>COMMAND     PID     USER   FD   TYPE DEVICE  SIZE/OFF NODE NAME
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>java       2847    root   45u  REG  8,1    2147483648 1048592 /var/log/application.log (deleted)
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>nginx      1923    www    12u  REG  8,1    536870912  524288 /var/log/access.log (deleted)
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>mysql      2156   mysql   34u  REG  8,1    268435456  262144 /var/log/mysql.log (deleted)
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>Vacuumed journals from /var/log/journal/*, freed 487M.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>du: cannot read directory '/root': Permission denied</code></strong> — Run the command with <code>sudo</code> or adjust the wildcard to skip restricted directories like <code>du -sh /var/* /home/* /opt/* 2&gt;/dev/null</code>.
+<strong><code>lsof: command not found</code></strong> — Install lsof with <code>apt install lsof</code> (Debian/Ubuntu) or <code>yum install lsof</code> (RHEL/CentOS).
+<strong><code>bash: /var/log/large-logfile.log: Permission denied</code></strong> — Use <code>sudo</code> to truncate the file: <code>sudo &gt; /var/log/large-logfile.log</code>.</p>
+</div>
 <h2 id="system-crash-reboot-analysis">System Crash / Reboot Analysis<a class="headerlink" href="#system-crash-reboot-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Recent reboots</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>last<span class="w"> </span>reboot<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Was it a kernel panic?</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50<span class="w">   </span><span class="c1"># Previous boot</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;panic\|bug:\|BUG:\|Oops:&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># kdump crash dump (if configured)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ls<span class="w"> </span>/var/crash/
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Hardware errors (memory, CPU, PCIe)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>mcelog<span class="w"> </span>--client<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;mce|machine check|uncorrect|hardware error&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check IPMI SEL (system event log)</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ipmitool<span class="w"> </span>sel<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Recent reboots</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>last<span class="w"> </span>reboot<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Was it a kernel panic?</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50<span class="w">   </span><span class="c1"># Previous boot</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;panic\|bug:\|BUG:\|Oops:&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># kdump crash dump (if configured)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>ls<span class="w"> </span>/var/crash/
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Hardware errors (memory, CPU, PCIe)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>mcelog<span class="w"> </span>--client<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;mce|machine check|uncorrect|hardware error&quot;</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Check IPMI SEL (system event log)</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>ipmitool<span class="w"> </span>sel<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>wtmp begins Fri Jan 10 14:32:00 2025
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>reboot   system boot  5.15.0-1234-aws  Fri Jan 10 14:32 - 16:45  (02:13)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>reboot   system boot  5.15.0-1234-aws  Fri Jan 10 12:01 - 14:31  (02:30)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>reboot   system boot  5.15.0-1233-aws  Thu Jan  9 18:22 - 12:00  (17:38)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>reboot   system boot  5.15.0-1233-aws  Thu Jan  9 15:45 - 18:21  (02:36)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Jan 10 14:32:15 prod-db-01 kernel: [    0.000000] Linux version 5.15.0-1234-aws (buildd@lgw02-amd64-031) (gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #1234-Ubuntu SMP Fri Jan 10 13:45:22 UTC 2025
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Jan 10 14:32:15 prod-db-01 kernel: [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-1234-aws root=/dev/mapper/ubuntu--vg-root ro quiet splash vt_handoff=7
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Jan 10 14:32:16 prod-db-01 kernel: [    0.847291] Memory: 16384000K/16777216K available (14339K kernel code, 2847K rwdata, 4612K rodata, 2560K init, 7891K pages, 5242K reserved, 0K cma)
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>(no output — command completes silently)
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>(no output — command completes silently)
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Total_mce_registers: 10
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>MCE events since last login: 0
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>(no output — command completes silently)
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>SEL has 128 entries (max 128 entries)
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>   1 | 01/10/2025 | 14:32:01 | Power Supply #0x20 | Voltage high | Asserted
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>   2 | 01/10/2025 | 14:32:15 | System Event #0x73 | OEM Event | Asserted
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>   3 | 01/10/2025 | 14:32:22 | Processor #0x30 | Thermal Threshold | Asserted
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>   4 | 01/10/2025 | 14:33:01 | Memory Module #0x40 | Correctable ECC | Asserted
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>   5 | 01/10/2025 | 14:35:44 | System Event #0x73 | Boot completed | Asserted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ipmitool: Error: Unable to establish IPMI v1 / IPMI v2 session</code></strong> — Verify IPMI is enabled in BIOS and the BMC is accessible; if running in a VM, IPMI may not be available.
+<strong><code>journalctl: command not found</code></strong> — Install systemd-journal or use <code>dmesg</code> and</p>
+</div>
 <h2 id="useful-one-liners">Useful One-Liners<a class="headerlink" href="#useful-one-liners" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All errors in the last 10 minutes</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 minutes ago&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Files recently modified in /etc</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/fstab<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Which process has a file open</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>lsof<span class="w"> </span>/path/to/file
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Which process is listening on a port</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:8080
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Strace a process for syscall-level debugging</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-f<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Check for time skew (NTP offset &gt; 1s = problematic)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># All errors in the last 10 minutes</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 minutes ago&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Files recently modified in /etc</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/fstab<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Which process has a file open</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>lsof<span class="w"> </span>/path/to/file
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Which process is listening on a port</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:8080
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Strace a process for syscall-level debugging</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-f<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Check for time skew (NTP offset &gt; 1s = problematic)</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>-- Logs begin at Wed 2024-01-10 14:22:33 UTC, end at Wed 2024-01-10 14:32:18 UTC. --
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Jan 10 14:28:45 prod-app-01 kernel: [12847.392] Out of memory: Kill process 2156 (java) score 892 or sacrifice child
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Jan 10 14:29:12 prod-app-01 systemd[1]: Failed to start PostgreSQL Database Server.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Jan 10 14:31:05 prod-app-01 sudo: pam_unix(sudo:auth): authentication failure; logname=admin uid=1002 ruser=admin rhost=? user=root
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>/etc/nginx/nginx.conf
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>/etc/systemd/system/app.service
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>/etc/resolv.conf
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>/etc/hosts
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>/etc/ssh/sshd_config.d/99-custom.conf
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>COMMAND     PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>nginx    45821    root    5u   REG  10,2   4096    892145 /path/to/file
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>nginx    45822   www-data 5u   REG  10,2   4096    892145 /path/to/file
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>LISTEN    0      128          0.0.0.0:8080       0.0.0.0:*    users:((&quot;java&quot;,pid=3421,fd=42))
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Process 3421 attached
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>[pid  3421] mmap(NULL, 2097152, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8c2a400000
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>[pid  3421] mprotect(0x7f8c2a400000, 2097152, PROT_NONE) = 0
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>[pid  3421] mmap(0x7f8c2a400000, 1048576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED, -1, 0) = 0x7f8c2a400000
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>[pid  3421] brk(0x55a8c5e5f000) = 0x55a8c5e5f000
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>[pid  3421] mmap(NULL, 262144, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f8c29fc0000
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>...
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>System time   : -0.000000234 seconds slow of NTP time
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>journalctl: No such file or directory</code></strong> — Ensure systemd-journal is installed and the journal directory exists at <code>/var/log/journal</code> or <code>/run/log/journal</code>.
+<strong><code>lsof: command not found</code></strong> — Install the lsof package with <code>apt install lsof</code> (Debian/Ubuntu) or <code>yum install lsof</code> (RHEL/CentOS).
+<strong><code>strace: attach: ptrace(PTRACE_SEIZE, &lt;PID&gt;): Operation not permitted</code></strong> — Run strace with sudo or ensure the user has CAP_SYS_PTRACE capability.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7990,7 +8226,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

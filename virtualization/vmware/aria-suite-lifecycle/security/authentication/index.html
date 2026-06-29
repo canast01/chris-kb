@@ -9231,6 +9231,14 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@lcm-prod-01.example.local&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{&quot;status&quot;:&quot;UP&quot;,&quot;timestamp&quot;:&quot;2024-01-15T09:42:33.847Z&quot;,&quot;components&quot;:{&quot;database&quot;:&quot;UP&quot;,&quot;cache&quot;:&quot;UP&quot;,&quot;messaging&quot;:&quot;UP&quot;},&quot;version&quot;:&quot;8.10.2&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify the vIDM hostname/IP is correct, the service is running (<code>systemctl status vidm</code>), and network connectivity exists from lcm-prod-01 to the vIDM appliance.</p>
+</div>
 <p>After registration, the LCM login page shows a "Log In with Workspace ONE" button that redirects to VIDM for authentication.</p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -9257,7 +9265,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 <li>Schedule group sync: every 60 minutes</li>
 </ol>
 <p><strong>Map AD groups to LCM roles:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>LCM → Settings → Access Control → Add Role Assignment
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM → Settings → Access Control → Add Role Assignment
 </code></pre></div>
 <table>
 <thead>
@@ -9284,15 +9292,35 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 <hr />
 <h2 id="api-authentication">API Authentication<a class="headerlink" href="#api-authentication" title="Permanent link">&para;</a></h2>
 <p>Service accounts and automation scripts use the LCM REST API with token-based authentication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Obtain a session token (token is valid for 30 minutes by default)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-lcm-api@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Use the token in subsequent calls</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Obtain a session token (token is valid for 30 minutes by default)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-lcm-api@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Use the token in subsequent calls</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;documentSelfLink&quot;: &quot;/lcm/lcmservice/api/v2/environments&quot;,
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;queryTimeMicros&quot;: 1234567,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;pageSize&quot;: 100,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;documentLinks&quot;: [
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &quot;/lcm/lcmservice/api/v2/environments/environment-prod-01&quot;,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    &quot;/lcm/lcmservice/api/v2/environments/environment-prod-02&quot;,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &quot;/lcm/lcmservice/api/v2/environments/environment-staging-01&quot;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  ],
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  &quot;documentCount&quot;: 3,
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  &quot;currentPageLink&quot;: &quot;/lcm/lcmservice/api/v2/environments?pageSize=100&quot;,
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  &quot;nextPageLink&quot;: null
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present in example, but verify SSL verification is intentionally disabled for self-signed certs).
+<strong><code>jq: parse error: Cannot index null with string "token"</code></strong> — Verify credentials are correct and the login endpoint is accessible; check response with <code>curl -sk ... | jq '.'</code> to see actual error message.
+<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></strong> — Confirm the LCM hostname/IP is correct and the service is running with <code>curl -sk https://lcm-prod-01.example.local/lcm/health</code>.</p>
+</div>
 <p>For automation pipelines, store the service account password in a secrets manager (HashiCorp Vault, CyberArk) and retrieve it at runtime rather than hardcoding in scripts.</p>
 <hr />
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
@@ -9329,12 +9357,20 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 <li>Do not share credentials — use named VIDM-backed accounts for day-to-day access</li>
 <li>Store break-glass passwords in an offline vault or privileged access workstation</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Change local admin password via API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/user/password&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;oldPassword&quot;:&quot;&lt;old&gt;&quot;,&quot;newPassword&quot;:&quot;&lt;new&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Change local admin password via API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/user/password&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;oldPassword&quot;:&quot;&lt;old&gt;&quot;,&quot;newPassword&quot;:&quot;&lt;new&gt;&quot;}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{&quot;documentSelfLink&quot;:&quot;/core/authz/user/admin&quot;,&quot;documentKind&quot;:&quot;com:vmware:lcm:authz:user:UserState&quot;,&quot;documentVersion&quot;:0,&quot;documentUpdateTimeMicros&quot;:1702847392156000,&quot;documentExpirationTimeMicros&quot;:0,&quot;name&quot;:&quot;admin&quot;,&quot;email&quot;:&quot;admin@example.local&quot;,&quot;passwordLastChangedTime&quot;:1702847392156,&quot;passwordExpirationTime&quot;:1735425792156,&quot;locked&quot;:false}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's included if removed).
+<strong><code>{"errorCode":401,"message":"Invalid or expired authentication token"}</code></strong> — Verify the <code>$TOKEN</code> variable is set correctly with <code>echo $TOKEN</code> and re-authenticate if expired.
+<strong><code>{"errorCode":400,"message":"oldPassword does not match current password"}</code></strong> — Confirm the old password value in the JSON payload matches the current admin password exactly.</p>
+</div>
 <hr />
 <h2 id="certificate-trust-for-api-clients">Certificate Trust for API Clients<a class="headerlink" href="#certificate-trust-for-api-clients" title="Permanent link">&para;</a></h2>
 <p>LCM uses TLS for all API endpoints. Scripts connecting to LCM must either:</p>
@@ -9342,12 +9378,20 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 <li>Trust the LCM certificate CA (add CA to the OS trust store on the client)</li>
 <li>Use <code>-sk</code> (skip verify) for internal tooling only — not acceptable for production pipelines</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add LCM CA to trust store (Linux/macOS) so scripts can omit -k</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>lcm-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/lcm-ca.crt
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># or</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>trust<span class="w"> </span>anchor<span class="w"> </span>lcm-ca.crt<span class="w">  </span><span class="c1"># RHEL/Fedora</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Add LCM CA to trust store (Linux/macOS) so scripts can omit -k</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cp<span class="w"> </span>lcm-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/lcm-ca.crt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># or</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>trust<span class="w"> </span>anchor<span class="w"> </span>lcm-ca.crt<span class="w">  </span><span class="c1"># RHEL/Fedora</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot create regular file '/usr/local/share/ca-certificates/lcm-ca.crt': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>update-ca-certificates: command not found</code></strong> — Use <code>trust anchor lcm-ca.crt</code> instead if on RHEL/Fedora, or install <code>ca-certificates</code> package on Debian/Ubuntu.
+<strong><code>trust: command not found</code></strong> — Install the <code>p11-kit</code> package which provides the <code>trust</code> utility, or use <code>update-ca-certificates</code> on Debian/Ubuntu systems.</p>
+</div>
 <hr />
 <h2 id="session-and-token-policies">Session and Token Policies<a class="headerlink" href="#session-and-token-policies" title="Permanent link">&para;</a></h2>
 <table>
@@ -9418,7 +9462,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

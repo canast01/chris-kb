@@ -7891,103 +7891,226 @@ Nutanix native snapshot-based protection, Protection Domain replication to a rem
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Delete snapshot to free space</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>acli<span class="w"> </span>vm.snapshot_delete<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Creating snapshot for VM &#39;prod-db-01&#39;...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Snapshot &#39;pre-change-20240115&#39; created successfully.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>UUID: 00051234-1234-1234-1234-123456789abc
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Creating application-consistent snapshot for VM &#39;prod-db-01&#39;...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Snapshot &#39;pre-change-appcons&#39; created successfully.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>UUID: 00051235-5678-5678-5678-567890123def
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VM &#39;prod-db-01&#39; snapshots:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  pre-change-20240115 (crash-consistent) — Size: 2.3 GB — Created: 2024-01-15 14:22:33
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  pre-change-appcons (application-consistent) — Size: 2.3 GB — Created: 2024-01-15 14:23:18
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Powering off VM &#39;prod-db-01&#39;...
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>VM &#39;prod-db-01&#39; powered off.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Reverting VM &#39;prod-db-01&#39; to snapshot &#39;pre-change-appcons&#39;...
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Snapshot revert completed successfully.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Powering on VM &#39;prod-db-01&#39;...
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>VM &#39;prod-db-01&#39; powered on.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Deleting snapshot &#39;pre-change-20240115&#39;...
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Snapshot deleted successfully. Freed 2.3 GB.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM must be powered off before reverting snapshot</code></strong> — Power off the VM with <code>acli vm.off &lt;vm-name&gt;</code> before running snapshot_revert.
+<strong><code>Error: NGT not installed on VM for APPLICATION_CONSISTENT snapshots</code></strong> — Install Nutanix Guest Tools on the VM or use crash-consistent snapshots instead.
+<strong><code>Error: Snapshot 'pre-change-appcons' not found</code></strong> — Verify the snapshot name exists by running <code>acli vm.snapshot_list &lt;vm-name&gt;</code> and use the exact name from the output.</p>
+</div>
 <hr />
 <h2 id="protection-domains-replication-to-remote-cluster">Protection Domains (Replication to Remote Cluster)<a class="headerlink" href="#protection-domains-replication-to-remote-cluster" title="Permanent link">&para;</a></h2>
 <p>Protection Domains (PDs) group VMs, take coordinated snapshots, and replicate to a remote Nutanix cluster.</p>
 <h3 id="setup-remote-site">Setup Remote Site<a class="headerlink" href="#setup-remote-site" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure the remote cluster as a remote site</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;dr-site-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>address-list<span class="o">=</span>&lt;remote-cvm-ip&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Verify connectivity</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>ping<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;dr-site-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure the remote cluster as a remote site</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;dr-site-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>address-list<span class="o">=</span>&lt;remote-cvm-ip&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify connectivity</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>ping<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;dr-site-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Remote site &#39;dr-site-prod&#39; created successfully with UUID: 12345678-1234-1234-1234-123456789abc
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Address: 192.168.50.29
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Status: Created
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Pinging remote site &#39;dr-site-prod&#39; (192.168.50.29)...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Response time: 45ms
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Remote site is reachable and responding
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Connection status: HEALTHY
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid address format for remote site</code></strong> — Verify the remote CVM IP is valid and reachable; use <code>ping &lt;remote-cvm-ip&gt;</code> to test connectivity first.
+<strong><code>Error: Remote site 'dr-site-prod' already exists</code></strong> — Choose a unique name for the remote site or delete the existing one with <code>ncli remote-site delete name=&lt;dr-site-name&gt;</code>.
+<strong><code>Error: Connection timeout - unable to reach remote site at 192.168.50.29</code></strong> — Confirm network connectivity between clusters, check firewall rules allow port 2009, and verify the remote CVM IP address is correct.</p>
+</div>
 <h3 id="create-and-configure-protection-domain">Create and Configure Protection Domain<a class="headerlink" href="#create-and-configure-protection-domain" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create PD</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add VMs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>add-vms<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>vm-names<span class="o">=</span>vm1,vm2,vm3
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Schedule snapshots with replication</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>app-consistent<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>every-nth<span class="o">=</span><span class="m">3600</span><span class="w"> </span><span class="se">\ </span><span class="w">         </span><span class="c1"># every 1 hour</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>num-snaps-to-retain<span class="o">=</span><span class="m">24</span><span class="w"> </span><span class="se">\ </span><span class="w"> </span><span class="c1"># keep 24 local copies</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>remote-site-list<span class="o">=</span>&lt;dr-site-name&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Take an immediate snapshot and replicate</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create PD</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add VMs</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>add-vms<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>vm-names<span class="o">=</span>vm1,vm2,vm3
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Schedule snapshots with replication</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>app-consistent<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>every-nth<span class="o">=</span><span class="m">3600</span><span class="w"> </span><span class="se">\ </span><span class="w">         </span><span class="c1"># every 1 hour</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>num-snaps-to-retain<span class="o">=</span><span class="m">24</span><span class="w"> </span><span class="se">\ </span><span class="w"> </span><span class="c1"># keep 24 local copies</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>remote-site-list<span class="o">=</span>&lt;dr-site-name&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Take an immediate snapshot and replicate</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Protection Domain created successfully with UUID: 00051234-1234-1234-1234-123456789abc
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Name: prod-db-pd
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>State: ACTIVE
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VMs added to Protection Domain prod-db-pd:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  vm1 (UUID: 00051111-1111-1111-1111-111111111111)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  vm2 (UUID: 00052222-2222-2222-2222-222222222222)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  vm3 (UUID: 00053333-3333-3333-3333-333333333333)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Schedule configured for Protection Domain prod-db-pd:
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Snapshot interval: 3600 seconds (1 hour)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Snapshots to retain: 24
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  App-consistent: false
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Remote replication site: dr-site-prod
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Next scheduled snapshot: 2024-01-15 14:30:00 UTC
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Snapshot initiated for Protection Domain prod-db-pd
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Snapshot UUID: 00054444-4444-4444-4444-444444444444
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Replication to dr-site-prod in progress...
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Replication completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection Domain '&lt;pd-name&gt;' already exists</code></strong> — Use a unique name or delete the existing PD with <code>ncli pd delete name=&lt;pd-name&gt;</code> first.
+<strong><code>Error: VM 'vm1' not found or not accessible</code></strong> — Verify VM names are correct and the Prism user has permissions to access those VMs.
+<strong><code>Error: Remote site '&lt;dr-site-name&gt;' is not reachable or not configured</code></strong> — Confirm the DR site is registered in Prism and network connectivity exists between clusters.</p>
+</div>
 <h3 id="monitor-replication">Monitor Replication<a class="headerlink" href="#monitor-replication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">         </span><span class="c1"># PD status, last snapshot, replication state</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>ls-snapshots<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">   </span><span class="c1"># list snapshots (local + remote)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check replication transfer progress</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|bytes&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">         </span><span class="c1"># PD status, last snapshot, replication state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>ls-snapshots<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">   </span><span class="c1"># list snapshots (local + remote)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check replication transfer progress</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication\|bytes&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Protection Domain: prod-db-pd
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                              UUID: 12a4f8c9-3e2b-47d1-9c5a-8f2e1d3b4c6a
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>                        Description: Production Database Protection Domain
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>                    Active: true
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>                    Metro Avail: false
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>                    Backup Enabled: true
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>                    Last Snapshot Time: 2024-01-15 14:32:18
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>                    Replication State: Active
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>                    Remote Site: dr-cluster-01
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>                    Bytes Protected: 2.847 TB
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>                    Replication Bytes Transferred: 2.847 TB
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>                    Replication Bytes Remaining: 0 B
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>                    Replication Transfer Rate: 0 B/s
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>                    Last Replication Time: 2024-01-15 14:35:42
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Snapshot UUID                            Creation Time           Expiration Time
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>12a4f8c9-3e2b-47d1-9c5a-8f2e1d3b4c6a    2024-01-15 14:32:18     2024-02-14 14:32:18
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>8f2e1d3b-4c6a-12a4-f8c9-3e2b47d19c5a    2024-01-14 14:30:05     2024-02-13 14:30:05
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>3e2b47d1-9c5a-8f2e-1d3b-4c6a12a4f8c9    2024-01-13 14:28:52     2024-02-12 14:28:52
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>...
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Replication State: Active
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Bytes Protected: 2.847 TB
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Replication Bytes Transferred: 2.847 TB
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Replication Bytes Remaining: 0 B
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection Domain &lt;pd-name&gt; not found</code></strong> — Verify the PD name with <code>ncli pd ls</code> and use the exact name from the output.
+<strong><code>Error: Connection refused (10.0.0.1:9440)</code></strong> — Ensure the Nutanix cluster is reachable and ncli is configured with correct cluster credentials via <code>ncli -h &lt;cluster-ip&gt;</code>.</p>
+</div>
 <h3 id="failover-to-remote-site">Failover to Remote Site<a class="headerlink" href="#failover-to-remote-site" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Activate PD on remote site (failover)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># SSH to remote CVM</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ncli<span class="w"> </span>pd<span class="w"> </span>activate<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># VMs are restored from the latest replicated snapshot</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Power on VMs manually after activation:</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Activate PD on remote site (failover)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># SSH to remote CVM</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ncli<span class="w"> </span>pd<span class="w"> </span>activate<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># VMs are restored from the latest replicated snapshot</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Power on VMs manually after activation:</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ncli pd activate name=prod-pd-01
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Activating Protection Domain prod-pd-01...
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Protection Domain prod-pd-01 activated successfully.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Latest snapshot: 2024-01-15T14:32:18Z (RPO: 2 minutes)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Restored VM count: 47
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>VM power state: OFF (manual activation required)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>acli vm.on web-server-01
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>VM web-server-01 powered on successfully.
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>acli vm.on app-server-02
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>VM app-server-02 powered on successfully.
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>acli vm.on db-primary-03
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>VM db-primary-03 powered on successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncli pd activate name=prod-pd-01: Error: Protection Domain not found</code></strong> — Verify the PD name matches exactly with <code>ncli pd list</code> and confirm you are connected to the correct remote cluster.
+<strong><code>acli vm.on web-server-01: Error: VM not found or not in activated PD</code></strong> — Ensure the PD activation completed successfully and the VM name is correct; use <code>acli vm.list</code> to verify VM presence on the remote site.
+<strong><code>ncli pd activate name=prod-pd-01: Error: Protection Domain is already active</code></strong> — The PD is already activated on this site; check if failover was already completed or if you are on the wrong cluster.</p>
+</div>
 <hr />
 <h2 id="nutanix-dr-prism-central-policy-based">Nutanix DR (Prism Central — Policy-Based)<a class="headerlink" href="#nutanix-dr-prism-central-policy-based" title="Permanent link">&para;</a></h2>
 <p>Nutanix DR replaces Protection Domains for new deployments. Managed entirely from Prism Central.</p>
 <h3 id="create-a-recovery-plan">Create a Recovery Plan<a class="headerlink" href="#create-a-recovery-plan" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Prism Central → Data Protection → Recovery Plans → Create Recovery Plan
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Source cluster: &lt;primary&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Target cluster: &lt;dr-site&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Network mappings: map source VLANs to DR VLANs
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Boot order: define VM startup sequence (DB before App before Web)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Central → Data Protection → Recovery Plans → Create Recovery Plan
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Source cluster: &lt;primary&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Target cluster: &lt;dr-site&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Network mappings: map source VLANs to DR VLANs
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Boot order: define VM startup sequence (DB before App before Web)
 </code></pre></div>
 <h3 id="create-a-protection-policy">Create a Protection Policy<a class="headerlink" href="#create-a-protection-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Prism Central → Data Protection → Protection Policies → Create
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Primary location: &lt;primary cluster&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Recovery location: &lt;dr cluster&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  RPO: 1 hour (minimum: 1 minute with async replication)
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Retention: local 24 snapshots, remote 7 days
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Assign categories: tag VMs with the policy category
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prism Central → Data Protection → Protection Policies → Create
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Primary location: &lt;primary cluster&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Recovery location: &lt;dr cluster&gt;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  RPO: 1 hour (minimum: 1 minute with async replication)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Retention: local 24 snapshots, remote 7 days
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Assign categories: tag VMs with the policy category
 </code></pre></div>
 <h3 id="assign-vms-to-policy">Assign VMs to Policy<a class="headerlink" href="#assign-vms-to-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Central → VMs → select VMs → Manage Categories
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Add category: ProtectionPolicy=&lt;policy-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Prism Central → VMs → select VMs → Manage Categories
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Add category: ProtectionPolicy=&lt;policy-name&gt;
 </code></pre></div>
 <p>VMs with the category are automatically protected by the policy.</p>
 <h3 id="test-failover-non-disruptive">Test Failover (Non-Disruptive)<a class="headerlink" href="#test-failover-non-disruptive" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Central → Recovery Plans → select plan → Test Failover
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Target: DR cluster
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Power on VMs: Yes (in test network, isolated)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Review results, then clean up test VMs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Prism Central → Recovery Plans → select plan → Test Failover
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  Target: DR cluster
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  Power on VMs: Yes (in test network, isolated)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  Review results, then clean up test VMs
 </code></pre></div>
 <hr />
 <h2 id="veeam-backup-replication-for-ahv">Veeam Backup &amp; Replication for AHV<a class="headerlink" href="#veeam-backup-replication-for-ahv" title="Permanent link">&para;</a></h2>
 <p>Veeam uses the Nutanix AHV Backup Proxy (a Veeam-provided VM on AHV) to back up VMs via the AOS snapshot API.</p>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Veeam Backup Server → Nutanix AHV Backup Proxy VM → AOS API → VM Snapshots
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                    ↓
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>              Veeam Backup Repository (NFS/SMB/S3/dedup appliance)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Veeam Backup Server → Nutanix AHV Backup Proxy VM → AOS API → VM Snapshots
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>                    ↓
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>              Veeam Backup Repository (NFS/SMB/S3/dedup appliance)
 </code></pre></div>
 <h3 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>1. Deploy Veeam AHV Backup Proxy OVA on the Nutanix cluster
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2. In Veeam Backup &amp; Replication:
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>   Backup Infrastructure → Managed Servers → Add Server
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>   Type: Nutanix AHV
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>   Address: &lt;Prism Element IP&gt;
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>   Credentials: Nutanix admin
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>3. Configure backup repository (target storage for backups)
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>4. Create backup job:
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>   Backup Jobs → New Job → Virtual Machine
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>   Select VMs or categories
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>   Backup repository: &lt;configured repo&gt;
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>   Schedule: daily at 02:00
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>   Retention: 14 days
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>1. Deploy Veeam AHV Backup Proxy OVA on the Nutanix cluster
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2. In Veeam Backup &amp; Replication:
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>   Backup Infrastructure → Managed Servers → Add Server
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>   Type: Nutanix AHV
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>   Address: &lt;Prism Element IP&gt;
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>   Credentials: Nutanix admin
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>3. Configure backup repository (target storage for backups)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>4. Create backup job:
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>   Backup Jobs → New Job → Virtual Machine
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>   Select VMs or categories
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>   Backup repository: &lt;configured repo&gt;
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>   Schedule: daily at 02:00
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>   Retention: 14 days
 </code></pre></div>
 <h3 id="restore-options">Restore Options<a class="headerlink" href="#restore-options" title="Permanent link">&para;</a></h3>
 <ul>
@@ -7998,39 +8121,84 @@ Nutanix native snapshot-based protection, Protection Domain replication to a rem
 <hr />
 <h2 id="hycu-for-nutanix">HYCU for Nutanix<a class="headerlink" href="#hycu-for-nutanix" title="Permanent link">&para;</a></h2>
 <p>HYCU is a purpose-built backup solution for Nutanix with direct AOS API integration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>1. Deploy HYCU appliance from Nutanix Marketplace or OVA
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>2. Connect to Nutanix cluster: HYCU UI → Sources → Add
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>3. Assign targets (S3, NFS, SMB) → Targets → Add
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>4. Create backup policies and assign to VMs or categories
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>5. Schedule: daily full or incremental
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>1. Deploy HYCU appliance from Nutanix Marketplace or OVA
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>2. Connect to Nutanix cluster: HYCU UI → Sources → Add
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>3. Assign targets (S3, NFS, SMB) → Targets → Add
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>4. Create backup policies and assign to VMs or categories
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>5. Schedule: daily full or incremental
 </code></pre></div>
 <p>HYCU supports application-aware backup (Exchange, SQL, Oracle) without agents by leveraging NGT VSS integration.</p>
 <hr />
 <h2 id="restore-runbook">Restore Runbook<a class="headerlink" href="#restore-runbook" title="Permanent link">&para;</a></h2>
 <h3 id="restore-a-vm-from-nutanix-snapshot">Restore a VM from Nutanix Snapshot<a class="headerlink" href="#restore-a-vm-from-nutanix-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List available snapshots</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Restore (clone from snapshot to avoid overwriting original)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;vm-name&gt;-restored<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># OR revert in place (destructive — VM must be off)</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># List available snapshots</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Restore (clone from snapshot to avoid overwriting original)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;vm-name&gt;-restored<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># OR revert in place (destructive — VM must be off)</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>acli vm.snapshot_list prod-web-01
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  Snapshot UUID                            | Snapshot Name        | Created (UTC)           | Size (GB)
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  12a4f8c9-7e2b-4d61-9c3a-5b8e1f2d9c4a    | daily-2024-01-15     | 2024-01-15 02:30:45     | 245.6
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>  3f7d2e1c-9a4b-5c8f-1d6e-7a9c2b5f8e3d    | daily-2024-01-14     | 2024-01-14 02:30:12     | 243.2
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  8c5a1f9e-3d7b-4c2a-6e9f-1b4d7a2c5e8f    | weekly-2024-01-08    | 2024-01-08 03:15:22     | 238.9
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>acli vm.clone prod-web-01 clone_vm_name=prod-web-01-restored snapshot_name=daily-2024-01-15
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Cloning VM from snapshot...
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>Clone task UUID: 7f3e8c1a-9d2b-5f4c-1a6e-3c7b9e2d5a8f
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>Clone completed successfully. New VM: prod-web-01-restored
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>acli vm.off prod-web-01
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>Powering off VM...
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>VM powered off successfully.
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>acli vm.snapshot_revert prod-web-01 snapshot_name=daily-2024-01-15
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>Reverting VM to snapshot daily-2024-01-15...
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>Revert completed successfully.
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>acli vm.on prod-web-01
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>Powering on VM...
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>VM powered on successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM prod-web-01 is powered on. Cannot revert snapshot on running VM.</code></strong> — Power off the VM with <code>acli vm.off &lt;vm-name&gt;</code> before attempting snapshot revert.
+<strong><code>Error: Snapshot daily-2024-01-15 not found for VM prod-web-01.</code></strong> — Verify the snapshot name exists by running <code>acli vm.snapshot_list &lt;vm-name&gt;</code> and use the exact snapshot name from the output.</p>
+</div>
 <h3 id="restore-a-vm-from-protection-domain">Restore a VM from Protection Domain<a class="headerlink" href="#restore-a-vm-from-protection-domain" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List snapshots in the PD</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>ls-snapshots<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Restore VM from a specific snapshot</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>restore-vm<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>vm-names<span class="o">=</span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>snapshot-id<span class="o">=</span>&lt;snapshot-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>restore-network-configuration<span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># List snapshots in the PD</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>ls-snapshots<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Restore VM from a specific snapshot</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>restore-vm<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>vm-names<span class="o">=</span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>snapshot-id<span class="o">=</span>&lt;snapshot-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span>restore-network-configuration<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>PD Name                          Snapshot ID                          Created Time            Size (GB)
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>prod-cluster-pd                  a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6  2024-01-15 14:32:18     245.3
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>prod-cluster-pd                  b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7  2024-01-14 09:15:42     245.3
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>prod-cluster-pd                  c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8  2024-01-13 22:47:05     245.3
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Task ID: task-12345
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Status: SUCCEEDED
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Restore VM &#39;web-server-01&#39; from snapshot &#39;a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&#39;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Restore completed in 4 minutes 23 seconds
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>Network configuration restored: eth0 (192.168.1.45/24), eth1 (10.0.0.12/24)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: PD 'prod-cluster-pd' not found</code></strong> — Verify the PD name with <code>ncli pd ls</code> and ensure you have cluster connectivity.
+<strong><code>Error: Snapshot ID 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' does not exist for PD 'prod-cluster-pd'</code></strong> — Confirm the snapshot ID matches the output of <code>ncli pd ls-snapshots</code> for the correct PD.
+<strong><code>Error: VM 'web-server-01' already exists in the cluster</code></strong> — Use a different VM name in the restore command or delete the existing VM before restoring.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8068,7 +8236,7 @@ Nutanix native snapshot-based protection, Protection Domain replication to a rem
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

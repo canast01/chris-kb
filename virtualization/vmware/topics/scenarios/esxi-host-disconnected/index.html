@@ -10820,6 +10820,22 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 <p>Ping the host's vmk0 IP from a jump host on the management VLAN to determine whether the issue is network or agent.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>&lt;esxi-mgmt-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 192.168.1.42 (192.168.1.42) 56(84) bytes of data.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>64 bytes from 192.168.1.42: icmp_seq=4 ttl=64 time=1.95 ms
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>^C
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>--- 192.168.1.42 statistics ---
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;esxi-mgmt-ip&gt;</code></strong> — Replace <code>&lt;esxi-mgmt-ip&gt;</code> with the actual ESXi management IP address (e.g., <code>192.168.1.42</code>).
+<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Verify the ESXi host is powered on, the management network is connected, and firewall rules allow ICMP traffic.
+<strong><code>ping: sendto: No route to host</code></strong> — Confirm the ESXi management IP is on the same subnet or that routing is properly configured between your admin workstation and the ESXi management network.</p>
+</div>
 <ul>
 <li><strong>Reachable</strong> → host is up; issue is vpxa/hostd or SSL.</li>
 <li><strong>Unreachable</strong> → network is down or host crashed; use iDRAC/iLO console.</li>
@@ -10827,63 +10843,181 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 <hr />
 <h2 id="4-check-and-restart-vpxa-and-hostd-agents">4. Check and Restart vpxa and hostd Agents<a class="headerlink" href="#4-check-and-restart-vpxa-and-hostd-agents" title="Permanent link">&para;</a></h2>
 <p>Read the logs before restarting — the lines immediately before a crash identify the disconnect reason.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vpxa.log
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hostd.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vpxa.log
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hostd.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vpxa (pid 2847) is running...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>hostd (pid 3124) is running...
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15 14:32:18.547 [7F2A4C1B9700 info &#39;Libs&#39; opID=52d41e22] VpxaHalVmomi_GetConfig: Entering
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15 14:32:19.123 [7F2A4C1B9700 info &#39;Hostd&#39; opID=52d41e22] Config update: vMotion enabled
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15 14:32:20.445 [7F2A4C1B9700 warn &#39;Libs&#39; opID=52d41e22] Certificate expiry in 45 days
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15 14:32:21.678 [7F2A4C1B9700 info &#39;Libs&#39; opID=52d41e22] Connection to vCenter established
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2024-01-15 14:32:22.891 [7F2A4C1B9700 info &#39;Hostd&#39; opID=52d41e22] Inventory sync completed
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>...
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15 14:33:45.234 [7F2A4C1B9700 info &#39;Libs&#39; opID=52d41e22] Heartbeat received from vCenter
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>2024-01-15 14:33:46.567 [7F2A4C1B9700 info &#39;Hostd&#39; opID=52d41e22] VM snapshot operation completed
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15 14:33:47.890 [7F2A4C1B9700 info &#39;Libs&#39; opID=52d41e22] Storage device scan completed
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15 14:33:48.123 [7F2A4C1B9700 info &#39;Hostd&#39; opID=52d41e22] NTP synchronization successful
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2024-01-15 14:33:49.456 [7F2A4C1B9700 info &#39;Libs&#39; opID=52d41e22] All services operational
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vpxa (pid XXXX) is running... hostd (pid XXXX) is running...</code></strong> — Both services are healthy; if either shows "is stopped," restart with <code>/etc/init.d/vpxa start</code> and <code>/etc/init.d/hostd start</code>.
+<strong><code>tail: cannot open '/var/log/vpxa.log' for reading: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access ESXi host logs.
+<strong><code>[7F2A4C1B9700 error 'Hostd'] Connection to vCenter failed: timeout</code></strong> — Verify network connectivity to vCenter and check firewall rules on port 443.</p>
+</div>
 <p>If an agent is stopped or crashed, restart it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Stopping vpxa:                                             [  OK  ]
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Starting vpxa:                                             [  OK  ]
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Stopping hostd:                                            [  OK  ]
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Starting hostd:                                            [  OK  ]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vpxa: unrecognized service</code></strong> — Verify the ESXi host is running and the vpxa service exists by checking <code>/etc/init.d/vpxa</code> file permissions and presence.
+<strong><code>hostd: command not found</code></strong> — Ensure you are running these commands directly on the ESXi host (not a remote system) with root privileges.</p>
+</div>
 <p>Wait 60–90 seconds, then attempt the vCenter Reconnect action again.</p>
 <hr />
 <h2 id="5-verify-management-network-configuration">5. Verify Management Network Configuration<a class="headerlink" href="#5-verify-management-network-configuration" title="Permanent link">&para;</a></h2>
 <p>Confirm vmk0 IP, gateway, and DNS have not drifted after a failed configuration change or DHCP interference.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name  IPv4 Address      IPv4 Netmask      IPv4 Broadcast    Address Type  DHCP DNS
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>----  ---------------   ----------------  ----------------  -----------   ---------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vmk0  192.168.1.105     255.255.255.0     192.168.1.255     STATIC        false
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vmk1  10.20.30.50       255.255.255.0     10.20.30.255      STATIC        false
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vmk2  172.16.0.100      255.255.255.0     172.16.0.255      DHCP          true
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Destination     Netmask         Gateway         Interface
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>-----------     -------         -------         ---------
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>0.0.0.0         0.0.0.0         192.168.1.1     vmk0
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>192.168.1.0     255.255.255.0   0.0.0.0         vmk0
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>10.20.30.0      255.255.255.0   0.0.0.0         vmk1
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Current Hostname: esx-prod-01.lab.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace network ip interface ipv4 get</code></strong> — Verify esxcli is available and you are running ESXi 5.0 or later; older versions use different command syntax.
+<strong><code>Error: Unable to connect to the host</code></strong> — Ensure SSH is enabled on the ESXi host and your user account has sufficient privileges (typically root or a user in the administrators group).</p>
+</div>
 <p>Look for: vmk0 shows the correct static IP, default gateway is present, FQDN matches what vCenter has registered. Any mismatch prevents reconnection even after agent restarts.</p>
 <hr />
 <h2 id="6-verify-dns-resolution">6. Verify DNS Resolution<a class="headerlink" href="#6-verify-dns-resolution" title="Permanent link">&para;</a></h2>
 <p>ESXi must resolve the vCenter FQDN — a broken DNS lookup blocks vpxa even when IP connectivity is fine.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nslookup<span class="w"> </span>vcenter.domain.local
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>nslookup<span class="w"> </span>vcenter.domain.local
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Server:     10.0.0.1
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Address:    10.0.0.1#53
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Name:   vcenter.domain.local
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Address: 192.168.1.50
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a># Generated by NetworkManager
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>nameserver 10.0.0.1
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>nameserver 10.0.0.2
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>search domain.local
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>IPv4 DNS Servers
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>   10.0.0.1
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>   10.0.0.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nslookup: can't resolve 'vcenter.domain.local': No address associated with hostname</code></strong> — Verify the DNS server is reachable and the hostname exists in DNS; check <code>/etc/resolv.conf</code> has correct nameserver entries.
+<strong><code>cat: /etc/resolv.conf: No such file or directory</code></strong> — This file may not exist on some ESXi hosts; use <code>esxcli network ip dns server list</code> instead to verify DNS configuration.
+<strong><code>Could not connect to Management Agent on localhost</code></strong> — Run the commands directly on the ESXi host via SSH or vSphere Client console, not from a remote system without proper credentials.</p>
+</div>
 <p>Correct a missing DNS server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span>&lt;dns-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span>&lt;dns-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or parameter: --server</code></strong> — Use the correct syntax <code>esxcli network ip dns server add -a &lt;dns-ip&gt;</code> (the flag is <code>-a</code>, not <code>--server</code>).
+<strong><code>Error: Connect to localhost failed. Connection refused</code></strong> — Ensure you are running this command directly on an ESXi host with SSH enabled, not from a remote vSphere client; alternatively, use <code>esxcli -s &lt;host-ip&gt; -u root -p &lt;password&gt;</code> to target the host remotely.</p>
+</div>
 <p>Look for: <code>nslookup</code> returns the correct vCenter IP; no "NXDOMAIN" or timeout errors.</p>
 <hr />
 <h2 id="7-check-ntp-time-drift-causes-ssl-failures">7. Check NTP — Time Drift Causes SSL Failures<a class="headerlink" href="#7-check-ntp-time-drift-causes-ssl-failures" title="Permanent link">&para;</a></h2>
 <p>A time difference of more than 60 seconds between the host and vCenter causes TLS handshake failures that look identical to certificate errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>date
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>date
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NTP Enabled: true
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>NTP Servers: 10.20.30.40, 10.20.30.41
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>NTP Service Running: true
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>==============================================================================
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a> 10.20.30.40     .LOCL.          1 u   64   64  377    2.341   -0.523   1.204
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a> 10.20.30.41     .LOCL.          1 u   62   64  377    2.156    0.412   0.987
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a> ntp.ubuntu.com  193.67.79.202   2 u   58   64  377   18.523    1.234   2.156
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Thu Mar 14 09:47:23 UTC 2024
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NTP Enabled: false</code></strong> — Enable NTP with <code>esxcli system ntp set --enabled=true</code> and start the service with <code>systemctl start ntpd</code>.
+<strong><code>reach   0</code></strong> — Verify network connectivity to NTP servers and check firewall rules allowing UDP port 123 outbound from the ESXi host.
+<strong><code>command not found: ntpq</code></strong> — Install the ntp client package or use <code>esxcli system ntp get</code> alone if ntpq is unavailable on your ESXi version.</p>
+</div>
 <p>Look for: offset column in <code>ntpq -p</code> output beyond ±60,000 ms (60 seconds) from the reference server. Compare <code>date</code> output on the host with vCenter system time to confirm drift.</p>
 <p>Fix NTP if drifted — see the
 <a href="ntp-drift-sso-certificate/index.md">NTP Drift Scenario</a> for the full remediation procedure.</p>
 <hr />
 <h2 id="8-read-logs-for-root-cause">8. Read Logs for Root Cause<a class="headerlink" href="#8-read-logs-for-root-cause" title="Permanent link">&para;</a></h2>
 <p>After any restarts, read logs to confirm the error is resolved and document the root cause.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2024-01-15T09:42:33.847Z [7F2A1B4C] [ssl] Certificate validation failed for peer 192.168.1.50
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2024-01-15T09:43:01.221Z [7F2A1B4D] [error] Connection timeout to vCenter server vc.internal.local:443
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2024-01-15T09:44:15.556Z [7F2A1B4E] [ssl] Unable to load certificate chain from /etc/vmware/ssl/rui.crt
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>2024-01-15T09:45:22.889Z [7F2A1B4F] [error] SSL_ERROR_HANDSHAKE_FAILURE_ALERT: peer refused connection
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>2024-01-15T09:46:08.112Z [7F2A1B50] [certificate] Certificate expires in 45 days
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>2024-01-15T09:47:33.445Z [7F2A1B51] [error] Timeout waiting for hostd response after 30 seconds
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>2024-01-15T09:48:19.778Z [7F2A1B52] [ssl] TLS version mismatch: client requested TLSv1.0, server requires TLSv1.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/hostd.log' for reading: No such file or directory</code></strong> — Verify the ESXi host is running and the log file path is correct; check if you're on the correct host or if logs have been rotated.
+<strong><code>grep: (standard input) is empty</code></strong> — This occurs when the log file exists but has no matching entries; it's not an error condition, just no matching lines found.</p>
+</div>
 <p>Common patterns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[error] SSL Exception: error:14090086 — certificate verify failed → NTP drift or cert expiry
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>[error] Connection refused on port 902              → firewall blocking vCenter → host traffic
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>[error] vpxa failed to connect: timeout             → network path issue between host and vCenter
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>[error] SSL Exception: error:14090086 — certificate verify failed → NTP drift or cert expiry
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>[error] Connection refused on port 902              → firewall blocking vCenter → host traffic
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>[error] vpxa failed to connect: timeout             → network path issue between host and vCenter
 </code></pre></div>
 <hr />
 <h2 id="9-nsx-transport-node-impact">9. NSX Transport Node Impact<a class="headerlink" href="#9-nsx-transport-node-impact" title="Permanent link">&para;</a></h2>
 <p>If the disconnected host is an NSX transport node, NSX Manager loses its control channel and new policy pushes queue until the host reconnects.</p>
 <p>Check NSX Manager → <strong>Fabric → Transport Nodes → select host</strong>. If state remains "Down" after vCenter reconnect:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>restart
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/etc/init.d/nsx-mpa<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>restart
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>/etc/init.d/nsx-mpa<span class="w"> </span>restart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Stopping NSX Operations Agent...                                    [  OK  ]
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Starting NSX Operations Agent...                                    [  OK  ]
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Stopping NSX Message Processing Agent...                           [  OK  ]
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Starting NSX Message Processing Agent...                           [  OK  ]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/etc/init.d/nsx-opsagent: No such file or directory</code></strong> — Verify NSX is installed on this host and the service paths are correct with <code>ls -la /etc/init.d/ | grep nsx</code>.
+<strong><code>Job for nsx-opsagent.service failed because the control process exited with error code.</code></strong> — Check service logs with <code>journalctl -u nsx-opsagent -n 50</code> to identify the underlying startup failure.</p>
+</div>
 <p>Look for: transport node state transitions to "Up" in NSX Manager within 60–90 seconds.</p>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
@@ -10989,7 +11123,7 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7555,154 +7555,443 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>terraform<span class="w"> </span>providers
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Output: dependency tree of modules → providers</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Success! The configuration is valid.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Terraform has been successfully initialized!
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Terraform v1.5.7
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>on linux_amd64
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>+ provider registry.terraform.io/hashicorp/aws v5.31.0
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>+ provider registry.terraform.io/hashicorp/azurerm v3.85.0
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>+ provider registry.terraform.io/hashicorp/null v3.2.2
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Providers required by configuration:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>├── provider[registry.terraform.io/hashicorp/aws] (v5.31.0)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>├── provider[registry.terraform.io/hashicorp/azurerm] (v3.85.0)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>└── provider[registry.terraform.io/hashicorp/null] (v3.2.2)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>module.networking
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>├── provider[registry.terraform.io/hashicorp/aws] (v5.31.0)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>└── provider[registry.terraform.io/hashicorp/null] (v3.2.2)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid or unsupported block type on main.tf line 42, in resource "aws_instance" "web"</code></strong> — Review the resource block syntax and ensure the resource type matches the provider schema.
+<strong><code>Error: Unsupported argument on variables.tf line 15, in variable "instance_count"</code></strong> — Remove or correct the argument name; check the Terraform documentation for valid variable block arguments.
+<strong><code>Error: Failed to query available provider versions on registry.terraform.io</code></strong> — Verify internet connectivity and that the provider registry is accessible, or configure a custom registry mirror.</p>
+</div>
 <hr />
 <h2 id="step-2-enable-debug-logging">Step 2 — Enable debug logging<a class="headerlink" href="#step-2-enable-debug-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable trace-level logging (most verbose — includes all provider API calls)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>TRACE
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PATH</span><span class="o">=</span>./terraform-debug-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.log
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>terraform<span class="w"> </span>plan<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-plan-output.txt
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Provider-only trace (reduces noise if only provider API calls are needed)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PROVIDER</span><span class="o">=</span>DEBUG
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>INFO
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>terraform<span class="w"> </span>plan<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-plan-output.txt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># After diagnosis — unset to avoid trace log overhead</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG<span class="w"> </span>TF_LOG_PROVIDER<span class="w"> </span>TF_LOG_PATH
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Search the trace log for the root cause</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|denied\|unauthorized&quot;</span><span class="w"> </span>terraform-debug-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Find provider API calls and their response codes</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;HTTP.*[45][0-9][0-9]&quot;</span><span class="w"> </span>terraform-debug-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable trace-level logging (most verbose — includes all provider API calls)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>TRACE
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PATH</span><span class="o">=</span>./terraform-debug-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.log
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>terraform<span class="w"> </span>plan<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-plan-output.txt
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Provider-only trace (reduces noise if only provider API calls are needed)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PROVIDER</span><span class="o">=</span>DEBUG
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>INFO
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>terraform<span class="w"> </span>plan<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-plan-output.txt
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># After diagnosis — unset to avoid trace log overhead</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG<span class="w"> </span>TF_LOG_PROVIDER<span class="w"> </span>TF_LOG_PATH
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Search the trace log for the root cause</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|denied\|unauthorized&quot;</span><span class="w"> </span>terraform-debug-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Find provider API calls and their response codes</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;HTTP.*[45][0-9][0-9]&quot;</span><span class="w"> </span>terraform-debug-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>terraform-debug-2025-01-15-1423.log
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  ~ update in-place
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Terraform will perform the following actions:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  # aws_instance.web[0] will be updated in-place
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  ~ resource &quot;aws_instance&quot; &quot;web&quot; {
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      ~ tags = {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>          ~ &quot;Environment&quot; = &quot;staging&quot; -&gt; &quot;production&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        }
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    }
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Plan: 0 to add, 1 to change, 0 to destroy.
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>2025-01-15T14:23:47.823Z [DEBUG] provider.terraform-provider-aws: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:42,&quot;method&quot;:&quot;ApplyResourceChange&quot;,&quot;params&quot;:{&quot;typeName&quot;:&quot;aws_instance&quot;,&quot;priorState&quot;:{&quot;values&quot;:{&quot;ami&quot;:&quot;ami-0c55b159cbfafe1f0&quot;}}}}
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>2025-01-15T14:23:48.156Z [DEBUG] provider.terraform-provider-aws: HTTP 200 OK - DescribeInstances completed successfully
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2025-01-15T14:23:49.234Z [WARN] provider.terraform-provider-aws: Rate limit approaching - 45 requests remaining in current window
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>terraform-debug-2025-01-15-1423.log:2025-01-15T14:23:50.891Z [ERROR] provider.terraform-provider-aws: AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute on resource: arn:aws:ec2:us-east-1:123456789012:instance/i-0abcd1234efgh5678
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>terraform-debug-2025-01-15-1423.log:2025-01-15T14:23:51.102Z [ERROR] Terraform encountered an error: failed to update resource
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>terraform-debug-2025-01-15-1423.log:2025-01-15T14:23:48.445Z [DEBUG] provider.terraform-provider-aws: HTTP 403 Forbidden - ModifyInstanceAttribute denied
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>terraform-debug-2025-01-15-1423.log:2025-01-15T14:23:49.667Z [DEBUG] provider.terraform-provider-aws: HTTP 401 Unauthorized - Invalid AWS credentials
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute</code></strong> — Add the required IAM policy action <code>ec2:ModifyInstanceAttribute</code> to the Terraform user's IAM role or policy.
+<strong><code>HTTP 403 Forbidden</code></strong> — Verify AWS credentials are correct and the IAM user/role has permissions for the resource being modified; check credential expiration with <code>aws sts get-caller-identity</code>.
+<strong><code>HTTP 401 Unauthorized - Invalid AWS credentials</code></strong> — Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set correctly or update your AWS credentials file at <code>~/.aws/credentials</code>.</p>
+</div>
 <hr />
 <h2 id="step-3-debug-provider-authentication">Step 3 — Debug provider authentication<a class="headerlink" href="#step-3-debug-provider-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List provider plugins installed in the working directory</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>providers
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check which credentials are configured in environment variables</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># AWS:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;AWS_ACCESS_KEY|AWS_SECRET|AWS_SESSION_TOKEN|AWS_PROFILE|AWS_REGION&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w">    </span><span class="c1"># Verify the identity Terraform will use</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Azure:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ARM_CLIENT|ARM_TENANT|ARM_SUBSCRIPTION|ARM_USE_MSI&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>account<span class="w"> </span>show<span class="w">                </span><span class="c1"># Verify Azure identity</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># GCP:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GOOGLE_CREDENTIALS
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>application-default<span class="w"> </span>print-access-token<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># vSphere (govmomi-based providers):</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VSPHERE_USER|VSPHERE_PASSWORD|VSPHERE_SERVER&quot;</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>govc<span class="w"> </span>about<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">VSPHERE_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">VSPHERE_PASSWORD</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">VSPHERE_SERVER</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># For profile-based AWS auth (multiple accounts):</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>configure<span class="w"> </span>list
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>cat<span class="w"> </span>~/.aws/credentials<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;\[&lt;profile-name&gt;\]&quot;</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># To use a specific profile in Terraform:</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span>&lt;profile-name&gt;
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># For Terraform Cloud authentication:</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>terraform<span class="w"> </span>login
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># Verify: ~/.terraform.d/credentials.tfrc.json exists and contains token for app.terraform.io</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List provider plugins installed in the working directory</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>providers
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check which credentials are configured in environment variables</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># AWS:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;AWS_ACCESS_KEY|AWS_SECRET|AWS_SESSION_TOKEN|AWS_PROFILE|AWS_REGION&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w">    </span><span class="c1"># Verify the identity Terraform will use</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Azure:</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ARM_CLIENT|ARM_TENANT|ARM_SUBSCRIPTION|ARM_USE_MSI&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>az<span class="w"> </span>account<span class="w"> </span>show<span class="w">                </span><span class="c1"># Verify Azure identity</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># GCP:</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GOOGLE_CREDENTIALS
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>application-default<span class="w"> </span>print-access-token<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># vSphere (govmomi-based providers):</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VSPHERE_USER|VSPHERE_PASSWORD|VSPHERE_SERVER&quot;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>govc<span class="w"> </span>about<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">VSPHERE_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">VSPHERE_PASSWORD</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">VSPHERE_SERVER</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># For profile-based AWS auth (multiple accounts):</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>aws<span class="w"> </span>configure<span class="w"> </span>list
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>cat<span class="w"> </span>~/.aws/credentials<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;\[&lt;profile-name&gt;\]&quot;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># To use a specific profile in Terraform:</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span>&lt;profile-name&gt;
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># For Terraform Cloud authentication:</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>terraform<span class="w"> </span>login
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="c1"># Verify: ~/.terraform.d/credentials.tfrc.json exists and contains token for app.terraform.io</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Providers required by configuration:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>└── provider[registry.terraform.io/hashicorp/aws]
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>AWS_ACCESS_KEY_ID=AKIA2EXAMPLE1234567
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG+39POPBGQ8ExampleKey
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>AWS_REGION=us-east-1
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>{
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    &quot;UserId&quot;: &quot;AIDACKCEVSQ6C2EXAMPLE&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    &quot;Account&quot;: &quot;123456789012&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    &quot;Arn&quot;: &quot;arn:aws:iam::123456789012:user/terraform-admin&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>}
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ARM_CLIENT_ID=a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ARM_TENANT_ID=f1e2d3c4-b5a6-7890-1234-567890abcdef
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ARM_SUBSCRIPTION_ID=12345678-1234-1234-1234-123456789012
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>{
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  &quot;id&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;name&quot;: &quot;Production&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  &quot;state&quot;: &quot;Enabled&quot;
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>}
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>GOOGLE_CREDENTIALS=/home/user/.config/gcloud/application_default_credentials.json
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMzQ1Njc4OTBhYmNkZWY...
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>          User: terraform@vsphere.local
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>       vCenter: vcenter.example.com
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        Logged in as: terraform@vsphere.local
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>     API Version: 7.0.2
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>     Access key Id                      AKIA2EXAMPLE1234567
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>     Secret access key                  ****
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>     MFA serial number                  arn:aws:iam::123456789012:mfa/user
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>     role ARN                           arn:aws:iam::123456789012:role/terraform-role
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>     role session name                  terraform-session
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>     source profile                     default
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>[prod-account]
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>aws_access_key_id = AKIA3EXAMPLE9876543
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>aws_secret_access_key = aBc1XyZ9DefGhIjKlMnOpQrStUvWxYz2Example
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>Terraform will be configured to use the Terraform Cloud/Enterprise credentials in:
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  /home/user/.terraform.d/credentials.tfrc.json
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>Success! Terraform has obtained and saved an API token.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Failed to query available provider packages could not query provider registry for registry.terraform.io/hashicorp/aws: no credentials found</code></strong> — Ensure at least one credential environment variable (AWS_ACCESS_KEY_ID, ARM_CLIENT_ID, GOOGLE_CREDENTIALS, or VSPHERE_USER) is properly set before running Terraform.
+<strong><code>error: VSPHERE_PASSWORD: command not found</code></strong> — Wrap the govc command in quotes or escape special characters, or use a credentials file instead of environment variables for vSphere authentication.
+<strong><code>Error: Failed to retrieve caller identity: InvalidClientId.NotFound</code></strong> — Verify the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are correct and the IAM user has not been deleted or disabled.</p>
+</div>
 <hr />
 <h2 id="step-4-inspect-and-audit-state">Step 4 — Inspect and audit state<a class="headerlink" href="#step-4-inspect-and-audit-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Safe state inspection commands (read-only, no changes)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># List all resources tracked in state</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Each line: resource_type.resource_name (e.g., aws_instance.web01)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show all attributes for a specific resource</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_instance.web01
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Compare these values to what the cloud console shows</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Discrepancies = drift; resolve with terraform refresh or targeted import</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Pull remote state as JSON for offline inspection</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Count resources in state</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resources | length&#39;</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Find a specific resource by attribute value</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resources[] | select(.type == &quot;aws_s3_bucket&quot;) | {name, instances}&#39;</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Check backend configuration</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>cat<span class="w"> </span>.terraform/terraform.tfstate<span class="w">          </span><span class="c1"># local; shows which workspace is active</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># For S3 backend: also check DynamoDB for an active lock entry</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>&lt;lock-table-name&gt;<span class="w"> </span>--filter-expression<span class="w"> </span><span class="s2">&quot;attribute_exists(LockID)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Safe state inspection commands (read-only, no changes)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># List all resources tracked in state</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Each line: resource_type.resource_name (e.g., aws_instance.web01)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Show all attributes for a specific resource</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_instance.web01
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Compare these values to what the cloud console shows</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Discrepancies = drift; resolve with terraform refresh or targeted import</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Pull remote state as JSON for offline inspection</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Count resources in state</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resources | length&#39;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Find a specific resource by attribute value</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resources[] | select(.type == &quot;aws_s3_bucket&quot;) | {name, instances}&#39;</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Check backend configuration</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>cat<span class="w"> </span>.terraform/terraform.tfstate<span class="w">          </span><span class="c1"># local; shows which workspace is active</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># For S3 backend: also check DynamoDB for an active lock entry</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>&lt;lock-table-name&gt;<span class="w"> </span>--filter-expression<span class="w"> </span><span class="s2">&quot;attribute_exists(LockID)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>aws_instance.web01
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws_instance.web02
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aws_s3_bucket.logs
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>aws_iam_role.lambda_exec
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>aws_dynamodb_table.sessions
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>...
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a># resource &quot;aws_instance&quot; &quot;web01&quot;:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>resource &quot;aws_instance&quot; &quot;web01&quot; {
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  id                   = &quot;i-0a7f2c9e1b4d5f8a2&quot;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  ami                  = &quot;ami-0c55b159cbfafe1f0&quot;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  instance_type        = &quot;t3.medium&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  private_ip           = &quot;10.0.1.42&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  public_ip            = &quot;203.0.113.87&quot;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  availability_zone    = &quot;us-east-1a&quot;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  vpc_security_group_ids = [&quot;sg-0f1a2b3c4d5e6f7a8&quot;]
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  tags = {
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    Name = &quot;web01&quot;
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    Environment = &quot;production&quot;
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  }
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>}
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>5
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>{
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  &quot;name&quot;: &quot;prod-logs&quot;,
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  &quot;instances&quot;: [
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    {
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>      &quot;index_key&quot;: null,
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>      &quot;attributes&quot;: {
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>        &quot;bucket&quot;: &quot;prod-logs-2024&quot;,
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>        &quot;region&quot;: &quot;us-east-1&quot;
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>      }
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>    }
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  ]
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>}
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>{
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>  &quot;version&quot;: 4,
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>  &quot;terraform_version&quot;: &quot;1.6.2&quot;,
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>  &quot;serial&quot;: 247,
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>  &quot;lineage&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>  &quot;outputs&quot;: {},
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>  &quot;resources&quot;: [...]
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>}
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>Item: {LockID: {S: &quot;prod/terraform.tfstate&quot;}, Digest: {S: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;}, Operation: {S: &quot;OperationTypeApply&quot;}, Info: {S: &quot;user@admin-laptop&quot;}, Path: {S: &quot;prod&quot;}, Created: {N: &quot;1704067200&quot;}}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: error reading state: state file not found</code></strong> — Ensure you are in the correct Terraform working directory and have initialized the backend with <code>terraform init</code>.
+<strong><code>Error: error reading the S3 bucket in the current account: AccessDenied</code></strong> — Verify your AWS credentials have <code>s3:GetObject</code> and <code>dynamodb:Scan</code> permissions for the state bucket and lock table.</p>
+</div>
 <hr />
 <h2 id="step-5-diagnose-backend-connectivity">Step 5 — Diagnose backend connectivity<a class="headerlink" href="#step-5-diagnose-backend-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Re-initialize the backend (safe — does not change state)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>init<span class="w"> </span>-reconfigure
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If this fails, the backend endpoint is unreachable or credentials lack access</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># For S3 backend — test directly</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;state-bucket&gt;/&lt;state-prefix&gt;/
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: lists state file(s); if AccessDenied = IAM permission issue</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># For Azure blob backend</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--prefix<span class="w"> </span>&lt;workspace-key&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--auth-mode<span class="w"> </span>login
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># For Terraform Cloud</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>cat<span class="w"> </span>~/.terraform.d/credentials.tfrc.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.credentials.&quot;app.terraform.io&quot;.token&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s2">&quot;https://app.terraform.io/api/v2/organizations&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[].attributes.name&#39;</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Expected: your organization name</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Diagnose state lock (S3 + DynamoDB backend)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Check if a lock exists in DynamoDB</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span>--table-name<span class="w"> </span>&lt;dynamodb-lock-table&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">&#39;{&quot;LockID&quot;: {&quot;S&quot;: &quot;&lt;s3-bucket&gt;/&lt;state-prefix&gt;/terraform.tfstate-md5&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Item&#39;</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># If output is non-empty, a lock is active; note the LockID for force-unlock</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Re-initialize the backend (safe — does not change state)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>terraform<span class="w"> </span>init<span class="w"> </span>-reconfigure
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># If this fails, the backend endpoint is unreachable or credentials lack access</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># For S3 backend — test directly</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;state-bucket&gt;/&lt;state-prefix&gt;/
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Expected: lists state file(s); if AccessDenied = IAM permission issue</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># For Azure blob backend</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>--prefix<span class="w"> </span>&lt;workspace-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>--auth-mode<span class="w"> </span>login
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># For Terraform Cloud</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>cat<span class="w"> </span>~/.terraform.d/credentials.tfrc.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.credentials.&quot;app.terraform.io&quot;.token&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="s2">&quot;https://app.terraform.io/api/v2/organizations&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[].attributes.name&#39;</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Expected: your organization name</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Diagnose state lock (S3 + DynamoDB backend)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># Check if a lock exists in DynamoDB</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span>--table-name<span class="w"> </span>&lt;dynamodb-lock-table&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">&#39;{&quot;LockID&quot;: {&quot;S&quot;: &quot;&lt;s3-bucket&gt;/&lt;state-prefix&gt;/terraform.tfstate-md5&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Item&#39;</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1"># If output is non-empty, a lock is active; note the LockID for force-unlock</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Initializing the backend...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Successfully configured the backend &quot;s3&quot;!
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Terraform has been successfully initialized!
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>2024-01-15T09:42:33Z        0 2024-01-15T08:12:44Z PRD/terraform.tfstate
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>2024-01-15T09:42:33Z        0 2024-01-15T08:12:44Z PRD/terraform.tfstate.backup
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>{
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;name&quot;: &quot;my-org&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;created-at&quot;: &quot;2023-11-20T14:22:15.000Z&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;email&quot;: &quot;ops@example.com&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>}
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>{
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    &quot;Item&quot;: {
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        &quot;LockID&quot;: {
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>            &quot;S&quot;: &quot;terraform-state-prod/terraform.tfstate-md5&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>        },
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>        &quot;Digest&quot;: {
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>            &quot;S&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>        },
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>        &quot;Operation&quot;: {
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>            &quot;S&quot;: &quot;OperationTypeApply&quot;
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>        },
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>        &quot;Info&quot;: {
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>            &quot;S&quot;: &quot;user@hostname&quot;
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>        },
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>        &quot;Who&quot;: {
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>            &quot;S&quot;: &quot;terraform@prod-runner&quot;
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>        },
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>        &quot;Version&quot;: {
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>            &quot;S&quot;: &quot;1.6.2&quot;
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>        },
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>        &quot;Created&quot;: {
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>            &quot;N&quot;: &quot;1705318953&quot;
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>        }
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>    }
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied</code></strong> — Verify the IAM role/user has <code>s3:ListBucket</code> and <code>s3:GetObject</code> permissions on the state bucket.
+<strong><code>Error: error reading the backend configuration: unsupported attribute "region"</code></strong> — Remove or correct the region attribute in the backend block; use <code>aws_region</code> environment variable instead.
+<strong><code>error: Item not found</code></strong> — No lock exists; if Terraform is hanging, check for network connectivity to DynamoDB or verify the lock table name matches your backend configuration.</p>
+</div>
 <hr />
 <h2 id="step-6-state-lock-recovery-caution">Step 6 — State lock recovery (caution)<a class="headerlink" href="#step-6-state-lock-recovery-caution" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SAFE: Back up state before any lock operation</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-backup-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.tfstate
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check the lock info (Terraform includes lock ID in the error message)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Error looks like: &quot;Error: Error locking state: Error acquiring the state lock&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Note the Lock ID from the error message</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Verify the locking process is truly gone before unlocking</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># For CI/CD runners: check if the pipeline run that acquired the lock has terminated</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># For local workstations: check if another terminal session is running terraform</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Unlock only when you are certain no other process holds the lock</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;lock-id&gt;
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># This is irreversible; if a legitimate apply was in progress, it will continue writing to</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># a state that is now also unlocked — resulting in corrupted state</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># After force-unlock: immediately run plan to verify state consistency</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>terraform<span class="w"> </span>plan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SAFE: Back up state before any lock operation</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-backup-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.tfstate
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check the lock info (Terraform includes lock ID in the error message)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Error looks like: &quot;Error: Error locking state: Error acquiring the state lock&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Note the Lock ID from the error message</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Verify the locking process is truly gone before unlocking</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># For CI/CD runners: check if the pipeline run that acquired the lock has terminated</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># For local workstations: check if another terminal session is running terraform</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Unlock only when you are certain no other process holds the lock</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;lock-id&gt;
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># This is irreversible; if a legitimate apply was in progress, it will continue writing to</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># a state that is now also unlocked — resulting in corrupted state</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># After force-unlock: immediately run plan to verify state consistency</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>terraform<span class="w"> </span>plan
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>state-backup-2024-01-15-143022.tfstate
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Acquiring state lock. This may take a few moments...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Acquiring state lock. This may take a few moments...
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Terraform will perform the following actions:
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  # aws_instance.web will be updated in-place
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  ~ resource &quot;aws_instance&quot; &quot;web&quot; {
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>      ~ tags = {
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>          ~ &quot;Environment&quot; = &quot;staging&quot; -&gt; &quot;production&quot;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        }
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    }
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Plan: 0 to add, 1 to change, 0 to destroy.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Error locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed</code></strong> — Run <code>terraform force-unlock &lt;lock-id&gt;</code> only after confirming no active terraform process holds the lock by checking CI/CD pipeline status or other terminal sessions.
+<strong><code>Error: error reading state: failed to read state from backend: AccessDenied: User is not authorized to perform: dynamodb:GetItem</code></strong> — Verify your AWS credentials have DynamoDB read/write permissions for the state lock table (typically <code>terraform-locks</code>).</p>
+</div>
 <hr />
 <h2 id="plan-inspection">Plan inspection<a class="headerlink" href="#plan-inspection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Save a plan in binary format, then inspect</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>terraform<span class="w"> </span>show<span class="w"> </span>tfplan<span class="w">                 </span><span class="c1"># Human-readable</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Machine-readable JSON plan</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/plan.json
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Find all resources that will change</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resource_changes[] | select(.change.actions[] != &quot;no-op&quot;) | {address, actions: .change.actions}&#39;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Find resources that will be destroyed</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resource_changes[] | select(.change.actions[] == &quot;delete&quot;) | .address&#39;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Visualise resource dependency graph</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>terraform<span class="w"> </span>graph<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tsvg<span class="w"> </span>&gt;<span class="w"> </span>/tmp/tf-graph.svg
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Open in a browser or SVG viewer to trace dependency cycles</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Save a plan in binary format, then inspect</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>terraform<span class="w"> </span>show<span class="w"> </span>tfplan<span class="w">                 </span><span class="c1"># Human-readable</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Machine-readable JSON plan</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/plan.json
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Find all resources that will change</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resource_changes[] | select(.change.actions[] != &quot;no-op&quot;) | {address, actions: .change.actions}&#39;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Find resources that will be destroyed</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resource_changes[] | select(.change.actions[] == &quot;delete&quot;) | .address&#39;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Visualise resource dependency graph</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>terraform<span class="w"> </span>graph<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tsvg<span class="w"> </span>&gt;<span class="w"> </span>/tmp/tf-graph.svg
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Open in a browser or SVG viewer to trace dependency cycles</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Terraform used the following default actions for this workspace: apply
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Terraform will perform the following actions:
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  # aws_instance.web[0] will be created
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  + resource &quot;aws_instance&quot; &quot;web&quot; {
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>      + ami           = &quot;ami-0c55b159cbfafe1f0&quot;
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      + instance_type = &quot;t3.micro&quot;
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>      + tags          = {
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>          + &quot;Name&quot; = &quot;web-server-01&quot;
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        }
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    }
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  # aws_security_group.allow_http will be updated in-place
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>  ~ resource &quot;aws_security_group&quot; &quot;allow_http&quot; {
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>      ~ ingress {
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>          + cidr_blocks = [
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>              + &quot;0.0.0.0/0&quot;,
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>            ]
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>          + from_port   = 80
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>          + protocol    = &quot;tcp&quot;
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>          + to_port     = 80
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>        }
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>    }
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  # aws_rds_instance.primary will be destroyed
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>  - resource &quot;aws_rds_instance&quot; &quot;primary&quot; {
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>      - allocated_storage    = 20
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>      - engine               = &quot;postgres&quot;
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>      - identifier           = &quot;prod-db-01&quot;
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>    }
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>Plan: 2 to add, 1 to change, 1 to destroy.
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>Saved the plan to: tfplan
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>To perform exactly these actions, run the command below
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>to apply:
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>    terraform apply tfplan
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>digraph {
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>    compound = true
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>    newrank = true
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>    subgraph &quot;root&quot; {
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>        &quot;[root] aws_instance.web[0]&quot; [label = &quot;aws_instance.web[0]&quot;, shape = &quot;box&quot;]
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>        &quot;[root] aws_security_group.allow_http&quot; [label = &quot;aws_security_group.allow_http&quot;, shape = &quot;box&quot;]
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>        &quot;[root] aws_instance.web[0]&quot; -&gt; &quot;[root] aws_security_group.allow_http&quot;
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>    }
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No configuration files found in working directory.</code></strong> — Run <code>terraform init</code> first to initialize the working directory and download required providers.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the plan file exists and is valid by running <code>terraform plan -out=tfplan</code> before attempting to parse it with <code>jq</code>.
+<strong><code>Error: Graphviz not found in PATH</code></strong> — Install Graphviz with <code>apt-get install graphviz</code> (Ubuntu/Debian) or <code>brew install graphviz</code> (macOS) to convert the graph to SVG format.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7740,7 +8029,7 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

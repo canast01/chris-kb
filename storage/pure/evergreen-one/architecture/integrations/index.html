@@ -8513,120 +8513,297 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Test phonehome manually</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>puresupport<span class="w"> </span>call<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Version           Serial
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>FlashArray-1                  6.4.2             PURE123456789ABC
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>FlashArray-2                  6.4.2             PURE987654321XYZ
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Connection Status:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Array Name        Status      Last Contact      Phonehome Enabled
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>FlashArray-1      Connected   2024-01-15 14:32  true
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>FlashArray-2      Connected   2024-01-15 14:31  true
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Test call initiated...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Phonehome test connection successful
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Upload size: 2.3 MB
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Destination: phonehome.purestorage.com
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Status: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure you are logged into the FlashArray management interface or source the Pure CLI environment variables.
+<strong><code>Connection Status: Disconnected</code></strong> — Verify network connectivity from the array to phonehome.purestorage.com on port 443 and check firewall rules allowing outbound HTTPS.
+<strong><code>Error: Phonehome disabled on this array</code></strong> — Enable phonehome support using <code>purearray set --phonehome=true</code> on the affected array.</p>
+</div>
 <p>If phonehome is disconnected, Pure cannot monitor SLA compliance and cannot proactively manage the hardware. Treat phonehome connectivity as a critical dependency.</p>
 <h3 id="pure1-rest-api-access">Pure1 REST API Access<a class="headerlink" href="#pure1-rest-api-access" title="Permanent link">&para;</a></h3>
 <p>Customers can access Pure1 REST API to query their own Evergreen//One capacity and SLA data:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate to Pure1 API (uses API client with private key)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Create API client in Pure1 portal: Administration → API Clients</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Get subscription summary</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Get arrays enrolled in Evergreen//One</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Get capacity metrics for a specific array</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity,array_used_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate to Pure1 API (uses API client with private key)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Create API client in Pure1 portal: Administration → API Clients</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Get subscription summary</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get arrays enrolled in Evergreen//One</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Get capacity metrics for a specific array</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-sX<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity,array_used_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api_token&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;continuation_token&quot;: null,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;items&quot;: [
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    {
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;id&quot;: &quot;8c4fd0fb-1234-5678-abcd-ef0123456789&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;name&quot;: &quot;prod-array-01.dc1.company.com&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;model&quot;: &quot;FlashArray//X70-R2&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;os&quot;: &quot;Purity//FA 6.4.2&quot;,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;status&quot;: &quot;ok&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;is_local&quot;: false
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    },
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    {
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;id&quot;: &quot;9d5ge1gc-2345-6789-bcde-f01234567890&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;name&quot;: &quot;prod-array-02.dc2.company.com&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;model&quot;: &quot;FlashArray//X20-R2&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;os&quot;: &quot;Purity//FA 6.4.1&quot;,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;status&quot;: &quot;ok&quot;,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>      &quot;is_local&quot;: false
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    },
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    {
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;id&quot;: &quot;ae6hf2hd-3456-7890-cdef-0123456789ab&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;name&quot;: &quot;dr-array-01.dc3.company.com&quot;,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;model&quot;: &quot;FlashArray//C70-R2&quot;,
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;os&quot;: &quot;Purity//FA 6.3.8&quot;,
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;status&quot;: &quot;ok&quot;,
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>      &quot;is_local&quot;: false
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>    }
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  ]
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>}
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>{
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  &quot;continuation_token&quot;: null,
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  &quot;items&quot;: [
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    {
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      &quot;name&quot;: &quot;array_total_capacity&quot;,
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>      &quot;values&quot;: [
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>        {&quot;time&quot;: 1704067200000, &quot;value&quot;: 107374182400},
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        {&quot;time&quot;: 1704153600000, &quot;value&quot;: 107374182400}
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>      ]
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>    },
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>    {
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>      &quot;name&quot;: &quot;array_used_capacity&quot;,
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>      &quot;values&quot;: [
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>        {&quot;time&quot;: 1704067200000, &quot;value&quot;: 64424509440},
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>        {&quot;time&quot;: 1704153600000, &quot;value&quot;: 68719476736}
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>      ]
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>    }
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>  ]
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to Pure1 API endpoints.
+<strong><code>{"error_code":"401","message":"Invalid authorization token"}</code></strong> — Regenerate your API token in the Pure1 portal and ensure it is not expired or revoked.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Update your CA certificate bundle or use <code>curl -k</code> only in non-production testing environments.</p>
+</div>
 <hr />
 <h2 id="vsphere-esxi-host-connectivity">vSphere / ESXi Host Connectivity<a class="headerlink" href="#vsphere-esxi-host-connectivity" title="Permanent link">&para;</a></h2>
 <p>Evergreen//One FlashArray connects to ESXi hosts using the same protocols as a standard FlashArray. The customer is responsible for all host-side fabric and configuration.</p>
 <h3 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each ESXi host — discover the FlashArray iSCSI targets</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcfg-swiscsi<span class="w"> </span>-s<span class="w">  </span><span class="c1"># Enable software iSCSI if not already enabled</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add FlashArray iSCSI target portals</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--adapter<span class="w"> </span>vmhba64<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">192</span>.168.100.10
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--adapter<span class="w"> </span>vmhba64<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">192</span>.168.100.11
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Rescan to discover LUNs</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba64
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Set SATP and PSP rules for Pure FlashArray</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>satp<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--satp<span class="w"> </span>VMW_SATP_ALUA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--psp<span class="w"> </span>VMW_PSP_RR<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--vendor<span class="w"> </span>PURE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--model<span class="w"> </span>FlashArray
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Verify multipath is active</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>pure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On each ESXi host — discover the FlashArray iSCSI targets</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcfg-swiscsi<span class="w"> </span>-s<span class="w">  </span><span class="c1"># Enable software iSCSI if not already enabled</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add FlashArray iSCSI target portals</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--adapter<span class="w"> </span>vmhba64<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">192</span>.168.100.10
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--adapter<span class="w"> </span>vmhba64<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">192</span>.168.100.11
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Rescan to discover LUNs</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba64
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Set SATP and PSP rules for Pure FlashArray</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>satp<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--satp<span class="w"> </span>VMW_SATP_ALUA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--psp<span class="w"> </span>VMW_PSP_RR<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--vendor<span class="w"> </span>PURE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--model<span class="w"> </span>FlashArray
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Verify multipath is active</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>pure
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Software iSCSI adapter vmhba64 already enabled
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Discovery address 192.168.100.10 added
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Discovery address 192.168.100.11 added
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Adapter vmhba64 rescanned: 8 LUNs discovered
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>SATP rule added: VMW_SATP_ALUA for PURE FlashArray
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Device: naa.624a9370abcd1234ef56 (PURE FlashArray)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   Runtime Name: vmhba64:C0:T0:L0
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   Group State: active
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   Array Priority: enabled
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   Path Count: 4
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   Active Paths: 4
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   Dead Paths: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option --adapter vmhba64</code></strong> — Verify the iSCSI adapter name with <code>esxcli iscsi adapter list</code> and use the correct adapter identifier.
+<strong><code>SATP rule add: Rule already exists for vendor PURE model FlashArray</code></strong> — Remove the existing rule first with <code>esxcli storage nmp satp rule remove --satp VMW_SATP_ALUA --vendor PURE --model FlashArray</code> before re-adding.
+<strong><code>No devices matched for grep pattern 'pure'</code></strong> — Rescan the adapter again and wait 30 seconds for LUN discovery to complete, then verify FlashArray targets are reachable on the iSCSI network.</p>
+</div>
 <h3 id="fibre-channel">Fibre Channel<a class="headerlink" href="#fibre-channel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check FC HBA status on ESXi host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify FlashArray LUNs are visible after zoning</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>pure
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm Round Robin path selection policy is set</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;PURE&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check FC HBA status on ESXi host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify FlashArray LUNs are visible after zoning</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>pure
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Confirm Round Robin path selection policy is set</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;PURE&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>HBA Name    Driver     State    Speed
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmhba0      lpfc       link up  16Gb
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vmhba1      lpfc       link up  16Gb
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vmhba2      qla2xxx    link up  8Gb
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vmhba3      qla2xxx    link up  8Gb
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Device: naa.624a9370abcd1234ef567890abcd1234
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Display Name: PURE FlashArray (naa.624a9370abcd1234ef567890abcd1234)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>State: Active
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Size: 1099511627776
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Device: naa.624a9370abcd5678ef567890abcd5678
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Display Name: PURE FlashArray (naa.624a9370abcd5678ef567890abcd5678)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>State: Active
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Size: 2199023255552
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Device: naa.624a9370abcd1234ef567890abcd1234
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Storage Array Type Path Config: PURE FlashArray
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Path Policy: VMW_PSP_RR
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Paths: vmhba0:C0:T0:L0 vmhba1:C0:T0:L0 vmhba2:C0:T0:L0 vmhba3:C0:T0:L0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not find a matching vmhba</code></strong> — Verify FC HBAs are properly detected with <code>esxcli storage san fc list</code> and check vSphere client for hardware errors.
+<strong><code>No matching devices found</code></strong> — Confirm FC zoning is complete on the SAN switch and LUNs are presented to the ESXi host with <code>esxcli storage core device list</code>.
+<strong><code>Path Policy: VMW_PSP_FIXED</code></strong> — Change the path selection policy to Round Robin using <code>esxcli storage nmp device setpolicy -d &lt;device-naa&gt; -P VMW_PSP_RR</code>.</p>
+</div>
 <h3 id="nvme-over-fibre-channel-nvmefc">NVMe over Fibre Channel (NVMe/FC)<a class="headerlink" href="#nvme-over-fibre-channel-nvmefc" title="Permanent link">&para;</a></h3>
 <p>Supported on FlashArray //X and //C with NVMe-enabled controllers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List NVMe adapters on ESXi</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List NVMe namespaces visible from host</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>namespace<span class="w"> </span>list
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check NVMe path health</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>path<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List NVMe adapters on ESXi</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List NVMe namespaces visible from host</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check NVMe path health</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>path<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name    Controller Number    Adapter Transport Type
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------  ------------------  ----------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>nvme0   0                    PCIe
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>nvme1   1                    PCIe
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nvme2   2                    PCIe
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Name      Controller  Namespace ID    Size        Formatted
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>--------  ----------  ---------------  ----------  ---------
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>nvme0n1   0           1                1099.5 GB   true
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>nvme1n1   1           1                1099.5 GB   true
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>nvme2n1   2           1                1099.5 GB   true
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Adapter  Namespace  Controller Path                          State
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>-------  ---------  ----------------------------------------  ------
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>nvme0    nvme0n1    ctl:0,ns:1                               Live
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>nvme1    nvme1n1    ctl:1,ns:1                               Live
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>nvme2    nvme2n1    ctl:2,ns:1                               Live
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace nvme</code></strong> — Verify NVMe drivers are installed with <code>esxcli software vib list | grep nvme</code> and install if missing.
+<strong><code>Error: Could not get adapter list</code></strong> — Ensure the ESXi host has NVMe-capable hardware and check <code>esxcli hardware pci list</code> to confirm NVMe controllers are detected.
+<strong><code>Permission denied</code></strong> — Run commands as root or with appropriate ESXi host privileges; use <code>esxcli system permission list</code> to verify user permissions.</p>
+</div>
 <hr />
 <h2 id="vmware-vasa-provider-vvols">VMware VASA Provider (vVols)<a class="headerlink" href="#vmware-vasa-provider-vvols" title="Permanent link">&para;</a></h2>
 <p>FlashArray integrates with vSphere as a VASA provider, enabling vVols (VMware Virtual Volumes) — per-VM storage policy enforcement directly on the array.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Register FlashArray VASA provider in vCenter (run once)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># vCenter → Storage → Storage Providers → Add</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># URL: https://&lt;flasharray-management-ip&gt;/vasa/version.xml</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Credentials: pureuser / &lt;password&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Register FlashArray VASA provider in vCenter (run once)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># vCenter → Storage → Storage Providers → Add</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># URL: https://&lt;flasharray-management-ip&gt;/vasa/version.xml</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Credentials: pureuser / &lt;password&gt;</span>
 </code></pre></div>
 <p>After registration, storage policies can be created in vCenter that map to FlashArray QoS limits, replication, and protection groups.</p>
 <hr />
 <h2 id="veeam-backup-replication">Veeam Backup &amp; Replication<a class="headerlink" href="#veeam-backup-replication" title="Permanent link">&para;</a></h2>
 <p>Veeam integrates with FlashArray as a storage array plugin (SAN snapshot transport) and as a Pure Storage snapshot provider.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Add FlashArray as a Veeam storage infrastructure plugin</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Veeam Console → Storage Infrastructure → Add Storage → Pure Storage FlashArray</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Provide management IP and credentials</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Veeam creates storage snapshots on the FlashArray for application-consistent backups</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># This uses the FlashArray REST API internally — ensure the Veeam service account</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># has at least storage_admin role on the FlashArray</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Add FlashArray as a Veeam storage infrastructure plugin</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Veeam Console → Storage Infrastructure → Add Storage → Pure Storage FlashArray</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Provide management IP and credentials</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Veeam creates storage snapshots on the FlashArray for application-consistent backups</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># This uses the FlashArray REST API internally — ensure the Veeam service account</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># has at least storage_admin role on the FlashArray</span>
 </code></pre></div>
 <hr />
 <h2 id="activecluster-synchronous-replication">ActiveCluster (Synchronous Replication)<a class="headerlink" href="#activecluster-synchronous-replication" title="Permanent link">&para;</a></h2>
 <p>ActiveCluster provides RPO=0 synchronous replication between two Evergreen//One sites. It requires a Mediator (lightweight VM) accessible from both arrays to resolve split-brain scenarios.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check ActiveCluster pod status (FlashArray CLI)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># State should be &quot;online&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check replication link health</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purereplicationlink<span class="w"> </span>list
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check Mediator connectivity</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>purepod<span class="w"> </span>list<span class="w"> </span>--connection
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check ActiveCluster pod status (FlashArray CLI)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># State should be &quot;online&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check replication link health</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>purereplicationlink<span class="w"> </span>list
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check Mediator connectivity</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>purepod<span class="w"> </span>list<span class="w"> </span>--connection
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                          State      Version      Capacity
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>flasharray-pod-01             online     6.4.2.1      50TB
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>flasharray-pod-02             online     6.4.2.1      50TB
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>flasharray-pod-03             online     6.4.2.1      50TB
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Name                          Local Pod              Remote Pod             Direction  Status
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>repl-link-prod-dr             flasharray-pod-01      flasharray-pod-02      Bidirectional  Healthy
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>repl-link-backup              flasharray-pod-01      flasharray-pod-03      Unidirectional  Healthy
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Pod Name              Mediator IP       Connection Status  Last Heartbeat
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>flasharray-pod-01     10.45.12.88       Connected          2s ago
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>flasharray-pod-02     10.45.12.88       Connected          1s ago
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>flasharray-pod-03     10.45.12.88       Connected          3s ago
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purereplicationlink list: error: connection refused</code></strong> — Verify the FlashArray CLI is authenticated and the management network is reachable with <code>purepod list</code> first.
+<strong><code>purepod list --connection: error: invalid option '--connection'</code></strong> — Use the correct flag <code>purepod list --mediator</code> or check your Pure OS version supports the connection flag.
+<strong><code>Mediator connection status: Disconnected</code></strong> — Confirm the Mediator VM is running and network connectivity exists between pods and Mediator on port 8888.</p>
+</div>
 <p>The two arrays must have network connectivity on the replication port (TCP 8081). Mediator VM can run on-premises or in a cloud VPC (GCP/Azure/AWS).</p>
 <hr />
 <h2 id="siem-syslog-integration">SIEM / Syslog Integration<a class="headerlink" href="#siem-syslog-integration" title="Permanent link">&para;</a></h2>
 <p>Forward FlashArray audit events to your SIEM for centralised security monitoring:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Configure syslog on FlashArray (FlashArray CLI)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>puresyslog<span class="w"> </span>add<span class="w"> </span>--name<span class="w"> </span>siem-server<span class="w"> </span>--address<span class="w"> </span><span class="m">192</span>.168.10.100<span class="w"> </span>--port<span class="w"> </span><span class="m">514</span><span class="w"> </span>--protocol<span class="w"> </span>UDP
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify syslog configuration</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>puresyslog<span class="w"> </span>list
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Events forwarded include: admin logins, volume create/delete, policy changes, hardware alerts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure syslog on FlashArray (FlashArray CLI)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>puresyslog<span class="w"> </span>add<span class="w"> </span>--name<span class="w"> </span>siem-server<span class="w"> </span>--address<span class="w"> </span><span class="m">192</span>.168.10.100<span class="w"> </span>--port<span class="w"> </span><span class="m">514</span><span class="w"> </span>--protocol<span class="w"> </span>UDP
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify syslog configuration</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>puresyslog<span class="w"> </span>list
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Events forwarded include: admin logins, volume create/delete, policy changes, hardware alerts</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name          Address          Port  Protocol
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>siem-server   192.168.10.100   514   UDP
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Name          Address          Port  Protocol
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>siem-server   192.168.10.100   514   UDP
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid address format</code></strong> — Verify the IP address is valid and reachable from the FlashArray management network.
+<strong><code>Error: Syslog server already exists</code></strong> — Use <code>puresyslog remove --name siem-server</code> before re-adding with a different configuration.</p>
+</div>
 <p>Key events to alert on:
 - Admin login from unexpected IP
 - Volume deletion (especially pod volumes under ActiveCluster)
@@ -8660,7 +8837,7 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

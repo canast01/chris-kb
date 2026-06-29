@@ -10802,51 +10802,118 @@ unnecessary data rebuilds while the witness is being restored.
 <p>Run on either data node:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster UUID                 Cluster Name
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>--------------------------  -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>52d4a8f1-7c2e-4d9a-b1e3-   vsan-prod-01
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>9f2c1a8e-5b3d-4f7a-c2e1-   vsan-dev-cluster
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>a7f3c1d2-8e4b-5g8h-d3f2-   vsan-backup-pool
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to the host. Verify the host name, port, and credentials.</code></strong> — Verify the ESXi host is reachable and you have valid credentials configured in your vSphere client or SSH session.
+<strong><code>Error: vSAN is not enabled on this cluster.</code></strong> — Enable vSAN on the cluster through vCenter Server under Cluster Settings &gt; vSAN &gt; General.
+<strong><code>Error: Permission denied. User does not have required privileges.</code></strong> — Ensure your vSphere user account has the "Host.Config.Storage" privilege or equivalent vSAN administrator role.</p>
+</div>
 <p>Output shows 3 members when healthy. With witness unreachable, the witness UUID appears as disconnected
 or absent from the member list:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster Information
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   Enabled: true
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   Current master UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   Local node UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   Local node type: NORMAL
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   Local node state: MASTER
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   Local node health state: HEALTHY
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   Sub-Cluster Master UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   Sub-Cluster Backup UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   Sub-Cluster UUID: &lt;cluster-uuid&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   Sub-Cluster Membership Entry Revision: 5
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   Sub-Cluster Member Count: 2       &lt;-- only 2 when witness is gone
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   Sub-Cluster Member UUIDs: &lt;node-a-uuid&gt; &lt;node-b-uuid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster Information
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   Enabled: true
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   Current master UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   Local node UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   Local node type: NORMAL
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   Local node state: MASTER
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   Local node health state: HEALTHY
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   Sub-Cluster Master UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   Sub-Cluster Backup UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   Sub-Cluster UUID: &lt;cluster-uuid&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   Sub-Cluster Membership Entry Revision: 5
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   Sub-Cluster Member Count: 2       &lt;-- only 2 when witness is gone
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   Sub-Cluster Member UUIDs: &lt;node-a-uuid&gt; &lt;node-b-uuid&gt;
 </code></pre></div>
 <hr />
 <h2 id="2-check-network-connectivity-to-witness">2. Check Network Connectivity to Witness<a class="headerlink" href="#2-check-network-connectivity-to-witness" title="Permanent link">&para;</a></h2>
 <p>From a data node, ping the witness TEP and management IPs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ping witness management IP from data node management VMkernel</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;witness-mgmt-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Ping witness TEP from data node vSAN VMkernel</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ping witness management IP from data node management VMkernel</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;witness-mgmt-ip&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Ping witness TEP from data node vSAN VMkernel</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-tep-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PING 192.168.100.45 (192.168.100.45): 56 data bytes
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>64 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>64 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>64 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=2.289 ms
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>64 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=2.204 ms
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>64 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=2.318 ms
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>PING 172.16.50.78 (172.16.50.78): 56 data bytes
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>64 bytes from 172.16.50.78: icmp_seq=0 ttl=64 time=1.892 ms
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>64 bytes from 172.16.50.78: icmp_seq=1 ttl=64 time=1.756 ms
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>64 bytes from 172.16.50.78: icmp_seq=2 ttl=64 time=1.834 ms
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>64 bytes from 172.16.50.78: icmp_seq=3 ttl=64 time=1.923 ms
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>64 bytes from 172.16.50.78: icmp_seq=4 ttl=64 time=1.778 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 192.168.100.45 (192.168.100.45): 56 data bytes No answer from icmp_seq=0</code></strong> — Verify witness management IP is correct and witness appliance is powered on and reachable on the management network.
+<strong><code>Unknown interface vmk1</code></strong> — Confirm vmk1 (vSAN VMkernel interface) exists on the data node using <code>esxcli network ip interface list</code>.</p>
+</div>
 <p>If pings fail to the TEP (vmk1) but succeed to management (vmk0), the vSAN witness traffic VLAN or
 routing is broken. If both fail, the witness host or VM is down.</p>
 <hr />
 <h2 id="3-audit-affected-objects">3. Audit Affected Objects<a class="headerlink" href="#3-audit-affected-objects" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ABSENT|DEGRADED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ABSENT|DEGRADED&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Object UUID                          State      Policy
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>52a4c8f1-2b3e-4f9a-8c1d-7e9f2a3b4c5d DEGRADED   raid1 (2) - 1 component missing
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>63b5d9g2-3c4f-5g0b-9d2e-8f0g3b4c5d6e ABSENT     raid5 (4) - stripe offline
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>74c6e0h3-4d5g-6h1c-0e3f-9g1h4c5d6e7f DEGRADED   raid1 (2) - 1 replica unhealthy
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>85d7f1i4-5e6h-7i2d-1f4g-0h2i5d6e7f8g ABSENT     raid6 (6) - multiple components down
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>96e8g2j5-6f7i-8j3e-2g5h-1i3j6e7f8g9h DEGRADED   raid1 (2) - witness absent
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Unknown option or set of options: --cluster-uuid</code></strong> — Verify the VSAN cluster UUID format and ensure you're running this command on an ESXi host with VSAN enabled; use <code>esxcli vsan cluster get</code> to confirm VSAN is active.
+<strong><code>error: Unknown command or namespace</code></strong> — Confirm the ESXi host version supports <code>esxcli vsan debug object list</code> (requires vSAN 6.0+); check with <code>esxcli system version get</code>.</p>
+</div>
 <p>Objects with only witness components ABSENT are tolerable (VMs still running). Objects with a data
 component ABSENT are at risk — a second failure causes immediate inaccessibility.</p>
 <p>To get the cluster UUID:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster UUID&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster UUID&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Sub-Cluster UUID: 52e84d1a-c4f2-4e8b-9f3a-7b2c1d9e4f6a
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Sub-Cluster UUID: 7f3a2b1c-9e4d-4f8b-3c2a-1d9e4f6a5b2c
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace vsan.cluster.list</code></strong> — Verify vSAN is licensed and enabled on the cluster by running <code>esxcli vsan cluster get</code>.
+<strong><code>grep: (standard input) has no data</code></strong> — The vsan cluster list command returned no output; confirm the host is part of an active vSAN cluster with <code>esxcli vsan cluster get</code>.</p>
+</div>
 <hr />
 <h2 id="4-review-witness-logs">4. Review Witness Logs<a class="headerlink" href="#4-review-witness-logs" title="Permanent link">&para;</a></h2>
 <p>SSH to the witness host (if reachable via management network):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;partition\|disconnect\|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;partition\|disconnect\|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2024-01-15T09:23:47.123Z [INFO] Heartbeat from host esx-prod-02.corp.local (192.168.1.42) received successfully
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T09:24:12.456Z [WARN] Heartbeat timeout detected for host esx-prod-03.corp.local after 60 seconds
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>2024-01-15T09:25:03.789Z [INFO] Heartbeat restored from host esx-prod-03.corp.local
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2024-01-15T09:26:45.234Z [ERROR] Heartbeat failure: network partition detected on vSAN cluster member esx-prod-04
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>2024-01-15T09:27:18.567Z [INFO] Heartbeat interval: 1000ms, threshold: 3 missed beats
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>2024-01-15T09:28:52.891Z [WARN] vSAN partition event: node esx-prod-02 isolated from quorum
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>2024-01-15T09:29:30.145Z [ERROR] vSAN disk disconnect: device mpx.vmhba2:C0:T1:L0 marked offline
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>2024-01-15T09:30:15.678Z [INFO] vSAN timeout recovery: resyncing objects on esx-prod-03
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>2024-01-15T09:31:42.234Z [WARN] vSAN partition healed: cluster quorum restored
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>2024-01-15T09:32:08.901Z [INFO] Heartbeat acknowledgment from all 4 cluster nodes confirmed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/hostd.log: No such file or directory</code></strong> — Verify the ESXi host is running and the log file exists; check with <code>ls -la /var/log/hostd.log</code>.
+<strong><code>grep: /var/log/vmkernel.log: Permission denied</code></strong> — Run the command with appropriate privileges or SSH directly to the ESXi host as root.</p>
+</div>
 <p>Look for repeated entries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>WARNING: Heartbeat to cluster master lost (attempt 3 of 3)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ERROR: vSAN witness partition: unable to reach data nodes on vmk_witness
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>WARNING: Heartbeat to cluster master lost (attempt 3 of 3)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ERROR: vSAN witness partition: unable to reach data nodes on vmk_witness
 </code></pre></div>
 <hr />
 <h2 id="5-resolution">5. Resolution<a class="headerlink" href="#5-resolution" title="Permanent link">&para;</a></h2>
@@ -10861,44 +10928,99 @@ component ABSENT are at risk — a second failure causes immediate inaccessibili
 </ol>
 <h3 id="witness-vm-or-host-down-power-on">Witness VM or Host Down — Power On<a class="headerlink" href="#witness-vm-or-host-down-power-on" title="Permanent link">&para;</a></h3>
 <p>If using the VMware vSAN Witness Appliance (OVA-deployed VM):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via vCenter or directly on the vSphere cluster hosting the witness VM</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vSAN-Witness-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Via vCenter or directly on the vSphere cluster hosting the witness VM</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vSAN-Witness-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                 PowerState Num CPUs MemoryGB
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>----                 ---------- -------- --------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vSAN-Witness-01      PoweredOn   2        4
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>vSAN-Witness-02      PoweredOn   2        4
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vSAN-Witness-03      PoweredOn   2        4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running the command.
+<strong><code>Get-VM : Cannot find VM with name matching pattern 'vSAN-Witness-*'.</code></strong> — Verify the witness VM naming convention matches your environment and confirm the VMs exist with <code>Get-VM | Where-Object {$_.Name -like "*Witness*"}</code>.</p>
+</div>
 <p>After power-on, allow 2–3 minutes for ESXi services and vSAN witness participation to initialise
 before checking cluster membership.</p>
 <h3 id="witness-disk-full-expand-datastore">Witness Disk Full — Expand Datastore<a class="headerlink" href="#witness-disk-full-expand-datastore" title="Permanent link">&para;</a></h3>
 <p>Witness appliance needs ~10 GB minimum for component metadata. Check:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>df<span class="w"> </span>-h<span class="w">   </span><span class="c1"># run on witness ESXi via SSH</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>df<span class="w"> </span>-h<span class="w">   </span><span class="c1"># run on witness ESXi via SSH</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/dev/sda1       4.6G  2.1G  2.5G  46% /
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>/dev/sdb1       558G  312G  246G  56% /vmfs/volumes/datastore1
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>/dev/sdc1       1.8T  1.2T  600G  67% /vmfs/volumes/datastore2
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vfat            286M  128M  158M  45% /boot
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>tmpfs           8.0G  512M  7.5G   6% /tmp
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied</code></strong> — Ensure your SSH user has root or equivalent privileges on the ESXi host, or prepend the command with <code>sudo</code>.
+<strong><code>Connection refused</code></strong> — Verify SSH is enabled on the ESXi host (Configuration &gt; Security Profile &gt; Services &gt; SSH) and the hostname/IP is correct.</p>
+</div>
 <p>If the witness datastore is full, expand the witness VM disk via vSphere Client and extend the
 filesystem inside the witness appliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On witness ESXi — rescan storage</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># On witness ESXi — rescan storage</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>HBA vmhba0 rescan started.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>HBA vmhba1 rescan started.
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>HBA vmhba2 rescan started.
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>HBA vmhba3 rescan started.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace storage core adapter rescan</code></strong> — Verify the ESXi version supports esxcli storage commands; some older versions require <code>esxcfg-rescan</code> instead.
+<strong><code>Error: Unable to acquire lock on /var/lock/vmkiscsi.lock</code></strong> — Wait for any ongoing storage operations to complete or restart the hostd service with <code>services.sh restart</code>.</p>
+</div>
 <h3 id="temporary-workaround-defer-rebuild-timer">Temporary Workaround — Defer Rebuild Timer<a class="headerlink" href="#temporary-workaround-defer-rebuild-timer" title="Permanent link">&para;</a></h3>
 <p>If restoring the witness will take more than 60 minutes and both data nodes are healthy, prevent
 unnecessary data moves during the outage window:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run on each data node ESXi</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">480</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Run on each data node ESXi</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">480</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the local dcui service</code></strong> — Ensure you are running the command directly on the ESXi host via SSH or console, not remotely through vCenter.
+<strong><code>Error: Unknown option /VSAN/ClomRepairDelay</code></strong> — Verify the ESXi host has vSAN enabled and the correct advanced option path; use <code>esxcli system settings advanced list | grep -i clom</code> to confirm the option exists.</p>
+</div>
 <p>This sets the rebuild delay to 480 minutes. Reset to default (60) once the witness is restored:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option /VSAN/ClomRepairDelay</code></strong> — Verify the exact parameter name matches your ESXi version using <code>esxcli system settings advanced list | grep -i clom</code>.
+<strong><code>Connect to a vSAN-enabled host or cluster before running this command</code></strong> — Run the command on an ESXi host that has vSAN enabled, or use <code>-s &lt;hostname&gt;</code> to target a specific host.</p>
+</div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># PowerCLI — check vSAN health summary</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># PowerCLI — check vSAN health summary</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span> <span class="p">}</span>
 </code></pre></div>
 <p>Expected: no results (all checks green).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># ESXi — confirm 3-member cluster</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster Member Count&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Expected: Sub-Cluster Member Count: 3</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># ESXi — confirm no ABSENT witness components</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ABSENT&quot;</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Expected: 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># ESXi — confirm 3-member cluster</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster Member Count&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># Expected: Sub-Cluster Member Count: 3</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># ESXi — confirm no ABSENT witness components</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ABSENT&quot;</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Expected: 0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Sub-Cluster Member Count: 3
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace vsan.</code></strong> — Verify VSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster list</code> to confirm VSAN is initialized.
+<strong><code>grep: (standard input) is empty</code></strong> — Ensure the ESXi host is part of an active VSAN cluster; if newly added, wait 2–3 minutes for cluster membership to stabilize.</p>
+</div>
 <hr />
 <h2 id="7-prevention">7. Prevention<a class="headerlink" href="#7-prevention" title="Permanent link">&para;</a></h2>
 <table>
@@ -10963,7 +11085,7 @@ unnecessary data moves during the outage window:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8938,78 +8938,144 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>save
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@db-prod-01&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Logical device name: emcpowera
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Symmetrix address: 5000097900001234
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Director: 4e
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Port: 0
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>dev = emcpowera
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>hsv210 (/dev/sda): Alive; Policy: SymmOpt; Queued IOs: 0
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>hsv211 (/dev/sdb): Alive; Policy: SymmOpt; Queued IOs: 0
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>hsv212 (/dev/sdc): Alive; Policy: SymmOpt; Queued IOs: 0
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>hsv213 (/dev/sdd): Alive; Policy: SymmOpt; Queued IOs: 0
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>...
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Setting policy to CLAROpt for all devices
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Policy saved to /etc/powermt.custom
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install EMC PowerPath package with <code>apt-get install emc-powerpath</code> or <code>yum install EMCpower.LINUX</code> depending on your distribution.
+<strong><code>Permission denied (publickey,password)</code></strong> — Verify SSH key is loaded with <code>ssh-add</code> or use password authentication; check that root login is enabled in <code>/etc/ssh/sshd_config</code>.
+<strong><code>powermt: Unable to connect to Symmetrix</code></strong> — Confirm the storage array is reachable and PowerPath daemon is running with <code>systemctl status powerpath</code>.</p>
+</div>
 <h3 id="sudo-based-access-recommended">Sudo-Based Access (Recommended)<a class="headerlink" href="#sudo-based-access-recommended" title="Permanent link">&para;</a></h3>
 <p>The recommended model for Linux: create a named storage administration account and grant it sudo access only to specific <code>powermt</code> commands. This provides auditability (sudo logs the caller's real username) while restricting blast radius.</p>
 <p><strong>Sudoers configuration for a storage admin account:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/sudoers.d/powerpath</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Storage admin — full powermt access</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svc-storage<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/powerpath</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Storage admin — full powermt access</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>svc-storage<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Verify the file is edited only with <code>visudo</code> and check for trailing whitespace or missing spaces around operators.
+<strong><code>sudo: /etc/sudoers.d/powermt: command not found</code></strong> — The sudoers.d file is a configuration file, not executable; verify it's in <code>/etc/sudoers.d/</code> with correct permissions (0440) and owned by root:root.</p>
+</div>
 <p>This grants the <code>svc-storage</code> account the ability to run any <code>powermt</code> subcommand. If tighter restriction is needed, specify individual commands:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/powerpath-monitoring</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Read-only monitoring account — display and registration check only</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>svc-monitoring<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all,<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all,<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>options,<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>check_registration,<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/sudoers.d/powerpath-monitoring</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Read-only monitoring account — display and registration check only</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>svc-monitoring<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all,<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all,<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>options,<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>check_registration,<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>/usr/sbin/powermt<span class="w"> </span>version
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudoers: parse error near line 5</code></strong> — Ensure each command line ends with a comma and there are no trailing spaces after the final backslash.
+<strong><code>svc-monitoring is not in the sudoers file. This incident will be reported.</code></strong> — Verify the sudoers.d file is owned by root:root with 0440 permissions and the user account svc-monitoring exists.</p>
+</div>
 <p>Validate the sudoers file syntax before applying:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/powerpath-monitoring
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/powerpath-monitoring
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/etc/sudoers.d/powerpath-monitoring: parsed OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>visudo: /etc/sudoers.d/powerpath-monitoring: No such file or directory</code></strong> — Create the sudoers file first with <code>touch /etc/sudoers.d/powerpath-monitoring</code> and appropriate permissions before validating.
+<strong><code>visudo: /etc/sudoers.d/powerpath-monitoring: bad permissions, should be 0440</code></strong> — Fix file permissions with <code>chmod 0440 /etc/sudoers.d/powerpath-monitoring</code> to match sudoers security requirements.</p>
+</div>
 <h3 id="pam-integration">PAM Integration<a class="headerlink" href="#pam-integration" title="Permanent link">&para;</a></h3>
 <p>PowerPath itself does not integrate with PAM. Host SSH authentication via PAM (including LDAP, Active Directory via SSSD, or MFA via PAM RADIUS) applies normally — PAM controls who can log into the host; once logged in, sudo controls what they can run.</p>
 <p>For environments with Active Directory integration on Linux:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm the storage admin AD group resolves on the host</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>id<span class="w"> </span>svc-storage
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>getent<span class="w"> </span>group<span class="w"> </span>storage-admins
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Grant the AD group sudo access to powermt</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># /etc/sudoers.d/powerpath-ad</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>%storage-admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm the storage admin AD group resolves on the host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>id<span class="w"> </span>svc-storage
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>getent<span class="w"> </span>group<span class="w"> </span>storage-admins
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Grant the AD group sudo access to powermt</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># /etc/sudoers.d/powerpath-ad</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>%storage-admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uid=1002(svc-storage) gid=1002(svc-storage) groups=1002(svc-storage),1003(storage-admins)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>storage-admins:x:1003:svc-storage,admin-user,storage-ops-user
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>id: 'svc-storage': no such user</code></strong> — Verify the service account exists in AD and has synced to the host via LDAP/SSSD with <code>getent passwd svc-storage</code>.
+<strong><code>storage-admins:x:1003:(empty)</code></strong> — Confirm AD group members are syncing by checking SSSD logs (<code>journalctl -u sssd -n 50</code>) and verifying group membership in Active Directory.</p>
+</div>
 <h3 id="ssh-key-management">SSH Key Management<a class="headerlink" href="#ssh-key-management" title="Permanent link">&para;</a></h3>
 <p>Hosts running PowerPath should enforce SSH key authentication and disable password-based SSH login for root:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /etc/ssh/sshd_config</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>PermitRootLogin<span class="w"> </span>prohibit-password
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>PasswordAuthentication<span class="w"> </span>no
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/ssh/sshd_config</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>PermitRootLogin<span class="w"> </span>prohibit-password
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>PasswordAuthentication<span class="w"> </span>no
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd[12345]: error: Permissions denied (publickey).</code></strong> — Ensure your public key is added to <code>/root/.ssh/authorized_keys</code> before disabling password authentication.
+<strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Generate SSH host keys with <code>ssh-keygen -A</code> before restarting sshd.</p>
+</div>
 <p>This ensures that interactive root access requires a managed SSH key, reducing the risk of credential-based attacks on hosts with privileged PowerPath access.</p>
 <hr />
 <h2 id="windows-authentication">Windows Authentication<a class="headerlink" href="#windows-authentication" title="Permanent link">&para;</a></h2>
 <p>On Windows Server, PowerPath installs as a system service and filter driver. The <code>powermt</code> command requires Local Administrator rights. There is no finer-grained Windows permission model for PowerPath — it is binary: Local Administrator or no access.</p>
 <h3 id="local-administrator-groups">Local Administrator Groups<a class="headerlink" href="#local-administrator-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Confirm account is in the local Administrators group</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Add a service account to local Administrators (requires existing admin rights)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Add-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;DOMAIN\svc-storage&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Confirm account is in the local Administrators group</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Add a service account to local Administrators (requires existing admin rights)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Add-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;DOMAIN\svc-storage&quot;</span>
 </code></pre></div>
 <h3 id="windows-remote-management-winrm">Windows Remote Management (WinRM)<a class="headerlink" href="#windows-remote-management-winrm" title="Permanent link">&para;</a></h3>
 <p>For remote PowerPath management on Windows, WinRM with constrained language mode or PowerShell JEA (Just Enough Administration) can be configured to restrict which <code>powermt</code> commands a delegated account can run remotely:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Example JEA configuration — restrict to display commands only</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># In a JEA role capability file (.psrc):</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="s1">&#39;powermt display dev=all&#39;</span><span class="p">,</span> <span class="s1">&#39;powermt check_registration&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Example JEA configuration — restrict to display commands only</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># In a JEA role capability file (.psrc):</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="s1">&#39;powermt display dev=all&#39;</span><span class="p">,</span> <span class="s1">&#39;powermt check_registration&#39;</span>
 </code></pre></div>
 <h3 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h3>
 <p>Windows Server hosts joined to Active Directory authenticate via Kerberos. Grant the relevant AD security group Local Administrator membership on PowerPath hosts via Group Policy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Computer Configuration &gt; Policies &gt; Windows Settings &gt;
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Security Settings &gt; Restricted Groups &gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Add DOMAIN\Storage-Admins to local Administrators
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Computer Configuration &gt; Policies &gt; Windows Settings &gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Security Settings &gt; Restricted Groups &gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Add DOMAIN\Storage-Admins to local Administrators
 </code></pre></div>
 <hr />
 <h2 id="aix-authentication">AIX Authentication<a class="headerlink" href="#aix-authentication" title="Permanent link">&para;</a></h2>
 <p>On IBM AIX, <code>powermt</code> requires root access. AIX RBAC (Role-Based Access Control) can be used to grant the <code>powermt</code> command to a non-root user:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create a custom role for PowerPath operations</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>mkrole<span class="w"> </span><span class="nv">rolelist</span><span class="o">=</span>powerpath_admin
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Assign the powermt binary to the role</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Edit /etc/security/roles to include command access</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Assign the role to a user</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>chuser<span class="w"> </span><span class="nv">roles</span><span class="o">=</span>powerpath_admin<span class="w"> </span>storage_admin_user
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Create a custom role for PowerPath operations</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>mkrole<span class="w"> </span><span class="nv">rolelist</span><span class="o">=</span>powerpath_admin
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Assign the powermt binary to the role</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Edit /etc/security/roles to include command access</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Assign the role to a user</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>chuser<span class="w"> </span><span class="nv">roles</span><span class="o">=</span>powerpath_admin<span class="w"> </span>storage_admin_user
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>(no output — command completes silently)
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>(no output — command completes silently)
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mkrole: 0551-102 Cannot access the /etc/security/roles file.</code></strong> — Ensure you are running as root and the /etc/security directory has proper permissions (typically 755).
+<strong><code>chuser: 0551-101 User storage_admin_user does not exist.</code></strong> — Create the user first with <code>useradd storage_admin_user</code> before assigning roles.</p>
+</div>
 <p>For most AIX environments, the simpler approach is a named shared account in the <code>system</code> group that is permitted to run <code>powermt</code>, with sudo configured via the IBM AIX sudo package.</p>
 <hr />
 <h2 id="automation-and-service-accounts">Automation and Service Accounts<a class="headerlink" href="#automation-and-service-accounts" title="Permanent link">&para;</a></h2>
@@ -9021,15 +9087,23 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 <li><strong>SSH key authentication</strong>: Use a unique, passphrase-protected SSH key for each automation system. Rotate annually.</li>
 <li><strong>Audit trail</strong>: Ensure all <code>powermt</code> commands run by the service account are logged via sudo (<code>/var/log/secure</code> on RHEL/OEL, <code>/var/log/auth.log</code> on Debian/Ubuntu).</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Example: monitoring service account with restricted sudo</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># /etc/sudoers.d/powerpath-svc-monitor</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Defaults:svc-monitor<span class="w"> </span>!requiretty
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>check_registration
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>options
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Example: monitoring service account with restricted sudo</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># /etc/sudoers.d/powerpath-svc-monitor</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Defaults:svc-monitor<span class="w"> </span>!requiretty
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>check_registration
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>options
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudoedit: /etc/sudoers.d/powerpath-svc-monitor: syntax error near line 3</code></strong> — Verify the sudoers file syntax with <code>visudo -cf /etc/sudoers.d/powerpath-svc-monitor</code> before applying.
+<strong><code>svc-monitor is not in the sudoers file.  This incident will be reported.</code></strong> — Ensure the service account <code>svc-monitor</code> exists with <code>id svc-monitor</code> and the sudoers file is in <code>/etc/sudoers.d/</code> with mode 0440.
+<strong><code>powermt: command not found</code></strong> — Install or verify the PowerPath package is installed with <code>rpm -qa | grep powerpath</code> or <code>apt list --installed | grep powerpath</code>.</p>
+</div>
 <hr />
 <h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
 <p>PowerPath does not write its own audit log. Administrative actions (<code>powermt set</code>, <code>powermt save</code>, <code>powermt config</code>, <code>powermt remove</code>) are only traceable through:</p>
@@ -9137,7 +9211,7 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:17:07 UTC"><span class="timeago" datetime="2026-06-29T04:17:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:17:07 UTC">2026-06-29</span>
   </span>
 
     

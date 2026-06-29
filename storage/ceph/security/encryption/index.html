@@ -7589,21 +7589,57 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># For a specific device on a single host:</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdb<span class="w"> </span>--encrypted
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Scheduling OSD deployment with encryption enabled
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Scheduled osd.encrypted update for host [node1,node2,node3]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Created OSD spec from osd-spec.yaml
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Deploying OSDs with dmcrypt encryption
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  node1: osd.0 (sda) - encrypted
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  node2: osd.1 (sdb) - encrypted
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  node3: osd.2 (sdc) - encrypted
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Waiting for encrypted OSD daemons to start...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>osd.0: up and in
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>osd.1: up and in
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>osd.2: up and in
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>All OSDs successfully deployed with encryption
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'</code></strong> — Add a <code>placement</code> section to the spec or set <code>unmanaged: true</code> if managing OSDs manually.
+<strong><code>Error: No available devices found on hosts [node1, node2, node3]</code></strong> — Verify devices exist and are not already in use with <code>ceph orch device ls</code>, and ensure hosts are in the cluster with <code>ceph orch host ls</code>.
+<strong><code>Error: --encrypted flag requires Ceph version Octopus or later</code></strong> — Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release.</p>
+</div>
 <h2 id="dm-crypt-key-management">dm-crypt Key Management<a class="headerlink" href="#dm-crypt-key-management" title="Permanent link">&para;</a></h2>
 <p>cephadm generates a unique random LUKS key per OSD. Keys are stored in the MON KV store — no external KMS is required, but the MON quorum must remain intact or encrypted OSDs cannot be unlocked.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Retrieve LUKS key for a specific OSD (requires admin caps)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>get<span class="w"> </span>dm-crypt/osd/&lt;id&gt;/luks
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List all stored dm-crypt keys</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-crypt
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Back up all dm-crypt keys for escrow (store in vault or secure offline storage)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-crypt<span class="w"> </span>&gt;<span class="w"> </span>/secure-backup/ceph-luks-keys-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify encryption is active on a running OSD</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cryptsetup<span class="w"> </span>status<span class="w"> </span>/dev/mapper/ceph-&lt;uuid&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Output shows: cipher aes-xts-plain64, keysize 512 bits, mode rw</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Retrieve LUKS key for a specific OSD (requires admin caps)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>get<span class="w"> </span>dm-crypt/osd/&lt;id&gt;/luks
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List all stored dm-crypt keys</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-crypt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Back up all dm-crypt keys for escrow (store in vault or secure offline storage)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-crypt<span class="w"> </span>&gt;<span class="w"> </span>/secure-backup/ceph-luks-keys-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify encryption is active on a running OSD</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cryptsetup<span class="w"> </span>status<span class="w"> </span>/dev/mapper/ceph-&lt;uuid&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Output shows: cipher aes-xts-plain64, keysize 512 bits, mode rw</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dm-crypt/osd/0/luks: AQDvK2Zl7x9mFRAAp8q3Z+Kw9L2m4vQ8xY5nJg==
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dm-crypt/osd/1/luks: AQDvK2Zl7x9mFRAAp8q3Z+Kw9L2m4vQ8xY5nJh==
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>dm-crypt/osd/2/luks: AQDvK2Zl7x9mFRAAp8q3Z+Kw9L2m4vQ8xY5nJi==
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dm-crypt/osd/3/luks: AQDvK2Zl7x9mFRAAp8q3Z+Kw9L2m4vQ8xY5nJj==
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>(no output — command completes silently)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/secure-backup/ceph-luks-keys-2024-01-15.json
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>/dev/mapper/ceph-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6 is active.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  type:    LUKS2
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  cipher:  aes-xts-plain64
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  keysize: 512 bits
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  mode:    rw
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: permission denied</code></strong> — Ensure your Ceph client has admin capabilities by checking your keyring and using <code>ceph auth list</code> to verify permissions.
+<strong><code>error: No such file or directory</code></strong> — Verify the OSD ID exists and the device mapper path is correct by running <code>ls /dev/mapper/ceph-*</code> to list active encrypted volumes.</p>
+</div>
 <blockquote>
 <p><strong>Critical</strong>: if all MONs are lost, encrypted OSD data is unrecoverable. Always maintain MON quorum and back up MON keyrings separately from the cluster.</p>
 </blockquote>
@@ -7613,64 +7649,125 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 <li><a href="../../operations/health-checks/">Ceph — Health Checks</a></li>
 </ul>
 <h2 id="verify-osd-encryption-status">Verify OSD Encryption Status<a class="headerlink" href="#verify-osd-encryption-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check OSD spec shows encrypted flag</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls<span class="w"> </span>--service-type<span class="w"> </span>osd<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>encrypted
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># On OSD host: verify LUKS header present on device</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cryptsetup<span class="w"> </span>isLuks<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LUKS encrypted&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not encrypted&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List all LUKS-encrypted mapper devices on a node</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--target<span class="w"> </span>crypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check OSD spec shows encrypted flag</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls<span class="w"> </span>--service-type<span class="w"> </span>osd<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>encrypted
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># On OSD host: verify LUKS header present on device</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cryptsetup<span class="w"> </span>isLuks<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LUKS encrypted&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not encrypted&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List all LUKS-encrypted mapper devices on a node</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--target<span class="w"> </span>crypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>service_type: osd
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>service_id: default
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>placement:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  hosts:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  - osd-node-01
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - osd-node-02
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>encrypted: true
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>data_devices:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  paths:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - /dev/sdb
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - /dev/sdc
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>LUKS encrypted
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>crypt-osd-sdb-a7f2e91c  (253, 0)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>crypt-osd-sdc-b3d4f82e  (253, 1)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Command 'cryptsetup' not found</code></strong> — Install cryptsetup with <code>apt-get install cryptsetup</code> (Debian/Ubuntu) or <code>yum install cryptsetup</code> (RHEL/CentOS).
+<strong><code>Device /dev/sdb does not contain a LUKS header</code></strong> — Verify the correct device path with <code>lsblk</code> and ensure the OSD was deployed with encryption enabled in the spec.
+<strong><code>No such device or address</code></strong> — Confirm the device exists and is accessible on the OSD host with <code>lsblk</code> before running cryptsetup.</p>
+</div>
 <h2 id="rbd-image-encryption">RBD Image Encryption<a class="headerlink" href="#rbd-image-encryption" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Per-image encryption (Quincy+) — encrypt specific RBD images</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Useful when you need client-managed keys (not cluster-managed)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a passphrase-based encrypted image</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>rbd<span class="w"> </span>create<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--size<span class="w"> </span>100G
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>format<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>luks2<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Open encrypted image for use</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>open<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Map the opened image as a block device</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>rbd<span class="w"> </span>map<span class="w"> </span>rbd/encrypted-vol
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Note: encryption metadata is stored in the image itself; the Ceph cluster is unaware of the key.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Per-image encryption (Quincy+) — encrypt specific RBD images</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Useful when you need client-managed keys (not cluster-managed)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Create a passphrase-based encrypted image</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>rbd<span class="w"> </span>create<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--size<span class="w"> </span>100G
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>format<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>luks2<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Open encrypted image for use</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>open<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Map the opened image as a block device</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>rbd<span class="w"> </span>map<span class="w"> </span>rbd/encrypted-vol
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Note: encryption metadata is stored in the image itself; the Ceph cluster is unaware of the key.</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>rbd: create 2024-01-15 10:23:45.123456 7f8a9c2d1e4b INFO: creating image
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>100G
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>rbd: format 2024-01-15 10:23:46.987654 7f8a9c2d1e4b INFO: encryption format luks2 applied
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>rbd: open 2024-01-15 10:23:47.654321 7f8a9c2d1e4b INFO: image opened successfully
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/dev/rbd0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rbd: error: image rbd/encrypted-vol already exists</code></strong> — Delete the existing image with <code>rbd rm rbd/encrypted-vol</code> or use a different image name.
+<strong><code>rbd: error: unable to read passphrase file /root/secret.key: No such file or directory</code></strong> — Create the passphrase file first with <code>echo 'your-passphrase' &gt; /root/secret.key &amp;&amp; chmod 600 /root/secret.key</code>.
+<strong><code>rbd: error: image rbd/encrypted-vol is not encrypted or encryption format not recognized</code></strong> — Ensure the image was formatted with <code>rbd encryption format</code> before attempting to open it.</p>
+</div>
 <h2 id="rgw-server-side-encryption-sse">RGW Server-Side Encryption (SSE)<a class="headerlink" href="#rgw-server-side-encryption-sse" title="Permanent link">&para;</a></h2>
 <h3 id="sse-s3-ceph-managed-keys">SSE-S3: Ceph-Managed Keys<a class="headerlink" href="#sse-s3-ceph-managed-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable SSE-S3 (Ceph manages the keys)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_require_ssl<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>secrettable
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Upload object with SSE-S3 (client sends encryption request header)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--sse<span class="w"> </span>AES256
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable SSE-S3 (Ceph manages the keys)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_require_ssl<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>secrettable
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Upload object with SSE-S3 (client sends encryption request header)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--sse<span class="w"> </span>AES256
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>upload: ./myfile.dat to s3://mybucket/myfile.dat
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error putting object: InvalidArgument: The Ceph RGW server does not support the requested encryption method.</code></strong> — Verify that <code>rgw_crypt_s3_kms_backend</code> is set to a supported backend (e.g., <code>vault</code>, <code>barbican</code>, or <code>secrettable</code>) and that the RGW daemon has been restarted after the config change.
+<strong><code>error: Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables with valid RGW user credentials.</p>
+</div>
 <h3 id="sse-kms-hashicorp-vault-backed-keys">SSE-KMS: HashiCorp Vault-Backed Keys<a class="headerlink" href="#sse-kms-hashicorp-vault-backed-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure Vault integration in ceph.conf / config DB</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>vault
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_addr<span class="w"> </span>https://vault.example.com:8200
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_auth<span class="w"> </span>token
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_token_file<span class="w"> </span>/etc/ceph/vault-token
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Client sends KMS header with key reference</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--sse-kms-key-id<span class="w"> </span>vault-key-id
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure Vault integration in ceph.conf / config DB</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>vault
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_addr<span class="w"> </span>https://vault.example.com:8200
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_auth<span class="w"> </span>token
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_vault_token_file<span class="w"> </span>/etc/ceph/vault-token
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Client sends KMS header with key reference</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--sse-kms-key-id<span class="w"> </span>vault-key-id
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>set client.rgw.myorg rgw_crypt_s3_kms_backend vault
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>set client.rgw.myorg rgw_crypt_vault_addr https://vault.example.com:8200
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>set client.rgw.myorg rgw_crypt_vault_auth token
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>set client.rgw.myorg rgw_crypt_vault_token_file /etc/ceph/vault-token
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>upload: ./myfile.dat to s3://mybucket/myfile.dat
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: error setting config option 'rgw_crypt_vault_addr': (22) Invalid argument</code></strong> — Verify the Vault URL is reachable and uses the correct protocol (https://) with valid hostname and port.
+<strong><code>fatal error: An error occurred (InvalidArgument) when calling the PutObject operation: The KMS key ID is invalid or not found</code></strong> — Ensure the vault-key-id exists in Vault and the RGW service account has read permissions on that key path.
+<strong><code>Error: error setting config option 'rgw_crypt_vault_token_file': (2) No such file or directory</code></strong> — Create the Vault token file at /etc/ceph/vault-token with appropriate permissions (readable by ceph user) before applying the configuration.</p>
+</div>
 <h3 id="sse-c-client-provided-keys">SSE-C: Client-Provided Keys<a class="headerlink" href="#sse-c-client-provided-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Client supplies the encryption key with every request</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Ceph applies the key for encryption/decryption but never stores it</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--sse-c<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--sse-c-key<span class="w"> </span>fileb:///path/to/32-byte-key.bin
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Client MUST supply the same key for every subsequent GET; Ceph cannot recover data without it</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Client supplies the encryption key with every request</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Ceph applies the key for encryption/decryption but never stores it</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://rgw.ceph.local:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--sse-c<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--sse-c-key<span class="w"> </span>fileb:///path/to/32-byte-key.bin
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Client MUST supply the same key for every subsequent GET; Ceph cannot recover data without it</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>upload: ./myfile.dat to s3://mybucket/myfile.dat
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidArgument) when calling the PutObject operation: The object was stored using a form of Server Side Encryption. The correct parameters must be provided to retrieve the object.</code></strong> — Supply the same <code>--sse-c</code> and <code>--sse-c-key</code> parameters on all subsequent GET/HEAD operations for this object.
+<strong><code>An error occurred (InvalidRequest) when calling the PutObject operation: Bad Request</code></strong> — Verify the key file exists at the specified path and contains exactly 32 bytes (use <code>wc -c /path/to/32-byte-key.bin</code> to confirm).</p>
+</div>
 <h2 id="encryption-options-summary">Encryption Options Summary<a class="headerlink" href="#encryption-options-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7728,19 +7825,31 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </tbody>
 </table>
 <h2 id="messenger-v2-in-transit-encryption">Messenger v2 (In-Transit Encryption)<a class="headerlink" href="#messenger-v2-in-transit-encryption" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable encryption for all connections</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># OSD-to-OSD (cluster network)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_service_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># client-to-OSD</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_client_mode<span class="w"> </span>secure<span class="w">     </span><span class="c1"># client connections</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_mon_cluster_mode<span class="w"> </span>secure<span class="w">  </span><span class="c1"># MON-to-MON</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Disable legacy msgr1 to prevent downgrade attacks</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_bind_msgr1<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Verify connections use secure mode</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>mon<span class="w"> </span>ms_cluster_mode
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Expected: secure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Enable encryption for all connections</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># OSD-to-OSD (cluster network)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_service_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># client-to-OSD</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_client_mode<span class="w"> </span>secure<span class="w">     </span><span class="c1"># client connections</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_mon_cluster_mode<span class="w"> </span>secure<span class="w">  </span><span class="c1"># MON-to-MON</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Disable legacy msgr1 to prevent downgrade attacks</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_bind_msgr1<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Verify connections use secure mode</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>mon<span class="w"> </span>ms_cluster_mode
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Expected: secure</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>(no output — command completes silently)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>(no output — command completes silently)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>(no output — command completes silently)
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>(no output — command completes silently)
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>secure
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: ms_cluster_mode is not a valid setting</code></strong> — Use <code>ceph config help global</code> to verify the correct parameter name; the setting may be <code>ms_cluster_mode</code> only on specific Ceph versions (14.2.0+).
+<strong><code>Error: unable to get config value: (2) No such file or directory</code></strong> — Ensure the monitor daemon is running with <code>ceph -s</code> and that you have proper authentication credentials in <code>/etc/ceph/ceph.conf</code>.</p>
+</div>
 <h2 id="encryption-deployment-checklist">Encryption Deployment Checklist<a class="headerlink" href="#encryption-deployment-checklist" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7796,14 +7905,23 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 <li><strong>Key rotation schedule</strong>: rotate <code>client.admin</code> and service account keys quarterly; rotate RGW KMS KEK annually or after any suspected compromise.</li>
 <li><strong>Backup encryption</strong>: if backing up with Ceph snapshots, ensure backup destination also uses encryption at rest.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify Vault connectivity for RGW SSE-KMS</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-Vault-Token: </span><span class="k">$(</span>cat<span class="w"> </span>/etc/ceph/vault-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>https://vault.example.com:8200/v1/sys/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>initialized
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check RGW encryption config</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_vault_addr
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_s3_kms_backend
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify Vault connectivity for RGW SSE-KMS</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-Vault-Token: </span><span class="k">$(</span>cat<span class="w"> </span>/etc/ceph/vault-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>https://vault.example.com:8200/v1/sys/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>initialized
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Check RGW encryption config</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_vault_addr
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_s3_kms_backend
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&quot;initialized&quot;: true
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>rgw_crypt_vault_addr = https://vault.example.com:8200
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>rgw_crypt_s3_kms_backend = vault
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>--cacert /path/to/vault-ca.crt</code> to the curl command or use <code>-k</code> if testing in non-production.
+<strong><code>Error ENOENT: error reading /etc/ceph/vault-token</code></strong> — Ensure the Vault token file exists and is readable by the user running the command; regenerate with <code>ceph config-key put client.rgw/vault-token &lt;token&gt;</code> if missing.</p>
+</div>
 <h2 id="performance-impact-reference">Performance Impact Reference<a class="headerlink" href="#performance-impact-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7869,7 +7987,7 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

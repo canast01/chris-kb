@@ -8988,24 +8988,41 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/cluster/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;control_cluster_status&#39;,{}).get(&#39;status&#39;,&#39;&#39;))&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>STABLE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to port 443: Connection refused</code></strong> — Verify the NSX Manager is running and reachable at the IP/hostname in $NSX_URL, and that port 443 is not blocked by a firewall.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that $NSX_PASS is set correctly and the admin user has API permissions; an authentication failure returns HTML instead of JSON.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store if <code>-k</code> is removed.</p>
+</div>
 <p>Expected: <code>STABLE</code>. Do not upgrade if NSX-T is in <code>DEGRADED</code> or <code>UNSTABLE</code> state.</p>
 <p><strong>No Active vMotion Operations</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*vmotion*&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*vmotion*&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <p>Wait for all vMotion tasks to complete before starting an upgrade.</p>
 <p><strong>SDDC Manager Configuration Backup</strong></p>
 <p>Take a manual backup of SDDC Manager configuration before upgrading:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">SDDC_URL</span><span class="o">=</span><span class="s2">&quot;https://sddc-manager.vcf.internal&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_URL</span><span class="si">}</span><span class="s2">/v1/tokens&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;P@ssw0rd&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;accessToken&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_URL</span><span class="si">}</span><span class="s2">/v1/backups/tasks&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;elements&quot;:[{&quot;resourceType&quot;:&quot;SDDC_MANAGER&quot;}]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">SDDC_URL</span><span class="o">=</span><span class="s2">&quot;https://sddc-manager.vcf.internal&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_URL</span><span class="si">}</span><span class="s2">/v1/tokens&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;P@ssw0rd&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;accessToken&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_URL</span><span class="si">}</span><span class="s2">/v1/backups/tasks&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;elements&quot;:[{&quot;resourceType&quot;:&quot;SDDC_MANAGER&quot;}]}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yQHZzcGhlcmUubG9jYWwiLCJleHAiOjE3MDk4MzIwMDB9.kR9mN2pQxZ1vL4jW8sT5uY6aB3cD7eF9gH0iJ1kL2m
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>{&quot;id&quot;:&quot;backup-task-20240307-001&quot;,&quot;resourceType&quot;:&quot;SDDC_MANAGER&quot;,&quot;status&quot;:&quot;RUNNING&quot;,&quot;startTime&quot;:&quot;2024-03-07T14:32:15Z&quot;,&quot;estimatedRemainingTime&quot;:&quot;PT45M&quot;,&quot;progress&quot;:0}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify SDDC_URL is correct and accessible).
+<strong><code>jq: command not found</code> or <code>json.decoder.JSONDecodeError</code></strong> — Ensure python3 is installed and the JSON response is valid by testing token endpoint separately with <code>curl -sk -X POST "${SDDC_URL}/v1/tokens" -H "Content-Type: application/json" -d '{"username":"administrator@vsphere.local","password":"P@ssw0rd"}'</code>.
+<strong><code>401 Unauthorized</code></strong> — Verify the token was successfully extracted by echoing <code>echo $TOKEN</code> and confirm credentials are correct; if token is empty, the authentication endpoint may have failed.</p>
+</div>
 <p><strong>VCF Compatibility Matrix Check</strong></p>
 <p>Before upgrading, verify the target version combination is supported:</p>
 <ul>
@@ -9016,46 +9033,57 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 <h2 id="esxi-upgrade-via-vsphere-lifecycle-manager">ESXi Upgrade via vSphere Lifecycle Manager<a class="headerlink" href="#esxi-upgrade-via-vsphere-lifecycle-manager" title="Permanent link">&para;</a></h2>
 <p>For EVS environments, ESXi upgrades go through vSphere Lifecycle Manager (vLCM) inside vCenter, not SDDC Manager UI directly. SDDC Manager triggers the vLCM workflow as part of the VCF upgrade bundle, but the actual host remediation is visible in vCenter.</p>
 <p><strong>Check current ESXi version across all hosts:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">vcf</span><span class="p">.</span><span class="n">internal</span> <span class="n">-User</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="s1">&#39;P@ssw0rd&#39;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span><span class="p">,</span> <span class="p">`</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LicenseKey&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">LicenseKey</span><span class="p">}}</span> <span class="p">|</span> <span class="nb">Sort </span><span class="n">Version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">vcf</span><span class="p">.</span><span class="n">internal</span> <span class="n">-User</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="s1">&#39;P@ssw0rd&#39;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span><span class="p">,</span> <span class="p">`</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LicenseKey&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">LicenseKey</span><span class="p">}}</span> <span class="p">|</span> <span class="nb">Sort </span><span class="n">Version</span>
 </code></pre></div>
 <p><strong>Check vLCM baseline compliance:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-Management-Cluster&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$h</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nv">$compliance</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$h</span> <span class="p">|</span> <span class="nb">Get-Compliance</span><span class="p">)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">Host</span> <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="n">Version</span> <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">Version</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="n">ComplianceStatus</span> <span class="p">=</span> <span class="nv">$compliance</span><span class="p">.</span><span class="n">Status</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="p">}</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-Management-Cluster&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nv">$h</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nv">$compliance</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$h</span> <span class="p">|</span> <span class="nb">Get-Compliance</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">Host</span> <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="n">Version</span> <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">Version</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="n">ComplianceStatus</span> <span class="p">=</span> <span class="nv">$compliance</span><span class="p">.</span><span class="n">Status</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="p">}</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Trigger remediation for a host via PowerCLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">$baseline</span> <span class="p">=</span> <span class="nb">Get-Baseline</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-ESXi-8.0-U2&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;evs-host-01.vcf.internal&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Test-Compliance</span> <span class="n">-Entity</span> <span class="nv">$host</span> <span class="n">-UpdateType</span> <span class="n">HostPatch</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">Remediate-Inventory</span> <span class="n">-Entity</span> <span class="nv">$host</span> <span class="n">-Baseline</span> <span class="nv">$baseline</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">$baseline</span> <span class="p">=</span> <span class="nb">Get-Baseline</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-ESXi-8.0-U2&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;evs-host-01.vcf.internal&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">Test-Compliance</span> <span class="n">-Entity</span> <span class="nv">$host</span> <span class="n">-UpdateType</span> <span class="n">HostPatch</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">Remediate-Inventory</span> <span class="n">-Entity</span> <span class="nv">$host</span> <span class="n">-Baseline</span> <span class="nv">$baseline</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>SDDC Manager typically invokes remediation automatically as part of the VCF upgrade workflow. Only run manual remediation if directed by SDDC Manager or if a host failed automatic remediation and you need to retry a single host.</p>
 <h2 id="hcx-version-upgrade">HCX Version Upgrade<a class="headerlink" href="#hcx-version-upgrade" title="Permanent link">&para;</a></h2>
 <p>HCX Cloud (the EVS-side appliance) upgrades automatically when EVS upgrades the VCF stack. You do not manage HCX Cloud upgrades directly. HCX on-premises Manager must be manually upgraded to match.</p>
 <p><strong>Check current HCX version (both sides):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">HCX_ONPREM</span><span class="o">=</span><span class="s2">&quot;https://hcx-onprem.corp.local&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">HCX_EVS</span><span class="o">=</span><span class="s2">&quot;https://hcx-cloud.vcf.internal&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;On-prem HCX:&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HCX_ONPREM</span><span class="si">}</span><span class="s2">/hybridity/api/about&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;  Version: {d.get(&#39;version&#39;,&#39;unknown&#39;)}\&quot;)&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;EVS HCX Cloud:&quot;</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HCX_EVS</span><span class="si">}</span><span class="s2">/hybridity/api/about&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;  Version: {d.get(&#39;version&#39;,&#39;unknown&#39;)}\&quot;)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">HCX_ONPREM</span><span class="o">=</span><span class="s2">&quot;https://hcx-onprem.corp.local&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">HCX_EVS</span><span class="o">=</span><span class="s2">&quot;https://hcx-cloud.vcf.internal&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;On-prem HCX:&quot;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HCX_ONPREM</span><span class="si">}</span><span class="s2">/hybridity/api/about&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;  Version: {d.get(&#39;version&#39;,&#39;unknown&#39;)}\&quot;)&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;EVS HCX Cloud:&quot;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HCX_EVS</span><span class="si">}</span><span class="s2">/hybridity/api/about&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;  Version: {d.get(&#39;version&#39;,&#39;unknown&#39;)}\&quot;)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>On-prem HCX:
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Version: 4.8.2.1
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>EVS HCX Cloud:
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Version: 4.8.2.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to hcx-onprem.corp.local port 443: Name or service not known</code></strong> — Verify DNS resolution for the HCX hostnames or update <code>/etc/hosts</code> with correct IP mappings.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag is already present; if still failing, ensure the HCX appliance certificate is valid and not expired.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Invalid JSON text at line 1</code></strong> — Confirm <code>$HCX_PASS</code> is set correctly and the HCX API endpoint is responding with valid JSON (check credentials and network connectivity).</p>
+</div>
 <p>Both sides must run the same major HCX version. If EVS has upgraded HCX Cloud automatically, upgrade on-prem HCX Manager before using HCX for migrations.</p>
 <p><strong>Upgrade on-prem HCX Manager:</strong></p>
 <ol>
@@ -9066,38 +9094,38 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 <li>If service mesh appliances need updating: Interconnect → Service Mesh → Update (per mesh)</li>
 </ol>
 <h2 id="sddc-manager-lifecycle">SDDC Manager Lifecycle<a class="headerlink" href="#sddc-manager-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Access SDDC Manager</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># URL: https://sddc-manager.vcf.internal</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Credentials: from AWS Secrets Manager /evs/&lt;env-name&gt;/sddc-manager-credentials</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check for available upgrade bundles</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># SDDC Manager UI → Lifecycle Management → Bundle Management → Download Available Bundles</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Trigger upgrade workflow</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># SDDC Manager UI → Lifecycle Management → Upgrade</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1">#   Select target VCF version → run precheck → schedule → execute</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Monitor upgrade progress</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># SDDC Manager → Lifecycle Management → Upgrade → running workflow task</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Takes: 4-8 hours for full stack (all components)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Access SDDC Manager</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># URL: https://sddc-manager.vcf.internal</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Credentials: from AWS Secrets Manager /evs/&lt;env-name&gt;/sddc-manager-credentials</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Check for available upgrade bundles</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># SDDC Manager UI → Lifecycle Management → Bundle Management → Download Available Bundles</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Trigger upgrade workflow</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># SDDC Manager UI → Lifecycle Management → Upgrade</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1">#   Select target VCF version → run precheck → schedule → execute</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># Monitor upgrade progress</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># SDDC Manager → Lifecycle Management → Upgrade → running workflow task</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1"># Takes: 4-8 hours for full stack (all components)</span>
 </code></pre></div>
 <h2 id="rollback-considerations">Rollback Considerations<a class="headerlink" href="#rollback-considerations" title="Permanent link">&para;</a></h2>
 <p>VCF component upgrades are generally not rollbackable. This applies especially to NSX-T and ESXi upgrades, which modify kernel-level components that cannot be downgraded via software. Plan accordingly:</p>
 <p><strong>Management VM Snapshots (before each component upgrade)</strong></p>
 <p>Before upgrading each component, snapshot the management VMs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">$mgmtVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;vcenter&quot;</span><span class="p">,</span> <span class="s2">&quot;sddc-manager&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-01&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-02&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-03&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmName</span> <span class="k">in</span> <span class="nv">$mgmtVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="nv">$vmName</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vm</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyy-MM-dd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>          <span class="n">-Description</span> <span class="s2">&quot;Snapshot before VCF upgrade&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="nb">Write-Output</span> <span class="s2">&quot;Snapshot created for $vmName&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="p">}</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">$mgmtVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;vcenter&quot;</span><span class="p">,</span> <span class="s2">&quot;sddc-manager&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-01&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-02&quot;</span><span class="p">,</span> <span class="s2">&quot;nsx-manager-03&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmName</span> <span class="k">in</span> <span class="nv">$mgmtVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="nv">$vmName</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vm</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyy-MM-dd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>          <span class="n">-Description</span> <span class="s2">&quot;Snapshot before VCF upgrade&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="nb">Write-Output</span> <span class="s2">&quot;Snapshot created for $vmName&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="p">}</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">}</span>
 </code></pre></div>
 <p>Delete snapshots after the upgrade is confirmed successful (snapshots consume vSAN space):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;pre-upgrade-*&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;pre-upgrade-*&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p><strong>What can be rolled back:</strong></p>
 <ul>
@@ -9176,7 +9204,7 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

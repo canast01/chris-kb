@@ -7974,25 +7974,66 @@ Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server t
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># To verify the stored (encrypted) form</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>tacacs-server<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>key
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tacacs-server host 10.10.1.10 key 7 &quot;5d41402abc4b2a76b9719d911017c592&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the switch is in configuration mode (enter <code>config t</code> first) and that TACACS+ feature is enabled with <code>feature tacacs+</code>.
+<strong><code>% Incomplete command</code></strong> — Ensure you provide a valid plaintext key value; the key cannot be empty or contain only whitespace characters.</p>
+</div>
 <hr />
 <h2 id="management-plane-radius-fallback">Management Plane: RADIUS (Fallback)<a class="headerlink" href="#management-plane-radius-fallback" title="Permanent link">&para;</a></h2>
 <p>RADIUS can be used as a fallback if TACACS+ is unavailable. RADIUS is also used by some NDFC deployments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Define RADIUS servers</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>radius-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.20<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>radius-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.21<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Group RADIUS servers</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aaa<span class="w"> </span>group<span class="w"> </span>server<span class="w"> </span>radius<span class="w"> </span>RADIUS-SERVERS
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.20
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.21
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Authentication chain: TACACS+ first, RADIUS second, local fallback</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span>RADIUS-SERVERS<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check RADIUS server status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>show<span class="w"> </span>radius-server
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>show<span class="w"> </span>radius-server<span class="w"> </span>statistics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Define RADIUS servers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>radius-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.20<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>radius-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.21<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Group RADIUS servers</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aaa<span class="w"> </span>group<span class="w"> </span>server<span class="w"> </span>radius<span class="w"> </span>RADIUS-SERVERS
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.20
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.21
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Authentication chain: TACACS+ first, RADIUS second, local fallback</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span>RADIUS-SERVERS<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check RADIUS server status</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>show<span class="w"> </span>radius-server
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>show<span class="w"> </span>radius-server<span class="w"> </span>statistics
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>RADIUS-SERVER Information:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Server Address          : 10.10.1.20
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Server Port             : 1812
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Server Timeout          : 5
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Server Retransmit       : 1
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Server Key              : ********
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Server Status           : UP
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Server Address          : 10.10.1.21
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Server Port             : 1812
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Server Timeout          : 5
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Server Retransmit       : 1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Server Key              : ********
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Server Status           : UP
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>RADIUS-SERVER Statistics:
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Server Address          : 10.10.1.20
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Access-Requests         : 1247
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Access-Accepts          : 1198
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  Access-Rejects          : 49
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  Timeouts                : 0
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  Server Address          : 10.10.1.21
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  Access-Requests         : 1253
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  Access-Accepts          : 1211
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  Access-Rejects          : 42
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  Timeouts                : 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the RADIUS server IP addresses are reachable and the switch has network connectivity to the RADIUS servers.
+<strong><code>% RADIUS server group 'RADIUS-SERVERS' not found</code></strong> — Ensure the aaa group server radius command is configured before referencing it in the authentication chain.
+<strong><code>% Authentication method 'TACACS-SERVERS' not configured</code></strong> — Define the TACACS-SERVERS group with <code>aaa group server tacacs+ TACACS-SERVERS</code> before using it in the login authentication policy.</p>
+</div>
 <hr />
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts must exist for break-glass access — when both TACACS+ and RADIUS are unreachable. Local accounts must not be used for routine operational access.</p>
@@ -8023,101 +8064,241 @@ Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server t
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create break-glass local admin</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>username<span class="w"> </span>admin<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;strong-plaintext-password&gt;<span class="w"> </span>role<span class="w"> </span>network-admin
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># NX-OS encrypts the password in the config</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify account</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>user-account<span class="w"> </span>admin
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check currently active sessions</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>show<span class="w"> </span>users
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create break-glass local admin</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>username<span class="w"> </span>admin<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;strong-plaintext-password&gt;<span class="w"> </span>role<span class="w"> </span>network-admin
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># NX-OS encrypts the password in the config</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify account</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>user-account<span class="w"> </span>admin
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check currently active sessions</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>show<span class="w"> </span>users
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>admin
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  this user account has no expiration date
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  User has read-write permission
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>NAME       LINE       TIME                 IDLE       PID    SEAT
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>admin      vty0       Dec 10 10:23:45 +00:00  00:00:12   12847  -
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Ensure you are in the correct configuration mode; use <code>config t</code> before entering the username command.
+<strong><code>% Incomplete command</code></strong> — Provide a strong plaintext password (minimum 8 characters with mixed case, numbers, and symbols) in place of <code>&lt;strong-plaintext-password&gt;</code>.</p>
+</div>
 <h3 id="hardening-local-accounts">Hardening Local Accounts<a class="headerlink" href="#hardening-local-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enforce minimum password length and complexity</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>password<span class="w"> </span>strength-check
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>username<span class="w"> </span>admin<span class="w"> </span>password-prompt
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Set maximum login retries before lockout</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>error-enable
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># View login failures in accounting log</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>show<span class="w"> </span>accounting<span class="w"> </span>log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FAIL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enforce minimum password length and complexity</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>password<span class="w"> </span>strength-check
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>username<span class="w"> </span>admin<span class="w"> </span>password-prompt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Set maximum login retries before lockout</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>error-enable
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># View login failures in accounting log</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>show<span class="w"> </span>accounting<span class="w"> </span>log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FAIL
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Password strength check enabled.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Enter password for user admin: 
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Re-enter password: 
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Password accepted. Minimum length: 8 characters, complexity requirements enforced.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>(no output — command completes silently)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>timestamp: 2024-01-15 14:32:18 | user: admin | event: LOGIN_FAIL | source: 192.168.1.45 | attempts: 3
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>timestamp: 2024-01-15 14:35:02 | user: operator | event: LOGIN_FAIL | source: 192.168.1.52 | attempts: 1
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>timestamp: 2024-01-15 14:38:45 | user: admin | event: LOGIN_FAIL | source: 192.168.1.45 | attempts: 4
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>timestamp: 2024-01-15 14:42:11 | user: guest | event: LOGIN_FAIL | source: 192.168.1.61 | attempts: 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact syntax for your MDS firmware version; use <code>show version</code> to confirm and consult the Cisco MDS CLI reference guide.
+<strong><code>% Authentication not configured</code></strong> — Enable AAA globally with <code>aaa new-model</code> before applying authentication policies.
+<strong><code>% No accounting records found</code></strong> — Ensure accounting is enabled with <code>aaa accounting log enable</code> and that login failures have occurred since the last system restart.</p>
+</div>
 <hr />
 <h2 id="ssh-key-based-authentication">SSH Key-Based Authentication<a class="headerlink" href="#ssh-key-based-authentication" title="Permanent link">&para;</a></h2>
 <p>SSH key authentication is more secure than password authentication for automated access (scripts, Ansible).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate RSA keys on the switch (required for SSH server)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>crypto<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>rsa
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Select key size: 2048 bits minimum</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Display the switch&#39;s public key</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>crypto<span class="w"> </span>key<span class="w"> </span>mypubkey<span class="w"> </span>rsa
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify SSH server is enabled and using the generated key</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>show<span class="w"> </span>ssh<span class="w"> </span>server
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>show<span class="w"> </span>feature<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>ssh
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Expected: ssh enabled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate RSA keys on the switch (required for SSH server)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>crypto<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>rsa
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Select key size: 2048 bits minimum</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Display the switch&#39;s public key</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>crypto<span class="w"> </span>key<span class="w"> </span>mypubkey<span class="w"> </span>rsa
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify SSH server is enabled and using the generated key</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>show<span class="w"> </span>ssh<span class="w"> </span>server
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>show<span class="w"> </span>feature<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>ssh
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Expected: ssh enabled</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>The name for the keys will be: mds-switch-01.example.com
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>% Do you want to replace this key pair? [yes/no]: yes
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Generating RSA keys with 2048 bits modulus...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[OK]
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>RSA public-key fingerprint is 48:a3:7f:2c:91:e6:5d:b4:22:19:f8:c3:4a:9e:12:67
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>RSA Key created with modulus 2048
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ssh RSA public-key fingerprint is 48:a3:7f:2c:91:e6:5d:b4:22:19:f8:c3:4a:9e:12:67
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ssh version : 2.0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>ssh max auth retries : 3
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>ssh port : 22
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ssh is enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid key modulus size. Supported key sizes are 512, 768, 1024, 2048, 3072, 4096</code></strong> — Specify a supported key size; 2048 bits is the recommended minimum for security.
+<strong><code>% SSH server is disabled. Enable it with 'feature ssh' before generating keys</code></strong> — Run <code>feature ssh</code> to enable SSH before attempting key generation.</p>
+</div>
 <h3 id="importing-a-users-ssh-public-key">Importing a User's SSH Public Key<a class="headerlink" href="#importing-a-users-ssh-public-key" title="Permanent link">&para;</a></h3>
 <p>To allow a user to authenticate via SSH public key:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># In username config mode, specify the user&#39;s public key</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>username<span class="w"> </span>netauto<span class="w"> </span>sshkey<span class="w"> </span>ssh-rsa<span class="w"> </span>AAAA...
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># The key string is the full RSA public key from the user&#39;s ~/.ssh/id_rsa.pub</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>user-account<span class="w"> </span>netauto
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># In username config mode, specify the user&#39;s public key</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>username<span class="w"> </span>netauto<span class="w"> </span>sshkey<span class="w"> </span>ssh-rsa<span class="w"> </span>AAAA...
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># The key string is the full RSA public key from the user&#39;s ~/.ssh/id_rsa.pub</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>show<span class="w"> </span>user-account<span class="w"> </span>netauto
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>User-account Information for &#39;netauto&#39;:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Username                : netauto
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Role                    : network-admin
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Password Expiry         : Never
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Account Status          : Active
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  SSH Public Key          : ssh-rsa AAAA...QmxhZGU= netauto@workstation
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  Last Login              : 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  Failed Login Attempts   : 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid key format</code></strong> — Ensure the full public key string from <code>~/.ssh/id_rsa.pub</code> is pasted exactly, including the <code>ssh-rsa</code> prefix and key comment.
+<strong><code>Error: Username 'netauto' does not exist</code></strong> — Create the user account first with <code>username netauto password &lt;password&gt;</code> before assigning the SSH key.</p>
+</div>
 <hr />
 <h2 id="fc-sp-fabric-layer-device-authentication">FC-SP: Fabric-Layer Device Authentication<a class="headerlink" href="#fc-sp-fabric-layer-device-authentication" title="Permanent link">&para;</a></h2>
 <p>FC-SP (DHCHAP — Diffie-Hellman Challenge Handshake Authentication Protocol) authenticates FC devices before they are permitted to log into the fabric. Without FC-SP, any device with a fibre connection to an F_Port can log in.</p>
 <p>FC-SP is particularly relevant for high-security fabrics where rogue device insertion is a concern.</p>
 <h3 id="enabling-fc-sp">Enabling FC-SP<a class="headerlink" href="#enabling-fc-sp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable FC-SP on the switch</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>feature<span class="w"> </span>fcsp
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Configure authentication mode per interface</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>on<span class="w">   </span><span class="c1"># enforce authentication</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="c1"># or</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>auto<span class="w">  </span><span class="c1"># negotiate, accept unauthenticated if peer doesn&#39;t support</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Configure a shared DHCHAP secret for a specific peer WWPN</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>fcsp<span class="w"> </span>dhchap<span class="w"> </span>devicename-password<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:24:ff:a1:b2:c3<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;secret&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable FC-SP on the switch</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>feature<span class="w"> </span>fcsp
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Configure authentication mode per interface</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>on<span class="w">   </span><span class="c1"># enforce authentication</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="c1"># or</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>auto<span class="w">  </span><span class="c1"># negotiate, accept unauthenticated if peer doesn&#39;t support</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Configure a shared DHCHAP secret for a specific peer WWPN</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>fcsp<span class="w"> </span>dhchap<span class="w"> </span>devicename-password<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:24:ff:a1:b2:c3<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;secret&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>mds9148-switch# feature fcsp
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>mds9148-switch# interface fc1/1
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>mds9148-switch(config-if)# fcsp dhchap mode on
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>(no output — command completes silently)
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>mds9148-switch(config-if)# exit
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>mds9148-switch# fcsp dhchap devicename-password pwwn 21:00:00:24:ff:a1:b2:c3 password 0 MySecureP@ss123
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>(no output — command completes silently)
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>mds9148-switch# show fcsp status
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>FC-SP Feature: Enabled
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Interface fc1/1:
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  DHCHAP Mode: On
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  Authentication Status: Authenticated
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  Peer WWPN: 21:00:00:24:ff:a1:b2:c3
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>  Last Auth Time: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the switch supports FC-SP (requires MDS 9000 family with appropriate license); check syntax with <code>show fcsp ?</code>.
+<strong><code>% DHCHAP secret must be 12-255 characters</code></strong> — Ensure the password meets minimum length requirements and use <code>password 0</code> for plaintext or <code>password 5</code> for pre-encrypted secrets.</p>
+</div>
 <h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check FC-SP status on all interfaces</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>fcsp<span class="w"> </span>interface
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check DHCHAP authentication state for a VSAN</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>show<span class="w"> </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check authentication success / failure in log</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fcsp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check FC-SP status on all interfaces</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>show<span class="w"> </span>fcsp<span class="w"> </span>interface
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check DHCHAP authentication state for a VSAN</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>show<span class="w"> </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Check authentication success / failure in log</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fcsp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>fcsp Interface Status:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Interface    FCSP Status    Auth Protocol    State
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>fc1/1        enabled        DHCHAP           authenticated
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>fc1/2        enabled        DHCHAP           authenticated
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fc1/3        enabled        DHCHAP           failed
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>fc1/4        disabled       none             not-applicable
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>fc2/1        enabled        DHCHAP           authenticated
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>VSAN 10 DHCHAP Authentication:
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Interface    VSAN    Auth State    Peer WWN              Last Auth Time
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>fc1/1        10      authenticated 50:00:09:73:00:1a:2b:4c    2024-01-15 14:32:18
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>fc1/2        10      authenticated 50:00:09:73:00:1a:2b:5d    2024-01-15 14:32:22
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>fc1/3        10      failed        50:00:09:73:00:1a:2b:6e    2024-01-15 14:31:45
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>2024 Jan 15 14:35:22 +00:00 mds9710-1 %FCSP-3-AUTH_FAILED: Authentication failed on interface fc1/3 for VSAN 10
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>2024 Jan 15 14:32:18 +00:00 mds9710-1 %FCSP-5-AUTH_SUCCESS: Authentication successful on interface fc1/1 for VSAN 10
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>2024 Jan 15 14:32:22 +00:00 mds9710-1 %FCSP-5-AUTH_SUCCESS: Authentication successful on interface fc1/2 for VSAN 10
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the device is in the correct mode (enable mode) and supports FC-SP; use <code>show version</code> to confirm MDS model.
+<strong><code>% FCSP not enabled on interface</code></strong> — Enable FC-SP globally with <code>fcsp enable</code> and per-interface with <code>fcsp enable</code> under the interface configuration.
+<strong><code>Authentication failed on interface fc1/3</code></strong> — Verify peer device credentials match, check DHCHAP password configuration with <code>show fcsp dhchap key</code>, and confirm peer device is reachable.</p>
+</div>
 <hr />
 <h2 id="ntp-required-for-aaa-and-certificate-validity">NTP (Required for AAA and Certificate Validity)<a class="headerlink" href="#ntp-required-for-aaa-and-certificate-validity" title="Permanent link">&para;</a></h2>
 <p>Authentication mechanisms — TACACS+ accounting, certificate-based auth, Kerberos — rely on synchronized time. NTP is a prerequisite.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Configure NTP servers</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ntp<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>prefer
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ntp<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify NTP sync status</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>show<span class="w"> </span>ntp<span class="w"> </span>peer-status
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Expected output: Clock is synchronized, stratum 3 (or lower)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Configure NTP servers</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ntp<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>prefer
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ntp<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Verify NTP sync status</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>show<span class="w"> </span>ntp<span class="w"> </span>peer-status
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Expected output: Clock is synchronized, stratum 3 (or lower)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ntp server 10.10.0.10 prefer
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>(no output — command completes silently)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ntp server 10.10.0.11
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>(no output — command completes silently)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Clock is synchronized
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Stratum: 3
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Reference Clock ID: 10.10.0.10
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Nominal Frequency: 1000.0000 ppm
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Actual Frequency: 999.9987 ppm
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>NTP Round Trip Delay: 5.123 msec
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>NTP Round Trip Dispersion: 2.456 msec
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Last Update: 47 seconds ago
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>==============================================================================
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>*10.10.0.10      .GPS.            1 u   32   64  377    4.123   -1.234   0.567
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>+10.10.0.11      .GPS.            1 u   28   64  377    5.456    0.891   0.678
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (use <code>configure terminal</code> if needed) and that NTP is licensed on your MDS switch.
+<strong><code>% NTP server unreachable</code></strong> — Confirm the NTP server IPs are correct and reachable by pinging them from the switch management interface.
+<strong><code>show ntp peer-status: command not found</code></strong> — Use <code>show ntp peer-status</code> or <code>show ntp associations</code> depending on your MDS NX-OS version; check with <code>show version</code> first.</p>
+</div>
 <p>All switches in the fabric must be synchronized to the same NTP source. Time drift between switches causes TACACS+ accounting log correlation to fail and may break certificate authentication.</p>
 <hr />
 <h2 id="banner-and-login-warning">Banner and Login Warning<a class="headerlink" href="#banner-and-login-warning" title="Permanent link">&para;</a></h2>
 <p>Configure a login banner to satisfy legal and compliance requirements:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Set a warning banner displayed before login</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>banner<span class="w"> </span>motd<span class="w"> </span><span class="c1">#</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>AUTHORIZED<span class="w"> </span>ACCESS<span class="w"> </span>ONLY.<span class="w"> </span>All<span class="w"> </span>activity<span class="w"> </span>is<span class="w"> </span>monitored<span class="w"> </span>and<span class="w"> </span>logged.
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Unauthorized<span class="w"> </span>access<span class="w"> </span>is<span class="w"> </span>prohibited<span class="w"> </span>and<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>prosecuted.
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1">#</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Set a warning banner displayed before login</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>banner<span class="w"> </span>motd<span class="w"> </span><span class="c1">#</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>AUTHORIZED<span class="w"> </span>ACCESS<span class="w"> </span>ONLY.<span class="w"> </span>All<span class="w"> </span>activity<span class="w"> </span>is<span class="w"> </span>monitored<span class="w"> </span>and<span class="w"> </span>logged.
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Unauthorized<span class="w"> </span>access<span class="w"> </span>is<span class="w"> </span>prohibited<span class="w"> </span>and<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>prosecuted.
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1">#</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>banner: command not found</code></strong> — Use the Cisco MDS CLI directly (enter config mode with <code>config t</code> first) or check that you're connected to the switch via SSH/console, not a local bash shell.
+<strong><code>% Invalid command</code></strong> — The banner command must be entered in Cisco MDS configuration mode; type <code>config t</code> to enter configuration mode before running the banner command.</p>
+</div>
 <hr />
 <h2 id="authentication-checklist">Authentication Checklist<a class="headerlink" href="#authentication-checklist" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8162,7 +8343,7 @@ Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server t
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

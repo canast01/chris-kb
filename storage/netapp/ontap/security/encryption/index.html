@@ -8573,50 +8573,125 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Confirm encryption is active</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encrypt,encryption-state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Volume &quot;prod_data&quot; created successfully.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Vserver     Volume      Encrypt  Encryption State
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>----------- ----------- -------- -----------------
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>svm_prod    prod_data   true     encrypted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Encryption is not licensed on this cluster</code></strong> — Verify NetApp Volume Encryption (NVE) license is installed with <code>system license show -package VE</code>.
+<strong><code>Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption</code></strong> — Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with <code>storage aggregate show -fields encrypt</code>.</p>
+</div>
 <h3 id="enabling-nve-on-an-existing-volume">Enabling NVE on an Existing Volume<a class="headerlink" href="#enabling-nve-on-an-existing-volume" title="Permanent link">&para;</a></h3>
 <p>Encrypting an existing volume requires re-keying — ONTAP rewrites the volume data with the new DEK. This is an online, non-disruptive operation for most workloads but runs in the background and affects I/O performance temporarily.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Start encryption conversion on an existing volume</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Monitor conversion progress</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Confirm volume is encrypted after conversion completes</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encryption-state
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Expected: full (fully encrypted)</span>
-</code></pre></div>
-<h3 id="nve-key-operations">NVE Key Operations<a class="headerlink" href="#nve-key-operations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show encryption status for all volumes</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>encrypt,encryption-state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start encryption conversion on an existing volume</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show the key ID protecting a volume</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>show-key-id<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor conversion progress</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Rekey a volume (rotate the DEK)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>volume<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Confirm volume is encrypted after conversion completes</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encryption-state
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Expected: full (fully encrypted)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster1::&gt; volume encryption conversion start -vserver svm1 -volume data_vol01
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[Job 1234] Job is queued
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cluster1::&gt; volume encryption conversion show -vserver svm1 -volume data_vol01
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Vserver Volume                  Conversion Progress State
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>------- ----------------------- ------------------- ----------
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>svm1    data_vol01              87%                 in_progress
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cluster1::&gt; volume show -vserver svm1 -volume data_vol01 -fields encryption-state
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Vserver Volume      Encryption State
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>------- ----------- ----------------
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>svm1    data_vol01  full
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: volume encryption conversion is not supported on this volume</code></strong> — Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with <code>storage aggregate show -fields encrypt</code>.
+<strong><code>Error: Vserver "svm1" does not exist</code></strong> — Confirm the SVM name is correct and exists by running <code>vserver show</code>.
+<strong><code>Error: Volume "data_vol01" does not exist</code></strong> — Check the volume name spelling and verify it exists in the target SVM with <code>volume show -vserver svm1</code>.</p>
+</div>
+<h3 id="nve-key-operations">NVE Key Operations<a class="headerlink" href="#nve-key-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show encryption status for all volumes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>encrypt,encryption-state
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show the key ID protecting a volume</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>show-key-id<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Rekey a volume (rotate the DEK)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>volume<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>volume<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Vserver   Volume            Encrypt  Encryption-State
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>--------- ----------------- -------- -----------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>svm_prod  vol_data_01       true     encrypted
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>svm_prod  vol_data_02       true     encrypted
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>svm_prod  vol_backup        false    none
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>svm_dev   vol_test          true     encrypted
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>svm_dev   vol_logs          false    none
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Key ID protecting volume vol_data_01:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Vserver: svm_prod
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Volume: vol_data_01
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Key ID: 47a8c9f2-1b3d-4e5f-9a2c-8d7e6f5g4h3i
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Rekey operation started for volume vol_data_01.
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Vserver   Volume            Rekey-State  Rekey-Progress
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>--------- ----------------- ------------ ---------------
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>svm_prod  vol_data_01       in-progress  45%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid volume name &lt;vol_name&gt;</code></strong> — Replace <code>&lt;vol_name&gt;</code> with an actual volume name and verify it exists with <code>volume show</code>.
+<strong><code>Error: This operation is not supported on unencrypted volumes</code></strong> — Ensure the volume has encryption enabled; enable it first with <code>volume encryption enable -vserver &lt;svm&gt; -volume &lt;vol_name&gt;</code>.
+<strong><code>Error: Rekey operation already in progress for this volume</code></strong> — Wait for the current rekey to complete by checking status with <code>volume encryption rekey show</code>, or contact NetApp support if stuck.</p>
+</div>
 <hr />
 <h2 id="netapp-aggregate-encryption-nae">NetApp Aggregate Encryption (NAE)<a class="headerlink" href="#netapp-aggregate-encryption-nae" title="Permanent link">&para;</a></h2>
 <p>NAE encrypts at the aggregate level. All volumes within an NAE aggregate share an aggregate encryption key (AEK). NAE is required when you want both encryption and cross-volume deduplication savings — NVE encrypts each volume independently, which prevents dedup fingerprints from matching across volumes.</p>
 <h3 id="creating-an-nae-aggregate">Creating an NAE Aggregate<a class="headerlink" href="#creating-an-nae-aggregate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a new NAE-enabled aggregate</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-diskcount<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-encrypt-with-aggr-key<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Verify NAE is active on the aggregate</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encrypt-with-aggr-key
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a new NAE-enabled aggregate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-diskcount<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-encrypt-with-aggr-key<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify NAE is active on the aggregate</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encrypt-with-aggr-key
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Aggregate creation initiated for aggregate &quot;aggr1&quot; on node &quot;cluster1-01&quot;.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Aggregate &quot;aggr1&quot; has been created successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Aggregate Name: aggr1
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Node: cluster1-01
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Encrypt With Aggr Key: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: 24 disks are not available on node cluster1-01</code></strong> — Verify available spare disks with <code>storage aggregate show-space</code> and reduce the <code>-diskcount</code> value or add more disks to the node.</p>
+<p><strong><code>Error: NAE (NetApp Aggregate Encryption) is not licensed on this cluster</code></strong> — Ensure the NVE/NAE license is installed with <code>system license show</code> and add the license if missing.</p>
+</div>
 <h3 id="converting-an-existing-aggregate-to-nae">Converting an Existing Aggregate to NAE<a class="headerlink" href="#converting-an-existing-aggregate-to-nae" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Start NAE conversion (background, non-disruptive)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start NAE conversion (background, non-disruptive)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Aggregate encryption rekey operation started for aggregate &quot;aggr_ssd_01&quot;.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Aggregate         Rekey Status      Progress  Estimated Time Remaining
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>aggr_ssd_01       In Progress       45%       2h 15m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: aggregate &lt;aggr_name&gt; not found</code></strong> — Verify the aggregate name with <code>storage aggregate show</code> and use the correct name.
+<strong><code>Error: Rekey operation already in progress on aggregate &lt;aggr_name&gt;</code></strong> — Wait for the current rekey to complete or cancel it with <code>storage aggregate encryption rekey abort</code> before starting a new one.</p>
+</div>
 <h3 id="nae-vs-nve-decision">NAE vs NVE Decision<a class="headerlink" href="#nae-vs-nve-decision" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8657,36 +8732,84 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <hr />
 <h2 id="netapp-storage-encryption-nse-self-encrypting-drives">NetApp Storage Encryption (NSE) — Self-Encrypting Drives<a class="headerlink" href="#netapp-storage-encryption-nse-self-encrypting-drives" title="Permanent link">&para;</a></h2>
 <p>NSE uses hardware-level self-encrypting drives (SEDs). Encryption happens at the drive firmware level, with no ONTAP CPU overhead. NSE is often combined with NVE (double encryption) for defense-in-depth.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show NSE drive status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,is-fips-compliant,drive-protection-mode
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show storage encryption key status</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>storage<span class="w"> </span>encryption<span class="w"> </span>disk<span class="w"> </span>show
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Assign authentication keys to NSE drives</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>storage<span class="w"> </span>encryption<span class="w"> </span>disk<span class="w"> </span>modify<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;<span class="w"> </span>-data-key-id<span class="w"> </span>&lt;key_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show NSE drive status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,is-fips-compliant,drive-protection-mode
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show storage encryption key status</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>storage<span class="w"> </span>encryption<span class="w"> </span>disk<span class="w"> </span>show
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Assign authentication keys to NSE drives</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>storage<span class="w"> </span>encryption<span class="w"> </span>disk<span class="w"> </span>modify<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;<span class="w"> </span>-data-key-id<span class="w"> </span>&lt;key_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Disk            Is-Fips-Compliant Drive-Protection-Mode
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>--------------- ----------------- --------------------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>1.0.0           true              encrypted
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>1.0.1           true              encrypted
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>1.0.2           true              encrypted
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>1.0.3           true              encrypted
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>1.0.4           true              encrypted
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>...
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Disk       Key ID                               Key Status
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>---------- ------------------------------------ ---------------
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>1.0.0      550e8400-e29b-41d4-a716-446655440000 available
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>1.0.1      550e8400-e29b-41d4-a716-446655440001 available
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>1.0.2      550e8400-e29b-41d4-a716-446655440002 available
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>1.0.3      550e8400-e29b-41d4-a716-446655440003 available
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>1.0.4      550e8400-e29b-41d4-a716-446655440004 available
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Disk 1.0.0: Key assignment successful
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: disk 1.0.5 not found</code></strong> — Verify the disk ID exists with <code>storage disk show</code> and correct any typos in the disk identifier.
+<strong><code>Error: key ID 550e8400-e29b-41d4-a716-446655440999 is not available</code></strong> — Confirm the key ID is valid and provisioned in the key management system using <code>storage encryption disk show</code>.</p>
+</div>
 <hr />
 <h2 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h2>
 <h3 id="onboard-key-manager-okm">Onboard Key Manager (OKM)<a class="headerlink" href="#onboard-key-manager-okm" title="Permanent link">&para;</a></h3>
 <p>OKM is ONTAP's built-in key manager. Keys are stored within the cluster itself, protected by a cluster-wide passphrase. Suitable for single-cluster environments or where an external KMS is not available.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure OKM (first-time setup)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># You will be prompted to enter and confirm a passphrase</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Back up the OKM passphrase and key hierarchy</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># CRITICAL: Store the passphrase in a secure vault (CyberArk, HashiCorp Vault, or password manager)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Without the passphrase, encrypted data is unrecoverable after a cluster loss</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Show OKM status</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Show key IDs managed by OKM</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>onboard
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Synchronize OKM keys to a new node added to the cluster</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>sync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Configure OKM (first-time setup)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># You will be prompted to enter and confirm a passphrase</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Back up the OKM passphrase and key hierarchy</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># CRITICAL: Store the passphrase in a secure vault (CyberArk, HashiCorp Vault, or password manager)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Without the passphrase, encrypted data is unrecoverable after a cluster loss</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Show OKM status</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Show key IDs managed by OKM</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>onboard
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Synchronize OKM keys to a new node added to the cluster</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>sync
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Enter a passphrase for onboard key management: ****
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Re-enter the passphrase: ****
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Onboard Key Management has been enabled successfully.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Cluster: prod-cluster-01
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Onboard Key Management Status: enabled
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Key Manager Type: onboard
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Passphrase Set: yes
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Last Key Rotation: 2024-01-15 09:32:15
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Key ID                                    Key Type      Status
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>----------------------------------------  -----------   --------
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>550e8400-e29b-41d4-a716-446655440000     NSE-256       available
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>550e8400-e29b-41d4-a716-446655440001     NSE-256       available
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>550e8400-e29b-41d4-a716-446655440002     NSE-256       available
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Synchronizing OKM keys to node2...
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Node2: Key synchronization completed successfully (3 keys synced)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Onboard Key Management is already enabled on this cluster</code></strong> — Run <code>security key-manager onboard show</code> first to verify current status before attempting re-enablement.
+<strong><code>Error: Failed to synchronize keys to node2: Authentication failed</code></strong> — Ensure the node is fully joined to the cluster with <code>cluster show</code> and that network connectivity exists between nodes.</p>
+</div>
 <h3 id="external-kmip-key-manager">External KMIP Key Manager<a class="headerlink" href="#external-kmip-key-manager" title="Permanent link">&para;</a></h3>
 <p>KMIP (Key Management Interoperability Protocol) integrates ONTAP with an enterprise KMS such as Thales CipherTrust, IBM SKLM, Entrust KeyControl, or HashiCorp Vault (via KMIP adapter). External key management is required for:</p>
 <ul>
@@ -8694,95 +8817,268 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <li>Compliance mandates (PCI-DSS, HIPAA, FedRAMP) requiring externally managed keys</li>
 <li>Key lifecycle policies enforced outside of ONTAP</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install the client certificate ONTAP uses to authenticate to the KMS</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>client-ca
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Install the KMS server CA certificate</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca<span class="w"> </span>-server-name<span class="w"> </span>&lt;kmip-server&gt;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Enable external KMIP key manager</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span>-key-servers<span class="w"> </span>&lt;kmip-server-ip&gt;:5696<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>-client-cert<span class="w"> </span>&lt;client-cert-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>-server-ca-certs<span class="w"> </span>&lt;server-ca-cert-name&gt;
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Add a secondary KMS server for high availability</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>add-servers<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span>-key-servers<span class="w"> </span>&lt;secondary-kmip-server-ip&gt;:5696
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1"># Verify KMS connectivity</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># Expected: connectivity: available</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># Show keys managed by external KMS</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>external
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Install the client certificate ONTAP uses to authenticate to the KMS</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>client-ca
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Install the KMS server CA certificate</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca<span class="w"> </span>-server-name<span class="w"> </span>&lt;kmip-server&gt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Enable external KMIP key manager</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span>-key-servers<span class="w"> </span>&lt;kmip-server-ip&gt;:5696<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span>-client-cert<span class="w"> </span>&lt;client-cert-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span>-server-ca-certs<span class="w"> </span>&lt;server-ca-cert-name&gt;
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Add a secondary KMS server for high availability</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>add-servers<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">    </span>-key-servers<span class="w"> </span>&lt;secondary-kmip-server-ip&gt;:5696
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># Verify KMS connectivity</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="c1"># Expected: connectivity: available</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Show keys managed by external KMS</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>external
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Installing client certificate...
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Certificate installed successfully.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Installing server CA certificate for kmip-server.example.com...
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Certificate installed successfully.
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Enabling external KMIP key manager...
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>External key manager enabled successfully.
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Adding secondary KMS server...
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Secondary key server added successfully.
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Vserver: cluster1-admin
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Key Servers:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  10.45.12.88:5696 (Primary)
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  10.45.12.89:5696 (Secondary)
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Client Certificate: ontap-kmip-client
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Server CA Certificates: kmip-server-ca
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Status: configured
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Checking KMS connectivity...
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Key Server: 10.45.12.88:5696
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  Connectivity: available
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Key Server: 10.45.12.89:5696
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  Connectivity: available
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Vserver: cluster1-admin
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Key Manager Type: external
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>Key ID                           Status
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>-------------------------------- --------
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>550e8400-e29b-41d4-a716-446655440001  available
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>550e8400-e29b-41d4-a716-446655440002  available
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>550e8400-e29b-41d4-a716-446655440003  available
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate not found: &lt;client-cert-name&gt;</code></strong> — Verify the certificate exists using <code>security certificate show</code> and use the exact certificate name from the output.
+<strong><code>Error: Key server &lt;kmip-server-ip&gt;:5696 is not reachable</code></strong> — Confirm network connectivity to the KMIP server with <code>ping &lt;kmip-server-ip&gt;</code> and verify the firewall allows port 5696.
+<strong><code>Error: KMIP server certificate validation failed</code></strong> — Ensure the server CA certificate was installed correctly and matches the KMIP server's actual CA using <code>security certificate show -type server-ca</code>.</p>
+</div>
 <h3 id="key-manager-decision">Key Manager Decision<a class="headerlink" href="#key-manager-decision" title="Permanent link">&para;</a></h3>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUM2KwkAMvvcpgndZ1JsHpYqypQwW3WMv0YZ22GlmOjOKiyzsQ-wT-iRG0IPYS_6_L_lSaU-HqC1Pweu6iUnSjaYw6EYDuIQGHUldBpBrQ79JN5be0rbOaOQDQYtcYaSSi2UGH_CZFWkqfk3VNlXFvJ9jIhyrcyTPaCBXu5LxhNrg3lA_gs4xb7V7hWVFyV8NGgqyMFsosSuO_hhiL4f9bgW_4b1FX0FOP6CQsSZf8iZXcP37hxCtJ3AYgms8BlGlGU54NP2M8igYzqAbP4OJvOcePM4Voe-ZnJHcALSte3Y=?" /></p>
 <h3 id="key-manager-health-checks">Key Manager Health Checks<a class="headerlink" href="#key-manager-health-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show overall key manager status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show-key-query
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show key manager type and status</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># For OKM</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># For KMIP</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show overall key manager status</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show-key-query
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Show key manager type and status</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># For OKM</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># For KMIP</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Key Manager Status:
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Key Manager Type: onboard
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Key Manager Status: available
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  Node: cluster1-01
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  Key Store Status: available
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Key Store Type: NSE
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Key Manager Configuration:
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Key Manager Type: onboard
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Status: available
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Nodes: 2
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  Node cluster1-01: available
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  Node cluster1-02: available
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Onboard Key Manager Status:
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  Status: available
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  Backup Status: completed
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  Backup Date: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  Node cluster1-01: available
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  Node cluster1-02: available
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>External Key Manager (KMIP) Configuration:
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  Status: not configured
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  KMIP Server: not configured
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>  Connection Status: N/A
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>External Key Manager Check:
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>  KMIP Server: not configured
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>  Status: N/A
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>  Last Check: never
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Key manager is not configured</code></strong> — Run <code>security key-manager onboard create</code> to initialize onboard key management or configure KMIP servers with <code>security key-manager external add-servers</code>.
+<strong><code>Error: Connection failed to KMIP server &lt;ip&gt;:5696</code></strong> — Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with <code>security key-manager external check</code>.
+<strong><code>Error: Backup status is failed</code></strong> — Manually trigger an onboard key manager backup with <code>security key-manager onboard create-backup</code> and verify sufficient disk space is available.</p>
+</div>
 <hr />
 <h2 id="tls-and-ssh-hardening">TLS and SSH Hardening<a class="headerlink" href="#tls-and-ssh-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="enforce-tls-12-minimum">Enforce TLS 1.2 Minimum<a class="headerlink" href="#enforce-tls-12-minimum" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Set minimum TLS version for HTTPS management</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Show current TLS/SSL configuration</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Verify TLS version from a client</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;cluster-mgmt-ip&gt;:443<span class="w"> </span>-tls1_1
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Should fail (connection rejected) if TLS 1.2 minimum is enforced</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Set minimum TLS version for HTTPS management</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Show current TLS/SSL configuration</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Verify TLS version from a client</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;cluster-mgmt-ip&gt;:443<span class="w"> </span>-tls1_1
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Should fail (connection rejected) if TLS 1.2 minimum is enforced</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>(no output — command completes silently)
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Interface: HTTPS
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Min Protocol Version: TLSv1.2
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Max Protocol Version: TLSv1.3
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Ciphers: DEFAULT
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Certificate: cluster-cert-20240115
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>CONNECTED(00000003)
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>depth=0 /C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>verify error:num=20:unable to get local issuer certificate
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>verify return:1
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>---
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Certificate chain
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a> 0 s:/C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>   i:/C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>---
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Server certificate
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>-----BEGIN CERTIFICATE-----
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>MIIDazCCAlOgAwIBAgIUK7x8z9pQ2k5vR8mJ3xL9z4kL2+0wDQYJKoZIhvcNAQEL
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>...
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>-----END CERTIFICATE-----
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>---
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>SSL-Session:
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>    Protocol  : TLSv1.1
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>    Cipher    : ECDHE-RSA-AES256-SHA
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>    Session-ID: A1B2C3D4E5F6...
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>    Session-ID-ctx: 
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>    Master-Key: 00112233445566778899AABBCCDDEEFF...
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>    Key-Arg   : None
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>    Compression: None
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>    Start Time: 1705334400
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>    Timeout   : 300 (sec)
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>    Verify return code: 20 (unable to get local issuer certificate)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid value for min-protocol-version</code></strong> — Verify the cluster supports the specified TLS version; use <code>security config show</code> to see available options.
+<strong><code>unable to get local issuer certificate</code></strong> — This is expected when testing with openssl against a self-signed cluster certificate; add <code>-CAfile &lt;cert-path&gt;</code> or use <code>-showcerts</code> to view the full chain.
+<strong><code>Connection refused</code> or <code>Connection reset by peer</code></strong> — Confirm the cluster management IP is correct and HTTPS port 443 is reachable with <code>ping &lt;cluster-mgmt-ip&gt;</code> and <code>nc -zv &lt;cluster-mgmt-ip&gt; 443</code>.</p>
+</div>
 <h3 id="restrict-ssh-ciphers-and-macs">Restrict SSH Ciphers and MACs<a class="headerlink" href="#restrict-ssh-ciphers-and-macs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Restrict SSH to strong ciphers and MAC algorithms</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify SSH configuration</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Disable weak KEX algorithms (ONTAP 9.10+)</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>-key-exchange-algorithms<span class="w"> </span>ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Restrict SSH to strong ciphers and MAC algorithms</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Verify SSH configuration</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Disable weak KEX algorithms (ONTAP 9.10+)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span>-key-exchange-algorithms<span class="w"> </span>ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cluster1::&gt; security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -macs hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>(no output — command completes silently)
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>cluster1::&gt; security ssh show -vserver cluster1
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Vserver: cluster1
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Ciphers: aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>MAC Algorithms: hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Key Exchange Algorithms: ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha1
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Server Host Key Algorithms: ssh-rsa,rsa-sha2-256,rsa-sha2-512,ecdsa-sha2-nistp256
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>cluster1::&gt; security ssh modify -vserver cluster1 -key-exchange-algorithms ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "cluster-name" is not a valid vserver name</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-prod</code>).
+<strong><code>Error: This command is not supported on this release of Data ONTAP</code></strong> — Verify ONTAP version is 9.10 or later for key-exchange-algorithms parameter; use <code>system node image show</code> to check.</p>
+</div>
 <h3 id="disable-telnet-and-rsh">Disable Telnet and RSH<a class="headerlink" href="#disable-telnet-and-rsh" title="Permanent link">&para;</a></h3>
 <p>These protocols must not be enabled on production clusters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify insecure protocols are disabled</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>security<span class="w"> </span>protocol<span class="w"> </span>show
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Confirm telnet and rsh show enabled: false</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Disable if enabled</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>telnet<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>rsh<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Verify insecure protocols are disabled</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>security<span class="w"> </span>protocol<span class="w"> </span>show
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Confirm telnet and rsh show enabled: false</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Disable if enabled</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>telnet<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>rsh<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Application     Enabled
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>------------    -------
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>ssh             true
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>telnet          false
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>rsh             false
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>snmp            true
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>http            false
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>https           true
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>ntp             true
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>nfs             true
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>cifs            true
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>(no output — command completes silently)
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "telnet" is not a valid application name</code></strong> — Use the exact application identifier from <code>security protocol show</code> output (e.g., <code>telnet</code> vs <code>Telnet</code>); verify case sensitivity.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Ensure you are logged in with admin-level credentials or a role with security protocol modification permissions.</p>
+</div>
 <h3 id="fips-140-2-mode">FIPS 140-2 Mode<a class="headerlink" href="#fips-140-2-mode" title="Permanent link">&para;</a></h3>
 <p>ONTAP supports a FIPS 140-2 compliance mode that restricts cryptographic algorithms to FIPS-approved ciphers and disallows non-compliant algorithms for all management interfaces.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable FIPS 140-2 compliance mode</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># WARNING: This will drop existing SSH sessions using non-FIPS ciphers</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Ensure all management clients support FIPS-approved algorithms before enabling</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-is-fips-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Verify FIPS mode is enabled</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>security<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>is-fips-enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Enable FIPS 140-2 compliance mode</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># WARNING: This will drop existing SSH sessions using non-FIPS ciphers</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># Ensure all management clients support FIPS-approved algorithms before enabling</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-is-fips-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Verify FIPS mode is enabled</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>security<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>is-fips-enabled
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Warning: Enabling FIPS 140-2 mode will disconnect SSH sessions using non-FIPS ciphers.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Do you want to continue? {y|n}: y
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Processing FIPS mode enablement...
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>FIPS 140-2 compliance mode has been enabled successfully.
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Note: SSH service will restart. Active sessions may be disconnected.
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>Vserver Cluster
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>------- -------
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>is-fips-enabled true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Command failed: FIPS mode cannot be enabled while non-compliant ciphers are active in SSH configuration</code></strong> — Run <code>security ssh modify -vserver &lt;vserver&gt; -ciphers fips</code> to restrict SSH to FIPS-approved ciphers before enabling FIPS mode.
+<strong><code>Error: This operation requires cluster administrator privileges</code></strong> — Verify your user account has the "admin" role by running <code>security login show -user-or-group-name &lt;username&gt;</code>.
+<strong><code>Warning: Some management clients may lose connectivity after FIPS enablement</code></strong> — Test FIPS compatibility with your management tools (e.g., SSH clients, API clients) on a non-production cluster first, or ensure they support only FIPS-approved algorithms (AES, SHA-2, ECDSA).</p>
+</div>
 <p>FIPS mode implications:
 - SSLv3, TLSv1.0, TLSv1.1 are disabled
 - SSH ciphers are restricted to AES-128-CTR, AES-192-CTR, AES-256-CTR
@@ -8791,61 +9087,144 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <hr />
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
 <h3 id="listing-and-inspecting-certificates">Listing and Inspecting Certificates<a class="headerlink" href="#listing-and-inspecting-certificates" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List all installed certificates</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Show certificate details including expiration</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>common-name,expiration-date,type
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Identify certificates expiring within 60 days</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>common-name,expiration-date<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># List all installed certificates</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Show certificate details including expiration</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>common-name,expiration-date,type
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1"># Identify certificates expiring within 60 days</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>common-name,expiration-date<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Vserver     Certificate Name                       Expiration Date
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>----------- -------------------------------------- -------------------
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>cluster1    cluster1-ca                            2025-08-14
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>cluster1    cluster1-self-signed                   2026-03-22
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>svm-prod    svm-prod-server-cert                   2025-02-18
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>svm-prod    svm-prod-client-cert                   2025-11-30
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>svm-dr      svm-dr-server-cert                     2025-01-28
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Common Name                    Expiration Date        Type
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>------------------------------ ---------------------- --------------------
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>cluster1-ca                    2025-08-14             root-ca
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>svm-prod-server-cert           2025-02-18             server
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>svm-prod-client-cert           2025-11-30             client
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>svm-dr-server-cert             2025-01-28             server
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>svm-dr-server-cert             2025-01-28
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>svm-prod-server-cert           2025-02-18
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>cluster1-ca                    2025-08-14
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: This command requires cluster administrative privileges.</code></strong> — Run the command with cluster admin credentials or use <code>set -privilege advanced</code> if already authenticated.
+<strong><code>Error: Vserver "&lt;svm&gt;" does not exist.</code></strong> — Verify the SVM name with <code>vserver show</code> and use the correct vserver name in the <code>-vserver</code> parameter.
+<strong><code>Error: Invalid field name "common-name".</code></strong> — Use the correct field name <code>common_name</code> (underscore instead of hyphen) in the <code>-fields</code> parameter.</p>
+</div>
 <h3 id="generating-a-csr-and-installing-a-signed-certificate">Generating a CSR and Installing a Signed Certificate<a class="headerlink" href="#generating-a-csr-and-installing-a-signed-certificate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Generate a CSR (Certificate Signing Request)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-common-name<span class="w"> </span>&lt;cluster-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-size<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>-country<span class="w"> </span>US<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>-state<span class="w"> </span><span class="s2">&quot;New York&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>-locality<span class="w"> </span><span class="s2">&quot;New York City&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>-organization<span class="w"> </span><span class="s2">&quot;Example Corp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span>-unit<span class="w"> </span><span class="s2">&quot;Infrastructure&quot;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># The CSR output is printed to the terminal — copy and submit to your CA</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># After receiving the signed certificate from the CA, install it</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Paste the PEM certificate when prompted</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Install the CA chain certificate</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># Paste the CA chain PEM when prompted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Generate a CSR (Certificate Signing Request)</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>-common-name<span class="w"> </span>&lt;cluster-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>-size<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span>-country<span class="w"> </span>US<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span>-state<span class="w"> </span><span class="s2">&quot;New York&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span>-locality<span class="w"> </span><span class="s2">&quot;New York City&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">    </span>-organization<span class="w"> </span><span class="s2">&quot;Example Corp&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">    </span>-unit<span class="w"> </span><span class="s2">&quot;Infrastructure&quot;</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="c1"># The CSR output is printed to the terminal — copy and submit to your CA</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="c1"># After receiving the signed certificate from the CA, install it</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="c1"># Paste the PEM certificate when prompted</span>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="c1"># Install the CA chain certificate</span>
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="c1"># Paste the CA chain PEM when prompted</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Certificate Signing Request (CSR) generated successfully.
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>-----BEGIN CERTIFICATE REQUEST-----
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>MIICljCCAX4CAQAwQDELMAkGA1UEBhMCVVMxETAPBgNVBAgMCE5ldyBZb3JrMREw
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>DwYDVQQHDAhOZXcgWW9yazELMAkGA1UECgwCQ0ExDDAKBgNVBAsMA0lUUzCCASIw
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALk2p9vK8mR3Q7xJ2vF4nK9pZqKH
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>-----END CERTIFICATE REQUEST-----
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Server certificate installed successfully on SVM &quot;svm-prod-01&quot;.
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>Certificate serial number: 01:A2:B3:C4:D5:E6:F7:08
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>Expiration date: 2026-03-15
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>CA chain certificate installed successfully on SVM &quot;svm-prod-01&quot;.
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>Certificate serial number: 02:F8:E7:D6:C5:B4:A3:91
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid FQDN format for common-name</code></strong> — Ensure the cluster FQDN is a valid fully-qualified domain name (e.g., cluster.example.com, not just "cluster").
+<strong><code>Error: Certificate installation failed - certificate does not match private key</code></strong> — Verify that the PEM certificate pasted matches the CSR that was generated; if not, request a new signed certificate from the CA.</p>
+</div>
 <h3 id="certificate-rotation-for-system-manager-https">Certificate Rotation for System Manager (HTTPS)<a class="headerlink" href="#certificate-rotation-for-system-manager-https" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Delete the existing self-signed or expired certificate</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-common-name<span class="w"> </span>&lt;cn&gt;<span class="w"> </span>-type<span class="w"> </span>server
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Generate a new CSR, get it signed, and install as above</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Activate the new certificate for HTTPS</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>security<span class="w"> </span>ssl<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-certificate-name<span class="w"> </span>&lt;new-cert-common-name&gt;
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Verify the active SSL certificate</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>security<span class="w"> </span>ssl<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Delete the existing self-signed or expired certificate</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-common-name<span class="w"> </span>&lt;cn&gt;<span class="w"> </span>-type<span class="w"> </span>server
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Generate a new CSR, get it signed, and install as above</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="c1"># Activate the new certificate for HTTPS</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>security<span class="w"> </span>ssl<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-certificate-name<span class="w"> </span>&lt;new-cert-common-name&gt;
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Verify the active SSL certificate</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>security<span class="w"> </span>ssl<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cluster1::&gt; security certificate delete -vserver svm1 -common-name ontap.example.com -type server
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(no output — command completes silently)
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>cluster1::&gt; security ssl modify -vserver svm1 -certificate-name ontap.example.com
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>(no output — command completes silently)
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>cluster1::&gt; security ssl show -vserver svm1
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>Vserver: svm1
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>Common Name: ontap.example.com
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>Serial Number: 01A2B3C4D5E6F7G8H9I0
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>Issuer: CN=ontap.example.com,O=Example Corp,C=US
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>Validity Start: Mon Jan 15 08:22:14 2024
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>Validity End: Tue Jan 14 08:22:14 2025
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>Certificate Type: server
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>Hash Function: sha256
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: certificate "ontap.example.com" does not exist</code></strong> — Verify the exact common name of the certificate to delete using <code>security certificate show -vserver &lt;svm&gt;</code> before attempting deletion.
+<strong><code>Error: Cannot modify SSL certificate: certificate not found</code></strong> — Ensure the new certificate has been installed first using <code>security certificate install</code> and use the exact certificate common name in the modify command.</p>
+</div>
 <h3 id="certificate-monitoring">Certificate Monitoring<a class="headerlink" href="#certificate-monitoring" title="Permanent link">&para;</a></h3>
 <p>Set up EMS alerting for certificate expiry:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check if any EMS events fire for certificate expiry</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expired*
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expiring*
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Configure email alert for certificate expiry events</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>cert-alerts<span class="w"> </span>-email<span class="w"> </span>ops@corp.local
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-destinations<span class="w"> </span>cert-alerts
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-messagename<span class="w"> </span>sslcert.*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Check if any EMS events fire for certificate expiry</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expired*
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expiring*
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Configure email alert for certificate expiry events</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>cert-alerts<span class="w"> </span>-email<span class="w"> </span>ops@corp.local
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-destinations<span class="w"> </span>cert-alerts
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-messagename<span class="w"> </span>sslcert.*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>There are no entries matching your query.
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>There are no entries matching your query.
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>(no output — command completes silently)
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>(no output — command completes silently)
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "cert-alerts" already exists.</code></strong> — Use <code>event notification destination show</code> to list existing destinations and choose a unique name or delete the existing one with <code>event notification destination delete -name cert-alerts</code>.</p>
+<p><strong><code>Error: "cert-filter" already exists.</code></strong> — Verify the filter name is unique with <code>event filter show</code> or use <code>event filter delete -filter-name cert-filter</code> before recreating it.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8875,7 +9254,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:24:31 UTC"><span class="timeago" datetime="2026-06-29T05:24:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:24:31 UTC">2026-06-29</span>
   </span>
 
     

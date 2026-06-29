@@ -9415,57 +9415,215 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Accept default certificate parameters or customise CN/SAN</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># The tool will replace the cert and restart required services</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VMware Certificate Manager
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Version 7.0.3 Build 21958341
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>1. Generate Certificate Signing Request (CSR)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2. Create a Self-Signed Certificate
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>3. Replace Machine SSL Certificate
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>4. Replace VMCA Root Certificate
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>5. Replace Solution User Certificates
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>6. Replace Machine SSL certificate with VMCA Certificate
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>7. Regenerate VMCA Root Certificate
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>8. Reset all Certificates
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>9. Exit
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Select an option [1-9]: 6
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Retrieving VMCA Certificate...
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Enter username [Administrator@vsphere.local]: administrator@vsphere.local
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Enter password: 
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Certificate Details:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Subject: CN=vcsa-01.corp.local,O=VMware,C=US
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Issuer: CN=VMCA,O=VMware,C=US
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Valid From: 2024-01-15 10:30:00 UTC
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  Valid Until: 2026-01-15 10:30:00 UTC
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Do you want to replace the Machine SSL Certificate? (Y/N): Y
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Replacing Machine SSL Certificate...
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Certificate replaced successfully.
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Restarting services:
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  - vmware-vpxd
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  - vmware-vsan-health
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  - vmware-rhttpproxy
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>All services restarted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Authentication failed for user administrator@vsphere.local</code></strong> — Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed.
+<strong><code>Certificate replacement failed: Certificate chain validation error</code></strong> — Ensure VMCA root certificate is valid and not expired by checking <code>/etc/vmware-vpx/ssl/vmca_issued_certs.pem</code>.
+<strong><code>Service restart timeout: vmware-vpxd did not respond within 120 seconds</code></strong> — Wait 2-3 minutes for services to stabilize, then manually restart with <code>service-control --restart --all</code> if the issue persists.</p>
+</div>
 <p>After renewal:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify new certificate dates</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Confirm services recovered</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify new certificate dates</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm services recovered</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>notBefore=Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Service vpxd is running
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Service vsan-health is running
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Service wcp is running
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Service vsphere-ui is running
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Service rhttpproxy is running
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Service vmonapi is running
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Service sps is running
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Service pschealth is running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error in x509 lookup v3 extensions</code></strong> — Ensure the certificate chain is complete; use <code>openssl s_client -connect vcenter.example.local:443 -showcerts</code> to verify all intermediate certificates are present.
+<strong><code>Service vpxd is stopped</code></strong> — Restart the vCenter service with <code>service-control --start --all</code> and wait 2–3 minutes for dependent services to initialize.</p>
+</div>
 <h3 id="machine-ssl-certificate-custom-ca">Machine SSL Certificate (Custom CA)<a class="headerlink" href="#machine-ssl-certificate-custom-ca" title="Permanent link">&para;</a></h3>
 <p>When your organisation uses an enterprise CA (Microsoft CA, DigiCert, etc.):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Generate a CSR</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Select option 1: Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># The tool outputs a CSR file at /tmp/vmca_issued_csr.csr</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Submit this CSR to your enterprise CA</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 2 — After receiving the signed certificate</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Place the cert chain and key in a temp location on VCSA</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Step 3 — Replace the certificate</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Select option 5: Replace Machine SSL certificate with Custom Certificate</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Provide path to: certificate file, key file, and root CA chain</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — Generate a CSR</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Select option 1: Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># The tool outputs a CSR file at /tmp/vmca_issued_csr.csr</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Submit this CSR to your enterprise CA</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Step 2 — After receiving the signed certificate</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Place the cert chain and key in a temp location on VCSA</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Step 3 — Replace the certificate</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Select option 5: Replace Machine SSL certificate with Custom Certificate</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Provide path to: certificate file, key file, and root CA chain</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter Certificate Manager
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Please select an option:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>1. Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2. Generate Certificate Signing Request(s) and Key(s) for all certificates
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>3. Regenerate a new Machine SSL certificate
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>4. Replace Machine SSL certificate with Custom Certificate
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>5. Replace all Certificates with Custom Certificates
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>6. Regenerate all certificates
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>7. Reset all Certificates to default
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>8. List all certificates
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Option [1]: 1
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Generating Certificate Signing Request for Machine SSL certificate...
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>CSR generated successfully at: /tmp/vmca_issued_csr.csr
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Key generated at: /tmp/vmca_issued_key.key
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Please submit the CSR to your enterprise CA and return with the signed certificate.
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>---
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>vCenter Certificate Manager
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Please select an option:
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>1. Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>2. Generate Certificate Signing Request(s) and Key(s) for all certificates
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>3. Regenerate a new Machine SSL certificate
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>4. Replace Machine SSL certificate with Custom Certificate
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>5. Replace all Certificates with Custom Certificates
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>6. Regenerate all certificates
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>7. Reset all Certificates to default
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>8. List all certificates
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>Option [1]: 5
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>Provide the following paths:
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>Certificate file path: /tmp/vcenter.crt
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>Key file path: /tmp/vmca_issued_key.key
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>Root CA chain file path: /tmp/ca-chain.crt
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>Validating certificate and key...
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>Certificate validation: PASSED
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>Key validation: PASSED
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>Chain validation: PASSED
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>Replacing Machine SSL certificate...
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>Certificate replacement completed successfully.
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>Services will restart automatically. Please wait...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at /tmp/vcenter.crt</code></strong> — Verify the signed certificate file path is correct and readable by the root user.
+<strong><code>Error: Private key does not match certificate</code></strong> — Ensure the key file corresponds to the CSR that was signed by your CA.
+<strong><code>Error: Certificate chain validation failed: untrusted root</code></strong> — Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root.</p>
+</div>
 <h3 id="sts-signing-certificate">STS Signing Certificate<a class="headerlink" href="#sts-signing-certificate" title="Permanent link">&para;</a></h3>
 <p>The STS (Security Token Service) signing certificate is the most impactful — its expiry causes complete login failure for all vSphere accounts. It has a 10-year validity by default but may have been set shorter on older installations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check STS certificate expiry</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>STS_INTERNAL_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If expired — this requires special recovery steps</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># See VMware KB 2112283 for the STS certificate renewal procedure</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Summary:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 1. Stop all services</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 2. Run the certificate-manager STS renewal</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 3. Restart all services</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Select option 8: Reset all certificates</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check STS certificate expiry</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>STS_INTERNAL_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If expired — this requires special recovery steps</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># See VMware KB 2112283 for the STS certificate renewal procedure</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Summary:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 1. Stop all services</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 2. Run the certificate-manager STS renewal</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 3. Restart all services</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Select option 8: Reset all certificates</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Alias                                    : STS_INTERNAL_SSL_CERT
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Not After                                : Dec 18 14:32:15 2025 GMT
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Stopping all services...
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Service vmon stopped
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Service vmafdd stopped
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Service vmdird stopped
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Service vmcad stopped
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Service vpostgres stopped
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>All services stopped successfully.
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2019-01-01T08:45:23.456Z - certificate-manager
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>======================================
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>VMware Certificate Manager
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>======================================
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>1. Replace Machine SSL certificate
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2. Replace VMCA Root certificate
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>3. Replace PSC SSL certificate
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>4. Replace Solution User certificates
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>5. Regenerate a new VMCA Root certificate and all certificates
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>6. Replace Smart Card certificate
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>7. Replace Authentication Proxy Server certificate
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>8. Reset all certificates
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>9. Exit
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Select an option [1-9]: 8
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Resetting all certificates...
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>All certificates reset successfully.
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>Starting all services...
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>Service vmon started
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Service vmafdd started
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>Service vmdird started
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>Service vmcad started
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>Service vpostgres started
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>All services started successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vecs-cli: command not found</code></strong> — Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed.
+<strong><code>Error: Failed to stop service — timeout waiting for service to stop</code></strong> — Increase the timeout or manually kill lingering processes with <code>pkill -9 vmware</code> before retrying service-control.
+<strong><code>certificate-manager: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user, as certificate operations require elevated privileges.</p>
+</div>
 <p><strong>Warning</strong>: If the STS certificate is already expired, the <code>certificate-manager</code> may not be able to authenticate. In this case, use the <code>fix_sts_cert.py</code> script from VMware KB 79248 or engage VMware Support directly.</p>
 <hr />
 <h2 id="nkp-backup-and-recovery">NKP Backup and Recovery<a class="headerlink" href="#nkp-backup-and-recovery" title="Permanent link">&para;</a></h2>
 <p>The Native Key Provider key material is embedded in vCenter. If vCenter is restored from backup or rebuilt, the NKP must also be restored for encrypted VMs to be accessible.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Backup procedure (do this immediately after creating NKP, and after any key rotation)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># vSphere Client → vCenter → Configure → Key Providers → &lt;NKP name&gt; → Back Up</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Download the backup file and store securely (offline or in a separate secrets manager)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># The backup is password-protected — store the password separately from the file</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Backup procedure (do this immediately after creating NKP, and after any key rotation)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># vSphere Client → vCenter → Configure → Key Providers → &lt;NKP name&gt; → Back Up</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Download the backup file and store securely (offline or in a separate secrets manager)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># The backup is password-protected — store the password separately from the file</span>
 </code></pre></div>
 <p>Recovery procedure:
 1. Deploy new VCSA (or restore from vCenter backup)
@@ -9481,16 +9639,16 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 <li>In the policy rules, enable <strong>Encryption</strong> and select the key provider</li>
 <li>Apply the policy to a VM: <strong>VM → Edit Settings → VM Options → Encryption → Encrypt VM</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check VM encryption status across the environment</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nv">$encrypted</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span> <span class="o">-ne</span> <span class="nv">$null</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">Name</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">Encrypted</span> <span class="p">=</span> <span class="nv">$encrypted</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">KeyId</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span><span class="p">.</span><span class="n">KeyId</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">ProviderId</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span><span class="p">.</span><span class="n">ProviderId</span><span class="p">.</span><span class="n">Id</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">}</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Encrypted</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check VM encryption status across the environment</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="nv">$encrypted</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span> <span class="o">-ne</span> <span class="nv">$null</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="n">Name</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="n">Encrypted</span> <span class="p">=</span> <span class="nv">$encrypted</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">KeyId</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span><span class="p">.</span><span class="n">KeyId</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="n">ProviderId</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span><span class="p">.</span><span class="n">ProviderId</span><span class="p">.</span><span class="n">Id</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="p">}</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Encrypted</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 </code></pre></div>
 <p>vSAN encryption is preferred over per-VM encryption in all-vSAN environments — it is more performant and simpler to manage at scale.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9520,7 +9678,7 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

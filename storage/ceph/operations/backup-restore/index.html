@@ -7736,124 +7736,313 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Apply incremental diff to existing image</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>rbd<span class="w"> </span>import-diff<span class="w"> </span>/mnt/backup/diff.img<span class="w"> </span>&lt;pool&gt;/&lt;image&gt;
 </code></pre></div>
-<h2 id="cephfs-snapshots">CephFS Snapshots<a class="headerlink" href="#cephfs-snapshots" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create snapshot — snapshots live in the .snap/ virtual directory of each CephFS directory</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mkdir<span class="w"> </span>/mnt/cephfs/.snap/daily-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List existing snapshots</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ls<span class="w"> </span>/mnt/cephfs/.snap/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Restore: copy files out of the snapshot subtree</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cp<span class="w"> </span>-a<span class="w"> </span>/mnt/cephfs/.snap/daily-2026-06-01/important-dir<span class="w"> </span>/mnt/cephfs/restored/
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Snapshot created: rbd/vm-disk@backup-2025-01-15
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SNAPID NAME                 SIZE PROTECTED TIMESTAMP
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>     4 backup-2025-01-15   50 GiB      false 2025-01-15T09:42:17.123456Z
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>     3 backup-2025-01-14   50 GiB      false 2025-01-14T09:40:02.987654Z
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Exporting image: 100% complete...done.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Exporting image diff: 100% complete...done.
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete old snapshot</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>rmdir<span class="w"> </span>/mnt/cephfs/.snap/daily-2026-05-01
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Snapshot scheduling via CephFS snapshot scheduler module</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>snap_schedule
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>add<span class="w"> </span>/<span class="w"> </span>1d<span class="w">               </span><span class="c1"># daily snapshots at root</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>retention<span class="w"> </span>add<span class="w"> </span>/<span class="w"> </span>7d<span class="w">    </span><span class="c1"># keep 7 days</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>list<span class="w"> </span>/
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Importing image: 100% complete...done.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Image rollback: 100% complete...done.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Applying diff: 100% complete...done.
 </code></pre></div>
-<h2 id="rgw-bucket-replication-cross-cluster-dr">RGW Bucket Replication (Cross-Cluster DR)<a class="headerlink" href="#rgw-bucket-replication-cross-cluster-dr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check multi-site sync status on source</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>radosgw-admin<span class="w"> </span>sync<span class="w"> </span>status
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rbd: error: image rbd/vm-disk@backup-2025-01-15 is not protected</code></strong> — Add <code>rbd snap protect &lt;pool&gt;/&lt;image&gt;@&lt;snap&gt;</code> before export-diff to prevent snapshot deletion during incremental operations.
+<strong><code>rbd: error: failed to open /mnt/backup/image.img: No such file or directory</code></strong> — Verify the backup file path exists and the mount point is accessible with <code>ls -lh /mnt/backup/</code>.
+<strong><code>rbd: error: image rbd/new-image already exists</code></strong> — Use a unique image name or delete the existing image with <code>rbd rm &lt;pool&gt;/&lt;new-image&gt;</code> before importing.</p>
+</div>
+<h2 id="cephfs-snapshots">CephFS Snapshots<a class="headerlink" href="#cephfs-snapshots" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create snapshot — snapshots live in the .snap/ virtual directory of each CephFS directory</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mkdir<span class="w"> </span>/mnt/cephfs/.snap/daily-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Commit any pending period updates</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>radosgw-admin<span class="w"> </span>period<span class="w"> </span>update<span class="w"> </span>--commit
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List existing snapshots</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>/mnt/cephfs/.snap/
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Bucket-level replication using S3 API (via AWS CLI pointed at RGW)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-replication<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;src-bucket&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--replication-configuration<span class="w"> </span>file://replicate.json
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check per-bucket sync status</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>radosgw-admin<span class="w"> </span>bucket<span class="w"> </span>sync<span class="w"> </span>status<span class="w"> </span>--bucket<span class="o">=</span>&lt;name&gt;
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Force sync of a specific bucket</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>radosgw-admin<span class="w"> </span>bucket<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--bucket<span class="o">=</span>&lt;name&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Restore: copy files out of the snapshot subtree</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cp<span class="w"> </span>-a<span class="w"> </span>/mnt/cephfs/.snap/daily-2026-06-01/important-dir<span class="w"> </span>/mnt/cephfs/restored/
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete old snapshot</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>rmdir<span class="w"> </span>/mnt/cephfs/.snap/daily-2026-05-01
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Snapshot scheduling via CephFS snapshot scheduler module</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>snap_schedule
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>add<span class="w"> </span>/<span class="w"> </span>1d<span class="w">               </span><span class="c1"># daily snapshots at root</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>retention<span class="w"> </span>add<span class="w"> </span>/<span class="w"> </span>7d<span class="w">    </span><span class="c1"># keep 7 days</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ceph<span class="w"> </span>fs<span class="w"> </span>snap-schedule<span class="w"> </span>list<span class="w"> </span>/
 </code></pre></div>
-<h2 id="rbd-mirroring-dr-async-replication">RBD Mirroring (DR / Async Replication)<a class="headerlink" href="#rbd-mirroring-dr-async-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable mirroring on pool (image mode = per-image opt-in)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>image
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Pool mode (all images in pool are mirrored)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>pool
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Enable on specific image (journaling feature required)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd/my-volume<span class="w"> </span>journaling
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># On secondary cluster: import bootstrap token</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>peer<span class="w"> </span>bootstrap<span class="w"> </span>import<span class="w"> </span>rbd<span class="w"> </span>bootstrap-token
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check mirror status</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>status<span class="w"> </span>rbd
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>status<span class="w"> </span>rbd/my-volume
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># DR failover: promote secondary image to writable</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>promote<span class="w"> </span>rbd/my-volume<span class="w">          </span><span class="c1"># on DR site</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>demote<span class="w"> </span>rbd/my-volume<span class="w">           </span><span class="c1"># on primary (if accessible)</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>daily-2026-06-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>daily-2026-06-02
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>daily-2026-06-03
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>daily-2026-05-15
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>daily-2026-05-01
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>(no output — command completes silently)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>(no output — command completes silently)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>SCHEDULE_PATH  SCHEDULE  RETENTION
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>/              1d        7d
 </code></pre></div>
-<h2 id="cluster-configuration-backup">Cluster Configuration Backup<a class="headerlink" href="#cluster-configuration-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all monitor key-value store entries (includes config flags and settings)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>ceph-config-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mkdir: cannot create directory '/mnt/cephfs/.snap/daily-2026-06-01': File exists</code></strong> — Use a unique snapshot name or delete the existing snapshot with <code>rmdir /mnt/cephfs/.snap/daily-2026-06-01</code> first.
+<strong><code>Error EPERM: permission denied</code></strong> — Ensure the user running the command has write permissions on the CephFS mount and that snapshots are enabled with <code>ceph fs set &lt;fs_name&gt; allow_new_snaps true</code>.
+<strong><code>Error: snap_schedule module is not available</code></strong> — Enable the snap_schedule manager module with <code>ceph mgr module enable snap_schedule</code> before scheduling snapshots.</p>
+</div>
+<h2 id="rgw-bucket-replication-cross-cluster-dr">RGW Bucket Replication (Cross-Cluster DR)<a class="headerlink" href="#rgw-bucket-replication-cross-cluster-dr" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check multi-site sync status on source</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>radosgw-admin<span class="w"> </span>sync<span class="w"> </span>status
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List all running daemon state</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cephadm<span class="w"> </span>ls<span class="w"> </span>&gt;<span class="w"> </span>cephadm-ls-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Commit any pending period updates</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>radosgw-admin<span class="w"> </span>period<span class="w"> </span>update<span class="w"> </span>--commit
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Export auth keys for all CephX users</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.keyring
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Export CRUSH map — binary and human-readable text</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>crushmap.bin
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>crushmap.bin<span class="w"> </span>-o<span class="w"> </span>crushmap.txt
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Bucket-level replication using S3 API (via AWS CLI pointed at RGW)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-replication<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;src-bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>--replication-configuration<span class="w"> </span>file://replicate.json
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check per-bucket sync status</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>radosgw-admin<span class="w"> </span>bucket<span class="w"> </span>sync<span class="w"> </span>status<span class="w"> </span>--bucket<span class="o">=</span>&lt;name&gt;
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># OSD map</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/osd-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Copy ceph.conf from admin node</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>cp<span class="w"> </span>/etc/ceph/ceph.conf<span class="w"> </span>/backup/ceph.conf.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Force sync of a specific bucket</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>radosgw-admin<span class="w"> </span>bucket<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--bucket<span class="o">=</span>&lt;name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>realm: default
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>zonegroup: us-west
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>zone: us-west-1a
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>metadata syncing: true
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>data syncing: true
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>full sync: false
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>incremental sync: true
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sync-from-zone: (none)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>source zone syncing: 0 shards, 0 entries
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>destination zone syncing: 0 shards, 0 entries
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>2024-07-15T09:42:18Z 7f8c2a1b9e4d: update period for realm=default, period=8f3c-9a2b-4e1d-7c5a
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>{
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    &quot;ReplicationConfiguration&quot;: {
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        &quot;Role&quot;: &quot;arn:aws:iam::123456789012:role/ceph-replication&quot;,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        &quot;Rules&quot;: [
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            {
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                &quot;ID&quot;: &quot;replicate-all&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                &quot;Status&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                &quot;Priority&quot;: 1,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                &quot;Destination&quot;: {
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>                    &quot;Bucket&quot;: &quot;arn:aws:s3:::dest-bucket&quot;,
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>                    &quot;ReplicationTime&quot;: {
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>                        &quot;Status&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>                        &quot;Time&quot;: {
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>                            &quot;Minutes&quot;: 15
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>                        }
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>                    }
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>                }
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>            }
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>        ]
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    }
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>}
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>bucket sync status for &#39;prod-data&#39;:
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    full sync: false
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    incremental sync: true
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    encrypted: false
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    syncing shards: 8/8
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    recovered shards: 8/8
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    metadata syncing: true
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>    data syncing: true
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    last sync marker: 2024-07-15T09:41:52Z
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>bucket sync run for &#39;prod-data&#39;: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: bucket 'prod-data' not found</code></strong> — Verify the bucket exists on the source zone with <code>radosgw-admin bucket list</code> and use the correct bucket name.
+<strong><code>error: invalid replication configuration: missing Role ARN</code></strong> — Ensure the replicate.json file contains a valid IAM role ARN in the Role field.
+<strong><code>error: period update failed: another update in progress</code></strong> — Wait for the previous period update to complete or check <code>radosgw-admin period get</code> to see the current state.</p>
+</div>
+<h2 id="rbd-mirroring-dr-async-replication">RBD Mirroring (DR / Async Replication)<a class="headerlink" href="#rbd-mirroring-dr-async-replication" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable mirroring on pool (image mode = per-image opt-in)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>image
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Pool mode (all images in pool are mirrored)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>pool
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Enable on specific image (journaling feature required)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd/my-volume<span class="w"> </span>journaling
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># On secondary cluster: import bootstrap token</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>peer<span class="w"> </span>bootstrap<span class="w"> </span>import<span class="w"> </span>rbd<span class="w"> </span>bootstrap-token
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check mirror status</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>status<span class="w"> </span>rbd
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>status<span class="w"> </span>rbd/my-volume
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># DR failover: promote secondary image to writable</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>promote<span class="w"> </span>rbd/my-volume<span class="w">          </span><span class="c1"># on DR site</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>demote<span class="w"> </span>rbd/my-volume<span class="w">           </span><span class="c1"># on primary (if accessible)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Mirroring enabled on pool rbd (mode: image)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Mirroring enabled on pool rbd (mode: pool)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Journaling feature enabled on rbd/my-volume
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Bootstrap import successful for peer rbd-cluster-dr
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>health: WARNING
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  rbd-mirror: 1 pools have peer connectivity issues
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pool rbd:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  peer: rbd-cluster-dr (UUID: a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    direction: rx-tx
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    mirror mode: image
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    leader: rbd-mirror-primary-1
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>image rbd/my-volume:
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  global_id: 12345678-abcd-ef01-2345-6789abcdef01
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  state: up+replaying
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  description: remote image replicated
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  last_snapshot_sync_time: 2024-01-15T14:32:18Z
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Image rbd/my-volume promoted to primary
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Image rbd/my-volume demoted to non-primary
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rbd: error: image rbd/my-volume does not have journaling feature enabled</code></strong> — Enable journaling on the image with <code>rbd feature enable rbd/my-volume journaling</code> before enabling mirroring.
+<strong><code>rbd: error: peer rbd-cluster-dr does not exist</code></strong> — Bootstrap import the peer first using <code>rbd mirror pool peer bootstrap import rbd &lt;bootstrap-token&gt;</code> on the secondary cluster.
+<strong><code>rbd: error: image rbd/my-volume is not mirrored</code></strong> — Enable mirroring on the image or pool with <code>rbd mirror pool enable rbd image</code> or <code>rbd mirror image enable rbd/my-volume journaling</code>.</p>
+</div>
+<h2 id="cluster-configuration-backup">Cluster Configuration Backup<a class="headerlink" href="#cluster-configuration-backup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Export all monitor key-value store entries (includes config flags and settings)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>ceph-config-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List all running daemon state</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>cephadm<span class="w"> </span>ls<span class="w"> </span>&gt;<span class="w"> </span>cephadm-ls-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Export auth keys for all CephX users</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.keyring
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Export CRUSH map — binary and human-readable text</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>crushmap.bin
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>crushmap.bin<span class="w"> </span>-o<span class="w"> </span>crushmap.txt
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># OSD map</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/osd-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Copy ceph.conf from admin node</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>cp<span class="w"> </span>/etc/ceph/ceph.conf<span class="w"> </span>/backup/ceph.conf.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>exported config-key dump
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>exported auth keys
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>exported auth keyring
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>got crush map
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>decompiled crush map
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>dumped osd map
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ceph.conf backed up to /backup/ceph.conf.2025-01-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: access denied</code></strong> — Ensure the user running these commands has sudo privileges or is part the ceph group (<code>sudo usermod -a -G ceph $USER</code>).
+<strong><code>No such file or directory</code></strong> — Create the <code>/backup</code> directory with write permissions before running the export commands (<code>sudo mkdir -p /backup &amp;&amp; sudo chmod 755 /backup</code>).
+<strong><code>ceph: command not found</code></strong> — Install the ceph-common package on the admin node (<code>sudo apt install ceph-common</code> or <code>sudo yum install ceph-common</code>).</p>
+</div>
 <h2 id="restore-from-configuration-backup">Restore from Configuration Backup<a class="headerlink" href="#restore-from-configuration-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Restore CRUSH map</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>/backup/crush-2026-06-07.bin
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restore auth keys for all users</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>import<span class="w"> </span>-i<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Restore a single auth key</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.rbd<span class="w"> </span>&gt;<span class="w"> </span>/etc/ceph/ceph.client.rbd.keyring
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Restore RBD image from exported file</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Full cluster recovery from scratch:</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 1. Deploy new cluster with cephadm bootstrap (same cluster FSID required)</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># 2. Import auth keys</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 3. Re-add OSDs (existing data may be recoverable if disks intact)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 4. Restore CRUSH map</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># 5. Run: ceph pg repair; ceph osd repair</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Restore CRUSH map</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>/backup/crush-2026-06-07.bin
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Restore auth keys for all users</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>import<span class="w"> </span>-i<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Restore a single auth key</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.rbd<span class="w"> </span>&gt;<span class="w"> </span>/etc/ceph/ceph.client.rbd.keyring
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Restore RBD image from exported file</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Full cluster recovery from scratch:</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># 1. Deploy new cluster with cephadm bootstrap (same cluster FSID required)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># 2. Import auth keys</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># 3. Re-add OSDs (existing data may be recoverable if disks intact)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 4. Restore CRUSH map</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># 5. Run: ceph pg repair; ceph osd repair</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># Crush map restore
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>set crush map from /backup/crush-2026-06-07.bin
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a># Auth keys import
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>imported keyring
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a># Single auth key restore
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>[client.rbd]
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    key = AQDvF8Zl7K9sERAAx8mK3pL2vQ4rT5uW6xYzAb==
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    caps mds = &quot;allow rw&quot;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    caps mon = &quot;allow r&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    caps osd = &quot;allow rwx pool=rbd&quot;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a># RBD image import
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Importing image: 100% complete...done.
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a># Cluster recovery verification
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>pg repair started on pg 1.0
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>pg repair started on pg 1.1
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>pg repair started on pg 1.2
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>...
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>osd repair: 47 PGs repaired
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: unable to open /backup/crush-2026-06-07.bin</code></strong> — Verify the backup file path exists and the ceph-mon container/service has read permissions to the backup directory.
+<strong><code>Error EINVAL: imported 0 keys</code></strong> — Ensure the keyring file is valid and not corrupted; try <code>ceph auth list</code> to confirm current keys before import.
+<strong><code>Error: image already exists</code></strong> — Use <code>rbd rm rbd/my-volume-restored</code> to remove the existing image first, or change the restored image name.</p>
+</div>
 <h2 id="mon-data-recovery-loss-of-quorum">MON Data Recovery (Loss of Quorum)<a class="headerlink" href="#mon-data-recovery-loss-of-quorum" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># If monitors lose quorum and cannot be recovered normally:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Rebuild MON store from OSD data (last resort)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ceph-monstore-tool<span class="w"> </span>/var/lib/ceph/mon/ceph-&lt;id&gt;/store.db<span class="w"> </span>rebuild<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--keyring<span class="w"> </span>/etc/ceph/ceph.client.admin.keyring
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Inject a new MON map if the map is corrupted</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph-mon<span class="w"> </span>--inject-monmap<span class="w"> </span>/tmp/monmap<span class="w"> </span>--id<span class="w"> </span>&lt;mon-id&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Export MON map for inspection</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>mon<span class="w"> </span>getmap<span class="w"> </span>-o<span class="w"> </span>/tmp/monmap
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>monmaptool<span class="w"> </span>--print<span class="w"> </span>/tmp/monmap
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Check MON store integrity</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ceph-kvstore-tool<span class="w"> </span>rocksdb<span class="w"> </span>/var/lib/ceph/mon/ceph-&lt;id&gt;/store.db<span class="w"> </span>check
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Stop all MONs before running store rebuild</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>ceph-mon@&lt;id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># If monitors lose quorum and cannot be recovered normally:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Rebuild MON store from OSD data (last resort)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ceph-monstore-tool<span class="w"> </span>/var/lib/ceph/mon/ceph-&lt;id&gt;/store.db<span class="w"> </span>rebuild<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--keyring<span class="w"> </span>/etc/ceph/ceph.client.admin.keyring
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Inject a new MON map if the map is corrupted</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ceph-mon<span class="w"> </span>--inject-monmap<span class="w"> </span>/tmp/monmap<span class="w"> </span>--id<span class="w"> </span>&lt;mon-id&gt;
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Export MON map for inspection</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ceph<span class="w"> </span>mon<span class="w"> </span>getmap<span class="w"> </span>-o<span class="w"> </span>/tmp/monmap
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>monmaptool<span class="w"> </span>--print<span class="w"> </span>/tmp/monmap
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Check MON store integrity</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>ceph-kvstore-tool<span class="w"> </span>rocksdb<span class="w"> </span>/var/lib/ceph/mon/ceph-&lt;id&gt;/store.db<span class="w"> </span>check
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># Stop all MONs before running store rebuild</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>ceph-mon@&lt;id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Rebuilding monstore from OSD data...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Recovered 1247 objects from OSD metadata
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Rebuilt monitor store successfully
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>(no output — command completes silently)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>epoch 42
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>fsid 8a4c8d7f-2b91-4e8a-9c3d-5f6e7a8b9c0d
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>election_strategy: 3
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>mon.ceph-mon01
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>mon.ceph-mon02
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>mon.ceph-mon03
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>monmaptool v17.2.5 (8a4c8d7f2b914e8a9c3d5f6e7a8b9c0d)
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>epoch 42
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>fsid 8a4c8d7f-2b91-4e8a-9c3d-5f6e7a8b9c0d
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>election_strategy: 3
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>mon.ceph-mon01 10.0.1.45:6789/0
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>mon.ceph-mon02 10.0.1.46:6789/0
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>mon.ceph-mon03 10.0.1.47:6789/0
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Checking monitor store integrity...
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Store check passed: 1247 objects verified
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Stopping ceph-mon@ceph-mon01...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: unable to open monitor store at /var/lib/ceph/mon/ceph-&lt;id&gt;/store.db</code></strong> — Verify the monitor ID is correct and the store directory exists before running rebuild.
+<strong><code>Error: failed to inject monmap: no such file or directory</code></strong> — Export the monmap first using <code>ceph mon getmap -o /tmp/monmap</code> before attempting injection.
+<strong><code>Error: failed to stop ceph-mon@&lt;id&gt;: Unit not loaded</code></strong> — Ensure the monitor service name matches your cluster configuration; check with <code>systemctl list-units | grep ceph-mon</code>.</p>
+</div>
 <h2 id="backup-schedule-recommendations">Backup Schedule Recommendations<a class="headerlink" href="#backup-schedule-recommendations" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7905,18 +8094,41 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 <li><a href="../health-checks/">Ceph — Health Checks</a></li>
 </ul>
 <h2 id="verify-backup-integrity">Verify Backup Integrity<a class="headerlink" href="#verify-backup-integrity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify exported RBD image is readable</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>qemu-img<span class="w"> </span>check<span class="w"> </span>/mnt/backup/image-2026-06-07.img
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check RBD image can be imported cleanly (into a test pool)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>rbd<span class="w"> </span>import<span class="w"> </span>/mnt/backup/image-2026-06-07.img<span class="w"> </span>rbd/restore-test<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Import OK&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify CRUSH map is decompilable</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>/backup/crushmap.bin<span class="w"> </span>-o<span class="w"> </span>/tmp/crush-verify.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRUSH OK&quot;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Verify auth keyring is parseable</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph-authtool<span class="w"> </span>--print-key<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Keyring OK&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify exported RBD image is readable</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>qemu-img<span class="w"> </span>check<span class="w"> </span>/mnt/backup/image-2026-06-07.img
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check RBD image can be imported cleanly (into a test pool)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>rbd<span class="w"> </span>import<span class="w"> </span>/mnt/backup/image-2026-06-07.img<span class="w"> </span>rbd/restore-test<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Import OK&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Verify CRUSH map is decompilable</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>/backup/crushmap.bin<span class="w"> </span>-o<span class="w"> </span>/tmp/crush-verify.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRUSH OK&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Verify auth keyring is parseable</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ceph-authtool<span class="w"> </span>--print-key<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Keyring OK&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>image: /mnt/backup/image-2026-06-07.img
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>file format: raw
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>virtual size: 100 GiB (107374182400 bytes)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>disk size: 87 GiB
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>cluster_size: 65536
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Format specific information:
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    compat: 0x0
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    incompatible mask: 0x0
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    autoclear mask: 0x0
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    refcount bits: 16
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    refcount order: 4
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Check complete, image is OK
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Import OK
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>CRUSH OK
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>AQDvK2dmFxJ8ExAAq7vL9Z3nK8pQ2m7vK9K8Dw==
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Keyring OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qemu-img: Could not open '/mnt/backup/image-2026-06-07.img': No such file or directory</code></strong> — Verify the backup path is mounted and the image filename matches exactly with <code>ls -lh /mnt/backup/</code>.
+<strong><code>error: pool does not exist</code></strong> — Create the test pool first with <code>ceph osd pool create restore-test 128 128</code> or use an existing pool name.
+<strong><code>Error reading crushmap from /backup/crushmap.bin</code></strong> — Ensure the crushmap binary file exists and is readable with <code>file /backup/crushmap.bin</code> to confirm it's a valid compiled CRUSH map.</p>
+</div>
 
 
 
@@ -7939,7 +8151,7 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

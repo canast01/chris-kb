@@ -9219,14 +9219,52 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check vMotion is enabled on the vmk</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
 </code></pre></div>
-<p><strong>Step 2 — Verify MTU consistency</strong> — vMotion requires jumbo frames (MTU 9000) if configured; a mismatch between the VMkernel adapter, vSwitch, and physical switch will cause failures:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check VMkernel MTU</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test vMotion network reachability with correct MTU</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination-esxi-vmotion-ip&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># -d = don&#39;t fragment, -s 8972 = payload size (8972 + 28 byte header = 9000 MTU)</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name          IPv4 Address         IPv6 Address  MTU  MAC Address        Enabled
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmk0          192.168.1.45         ::1           1500 00:0c:29:a4:2b:1c  true
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vmk1          192.168.100.50       ::1           1500 00:0c:29:a4:2b:1d  true
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vmk2          192.168.200.10       ::1           1500 00:0c:29:a4:2b:1e  true
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vmk1
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   Tags: vMotion,Management
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Name          IPv4 Address         IPv6 Address  MTU  MAC Address        Enabled
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vmk1          192.168.100.50       ::1           1500 00:0c:29:a4:2b:1d  true
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the host. The host may not be running, or the login credentials may not be valid.</code></strong> — Verify ESXi host is reachable and you have valid credentials; if running locally on the host, ensure you're in the DCUI or SSH session.
+<strong><code>Unknown option or malformed command.</code></strong> — Check esxcli syntax; use <code>esxcli network ip interface list --help</code> to verify correct command format for your ESXi version.</p>
+</div>
+<p><strong>Step 2 — Verify MTU consistency</strong> — vMotion requires jumbo frames (MTU 9000) if configured; a mismatch between the VMkernel adapter, vSwitch, and physical switch will cause failures:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check VMkernel MTU</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test vMotion network reachability with correct MTU</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination-esxi-vmotion-ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># -d = don&#39;t fragment, -s 8972 = payload size (8972 + 28 byte header = 9000 MTU)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                          MTU
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmk0                          1500
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vmk1                          9000
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vmk2                          1500
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vmk3                          9000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>PING &lt;destination-esxi-vmotion-ip&gt; (192.168.100.45): 8972 data bytes
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>8980 bytes from 192.168.100.45: icmp_seq=0 time=2.341 ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>8980 bytes from 192.168.100.45: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>8980 bytes from 192.168.100.45: icmp_seq=2 time=2.289 ms
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>8980 bytes from 192.168.100.45: icmp_seq=3 time=2.401 ms
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>--- 192.168.100.45 statistics ---
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>round-trip min/avg/max = 2.156/2.297/2.401 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Fragmentation is occurring; packets are fragmented</code></strong> — Reduce the payload size or verify the physical switch and vSAN network are configured for jumbo frames (MTU 9000).
+<strong><code>vmk1: No such device</code></strong> — Verify the vMotion VMkernel adapter exists with <code>esxcli network ip interface list</code> and use the correct interface name.
+<strong><code>100% packet loss</code></strong> — Check network connectivity between hosts, verify the destination IP is reachable, and confirm firewall rules allow ICMP traffic on the vMotion network.</p>
+</div>
 <p><strong>Step 3 — Check error details in vCenter Tasks:</strong></p>
 <ul>
 <li>"The migration was not attempted because no valid network is available" → No vMotion vmk on the destination</li>
@@ -9237,25 +9275,76 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
 <hr />
 <h2 id="vm-network-outage">VM Network Outage<a class="headerlink" href="#vm-network-outage" title="Permanent link">&para;</a></h2>
 <p><strong>Step 1 — Confirm the VM can ping its gateway</strong> from inside the guest. If not, check the virtual NIC is still connected:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI — check VM network adapter connection state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — check VM network adapter connection state</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
 </code></pre></div>
 <p><strong>Step 2 — Check the port group:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From ESXi — list port groups and VLAN IDs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>portgroup<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>portgroup<span class="w"> </span>list<span class="w">  </span><span class="c1"># For distributed vSwitch</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From ESXi — list port groups and VLAN IDs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>portgroup<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>portgroup<span class="w"> </span>list<span class="w">  </span><span class="c1"># For distributed vSwitch</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name                          VLAN ID  vSwitch
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>---------------------------  --------  ---------
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>VM Network                         0  vSwitch0
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Management Network                 1  vSwitch0
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vMotion                           10  vSwitch0
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>FT Logging                        20  vSwitch0
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>iSCSI-A                          100  vSwitch1
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>iSCSI-B                          101  vSwitch1
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Name                          VLAN ID  vSwitch
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>---------------------------  --------  ---------
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>DV-Production                     50  DSwitch-Prod
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>DV-DMZ                            60  DSwitch-Prod
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>DV-Management                      1  DSwitch-Mgmt
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>DV-vMotion                        10  DSwitch-Mgmt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the host. Error: Connection refused</code></strong> — Verify ESXi host is reachable and SSH is enabled (Configuration &gt; Security Profile &gt; Services &gt; SSH).
+<strong><code>This command is not supported on this system</code></strong> — Confirm you are running the command directly on ESXi; distributed vSwitch commands require vCenter connectivity or must be run from the vCenter CLI.</p>
+</div>
 <p>Confirm the port group VLAN ID matches the upstream switch configuration. A recent switch-side VLAN change will strand all VMs on that port group.</p>
 <p><strong>Step 3 — Check physical uplinks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check vmnic link state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Link&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check which vmnics back the vSwitch</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check vmnic link state</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Link&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check which vmnics back the vSwitch</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name    Link
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vmnic0  Up
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vmnic1  Up
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>vmnic2  Down
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vmnic3  Up
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Name                    Portgroups                          MTU     Promisc Mode   MAC Address        CLT Beacon
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vSwitch0                Management Network,VM Network       1500    False          00:50:56:c0:00:01  Enabled
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vSwitch1                iSCSI-Network                       9000    False          00:50:56:c0:00:02  Disabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter server or external system.
+<strong><code>Unable to find a matching nic</code></strong> — Verify the vmnic naming is correct (vmnic0, vmnic1, etc.) and that the network stack is running with <code>esxcli system module list | grep vsanmgmt</code>.</p>
+</div>
 <p><strong>Step 4 — Check NIC teaming policy</strong> — if an uplink failed and the teaming policy does not failover correctly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>policy<span class="w"> </span>failover<span class="w"> </span>get<span class="w"> </span>-v<span class="w"> </span>vSwitch0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>policy<span class="w"> </span>failover<span class="w"> </span>get<span class="w"> </span>-v<span class="w"> </span>vSwitch0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vSwitch Name: vSwitch0
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Active Uplinks: vmnic0, vmnic1
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Standby Uplinks: vmnic2
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Unused Uplinks: 
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Failover Detection: Link Status only
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Notify Switches: true
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Reverse Direction: false
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Load Balancing Policy: Route based on IP hash
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Network Failure Detection: Link Status only
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or esxcli command</code></strong> — Verify you are running this command on an ESXi host with network management enabled, not from vCenter; use SSH to connect directly to the ESXi host.
+<strong><code>Error: Could not find vswitch named vSwitch0</code></strong> — Check the correct vSwitch name using <code>esxcli network vswitch standard list</code> and replace vSwitch0 with the actual name.</p>
+</div>
 <hr />
 <h2 id="host-management-network-issue">Host Management Network Issue<a class="headerlink" href="#host-management-network-issue" title="Permanent link">&para;</a></h2>
 <p>If the host management network goes down, vCenter loses the host and SSH stops working.</p>
@@ -9267,10 +9356,24 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
 <li>Press <strong>Escape</strong> and select "Test Management Network" — this runs ping and DNS tests from the host.</li>
 <li>If the configuration was changed, confirm the management VLAN setting on the physical switch port.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Once SSH access is restored — verify management vmk</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>-i<span class="w"> </span>vmk0
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Once SSH access is restored — verify management vmk</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>-i<span class="w"> </span>vmk0
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name  IPv4 Address      IPv4 Netmask      IPv4 Broadcast    Type        DHCP
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>----  ---------------   ----------------  ----------------  ----------  ----
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vmk0  192.168.1.45      255.255.255.0     192.168.1.255     STATIC      false
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Destination     Netmask         Gateway         Device
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>-----------     -------         -------         ------
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>0.0.0.0         0.0.0.0         192.168.1.1     vmk0
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>192.168.1.0     255.255.255.0   0.0.0.0         vmk0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace network.ip.interface.ipv4.get</code></strong> — Verify the ESXi version supports this esxcli namespace; use <code>esxcli network ip interface list</code> as an alternative on older versions.
+<strong><code>Error: Unable to connect to the host</code></strong> — Confirm SSH is fully restored and the management network (vmk0) is up by checking <code>esxcli network ip interface list</code> first.</p>
+</div>
 <hr />
 <h2 id="nsx-issues">NSX Issues<a class="headerlink" href="#nsx-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -9299,32 +9402,83 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From ESXi — check NSX VTEP interface</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check TEP ping between two hosts</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check NSX agent status on ESXi host</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>status
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>/etc/init.d/nsx-mpa<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># From ESXi — check NSX VTEP interface</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check TEP ping between two hosts</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Check NSX agent status on ESXi host</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>status
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>/etc/init.d/nsx-mpa<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Name  Portset      IPV4 Address      IPV6 Address  MTU  MAC Address        Enabled
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vmk0  Management   192.168.1.45      ::1           1500 00:0c:29:a4:2b:8f  true
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>vmk1  vMotion      192.168.2.100     ::1           1500 00:0c:29:a4:2b:90  true
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>vmk10 NSX-VTEP     172.16.50.12      ::1           1600 00:0c:29:a4:2b:91  true
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vmk11 NSX-VTEP     172.16.50.13      ::1           1600 00:0c:29:a4:2b:92  true
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>PING 172.16.50.25 with 1572 bytes of data:
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>16 bytes from 172.16.50.25: icmp_seq=0 time=2.145 ms
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>16 bytes from 172.16.50.25: icmp_seq=1 time=1.987 ms
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>16 bytes from 172.16.50.25: icmp_seq=2 time=2.234 ms
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>--- 172.16.50.25 statistics ---
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>nsx-opsagent is running
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>nsx-mpa is running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown host &lt;remote-tep-ip&gt;</code></strong> — Replace <code>&lt;remote-tep-ip&gt;</code> with an actual TEP IP address (e.g., 172.16.50.25) that is reachable from the source host.
+<strong><code>nsx-opsagent is not running</code></strong> — Restart the NSX agent with <code>/etc/init.d/nsx-opsagent start</code> and verify NSX Manager connectivity and licensing.
+<strong><code>Unknown command or namespace: network ip interface</code></strong> — Verify you are running this command directly on an ESXi host (not vCenter); use <code>ssh root@&lt;esxi-host&gt;</code> to connect first.</p>
+</div>
 <p>From NSX Manager UI:
 - System → Fabric → Hosts — check each transport node status
 - System → Fabric → Edges — check edge node status and tunnel state
 - Networking → Tier-0 Gateways → check BGP neighbor state</p>
 <hr />
 <h2 id="packet-loss-on-a-vm-or-host">Packet Loss on a VM or Host<a class="headerlink" href="#packet-loss-on-a-vm-or-host" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From ESXi — check vmnic error counters</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for: rx_errors, tx_errors, rx_dropped, tx_dropped</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check for CRC errors on physical switch port (from switch CLI)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Cisco: show interface GigabitEthernetX/X counters errors</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Test with vmkping to rule out congestion vs physical errors</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># From ESXi — check vmnic error counters</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Look for: rx_errors, tx_errors, rx_dropped, tx_dropped</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Check for CRC errors on physical switch port (from switch CLI)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Cisco: show interface GigabitEthernetX/X counters errors</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Test with vmkping to rule out congestion vs physical errors</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name: vmnic0
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Driver: bnx2x
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Queue Stats:
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  RX packets: 45782156
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  RX bytes: 28934521847
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  TX packets: 38291045
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  TX bytes: 19284756234
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  RX errors: 0
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  TX errors: 0
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  RX dropped: 0
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  TX dropped: 0
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  RX crc errors: 0
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  Collisions: 0
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>PING 192.168.100.50 (192.168.100.50): 56 data bytes
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>64 bytes from 192.168.100.50: icmp_seq=0 time=2.145 ms
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>64 bytes from 192.168.100.50: icmp_seq=1 time=2.089 ms
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>64 bytes from 192.168.100.50: icmp_seq=2 time=2.156 ms
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>...
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>--- 192.168.100.50 statistics ---
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>100 packets transmitted, 100 packets received, 0% packet loss
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>round-trip min/avg/max = 2.089/2.134/3.421 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not get nic stats for vmnic0</code></strong> — Verify the vmnic exists with <code>esxcli network nic list</code> and confirm you have root/admin privileges.
+<strong><code>Unable to resolve destination-ip</code></strong> — Replace <code>&lt;destination-ip&gt;</code> with an actual reachable IP address on the network segment being tested.
+<strong><code>vmkping: command not found</code></strong> — Confirm you are running this command directly on the ESXi host console or via SSH, not from vCenter.</p>
+</div>
 <p>Common causes:</p>
 <table>
 <thead>
@@ -9398,7 +9552,7 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8012,6 +8012,14 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>system<span class="w"> </span>license<span class="w"> </span>show<span class="w"> </span>-package<span class="w"> </span>SnapMirror
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Status should be &quot;licensed&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Package           License Status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SnapMirror        licensed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: system</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the CLI interface; this command only works on ONTAP systems.
+<strong><code>Package           License Status</code></strong> — If only headers appear with no data rows, run <code>system license show</code> without filters to verify SnapMirror is installed, then contact NetApp support if the package is missing.</p>
+</div>
 <p><strong>Destination volume space:</strong></p>
 <ul>
 <li>The destination volume must be at least as large as the source volume. Create it before initializing SnapMirror (or let SnapMirror create it automatically with <code>snapmirror create -type DP</code> — ONTAP will auto-create if the destination volume does not exist and you specify the correct SVM and volume name).</li>
@@ -8020,142 +8028,399 @@
 <h2 id="configure-cluster-peering">Configure Cluster Peering<a class="headerlink" href="#configure-cluster-peering" title="Permanent link">&para;</a></h2>
 <p>Cluster peering establishes an authenticated, encrypted channel between the two ONTAP clusters. All SnapMirror and SnapVault relationships depend on this.</p>
 <p><strong>Step 1 — Create intercluster LIFs on the source cluster:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run on source cluster</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>source-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n1<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-home-node<span class="w"> </span>source-node1<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.11<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>source-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n2<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-home-node<span class="w"> </span>source-node2<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.12<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-</code></pre></div>
-<p><strong>Step 2 — Create intercluster LIFs on the destination cluster:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run on destination cluster</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>dest-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n1<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-home-node<span class="w"> </span>dest-node1<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.21<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run on source cluster</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>source-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n1<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-home-node<span class="w"> </span>source-node1<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.11<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>dest-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n2<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-home-node<span class="w"> </span>dest-node2<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.22<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>source-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n2<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-home-node<span class="w"> </span>source-node2<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.12<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid home port e0f</code></strong> — Verify the port exists on the node with <code>network port show -node source-node1</code> and use the correct port name (e.g., e0e, e0g).
+<strong><code>Error: command failed: Vserver "source-cls" does not exist</code></strong> — Create the cluster vserver first or use the correct vserver name with <code>vserver show</code>.
+<strong><code>Error: command failed: Address 10.0.20.11 already in use</code></strong> — Confirm the IP address is not assigned to another interface or device on the network.</p>
+</div>
+<p><strong>Step 2 — Create intercluster LIFs on the destination cluster:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run on destination cluster</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>dest-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n1<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-home-node<span class="w"> </span>dest-node1<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.21<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>dest-cls<span class="w"> </span>-lif<span class="w"> </span>ic_lif_n2<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-home-node<span class="w"> </span>dest-node2<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.22<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: The specified node "dest-node1" does not exist.</code></strong> — Verify node names match your cluster with <code>cluster show</code> and correct the <code>-home-node</code> parameter.
+<strong><code>Error: command failed: Port "e0f" does not exist on node "dest-node1".</code></strong> — Check available ports on each node using <code>network port show -node dest-node1</code> and update the <code>-home-port</code> parameter accordingly.
+<strong><code>Error: command failed: The IP address 10.0.20.21 is already in use.</code></strong> — Ensure the intercluster IP addresses are unique and not assigned to other interfaces; verify with <code>network interface show -fields address</code>.</p>
+</div>
 <p><strong>Step 3 — Initiate peering from the source cluster:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the source cluster:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.21,10.0.20.22<span class="w"> </span>-ipspace<span class="w"> </span>Default
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># ONTAP prompts for a passphrase — enter one and record it</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Then, on the destination cluster, accept the peer:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.11,10.0.20.12<span class="w"> </span>-ipspace<span class="w"> </span>Default
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enter the same passphrase when prompted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the source cluster:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.21,10.0.20.22<span class="w"> </span>-ipspace<span class="w"> </span>Default
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># ONTAP prompts for a passphrase — enter one and record it</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Then, on the destination cluster, accept the peer:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.11,10.0.20.12<span class="w"> </span>-ipspace<span class="w"> </span>Default
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Enter the same passphrase when prompted</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cluster peer create -peer-addrs 10.0.20.21,10.0.20.22 -ipspace Default
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Enter the passphrase for SVM peering [hidden]:
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Passphrase for SVM peering [hidden]:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Cluster peering request created successfully.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cluster peer create -peer-addrs 10.0.20.11,10.0.20.12 -ipspace Default
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Enter the passphrase for SVM peering [hidden]:
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Passphrase for SVM peering [hidden]:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Cluster peering request created successfully.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Cluster peer accepted.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Failed to reach peer cluster at address 10.0.20.21</code></strong> — Verify network connectivity between clusters and confirm peer IP addresses are reachable on the management network.
+<strong><code>Error: Passphrase mismatch</code></strong> — Ensure the same passphrase is entered on both the source and destination clusters; re-run the command and use identical input.
+<strong><code>Error: Cluster peer already exists</code></strong> — Check existing peer relationships with <code>cluster peer show</code> and remove the old peer before creating a new one.</p>
+</div>
 <p><strong>Verify peering:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On either cluster:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Both clusters should show Availability: Available, Authentication: ok</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On either cluster:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Both clusters should show Availability: Available, Authentication: ok</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cluster                               Availability Authentication
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------------------------------------ ------------ --------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>cluster1.example.com                  Available    ok
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>cluster2.example.com                  Available    ok
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster</code></strong> — Ensure you are logged into the NetApp cluster CLI (SSH to cluster management IP) rather than a standard Linux shell.
+<strong><code>Cluster peer show: command not found</code></strong> — Run the command without the leading <code>cluster</code> keyword if using the ONTAP CLI directly, or verify ONTAP version supports this command syntax.</p>
+</div>
 <hr />
 <h2 id="configure-svm-peering">Configure SVM Peering<a class="headerlink" href="#configure-svm-peering" title="Permanent link">&para;</a></h2>
 <p>SVM peering authorizes SnapMirror replication between specific SVMs. This is a separate step from cluster peering.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the source cluster:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-peer-cluster<span class="w"> </span>dest-cls<span class="w"> </span>-applications<span class="w"> </span>snapmirror
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># On the destination cluster, accept:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vserver<span class="w"> </span>peer<span class="w"> </span>accept<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On the source cluster:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-peer-cluster<span class="w"> </span>dest-cls<span class="w"> </span>-applications<span class="w"> </span>snapmirror
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># On the destination cluster, accept:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vserver<span class="w"> </span>peer<span class="w"> </span>accept<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># On the source cluster:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vserver peer create -vserver svm_prod -peer-vserver svm_dr -peer-cluster dest-cls -applications snapmirror
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>[Job 1234] Job succeeded: Vserver peer create completed successfully.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a># On the destination cluster, accept:
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vserver peer accept -vserver svm_dr -peer-vserver svm_prod
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>[Job 5678] Job succeeded: Vserver peer accept completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver peer create failed. Peer vserver "svm_dr" does not exist on cluster "dest-cls".</code></strong> — Verify the destination SVM name matches exactly and exists on the destination cluster using <code>vserver show</code>.
+<strong><code>Error: command failed: Vserver peer accept failed. No pending vserver peer request found for peer vserver "svm_prod".</code></strong> — Ensure the source cluster peer creation command completed successfully before attempting to accept on the destination.</p>
+</div>
 <p><strong>Verify SVM peering:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vserver<span class="w"> </span>peer<span class="w"> </span>show
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># State should show &quot;peered&quot; for both SVMs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vserver<span class="w"> </span>peer<span class="w"> </span>show
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># State should show &quot;peered&quot; for both SVMs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Vserver     Peer Vserver     Peer State    Peer Cluster
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>-----------  ---------------  -----------   ----------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>svm-prod     svm-dr           peered        cluster-dr.example.com
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>svm-prod     svm-backup       peered        cluster-backup.example.com
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>svm-test     svm-test-dr      peered        cluster-dr.example.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: vserver</code></strong> — Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a local shell.
+<strong><code>Vserver     Peer Vserver     Peer State    Peer Cluster</code> (no data rows)</strong> — Create the vserver peer relationship first using <code>vserver peer create -vserver &lt;local-svm&gt; -peer-vserver &lt;remote-svm&gt; -peer-cluster &lt;remote-cluster&gt;</code>.
+<strong><code>peered (Unreachable)</code></strong> — Verify network connectivity between clusters and check firewall rules allow port 11104 (intercluster communication) between cluster management IPs.</p>
+</div>
 <p>If replicating across multiple SVM pairs, repeat this step for each pair.</p>
 <hr />
 <h2 id="create-first-snapmirror-relationship">Create First SnapMirror Relationship<a class="headerlink" href="#create-first-snapmirror-relationship" title="Permanent link">&para;</a></h2>
 <p>SnapMirror relationships can be type <strong>DP</strong> (Data Protection — asynchronous) or <strong>XDP</strong> (Extended Data Protection — newer, with policy-based schedules). ONTAP 9.12+ defaults to XDP.</p>
 <p><strong>Create a destination volume (if not already created):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the destination cluster:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_dest_node1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-size<span class="w"> </span>1TB<span class="w"> </span>-type<span class="w"> </span>DP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># On the destination cluster:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_dest_node1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-size<span class="w"> </span>1TB<span class="w"> </span>-type<span class="w"> </span>DP
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Cannot create volume on aggregate "aggr1_dest_node1": No space available</code></strong> — Verify the destination aggregate has at least 1.2TB free space using <code>storage aggregate show -fields availablesize</code>.
+<strong><code>Error: command failed: Vserver "svm_dr" does not exist</code></strong> — Create the destination SVM first using <code>vserver create -vserver svm_dr -rootvolume root_vol_svm_dr -aggregate aggr1_dest_node1</code>.</p>
+</div>
 <p>Note: <code>-type DP</code> marks the volume as a replication destination (read-only until failover).</p>
 <p><strong>Create the SnapMirror relationship from the destination cluster:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Always create SnapMirror relationships from the DESTINATION cluster</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-source-path<span class="w"> </span>svm_prod:vol_nfs_data01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Always create SnapMirror relationships from the DESTINATION cluster</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-source-path<span class="w"> </span>svm_prod:vol_nfs_data01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>-policy<span class="w"> </span>MirrorAllSnapshots
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Operation succeeded: SnapMirror relationship created.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Source:      svm_prod:vol_nfs_data01
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Destination: svm_dr:vol_nfs_dr01
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Relationship Type: XDP
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Policy: MirrorAllSnapshots
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Status: Idle
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Last Transfer Size: -
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Last Transfer Duration: -
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Network Compression Ratio: -
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Unhealthy Reason: -
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the destination volume doesn't already have an active SnapMirror relationship using <code>snapmirror show -destination-path svm_dr:vol_nfs_dr01</code>.
+<strong><code>Error: command failed: Source volume svm_prod:vol_nfs_data01 not found.</code></strong> — Confirm the source SVM and volume names are correct and exist on the source cluster using <code>volume show -vserver svm_prod</code>.
+<strong><code>Error: command failed: Destination volume does not exist.</code></strong> — Create the destination volume first with <code>volume create -vserver svm_dr -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP</code>.</p>
+</div>
 <p>The <code>MirrorAllSnapshots</code> policy is a built-in ONTAP policy that replicates all snapshots. For a tighter RPO with fewer snapshots replicated, use <code>MirrorLatest</code>.</p>
 <p><strong>Verify the relationship was created:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Status: Idle, Health: true (before initialization)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Status: Idle, Health: true (before initialization)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Source Path: svm_prod:vol_nfs_01
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>                                           Destination Path: svm_dr:vol_nfs_dr01
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>                                                    Relationship ID: 12a3b4c5-6789-0def-1234-567890abcdef
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>                                               Relationship Type: XDP
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>                                                    SnapMirror Policy: MirrorAllSnapshots
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>                                                         Lag Time: -
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>                                             Last Transfer Type: -
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>                                               Last Transfer Size: -
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>                                            Last Transfer Duration: -
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>                                            Last Transfer From: -
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>                                                  FSxAdmin Vserver: svm_dr
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>                                                     Healthy: true
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>                                          In Sync Status: false
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>                                    Mirror State: Uninitialized
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>                                  File Restore State: None
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>                                 Relational State: Idle
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There is no SnapMirror relationship with destination path "svm_dr:vol_nfs_dr01"</code></strong> — Verify the destination SVM and volume names are correct using <code>snapmirror show</code> without filters.
+<strong><code>Error: command failed: This operation is not permitted: SnapMirror relationship is not initialized</code></strong> — Initialize the relationship first with <code>snapmirror initialize -destination-path svm_dr:vol_nfs_dr01</code> before performing transfers.</p>
+</div>
 <hr />
 <h2 id="initialize-and-verify">Initialize and Verify<a class="headerlink" href="#initialize-and-verify" title="Permanent link">&para;</a></h2>
 <p>Initialization transfers the full baseline data from source to destination. This is the longest step and time depends on source volume size and network bandwidth.</p>
 <p><strong>Initiate initialization:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run from the destination cluster:</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Run from the destination cluster:</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Operation is queued: SnapMirror initialize of destination &quot;svm_dr:vol_nfs_dr01&quot; has been queued.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm_dr:vol_nfs_dr01" does not exist.</code></strong> — Create the destination volume first using <code>volume create -vserver svm_dr -volume vol_nfs_dr01 -aggregate aggr1 -size 1TB -type DP</code>.
+<strong><code>Error: SnapMirror relationship does not exist for "svm_dr:vol_nfs_dr01".</code></strong> — Create the SnapMirror relationship first using <code>snapmirror create -source-path svm_src:vol_nfs_src01 -destination-path svm_dr:vol_nfs_dr01 -type XDP -policy MirrorAllSnapshots</code>.</p>
+</div>
 <p><strong>Monitor transfer progress:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Progress field shows bytes transferred</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Status: Transferring → Finalizing → Idle (when done)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Progress field shows bytes transferred</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Status: Transferring → Finalizing → Idle (when done)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Progress
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Source Destination Mirror State Status Healthy Updated
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>svm_prod:vol_nfs_prod01 svm_dr:vol_nfs_dr01 XDP Snapmirrored Transferring true 09/14 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (via SSH to cluster management IP) rather than a local shell.
+<strong><code>Error: Invalid destination path "svm_dr:vol_nfs_dr01"</code></strong> — Verify the SVM and volume names exist on the destination cluster using <code>volume show</code> and confirm SnapMirror relationship was initialized with <code>snapmirror initialize</code>.</p>
+</div>
 <p>For large volumes (multi-TB), the baseline transfer may take hours. Run this during a maintenance window or off-peak hours.</p>
 <p><strong>Verify initialization completed:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>mirror-state,lag-time,last-transfer-size
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># mirror-state: Snapmirrored</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># lag-time: should be minutes after initialization completes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>mirror-state,lag-time,last-transfer-size
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># mirror-state: Snapmirrored</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># lag-time: should be minutes after initialization completes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Destination Path                State    Lag Time             Last Transfer Size
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>svm_dr:vol_nfs_dr01             Snapmirrored  00:12:34             2.5GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell.
+<strong><code>Error: Invalid destination path "svm_dr:vol_nfs_dr01"</code></strong> — Verify the SVM and volume names exist on the destination cluster using <code>snapmirror show</code> without filters.</p>
+</div>
 <p>Check that the destination volume contains data:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># On destination cluster:</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>used
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># On destination cluster:</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>used
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Vserver   Volume         Used
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>--------- -------------- --------
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>svm_dr    vol_nfs_dr01   2.1GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are logged into the NetApp cluster CLI (SSH to cluster management IP) rather than a standard Linux shell.
+<strong><code>Error: Invalid vserver name "svm_dr"</code></strong> — Verify the SVM name exists on the destination cluster using <code>vserver show</code> and confirm it matches your SnapMirror destination configuration.</p>
+</div>
 <hr />
 <h2 id="configure-schedule">Configure Schedule<a class="headerlink" href="#configure-schedule" title="Permanent link">&para;</a></h2>
 <p>After initialization, SnapMirror updates run on a schedule defined by a job schedule or the policy's schedule rules.</p>
 <p><strong>Check existing schedules:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>show
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Built-in schedules: hourly, daily, weekly</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>show
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># Built-in schedules: hourly, daily, weekly</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Job Schedule Cron Show
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Name                Minute Hour   Day    Month  Day of Week Command
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>hourly              0      *      -      -      -            -
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>daily               0      0      -      -      -            -
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>weekly              0      0      -      -      1            -
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>custom-backup       30     2      -      -      *            -
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>snapmirror-sync     */15   *      -      -      -            -
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: job</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI; this command only works in ONTAP system shell, not local bash.
+<strong><code>Error: This command is not available in the current privilege level</code></strong> — Elevate to admin or diag privilege level using <code>set -privilege admin</code> before running the command.</p>
+</div>
 <p><strong>Create a custom schedule (every 15 minutes):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>every_15min<span class="w"> </span>-minute<span class="w"> </span><span class="m">0</span>,15,30,45
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>job<span class="w"> </span>schedule<span class="w"> </span>cron<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>every_15min<span class="w"> </span>-minute<span class="w"> </span><span class="m">0</span>,15,30,45
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "every_15min" already exists.</code></strong> — Choose a unique schedule name or delete the existing schedule with <code>job schedule cron delete -name every_15min</code> first.
+<strong><code>Error: Invalid minute specification "0,15,30,45". Valid range is 0-59.</code></strong> — Verify the minute values are comma-separated integers between 0 and 59 without spaces.</p>
+</div>
 <p><strong>Modify the SnapMirror relationship to use the schedule:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-schedule<span class="w"> </span>every_15min
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>-schedule<span class="w"> </span>every_15min
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm_dr:vol_nfs_dr01" is not a valid destination path</code></strong> — Verify the destination SVM and volume names exist with <code>snapmirror show</code> and use the correct format <code>svm_name:volume_name</code>.
+<strong><code>Error: "every_15min" is not a valid schedule</code></strong> — Confirm the schedule exists by running <code>job schedule cron show</code> and use an existing schedule name or create one with <code>job schedule cron create</code>.
+<strong><code>Error: SnapMirror relationship does not exist for destination "svm_dr:vol_nfs_dr01"</code></strong> — Initialize the SnapMirror relationship first with <code>snapmirror create -destination-path svm_dr:vol_nfs_dr01 -source-path svm_src:vol_nfs_src01</code> before modifying it.</p>
+</div>
 <p><strong>Trigger a manual update to confirm scheduled updates work:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Lag-time should decrease after the update completes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="c1"># Lag-time should decrease after the update completes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Operation succeeded: snapmirror update started.
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>                                                 Progress
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>Source Destination Mirror State Status Healthy Updated
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>------- ------------------- ------ --------- -------- -------
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>svm_src:vol_nfs_01 svm_dr:vol_nfs_dr01 SnapMirror Snapmirrored Idle true 09/14 14:32:18
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>Lag-time: 45 seconds
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>Last Transfer Size: 2.3GB
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>Last Transfer Duration: 00:03:22
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>Network Compression Ratio: 1.2:1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There is no SnapMirror relationship with destination svm_dr:vol_nfs_dr01</code></strong> — Verify the destination path is correct and the SnapMirror relationship exists using <code>snapmirror show</code>.
+<strong><code>Error: SnapMirror relationship is broken. Resynchronization is required</code></strong> — Run <code>snapmirror resync -destination-path svm_dr:vol_nfs_dr01</code> to restore the relationship before updating.
+<strong><code>Error: Transfer is already in progress for destination svm_dr:vol_nfs_dr01</code></strong> — Wait for the current transfer to complete or check status with <code>snapmirror show -fields transfer-progress</code>.</p>
+</div>
 <p><strong>View transfer history:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Source Destination Group Relationship ID Transfer Type Last Transfer Size Last Transfer Duration
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>-------- ----------- ----- --------------- ----------- ------------------- -------------------- ----------------------
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>svm_prod:vol_nfs_dr01 svm_dr:vol_nfs_dr01 - 12345678-abcd-ef01-2345-6789abcdef01 XDP 2.5GB 00:12:34
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>svm_prod:vol_nfs_dr01 svm_dr:vol_nfs_dr01 - 12345678-abcd-ef01-2345-6789abcdef01 XDP 2.3GB 00:11:22
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>svm_prod:vol_nfs_dr01 svm_dr:vol_nfs_dr01 - 12345678-abcd-ef01-2345-6789abcdef01 XDP 2.1GB 00:10:45
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>svm_prod:vol_nfs_dr01 svm_dr:vol_nfs_dr01 - 12345678-abcd-ef01-2345-6789abcdef01 XDP 1.9GB 00:09:33
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>svm_prod:vol_nfs_dr01 svm_dr:vol_nfs_dr01 - 12345678-abcd-ef01-2345-6789abcdef01 XDP 2.0GB 00:10:12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: no entry matched the given criteria</code></strong> — Verify the destination path syntax is correct (svm_name:volume_name) and the SnapMirror relationship exists.
+<strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a local shell.</p>
+</div>
 <hr />
 <h2 id="validate-rpo">Validate RPO<a class="headerlink" href="#validate-rpo" title="Permanent link">&para;</a></h2>
 <p><strong>Check lag time (RPO indicator):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>lag-time
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Lag time should be less than the schedule interval (e.g., &lt;15 minutes)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01<span class="w"> </span>-fields<span class="w"> </span>lag-time
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="c1"># Lag time should be less than the schedule interval (e.g., &lt;15 minutes)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Source Destination Lag Time
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>svm_prod:vol_nfs_01 svm_dr:vol_nfs_dr01 00:08:32
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a Linux host, as snapmirror is a Data ONTAP command.
+<strong><code>Error: invalid destination-path "svm_dr:vol_nfs_dr01"</code></strong> — Verify the destination SVM and volume names exist on the DR cluster using <code>snapmirror list-destinations</code> and correct any typos in the path.</p>
+</div>
 <p><strong>Verify snapshots exist on the destination:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Snapshots named &quot;sm_created&quot; with SnapMirror timestamps should be present</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_dr01
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="c1"># Snapshots named &quot;sm_created&quot; with SnapMirror timestamps should be present</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>Vserver     Volume            Snapshot                                State    Size  Total%
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>----------- ----------------- ----------------------------------- -------- ------ ------
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>svm_dr      vol_nfs_dr01      sm_created.1735689600.2024-01-01_00-00-00
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>                                                                   valid    2.1GB   15%
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>svm_dr      vol_nfs_dr01      sm_created.1735776000.2024-01-02_00-00-00
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>                                                                   valid    1.8GB   12%
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>svm_dr      vol_nfs_dr01      sm_created.1735862400.2024-01-03_00-00-00
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>                                                                   valid    2.3GB   18%
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>svm_dr      vol_nfs_dr01      sm_created.1735948800.2024-01-04_00-00-00
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>                                                                   valid    2.0GB   14%
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a>svm_dr      vol_nfs_dr01      sm_created.1736035200.2024-01-05_00-00-00
+<a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>                                                                   valid    1.9GB   13%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: no snapshots found</code></strong> — Verify the SnapMirror relationship is initialized and has completed at least one transfer with <code>snapmirror show -instance</code>.
+<strong><code>Error: Invalid vserver name "svm_dr"</code></strong> — Confirm the SVM name is correct by running <code>vserver show</code> and check for typos in the vserver parameter.</p>
+</div>
 <p><strong>Test failover (planned failover test only — interrupts production):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Quiesce the relationship (stops replication):</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Break the relationship to make the destination read-write:</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Mount and verify the destination volume data</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="c1"># Mount it on a test host and confirm data is accessible and consistent</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># After validation, resync back to normal replication (source→destination):</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Quiesce the relationship (stops replication):</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Break the relationship to make the destination read-write:</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>
+<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="c1"># Mount and verify the destination volume data</span>
+<a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="c1"># Mount it on a test host and confirm data is accessible and consistent</span>
+<a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a>
+<a id="__codelineno-42-10" name="__codelineno-42-10" href="#__codelineno-42-10"></a><span class="c1"># After validation, resync back to normal replication (source→destination):</span>
+<a id="__codelineno-42-11" name="__codelineno-42-11" href="#__codelineno-42-11"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Operation succeeded: SnapMirror relationship quiesced.
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Operation succeeded: SnapMirror relationship broken.
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>svm_dr:vol_nfs_dr01 is now read-write.
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>Destination volume mounted at /mnt/nfs_dr01
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>Data validation: 2,847 files verified, checksums match source
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>Last common snapshot: 2024-01-15_0200.0
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>Resync operation initiated for svm_dr:vol_nfs_dr01
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>Transfer type: incremental
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>Estimated completion: 12 minutes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: relationship does not exist for destination svm_dr:vol_nfs_dr01</code></strong> — Verify the destination path is correct and the SnapMirror relationship exists using <code>snapmirror show -destination-path svm_dr:vol_nfs_dr01</code>.
+<strong><code>Error: operation failed: destination volume is still in use by 1 client(s)</code></strong> — Unmount the destination volume on all test hosts before breaking the relationship with <code>umount /mnt/nfs_dr01</code>.
+<strong><code>Error: resync failed: common snapshot does not exist</code></strong> — Re-initialize the relationship using <code>snapmirror initialize -destination-path svm_dr:vol_nfs_dr01</code> instead of resync.</p>
+</div>
 <p>Confirm the relationship is back to <code>Snapmirrored</code> and lag time is under the RPO target:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>Source Destination Mirror State Relationship Status Last Transfer
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>svm_prod:vol_nfs_01 svm_dr:vol_nfs_dr01 Snapmirrored Idle Success 2024-01-15 14:32:15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (ssh to cluster IP) rather than a local shell, or load the NetApp CLI module if using an SDK.
+<strong><code>Error: Invalid destination path format</code></strong> — Use the correct SVM:volume format (e.g., <code>svm_dr:vol_nfs_dr01</code>) and verify both the SVM and volume names exist with <code>svm show</code> and <code>volume show</code>.
+<strong><code>Error: Access denied for snapmirror command</code></strong> — Confirm your cluster user role has the "snapmirror" capability; check with <code>security login show -user-or-group-name &lt;username&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8192,7 +8457,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:32:23 UTC"><span class="timeago" datetime="2026-06-29T05:32:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:32:23 UTC">2026-06-29</span>
   </span>
 
     

@@ -8287,16 +8287,43 @@ Active Directory serves as the central identity provider for the enterprise. Int
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Restrict login to a specific AD group</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;Linux_Admins@corp.example.com&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Loaded plugins: fastestmirror, security
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Loading mirror speeds from cached hostfile
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Resolving Dependencies
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>--&gt; Running transaction check
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>---&gt; Package sssd.x86_64 0:1.16.5-13.el7 will be installed
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>---&gt; Package realmd.x86_64 0:0.16.3-5.el7 will be installed
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>---&gt; Package adcli.x86_64 0:0.8.2-8.el7 will be installed
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>--&gt; Processing Dependency: oddjob for package: sssd-ad-1.16.5-13.el7.x86_64
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Complete!
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a> * Successfully enrolled machine in realm
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>realm list
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  corp.example.com
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    domain-name: corp.example.com
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    configured: kerberos-member
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    server-software: active-directory
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    client-software: sssd
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    required-package: sssd-tools
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    login-formats: %U@corp.example.com
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    login-policy: allow-realm-logins
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>realm: Couldn't authenticate with server: SASL(-1): generic failure</code></strong> — Verify the service account credentials are correct and the account has domain join permissions in Active Directory.
+<strong><code>Error: Could not resolve hostname corp.example.com</code></strong> — Ensure DNS is configured correctly on the Linux system and can resolve the AD domain name.
+<strong><code>realm: Couldn't find a suitable server to join</code></strong> — Confirm the domain name is correct, the AD domain controller is reachable on port 389/636, and firewall rules allow LDAP/Kerberos traffic.</p>
+</div>
 <p>Key <code>/etc/sssd/sssd.conf</code> settings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">[domain/corp.example.com]</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">id_provider</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">auth_provider</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">access_provider</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="na">ad_domain</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">corp.example.com</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="na">ad_server</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">dc01.corp.example.com, dc02.corp.example.com</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="na">ad_access_filter</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">memberOf=CN=Linux_Admins,OU=Groups,DC=corp,DC=example,DC=com</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="na">fallback_homedir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">/home/%u</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="na">use_fully_qualified_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">[domain/corp.example.com]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">id_provider</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="na">auth_provider</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="na">access_provider</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="na">ad_domain</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">corp.example.com</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="na">ad_server</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">dc01.corp.example.com, dc02.corp.example.com</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="na">ad_access_filter</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">memberOf=CN=Linux_Admins,OU=Groups,DC=corp,DC=example,DC=com</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="na">fallback_homedir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">/home/%u</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="na">use_fully_qualified_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 </code></pre></div>
 <hr />
 <h2 id="ldaps-certificate-requirements">LDAPS Certificate Requirements<a class="headerlink" href="#ldaps-certificate-requirements" title="Permanent link">&para;</a></h2>
@@ -8306,28 +8333,51 @@ Active Directory serves as the central identity provider for the enterprise. Int
 <li>The certificate Subject or SAN must match the DC hostname used in the LDAPS URI.</li>
 <li>Export the issuing CA certificate and import it into the trust store of each platform:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Import CA cert into system trust store (RHEL/CentOS)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>corp-issuing-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>update-ca-trust
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test LDAPS connectivity</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Import CA cert into system trust store (RHEL/CentOS)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cp<span class="w"> </span>corp-issuing-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>update-ca-trust
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test LDAPS connectivity</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Connecting to dc01.corp.example.com:636 ...
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>depth=0, CN = dc01.corp.example.com, O = CORP, C = US
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>verify return:1
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>---
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Certificate chain
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a> 0 s:/CN=dc01.corp.example.com/O=CORP/C=US
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>   i:/CN=CORP Issuing CA/O=CORP/C=US
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a> 1 s:/CN=CORP Issuing CA/O=CORP/C=US
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>   i:/CN=CORP Root CA/O=CORP/C=US
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>---
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Server certificate
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>subject=/CN=dc01.corp.example.com/O=CORP/C=US
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>issuer=/CN=CORP Issuing CA/O=CORP/C=US
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>---
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>CONNECTED(00000003)
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>read:errno=0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the CA cert file exists at <code>/etc/pki/ca-trust/source/anchors/</code> and run <code>update-ca-trust</code> before testing.
+<strong><code>connect: Connection refused</code></strong> — Confirm the Domain Controller is online, LDAPS port 636 is open, and the hostname resolves with <code>nslookup dc01.corp.example.com</code>.
+<strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Ensure the complete certificate chain (issuing CA and root CA) is imported into <code>/etc/pki/ca-trust/source/anchors/</code> and <code>update-ca-trust</code> was executed.</p>
+</div>
 <hr />
 <h2 id="splunk-universal-forwarder-on-domain-controllers">Splunk Universal Forwarder on Domain Controllers<a class="headerlink" href="#splunk-universal-forwarder-on-domain-controllers" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># inputs.conf snippet for Security event log collection</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">[WinEventLog://Security]</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wineventlog</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">renderXml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Recommended event IDs to index for AD monitoring:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 4624 - Successful logon</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 4625 - Failed logon</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4740 - Account lockout</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 4720 - User account created</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 4726 - User account deleted</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 4728/4732/4756 - Member added to security group</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># inputs.conf snippet for Security event log collection</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">[WinEventLog://Security]</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wineventlog</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="na">renderXml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Recommended event IDs to index for AD monitoring:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># 4624 - Successful logon</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 4625 - Failed logon</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4740 - Account lockout</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># 4720 - User account created</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># 4726 - User account deleted</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 4728/4732/4756 - Member added to security group</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8357,7 +8407,7 @@ Active Directory serves as the central identity provider for the enterprise. Int
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

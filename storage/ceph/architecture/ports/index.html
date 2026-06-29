@@ -8048,6 +8048,40 @@ Firewall port reference for Ceph. Covers monitor (MON) messaging, OSD data and h
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># From admin node — verify OSD port allocation for a specific OSD</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>find<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection to 10.20.30.45 3300 [tcp/*] succeeded!
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection to 10.20.30.45 6789 [tcp/*] succeeded!
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>200
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>200
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>NAME                                 HOST           ADDR           PORT        DAEMON TYPE   VERSION   STATUS   REFRESHED   AGE   MEM USE   MEM LIM   CPU USE
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>osd.0                                ceph-osd-01    10.20.31.10    6800/1234   osd           17.2.5    running   2m ago     3d    512.0M   4.0G     1.2
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>osd.1                                ceph-osd-02    10.20.31.11    6801/1235   osd           17.2.5    running   2m ago     3d    498.0M   4.0G     0.8
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mon.a                                ceph-mon-01    10.20.30.45    6789        mon           17.2.5    running   1m ago     5d    256.0M   2.0G     0.3
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>mgr.ceph-mgr-01.abcdef               ceph-mgr-01    10.20.30.46    6800        mgr           17.2.5    running   1m ago     5d    384.0M   3.0G     0.5
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>LISTEN     0      128                 10.20.31.10:6800            0.0.0.0:*        users:((&quot;ceph-osd&quot;,pid=4521,fd=45))
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>LISTEN     0      128                 10.20.31.11:6801            0.0.0.0:*        users:((&quot;ceph-osd&quot;,pid=4522,fd=46))
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>LISTEN     0      128                 10.20.30.45:6789            0.0.0.0:*        users:((&quot;ceph-mon&quot;,pid=3210,fd=32))
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>LISTEN     0      128                 10.20.30.46:6800            0.0.0.0:*        users:((&quot;ceph-mgr&quot;,pid=3890,fd=28))
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># HELP ceph_cluster_total_bytes Ceph cluster total bytes
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># TYPE ceph_cluster_total_bytes gauge
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ceph_cluster_total_bytes 1099511627776
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># HELP ceph_cluster_used_bytes Ceph cluster used bytes
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># TYPE ceph_cluster_used_bytes gauge
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ceph_cluster_used_bytes 274877906944
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># HELP ceph_osd_up OSD up status
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># TYPE ceph_osd_up gauge
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ceph_osd_up{ceph_daemon=&quot;osd.0&quot;} 1
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>{
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;osd&quot;: 0,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;ip&quot;: &quot;10.20.31.10:6800/1234&quot;,
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;host&quot;: &quot;ceph-osd-01&quot;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: connect to 10.20.30.45 port 3300 (tcp) failed: Connection refused</code></strong> — Verify the MON daemon is running with <code>ceph orch ps</code> and check firewall rules allow port 3300 inbound.
+<strong><code>curl: (7) Failed to connect to 10.20.30.46 port 8443: Connection refused</code></strong></p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8078,7 +8112,7 @@ Firewall port reference for Ceph. Covers monitor (MON) messaging, OSD data and h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

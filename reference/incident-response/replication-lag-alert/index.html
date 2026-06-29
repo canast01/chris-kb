@@ -7153,6 +7153,24 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-fields<span class="w"> </span>lag-time,last-transfer-size,last-transfer-end-timestamp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source Path                Destination Path           Lag Time  Health    State
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>========================== ========================== ========= ========= ==========
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svm1:vol_prod_data         svm2:vol_prod_data_dr      00:15:32  Healthy   SnapMirrored
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svm1:vol_logs              svm2:vol_logs_dr           00:02:18  Healthy   SnapMirrored
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>svm1:vol_archive           svm3:vol_archive_dr        12:45:00  Unhealthy Broken-off
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>svm1:vol_temp              svm2:vol_temp_dr           00:00:45  Healthy   Transferring
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>svm1:vol_config            svm2:vol_config_dr         00:08:12  Healthy   SnapMirrored
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Source Path                Lag Time  Last Transfer Size  Last Transfer End Timestamp
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>========================== ========= =================== ============================
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>svm1:vol_prod_data         00:15:32  2.4GB               2024-01-15 14:32:18 +00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Verify you are connected to an ONTAP cluster with <code>cluster show</code> and have appropriate admin credentials.
+<strong><code>Error: invalid field name "lag-time"</code></strong> — Use <code>snapmirror show -fields ?</code> to list valid field names for your ONTAP version, as field names vary between releases.
+<strong><code>Error: no records found</code></strong> — Confirm the source path format is correct (use <code>svm:volume</code> syntax) and the relationship exists with <code>snapmirror list-destinations</code>.</p>
+</div>
 <p>Compare current lag to your RPO target:</p>
 <table>
 <thead>
@@ -7187,42 +7205,108 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 </table>
 <h2 id="diagnose-root-cause">Diagnose Root Cause<a class="headerlink" href="#diagnose-root-cause" title="Permanent link">&para;</a></h2>
 <p>Common causes: WAN bandwidth saturation, high source change rate, destination full, missed schedule window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check intercluster LIF speed and utilisation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-fields<span class="w"> </span>curr-speed,status-oper
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check source volume change rate (delta between recent snapshots)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>cumulative-total,name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check destination aggregate space</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available,percent-used
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check if a transfer is currently in progress</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check intercluster LIF speed and utilisation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-fields<span class="w"> </span>curr-speed,status-oper
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check source volume change rate (delta between recent snapshots)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>cumulative-total,name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check destination aggregate space</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available,percent-used
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check if a transfer is currently in progress</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster1::&gt; network interface show -role intercluster -fields curr-speed,status-oper
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Vserver     Interface       curr-speed  status-oper
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>----------- --------------- ----------- -----------
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cluster1    ic_lif_01       10Gb        up
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cluster1    ic_lif_02       10Gb        up
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cluster2    ic_lif_03       1Gb         up
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2 entries were displayed.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>cluster1::&gt; snapshot show -volume vol_prod_01 -fields cumulative-total,name | head -5
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Vserver  Volume       Snapshot                 cumulative-total
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>-------- ------------ ------------------------ ----------------
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>svm_prod vol_prod_01  hourly.2024-01-15_0900  847.2GB
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>svm_prod vol_prod_01  hourly.2024-01-15_0800  823.1GB
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>svm_prod vol_prod_01  hourly.2024-01-15_0700  798.5GB
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>svm_prod vol_prod_01  daily.2024-01-14_0000   756.3GB
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>cluster1::&gt; volume show -vserver svm_dr -fields available,percent-used
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Vserver Name            Available Percent-Used
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>------- --------------- --------- ------------
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>svm_dr  vol_dr_mirror   2.1TB     78%
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>svm_dr  vol_dr_backup   4.8TB     45%
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>2 entries were displayed.
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>cluster1::&gt; snapmirror show -fields transfer-progress,bytes-transferred
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Source Destination Mirror State Lag Time Transfer Progress Bytes Transferred
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>------ ----------- ------------ -------- --------- ----------------------
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>svm_src:vol_prod_01 svm_dr:vol_dr_mirror SnapMirrored In-Sync 0s 100% 847.2GB
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>1 entry was displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Verify you are connected to the correct cluster with <code>cluster show</code> and that SnapMirror is licensed with <code>system license show</code>.
+<strong><code>Error: There is no data to display</code></strong> — Confirm the volume name is correct and exists in the specified SVM using <code>volume show -vserver &lt;dstsvm&gt;</code>.</p>
+</div>
 <h2 id="fix-option-a-force-immediate-update">Fix — Option A: Force Immediate Update<a class="headerlink" href="#fix-option-a-force-immediate-update" title="Permanent link">&para;</a></h2>
 <p>Use when lag is recoverable and bandwidth is available:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger immediate update</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Trigger immediate update</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Operation is queued: snapmirror transfer with id &quot;4f3c8b92-1a2e-11ee-9c4a-005056b3d3f1&quot; for pair &quot;cluster1:svm_prod:vol_data&quot; -&gt; &quot;cluster2:svm_dr:vol_data_mirror&quot;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Source Destination Status Progress
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cluster1:svm_prod:vol_data cluster2:svm_dr:vol_data_mirror transferring 45% 2.3GB/5.1GB
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cluster1:svm_prod:vol_logs cluster2:svm_dr:vol_logs_mirror idle - -
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cluster1:svm_prod:vol_config cluster2:svm_dr:vol_config_mirror idle - -
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "snapmirror update" command requires source and destination paths in the format svm:volume</code></strong> — Verify both source and destination paths follow the exact format <code>&lt;svm_name&gt;:&lt;volume_name&gt;</code> with no extra spaces or special characters.
+<strong><code>Error: SnapMirror relationship does not exist for source-path &lt;svm:vol&gt;</code></strong> — Initialize the SnapMirror relationship first using <code>snapmirror create -source-path &lt;svm:vol&gt; -destination-path &lt;dstsvm:dstvol&gt; -type XDP</code> before attempting an update.
+<strong><code>Error: Transfer already in progress for this relationship</code></strong> — Wait for the current transfer to complete or abort it with <code>snapmirror abort -source-path &lt;svm:vol&gt; -destination-path &lt;dstsvm:dstvol&gt;</code> before issuing a new update command.</p>
+</div>
 <h2 id="fix-option-b-remove-throttle-for-catch-up">Fix — Option B: Remove Throttle for Catch-Up<a class="headerlink" href="#fix-option-b-remove-throttle-for-catch-up" title="Permanent link">&para;</a></h2>
 <p>Use when throttle is limiting catch-up speed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove bandwidth throttle temporarily</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After catching up, restore throttle</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">100000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Remove bandwidth throttle temporarily</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># After catching up, restore throttle</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">100000</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Operation succeeded: SnapMirror of &quot;cluster2://svm_dr:vol_backup&quot; is now unthrottled.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid destination path format</code></strong> — Ensure the destination path follows the format <code>cluster-name://svm-name:volume-name</code> with proper colons and slashes.
+<strong><code>Error: This operation is not permitted on the source of an active SnapMirror relationship</code></strong> — Run the command on the destination cluster/SVM, not the source.</p>
+</div>
 <h2 id="fix-option-c-expand-destination-volume">Fix — Option C: Expand Destination Volume<a class="headerlink" href="#fix-option-c-expand-destination-volume" title="Permanent link">&para;</a></h2>
 <p>Use when destination is full and blocking replication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Grow destination volume</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;<span class="w"> </span>-size<span class="w"> </span>+200g
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm new space</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Grow destination volume</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;<span class="w"> </span>-size<span class="w"> </span>+200g
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Confirm new space</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Volume modify successful: Volume &quot;data_vol&quot; size set to 1.2TB.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Vserver     Volume      Available
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>----------- ----------- ----------
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>prod-svm    data_vol    487.6GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: no such volume &lt;dstvol&gt;</code></strong> — Verify the destination volume name matches exactly and the vserver is online with <code>vserver show</code>.
+<strong><code>Error: Insufficient space in aggregate to grow volume by 200GB</code></strong> — Check aggregate free space with <code>storage aggregate show -fields available</code> and reduce the growth size or add disks to the aggregate.</p>
+</div>
 <h2 id="if-rpo-is-breached">If RPO Is Breached<a class="headerlink" href="#if-rpo-is-breached" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Notify DR owner and IT management</strong> — document breach start time and cause</li>
@@ -7232,12 +7316,31 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 <li><strong>Document</strong> breach in incident log: start time, end time, lag peak, cause, resolution</li>
 </ol>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm lag returned within RPO</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm last successful transfer</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-end-timestamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm lag returned within RPO</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirm last successful transfer</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-end-timestamp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Cluster::&gt; snapmirror show -fields lag-time,health
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Source Destination Mirror State Lag Time Health
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>------- ----------- ------ ----- -------- ------
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>svm1:vol_prod svm2:vol_prod_mirror SnapMirror Snapmirrored 00:15:32 Healthy
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>svm1:vol_data svm2:vol_data_mirror SnapMirror Snapmirrored 00:08:17 Healthy
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>svm3:vol_logs svm4:vol_logs_mirror SnapMirror Snapmirrored 00:22:45 Healthy
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Cluster::&gt; snapmirror show -fields last-transfer-end-timestamp
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Source Destination Mirror State Last Transfer End Timestamp
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>------- ----------- ------ ----- ---------------------------
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>svm1:vol_prod svm2:vol_prod_mirror SnapMirror Snapmirrored 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>svm1:vol_data svm2:vol_data_mirror SnapMirror Snapmirrored 2024-01-15 14:28:45 +00:00
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>svm3:vol_logs svm4:vol_logs_mirror SnapMirror Snapmirrored 2024-01-15 14:15:22 +00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the ONTAP cluster CLI (not the local shell) and have SnapMirror licensed.
+<strong><code>Error: No SnapMirror relationships found</code></strong> — Verify SnapMirror relationships exist with <code>snapmirror list-destinations</code> and confirm source and destination SVMs are peered.</p>
+</div>
 <p>Also confirm:
 - SRM alarm cleared in vCenter
 - RecoverPoint shows RPO met
@@ -7278,7 +7381,7 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

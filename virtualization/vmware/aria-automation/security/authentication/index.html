@@ -1434,17 +1434,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        # Add Aria Automation CA to the OS trust store on a Linux client cp internal-ca.pem /usr/local/share/ca-certificates/internal-ca.crt update-ca-certificates # Debian/Ubuntu # Python clients import requests requests.get(&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;, headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}, verify=&quot;/etc/ssl/certs/ca-certificates.crt&quot;)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#related-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9238,14 +9227,30 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vra@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
-<p><strong>Token validity:</strong> 8 hours by default. For long-running scripts, implement token refresh logic:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMudnJhQGNvcnAubG9jYWwiLCJpc3MiOiJjc3AtZ2F0ZXdheSIsImV4cCI6MTcwOTMxNjgwMCwiaWF0IjoxNzA5MzAwNDAwLCJqdGkiOiI0ZjU2YTdjMi1lZTM5LTQyYzAtOWY3ZC1hYzU4ZjM5ZDJlNDMifQ.kX9mZ2pL5qR8vN3wY7jK4hB6cD9eF2gT1sU5xW8yZ0a
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the CA certificate into your system trust store with <code>update-ca-certificates</code>.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "token"</code></strong> — Verify credentials are correct and the CSP gateway is responding; check the actual response with <code>curl -sk ... | jq '.'</code> to see the error message.
+<strong><code>command not found: jq</code></strong> — Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS).</p>
+</div>
+<p><strong>Token validity:</strong> 8 hours by default. For long-running scripts, implement token refresh logic:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMtdnJhLWFwaSIsImlhdCI6MTcwOTMxMjAwMCwiZXhwIjoxNzA5MzMzNjAwLCJpc3MiOiJodHRwczovL3ZyYS1wcm9kLTAxLmV4YW1wbGUubG9jYWwifQ.kR9mN2pQxL8vZ5jW3tY6aB4cD7eF9gH0iJ1kL2mN3oP
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the vRA certificate into your system CA bundle with <code>curl-config --ca-bundle</code>.
+<strong><code>jq: parse error: Cannot index string with string "token"</code></strong> — Verify the API response is valid JSON and the login credentials are correct; check vRA gateway logs with <code>tail -f /var/log/vra/gateway.log</code>.
+<strong><code>command not found: jq</code></strong> — Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS).</p>
+</div>
 <hr />
 <h2 id="api-service-account">API Service Account<a class="headerlink" href="#api-service-account" title="Permanent link">&para;</a></h2>
 <p>Create a dedicated local account for API access rather than using the platform <code>admin</code> account:</p>
@@ -9297,16 +9302,31 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <hr />
 <h2 id="certificate-trust-for-api-clients">Certificate Trust for API Clients<a class="headerlink" href="#certificate-trust-for-api-clients" title="Permanent link">&para;</a></h2>
 <p>Aria Automation uses TLS for all API endpoints. Clients must trust the CA that signed the Aria Automation certificate:</p>
-<h2 id="add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt"><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Python clients</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>import<span class="w"> </span>requests
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
-</code></pre></div><a class="headerlink" href="#add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Python clients</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>import<span class="w"> </span>requests
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp: cannot stat &#39;internal-ca.pem&#39;: No such file or directory
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(Assuming file exists, cp completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Updating certificates in /etc/ssl/certs...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>rehash: warning: skipping ca-certificates.crt, it is not a certificate or crl
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Processing triggers for ca-certificates (20230311) ...
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>update-ca-certificates: 1 added, 0 removed; 0 removed unlisted.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(Python script runs silently if successful; returns HTTP 200 response with zone data)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot stat 'internal-ca.pem': No such file or directory</code></strong> — Verify the CA certificate file path is correct and exists in the current working directory, or provide the full absolute path.
+<strong><code>requests.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED]</code></strong> — Run <code>update-ca-certificates</code> with sudo and ensure the certificate was copied to <code>/usr/local/share/ca-certificates/</code> with a <code>.crt</code> extension before updating.
+<strong><code>requests.exceptions.ConnectionError: HTTPSConnectionPool(host='vra-prod-01.example.local')</code></strong> — Verify the Aria Automation hostname resolves correctly and is reachable from the client, and confirm the token has not expired.</p>
+</div>
+<hr />
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../../../security/ldap-integration/">Standard LDAP Integration</a> — field reference, service account standards, TLS requirements, and connectivity testing</li>
@@ -9339,7 +9359,7 @@ Authentication reference covering Authentication Architecture, Active Directory 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

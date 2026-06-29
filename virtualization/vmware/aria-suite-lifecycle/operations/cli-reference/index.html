@@ -9321,51 +9321,168 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check certificate expiry</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;alias|expiry&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vracli certificate list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Alias                          Issuer                    Expiry Date            Status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>aria-default-cert             CN=VMware,O=VMware        2025-06-15 10:30:00    Valid
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>custom-api-cert               CN=Custom CA,O=Internal   2024-11-22 14:45:30    Expired
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>lb-wildcard-cert              CN=*.corp.local           2026-03-10 08:15:00    Valid
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>tenant-isolation-cert         CN=Tenant-CA              2025-01-08 16:20:00    Valid
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vracli certificate show --alias aria-default-cert
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Certificate Details for: aria-default-cert
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Subject: CN=aria.corp.local,O=VMware,C=US
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Issuer: CN=VMware,O=VMware,C=US
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Serial Number: 4A:2B:C1:D9:E8:F5:6A:7B
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Valid From: 2023-06-15 10:30:00 UTC
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Valid Until: 2025-06-15 10:30:00 UTC
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Fingerprint (SHA256): a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Status: Valid
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vracli certificate import --cert /etc/ssl/certs/new-cert.pem --key /etc/ssl/private/new-key.pem --alias production-cert
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>(no output — command completes silently)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>vracli certificate delete --alias custom-api-cert
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Certificate &#39;custom-api-cert&#39; deleted successfully.
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>vracli certificate list | grep -E &quot;alias|expiry&quot;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Alias                          Issuer                    Expiry Date            Status
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>aria-default-cert             CN=VMware,O=VMware        2025-06-15 10:30:00    Valid
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>lb-wildcard-cert              CN=*.corp.local           2026-03-10 08:15:00    Valid
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>tenant-isolation-cert         CN=Tenant-CA              2025-01-08 16:20:00    Valid
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>production-cert               CN=production.local       2027-09-20 12:00:00    Valid
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found: /etc/ssl/certs/new-cert.pem</code></strong> — Verify the certificate file path exists and is readable by the vracli user.
+<strong><code>Error: Alias 'aria-default-cert' is in use and cannot be deleted</code></strong> — Use a different alias or ensure the certificate is not actively bound to any service before deletion.
+<strong><code>Error: Private key does not match certificate</code></strong> — Ensure the certificate and private key pair are from the same CSR and re-run the import command with the correct files.</p>
+</div>
 <hr />
 <h2 id="proxy-network">Proxy &amp; Network<a class="headerlink" href="#proxy-network" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show current proxy configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set outbound proxy for bundle downloads</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy_host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;proxy_port&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Clear proxy</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show network configuration</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vracli<span class="w"> </span>network<span class="w"> </span>show
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Update DNS servers</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vracli<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span>&lt;dns1&gt;,&lt;dns2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current proxy configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set outbound proxy for bundle downloads</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy_host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;proxy_port&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Clear proxy</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show network configuration</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vracli<span class="w"> </span>network<span class="w"> </span>show
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Update DNS servers</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vracli<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span>&lt;dns1&gt;,&lt;dns2&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Proxy Configuration:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Host: proxy.corp.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Port: 8080
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Username: (not configured)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Status: Active
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Network Configuration:
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Hostname: aria-lifecycle-01.corp.local
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  IPv4 Address: 192.168.1.45
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Subnet Mask: 255.255.255.0
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Gateway: 192.168.1.1
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  DNS Servers: 8.8.8.8, 8.8.4.4
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  MTU: 1500
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Proxy cleared successfully.
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>DNS servers updated:
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Primary: 10.0.0.10
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Secondary: 10.0.0.11
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  Status: Applied
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to proxy host proxy.corp.local:8080</code></strong> — Verify the proxy hostname/IP and port are correct, and that the appliance has network connectivity to the proxy server.
+<strong><code>Error: vracli command not found</code></strong> — Ensure you are logged into the Aria Suite Lifecycle appliance via SSH and have appropriate permissions; vracli is only available on the appliance itself.
+<strong><code>Error: DNS update failed - invalid server format</code></strong> — Use comma-separated IP addresses without spaces (e.g., <code>10.0.0.10,10.0.0.11</code>) for the <code>--servers</code> parameter.</p>
+</div>
 <hr />
 <h2 id="ntp-time">NTP &amp; Time<a class="headerlink" href="#ntp-time" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current NTP configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set NTP servers</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;ntp_server1&gt;<span class="w"> </span>&lt;ntp_server2&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify time sync</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Force NTP sync</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>chronyc<span class="w"> </span>makestep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current NTP configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;ntp_server1&gt;<span class="w"> </span>&lt;ntp_server2&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify time sync</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Force NTP sync</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>chronyc<span class="w"> </span>makestep
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NTP Configuration:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Server 1: 10.20.30.40
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Server 2: 10.20.30.41
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Status: synchronized
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Last update: 2.5s ago
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>               Local time: Wed 2024-01-17 14:32:18 UTC
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>           Universal time: Wed 2024-01-17 14:32:18 UTC
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                 RTC time: Wed 2024-01-17 14:32:18
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>System clock synchronized: yes
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>              NTP service: active
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>       RTC in local TZ: no
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>200 OK
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Making a step adjustment of 125.432 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged into the vRealize Automation appliance via SSH and that vracli is in your PATH, or use the full path <code>/opt/vmware/vrealize/bin/vracli</code>.
+<strong><code>Failed to set NTP servers: Permission denied</code></strong> — Run the vracli commands with appropriate privileges (use <code>sudo</code> or ensure your user has NTP configuration permissions in vRA).
+<strong><code>Timed out waiting for NTP synchronization</code></strong> — Check network connectivity to the NTP servers with <code>ping 10.20.30.40</code> and verify firewall rules allow UDP port 123 outbound.</p>
+</div>
 <hr />
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Follow the main LCM application log</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Follow the LCM debug log</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-debug.log
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Collect a support bundle</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vracli<span class="w"> </span>support-bundle
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># View recent system journal</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>journalctl<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>-u<span class="w"> </span>lcm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Follow the main LCM application log</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Follow the LCM debug log</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-debug.log
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Collect a support bundle</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vracli<span class="w"> </span>support-bundle
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># View recent system journal</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>journalctl<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>-u<span class="w"> </span>lcm
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>==&gt; /var/log/lcm/lcm-app.log &lt;==
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2024-01-15 14:32:18.456 [main] INFO  com.vmware.lcm.core.LifecycleManager - Initializing LCM application v8.12.1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15 14:32:19.123 [pool-2-thread-3] DEBUG com.vmware.lcm.inventory.InventoryService - Loading vCenter inventory from 192.168.1.42
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15 14:32:21.789 [pool-2-thread-5] INFO  com.vmware.lcm.deployment.DeploymentEngine - Deployment task &#39;d4c8e2f1-9a3b-4c2e-b1d7-8f3a2c5e9b1a&#39; started
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15 14:32:45.234 [pool-2-thread-5] INFO  com.vmware.lcm.deployment.DeploymentEngine - Component &#39;aria-automation-8.12.0&#39; deployment completed successfully
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-01-15 14:33:02.567 [main] INFO  com.vmware.lcm.core.HealthCheck - System health status: HEALTHY
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>==&gt; /var/log/lcm/lcm-debug.log &lt;==
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-01-15 14:32:18.101 [DEBUG] Heap memory: 2048MB, Used: 1456MB, Free: 592MB
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-01-15 14:32:19.445 [DEBUG] Database connection pool initialized: 20 connections
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15 14:32:21.678 [DEBUG] vCenter API call: GET /rest/vcenter/vm?filter.names={&#39;aria-automation-node-01&#39;}
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15 14:32:22.901 [DEBUG] Response received: 200 OK, 1 VM found
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>2024-01-15 14:33:15.234 [DEBUG] Deployment state persisted to database: COMPLETED
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Support bundle collection started...
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Collecting system logs...
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Collecting configuration files...
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Collecting diagnostic data...
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Support bundle created: /tmp/lcm-support-bundle-20240115-143325.tar.gz (487MB)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Jan 15 14:31:42 aria-lcm-01 systemd[1]: Started Lifecycle Manager Application.
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Jan 15 14:32:18 aria-lcm-01 lcm[2847]: Application startup sequence initiated
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Jan 15 14:32:45 aria-lcm-01 lcm[2847]: Deployment task completed with status: SUCCESS
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Jan 15 14:33:02 aria-lcm-01 lcm[2847]: Health check passed: all services operational
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/lcm/lcm-app.log' for reading: No such file or directory</code></strong> — Verify the LCM application is installed and running with <code>systemctl status lcm</code>, or check the correct log path in <code>/var/log/lcm/</code>.
+<strong><code>vracli: command not found</code></strong> — Ensure the vRealize Automation CLI is installed and in your PATH by running <code>which vracli</code> or sourcing the vRA environment setup script.
+**`journal</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9401,7 +9518,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

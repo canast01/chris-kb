@@ -9173,6 +9173,21 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected output shows VPLEX splitter entries with status &quot;Connected&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Splitter ID                          Status      Version      Last Heartbeat
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>================================================================================
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>splitter-vplex-01.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:18
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>splitter-vplex-02.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:15
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>splitter-vplex-03.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:19
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>splitter-vplex-04.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:17
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Total Splitters: 4 | Connected: 4 | Disconnected: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>boxmgmt: command not found</code></strong> — Ensure you are running this command on a RecoverPoint appliance with boxmgmt CLI installed, or source the appropriate environment setup script.
+<strong><code>Error: Unable to connect to splitter splitter-vplex-01.prod.local - Connection timeout</code></strong> — Verify network connectivity and that the VPLEX splitter is powered on and reachable from the RecoverPoint appliance.
+<strong><code>Error: Authentication failed - Invalid credentials</code></strong> — Confirm your boxmgmt user account has sufficient privileges; re-authenticate or check the RecoverPoint user role permissions.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">VPLEX Splitter Auto-Attach</p>
 <p>VPLEX splitters attach to all eligible RPA clusters automatically when zoning and masking are configured. Verify that only the intended RPA clusters are attached to avoid unexpected replication paths.</p>
@@ -9206,34 +9221,68 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 </tbody>
 </table>
 <p>Installing the ESXi splitter VIB:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Method 1 — via ESXCLI on the ESXi host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-*.vib<span class="w"> </span>--no-sig-check
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Method 2 — via vCenter (preferred for scale)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Use vSphere Lifecycle Manager baseline with the RP VIB URL</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># URL format: https://&lt;vRPA-cluster-IP&gt;/splitter_vib/vmware/RecoverPoint-*.vib</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify VIB installation</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Method 1 — via ESXCLI on the ESXi host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-*.vib<span class="w"> </span>--no-sig-check
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Method 2 — via vCenter (preferred for scale)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Use vSphere Lifecycle Manager baseline with the RP VIB URL</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># URL format: https://&lt;vRPA-cluster-IP&gt;/splitter_vib/vmware/RecoverPoint-*.vib</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Verify VIB installation</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Installation Result
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>   Message: The update completed successfully, but the system needs to be rebooted for the changes to take effect.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   Reboot Required: true
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>VIB Installation Status:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>   Vendor: Dell
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>   Name: RecoverPoint
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>   Version: 5.4.2.1
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>   Acceptance Level: PartnerSupported
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>RecoverPoint                                    5.4.2.1                PartnerSupported   2024-01-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VIB signature verification failed. Use --no-sig-check to override.</code></strong> — Add the <code>--no-sig-check</code> flag to the esxcli command as shown in the documentation.
+<strong><code>Error: Could not find a matching VIB package at /tmp/RecoverPoint-*.vib</code></strong> — Verify the VIB file exists in /tmp/ by running <code>ls -la /tmp/RecoverPoint*.vib</code> and confirm the filename matches the glob pattern.
+**<code>HTTP 403 Forbidden</code> when accessing the vRPA cluster VIB URL<code>** — Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with</code>ping <vRPA-cluster-IP>`.</p>
+</div>
 <p>After VIB installation, trust the splitter from the vRPA cluster UI or via REST API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From vRPA management (REST API example)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vRPA-IP&gt;/api/splitters/trust&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;esxiHost&quot;: &quot;&lt;ESXi-FQDN&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From vRPA management (REST API example)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vRPA-IP&gt;/api/splitters/trust&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;esxiHost&quot;: &quot;&lt;ESXi-FQDN&gt;&quot;}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;id&quot;: &quot;splitter-7f4a2c91&quot;,
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;status&quot;: &quot;success&quot;,
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &quot;message&quot;: &quot;Trust relationship established&quot;,
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &quot;esxiHost&quot;: &quot;esx-prod-04.datacenter.local&quot;,
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;,
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  &quot;certificateThumbprint&quot;: &quot;A1:B2:C3:D4:E5:F6:7G:8H:9I:0J:1K:2L:3M:4N:5O:6P&quot;,
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  &quot;trustedAt&quot;: &quot;2024-01-15T14:32:18.451Z&quot;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify vRPA IP is correct and accessible).
+<strong><code>curl: (7) Failed to connect to &lt;vRPA-IP&gt; port 443: Connection refused</code></strong> — Confirm vRPA management interface is running and listening on port 443 with <code>netstat -tlnp | grep 443</code> on the vRPA appliance.
+<strong><code>{"status":"error","message":"Invalid credentials"}</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; test with <code>curl -sk -u admin:password https://&lt;vRPA-IP&gt;/api/health</code> first.</p>
+</div>
 <hr />
 <h2 id="consistency-group-configuration">Consistency Group Configuration<a class="headerlink" href="#consistency-group-configuration" title="Permanent link">&para;</a></h2>
 <p>After splitters are configured, create Consistency Groups (CGs) to define what is replicated and how:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Unisphere for RecoverPoint → Add Consistency Group
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Name: CG-&lt;app&gt;-&lt;source-site&gt;-&lt;target-site&gt; (e.g., CG-ORACLE-DC1-DC2)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Replication set: select source volumes (PowerMax LUNs or vRPA VMDKs)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Add target copy: select target site cluster and target volumes
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. Journal: assign pre-created journal volume(s) at both source and target
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>6. Replication mode: CDP (synchronous) or CRR/CLR (asynchronous)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>7. RPO target: set in seconds (0 for CDP; 30–900 seconds for async)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>8. Enable CG — verify state transitions to &quot;Enabled / Replicating&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>1. Unisphere for RecoverPoint → Add Consistency Group
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2. Name: CG-&lt;app&gt;-&lt;source-site&gt;-&lt;target-site&gt; (e.g., CG-ORACLE-DC1-DC2)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>3. Replication set: select source volumes (PowerMax LUNs or vRPA VMDKs)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>4. Add target copy: select target site cluster and target volumes
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>5. Journal: assign pre-created journal volume(s) at both source and target
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>6. Replication mode: CDP (synchronous) or CRR/CLR (asynchronous)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>7. RPO target: set in seconds (0 for CDP; 30–900 seconds for async)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>8. Enable CG — verify state transitions to &quot;Enabled / Replicating&quot;
 </code></pre></div>
 <hr />
 <h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
@@ -9249,12 +9298,53 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 <li>[ ] Notify application owners of the maintenance window</li>
 <li>[ ] Confirm WAN bandwidth is not saturated (replicated backlog = 0)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pre-upgrade health checks from boxmgmt</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pre-upgrade health checks from boxmgmt</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>System Status Report
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>====================
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>System Name: RecoverPoint-RPA-01
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>System ID: 5a3c8b2f-9e1d-47c2-b4a9-2c7d1e5f8a3b
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Software Version: 5.4.2.1
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Build: 20231015-001
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Uptime: 45 days 12 hours 23 minutes
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Cluster Status: HEALTHY
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Replication Status: ACTIVE
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Journal Usage: 62%
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Cache Usage: 48%
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Consistency Groups
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>==================
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>CG-PROD-DB-01 (ID: cg-001) — Status: PROTECTED — RPO: 5m
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>CG-PROD-APP-02 (ID: cg-002) — Status: PROTECTED — RPO: 15m
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>CG-DEV-TEST-03 (ID: cg-003) — Status: PROTECTED — RPO: 30m
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>CG-ARCHIVE-04 (ID: cg-004) — Status: PROTECTED — RPO: 1h
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>...
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Consistency Group Health Check
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>===============================
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>CG-PROD-DB-01: PASS (last check: 2024-01-15 14:32:15 UTC)
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>CG-PROD-APP-02: PASS (last check: 2024-01-15 14:32:18 UTC)
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>CG-DEV-TEST-03: PASS (last check: 2024-01-15 14:32:21 UTC)
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>CG-ARCHIVE-04: PASS (last check: 2024-01-15 14:32:24 UTC)
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>All consistency groups: HEALTHY
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Journal Health Check
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>====================
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>Journal Volume 1: HEALTHY (Used: 58%, Errors: 0)
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>Journal Volume 2: HEALTHY (Used: 65%, Errors: 0)
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>Journal Volume 3: HEALTHY (Used: 61%, Errors: 0)
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>All journals: OPERATIONAL
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>boxmgmt: command not found</code></strong> — Ensure the RecoverPoint management CLI is installed and the PATH includes the boxmgmt binary directory (typically <code>/opt/RecoverPoint/bin</code>).
+<strong><code>Error: Unable to connect to cluster — Connection refused on port 7225</code></strong> — Verify the RecoverPoint cluster is running and accessible; check network connectivity and firewall rules for the management port.
+<strong><code>CG-PROD-DB-01: FAIL — Journal write error detected</code></strong> — Run <code>boxmgmt journal repair</code> on the affected journal volume and verify storage array connectivity before proceeding with upgrade.</p>
+</div>
 <h3 id="rolling-upgrade-sequence">Rolling Upgrade Sequence<a class="headerlink" href="#rolling-upgrade-sequence" title="Permanent link">&para;</a></h3>
 <p>RecoverPoint upgrades use EasyInstaller and are performed in a rolling fashion — one RPA node at a time within each cluster, maintaining replication continuity throughout.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -9294,46 +9384,113 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 <p><strong>Array-based (PowerMax):</strong> The splitter is embedded in the array microcode. It updates automatically when the PowerMaxOS is upgraded. No manual step is required, but verify RPA-to-array connectivity after the array upgrade.</p>
 <p><strong>VPLEX-based:</strong> Upgrade the GeoSynchrony code as a separate VPLEX upgrade. Coordinate with the VPLEX upgrade window.</p>
 <p><strong>Host-based (RP4VM VIB):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Upgrade VIB on a single ESXi host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 1 — vMotion all VMs off the host</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Step 2 — Put host in maintenance mode</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Step 3 — Remove old VIB</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>RecoverPoint-splitter
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Step 4 — Install new VIB</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-&lt;new-version&gt;.vib<span class="w"> </span>--no-sig-check
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Step 5 — Exit maintenance mode</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Step 6 — Re-trust the splitter from vRPA UI</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Upgrade VIB on a single ESXi host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Step 1 — vMotion all VMs off the host</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Step 2 — Put host in maintenance mode</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Step 3 — Remove old VIB</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>RecoverPoint-splitter
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Step 4 — Install new VIB</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-&lt;new-version&gt;.vib<span class="w"> </span>--no-sig-check
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Step 5 — Exit maintenance mode</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Step 6 — Re-trust the splitter from vRPA UI</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Entering maintenance mode...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Removal Result
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>   Message: The update completed successfully, but the system needs to be rebooted.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>   Reboot Required: true
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>   VIBs Installed: RecoverPoint-splitter-8.2.1.0-12345678
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>   VIBs Removed: RecoverPoint-splitter-8.2.0.5-87654321
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>   VIBs Skipped: 
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>   VIBs Obsoleted: 
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>   VIBs Rolled Back: 
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>   Reboot Required: true
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Installation Result
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>   Message: The update completed successfully, but the system needs to be rebooted.
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>   Reboot Required: true
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>   VIBs Installed: RecoverPoint-splitter-8.2.1.0-12345678
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>   VIBs Removed: 
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>   VIBs Skipped: 
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>   VIBs Obsoleted: 
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>   VIBs Rolled Back: 
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Exiting maintenance mode...
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VIB RecoverPoint-splitter not installed</code></strong> — Verify the VIB name matches the installed package using <code>esxcli software vib list | grep -i recoverpoint</code> before removal.
+<strong><code>[Errno 2] No such file or directory: /tmp/RecoverPoint-&lt;new-version&gt;.vib</code></strong> — Confirm the VIB file exists and the version placeholder is replaced with the actual version number (e.g., <code>RecoverPoint-8.2.1.0.vib</code>).
+<strong><code>Host has running virtual machines</code></strong> — Complete vMotion of all VMs to other hosts before entering maintenance mode, or use <code>esxcli vm process list</code> to verify the host is empty.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Minimum Splitter Redundancy</p>
 <p>Keep at least 2 ESXi hosts per cluster with a working splitter active at all times. Single-host splitter maintenance is safe only if at least one other host in the cluster still has an active splitter.</p>
 </div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Verify RPA software versions</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Check cluster health</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. List all CGs and confirm state</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Verify each CG is replicating with healthy RPO</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 5. Check journal utilisation</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># 6. Confirm splitter connectivity</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Verify RPA software versions</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>version
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Check cluster health</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. List all CGs and confirm state</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 4. Verify each CG is replicating with healthy RPO</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># 5. Check journal utilisation</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># 6. Confirm splitter connectivity</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>RPA Software Version: 5.4.2.1 (Build 12847)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Firmware Version: 8.1.5
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>System Status: HEALTHY
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Cluster Mode: Active-Active
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Node 1 (rpa-prod-01.dc1): ONLINE
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Node 2 (rpa-prod-02.dc1): ONLINE
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Replication Link Status: ACTIVE
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>CG Name                    State         Type        RTO(min)  RPO(sec)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>cg-db-prod-01              REPLICATING   Synchronous 5         0
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>cg-app-tier-02             REPLICATING   Asynchronous 60        30
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>cg-fileserver-backup       REPLICATING   Synchronous 5         0
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>cg-vm-cluster-03           REPLICATING   Asynchronous 120       45
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>cg-archive-data            REPLICATING   Asynchronous 180       60
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>CG Check Summary: 5 CGs checked
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  HEALTHY: 5
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  WARNING: 0
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>  CRITICAL: 0
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>All CGs replicating with acceptable RPO.
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Journal Utilization Report:
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>  Journal 1: 62% utilized (4.2 GB / 6.8 GB)
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>  Journal 2: 58% utilized (3.9 GB / 6.8 GB)
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  Journal 3: 71% utilized (4.8 GB / 6.8 GB)
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>All journals operating within normal parameters.
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>Splitter Connectivity Status:
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>  Splitter ID: splitter-emc-01 | IP: 192.168.50.41 | Status: CONNECTED | Link: 10Gbps
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>  Splitter ID: splitter-emc-02 | IP: 192.168.50.42 | Status: CONNECTED | Link: 10Gbps
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>  Splitter ID: splitter-netapp-01 | IP: 192.168.51.33 | Status: CONNECTED | Link: 1Gbps
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>All splitters healthy and communicating.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: RPA cluster unreachable — verify network connectivity to the RPA management IP and confirm firewall rules allow port 7225.</code></strong>
+<strong><code>WARNING: Journal utilization above 85% on Journal 2 — increase journal size or reduce replication load to prevent RPO violations.</code></strong>
+<strong><code>ERROR: Splitter splitter-emc-02 status DISCONNECTED — check physical network cable, verify splitter IP configuration, and restart the splitter management service.</code></strong></p>
+</div>
 <p>Validation checklist after upgrade:</p>
 <ul>
 <li>[ ] All RPA nodes show correct new software version</li>
@@ -9344,12 +9501,28 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 <li>[ ] No active alerts in Unisphere for RecoverPoint</li>
 <li>[ ] Run test image access on at least one Tier 1 CG to confirm failover image is recoverable</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable image access for a test (non-disruptive — creates a point-in-time snapshot mount)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>latest
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify image is accessible, then disable</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>disable_image_access<span class="w"> </span>&lt;CG-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Enable image access for a test (non-disruptive — creates a point-in-time snapshot mount)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>latest
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify image is accessible, then disable</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>disable_image_access<span class="w"> </span>&lt;CG-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Enabling image access for consistency group &#39;prod-db-cg&#39;...
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Image access enabled successfully.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Mount point: /mnt/recoverpoint/prod-db-cg-snapshot-20240115T143022Z
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Snapshot ID: rp-img-7f4a2c91-e8d9-4b12-9c3f-5d8e1a2b3c4d
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Access expires in: 24 hours
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Status: ACTIVE
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Disabling image access for consistency group &#39;prod-db-cg&#39;...
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Image access disabled successfully.
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Cleanup completed. Snapshot unmounted from /mnt/recoverpoint/prod-db-cg-snapshot-20240115T143022Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Consistency group 'prod-db-cg' not found or offline</code></strong> — Verify the CG name matches exactly and check cluster connectivity with <code>boxmgmt cluster status</code>.
+<strong><code>Error: Image access already enabled for this CG. Disable existing access before enabling new access.</code></strong> — Run <code>boxmgmt cg disable_image_access &lt;CG-name&gt;</code> first, then retry the enable command.</p>
+</div>
 <hr />
 <h2 id="refresh-planning">Refresh Planning<a class="headerlink" href="#refresh-planning" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9427,7 +9600,7 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:42:48 UTC"><span class="timeago" datetime="2026-06-29T04:42:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:42:48 UTC">2026-06-29</span>
   </span>
 
     

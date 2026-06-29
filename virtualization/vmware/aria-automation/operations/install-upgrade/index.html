@@ -9463,20 +9463,77 @@ Install & Upgrade reference covering Version Matrix, Initial Deployment (New Env
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Confirm backup is current</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vracli<span class="w"> </span>backup<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@vra-prod-01:~# df -h / /var
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/dev/sda1        50G   32G   15G  68% /
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/dev/sda2       100G   45G   52G  46% /var
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>root@vra-prod-01:~# kubectl get pods --all-namespaces | grep -v &quot;Running\|Completed\|Succeeded&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>NAMESPACE              NAME                                          READY   STATUS
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vra                    vra-catalog-7d4f2c8b9-kx2m1                  1/1     Running
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vra                    vra-orchestrator-5c9e1a3d2-jq8p9              1/1     Running
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vra                    vra-iaas-proxy-8f2b4e6c1-lw3k5                1/1     Running
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vra                    vra-ng-custom-resource-7a1c9d5e-mp2l8         1/1     Running
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>kube-system            coredns-558bd4d5db-9x7m2                      1/1     Running
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>root@vra-prod-01:~# vracli status
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vra-catalog                    RUNNING
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>vra-orchestrator               RUNNING
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vra-iaas-proxy                 RUNNING
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vra-ng-custom-resource         RUNNING
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>vra-identity                   RUNNING
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>root@vra-prod-01:~# vracli backup status
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Backup Status: COMPLETED
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Last Backup: 2024-01-15 03:45:22 UTC
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Backup Location: /mnt/backup/vra-prod-01-20240115-034522.tar.gz
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Backup Size: 18.7 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>df: cannot access '/var': No such file or directory</code></strong> — Verify the mount point exists or adjust the command to check only mounted filesystems with <code>df -h /</code>.
+<strong><code>error: unable to connect to the server: dial tcp: lookup kubernetes.default on 10.0.2.2:53: no such host</code></strong> — Ensure kubectl is configured with the correct kubeconfig context using <code>kubectl config use-context &lt;context-name&gt;</code>.
+<strong><code>vracli: command not found</code></strong> — Add the vracli binary path to your shell environment with <code>export PATH=$PATH:/opt/vmware/vra/bin</code> or use the full path <code>/opt/vmware/vra/bin/vracli</code>.</p>
+</div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <p>Run immediately after the upgrade completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm installed version matches target</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vracli<span class="w"> </span>version
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Confirm all pods are Running</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected: no output (all pods healthy)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Confirm cluster node status (3-node deployments)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm installed version matches target</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm all pods are Running</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: no output (all pods healthy)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Confirm cluster node status (3-node deployments)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vRA version 8.10.2 Build 20231015
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vRA Kubernetes version: 1.26.8
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vRA Database version: 12.1.0.192.0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>NAMESPACE              NAME                                          READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vra                    vra-server-0                                  1/1     Running   0          45d
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>vra                    vra-server-1                                  1/1     Running   0          45d
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vra                    vra-iaas-proxy-0                              1/1     Running   2          45d
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>vra                    vra-postgres-0                                1/1     Running   0          45d
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vra                    vra-rabbitmq-0                                1/1     Running   1          45d
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vra                    vra-config-server-0                           1/1     Running   0          45d
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Cluster Health Status: HEALTHY
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Node vra-prod-01.example.local: HEALTHY (Leader)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Node vra-prod-02.example.local: HEALTHY (Follower)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Node vra-prod-03.example.local: HEALTHY (Follower)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Cluster Quorum: 3/3 nodes available
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Last health check: 2024-01-18 14:32:15 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: vracli: command not found</code></strong> — Ensure you are logged into the vRA appliance via SSH and vracli is in the PATH; check that vRA is fully initialized with <code>systemctl status vra-server</code>.
+<strong><code>error: You must be logged in to the server</code></strong> — Authenticate to the Kubernetes cluster with <code>kubectl config use-context vra-admin</code> or verify kubeconfig permissions.
+<strong><code>Cluster Health Status: UNHEALTHY - Node vra-prod-03.example.local: UNREACHABLE</code></strong> — Check network connectivity to the unreachable node and verify the vRA cluster service is running with <code>systemctl status vra-cluster</code> on that node.</p>
+</div>
 <p>Via UI validation:</p>
 <ul>
 <li>[ ] Log into Aria Automation UI — authentication works (VIDM redirect succeeds)</li>
@@ -9584,7 +9641,7 @@ Install & Upgrade reference covering Version Matrix, Initial Deployment (New Env
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

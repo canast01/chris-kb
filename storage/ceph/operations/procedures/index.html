@@ -7729,198 +7729,487 @@ Ceph operational procedures: add/replace/decommission OSDs, reweight for capacit
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w">                    </span><span class="c1"># new OSD with correct weight</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">              </span><span class="c1"># HEALTH_OK after rebalance completes</span>
 </code></pre></div>
-<h2 id="replace-a-failed-osd">Replace a Failed OSD<a class="headerlink" href="#replace-a-failed-osd" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Identify failed OSD — note ID and host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sdx    8:0    0 1.8T  0 disk 
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Set noout before starting to avoid false alarms</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Mark OSD out — starts data migration away from failed disk</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Wait for PGs to recover before touching hardware</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">              </span><span class="c1"># wait until active+clean</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. Stop the OSD daemon</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>stop<span class="w"> </span>osd.&lt;id&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 6. Replace the physical disk on the host</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 7. Purge old OSD entry from cluster</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--yes-i-really-mean-it
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># 8. Add new OSD on the same host/device</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>&lt;hostname&gt;:/dev/sdX
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># 9. Remove noout</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># 10. Verify</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w">                    </span><span class="c1"># new OSD has correct weight</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>ceph<span class="w"> </span>-s<span class="w">                          </span><span class="c1"># HEALTH_OK</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Zapping: /dev/sdx
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Zapping lvm member /dev/sdx
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Zapping done for: /dev/sdx
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Deploying daemon osd.12 on host ceph-node-03
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Waiting for daemon osd.12 to deploy...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Deployed osd.12
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ID CLASS WEIGHT   TYPE NAME           STATUS REWEIGHT PRI-AFFINITY
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>-1       1.80000 root default
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>-3       1.80000 host ceph-node-03
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>12   ssd 1.80000     osd.12              up  1.00000 1.00000
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Every 10.0s: ceph -s                                    Mon Dec 19 14:32:15 2024
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  cluster:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    health: HEALTH_OK
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  services:
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    mon: 3 daemons, quorum ceph-mon-01,ceph-mon-02,ceph-mon-03 (age 2d)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    osd: 13 osds, 13 up, 13 in; 1 remapped pgs
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  data:
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    objects: 2.45M
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    usage:   18.5 TiB / 23.4 TiB
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    state:   active+clean
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No such device /dev/sdX</code></strong> — Replace <code>/dev/sdX</code> with the actual device name (e.g. <code>/dev/sdb</code>) and verify it exists with <code>lsblk</code>.
+<strong><code>Error: OSD deployment failed: device /dev/sdx is already in use</code></strong> — Run <code>cephadm ceph-volume lvm zap /dev/sdx --destroy</code> before attempting to add the OSD.
+<strong><code>Error: host &lt;hostname&gt; not found in CRUSH map</code></strong> — Ensure the hostname matches exactly what <code>ceph orch host ls</code> shows and the host is already added to the cluster.</p>
+</div>
+<h2 id="replace-a-failed-osd">Replace a Failed OSD<a class="headerlink" href="#replace-a-failed-osd" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Identify failed OSD — note ID and host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Set noout before starting to avoid false alarms</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Mark OSD out — starts data migration away from failed disk</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. Wait for PGs to recover before touching hardware</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">              </span><span class="c1"># wait until active+clean</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># 5. Stop the OSD daemon</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>stop<span class="w"> </span>osd.&lt;id&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># 6. Replace the physical disk on the host</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># 7. Purge old OSD entry from cluster</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--yes-i-really-mean-it
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># 8. Add new OSD on the same host/device</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>&lt;hostname&gt;:/dev/sdX
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># 9. Remove noout</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># 10. Verify</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w">                    </span><span class="c1"># new OSD has correct weight</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>ceph<span class="w"> </span>-s<span class="w">                          </span><span class="c1"># HEALTH_OK</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># 1. Identify failed OSD
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>-2       0.87109 root default
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>-1       0.87109     host ceph-node-03
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> 0   ssd 0.29036         osd.0      up   1.00000 1.00000
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> 1   ssd 0.29036         osd.1      up   1.00000 1.00000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> 4   ssd 0.29036         osd.4    down   1.00000 1.00000
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a># 2. Set noout
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>noout flag(s) set
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a># 3. Mark OSD out
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>marked out osd.4
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a># 4. Wait for PGs to recover
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Every 10.0s: ceph -s
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  cluster:
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    id:     a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    health: HEALTH_WARN
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>            1 osds down
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>            Degraded data redundancy: 128/384 objects degraded (33.3%), 64 pgs degraded
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  services:
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    mon: 3 daemons, quorum ceph-mon-01,ceph-mon-02,ceph-mon-03 (age 2h)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    mgr: ceph-mgr-01(active, since 1h), ceph-mgr-02(standby, since 1h)
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    osd: 5 osds, 4 up, 1 down; 128 remapped pgs
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a># 5. Stop the OSD daemon
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Scheduled daemon stop for osd.4 on host ceph-node-03
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a># 7. Purge old OSD entry
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>purged osd.4
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a># 8. Add new OSD
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Created osd(s) 4 for ceph-node-03:/dev/sdX
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a># 10. Verify
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>-2       0.87109 root default
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>-1       0.87109     host ceph-node-03
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a> 0   ssd 0.29036         osd.0      up   1.00000 1.00000
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a> 1   ssd 0.29036         osd.1      up   1.00000 1.00000
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a> 4   ssd 0.29036         osd.4      up   1.00000 1.00000
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>  cluster:
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>    id:     a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>    health: HEALTH_OK
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>    services:
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>      mon: 3 daemons, quorum ceph-mon-01,ceph-mon-02,ceph-mon-03 (age 2h)
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>      osd: 5 osds, 5 up, 0 down
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: osd.4 does not exist</code></strong> — Verify the OSD ID is correct with <code>ceph osd tree</code> before attempting to purge.
+<strong><code>Error: device /dev/sdX is already in use by osd.X</code></strong> — Ensure the old OSD is fully purged and the device is wiped with <code>sgdisk --zap-all /dev/sdX</code> before re-adding.
+**</p>
+</div>
 <h2 id="decommission-a-host-remove-all-its-osds">Decommission a Host (Remove All Its OSDs)<a class="headerlink" href="#decommission-a-host-remove-all-its-osds" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Set both noout and norebalance to control data migration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norebalance
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Identify all OSD IDs on the target host</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 3. Mark all host OSDs out</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;id1&gt;<span class="w"> </span>&lt;id2&gt;<span class="w"> </span>&lt;id3&gt;<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span><span class="nv">$i</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 4. Unset norebalance to allow data to migrate away</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norebalance
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 5. Wait for all PGs to return to active+clean</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 6. Drain and stop all daemons on the host</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>drain<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># 7. Purge each OSD from the cluster map</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;id1&gt;<span class="w"> </span>&lt;id2&gt;<span class="w"> </span>&lt;id3&gt;<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span><span class="nv">$i</span><span class="w"> </span>--yes-i-really-mean-it
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="k">done</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># 8. Remove host from orchestrator</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>rm<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># 9. Unset noout</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Set both noout and norebalance to control data migration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norebalance
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Identify all OSD IDs on the target host</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Mark all host OSDs out</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;id1&gt;<span class="w"> </span>&lt;id2&gt;<span class="w"> </span>&lt;id3&gt;<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span><span class="nv">$i</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Unset norebalance to allow data to migrate away</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norebalance
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 5. Wait for all PGs to return to active+clean</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 6. Drain and stop all daemons on the host</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>drain<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 7. Purge each OSD from the cluster map</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;id1&gt;<span class="w"> </span>&lt;id2&gt;<span class="w"> </span>&lt;id3&gt;<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>ceph<span class="w"> </span>osd<span class="w"> </span>purge<span class="w"> </span><span class="nv">$i</span><span class="w"> </span>--yes-i-really-mean-it
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="k">done</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># 8. Remove host from orchestrator</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>rm<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># 9. Unset noout</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>noout flag set
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>norebalance flag set
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>osd.2 host=storage-node-04 class=ssd
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>osd.5 host=storage-node-04 class=ssd
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>osd.8 host=storage-node-04 class=ssd
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>marked out osd.2
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>marked out osd.5
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>marked out osd.8
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>norebalance flag unset
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    cluster 8a2f3c1e-9d4a-4f2b-b1c3-7e5d9f2a6c4b
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>     health HEALTH_OK
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>     monmap e12: 3 mons at {mon01=10.0.1.5:6789/0, mon02=10.0.1.6:6789/0, mon03=10.0.1.7:6789/0}
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>     osdmap e2847: 24 osds: 21 up, 21 in; 3 out
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>     pgmap v8934: 512 pgs: 512 active+clean; 2.4 TiB data, 6.8 TiB used, 18 TiB avail
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Draining host storage-node-04...
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Removed osd.2
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Removed osd.5
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Removed osd.8
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Removed host storage-node-04
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>noout flag unset
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EBUSY: osd.2 is still in use</code></strong> — Wait longer for PGs to finish migrating before attempting purge, or check <code>ceph osd safe-to-destroy osd.2</code> first.
+<strong><code>Error: host storage-node-04 still has daemons</code></strong> — Ensure <code>ceph orch host drain</code> completes fully before removing the host; check <code>ceph orch ps</code> to verify all daemons are stopped.
+<strong><code>Error ENOENT: osd.2 does not exist</code></strong> — Do not re-run the purge loop; each OSD is removed only once, so verify the OSD ID is correct in the for loop.</p>
+</div>
 <h2 id="reweight-osds-to-balance-capacity">Reweight OSDs to Balance Capacity<a class="headerlink" href="#reweight-osds-to-balance-capacity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current utilization per OSD</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Sort to find most-full OSDs</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Automatic reweight: move data off OSDs more than 115% of average utilization</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>reweight-by-utilization<span class="w"> </span><span class="m">115</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Manual reweight for a single OSD (lower value = less data placed on it)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>reweight<span class="w"> </span>&lt;id&gt;<span class="w"> </span>&lt;<span class="m">0</span>.0–1.0&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Reweight all OSDs to match their actual device capacity (after adding larger disks)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>reweight-all
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Verify effect after rebalance</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current utilization per OSD</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Sort to find most-full OSDs</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Automatic reweight: move data off OSDs more than 115% of average utilization</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>reweight-by-utilization<span class="w"> </span><span class="m">115</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Manual reweight for a single OSD (lower value = less data placed on it)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>reweight<span class="w"> </span>&lt;id&gt;<span class="w"> </span>&lt;<span class="m">0</span>.0–1.0&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Reweight all OSDs to match their actual device capacity (after adding larger disks)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>reweight-all
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Verify effect after rebalance</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ID  CLASS WEIGHT  TYPE NAME                STATUS REWEIGHT SIZE    RAW USE %USE VARS PGS
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-1       259.72  root default
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>-3        86.57   host ceph-node-01
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> 0   ssd  10.82    osd.0                    up  1.00000 10.8T 8.2T 75.8  1.02 312
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a> 1   ssd  10.82    osd.1                    up  1.00000 10.8T 9.1T 84.3  1.09 298
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a> 2   ssd  10.82    osd.2                    up  1.00000 10.8T 9.5T 87.9  1.14 285
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-5        86.57   host ceph-node-02
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a> 3   ssd  10.82    osd.3                    up  1.00000 10.8T 7.9T 73.1  0.95 325
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> 4   ssd  10.82    osd.4                    up  1.00000 10.8T 8.8T 81.5  1.06 310
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a> 5   ssd  10.82    osd.5                    up  1.00000 10.8T 9.3T 86.0  1.12 292
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>-7        86.58   host ceph-node-03
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> 6   ssd  10.82    osd.6                    up  1.00000 10.8T 6.2T 57.4  0.74 401
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> 7   ssd  10.82    osd.7                    up  1.00000 10.8T 7.1T 65.7  0.85 378
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> 8   ssd  10.82    osd.8                    up  1.00000 10.8T 8.9T 82.3  1.07 308
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>REWEIGHT_BY_UTILIZATION: reweighted 3 osds [2,5,1] by factor 0.95
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>(no output — command completes silently)
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>(no output — command completes silently)
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>ID  CLASS WEIGHT  TYPE NAME                STATUS REWEIGHT SIZE    RAW USE %USE VARS PGS
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>-1       259.72  root default
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>-3        86.57   host ceph-node-01
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a> 0   ssd  10.82    osd.0                    up  1.00000 10.8T 8.1T 75.0  0.98 318
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a> 1   ssd  10.82    osd.1                    up  0.95000 10.8T 8.6T 79.6  1.04 289
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a> 2   ssd  10.82    osd.2                    up  0.95000 10.8T 8.9T 82.4  1.08 276
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>-5        86.57   host ceph-node-02
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a> 3   ssd  10.82    osd.3                    up  1.00000 10.8T 7.8T 72.1  0.94 332
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a> 4   ssd  10.82    osd.4                    up  1.00000 10.8T 8.7T 80.5
 </code></pre></div>
 <h2 id="manage-scrub-operations">Manage Scrub Operations<a class="headerlink" href="#manage-scrub-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check scrub status across PGs</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>scrub
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Force immediate scrub on a specific PG</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>scrub<span class="w"> </span>&lt;pgid&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Force scrub on all PGs in a pool</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>scrub<span class="w"> </span>&lt;pool&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>deep-scrub<span class="w"> </span>&lt;pool&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Disable scrub during maintenance window</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noscrub
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nodeep-scrub
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Re-enable after maintenance</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Restrict automatic scrub to off-hours</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_begin_hour<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_end_hour<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Per-pool scrub disable (does not affect other pools)</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;pool&gt;<span class="w"> </span>noscrub<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;pool&gt;<span class="w"> </span>nodeep-scrub<span class="w"> </span><span class="nb">true</span>
-</code></pre></div>
-<h2 id="repair-an-inconsistent-pg">Repair an Inconsistent PG<a class="headerlink" href="#repair-an-inconsistent-pg" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Identify inconsistent PGs</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>inconsistent
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Trigger repair on the affected PG</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>repair<span class="w"> </span>&lt;pgid&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Monitor repair progress</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;ceph pg &lt;pgid&gt; query | python3 -m json.tool | grep state&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. Confirm PG returns to active+clean</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># If repair fails — identify which OSD has the bad object copy</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>&lt;pgid&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>acting
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Pull the object from the good OSD manually</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>rados<span class="w"> </span>get<span class="w"> </span>-p<span class="w"> </span>&lt;pool&gt;<span class="w"> </span>&lt;object&gt;<span class="w"> </span>/tmp/recovered-object
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>rados<span class="w"> </span>put<span class="w"> </span>-p<span class="w"> </span>&lt;pool&gt;<span class="w"> </span>&lt;object&gt;<span class="w"> </span>/tmp/recovered-object
-</code></pre></div>
-<h2 id="osd-replacement-original-procedure-ceph-orch">OSD Replacement (Original Procedure — ceph orch)<a class="headerlink" href="#osd-replacement-original-procedure-ceph-orch" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># When a disk fails and needs replacement:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># 1. Confirm OSD is down</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># 2. Mark OSD out (triggers data migration to remaining OSDs)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.5
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 3. Wait for PGs to recover (BytesToResync reaches 0)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># 4. Remove OSD daemon</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>rm<span class="w"> </span>osd.5<span class="w"> </span>--force
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># 5. Remove OSD from CRUSH and cluster</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rm<span class="w"> </span>osd.5
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>ceph<span class="w"> </span>auth<span class="w"> </span>del<span class="w"> </span>osd.5
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># 6. Physically replace the disk</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># 7. Add new OSD (cephadm discovers new disk automatically)</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Or specifically:</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
-</code></pre></div>
-<h2 id="add-new-node">Add New Node<a class="headerlink" href="#add-new-node" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Prepare the new node: install dependencies, configure networking</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 2. Copy SSH key</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@new-node
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 3. Add host to cluster</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>new-node<span class="w"> </span><span class="m">10</span>.0.1.30
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># 4. Add OSDs from new node</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdb
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdc
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># 5. Monitor rebalancing (data redistributes to new OSDs)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">   </span><span class="c1"># wait for HEALTH_OK</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># 6. Adjust CRUSH weight if needed (should happen automatically)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
-</code></pre></div>
-<h2 id="maintenance-mode">Maintenance Mode<a class="headerlink" href="#maintenance-mode" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Before maintenance on an OSD node:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">        </span><span class="c1"># prevent OSDs from being marked out during maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check scrub status across PGs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>scrub
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Perform maintenance (patch, reboot, hardware work)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Verify OSDs come back up after reboot</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat<span class="w">             </span><span class="c1"># all OSDs should be up+in</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Remove noout flag</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Flags reference:</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># noout      = don&#39;t mark OSDs out when they disconnect (maintenance safety)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># noin       = don&#39;t mark OSDs in when they reconnect</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># norecover  = suspend recovery</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># nobackfill = suspend backfill</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># norebalance= suspend rebalancing</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Force immediate scrub on a specific PG</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>scrub<span class="w"> </span>&lt;pgid&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Force scrub on all PGs in a pool</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>scrub<span class="w"> </span>&lt;pool&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>deep-scrub<span class="w"> </span>&lt;pool&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Disable scrub during maintenance window</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noscrub
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nodeep-scrub
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Re-enable after maintenance</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Restrict automatic scrub to off-hours</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_begin_hour<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_end_hour<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Per-pool scrub disable (does not affect other pools)</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;pool&gt;<span class="w"> </span>noscrub<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;pool&gt;<span class="w"> </span>nodeep-scrub<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>PG_STAT OBJECTS MISSING_ON_PRIMARY DEGRADED MISPLACED VERSION STATE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>1.0        1024                  0        0         0   12&#39;34 active+clean
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>1.1        2048                  0        0         0   11&#39;28 active+clean+scrubbing
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>1.2        512                   0        0         0   10&#39;15 active+clean
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>1.3        1536                  0        0         0   12&#39;40 active+clean+deep-scrubbing
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>1.4        2560                  0        0         0   11&#39;32 active+clean
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>...
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>instructing pg 1.1 to scrub
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>instructing pg 1.3 to scrub
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>instructing pg 1.4 to scrub
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>instructing pg 1.5 to scrub
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>instructing pg 1.6 to scrub
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>...
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>noscrub,nodeep-scrub set
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>osd_scrub_begin_hour = 1
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>osd_scrub_end_hour = 5
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>set pool 3 noscrub to true
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>set pool 3 nodeep-scrub to true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: invalid pool name '&lt;pool&gt;'</code></strong> — Replace <code>&lt;pool&gt;</code> with an actual pool name like <code>rbd</code> or <code>cephfs_data</code>, or list pools with <code>ceph osd pool ls</code>.
+<strong><code>Error ENOENT: pool does not exist</code></strong> — Verify the pool exists and is not being deleted; check with <code>ceph osd pool ls</code>.</p>
+</div>
+<h2 id="repair-an-inconsistent-pg">Repair an Inconsistent PG<a class="headerlink" href="#repair-an-inconsistent-pg" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Identify inconsistent PGs</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>inconsistent
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Trigger repair on the affected PG</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>repair<span class="w"> </span>&lt;pgid&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Monitor repair progress</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;ceph pg &lt;pgid&gt; query | python3 -m json.tool | grep state&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Confirm PG returns to active+clean</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># If repair fails — identify which OSD has the bad object copy</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>&lt;pgid&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>acting
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Pull the object from the good OSD manually</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>rados<span class="w"> </span>get<span class="w"> </span>-p<span class="w"> </span>&lt;pool&gt;<span class="w"> </span>&lt;object&gt;<span class="w"> </span>/tmp/recovered-object
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>rados<span class="w"> </span>put<span class="w"> </span>-p<span class="w"> </span>&lt;pool&gt;<span class="w"> </span>&lt;object&gt;<span class="w"> </span>/tmp/recovered-object
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>HEALTH_ERR 1 pg inconsistent
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    pg 2.4c is inconsistent
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>PG_STATE_INCONSISTENT
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Every 10.0s: ceph pg 2.4c query | python3 -m json.tool | grep state
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    &quot;state&quot;: &quot;recovering+inconsistent&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    &quot;state&quot;: &quot;recovering&quot;,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    &quot;state&quot;: &quot;active+clean&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>PG_STAT objects 1024 bytes 4194304 log 512
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    2.4c: active+clean [3,1,2] r=0 lpr=512 pi=256..512 lpr=512 pi=256..512 cdhr=513 lis=512 empty_epoch=0
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    &quot;acting&quot;: [3, 1, 2],
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    &quot;acting_primary&quot;: 3,
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>object recovered-object retrieved from pool default.rgw.buckets.data
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>object recovered-object written to pool default.rgw.buckets.data
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: pg 2.4c query: No such file or directory</code></strong> — Verify the PG ID format is correct (use <code>ceph pg ls</code> to list valid PGs) and ensure the cluster is in a queryable state.
+<strong><code>error: [Errno 2] No such file or directory: '/tmp/recovered-object'</code></strong> — Create the temporary directory first with <code>mkdir -p /tmp</code> or use a writable path like <code>$HOME/recovered-object</code>.
+<strong><code>Error: pool &lt;pool&gt; does not exist</code></strong> — Confirm the pool name with <code>ceph osd pool ls</code> and substitute the correct pool name in the rados commands.</p>
+</div>
+<h2 id="osd-replacement-original-procedure-ceph-orch">OSD Replacement (Original Procedure — ceph orch)<a class="headerlink" href="#osd-replacement-original-procedure-ceph-orch" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># When a disk fails and needs replacement:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># 1. Confirm OSD is down</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># 2. Mark OSD out (triggers data migration to remaining OSDs)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.5
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># 3. Wait for PGs to recover (BytesToResync reaches 0)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># 4. Remove OSD daemon</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>rm<span class="w"> </span>osd.5<span class="w"> </span>--force
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># 5. Remove OSD from CRUSH and cluster</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rm<span class="w"> </span>osd.5
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>ceph<span class="w"> </span>auth<span class="w"> </span>del<span class="w"> </span>osd.5
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># 6. Physically replace the disk</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># 7. Add new OSD (cephadm discovers new disk automatically)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="c1"># Or specifically:</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>osd.5 down                                    1        1.0          1.0B        0 B        0 B 0 B
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>cluster:
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    health: HEALTH_WARNING
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>            Degraded data redundancy: 342 pgs degraded
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    services:
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      mon: 3 daemons, quorum ceph-mon1,ceph-mon2,ceph-mon3 (age 2h)
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>      mgr: ceph-mgr1(active, since 45m), ceph-mgr2
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>      osd: 12 osds: 11 up, 1 down; 11 in, 1 out
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    data:
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>      pools:   8 pools, 256 pgs
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>      objects: 1.24M objects, 4.2 TiB
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>      usage:   8.9 TiB used, 31 TiB / 40 TiB avail
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>      pgs:     342 degraded+undersized+peering
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>      BytesToResync: 0 B
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>osd.5 marked out.
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>osd.5 removed.
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>osd.5 deleted.
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Removed /var/lib/ceph/osd/ceph-5
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Scheduled osd.6 addition for ceph-node2:/dev/sdb
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: osd.5 does not exist</code></strong> — Verify the OSD number is correct and the daemon hasn't already been removed with <code>ceph osd tree</code>.
+<strong><code>Error: OSD osd.5 is still in (in the cluster); must be marked out first</code></strong> — Run <code>ceph osd out osd.5</code> before attempting to remove the OSD.
+<strong><code>Error: Device /dev/sdb is already in use or has an existing LVM/partition table</code></strong> — Wipe the disk with <code>sgdisk -Z /dev/sdb</code> or <code>dd if=/dev/zero of=/dev/sdb bs=1M count=100</code> before re-adding it to the cluster.</p>
+</div>
+<h2 id="add-new-node">Add New Node<a class="headerlink" href="#add-new-node" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Prepare the new node: install dependencies, configure networking</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># 2. Copy SSH key</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@new-node
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># 3. Add host to cluster</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>new-node<span class="w"> </span><span class="m">10</span>.0.1.30
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># 4. Add OSDs from new node</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdb
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdc
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># 5. Monitor rebalancing (data redistributes to new OSDs)</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">   </span><span class="c1"># wait for HEALTH_OK</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># 6. Adjust CRUSH weight if needed (should happen automatically)</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: &quot;/etc/ceph/ceph.pub&quot;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/usr/bin/ssh-copy-id: INFO: attempting to log in with the following key(s):
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>/usr/bin/ssh-copy-id: INFO: 1 key sent to root@new-node, trying passwd authentication.
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Number of key(s) added: 1
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Added host &#39;new-node&#39; with addr &#39;10.0.1.30&#39;
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Scheduling osd.4 (device /dev/sdb) on host &#39;new-node&#39;
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Scheduling osd.5 (device /dev/sdc) on host &#39;new-node&#39;
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Every 10.0s: ceph -s                                                    Mon Jan 15 14:32:45 2025
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  cluster:
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    health: HEALTH_WARN
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  services:
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    mon: 3 daemons, quorum ceph-mon01,ceph-mon02,ceph-mon03 (age 2h)
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    mgr: ceph-mgr01(active, since 1h), ceph-mgr02(standby, since 1h)
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    osd: 6 osds: 6 up, 6 in; 145 GiB data, 892 GiB total, 747 GiB avail
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  data:
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    pools:   3 pools, 96 pg
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>    objects: 45.2k objects, 142 GiB
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>    usage:   145 GiB used, 747 GiB / 894 GiB avail
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>    pgs:     96 active+clean
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>ID  CLASS  WEIGHT   TYPE NAME          STATUS REWEIGHT PRI-AFF
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>-1         0.87500  root default
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>-3         0.87500      host ceph-node01
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a> 0    ssd  0.43750          osd.0        up  1.00000 1.00000
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a> 1    ssd  0.43750          osd.1        up  1.00000 1.00000
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>-5         0.87500      host new-node
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a> 4    ssd  0.43750          osd.4        up  1.00000 1.00000
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a> 5    ssd  0.43750          osd.5        up  1.00000 1.00000
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh-copy-id: ERROR: failed to open ID file '/etc/ceph/ceph.pub': No such file or directory</code></strong> — Generate the SSH key pair on the admin node with <code>ssh-keygen -t rsa -f /etc/ceph/ceph -N ''</code> before copying.
+<strong><code>Error EINVAL: osd.X: device /dev/sdb does not exist or is not usable</code></strong> — Verify the device exists on the target node with <code>ssh root@new-node lsblk</code> and ensure it is not already partitioned or in use.
+<strong><code>Error: host 'new-node' not found in CRUSH map</code></strong> — Confirm the host was successfully added with <code>ceph orch host ls</code> and check network connectivity to the new node.</p>
+</div>
+<h2 id="maintenance-mode">Maintenance Mode<a class="headerlink" href="#maintenance-mode" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Before maintenance on an OSD node:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">        </span><span class="c1"># prevent OSDs from being marked out during maintenance</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Perform maintenance (patch, reboot, hardware work)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Verify OSDs come back up after reboot</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat<span class="w">             </span><span class="c1"># all OSDs should be up+in</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Remove noout flag</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># Flags reference:</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># noout      = don&#39;t mark OSDs out when they disconnect (maintenance safety)</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1"># noin       = don&#39;t mark OSDs in when they reconnect</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># norecover  = suspend recovery</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># nobackfill = suspend backfill</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="c1"># norebalance= suspend rebalancing</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>set noout
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    osdmap e847: 24 osds: 24 up, 24 in
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>        flags noout
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    pools:   8
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    objects: 2.34M
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    usage:   847 GiB / 960 GiB avail
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    pgs:     672 active+clean
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>unset noout
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    osdmap e851: 24 osds: 24 up, 24 in
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>        flags 
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    pools:   8
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    objects: 2.34M
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    usage:   849 GiB / 960 GiB avail
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>    pgs:     672 active+clean
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EACCES: access denied</code></strong> — Ensure you have admin-level ceph credentials (typically run with <code>sudo</code> or as the <code>ceph</code> user with proper keyring permissions).
+<strong><code>Error EINVAL: invalid command</code></strong> — Verify the cluster is healthy and reachable; check that <code>ceph.conf</code> is present and <code>MON_HOST</code> is correctly configured.
+<strong><code>Error: no monitors available</code></strong> — Confirm at least one monitor is running and network connectivity exists to the monitor nodes (check firewall rules and DNS resolution).</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7956,7 +8245,7 @@ Ceph operational procedures: add/replace/decommission OSDs, reweight for capacit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

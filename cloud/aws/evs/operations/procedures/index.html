@@ -8986,239 +8986,438 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 6. Verify vSAN rebalance on remaining hosts</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync,<span class="w"> </span>RecoveryETA
 </code></pre></div>
-<h2 id="add-a-host">Add a Host<a class="headerlink" href="#add-a-host" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Verify current cluster capacity before adding</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;hostSummaries[*].state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>3
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>(no output — command completes silently)
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. Request new host via AWS EVS API</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment-host<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--host<span class="w"> </span><span class="s1">&#39;{&quot;instanceType&quot;:&quot;i4i.metal&quot;,&quot;keyName&quot;:&quot;evs-cluster-key&quot;}&#39;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 3. Monitor host provisioning (takes ~30-60 min)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;aws evs list-environment-hosts --environment-id $ENV_ID \</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  --query &quot;hostSummaries[*].[hostId,state]&quot; --output table&#39;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># 4. Once host state = CREATED, verify it appears in vCenter</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># vCenter → Cluster → Hosts → new host should be Connected</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># 5. Verify vSAN automatically adds the host disk groups</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Get-VsanDiskGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.VMHost.Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;new-host.vcf.internal&quot;</span><span class="w"> </span><span class="o">}</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># 6. Allow vSAN to rebalance (may take 1-4 hours depending on data volume)</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>BytesToSync ActiveTasks
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>----------- -----------
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>          0           0
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>(no output — command completes silently)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>-----------------------------------------
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|  hostId      |  hostName           |  state      |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>-----------------------------------------
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|  host-yyy    |  evs-host-02.vcf... |  ACTIVE     |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|  host-zzz    |  evs-host-03.vcf... |  ACTIVE     |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|  host-www    |  evs-host-04.vcf... |  ACTIVE     |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>-----------------------------------------
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>BytesToSync RecoveryETA
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>----------- -----------
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>          0  00:00:00
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The host has 2 remaining hosts. Minimum 3 required for vSAN cluster.</code></strong> — Verify cluster size before removal or adjust FTT policy; use <code>aws evs describe-environment --environment-id $ENV_ID</code> to confirm host count.
+<strong><code>Set-VMHost : The object 'evs-host-01.vcf.internal' cannot be found.</code></strong> — Verify the exact hostname with <code>Get-VMHost | Select Name</code> and ensure vCenter connectivity with <code>Test-VcenterConnection</code>.
+<strong><code>An error occurred (ResourceNotFound) when calling the DeleteEnvironmentHost operation: Host host-xxx not found.</code></strong> — Confirm the correct host ID from <code>aws evs list-environment-hosts</code> output and ensure the host is in maintenance mode before deletion.</p>
+</div>
+<h2 id="add-a-host">Add a Host<a class="headerlink" href="#add-a-host" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Verify current cluster capacity before adding</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;hostSummaries[*].state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Request new host via AWS EVS API</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment-host<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--host<span class="w"> </span><span class="s1">&#39;{&quot;instanceType&quot;:&quot;i4i.metal&quot;,&quot;keyName&quot;:&quot;evs-cluster-key&quot;}&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 3. Monitor host provisioning (takes ~30-60 min)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;aws evs list-environment-hosts --environment-id $ENV_ID \</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">  --query &quot;hostSummaries[*].[hostId,state]&quot; --output table&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 4. Once host state = CREATED, verify it appears in vCenter</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># vCenter → Cluster → Hosts → new host should be Connected</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 5. Verify vSAN automatically adds the host disk groups</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Get-VsanDiskGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.VMHost.Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;new-host.vcf.internal&quot;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># 6. Allow vSAN to rebalance (may take 1-4 hours depending on data volume)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ACTIVE  ACTIVE  ACTIVE  ACTIVE  ACTIVE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>{
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    &quot;hostId&quot;: &quot;host-evs-0847&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;state&quot;: &quot;PROVISIONING&quot;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>}
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Every 30.0s: aws evs list-environment-hosts --environment-id env-prod-cluster-01 ...
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>hostId              state
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>──────────────────  ──────────────
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>host-evs-0842       CREATED
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>host-evs-0843       CREATED
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>host-evs-0844       CREATED
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>host-evs-0845       CREATED
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>host-evs-0847       CREATED
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>CanonicalName                 : /vmfs/volumes/vsan:52d4a8c1-8f2e-4c2a-91b3-7e3c9a2f1d48
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Disks                         : {naa.55cd2e404bd3c4a1, naa.55cd2e404bd3c4a2}
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>IsSsd                         : True
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>VMHost                        : new-host.vcf.internal
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>DiskCount                     : 2
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>BytesToSync : 847293456384
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>ResyncRate  : 12582912
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>TimeRemaining : 67200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (InvalidEnvironmentId) when calling the ListEnvironmentHosts operation: The environment ID 'env-prod-cluster-01' does not exist or you do not have access.</code></strong> — Verify the environment ID with <code>aws evs list-environments</code> and ensure your IAM role has <code>evs:ListEnvironmentHosts</code> permissions.
+<strong><code>error: watch: command not found</code></strong> — Install <code>procps</code> package with <code>apt-get install procps</code> or use <code>while true; do ... sleep 30; done</code> as an alternative.
+<strong><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></strong> — Load the vSAN PowerCLI module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running PowerShell commands.</p>
+</div>
 <h2 id="host-replacement-aws-initiated">Host Replacement (AWS-Initiated)<a class="headerlink" href="#host-replacement-aws-initiated" title="Permanent link">&para;</a></h2>
 <p>AWS performs the physical host replacement when a bare-metal host fails a hardware health check. AWS will notify you when the replacement host is available. Your responsibility is the VMware layer.</p>
 <p><strong>Trigger:</strong> AWS notifies via EVS event or CloudWatch alarm that a host has been replaced.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Confirm the new host appears in the EVS host list with state = ACTIVE</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;hostSummaries[*].[hostId,hostName,state]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Verify the new host appears in vCenter as Connected</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># vCenter → Hosts and Clusters → new host should be present and Connected</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># If not connected after 15 min, verify VPC network connectivity to the host ENI</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># 3. Verify ESXi configuration (NTP, syslog, DNS) was re-applied by VCF</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># SDDC Manager automatically pushes host config during add; verify in vCenter</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># 4. Verify vSAN disk groups were claimed on the new host</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Get-VsanDiskGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.VMHost.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*new-host*&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>Select<span class="w"> </span>VMHost,<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;CacheDisks&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.ExtensionData.SSD<span class="o">)</span>.Count<span class="o">}}</span>,<span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;CapacityDisks&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.ExtensionData.NonSSD<span class="o">)</span>.Count<span class="o">}}</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># If vSAN disk groups are missing, claim disks manually:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># vCenter → Cluster → Configure → vSAN → Disk Management → Claim Disks</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># 5. Verify vSAN has resynced all objects to the new host (BytesToSync = 0)</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync,<span class="w"> </span>ActiveTasks,<span class="w"> </span>RecoveryETA
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># 6. Verify NSX-T host transport node state is UP</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># NSX Manager → System → Fabric → Nodes → Host Transport Nodes → new host = Success</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s2">    print(n[&#39;display_name&#39;], n.get(&#39;state&#39;,&#39;&#39;))</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s2">&quot;</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># 7. Verify VMs have been rebalanced via DRS (if DRS is set to Fully Automated)</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort<span class="w"> </span>VMHost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Confirm the new host appears in the EVS host list with state = ACTIVE</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;hostSummaries[*].[hostId,hostName,state]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Verify the new host appears in vCenter as Connected</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># vCenter → Hosts and Clusters → new host should be present and Connected</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># If not connected after 15 min, verify VPC network connectivity to the host ENI</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 3. Verify ESXi configuration (NTP, syslog, DNS) was re-applied by VCF</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># SDDC Manager automatically pushes host config during add; verify in vCenter</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 4. Verify vSAN disk groups were claimed on the new host</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Get-VsanDiskGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.VMHost.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*new-host*&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>Select<span class="w"> </span>VMHost,<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;CacheDisks&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.ExtensionData.SSD<span class="o">)</span>.Count<span class="o">}}</span>,<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;CapacityDisks&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.ExtensionData.NonSSD<span class="o">)</span>.Count<span class="o">}}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># If vSAN disk groups are missing, claim disks manually:</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># vCenter → Cluster → Configure → vSAN → Disk Management → Claim Disks</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 5. Verify vSAN has resynced all objects to the new host (BytesToSync = 0)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync,<span class="w"> </span>ActiveTasks,<span class="w"> </span>RecoveryETA
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># 6. Verify NSX-T host transport node state is UP</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># NSX Manager → System → Fabric → Nodes → Host Transport Nodes → new host = Success</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="s2">    print(n[&#39;display_name&#39;], n.get(&#39;state&#39;,&#39;&#39;))</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="c1"># 7. Verify VMs have been rebalanced via DRS (if DRS is set to Fully Automated)</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort<span class="w"> </span>VMHost
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>---------------------------------------------------------------------------
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>|                        hostId                        |   hostName    | state  |
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>|---------------------------------------------------------------------------|
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>| host-12a4f8c9-7e2b-4d91-a3c2-9f1e8b6c5d3a          | esx-prod-04   | ACTIVE |
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>| host-98b3e7d2-1c4a-4f6b-8e9d-2a5c7b1f3e6h          | esx-prod-05   | ACTIVE |
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>---------------------------------------------------------------------------
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>VMHost                                    CacheDisks CapacityDisks
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>------                                    ---------- ---------------
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esx-prod-04.corp.local                             2             10
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>esx-prod-05.corp.local                             2             10
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>BytesToSync ActiveTasks RecoveryETA
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>----------- ----------- -----------
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>          0           0 00:00:00
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>esx-prod-04.corp.local Success
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>esx-prod-05.corp.local Success
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Name                                      VMHost
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>----                                      ------
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>prod-web-01                               esx-prod-01.corp.local
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>prod-web-02                               esx-prod-04.corp.local
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>prod-app-03                               esx-prod-02.corp.local
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>prod-app-04                               esx-prod-04.corp.local
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>prod-db-01                                esx-prod-03.corp.local
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>prod-db-02                                esx-prod-05.corp.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></strong> — Load the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running vSAN cmdlets.
+<strong><code>curl: (7) Failed to connect to nsxmgr.corp.local port 443: Connection timed out</code></strong> — Verify NSX Manager IP/hostname in <code>$NSX_URL</code> and confirm network connectivity from the jump host to the NSX Manager management interface.
+<strong><code>jq: command not found</code></strong> — Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use Python's json module as shown in the curl command for JSON parsing.</p>
+</div>
 <h2 id="vcf-password-rotation">VCF Password Rotation<a class="headerlink" href="#vcf-password-rotation" title="Permanent link">&para;</a></h2>
 <p>Password rotation is required quarterly for most security policies. SDDC Manager manages all VCF component credentials.</p>
 <p><strong>UI Method:</strong> SDDC Manager → Administration → Credentials → Select all → Rotate</p>
 <p><strong>API Method (for automation):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">SDDC_MANAGER</span><span class="o">=</span><span class="s2">&quot;https://sddc-manager.vcf.internal&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">SDDC_TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/tokens&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;P@ssw0rd&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;accessToken&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># List all credentials managed by SDDC Manager</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">for c in d.get(&#39;elements&#39;, []):</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">    print(c.get(&#39;entityName&#39;,&#39;&#39;), c.get(&#39;credentialType&#39;,&#39;&#39;), c.get(&#39;username&#39;,&#39;&#39;))</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">&quot;</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Initiate rotation for all credentials</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nv">TASK_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/credentials&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;operationType&quot;:&quot;ROTATE&quot;,&quot;elements&quot;:[{&quot;resourceName&quot;:&quot;ALL&quot;}]}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;id&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Rotation task ID: </span><span class="si">${</span><span class="nv">TASK_ID</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="c1"># Poll task status until complete</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;curl -sk -H &#39;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&#39; \</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="s2">  </span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/tasks/</span><span class="si">${</span><span class="nv">TASK_ID</span><span class="si">}</span><span class="s2"> | \</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="s2">  python3 -c \&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;status&#39;,&#39;&#39;), d.get(&#39;completionTimestamp&#39;,&#39;&#39;))\&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">SDDC_MANAGER</span><span class="o">=</span><span class="s2">&quot;https://sddc-manager.vcf.internal&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">SDDC_TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/tokens&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;P@ssw0rd&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;accessToken&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># List all credentials managed by SDDC Manager</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">for c in d.get(&#39;elements&#39;, []):</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">    print(c.get(&#39;entityName&#39;,&#39;&#39;), c.get(&#39;credentialType&#39;,&#39;&#39;), c.get(&#39;username&#39;,&#39;&#39;))</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Initiate rotation for all credentials</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nv">TASK_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/credentials&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;operationType&quot;:&quot;ROTATE&quot;,&quot;elements&quot;:[{&quot;resourceName&quot;:&quot;ALL&quot;}]}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;id&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Rotation task ID: </span><span class="si">${</span><span class="nv">TASK_ID</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="c1"># Poll task status until complete</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;curl -sk -H &#39;Authorization: Bearer </span><span class="si">${</span><span class="nv">SDDC_TOKEN</span><span class="si">}</span><span class="s2">&#39; \</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="s2">  </span><span class="si">${</span><span class="nv">SDDC_MANAGER</span><span class="si">}</span><span class="s2">/v1/tasks/</span><span class="si">${</span><span class="nv">TASK_ID</span><span class="si">}</span><span class="s2"> | \</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="s2">  python3 -c \&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;status&#39;,&#39;&#39;), d.get(&#39;completionTimestamp&#39;,&#39;&#39;))\&quot;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vcsa-01.vcf.internal APPLIANCE root
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vcsa-02.vcf.internal APPLIANCE root
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>nsx-manager-01.vcf.internal NSX_MANAGER admin
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxi-01.vcf.internal ESXI root
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxi-02.vcf.internal ESXI root
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>...
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Rotation task ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Every 30.0s: curl -sk -H &#39;Authorization: Bearer eyJhbGc...&#39; https://sddc-manager.vcf.internal/v1/tasks/550e8400-e29b-41d4-a716-446655440000 | python3 -c &quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;status&#39;,&#39;&#39;), d.get(&#39;completionTimestamp&#39;,&#39;&#39;))&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>RUNNING 
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>RUNNING 
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>RUNNING 
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>COMPLETED 2024-01-15T14:32:18.456Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification, or import the SDDC Manager certificate into your system trust store.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "accessToken"</code></strong> — Verify the SDDC Manager credentials are correct and the <code>/v1/tokens</code> endpoint returned valid JSON; check the response with <code>curl -sk -X POST ... | python3 -m json.tool</code>.
+<strong><code>Authorization header missing or invalid</code></strong> — Ensure the <code>${SDDC_TOKEN}</code> variable is populated by checking <code>echo ${SDDC_TOKEN}</code> before running subsequent curl commands; re-authenticate if the token is empty or expired.</p>
+</div>
 <p>After rotation completes, update any external automation or scripts that reference VCF credentials.</p>
 <h2 id="nsx-t-edge-cluster-scale-out">NSX-T Edge Cluster Scale-Out<a class="headerlink" href="#nsx-t-edge-cluster-scale-out" title="Permanent link">&para;</a></h2>
 <p>Add Edge nodes when workloads have high North-South throughput requirements, or when existing Edge nodes are CPU or bandwidth saturated.</p>
 <p><strong>When to scale out:</strong> Edge node CPU sustained above 70%, or when adding gateway services (load balancers, NAT) that require additional capacity.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Deploy a new Edge VM from SDDC Manager or NSX Manager</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># SDDC Manager handles Edge deployment in VCF environments — use SDDC Manager UI</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># SDDC Manager → Workload Domains → Cluster → Add Edge Node</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If adding manually via NSX Manager (non-VCF-managed):</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># NSX Manager → System → Fabric → Nodes → Edge Transport Nodes → Add Node</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Select form factor: Large (16 vCPU, 64 GB RAM recommended for production)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Assign uplink profiles and transport zones matching existing Edge nodes</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 2: Once Edge node is deployed, verify it appears as a transport node</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes?node_types=EdgeNode&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">    print(n[&#39;display_name&#39;], n.get(&#39;state&#39;,&#39;&#39;))</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Step 3: Add the new Edge node to the existing Edge Cluster</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Get existing Edge Cluster ID</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="nv">EDGE_CLUSTER_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;results&#39;][0][&#39;id&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="c1"># Get new Edge node transport node ID</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="nv">NEW_EDGE_TN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes?node_types=EdgeNode&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); [print(n[&#39;id&#39;]) for n in d[&#39;results&#39;] if &#39;new-edge&#39; in n[&#39;display_name&#39;]]&quot;</span><span class="k">)</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># Add member to Edge Cluster via PUT (full replacement of member list)</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters/</span><span class="si">${</span><span class="nv">EDGE_CLUSTER_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="s2">    \&quot;members\&quot;: [</span>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="s2">      {\&quot;transport_node_id\&quot;: \&quot;&lt;existing-edge-tn-id&gt;\&quot;},</span>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="s2">      {\&quot;transport_node_id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NEW_EDGE_TN_ID</span><span class="si">}</span><span class="s2">\&quot;}</span>
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="s2">    ]</span>
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="s2">  }&quot;</span>
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="c1"># Step 4: Verify Edge Cluster member count and status</span>
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters/</span><span class="si">${</span><span class="nv">EDGE_CLUSTER_ID</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;member_statuses&#39;,[]))&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 1: Deploy a new Edge VM from SDDC Manager or NSX Manager</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># SDDC Manager handles Edge deployment in VCF environments — use SDDC Manager UI</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># SDDC Manager → Workload Domains → Cluster → Add Edge Node</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If adding manually via NSX Manager (non-VCF-managed):</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># NSX Manager → System → Fabric → Nodes → Edge Transport Nodes → Add Node</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Select form factor: Large (16 vCPU, 64 GB RAM recommended for production)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Assign uplink profiles and transport zones matching existing Edge nodes</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Step 2: Once Edge node is deployed, verify it appears as a transport node</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes?node_types=EdgeNode&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s2">    print(n[&#39;display_name&#39;], n.get(&#39;state&#39;,&#39;&#39;))</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s2">&quot;</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Step 3: Add the new Edge node to the existing Edge Cluster</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Get existing Edge Cluster ID</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="nv">EDGE_CLUSTER_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;results&#39;][0][&#39;id&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="c1"># Get new Edge node transport node ID</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="nv">NEW_EDGE_TN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/transport-nodes?node_types=EdgeNode&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); [print(n[&#39;id&#39;]) for n in d[&#39;results&#39;] if &#39;new-edge&#39; in n[&#39;display_name&#39;]]&quot;</span><span class="k">)</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="c1"># Add member to Edge Cluster via PUT (full replacement of member list)</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters/</span><span class="si">${</span><span class="nv">EDGE_CLUSTER_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="s2">    \&quot;members\&quot;: [</span>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="s2">      {\&quot;transport_node_id\&quot;: \&quot;&lt;existing-edge-tn-id&gt;\&quot;},</span>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="s2">      {\&quot;transport_node_id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NEW_EDGE_TN_ID</span><span class="si">}</span><span class="s2">\&quot;}</span>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="s2">    ]</span>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="s2">  }&quot;</span>
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="c1"># Step 4: Verify Edge Cluster member count and status</span>
+<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/edge-clusters/</span><span class="si">${</span><span class="nv">EDGE_CLUSTER_ID</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;member_statuses&#39;,[]))&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>edge-01 UP
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>edge-02 UP
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>new-edge-01 UP
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>edge-cluster-1
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>tn-edge-02-uuid-a1b2c3d4e5f6
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[{&#39;transport_node_id&#39;: &#39;tn-edge-01-uuid-9x8y7z6w5v4u&#39;, &#39;status&#39;: &#39;UP&#39;, &#39;realtime_status&#39;: &#39;REALIZED&#39;}, {&#39;transport_node_id&#39;: &#39;tn-edge-02-uuid-a1b2c3d4e5f6&#39;, &#39;status&#39;: &#39;UP&#39;, &#39;realtime_status&#39;: &#39;REALIZED&#39;}]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index array with string "results"</code></strong> — Verify NSX_URL is correct and the API endpoint is returning valid JSON; test with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/edge-clusters" | head -20</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or configure NSX Manager certificate in your CA bundle; the <code>-sk</code> flags should suppress this but verify NSX_URL uses https.
+<strong><code>ValueError: No JSON object could be decoded</code></strong> — Ensure NSX_PASS is set correctly and the admin user has API permissions; test authentication with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/transport-nodes" -w "\n%{http_code}\n"</code> to check for 401 responses.</p>
+</div>
 <h2 id="vsan-storage-policy-update">vSAN Storage Policy Update<a class="headerlink" href="#vsan-storage-policy-update" title="Permanent link">&para;</a></h2>
 <p>Storage policies (SPBM) control the data protection level for VM objects. Update policies when changing FTT, RAID type, or adding encryption requirements.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1: Create a new SPBM policy via PowerCLI</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-SpbmStoragePolicy<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-FTT2-RAID1&quot;</span><span class="w"> </span>-Description<span class="w"> </span><span class="s2">&quot;FTT=2 RAID-1 mirroring&quot;</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-AnyOfRuleSets<span class="w"> </span>@<span class="o">(</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>New-SpbmRuleSet<span class="w"> </span>-AllOfRules<span class="w"> </span>@<span class="o">(</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span>New-SpbmRule<span class="w"> </span>-Capability<span class="w"> </span><span class="o">(</span>Get-SpbmCapability<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span><span class="o">)</span><span class="w"> </span>-Value<span class="w"> </span><span class="m">2</span>,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span>New-SpbmRule<span class="w"> </span>-Capability<span class="w"> </span><span class="o">(</span>Get-SpbmCapability<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;VSAN.replicaPreference&quot;</span><span class="o">)</span><span class="w"> </span>-Value<span class="w"> </span><span class="s2">&quot;RAID-1 (Mirroring) - Performance&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="o">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="o">)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 2: Check compliance of existing VMs against the new policy</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;Compliant&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.ComplianceStatus<span class="o">}}</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Step 3: Apply the new policy to a specific VM</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Set-SpbmEntityConfiguration<span class="w"> </span>-Configuration<span class="w"> </span><span class="o">(</span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="nv">$vm</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>-StoragePolicy<span class="w"> </span><span class="nv">$policy</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Step 4: Apply policy to all VMDKs of a VM</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-HardDisk<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>Set-SpbmEntityConfiguration<span class="w"> </span>-StoragePolicy<span class="w"> </span><span class="nv">$policy</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Step 5: Check compliance status after applying</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>ComplianceStatus
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># Step 6: Run a cluster-wide compliance check</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>Get-Cluster<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-Management-Cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ComplianceStatus<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;compliant&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>ComplianceStatus
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Step 1: Create a new SPBM policy via PowerCLI</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-SpbmStoragePolicy<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-FTT2-RAID1&quot;</span><span class="w"> </span>-Description<span class="w"> </span><span class="s2">&quot;FTT=2 RAID-1 mirroring&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-AnyOfRuleSets<span class="w"> </span>@<span class="o">(</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>New-SpbmRuleSet<span class="w"> </span>-AllOfRules<span class="w"> </span>@<span class="o">(</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span>New-SpbmRule<span class="w"> </span>-Capability<span class="w"> </span><span class="o">(</span>Get-SpbmCapability<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span><span class="o">)</span><span class="w"> </span>-Value<span class="w"> </span><span class="m">2</span>,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">      </span>New-SpbmRule<span class="w"> </span>-Capability<span class="w"> </span><span class="o">(</span>Get-SpbmCapability<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;VSAN.replicaPreference&quot;</span><span class="o">)</span><span class="w"> </span>-Value<span class="w"> </span><span class="s2">&quot;RAID-1 (Mirroring) - Performance&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="o">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="o">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Step 2: Check compliance of existing VMs against the new policy</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;Compliant&quot;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.ComplianceStatus<span class="o">}}</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Step 3: Apply the new policy to a specific VM</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Set-SpbmEntityConfiguration<span class="w"> </span>-Configuration<span class="w"> </span><span class="o">(</span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="nv">$vm</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span>-StoragePolicy<span class="w"> </span><span class="nv">$policy</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Step 4: Apply policy to all VMDKs of a VM</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-HardDisk<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span>Set-SpbmEntityConfiguration<span class="w"> </span>-StoragePolicy<span class="w"> </span><span class="nv">$policy</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># Step 5: Check compliance status after applying</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;myvm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>ComplianceStatus
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1"># Step 6: Run a cluster-wide compliance check</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>Get-Cluster<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-Management-Cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SpbmEntityConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ComplianceStatus<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;compliant&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">  </span>Select<span class="w"> </span>Entity,<span class="w"> </span>StoragePolicy,<span class="w"> </span>ComplianceStatus
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name                          : EVS-FTT2-RAID1
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Description                   : FTT=2 RAID-1 mirroring
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ResourceType                  : Storage
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>CreationTime                  : 2024-01-15 14:32:18
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ModifiedTime                  : 2024-01-15 14:32:18
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Entity                         StoragePolicy              Compliant
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>------                         ---------------            ---------
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>myvm                           vSAN Default Policy        compliant
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>web-app-01                     EVS-FTT2-RAID1             compliant
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>db-server-02                   vSAN Default Policy        nonCompliant
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>cache-node-03                  EVS-FTT2-RAID1             compliant
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>...
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Entity                         StoragePolicy              ComplianceStatus
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>------                         ---------------            -----------------
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>myvm                           EVS-FTT2-RAID1             compliant
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Entity                         StoragePolicy              ComplianceStatus
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>------                         ---------------            -----------------
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>db-server-02                   EVS-FTT2-RAID1             nonCompliant
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>legacy-app-vm                  vSAN Default Policy        nonCompliant
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>backup-staging-01              EVS-FTT2-RAID1             nonCompliant
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-SpbmCapability : The term 'Get-SpbmCapability' is not recognized</code></strong> — Load the VMware.VimAutomation.Storage module with <code>Import-Module VMware.VimAutomation.Storage</code> before running SPBM commands.
+<strong><code>Set-SpbmEntityConfiguration : Cannot bind argument to parameter 'StoragePolicy' because it is null</code></strong> — Ensure the policy variable <code>$policy</code> was successfully created in Step 1 by running <code>$policy | Get-Member</code> to verify the object exists.
+<strong><code>Get-VM : The specified VM 'myvm' was not found</code></strong> — Verify the VM name matches exactly (case-sensitive) using <code>Get-VM | Select Name</code> to list available VMs in the connected vCenter.</p>
+</div>
 <h2 id="nsx-t-segment-management">NSX-T Segment Management<a class="headerlink" href="#nsx-t-segment-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a new logical segment (workload network)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;display_name&quot;: &quot;workload-web-01&quot;,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">    &quot;transport_zone_id&quot;: &quot;&lt;overlay-tz-id&gt;&quot;,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">    &quot;replication_mode&quot;: &quot;MTEP&quot;,</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">    &quot;admin_state&quot;: &quot;UP&quot;,</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    &quot;vni&quot;: 70001</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Attach segment to T1 router (via router port)</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Recommended: do this via NSX-T UI for first-time config; use API for automation</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Update distributed firewall policy to allow new segment</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># NSX-T → Security → Distributed Firewall → Add rule targeting new segment group</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a new logical segment (workload network)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-switches&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;display_name&quot;: &quot;workload-web-01&quot;,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;transport_zone_id&quot;: &quot;&lt;overlay-tz-id&gt;&quot;,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">    &quot;replication_mode&quot;: &quot;MTEP&quot;,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">    &quot;admin_state&quot;: &quot;UP&quot;,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">    &quot;vni&quot;: 70001</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Attach segment to T1 router (via router port)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Recommended: do this via NSX-T UI for first-time config; use API for automation</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Update distributed firewall policy to allow new segment</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># NSX-T → Security → Distributed Firewall → Add rule targeting new segment group</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;id&quot;: &quot;logical-switch-70001&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;display_name&quot;: &quot;workload-web-01&quot;,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;transport_zone_id&quot;: &quot;tz-overlay-prod-01&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;replication_mode&quot;: &quot;MTEP&quot;,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;admin_state&quot;: &quot;UP&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;vni&quot;: 70001,
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  &quot;resource_type&quot;: &quot;LogicalSwitch&quot;,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  &quot;_create_time&quot;: 1699564823456,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  &quot;_last_modified_time&quot;: 1699564823456,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;_system_owned&quot;: false,
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  &quot;_protection&quot;: &quot;NOT_PROTECTED&quot;,
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  &quot;revision&quot;: 0
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command (already present in example) or import the NSX Manager certificate into your system trust store.
+<strong><code>{"error_code":400,"error_message":"Invalid transport_zone_id"}</code></strong> — Replace <code>&lt;overlay-tz-id&gt;</code> with an actual transport zone UUID from your NSX deployment (retrieve via <code>curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/transport-zones"</code>).
+<strong><code>curl: (7) Failed to connect to $NSX_URL port 443: Connection refused</code></strong> — Verify <code>$NSX_URL</code> environment variable is set correctly (e.g., <code>export NSX_URL=https://nsx-manager.example.com</code>) and NSX Manager is reachable on the network.</p>
+</div>
 <h2 id="vsan-rebalance">vSAN Rebalance<a class="headerlink" href="#vsan-rebalance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Trigger manual vSAN rebalance (PowerCLI)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-Management-Cluster&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check current vSAN disk balance across hosts</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">$vsanHealth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VsanView<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">$health</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$vsanHealth</span>.QueryVsanClusterHealthSummary<span class="o">(</span><span class="nv">$cluster</span>.Id,<span class="nv">$null</span>,<span class="nv">$null</span>,<span class="nv">$true</span>,<span class="nv">$null</span>,<span class="nv">$null</span>,<span class="s2">&quot;defaultView&quot;</span><span class="o">)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">$health</span>.Groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>GroupName,<span class="w"> </span>GroupHealth
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Trigger proactive rebalance via vSAN API</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Invoke-VsanCommand<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-VsanCommand<span class="w"> </span><span class="s2">&quot;proactive-rebalance start&quot;</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Monitor rebalance progress</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync,<span class="w"> </span>ActiveTasks,<span class="w"> </span>RecoveryETA
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Trigger manual vSAN rebalance (PowerCLI)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;EVS-Management-Cluster&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check current vSAN disk balance across hosts</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nv">$vsanHealth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VsanView<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nv">$health</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$vsanHealth</span>.QueryVsanClusterHealthSummary<span class="o">(</span><span class="nv">$cluster</span>.Id,<span class="nv">$null</span>,<span class="nv">$null</span>,<span class="nv">$true</span>,<span class="nv">$null</span>,<span class="nv">$null</span>,<span class="s2">&quot;defaultView&quot;</span><span class="o">)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nv">$health</span>.Groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>GroupName,<span class="w"> </span>GroupHealth
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Trigger proactive rebalance via vSAN API</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Invoke-VsanCommand<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-VsanCommand<span class="w"> </span><span class="s2">&quot;proactive-rebalance start&quot;</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Monitor rebalance progress</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Get-VsanResyncDashboard<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BytesToSync,<span class="w"> </span>ActiveTasks,<span class="w"> </span>RecoveryETA
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>GroupName                          GroupHealth
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>---------                          -----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Capacity                           Healthy
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Performance                        Healthy
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Network                            Healthy
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Disk Balance                        Warning
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Memory                              Healthy
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Proactive rebalance initiated on cluster EVS-Management-Cluster
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Rebalance job ID: 4a7c9e2f-b1d3-4e8a-9f2c-5d6e7f8a9b0c
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Status: In Progress
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>BytesToSync                        ActiveTasks    RecoveryETA
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>-----------                        -----------    -----------
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>847.3 GB                           12             00:45:23
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VsanView : The term 'Get-VsanView' is not recognized</code></strong> — Import the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running the script.
+<strong><code>Invoke-VsanCommand : Cluster 'EVS-Management-Cluster' is not vSAN enabled</code></strong> — Verify the cluster name matches exactly and that vSAN is enabled on the cluster with <code>Get-Cluster | Get-VsanClusterConfiguration</code>.</p>
+</div>
 <h2 id="hcx-migration-procedure">HCX Migration Procedure<a class="headerlink" href="#hcx-migration-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pre-migration checks:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># 1. Verify HCX service mesh is Green</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># 2. Confirm Direct Connect bandwidth is adequate (1 Gbps for live vMotion)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 3. Verify L2 network extension (NE) is active for the VM network</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># 4. Check that destination vSAN has sufficient free capacity</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Migrate a VM via HCX vMotion (zero-downtime)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># HCX UI → Migration → Migrate VMs</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">#   Source site: on-premises</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">#   Destination site: EVS</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1">#   Migration type: vMotion</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">#   Target datastore: vsanDatastore</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1">#   Target network: same as source (via NE) or new segment</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Post-migration:</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># 1. Verify VM is reachable at same IP (if NE used)</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># 2. Check vSAN policy applied to migrated VM</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># 3. Remove NE for migrated networks once all VMs are moved</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Pre-migration checks:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># 1. Verify HCX service mesh is Green</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># 2. Confirm Direct Connect bandwidth is adequate (1 Gbps for live vMotion)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 3. Verify L2 network extension (NE) is active for the VM network</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># 4. Check that destination vSAN has sufficient free capacity</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Migrate a VM via HCX vMotion (zero-downtime)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># HCX UI → Migration → Migrate VMs</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1">#   Source site: on-premises</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1">#   Destination site: EVS</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1">#   Migration type: vMotion</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1">#   Target datastore: vsanDatastore</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1">#   Target network: same as source (via NE) or new segment</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Post-migration:</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># 1. Verify VM is reachable at same IP (if NE used)</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="c1"># 2. Check vSAN policy applied to migrated VM</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># 3. Remove NE for migrated networks once all VMs are moved</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9255,7 +9454,7 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

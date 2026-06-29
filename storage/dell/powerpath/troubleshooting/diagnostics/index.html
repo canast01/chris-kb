@@ -8950,176 +8950,514 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>alive
 </code></pre></div>
-<p>Save the output of all commands before making any changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">DIAG</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_powerpath_diag_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.txt&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== PowerPath Diagnostic: </span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2"> — </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt version ---&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>powermt<span class="w"> </span>version
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt check_registration ---&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>powermt<span class="w"> </span>check_registration
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display options ---&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display dev=all ---&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display ports class=all ---&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DIAG</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostic saved to: </span><span class="nv">$DIAG</span><span class="s2">&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PowerPath Release: EMC PowerPath 6.1 for Linux
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Copyright (c) 1999-2023 EMC Corporation. All rights reserved.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Logical Device ID: 0001
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>state=alive; policy=SymmOpt; priority=0; owner=node-prod-01; array_priority=0
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>------------ Host ---------------  - Stor -  -- I/O Path --  *** Paths ***
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> # HBA SP  Node  Symm Logical Dead Queued  (dead)  vs  (alive)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> 0  fa.0a  SP A  000297900001  0001   0      0      alive      alive
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> 1  fa.0b  SP B  000297900001  0001   0      0      alive      alive
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> 2  fa.1a  SP A  000297900001  0001   0      0      alive      alive
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> 3  fa.1b  SP B  000297900001  0001   0      0      alive      alive
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>HBA Port Information:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Port 0 (qla2xxx): ONLINE - Speed: 16Gb/s - WWPN: 50:00:14:40:5a:2b:c1:01
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Port 1 (qla2xxx): ONLINE - Speed: 16Gb/s - WWPN: 50:00:14:40:5a:2b:c1:02
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Port 2 (qla2xxx): ONLINE - Speed: 16Gb/s - WWPN: 50:00:14:40:5a:2b:c1:03
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Port 3 (qla2xxx): ONLINE - Speed: 16Gb/s - WWPN: 50:00:14:40:5a:2b:c1:04
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>PowerPath Options:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Load Balancing Policy: SymmOpt
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Failover Mode: Enabled
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Auto-failback: Disabled
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  Inquiry Timeout: 30 seconds
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  Path Verification: Enabled
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>License Registration Status:
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  License Key: VALID
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  Expiration Date: 2025-12-31
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  Licensed Paths: 16
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  Current Paths: 4
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>PowerPath Version: 6.1.0 Build 1234
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Kernel Module: powerpath (loaded)
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Daemon: powerpathmgr (running)
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>2
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>4
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.
+<strong><code>powermt display dev=all: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the powerpath group with <code>sudo usermod -a -G powerpath $USER</code>.
+<strong><code>No devices found</code></strong> — Confirm SAN connectivity and that storage arrays are visible to the host with <code>lsscsi</code> or <code>multipath -ll</code>.</p>
+</div>
+<p>Save the output of all commands before making any changes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">DIAG</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_powerpath_diag_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== PowerPath Diagnostic: </span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2"> — </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt version ---&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>powermt<span class="w"> </span>version
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt check_registration ---&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display options ---&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display dev=all ---&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- powermt display ports class=all ---&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DIAG</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostic saved to: </span><span class="nv">$DIAG</span><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>=== PowerPath Diagnostic: storage-dell-01 — Thu Nov 14 10:23:47 UTC 2024 ===
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>--- powermt version ---
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>PowerPath Release: 6.2.1 (build 234)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>--- powermt check_registration ---
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>PowerPath is registered and licensed.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>--- powermt display options ---
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Option Name                          Current Value
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>=====================================  ===============
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>auto_failover                         enabled
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>load_balance_policy                   round_robin
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>fast_write_enabled                    yes
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>--- powermt display dev=all ---
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Symmetrix ID: 000297900123
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Device                 Logical Device  Flags
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>emcpowerb              SYMMETRIX-8F     (O)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>emcpowerc              SYMMETRIX-8F     (O)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>emcpowerd              SYMMETRIX-8F     (O)
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>--- powermt display ports class=all ---
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Logical Device          Avail  Optimization  Ident  Paths  Algo
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>SYMMETRIX-8F            Yes    Symmetrix     ON     4      LBA
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Diagnostic saved to: storage-dell-01_powerpath_diag_20241114_102347.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Install PowerPath EMC client package or verify the binary is in $PATH with <code>which powermt</code>.
+<strong><code>Permission denied</code></strong> — Run the diagnostic script with sudo or as root user since powermt requires elevated privileges.
+<strong><code>powermt: error: unable to connect to the PowerPath daemon</code></strong> — Restart the PowerPath daemon with <code>sudo systemctl restart powerpath</code> or verify it is running with <code>sudo systemctl status powerpath</code>.</p>
+</div>
 <hr />
 <h2 id="step-2-linux-specific-diagnostics">Step 2 — Linux-specific diagnostics<a class="headerlink" href="#step-2-linux-specific-diagnostics" title="Permanent link">&para;</a></h2>
 <h3 id="kernel-module">Kernel module<a class="headerlink" href="#kernel-module" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm the PowerPath kernel module is loaded</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check the loaded module&#39;s version</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>modinfo<span class="w"> </span>emcp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;filename|version|description&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Compare with the expected kernel version</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uname<span class="w"> </span>-r
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check for module load errors at boot time</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|emcpower\|PowerPath&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check if the module is available for the current kernel</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>find<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;emcp*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm the PowerPath kernel module is loaded</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check the loaded module&#39;s version</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>modinfo<span class="w"> </span>emcp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;filename|version|description&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Compare with the expected kernel version</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>uname<span class="w"> </span>-r
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check for module load errors at boot time</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|emcpower\|PowerPath&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check if the module is available for the current kernel</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>find<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;emcp*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>emcp                  847872  12
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>filename: /lib/modules/5.15.0-91-generic/kernel/drivers/scsi/emc/emcp.ko
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>version: 6.2.0.1234
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>description: EMC PowerPath Driver
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>5.15.0-91-generic
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>[    2.847291] emcp: loading out-of-tree module taints kernel.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>[    2.847402] emcp: module verification failed: signature and/or required key missing
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>[    2.851847] emcpower: registered device emcpower0
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>[    2.852103] emcpower: registered device emcpower1
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>[    3.124556] emcp: PowerPath 6.2.0.1234 initialized successfully
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>/lib/modules/5.15.0-91-generic/kernel/drivers/scsi/emc/emcp.ko
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>/lib/modules/5.15.0-91-generic/kernel/drivers/scsi/emc/emcp.mod
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>emcp: module verification failed: signature and/or required key missing</code></strong> — This is a warning on secure boot systems; verify the module is from Dell/EMC and proceed if trusted, or disable secure boot if required by your environment.
+<strong><code>modinfo: ERROR: Module alias emcp not found.</code></strong> — The module is not loaded; run <code>modprobe emcp</code> to load it, or check that PowerPath is installed with <code>rpm -qa | grep PowerPath</code>.
+<strong><code>find: '/lib/modules/5.15.0-91-generic': No such file or directory</code></strong> — The kernel version in <code>uname -r</code> does not match installed kernel modules; rebuild the module for the current kernel with <code>powerpath-build</code> or reboot to the correct kernel.</p>
+</div>
 <h3 id="powerpath-service">PowerPath service<a class="headerlink" href="#powerpath-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check the PowerPath daemon status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View recent service log entries</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>PowerPath<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>--no-pager
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check the service start time (to correlate with path events)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>show<span class="w"> </span>PowerPath<span class="w"> </span>--property<span class="o">=</span>ActiveEnterTimestamp
-</code></pre></div>
-<h3 id="hba-port-state">HBA port state<a class="headerlink" href="#hba-port-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all FC HBA ports and their state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>/sys/class/fc_host/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/fc_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nv">port</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$host</span><span class="k">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nv">state</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/port_state<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nv">wwpn</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/port_name<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nv">speed</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/speed<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">: state=</span><span class="si">${</span><span class="nv">state</span><span class="si">}</span><span class="s2"> wwpn=</span><span class="si">${</span><span class="nv">wwpn</span><span class="si">}</span><span class="s2"> speed=</span><span class="si">${</span><span class="nv">speed</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">done</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Detailed HBA info via systool (if sysfsutils is installed)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># HBA error statistics</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/fc_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nv">port</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$host</span><span class="k">)</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> statistics ===&quot;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/link_failure_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (link_failure_count)&quot;</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/loss_of_signal_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (loss_of_signal_count)&quot;</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/error_frames<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (error_frames)&quot;</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/invalid_crc_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (invalid_crc_count)&quot;</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="k">done</span>
-</code></pre></div>
-<h3 id="kernel-messages">Kernel messages<a class="headerlink" href="#kernel-messages" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SCSI and multipath-related kernel messages</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;scsi|multipath|emcpower|powerpath|hba|fibre|fc_host&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Real-time kernel messages (watch during path restore)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>dmesg<span class="w"> </span>-w<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;scsi|emcpower|powerpath&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># System log (path state change events)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;emcp|PowerPath|dead path|path restored|SCSI error&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># journald equivalent</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;emcp|powerpath|scsi&quot;</span>
-</code></pre></div>
-<h3 id="scsi-device-layer">SCSI device layer<a class="headerlink" href="#scsi-device-layer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all SCSI block devices (raw paths before PowerPath abstraction)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>lsblk<span class="w"> </span>-S
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check the PowerPath daemon status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm pseudo devices exist and are accessible</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/dev/emcpower*<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Each emcpower* device corresponds to one LUN</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check block device I/O queue state</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>cat<span class="w"> </span>/sys/block/sda/device/state<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># &#39;running&#39; is normal; &#39;offline&#39; indicates a SCSI transport failure</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># View recent service log entries</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>PowerPath<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>--no-pager
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check the service start time (to correlate with path events)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span>show<span class="w"> </span>PowerPath<span class="w"> </span>--property<span class="o">=</span>ActiveEnterTimestamp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>● PowerPath.service - Dell EMC PowerPath
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>     Loaded: loaded (/usr/lib/systemd/system/PowerPath.service; enabled; vendor preset: enabled)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 3 days ago
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    Process: 2847 ExecStart=/opt/PowerPath/bin/powerpath start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   Main PID: 2851 (powerpath)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      Tasks: 12 (limit: 4915)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>     Memory: 156.3M
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        CPU: 2h 14m 23s
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>     CGroup: /system.slice/PowerPath.service
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>             └─2851 /opt/PowerPath/bin/powerpath daemon
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Jan 17 14:32:18 stor-node-04 systemd[1]: Starting Dell EMC PowerPath...
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Jan 17 14:32:19 stor-node-04 powerpath[2847]: PowerPath daemon initialized successfully
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Jan 17 14:32:20 stor-node-04 powerpath[2851]: Loaded 8 storage arrays
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Jan 17 14:32:21 stor-node-04 powerpath[2851]: Path failover monitoring enabled
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Jan 17 14:32:22 stor-node-04 systemd[1]: Started Dell EMC PowerPath.
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Jan 17 15:14:33 stor-node-04 powerpath[2851]: Path recovery: EMC-SAN-01 LUN 0x0042 restored
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Jan 17 16:45:12 stor-node-04 powerpath[2851]: Warning: High latency detected on path /dev/sdg (234ms)
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>ActiveEnterTimestamp=Wed 2024-01-17 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit PowerPath.service could not be found.</code></strong> — Install the PowerPath package with <code>apt-get install powerpath</code> or <code>yum install powerpath</code> depending on your distribution.
+<strong><code>Failed to get properties: Unit PowerPath.service is not loaded.</code></strong> — Enable and start the service with <code>systemctl enable PowerPath &amp;&amp; systemctl start PowerPath</code>.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as the root user.</p>
+</div>
+<h3 id="hba-port-state">HBA port state<a class="headerlink" href="#hba-port-state" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all FC HBA ports and their state</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ls<span class="w"> </span>/sys/class/fc_host/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/fc_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nv">port</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$host</span><span class="k">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nv">state</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/port_state<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nv">wwpn</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/port_name<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nv">speed</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/speed<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">: state=</span><span class="si">${</span><span class="nv">state</span><span class="si">}</span><span class="s2"> wwpn=</span><span class="si">${</span><span class="nv">wwpn</span><span class="si">}</span><span class="s2"> speed=</span><span class="si">${</span><span class="nv">speed</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">done</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Detailed HBA info via systool (if sysfsutils is installed)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># HBA error statistics</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/fc_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="nv">port</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$host</span><span class="k">)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> statistics ===&quot;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/link_failure_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (link_failure_count)&quot;</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/loss_of_signal_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (loss_of_signal_count)&quot;</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/error_frames<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (error_frames)&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span>cat<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>/statistics/invalid_crc_count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; (invalid_crc_count)&quot;</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>host0
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>host1
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>host2
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>host3
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>host0: state=Online wwpn=0x500143800000a1b2 speed=16 Gbit
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>host1: state=Online wwpn=0x500143800000a1b3 speed=16 Gbit
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>host2: state=Online wwpn=0x500143800000a1c4 speed=8 Gbit
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>host3: state=Offline wwpn=0x500143800000a1c5 speed=Unknown
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ClassVersion = &quot;1.0&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Class fc_host
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  | Host scsi_host0
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  |   active_mode = &quot;Initiator&quot;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  |   fabric_name = &quot;0x100000051e55a42b&quot;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  |   node_name = &quot;0x200143800000a1b2&quot;
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  |   port_name = &quot;0x500143800000a1b2&quot;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  |   port_state = &quot;Online&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  |   port_type = &quot;NPort (fabric via point-to-point)&quot;
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  |   speed = &quot;16 Gbit&quot;
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  |   supported_speeds = &quot;4 Gbit, 8 Gbit, 16 Gbit&quot;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  |   symbolic_name = &quot;DGC VRAID Fibre Channel Adapter&quot;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  |   ...
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>=== host0 statistics ===
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>2
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a> (link_failure_count)
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>0
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a> (loss_of_signal_count)
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>15
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a> (error_frames)
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>3
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a> (invalid_crc_count)
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>=== host1 statistics ===
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>1
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a> (link_failure_count)
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>0
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a> (loss_of_signal_count)
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>8
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a> (error_frames)
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>1
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a> (invalid_crc_count)
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>=== host2 statistics ===
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>0
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a> (link_failure_count)
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>0
+<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a> (loss_of_signal_count)
+<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a>0
+<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a> (error_frames)
+<a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a>0
+<a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a> (invalid_crc_count)
+<a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>=== host3 statistics ===
+<a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a>cat: /sys/class/fc_host/host3/statistics/link_failure_count: No such file or directory
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: systool</code></strong> — Install sysfsutils package with <code>apt-get install sysfsutils</code> or <code>yum install sysfsutils</code>.
+<strong><code>cat: /sys/class/fc_host/host3/statistics/link_failure_count: No such file or directory</code></strong> — This is expected for offline HBAs; the statistics directory may not exist until the port comes online.</p>
+</div>
+<h3 id="kernel-messages">Kernel messages<a class="headerlink" href="#kernel-messages" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SCSI and multipath-related kernel messages</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;scsi|multipath|emcpower|powerpath|hba|fibre|fc_host&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Real-time kernel messages (watch during path restore)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>dmesg<span class="w"> </span>-w<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;scsi|emcpower|powerpath&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># System log (path state change events)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;emcp|PowerPath|dead path|path restored|SCSI error&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># journald equivalent</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;emcp|powerpath|scsi&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[    0.234567] scsi host0: bnx2fc: QLogic BNXE Linux FCoE Driver v2.12.3
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[    1.456789] scsi 0:0:0:0: Direct-Access-RW NETAPP LUN C-Mode     SA67 PQ: 0 ANSI: 5
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>[    2.123456] scsi 1:0:1:2: Direct-Access-RW EMC SYMMETRIX        5978 PQ: 0 ANSI: 5
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>[   15.678901] emcpower: registered with major device number 120
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>[   42.345678] PowerPath: Detected 4 paths to device emcpowerb (WWNN: 50:00:14:40:5a:2b:c1:d0)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>[   58.912345] PowerPath: Path fc1 to LUN 0 restored (round-trip latency: 2.3ms)
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>[   89.567890] fc_host0: link up
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>[  124.234567] PowerPath: Dead path detected on fc3 to device emcpowera
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>[  156.789012] SCSI error: sdev 0:0:2:1 sense key=6 ASC=29h ASCQ=00h
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>[  201.456789] PowerPath: Failover complete - 2 active paths, 1 standby
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>[  245.123456] emcpower: device emcpowerc: I/O resumed after 4.2 second outage
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dmesg: read kernel buffer failed: Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>grep: /var/log/messages: No such file or directory</code></strong> — Use <code>/var/log/syslog</code> on Debian/Ubuntu systems or check your distribution's log location with <code>ls /var/log/</code>.</p>
+</div>
+<h3 id="scsi-device-layer">SCSI device layer<a class="headerlink" href="#scsi-device-layer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List all SCSI block devices (raw paths before PowerPath abstraction)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>lsblk<span class="w"> </span>-S
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Confirm pseudo devices exist and are accessible</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/dev/emcpower*<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Each emcpower* device corresponds to one LUN</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check block device I/O queue state</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>cat<span class="w"> </span>/sys/block/sda/device/state<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># &#39;running&#39; is normal; &#39;offline&#39; indicates a SCSI transport failure</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NAME HCTL       TYPE VENDOR   MODEL             REV TRAN
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sda  0:0:0:0    disk DELL     PERC H840         4.68 sas
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>sdb  0:0:1:0    disk DELL     PERC H840         4.68 sas
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>sdc  1:0:0:0    disk EMC      SYMMETRIX         5978 fc
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>sdd  1:0:1:0    disk EMC      SYMMETRIX         5978 fc
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>sde  2:0:0:0    disk EMC      SYMMETRIX         5978 fc
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>brw-rw---- 1 root disk 128,  0 Nov 14 09:22 /dev/emcpower0a
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>brw-rw---- 1 root disk 128, 16 Nov 14 09:22 /dev/emcpower1a
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>brw-rw---- 1 root disk 128, 32 Nov 14 09:22 /dev/emcpower2a
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>brw-rw---- 1 root disk 128, 48 Nov 14 09:22 /dev/emcpower3a
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ls: cannot access '/dev/emcpower*': No such file or directory</code></strong> — Verify PowerPath is installed and the daemon is running with <code>systemctl status powerpath</code> or <code>powermt display dev=all</code>.
+<strong><code>cat: /sys/block/sda/device/state: No such file or directory</code></strong> — Confirm the device exists and is recognized by the kernel; check <code>dmesg</code> for SCSI discovery errors and rescan with <code>echo "- - -" &gt; /sys/class/scsi_host/host0/scan</code>.</p>
+</div>
 <h3 id="iscsi-specific-if-using-iscsi">iSCSI-specific (if using iSCSI)<a class="headerlink" href="#iscsi-specific-if-using-iscsi" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show iSCSI sessions</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show detailed iSCSI session info</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check iSCSI initiator IQN</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Show iSCSI sessions</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Show detailed iSCSI session info</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Check iSCSI initiator IQN</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>tcp: [1] 10.45.120.15:3260,1 iqn.1991-05.com.dell:storage.array1.disk1 (non-flash)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>tcp: [2] 10.45.120.16:3260,1 iqn.1991-05.com.dell:storage.array1.disk2 (non-flash)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>iSCSI Transport Class version 2.0-870
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>version 6.2.0.874
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Host Number: 0  State: logged in
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    Persistent Portal: 10.45.120.15:3260,1
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    Iface Name: default
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    Initiator Name: iqn.1993-08.org.linux-iscsi:a1b2c3d4e5f6
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    Alias: 
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    StaticPortal: 10.45.120.15:3260
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    TargetName: iqn.1991-05.com.dell:storage.array1.disk1
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    InitiatorAlias: &lt;empty&gt;
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    TargetAlias: &lt;empty&gt;
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    TargetPortalGroupTag: 1
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    HeaderDigest: None
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    DataDigest: None
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    Authentication: CHAP, username: admin
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    MaxRecvDataSegmentLength: 262144
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    MaxXmitDataSegmentLength: 262144
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    CurrentConnectionState: logged in
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    ConnectTimeout: 30
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    LoginTimeout: 15
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>    AuthenticationTimeout: 45
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>    ActiveTimeout: 30
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>    BidirectionalHeartbeat: No
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>    IFMarker: No
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    OFMarker: No
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>    Chap Name: admin
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>    Chap Secret: ********
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>    ISID: 00023d000001
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>    TSIH: 1
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>    iSER (iSCSI Extensions for RDMA): No
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>## DO NOT EDIT OR REMOVE THE FOLLOWING LINE ##
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>InitiatorName=iqn.1993-08.org.linux-iscsi:a1b2c3d4e5f6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No active sessions.</code></strong> — Run <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> to discover targets, then <code>iscsiadm -m node --login</code> to establish sessions.
+<strong><code>cat: /etc/iscsi/initiatorname.iscsi: No such file or directory</code></strong> — Install open-iscsi package with <code>apt-get install open-iscsi</code> or <code>yum install iscsi-initiator-utils</code> depending on your distribution.
+<strong><code>iscsiadm: command not found</code></strong> — Install the open-iscsi utilities package for your Linux distribution.</p>
+</div>
 <hr />
 <h2 id="step-3-windows-specific-diagnostics">Step 3 — Windows-specific diagnostics<a class="headerlink" href="#step-3-windows-specific-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerPath device status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># PowerPath service status</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPower*&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;PowerPath*&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Check if PowerPath driver is loaded</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_SystemDriver</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;emcpower&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># View recent PowerPath events in Windows Event Log</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;System&quot;</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;emcpower|PowerPath&quot;</span> <span class="p">}</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;emcpower|PowerPath&quot;</span> <span class="p">}</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c"># Disk status (confirm PowerPath disks are online)</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c"># HBA port info via WMI</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="s2">&quot;root\WMI&quot;</span> <span class="n">-Class</span> <span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span> <span class="p">|</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    <span class="nb">Select-Object</span> <span class="n">NodeWWN</span><span class="p">,</span> <span class="n">PortWWN</span><span class="p">,</span> <span class="n">NumberOfPorts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># PowerPath device status</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># PowerPath service status</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPower*&quot;</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;PowerPath*&quot;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c"># Check if PowerPath driver is loaded</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_SystemDriver</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;emcpower&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c"># View recent PowerPath events in Windows Event Log</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;System&quot;</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;emcpower|PowerPath&quot;</span> <span class="p">}</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;emcpower|PowerPath&quot;</span> <span class="p">}</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="c"># Disk status (confirm PowerPath disks are online)</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c"># HBA port info via WMI</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="s2">&quot;root\WMI&quot;</span> <span class="n">-Class</span> <span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span> <span class="p">|</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>    <span class="nb">Select-Object</span> <span class="n">NodeWWN</span><span class="p">,</span> <span class="n">PortWWN</span><span class="p">,</span> <span class="n">NumberOfPorts</span>
 </code></pre></div>
 <hr />
 <h2 id="step-4-san-fabric-diagnostics">Step 4 — SAN fabric diagnostics<a class="headerlink" href="#step-4-san-fabric-diagnostics" title="Permanent link">&para;</a></h2>
 <p>When PowerPath dead paths do not recover after <code>powermt restore</code>, the issue is in the fabric or at the array. Run these on the switch, not on the host.</p>
 <h3 id="brocade-fos">Brocade (FOS)<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Port state for the switch port connected to the HBA</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>portshow<span class="w"> </span>&lt;port_number&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Fabric name server — confirm host initiator is logged in</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nsshow
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>nsallshow
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check port error counters</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>porterrshow
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Recent fabric event log</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>errshow
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Zone configuration — confirm this initiator and target are in the same zone</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>zoneshow
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>cfgshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Port state for the switch port connected to the HBA</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>portshow<span class="w"> </span>&lt;port_number&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Fabric name server — confirm host initiator is logged in</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>nsshow
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>nsallshow
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># Check port error counters</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>porterrshow
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># Recent fabric event log</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>errshow
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># Zone configuration — confirm this initiator and target are in the same zone</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>zoneshow
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>cfgshow
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>portshow 0
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>portName:   0
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>portType:   F-Port
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>portState:  Online
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>speed:  16Gb
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>portWWN:    50:00:09:73:00:1a:2b:4c
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>Connected portWWN:  50:00:14:40:5c:8d:9e:3f
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Connected portName: esx-hba1
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>nsshow
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>Initiator portWWN,Device,State
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>500143400a1b2c3d;esx-host-01,logged in
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>500143400a1b2e4e;esx-host-02,logged in
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>500143400a1b2f5f;storage-array-01,logged in
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>porterrshow
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>portName    Frames  CRCs    Timeouts    Discards
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>0   0   0   0   0
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>1   2   1   0   0
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>2   0   0   0   0
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>errshow
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>Time: 2024-01-15 14:32:18
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>Event: Link Reset on port 1
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>Severity: Warning
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>Time: 2024-01-15 13:45:02
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>Event: Port 2 Speed Negotiation Complete
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>Severity: Informational
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a>zoneshow
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>zoneName: zone_prod_esx
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a>memberIndex: 0, portWWN: 500143400a1b2c3d
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a>memberIndex: 1, portWWN: 500143400a1b2f5f
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a>
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a>cfgshow
+<a id="__codelineno-18-36" name="__codelineno-18-36" href="#__codelineno-18-36"></a>configName: fabric_config_01
+<a id="__codelineno-18-37" name="__codelineno-18-37" href="#__codelineno-18-37"></a>memberIndex: 0, zoneName: zone_prod_esx
+<a id="__codelineno-18-38" name="__codelineno-18-38" href="#__codelineno-18-38"></a>memberIndex: 1, zoneName: zone_dev_esx
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>portshow: Invalid port number</code></strong> — Verify the port number exists on your switch using <code>switchshow</code> and use the correct numeric identifier.
+<strong><code>nsshow: No initiators found</code></strong> — Confirm the HBA is properly zoned and logged into the fabric; check physical cable connections and HBA driver status on the host.
+<strong><code>zoneshow: Zone not found</code></strong> — Verify the zone name is spelled correctly and that the initiator and target WWNs are actually members of an active zone configuration.</p>
+</div>
 <h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Port state for the switch port connected to the HBA</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Name server — confirm host initiator is logged in</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Port error counters</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4<span class="w"> </span>counters
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Zone set configuration</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan_id&gt;
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>show<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Port state for the switch port connected to the HBA</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Name server — confirm host initiator is logged in</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Port error counters</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4<span class="w"> </span>counters
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Zone set configuration</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan_id&gt;
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>show<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>fc1/4 is up
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  Hardware is Fibre Channel, SFP is present
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  Port WWN is 50:00:d4:31:a2:c1:5f:04
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  Admin port mode is F, Physical port mode is F
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  Speed is 16 Gbps
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  Buffer credit is 64
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>FCNS Database:
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  VSAN 1:
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    FC4-Types: FCP
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    Symbolic Node Name: esx-host-01.lab.local
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    Node WWN: 50:00:0b:08:2e:f1:a2:01
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>    Port WWN: 50:00:0b:08:2e:f1:a2:02
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>Port fc1/4 Counters (cleared 2 days ago):
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>  Frames transmitted: 2847291
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>  Frames received: 2851043
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>  Transmit B2B credit zero: 0
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>  Link failures: 0
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>  Sync losses: 0
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>  Signal losses: 0
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>  Invalid CRCs: 0
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>  Invalid transmission words: 0
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>Active zone set: PROD_ZONES (vsan 1)
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>zone name PROD_ZONE_ESX01 vsan 1
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>  member pwwn 50:00:0b:08:2e:f1:a2:02
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>  member pwwn 50:00:14:40:66:b1:3c:10
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>  member pwwn 50:00:14:40:66:b1:3c:11
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fc1/4 is down (Administratively down)</code></strong> — Enable the port with <code>config terminal</code> → <code>interface fc1/4</code> → <code>no shutdown</code>.
+<strong><code>FCNS Database: No entries found</code></strong> — Verify the HBA is logged in to the fabric and check <code>show flogi database</code> to confirm FLOGI completion.
+<strong><code>zone name &lt;zone_name&gt; vsan &lt;vsan_id&gt;: Zone does not exist</code></strong> — Confirm the zone name spelling and VSAN ID match the active zoneset with <code>show zoneset active</code>.</p>
+</div>
 <hr />
 <h2 id="step-5-array-side-diagnostics">Step 5 — Array-side diagnostics<a class="headerlink" href="#step-5-array-side-diagnostics" title="Permanent link">&para;</a></h2>
 <p>Check at the storage array console when fabric-layer diagnostics show the fabric is healthy but paths remain dead.</p>
@@ -9138,50 +9476,73 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 </ul>
 <hr />
 <h2 id="step-6-support-bundle-collection">Step 6 — Support bundle collection<a class="headerlink" href="#step-6-support-bundle-collection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># powerpath_support_collect.sh — Collect PowerPath diagnostic data for Dell Support</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Run as root on the affected host</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">OUTDIR</span><span class="o">=</span><span class="s2">&quot;/tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>collect<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">shift</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collecting: </span><span class="si">${</span><span class="nv">label</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTDIR</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">label</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="o">}</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># PowerPath data</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_version&quot;</span><span class="w">              </span>powermt<span class="w"> </span>version
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_check_registration&quot;</span><span class="w">   </span>powermt<span class="w"> </span>check_registration
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_dev_all&quot;</span><span class="w">      </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_ports&quot;</span><span class="w">        </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_options&quot;</span><span class="w">      </span>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># OS and kernel</span>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>collect<span class="w"> </span><span class="s2">&quot;uname&quot;</span><span class="w">                        </span>uname<span class="w"> </span>-a
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>collect<span class="w"> </span><span class="s2">&quot;os_release&quot;</span><span class="w">                   </span>cat<span class="w"> </span>/etc/os-release
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>collect<span class="w"> </span><span class="s2">&quot;kernel_modules&quot;</span><span class="w">               </span>lsmod
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="c1"># HBA info</span>
-<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>collect<span class="w"> </span><span class="s2">&quot;fc_host_info&quot;</span><span class="w">                 </span>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v
-<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>collect<span class="w"> </span><span class="s2">&quot;dmesg_scsi&quot;</span><span class="w">                   </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dmesg | grep -iE &#39;scsi|emcpower|powerpath|hba&#39; | tail -200&quot;</span>
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>
-<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="c1"># Syslog</span>
-<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>collect<span class="w"> </span><span class="s2">&quot;syslog_emcp&quot;</span><span class="w">                  </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;grep -iE &#39;emcp|powerpath|scsi error&#39; /var/log/messages | tail -200&quot;</span>
-<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>
-<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="c1"># PowerPath service</span>
-<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>collect<span class="w"> </span><span class="s2">&quot;powerpath_service&quot;</span><span class="w">            </span>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
-<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>collect<span class="w"> </span><span class="s2">&quot;powerpath_journal&quot;</span><span class="w">            </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;journalctl -u PowerPath --since &#39;24 hours ago&#39; --no-pager&quot;</span>
-<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>
-<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="c1"># Archive</span>
-<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;/tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span>-C<span class="w"> </span>/tmp<span class="w"> </span><span class="s2">&quot;pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Support bundle: /tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
-<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Attach this file to your Dell support case.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># powerpath_support_collect.sh — Collect PowerPath diagnostic data for Dell Support</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># Run as root on the affected host</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nv">OUTDIR</span><span class="o">=</span><span class="s2">&quot;/tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>collect<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">shift</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collecting: </span><span class="si">${</span><span class="nv">label</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTDIR</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">label</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="o">}</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="c1"># PowerPath data</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_version&quot;</span><span class="w">              </span>powermt<span class="w"> </span>version
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_check_registration&quot;</span><span class="w">   </span>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_dev_all&quot;</span><span class="w">      </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_ports&quot;</span><span class="w">        </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>collect<span class="w"> </span><span class="s2">&quot;powermt_display_options&quot;</span><span class="w">      </span>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="c1"># OS and kernel</span>
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>collect<span class="w"> </span><span class="s2">&quot;uname&quot;</span><span class="w">                        </span>uname<span class="w"> </span>-a
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>collect<span class="w"> </span><span class="s2">&quot;os_release&quot;</span><span class="w">                   </span>cat<span class="w"> </span>/etc/os-release
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>collect<span class="w"> </span><span class="s2">&quot;kernel_modules&quot;</span><span class="w">               </span>lsmod
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a><span class="c1"># HBA info</span>
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>collect<span class="w"> </span><span class="s2">&quot;fc_host_info&quot;</span><span class="w">                 </span>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>collect<span class="w"> </span><span class="s2">&quot;dmesg_scsi&quot;</span><span class="w">                   </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dmesg | grep -iE &#39;scsi|emcpower|powerpath|hba&#39; | tail -200&quot;</span>
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a><span class="c1"># Syslog</span>
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>collect<span class="w"> </span><span class="s2">&quot;syslog_emcp&quot;</span><span class="w">                  </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;grep -iE &#39;emcp|powerpath|scsi error&#39; /var/log/messages | tail -200&quot;</span>
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a><span class="c1"># PowerPath service</span>
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>collect<span class="w"> </span><span class="s2">&quot;powerpath_service&quot;</span><span class="w">            </span>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>collect<span class="w"> </span><span class="s2">&quot;powerpath_journal&quot;</span><span class="w">            </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;journalctl -u PowerPath --since &#39;24 hours ago&#39; --no-pager&quot;</span>
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a><span class="c1"># Archive</span>
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;/tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span>-C<span class="w"> </span>/tmp<span class="w"> </span><span class="s2">&quot;pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Support bundle: /tmp/pp_support_</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">TS</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Attach this file to your Dell support case.&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Collecting: powermt_version
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Collecting: powermt_check_registration
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Collecting: powermt_display_dev_all
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>Collecting: powermt_display_ports
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>Collecting: powermt_display_options
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>Collecting: uname
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>Collecting: os_release
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>Collecting: kernel_modules
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>Collecting: fc_host_info
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>Collecting: dmesg_scsi
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>Collecting: syslog_emcp
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>Collecting: powerpath_service
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>Collecting: powerpath_journal
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>Support bundle: /tmp/pp_support_esx-prod-01_20240215_143022.tar.gz
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>Attach this file to your Dell support case.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and add its bin directory to PATH or use full path <code>/opt/emc/PowerPath/bin/powermt</code>.
+<strong><code>Permission denied</code></strong> — Run the script with <code>sudo bash powerpath_support_collect.sh</code> or as root user; PowerPath commands require elevated privileges.
+<strong><code>systemctl status PowerPath</code> returned exit code 3</strong> — The PowerPath service may not be installed or the unit name differs; check available services with <code>systemctl list-units | grep -i power</code>.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -9272,7 +9633,7 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:17:07 UTC"><span class="timeago" datetime="2026-06-29T04:17:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:17:07 UTC">2026-06-29</span>
   </span>
 
     

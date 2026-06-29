@@ -8596,6 +8596,24 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Assign a policy to a volume</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot-policy<span class="w"> </span>daily-7
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Policy                                   Enabled  Schedules
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>---------------------------------------- -------- -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>default                                  true     hourly, daily, weekly, monthly
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>daily-7                                  true     daily
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>weekly-backup                            true     weekly, monthly
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>(Vserver: svm-prod, Volume: data_vol01)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Snapshot Policy: default
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Created snapshot policy &quot;daily-7&quot;.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Added schedule &quot;daily&quot; to policy &quot;daily-7&quot; with count 7.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Volume modify successful for volume &quot;data_vol01&quot; in Vserver &quot;svm-prod&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "daily-7" already exists.</code></strong> — Use a unique policy name or delete the existing policy with <code>volume snapshot policy delete -policy daily-7</code> first.
+<strong><code>Error: Invalid vserver "svm-prod".</code></strong> — Verify the SVM name with <code>vserver show</code> and ensure you are connected to the correct cluster.
+<strong><code>Error: Volume "data_vol01" does not exist in Vserver "svm-prod".</code></strong> — Confirm the volume name and SVM with <code>volume show -vserver &lt;svm&gt;</code> before assigning the policy.</p>
+</div>
 <p>Recommended snapshot schedule for production volumes:</p>
 <table>
 <thead>
@@ -8629,61 +8647,147 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
 </tbody>
 </table>
 <h3 id="listing-and-reviewing-snapshots">Listing and Reviewing Snapshots<a class="headerlink" href="#listing-and-reviewing-snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all snapshots for a volume</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show snapshot details including size and creation time</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>size,create-time,busy,owners
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check total snapshot space consumption on a volume</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot-percent,size,used
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Access snapshots directly from an NFS client (read-only)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ls<span class="w"> </span>/mnt/vol/.snapshot/
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Access snapshots from an SMB client (read-only)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Navigate to \\server\share\~snapshot\ in Windows Explorer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all snapshots for a volume</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show snapshot details including size and creation time</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>size,create-time,busy,owners
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check total snapshot space consumption on a volume</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot-percent,size,used
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Access snapshots directly from an NFS client (read-only)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ls<span class="w"> </span>/mnt/vol/.snapshot/
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Access snapshots from an SMB client (read-only)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Navigate to \\server\share\~snapshot\ in Windows Explorer</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vserver     Volume       Snapshot                                Create Time
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>----------- ------------ ----------------------------------- ---------------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-svm    data_vol     hourly.2024-01-15_0800              Jan 15 08:00
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prod-svm    data_vol     hourly.2024-01-15_0900              Jan 15 09:00
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>prod-svm    data_vol     daily.2024-01-14                    Jan 14 00:00
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>prod-svm    data_vol     weekly.2024-01-08                   Jan 08 00:00
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Vserver     Volume       Snapshot                 Size     Create Time        Busy  Owners
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>----------- ------------ -------------------- --------- ------------------- ---- ----------
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>prod-svm    data_vol     hourly.2024-01-15_0800 2.4GB    Jan 15 08:00:12     No   -
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>prod-svm    data_vol     hourly.2024-01-15_0900 2.6GB    Jan 15 09:00:08     No   -
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>prod-svm    data_vol     daily.2024-01-14       5.1GB    Jan 14 00:00:01     No   -
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Vserver     Volume       Snapshot Percent  Size      Used
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>----------- ------------ --------------- --------- ---------
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>prod-svm    data_vol     18%              500GB     89GB
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>total 0
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>dr-xr-xr-x  4 root root  4096 Jan 15 09:00 hourly.2024-01-15_0800
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>dr-xr-xr-x  4 root root  4096 Jan 15 08:00 hourly.2024-01-15_0900
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>dr-xr-xr-x  4 root root  4096 Jan 14 00:00 daily.2024-01-14
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>dr-xr-xr-x  4 root root  4096 Jan 08 00:00 weekly.2024-01-08
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: invalid vserver name "&lt;svm&gt;"</code></strong> — Replace <code>&lt;svm&gt;</code> with the actual SVM name (e.g., <code>prod-svm</code>) and verify it exists with <code>vserver show</code>.
+<strong><code>Error: command failed: invalid volume name "&lt;vol&gt;"</code></strong> — Replace <code>&lt;vol&gt;</code> with the actual volume name (e.g., <code>data_vol</code>) and confirm the volume exists on the specified SVM.
+<strong><code>ls: cannot access '/mnt/vol/.snapshot/': Permission denied</code></strong> — Ensure the NFS mount includes the <code>snapdir=visible</code> option and the client has read permissions on the volume.</p>
+</div>
 <h3 id="restoring-a-single-file-or-directory">Restoring a Single File or Directory<a class="headerlink" href="#restoring-a-single-file-or-directory" title="Permanent link">&para;</a></h3>
 <p>Clients can access snapshots directly and copy files back without storage administrator intervention:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># NFS client — copy a file from a snapshot back to the live volume</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>/mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt<span class="w"> </span>/mnt/vol/important_file.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># NFS client — copy a file from a snapshot back to the live volume</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt<span class="w"> </span>/mnt/vol/important_file.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot open '/mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt' for reading: No such file or directory</code></strong> — Verify the snapshot name and file path exist by listing the snapshot directory with <code>ls -la /mnt/vol/.snapshot/</code>.
+<strong><code>cp: cannot create regular file '/mnt/vol/important_file.txt': Permission denied</code></strong> — Ensure the NFS mount has write permissions and the user has sufficient privileges; check mount options with <code>mount | grep /mnt/vol</code>.</p>
+</div>
 <p>For files exposed via SMB, Windows clients can use the Previous Versions tab on any file or folder to restore directly from ONTAP snapshots.</p>
 <h3 id="restoring-a-full-volume-to-a-snapshot">Restoring a Full Volume to a Snapshot<a class="headerlink" href="#restoring-a-full-volume-to-a-snapshot" title="Permanent link">&para;</a></h3>
 <p>A volume snapshot restore reverts the entire volume to the state at snapshot creation. This is destructive — all changes after the snapshot are lost. Always verify the snapshot contains the required data before proceeding.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify the snapshot exists and note its creation time</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot,create-time
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Take a pre-restore snapshot (safety net before restoring)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>pre-restore-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Offline the volume (required for a full snapshot restore)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Restore the volume to the snapshot</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Bring the volume back online</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify the snapshot exists and note its creation time</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot,create-time
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Take a pre-restore snapshot (safety net before restoring)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>pre-restore-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Offline the volume (required for a full snapshot restore)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Restore the volume to the snapshot</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Bring the volume back online</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Vserver   Volume            Snapshot                 Create Time
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------- ----------------- ------------------------ ------------------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>svm01     data_vol          hourly.2024.01.15_0800   1/15/2024 08:00:15
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>svm01     data_vol          daily.2024.01.14_0000    1/14/2024 00:00:02
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>svm01     data_vol          weekly.2024.01.08_0000   1/8/2024 00:00:01
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Volume &quot;data_vol&quot; on Vserver &quot;svm01&quot; has been created successfully.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Volume &quot;data_vol&quot; on Vserver &quot;svm01&quot; has been taken offline.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Volume snapshot restore: Restoring volume &quot;data_vol&quot; on Vserver &quot;svm01&quot; from snapshot &quot;hourly.2024.01.15_0800&quot;.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>This operation will overwrite all data on the volume. Do you want to continue? {y|n}: y
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Restore of snapshot &quot;hourly.2024.01.15_0800&quot; completed successfully.
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Volume &quot;data_vol&quot; on Vserver &quot;svm01&quot; has been brought online.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Volume "data_vol" is not offline</code></strong> — Run <code>volume offline -vserver &lt;svm&gt; -volume &lt;vol&gt;</code> before attempting the restore operation.
+<strong><code>Error: command failed: Snapshot "snap_name" does not exist</code></strong> — Verify the exact snapshot name using <code>volume snapshot show</code> and ensure you are targeting the correct Vserver and volume.
+<strong><code>Error: command failed: Volume has active CIFS/NFS connections</code></strong> — Disconnect all clients accessing the volume before taking it offline with <code>volume offline -vserver &lt;svm&gt; -volume &lt;vol&gt; -force true</code>.</p>
+</div>
 <p>For ONTAP 9.12+ with the SnapRestore license, online restore is supported — the volume remains accessible during restore, which is useful for large volumes where downtime is unacceptable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>-online<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>-online<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Restoring snapshot &quot;daily.2024-01-15_0200&quot; to volume &quot;data_vol&quot; on SVM &quot;prod_svm&quot;...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Restore operation started. Snapshot restore job ID: 12345
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Volume &quot;data_vol&quot; is now online and accessible.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Restore completed successfully in 47 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell.
+<strong><code>Error: volume does not exist</code></strong> — Verify the SVM name and volume name are correct using <code>volume show -vserver &lt;svm&gt;</code>.
+<strong><code>Error: snapshot does not exist</code></strong> — List available snapshots with <code>volume snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt;</code> and use the exact snapshot name.</p>
+</div>
 <h3 id="flexclone-for-non-destructive-test-restore">FlexClone for Non-Destructive Test Restore<a class="headerlink" href="#flexclone-for-non-destructive-test-restore" title="Permanent link">&para;</a></h3>
 <p>FlexClone creates an instant writable copy of a volume from a snapshot without consuming additional space. Use this to validate restore content before committing to a production restore:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a FlexClone from a production snapshot</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-flexclone<span class="w"> </span>&lt;clone_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>-parent-volume<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-parent-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;clone_name&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Mount and verify the data</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># After validation, delete the clone</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>volume<span class="w"> </span>clone<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;clone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a FlexClone from a production snapshot</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-flexclone<span class="w"> </span>&lt;clone_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-parent-volume<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-parent-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;clone_name&gt;
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Mount and verify the data</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># After validation, delete the clone</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>volume<span class="w"> </span>clone<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;clone_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Volume clone create: Command issued successfully
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Waiting for clone operation to complete...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Clone creation completed successfully.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Volume &quot;prod_clone_test&quot; created successfully with junction path &quot;/prod_clone_test&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Volume is online and ready for access.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Volume clone delete: Command issued successfully
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>FlexClone volume &quot;prod_clone_test&quot; has been deleted successfully.
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Deleting associated snapshot dependencies...
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Clone deletion completed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Snapshot "snap_name" does not exist on volume "source_vol"</code></strong> — Verify the snapshot exists on the parent volume using <code>volume snapshot show -vserver &lt;svm&gt; -volume &lt;source_vol&gt;</code>.
+<strong><code>Error: command failed: Volume "clone_name" already exists</code></strong> — Use a unique clone name or delete the existing clone with <code>volume clone delete -vserver &lt;svm&gt; -flexclone &lt;clone_name&gt;</code> first.
+<strong><code>Error: command failed: Junction path "/&lt;clone_name&gt;" is already in use</code></strong> — Specify a different junction path or remove the existing mount point before creating the clone.</p>
+</div>
 <hr />
 <h2 id="snapmirror-relationship-types">SnapMirror Relationship Types<a class="headerlink" href="#snapmirror-relationship-types" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
@@ -8735,97 +8839,253 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
     Admin-&gt;&gt;SrcCluster: snapmirror break (Primary)
     Admin-&gt;&gt;DstCluster: snapmirror resync (restore original)</code></pre>
 <h3 id="standard-failover-procedure">Standard Failover Procedure<a class="headerlink" href="#standard-failover-procedure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Confirm the relationship state and last successful transfer</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,last-transfer-end-timestamp
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 2. Quiesce the relationship (stop new transfers, allow current to complete)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. Break the relationship — destination volume becomes writable</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 4. Mount or present the destination volume to DR hosts</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>volume<span class="w"> </span>mount<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span>-junction-path<span class="w"> </span>/&lt;dest_vol&gt;
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 5. Create NFS exports or CIFS shares on the DR SVM as needed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Confirm the relationship state and last successful transfer</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,last-transfer-end-timestamp
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># 2. Quiesce the relationship (stop new transfers, allow current to complete)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># 3. Break the relationship — destination volume becomes writable</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># 4. Mount or present the destination volume to DR hosts</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>volume<span class="w"> </span>mount<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span>-junction-path<span class="w"> </span>/&lt;dest_vol&gt;
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 5. Create NFS exports or CIFS shares on the DR SVM as needed</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Source Path: cluster1_svm:prod_vol
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>                                  Destination Path: cluster2_svm:prod_vol_dr
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>                                         Lag Time: 00:00:15
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>                                           Healthy: true
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>                        Last Transfer End Timestamp: 2024-01-15 14:32:47 +00:00
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Operation succeeded: SnapMirror relationship quiesced.
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Waiting for current transfer to complete...
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Transfer completed successfully.
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Operation succeeded: SnapMirror relationship broken.
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Destination volume cluster2_svm:prod_vol_dr is now writable.
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Volume mount: Mount operation completed successfully.
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Volume cluster2_svm:prod_vol_dr mounted at junction path /prod_vol_dr
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: relationship does not exist</code></strong> — Verify the destination path syntax matches exactly (SVM:volume format) and the relationship exists with <code>snapmirror show</code>.
+<strong><code>Error: command failed: destination volume is not in a SnapMirror relationship</code></strong> — Confirm the SnapMirror relationship is initialized and healthy before attempting to break it.
+<strong><code>Error: command failed: junction path already exists</code></strong> — Use a different junction path or remove the existing mount point before mounting the destination volume.</p>
+</div>
 <h3 id="resync-after-primary-recovery">Resync After Primary Recovery<a class="headerlink" href="#resync-after-primary-recovery" title="Permanent link">&para;</a></h3>
 <p>When the primary site is restored, resync re-establishes the replication relationship. The resync operation is incremental — only changed blocks since the failover are transferred.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># After returning to primary, reverse-resync from DR back to primary</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># (makes primary the destination, DR the temporary source)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># After data is synced back, reverse the relationship to restore original direction</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># After returning to primary, reverse-resync from DR back to primary</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># (makes primary the destination, DR the temporary source)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># After data is synced back, reverse the relationship to restore original direction</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Operation is queued: snapmirror resync to destination &quot;cluster2://dr_svm/dr_volume&quot;.
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>[Job 1234] Job succeeded: snapmirror resync completed.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Transfer size: 2.4GB
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Last transfer duration: 00:12:34
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Healthy: true
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Operation is queued: snapmirror break for destination &quot;cluster1://prod_svm/prod_volume&quot;.
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>[Job 1235] Job succeeded: snapmirror break completed.
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>SnapMirror relationship broken.
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Operation is queued: snapmirror resync to destination &quot;cluster2://dr_svm/dr_volume&quot;.
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>[Job 1236] Job succeeded: snapmirror resync completed.
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Transfer size: 156MB
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Last transfer duration: 00:03:12
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Healthy: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: relationship does not exist</code></strong> — Verify the source and destination paths are correctly formatted as <code>svm_name:volume_name</code> and that the SnapMirror relationship exists.
+<strong><code>Error: command failed: destination is not a SnapMirror destination</code></strong> — Ensure the break command targets the correct destination path and that the relationship is in a valid state before breaking.</p>
+</div>
 <h3 id="svm-dr-full-svm-failover">SVM DR (Full SVM Failover)<a class="headerlink" href="#svm-dr-full-svm-failover" title="Permanent link">&para;</a></h3>
 <p>SVM DR replicates the entire SVM configuration — namespace, NFS exports, CIFS shares, LIF configuration, and data volumes — to a destination SVM. This enables full site failover including protocol configuration, not just volume data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show SVM DR relationships</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Activate the destination SVM (failover)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check SVM state on destination</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify volumes and LIFs were activated</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show SVM DR relationships</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Activate the destination SVM (failover)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check SVM state on destination</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Verify volumes and LIFs were activated</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Source                    Destination               Lag Time       Healthy
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>========================  ========================  =============  =======
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>source_svm:               dest_svm:                 00:00:15       true
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>source_svm:vol_data       dest_svm:vol_data         00:00:12       true
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>source_svm:vol_logs       dest_svm:vol_logs         00:00:18       true
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Operation succeeded: SnapMirror relationship broken for destination-path &quot;dest_svm:&quot;.
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                                   Admin      Operational Root
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Vserver     Type    Subtype        State      State       Volume  Aggregate
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>=========== ======= ============== ========== ========== ======== ===========
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>dest_svm    data    default        running    running     vol_root aggr1
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Vserver     Volume       Aggregate    State      Type       Size
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>=========== ============ ============ ========== ========== ==========
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>dest_svm    vol_data     aggr1        online     DP         500GB
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>dest_svm    vol_logs     aggr1        online     DP         250GB
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>dest_svm    vol_root     aggr1        online     RW         20GB
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>Vserver     Interface       IP              Status      Is Home
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>=========== =============== =============== =========== ==========
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>dest_svm    data_lif_01     192.168.1.45    up          true
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>dest_svm    data_lif_02     192.168.1.46    up          true
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>dest_svm    mgmt_lif        192.168.1.50    up          true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: SnapMirror relationship is not in a quiesced state</code></strong> — Run <code>snapmirror quiesce -destination-path &lt;dest_svm&gt;:</code> before attempting to break the relationship.
+<strong><code>Error: There is no data Vserver with name "&lt;dest_svm&gt;"</code></strong> — Verify the destination SVM name is correct and exists on the destination cluster using <code>vserver show</code>.
+<strong><code>Error: SnapMirror relationship does not exist</code></strong> — Confirm the DP relationship is initialized and healthy by checking <code>snapmirror show -type DP</code> output before breaking it.</p>
+</div>
 <hr />
 <h2 id="snapvault-long-term-retention">SnapVault (Long-Term Retention)<a class="headerlink" href="#snapvault-long-term-retention" title="Permanent link">&para;</a></h2>
 <p>SnapVault uses the XDP (Extended Data Protection) relationship type to create independent backup copies with configurable long-term retention policies. Destination snapshots are independent of the source — source snapshots can be deleted without affecting SnapVault copies.</p>
 <h3 id="snapvault-relationship-setup">SnapVault Relationship Setup<a class="headerlink" href="#snapvault-relationship-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create a SnapVault relationship (XDP type)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>-policy<span class="w"> </span>XDPDefault
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Initialize (baseline transfer)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Monitor initialization progress</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span>-transfer-progress
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Create a SnapVault relationship (XDP type)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span>-policy<span class="w"> </span>XDPDefault
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Initialize (baseline transfer)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Monitor initialization progress</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span>-transfer-progress
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Operation succeeded: SnapVault relationship created.
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Operation succeeded: SnapMirror operation queued.
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Destination Path: prod_vault_svm:prod_vault_vol
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Relationship Type: vault
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Admin State: snapmirrored
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Mirror State: initializing
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Unhealthy Reason: -
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Progress: 45%
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Elapsed Time: 12m34s
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Estimated Remaining Time: 15m22s
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Network Compression Ratio: 1.2:1
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Snapshot Progress: 8 of 12 snapshots transferred
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>Last Transfer Size: 847.3GB
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>Last Transfer Duration: 8m15s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the relationship doesn't already exist with <code>snapmirror show -destination-path &lt;vault_svm&gt;:&lt;vault_vol&gt;</code> before creating.
+<strong><code>Error: command failed: Source volume &lt;src_svm&gt;:&lt;src_vol&gt; does not exist.</code></strong> — Confirm source volume name and SVM are correct and the source cluster is reachable via cluster peering.
+<strong><code>Error: command failed: Destination volume &lt;vault_svm&gt;:&lt;vault_vol&gt; does not exist or is not a DP volume.</code></strong> — Create the destination volume first with <code>volume create -vserver &lt;vault_svm&gt; -volume &lt;vault_vol&gt; -aggregate &lt;aggr&gt; -type DP -size &lt;size&gt;</code>.</p>
+</div>
 <h3 id="snapvault-policy-configuration">SnapVault Policy Configuration<a class="headerlink" href="#snapvault-policy-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show SnapMirror/SnapVault policies</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show retention rules on the default XDP policy</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>show-rule<span class="w"> </span>-policy<span class="w"> </span>XDPDefault
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Create a custom vault policy with 90-day retention</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d<span class="w"> </span>-type<span class="w"> </span>vault
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>add-rule<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>-snapmirror-label<span class="w"> </span>daily<span class="w"> </span>-keep<span class="w"> </span><span class="m">90</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Apply custom policy to a SnapVault relationship</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Show SnapMirror/SnapVault policies</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>show
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Show retention rules on the default XDP policy</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>show-rule<span class="w"> </span>-policy<span class="w"> </span>XDPDefault
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Create a custom vault policy with 90-day retention</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d<span class="w"> </span>-type<span class="w"> </span>vault
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>snapmirror<span class="w"> </span>policy<span class="w"> </span>add-rule<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">    </span>-snapmirror-label<span class="w"> </span>daily<span class="w"> </span>-keep<span class="w"> </span><span class="m">90</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Apply custom policy to a SnapVault relationship</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span>-policy<span class="w"> </span>vault-90d
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Policy Name                     Type        Comment
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>-------------------------------- ----------- --------------------------------
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>DPDefault                        async-mirror -
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>XDPDefault                       vault       -
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>LocalSync                        sync-mirror -
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>vault-90d                        vault       -
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>-------------------- ------ --------- ---- -------- ------
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>daily                90     false     false -        -
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>weekly               52     false     false -        -
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>monthly              12     false     false -        -
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Policy &quot;vault-90d&quot; created successfully.
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>Rule added to policy &quot;vault-90d&quot;.
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>Operation succeeded: snapmirror modify for destination &quot;svm-dr:vault_prod&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver "vault_svm" does not exist.</code></strong> — Verify the vault SVM name with <code>vserver show</code> and replace <code>&lt;vault_svm&gt;</code> with the correct SVM name.
+<strong><code>Error: command failed: Cannot modify policy on an active SnapMirror relationship without quiescing first.</code></strong> — Run <code>snapmirror quiesce -destination-path &lt;vault_svm&gt;:&lt;vault_vol&gt;</code> before modifying the policy.
+<strong><code>Error: command failed: SnapMirror label "daily" does not exist on source volume.</code></strong> — Ensure the source volume has Snapshot copies with the "daily" label created by a matching schedule.</p>
+</div>
 <h3 id="manual-snapvault-update">Manual SnapVault Update<a class="headerlink" href="#manual-snapvault-update" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Trigger an immediate backup (manual update)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Show vault relationship status</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>XDP
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Show snapshots on the vault destination</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vault_vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Trigger an immediate backup (manual update)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Show vault relationship status</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>XDP
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Show snapshots on the vault destination</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;vault_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vault_vol&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Operation is queued: snapmirror update to destination &quot;vault_svm:vault_vol&quot; has been initiated.
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Source Destination Mirror State Relationship Status Last Transfer Size Last Transfer Time
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>------- ----------- ------ ----- ------------------- -------------------- ------------------
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>prod_svm:data_vol vault_svm:vault_vol XDP Snapmirrored Idle 2.3GB 11/15/2024 14:32:18
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Vserver Volume Snapshot Size State Owner
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>------- ------ -------- ---- ----- -----
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>vault_svm vault_vol daily.2024-11-15_1400 1.8GB valid SVM
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>vault_svm vault_vol daily.2024-11-14_1400 1.7GB valid SVM
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>vault_svm vault_vol daily.2024-11-13_1400 1.6GB valid SVM
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>vault_svm vault_vol hourly.2024-11-15_1300 892MB valid SVM
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>vault_svm vault_vol hourly.2024-11-15_1200 856MB valid SVM
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: snapmirror relationship does not exist</code></strong> — Verify the destination path syntax matches an existing SnapMirror relationship using <code>snapmirror show</code>.
+<strong><code>Error: command failed: access denied. Insufficient privileges for snapmirror update</code></strong> — Ensure your ONTAP user role includes the "snapmirror" capability or request admin credentials.</p>
+</div>
 <h3 id="restoring-from-snapvault">Restoring from SnapVault<a class="headerlink" href="#restoring-from-snapvault" title="Permanent link">&para;</a></h3>
 <p>To restore from a SnapVault destination, use <code>snapmirror restore</code> to copy a specific snapshot back to the source (or a new recovery volume):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Restore a specific snapshot from SnapVault back to the source volume</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>restore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>-source-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Restore a specific snapshot from SnapVault back to the source volume</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>snapmirror<span class="w"> </span>restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;vault_svm&gt;:&lt;vault_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span>-source-snapshot<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>[Job 123] Job is queued
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>[Job 123] Executing SnapMirror restore
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>[Job 123] Transfer starting for relationship SnapVault_prod_backup
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>[Job 123] Transferring snapshot: hourly.2024-01-15_0200
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>[Job 123] 45% Completed (2.3 GB of 5.1 GB transferred)
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>[Job 123] 100% Completed (5.1 GB transferred)
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>[Job 123] Finalizing restore operation
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>[Job 123] Job succeeded: Restore of snapshot &#39;hourly.2024-01-15_0200&#39; completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: source-path "&lt;vault_svm&gt;:&lt;vault_vol&gt;" does not exist</code></strong> — Verify the vault SVM and volume names match the SnapVault destination using <code>snapmirror show -destination-path</code>.
+<strong><code>Error: Snapshots with name "&lt;snap_name&gt;" do not exist on source</code></strong> — List available snapshots on the vault volume with <code>snapshot show -vserver &lt;vault_svm&gt; -volume &lt;vault_vol&gt;</code> and use the correct snapshot name.
+<strong><code>Error: SnapMirror relationship does not exist for destination-path "&lt;src_svm&gt;:&lt;src_vol&gt;"</code></strong> — Confirm the SnapVault relationship is initialized and healthy using <code>snapmirror show -destination-path &lt;src_svm&gt;:&lt;src_vol&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="snapcenter-integration">SnapCenter Integration<a class="headerlink" href="#snapcenter-integration" title="Permanent link">&para;</a></h2>
 <p>SnapCenter provides application-consistent backup orchestration for ONTAP. It coordinates pre/post quiesce hooks with VMware, Oracle, SQL Server, SAP HANA, and other applications before triggering ONTAP snapshot creation, ensuring backup consistency beyond crash-consistent.</p>
@@ -8858,25 +9118,41 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
 <li>[ ] AutoSupport delivering successfully: <code>system node autosupport history show</code></li>
 </ul>
 <h3 id="restore-test-procedure-flexclone-based">Restore Test Procedure (FlexClone-Based)<a class="headerlink" href="#restore-test-procedure-flexclone-based" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Identify the most recent snapshot on a production volume</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>create-time<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 2. Create a FlexClone from the most recent snapshot</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>-flexclone<span class="w"> </span>&lt;vol&gt;-restore-test<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>-parent-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span>-parent-snapshot<span class="w"> </span>&lt;most_recent_snap&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol&gt;-restore-test
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># 3. Mount the clone and verify data</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># (mount from an NFS client or attach to a test host)</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># 4. Record the restore test result and timestamp</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># 5. Delete the test clone</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>volume<span class="w"> </span>clone<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;vol&gt;-restore-test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Identify the most recent snapshot on a production volume</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>create-time<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. Create a FlexClone from the most recent snapshot</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span>-flexclone<span class="w"> </span>&lt;vol&gt;-restore-test<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">    </span>-parent-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">    </span>-parent-snapshot<span class="w"> </span>&lt;most_recent_snap&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol&gt;-restore-test
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="c1"># 3. Mount the clone and verify data</span>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="c1"># (mount from an NFS client or attach to a test host)</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="c1"># 4. Record the restore test result and timestamp</span>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="c1"># 5. Delete the test clone</span>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>volume<span class="w"> </span>clone<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;vol&gt;-restore-test
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Vserver   Volume                 Create Time
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>--------- ---------------------- ------------------------
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>prod-svm  prod-data              2024-01-15 14:32:18 +00:00
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>prod-svm  prod-data              2024-01-15 08:15:42 +00:00
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>prod-svm  prod-data              2024-01-14 22:47:09 +00:00
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Volume clone create: Command completed successfully.
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Volume clone delete: Command completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Snapshot "snapshot_name" does not exist.</code></strong> — Verify the snapshot name matches exactly and exists on the parent volume using <code>volume snapshot show</code>.
+<strong><code>Error: command failed: FlexClone "vol-restore-test" already exists.</code></strong> — Delete the existing clone with <code>volume clone delete -vserver &lt;svm&gt; -flexclone &lt;vol&gt;-restore-test</code> before creating a new one.
+<strong><code>Error: command failed: Cannot delete FlexClone volume while it is mounted or in use.</code></strong> — Unmount the clone from all NFS clients and ensure no processes are accessing it before attempting deletion.</p>
+</div>
 <h3 id="rpo-and-rto-reference">RPO and RTO Reference<a class="headerlink" href="#rpo-and-rto-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8962,7 +9238,7 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

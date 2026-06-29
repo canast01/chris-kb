@@ -8561,21 +8561,74 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Confirm only publickey method remains</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Vserver: cluster1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Username: admin
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Application: ssh
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Authentication Method: publickey
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Public Key Index: 1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Public Key Comment: admin-key-2024
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Public Key Hash: SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdEfG==
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Vserver: cluster1
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Username: admin
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Application: ssh
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Authentication Method: password
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Public Key Index: —
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Public Key Comment: —
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Public Key Hash: —
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>(no output — command completes silently)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Vserver: cluster1
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Username: admin
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Application: ssh
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Authentication Method: publickey
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Public Key Index: 1
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Public Key Comment: admin-key-2024
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Public Key Hash: SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdEfG==
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: entry doesn't exist</code></strong> — Ensure the public key has been added to the admin account using <code>security login publickey create</code> before attempting deletion.
+<strong><code>Error: Cannot delete the only authentication method</code></strong> — Verify the public key is working via SSH before deleting the password method, or add an additional authentication method first.</p>
+</div>
 <h3 id="lock-diagnostic-accounts">Lock Diagnostic Accounts<a class="headerlink" href="#lock-diagnostic-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Lock the built-in diag account</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify it is locked</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-fields<span class="w"> </span>is-account-locked
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Expected: is-account-locked: true</span>
-</code></pre></div>
-<h3 id="session-timeout">Session Timeout<a class="headerlink" href="#session-timeout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set CLI SSH idle timeout to 10 minutes (600 seconds)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>modify<span class="w"> </span>-timeout<span class="w"> </span><span class="m">600</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Lock the built-in diag account</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify timeout</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>show
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify it is locked</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-fields<span class="w"> </span>is-account-locked
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected: is-account-locked: true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Vserver     Username Account Locked
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>----------- -------- --------------
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>prod-cluster diag     true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "diag" is not a valid username for Vserver "prod-cluster"</code></strong> — Verify the cluster name with <code>cluster show</code> and ensure the diag account exists on that specific Vserver.
+<strong><code>Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"</code></strong> — Confirm your user account has the "admin" or equivalent security role by running <code>security login show -username &lt;your-user&gt;</code>.</p>
+</div>
+<h3 id="session-timeout">Session Timeout<a class="headerlink" href="#session-timeout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set CLI SSH idle timeout to 10 minutes (600 seconds)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>modify<span class="w"> </span>-timeout<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify timeout</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>show
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Session Timeout
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>---------------
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Idle Timeout: 600 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "security session timeout modify" is not a valid command.</code></strong> — Verify you are running ONTAP 9.1 or later, as this command was introduced in that version.
+<strong><code>Error: Invalid value "600" for parameter "timeout".</code></strong> — Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly.</p>
+</div>
 <h3 id="account-lockout-policy">Account Lockout Policy<a class="headerlink" href="#account-lockout-policy" title="Permanent link">&para;</a></h3>
 <p>ONTAP does not have a configurable account lockout after N failed attempts in the same way as Active Directory. Enforce this compensating control:</p>
 <ul>
@@ -8586,217 +8639,561 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <hr />
 <h2 id="protocol-hardening">Protocol Hardening<a class="headerlink" href="#protocol-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enforce TLS 1.2 minimum for HTTPS management interfaces</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify current TLS configuration</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># For highest security environments, enforce TLS 1.2 only on both interfaces</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>SSL<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify with an external SSL test</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;cluster-mgmt-ip&gt;:443<span class="w"> </span>-tls1_1
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Should fail if TLS 1.2 minimum is properly enforced</span>
-</code></pre></div>
-<h3 id="ssh-cipher-hardening">SSH Cipher Hardening<a class="headerlink" href="#ssh-cipher-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restrict SSH to strong ciphers (remove CBC mode ciphers)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify SSH settings</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-</code></pre></div>
-<h3 id="disable-legacy-protocols">Disable Legacy Protocols<a class="headerlink" href="#disable-legacy-protocols" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable Telnet</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>telnet<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Disable RSH</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>rsh<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify both are disabled</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>security<span class="w"> </span>protocol<span class="w"> </span>show
-</code></pre></div>
-<h3 id="disable-smb1">Disable SMB1<a class="headerlink" href="#disable-smb1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable SMB1 (vulnerable to EternalBlue and similar exploits)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enforce TLS 1.2 minimum for HTTPS management interfaces</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify SMB1 is disabled</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>smb1-enabled
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Expected: smb1-enabled: false</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Enable SMB signing (prevents man-in-the-middle attacks on SMB traffic)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>security<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-signing-required<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify current TLS configuration</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># For highest security environments, enforce TLS 1.2 only on both interfaces</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>SSL<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify with an external SSL test</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;cluster-mgmt-ip&gt;:443<span class="w"> </span>-tls1_1
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Should fail if TLS 1.2 minimum is properly enforced</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Interface  Min Protocol Version  Max Protocol Version
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>---------  -------------------  -------------------
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>HTTPS      TLSv1.2              TLSv1.3
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>SSL        TLSv1.2              TLSv1.3
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>(no output — command completes silently)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>CONNECTED(00000000)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>140735289847616:error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_read_c.c:659:SSL alert number 70
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid value for "-min-protocol-version": "TLSv1.2"</code></strong> — Verify the exact protocol version string supported by your ONTAP version (may be <code>TLSv1.2</code> or <code>TLSV1_2</code> depending on release); check the admin guide for valid enum values.
+<strong><code>Error: command not found: openssl</code></strong> — Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration.
+<strong><code>Error: Connection refused</code></strong> — Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with <code>network interface show -vserver &lt;cluster&gt; -role mgmt</code>.</p>
+</div>
+<h3 id="ssh-cipher-hardening">SSH Cipher Hardening<a class="headerlink" href="#ssh-cipher-hardening" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Restrict SSH to strong ciphers (remove CBC mode ciphers)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify SSH settings</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver: cluster-prod-01
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Ciphers: aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>MACs: hmac-sha2-256,hmac-sha2-512
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Key Exchange Algorithms: diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Hostkey Algorithms: ssh-rsa,rsa-sha2-256,rsa-sha2-512,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Vserver "&lt;cluster-name&gt;" does not exist</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name from <code>cluster identity show</code>.
+<strong><code>Error: Invalid cipher name "aes256-ctr"</code></strong> — Verify cipher names match your ONTAP version's supported list using <code>security ssh show -fields ciphers</code>.</p>
+</div>
+<h3 id="disable-legacy-protocols">Disable Legacy Protocols<a class="headerlink" href="#disable-legacy-protocols" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Disable Telnet</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>telnet<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Disable RSH</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>security<span class="w"> </span>protocol<span class="w"> </span>modify<span class="w"> </span>-application<span class="w"> </span>rsh<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify both are disabled</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>security<span class="w"> </span>protocol<span class="w"> </span>show
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>security protocol modify -application telnet -enabled false
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>security protocol modify -application rsh -enabled false
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>(no output — command completes silently)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>security protocol show
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Application     Enabled
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>-----------     -------
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>telnet          false
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>rsh             false
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>ssh             true
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>snmp            true
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>http            false
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>https           true
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>ndmp            true
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>nfs             true
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>cifs            true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "telnet" is not a valid application name</code></strong> — Use the exact application name from <code>security protocol show</code> output; verify spelling matches ONTAP's protocol list.
+<strong><code>Error: This operation is not permitted: admin role lacks "security" API access</code></strong> — Ensure your user account has the "admin" or equivalent security management role assigned.</p>
+</div>
+<h3 id="disable-smb1">Disable SMB1<a class="headerlink" href="#disable-smb1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Disable SMB1 (vulnerable to EternalBlue and similar exploits)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Verify SMB1 is disabled</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>smb1-enabled
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Expected: smb1-enabled: false</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Enable SMB signing (prevents man-in-the-middle attacks on SMB traffic)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>security<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-signing-required<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vserver cifs options modify -vserver prod-svm-01 -smb1-enabled false
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>vserver cifs options show -vserver prod-svm-01 -fields smb1-enabled
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Vserver          SMB1 Enabled
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>---------------- ----------------
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>prod-svm-01      false
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>vserver cifs security modify -vserver prod-svm-01 -is-signing-required true
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "prod-svm-01" is not a valid vserver name</code></strong> — Verify the SVM name with <code>vserver show</code> and replace <code>&lt;svm&gt;</code> with the correct vserver name.
+<strong><code>Error: CIFS is not configured on vserver "prod-svm-01"</code></strong> — Enable CIFS on the SVM first with <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;netbios-name&gt; -domain &lt;domain&gt;</code>.
+<strong><code>Error: This operation is not permitted: SMB1 is required for legacy clients</code></strong> — If legacy clients require SMB1, document the exception and use <code>-smb1-enabled true</code> instead, or plan a client upgrade.</p>
+</div>
 <hr />
 <h2 id="snmp-hardening">SNMP Hardening<a class="headerlink" href="#snmp-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Delete all SNMPv1/v2c community strings</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>public
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>private
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Confirm no community strings remain</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>show
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Expected: no entries</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Create an SNMPv3 user with authentication and privacy</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>-username<span class="w"> </span>snmpv3monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>-authmethod<span class="w"> </span>sha<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>-authpassword<span class="w"> </span>&lt;strong-auth-passphrase&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>-privpassword<span class="w"> </span>&lt;strong-priv-passphrase&gt;
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Add the monitoring server as an SNMPv3 trap host</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-server-ip&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3monitor
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># Enable SNMP</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>system<span class="w"> </span>snmp<span class="w"> </span>modify<span class="w"> </span>-is-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>show
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Delete all SNMPv1/v2c community strings</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>public
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>private
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Confirm no community strings remain</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>show
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Expected: no entries</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Create an SNMPv3 user with authentication and privacy</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span>-username<span class="w"> </span>snmpv3monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span>-authmethod<span class="w"> </span>sha<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span>-authpassword<span class="w"> </span>&lt;strong-auth-passphrase&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span>-privpassword<span class="w"> </span>&lt;strong-priv-passphrase&gt;
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Add the monitoring server as an SNMPv3 trap host</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-server-ip&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3monitor
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># Enable SNMP</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>system<span class="w"> </span>snmp<span class="w"> </span>modify<span class="w"> </span>-is-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>show
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>system snmp community delete -community-name public
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>(no output — command completes silently)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>system snmp community delete -community-name private
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>(no output — command completes silently)
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>system snmp community show
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>(no entries)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>system snmp user create -username snmpv3monitor -authmethod sha -authpassword ••••••••••••••• -privmethod aes128 -privpassword •••••••••••••••
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>(no output — command completes silently)
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>system snmp traphost add -ipaddr 192.168.1.45 -username snmpv3monitor
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>(no output — command completes silently)
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>system snmp modify -is-enabled true
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>(no output — command completes silently)
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>system snmp show
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>SNMP Status: enabled
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>SNMP Traps: enabled
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Authentication Traps: enabled
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Contact: admin@example.com
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Location: Data Center 1
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>system snmp user show
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>User Name: snmpv3monitor
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>Auth Protocol: sha
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Privacy Protocol: aes128
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Engine ID: 80:00:1f:88:03:00:08:c0:a8:01:2d
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>system snmp traphost show
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>IP Address: 192.168.1.45
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>Username: snmpv3monitor
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Port: 162
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: entry already exists.</code></strong> — Verify the community string or user does not already exist before creation; use <code>system snmp community show</code> or <code>system snmp user show</code> to check.
+<strong><code>Error: Invalid IP address &lt;monitoring-server-ip&gt;</code></strong> — Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation.
+<strong><code>Error: Authentication failed: invalid password complexity</code></strong> — Ensure both <code>&lt;strong-auth-passphrase&gt;</code> and <code>&lt;strong-priv-passphrase&gt;</code> meet minimum length (8 characters) and complexity requirements.</p>
+</div>
 <hr />
 <h2 id="autosupport-security">AutoSupport Security<a class="headerlink" href="#autosupport-security" title="Permanent link">&para;</a></h2>
 <p>AutoSupport transmits cluster telemetry to NetApp and optionally to internal addresses. Ensure HTTPS is used and that proxy configuration is in place if direct internet access is not available from the cluster management network.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Set all nodes to use HTTPS for AutoSupport delivery</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-transport<span class="w"> </span>https
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Configure a proxy if the cluster management LIF cannot reach the internet directly</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Set the internal notification address for callhome events</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-noteto<span class="w"> </span>ops-storage@corp.local
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify HTTPS connectivity to NetApp AutoSupport endpoints</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Test AutoSupport delivery</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Confirm test message was delivered</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-most-recent<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Look for status: sent-successful</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Set all nodes to use HTTPS for AutoSupport delivery</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-transport<span class="w"> </span>https
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Configure a proxy if the cluster management LIF cannot reach the internet directly</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Set the internal notification address for callhome events</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-noteto<span class="w"> </span>ops-storage@corp.local
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Verify HTTPS connectivity to NetApp AutoSupport endpoints</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Test AutoSupport delivery</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Confirm test message was delivered</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-most-recent<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># Look for status: sent-successful</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>node-1::*&gt; autosupport modify -node * -transport https
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>node-2::*&gt; autosupport modify -node * -transport https
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>(no output — command completes silently)
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>node-1::*&gt; autosupport modify -node * -proxy-url http://proxy.example.local:8080
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>node-2::*&gt; autosupport modify -node * -proxy-url http://proxy.example.local:8080
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>(no output — command completes silently)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>node-1::*&gt; autosupport modify -node * -noteto ops-storage@corp.local
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>node-2::*&gt; autosupport modify -node * -noteto ops-storage@corp.local
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>(no output — command completes silently)
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>node-1::*&gt; autosupport check show
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Node: node-1
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  Connectivity Status: PASSED
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  HTTPS Connectivity: PASSED
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  Proxy Configuration: PASSED
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  DNS Resolution: PASSED
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>Node: node-2
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>  Connectivity Status: PASSED
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>  HTTPS Connectivity: PASSED
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  Proxy Configuration: PASSED
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  DNS Resolution: PASSED
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>node-1::*&gt; autosupport invoke -node * -type test
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>node-1: AutoSupport test message queued for delivery
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>node-2: AutoSupport test message queued for delivery
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>node-1::*&gt; autosupport history show -node * -most-recent 3
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>Node: node-1
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>  Sequence Number: 4521
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>  Subject: AutoSupport DAILY [node-1] 192.168.1.10
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>  Status: sent-successful
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>  Timestamp: 2024-01-15 14:32:15 UTC
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>  Sequence Number: 4520
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>  Subject: AutoSupport TEST [node-1] 192.168.1.10
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>  Status: sent-successful
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>  Timestamp: 2024-01-15 14:28:42 UTC
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>  Sequence Number: 4519
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>  Subject: AutoSupport DAILY [node-1] 192.168.1.10
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>  Status: sent-successful
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>  Timestamp: 2024-01-14 23:00:08 UTC
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>Node: node-2
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>  Sequence Number: 4518
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>  Subject: AutoSupport DAILY [node-2] 192.168.1.11
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>  Status: sent-successful
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>  Timestamp: 2024-01-15 14:32:10 UTC
+<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>  ...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Proxy URL is invalid or unreachable</code></strong> — Verify the proxy hostname resolves and is reachable from the cluster management LIF using <code>network ping -vserver Cluster -destination proxy.example.local</code>.
+<strong><code>Error: AutoSupport check show reports FAILED for HTTPS Connectivity</code></strong> — Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running <code>network traceroute -destination support.netapp.com</code>.
+<strong><code>Error: autosupport history show displays status: sent-failed</code></strong> — Check the AutoSupport destination email address is correct and review logs with <code>autosupport history show -node &lt;node&gt; -fields subject,status,error-detail</code> to identify the delivery failure reason.</p>
+</div>
 <hr />
 <h2 id="audit-and-siem-forwarding">Audit and SIEM Forwarding<a class="headerlink" href="#audit-and-siem-forwarding" title="Permanent link">&para;</a></h2>
 <h3 id="admin-action-audit-log">Admin Action Audit Log<a class="headerlink" href="#admin-action-audit-log" title="Permanent link">&para;</a></h3>
 <p>All CLI, System Manager, and API operations by authenticated users are recorded in the ONTAP administrative audit log. This is enabled by default and cannot be disabled.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View recent administrative audit events</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Filter by username</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Filter by time range (last 24 hours)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;24h&quot;</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Filter by command</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-cmdname<span class="w"> </span><span class="s2">&quot;security login&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># View recent administrative audit events</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Filter by username</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Filter by time range (last 24 hours)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;24h&quot;</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Filter by command</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-cmdname<span class="w"> </span><span class="s2">&quot;security login&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Time                     User   Vserver      Command                          Result
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>------------------------  -----  -----------  --------------------------------  ------
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2024-01-15 14:32:18 UTC  admin  cluster1     security login create            Success
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>2024-01-15 13:47:02 UTC  admin  cluster1     volume create                    Success
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>2024-01-15 12:15:44 UTC  root   cluster1     cluster modify                   Success
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>2024-01-15 11:28:19 UTC  admin  cluster1     security login delete            Success
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>2024-01-15 10:05:33 UTC  diag   cluster1     system node reboot               Success
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>2024-01-15 09:42:11 UTC  admin  cluster1     security login                   Success
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>...
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>(7 entries displayed)
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Time                     User   Vserver      Command                          Result
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>------------------------  -----  -----------  --------------------------------  ------
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>2024-01-15 14:32:18 UTC  admin  cluster1     security login create            Success
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>2024-01-15 13:47:02 UTC  admin  cluster1     volume create                    Success
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>2024-01-15 11:28:19 UTC  admin  cluster1     security login delete            Success
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>2024-01-15 09:42:11 UTC  admin  cluster1     security login                   Success
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>(4 entries displayed)
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Time                     User   Vserver      Command                          Result
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>------------------------  -----  -----------  --------------------------------  ------
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>2024-01-15 14:32:18 UTC  admin  cluster1     security login create            Success
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>2024-01-15 13:47:02 UTC  admin  cluster1     volume create                    Success
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>2024-01-15 12:15:44 UTC  root   cluster1     cluster modify                   Success
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>2024-01-15 11:28:19 UTC  admin  cluster1     security login delete            Success
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>(4 entries displayed)
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>Time                     User   Vserver      Command                          Result
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>------------------------  -----  -----------  --------------------------------  ------
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>2024-01-15 14:32:18 UTC  admin  cluster1     security login create            Success
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>2024-01-15 11:28:19 UTC  admin  cluster1     security login delete            Success
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>(2 entries displayed)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid time range format "24h"</code></strong> — Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time.
+<strong><code>Error: Access denied for user 'readonly' to command 'security audit log show'</code></strong> — Ensure the user account has the "admin" or "security" role assigned via <code>security login modify</code>.</p>
+</div>
 <h3 id="ems-syslog-forwarding-to-siem">EMS Syslog Forwarding to SIEM<a class="headerlink" href="#ems-syslog-forwarding-to-siem" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a syslog destination for your SIEM</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-name<span class="w"> </span>siem-dest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-syslog<span class="w"> </span>&lt;siem-server-ip&gt;
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Create an event notification filter for CRITICAL and ERROR events</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>critical
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>error
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>alert
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Create the notification linking filter to destination</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>-destinations<span class="w"> </span>siem-dest
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Verify notification configuration</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>event<span class="w"> </span>notification<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create a syslog destination for your SIEM</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-name<span class="w"> </span>siem-dest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-syslog<span class="w"> </span>&lt;siem-server-ip&gt;
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Create an event notification filter for CRITICAL and ERROR events</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>critical
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>error
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-severity<span class="w"> </span>alert
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Create the notification linking filter to destination</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">    </span>-filter-name<span class="w"> </span>critical-errors<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">    </span>-destinations<span class="w"> </span>siem-dest
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c1"># Verify notification configuration</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>event<span class="w"> </span>notification<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cluster1::&gt; event notification destination create -name siem-dest -syslog 192.168.1.50
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>(no output — command completes silently)
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>cluster1::&gt; event filter create -filter-name critical-errors
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>(no output — command completes silently)
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>cluster1::&gt; event filter rule add -filter-name critical-errors -type include -severity critical
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>(no output — command completes silently)
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>cluster1::&gt; event filter rule add -filter-name critical-errors -type include -severity error
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>(no output — command completes silently)
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>cluster1::&gt; event filter rule add -filter-name critical-errors -type include -severity alert
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>(no output — command completes silently)
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>cluster1::&gt; event notification create -filter-name critical-errors -destinations siem-dest
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>(no output — command completes silently)
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>cluster1::&gt; event notification destination show
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>Name            Syslog Server
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>--------------- ----------------
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>siem-dest       192.168.1.50
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>cluster1::&gt; event notification show
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>Filter Name     Destinations
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>--------------- ----------------
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>critical-errors siem-dest
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Syslog server address is not reachable</code></strong> — Verify network connectivity to the SIEM server IP and ensure the firewall permits syslog traffic (UDP 514 by default).
+<strong><code>Error: "critical-errors" does not exist</code></strong> — Create the filter before linking it to a notification destination using the event filter create command.
+<strong><code>Error: Destination "siem-dest" does not exist</code></strong> — Create the syslog destination first with event notification destination create before referencing it in the notification.</p>
+</div>
 <h3 id="file-access-audit-ontap-audit-framework">File Access Audit (ONTAP Audit Framework)<a class="headerlink" href="#file-access-audit-ontap-audit-framework" title="Permanent link">&para;</a></h3>
 <p>For NAS environments requiring file access audit logging (SOX, HIPAA, PCI-DSS):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Configure file access auditing on an SVM</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># First create a volume to store audit logs</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>audit_logs<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-size<span class="w"> </span>50G<span class="w"> </span>-junction-path<span class="w"> </span>/audit_logs
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Configure the audit framework</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span>-format<span class="w"> </span>xml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span>-rotate-size<span class="w"> </span>50MB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span>-rotate-schedule-minute<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span>-rotate-schedule-hour<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span>-rotate-schedule-dayofweek<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Enable auditing</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># Verify audit configuration</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>vserver<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c1"># Show audit log files</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>vserver<span class="w"> </span>audit<span class="w"> </span>event-log<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Configure file access auditing on an SVM</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># First create a volume to store audit logs</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>audit_logs<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-size<span class="w"> </span>50G<span class="w"> </span>-junction-path<span class="w"> </span>/audit_logs
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Configure the audit framework</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">    </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span>-format<span class="w"> </span>xml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span>-rotate-size<span class="w"> </span>50MB<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">    </span>-rotate-schedule-minute<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">    </span>-rotate-schedule-hour<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">    </span>-rotate-schedule-dayofweek<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1"># Enable auditing</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="c1"># Verify audit configuration</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>vserver<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1"># Show audit log files</span>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>vserver<span class="w"> </span>audit<span class="w"> </span>event-log<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Volume created successfully.
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Vserver Audit Configuration for SVM &quot;prod-svm-01&quot;:
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>                           Vserver: prod-svm-01
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>                       Destination: /audit_logs
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>                            Events: file-ops,cifs-logon-logoff
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>                            Format: xml
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>                       Rotate Size: 50MB
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>                Rotate Schedule Minute: 0
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>                  Rotate Schedule Hour: 0
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>              Rotate Schedule Dayofweek: 0
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>                            Enabled: true
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Vserver Audit Event Log Files for SVM &quot;prod-svm-01&quot;:
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Index  Filename                          Size      Timestamp
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>-----  --------------------------------  --------  -------------------------
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>1      20240115_000000_audit.xml        12.4MB    Jan 15 2024 00:00:15 +0000
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>2      20240114_000000_audit.xml        50.0MB    Jan 14 2024 00:00:08 +0000
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>3      20240113_000000_audit.xml        50.0MB    Jan 13 2024 00:00:12 +0000
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: destination path "/audit_logs" does not exist</code></strong> — Create the volume and mount it at the junction path before configuring the audit destination.
+<strong><code>Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"</code></strong> — Run <code>vserver audit delete -vserver &lt;svm&gt;</code> first to remove the existing audit configuration, then recreate it.
+<strong><code>Error: Invalid event type "file-ops"</code></strong> — Use valid event types such as <code>file-ops</code>, <code>cifs-logon-logoff</code>, <code>cap-staging</code>, or <code>file-share-access</code> separated by commas without spaces.</p>
+</div>
 <hr />
 <h2 id="rbac-hardening-for-service-accounts">RBAC Hardening for Service Accounts<a class="headerlink" href="#rbac-hardening-for-service-accounts" title="Permanent link">&para;</a></h2>
 <p>Automation tools, monitoring agents, and backup software should never use the full <code>admin</code> role. Create dedicated roles with minimum required permissions.</p>
 <h3 id="read-only-monitoring-role">Read-Only Monitoring Role<a class="headerlink" href="#read-only-monitoring-role" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a monitoring role with no access by default</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Grant read-only access to specific command directories</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;cluster show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;storage aggregate show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;system health alert show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;storage disk show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;event log show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Create the monitoring service account</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">    </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="c1"># Add the monitoring service&#39;s public key</span>
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...monitoring-service-key&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Create a monitoring role with no access by default</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Grant read-only access to specific command directories</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;cluster show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;storage aggregate show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;system health alert show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;storage disk show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;event log show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="c1"># Create the monitoring service account</span>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">    </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>
+<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a><span class="c1"># Add the monitoring service&#39;s public key</span>
+<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...monitoring-service-key&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>cluster1::&gt; security login role create \
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    -role monitoring-ro \
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    -cmddirname &quot;DEFAULT&quot; \
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    -access none \
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    -vserver cluster1
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>(no output — command completes silently)
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;version&quot; -access readonly
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>(no output — command completes silently)
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;cluster show&quot; -access readonly
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>(no output — command completes silently)
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;storage aggregate show&quot; -access readonly
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>(no output — command completes silently)
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;volume show&quot; -access readonly
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>(no output — command completes silently)
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;snapmirror show&quot; -access readonly
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>(no output — command completes silently)
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;network interface show&quot; -access readonly
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>(no output — command completes silently)
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;storage disk show&quot; -access readonly
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>(no output — command completes silently)
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>cluster1::&gt; security login role create -role monitoring-ro -cmddirname &quot;event log show&quot; -access readonly
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>(no output — command completes silently)
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>cluster1::&gt; security login create \
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>    -username svc-monitoring \
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>    -application ssh \
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>    -authentication-method publickey \
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>    -role monitoring-ro \
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a>    -vserver cluster1
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>(no output — command completes silently)
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>cluster1::&gt; security login publickey create \
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a>    -username svc-monitoring \
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a>    -index 0 \
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a>    -publickey &quot;ssh-ed25519 AAAA...monitoring-service-key&quot;
+<a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "monitoring-ro" already exists.</code></strong> — Drop the existing role with <code>security login role delete -role monitoring-ro -cmddirname DEFAULT</code> before recreating it, or use a different role name.
+<strong><code>Error: Invalid vserver name "&lt;cluster-name&gt;"</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or omit the <code>-vserver</code> parameter to use the admin vserver.
+<strong><code>Error: User "svc-monitoring" already exists.</code></strong> — Delete the existing user with <code>security login delete -username svc-monitoring -application ssh</code> before recreating it.</p>
+</div>
 <h3 id="snapcenter-backup-role">SnapCenter / Backup Role<a class="headerlink" href="#snapcenter-backup-role" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create a backup role for SnapCenter or Veeam with snapshot and SnapMirror access</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume snapshot&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume clone&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;lun show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span>-username<span class="w"> </span>svc-snapcenter<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span>-application<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span>-role<span class="w"> </span>backup-role<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Create a backup role for SnapCenter or Veeam with snapshot and SnapMirror access</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume snapshot&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume clone&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;lun show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">    </span>-username<span class="w"> </span>svc-snapcenter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">    </span>-application<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="w">    </span>-role<span class="w"> </span>backup-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;DEFAULT&quot; -access none
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>(no output — command completes silently)
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;version&quot; -access readonly
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>(no output — command completes silently)
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;volume snapshot&quot; -access all
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>(no output — command completes silently)
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;snapmirror&quot; -access all
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>(no output — command completes silently)
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;volume show&quot; -access readonly
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>(no output — command completes silently)
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;volume clone&quot; -access all
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>(no output — command completes silently)
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>cluster1::&gt; security login role create -role backup-role -cmddirname &quot;lun show&quot; -access readonly
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>(no output — command completes silently)
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>cluster1::&gt; security login create -username svc-snapcenter -application http -authentication-method password -role backup-role -vserver cluster1
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>Please enter a password for user &quot;svc-snapcenter&quot;:
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Please confirm the password:
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Role "backup-role" already exists.</code></strong> — Delete the existing role with <code>security login role delete -role backup-role</code> before recreating it.
+<strong><code>"&lt;cluster-name&gt;" is not a valid vserver name.</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or use <code>-vserver *</code> for cluster-scoped access.
+<strong><code>User "svc-snapcenter" already exists.</code></strong> — Use <code>security login delete -username svc-snapcenter -application http</code> to remove the existing user first, or choose a different username.</p>
+</div>
 <hr />
 <h2 id="compliance-mode-and-audit-readiness">Compliance Mode and Audit Readiness<a class="headerlink" href="#compliance-mode-and-audit-readiness" title="Permanent link">&para;</a></h2>
 <p>For regulated environments (PCI-DSS, HIPAA, FedRAMP, ISO 27001):</p>
@@ -8890,7 +9287,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:24:31 UTC"><span class="timeago" datetime="2026-06-29T05:24:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:24:31 UTC">2026-06-29</span>
   </span>
 
     

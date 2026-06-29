@@ -7827,21 +7827,75 @@
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)
 <a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>kubectl get networkpolicies --all-namespaces | grep -c &quot;NetworkPolicy&quot;
 <a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a># Should be non-zero
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check NTP status on all nodes</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
 </code></pre></div></li>
 </ol>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Welcome to Nexus Dashboard
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ndadmin@nd-dc1-1.corp.example.com&#39;s password:
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.42.18.55
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>default nginx-deployment-5d4c8f7b9  1000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>default postgres-app-7c2b1d9e4  2000
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>kube-system coredns-558bd4d5c9-k8m2x    65534
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>kube-system etcd-nd-dc1-1   0
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>monitoring  prometheus-operator-0   65534
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ingress-nginx   nginx-ingress-controller-abc123 101
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Privileged: ingress-nginx/nginx-ingress-controller-abc123/nginx
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Privileged: monitoring/alertmanager-0/alertmanager
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com on 127.0.0.1:53: no such host</code></strong> — Verify the hostname is correct and DNS is resolving; check <code>/etc/hosts</code> or corporate DNS configuration.
+<strong><code>command not found: python3</code></strong> — Install Python 3 on the Nexus Dashboard node with <code>apt-get install python3</code> or equivalent for your OS.
+<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Ensure your kubeconfig is valid and your ndadmin user has cluster-admin permissions; run <code>kubectl auth can-i get pods --all-namespaces</code> to verify.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check NTP status on all nodes</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.20.5.42
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nd-dc1-1.corp.example.com#
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>NTP Configuration:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Server: 10.10.0.10 (prefer)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    Reachable: No
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    Stratum: 16
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    Offset: 0ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Server: 10.10.0.11
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    Reachable: No
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    Stratum: 16
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    Offset: 0ms
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>NTP Server 10.10.0.10 added successfully (prefer)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>NTP Server 10.10.0.11 added successfully
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>NTP Configuration:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Server: 10.10.0.10 (prefer)
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    Reachable: Yes
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    Stratum: 2
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    Offset: 12ms
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  Server: 10.10.0.11
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    Reachable: Yes
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    Stratum: 2
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    Offset: 18ms
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Synchronization Status: SYNCHRONIZED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the Nexus Dashboard IP address is correct and SSH is enabled on port 22.
+<strong><code>NTP Server 10.10.0.10 already exists</code></strong> — Remove the existing NTP server with <code>acs system ntp remove --server 10.10.0.10</code> before re-adding it.
+<strong><code>Synchronization Status: UNSYNCHRONIZED</code></strong> — Confirm the NTP servers are reachable from the Nexus Dashboard network and allow UDP port 123 in firewall rules.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7871,7 +7925,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 13:38:25 UTC"><span class="timeago" datetime="2026-06-29T13:38:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 13:38:25 UTC">2026-06-29</span>
   </span>
 
     

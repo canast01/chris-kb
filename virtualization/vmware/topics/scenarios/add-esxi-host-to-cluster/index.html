@@ -10847,48 +10847,109 @@ are difficult to diagnose after the fact.
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify reverse resolution</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nslookup<span class="w"> </span>&lt;esxi-management-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.0.1.53
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   esxi-new-host.domain.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 192.168.100.45
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Server:     10.0.1.53
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>45.100.168.192.in-addr.arpa name = esxi-new-host.domain.local.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find esxi-new-host.domain.local: NXDOMAIN</code></strong> — Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53).
+<strong><code>** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN</code></strong> — Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address.</p>
+</div>
 <p>Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use <code>/etc/hosts</code> workarounds.</p>
 <hr />
 <h2 id="3-ntp-configuration">3. NTP Configuration<a class="headerlink" href="#3-ntp-configuration" title="Permanent link">&para;</a></h2>
 <p>Configure NTP before the host joins vCenter — SSO certificate validation fails if the host clock differs from vCenter by more than 5 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>==============================================================================
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> ntp1.domain.lo  10.0.0.1         2 u   64  128  377   12.543    2.156   1.234
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> ntp2.domain.lo  10.0.0.2         2 u   32  128  377   14.821   -1.892   0.987
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a> LOCAL(0)        .LOCL.          10 l  998 1024    1    0.000    0.000   0.001
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option --server</code></strong> — Use <code>esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local</code> (comma-separated in a single argument) on some ESXi versions instead of repeated <code>--server</code> flags.
+<strong><code>Error: Unable to resolve ntp1.domain.local</code></strong> — Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via <code>nslookup ntp1.domain.local</code>.
+<strong><code>reach   delay   offset  jitter</code> (no peer entries)</strong> — Wait 2-3 minutes for NTP to synchronize and re-run <code>ntpq -p</code>, or check firewall rules allow UDP port 123 outbound to the NTP servers.</p>
+</div>
 <p>Look for: <code>*</code> or <code>+</code> next to a server in the <code>ntpq -p</code> output, indicating an active sync source.</p>
 <hr />
 <h2 id="4-vmkernel-port-configuration">4. VMkernel Port Configuration<a class="headerlink" href="#4-vmkernel-port-configuration" title="Permanent link">&para;</a></h2>
 <p>Configure vMotion and vSAN VMkernel ports before adding the host to vCenter, then test vSAN MTU across the network.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># vMotion VMkernel (vmk1)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.10.1.X<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--tagname<span class="w"> </span>VMotion
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># vSAN VMkernel (vmk2)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vSAN&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.20.1.X<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--tagname<span class="w"> </span>VSAN
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># MTU test — -d disables fragmentation, -s 8972 is the vSAN jumbo frame test size</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;existing-host-vSAN-vmk-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># vMotion VMkernel (vmk1)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.10.1.X<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--tagname<span class="w"> </span>VMotion
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># vSAN VMkernel (vmk2)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vSAN&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.20.1.X<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--tagname<span class="w"> </span>VSAN
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># MTU test — -d disables fragmentation, -s 8972 is the vSAN jumbo frame test size</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;existing-host-vSAN-vmk-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vmk1 successfully added.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmk1 successfully configured.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vmk1 successfully tagged.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vmk2 successfully added.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vmk2 successfully configured.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vmk2 successfully tagged.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PING 10.20.1.42 (10.20.1.42): 8972 data bytes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>8980 bytes from 10.20.1.42: icmp_seq=0 time=1.245 ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>8980 bytes from 10.20.1.42: icmp_seq=1 time=1.198 ms
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>8980 bytes from 10.20.1.42: icmp_seq=2 time=1.267 ms
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>8980 bytes from 10.20.1.42: icmp_seq=3 time=1.203 ms
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>--- 10.20.1.42 statistics ---
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>4 packets transmitted, 4 packets received, 0% packet loss
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The object already exists.</code></strong> — Verify the VMkernel interface does not already exist with <code>esxcli network ip interface list</code> before adding.
+<strong><code>Error: The portgroup does not exist.</code></strong> — Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command.
+<strong><code>100% packet loss</code></strong> — Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group.</p>
+</div>
 <p>Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.</p>
 <hr />
 <h2 id="5-add-host-to-vcenter">5. Add Host to vCenter<a class="headerlink" href="#5-add-host-to-vcenter" title="Permanent link">&para;</a></h2>
 <p>Add the host to the cluster via PowerCLI, then immediately assign a licence to avoid evaluation mode expiry.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-new-host.domain.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>           <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>           <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="s2">&quot;&lt;password&gt;&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>           <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-new-host.domain.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>           <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>           <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="s2">&quot;&lt;password&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>           <span class="n">-Force</span>
 </code></pre></div>
 <p>Expected: host appears in vCenter as <strong>Connected</strong>. Then assign the licence: vCenter → <strong>Administration</strong> → <strong>Licences</strong> → <strong>Assets</strong> → <strong>Hosts</strong> → select the new host → <strong>Assign Licence Key</strong>.</p>
 <hr />
 <h2 id="6-vsan-disk-claim">6. vSAN Disk Claim<a class="headerlink" href="#6-vsan-disk-claim" title="Permanent link">&para;</a></h2>
 <p>If the cluster uses vSAN, claim disks via vCenter → <strong>vSAN</strong> → <strong>Disk Management</strong> → select the new host, then verify the disk group is healthy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name                                    VSANID                                Tier  Allocated  Capacity
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>------------------------------------    ------------------------------------  ----  ---------  ----------
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vsanDatastore                           52d33c41-a8f2-4e12-b1c3-7f9e2a1d5c8b  All   2.3 TB     4.6 TB
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>vsanDatastore-2                         61e44d52-b9f3-5f23-c2d4-8g0f3b2e6d9c  All   1.8 TB     3.2 TB
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vsanDatastore-backup                    7af55e63-ca04-6g34-d3e5-9h1g4c3f7e0d  All   892 GB     2.0 TB
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>vsanDatastore-prod                      8bg66f74-db15-7h45-e4f6-0i2h5d4g8f1e  All   3.1 TB     5.5 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation.
+<strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster.</p>
+</div>
 <p>Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click <strong>Claim Disks</strong>, and assign cache and capacity roles.</p>
 <hr />
 <h2 id="7-nsx-transport-node-configuration">7. NSX Transport Node Configuration<a class="headerlink" href="#7-nsx-transport-node-configuration" title="Permanent link">&para;</a></h2>
@@ -10905,8 +10966,15 @@ are difficult to diagnose after the fact.
 <hr />
 <h2 id="9-disable-ssh">9. Disable SSH<a class="headerlink" href="#9-disable-ssh" title="Permanent link">&para;</a></h2>
 <p>Disable SSH once all configuration steps are complete.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SSH has been disabled.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command: disable_ssh</code></strong> — Verify the correct vSphere API command syntax; use <code>vim-cmd hostsvc/enable_ssh</code> or <code>vim-cmd hostsvc/query_config</code> to check SSH status instead.
+<strong><code>vim-cmd: command not found</code></strong> — Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH.</p>
+</div>
 <p>Expected: SSH service stops. Set startup policy to <strong>Start and stop manually</strong> (vCenter → Host → <strong>Configure</strong> → <strong>Services</strong> → <strong>SSH</strong>) to prevent it restarting on reboot.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
@@ -11072,7 +11140,7 @@ are difficult to diagnose after the fact.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

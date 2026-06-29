@@ -8914,15 +8914,49 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to VCSA or use vCenter Shell</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING<span class="w">   </span><span class="c1"># anything not RUNNING?</span>
 </code></pre></div>
-<p><strong>Expected output:</strong> No output (all services RUNNING). If any service appears, restart it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>&lt;service-name&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vmware-vpostgres                                    STOPPED
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmware-rhttpproxy                                   RUNNING
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vmware-sps                                          RUNNING
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vmware-vpxd                                         RUNNING
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmware-vsan-health                                  RUNNING
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vmware-cm                                           STOPPED
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vmware-cis-license                                  RUNNING
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmware-netdumper                                    STOPPED
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>service-control: command not found</code></strong> — Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or log in as root user to the VCSA appliance.</p>
+</div>
+<p><strong>Expected output:</strong> No output (all services RUNNING). If any service appears, restart it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>&lt;service-name&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Stopping service &lt;service-name&gt;...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Waiting for service &lt;service-name&gt; to stop...
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Service &lt;service-name&gt; stopped successfully.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Starting service &lt;service-name&gt;...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Waiting for service &lt;service-name&gt; to start...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Service &lt;service-name&gt; started successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown service '&lt;service-name&gt;'</code></strong> — Replace <code>&lt;service-name&gt;</code> with a valid VMware service name like <code>vmware-vpxd</code>, <code>vmware-esx-hostd</code>, or <code>vpxa</code>.
+<strong><code>Error: Permission denied</code></strong> — Run the command with root privileges using <code>sudo service-control --restart &lt;service-name&gt;</code> or as the root user.
+<strong><code>Timeout waiting for service to start</code></strong> — Check service dependencies and logs with <code>service-control --status &lt;service-name&gt;</code> and review <code>/var/log/vmware/vpxd/vpxd.log</code> for startup errors.</p>
+</div>
 <p>Check alarms in vSphere Client: <strong>Home → Alarms → All Alarms</strong> — filter to <code>Critical</code>. Any critical alarm here blocks the rest of the routine until acknowledged or resolved.</p>
 <p>Verify backup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VAMI: https://&lt;vcenter-fqdn&gt;:5480 → Backup → Last backup status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CLI alternative:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>grep<span class="w"> </span><span class="s2">&quot;Backup completed&quot;</span><span class="w"> </span>/var/log/vmware/applmgmt/backup.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VAMI: https://&lt;vcenter-fqdn&gt;:5480 → Backup → Last backup status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># CLI alternative:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span><span class="s2">&quot;Backup completed&quot;</span><span class="w"> </span>/var/log/vmware/applmgmt/backup.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Backup completed successfully at 2024-01-15 03:45:22 UTC. Duration: 47 minutes. Size: 23.4 GB. Destination: /mnt/backup/vcenter-prod-01.bak.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmware/applmgmt/backup.log: No such file or directory</code></strong> — Verify the vCenter appliance has backup logging enabled and check the correct log path with <code>find /var/log -name "*backup*"</code>.
+<strong><code>(no output returned)</code></strong> — The backup log exists but contains no successful completions; check <code>/var/log/vmware/applmgmt/backup.log</code> directly or review VAMI for backup job status and errors.</p>
+</div>
 <p><strong>Expected output:</strong> Timestamp within last 24 hours.</p>
 <p><strong>Escalate if:</strong> Any service not running after restart · Last backup &gt; 24 h ago · Critical alarms present.</p>
 <hr />
@@ -8936,34 +8970,70 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 <li><strong>DRS Status</strong> — Fully Automated, no migration recommendations pending &gt; 1 hour</li>
 </ul>
 <p>Check NTP across hosts (PowerCLI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;NTP&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-VMHostNtpServer</span><span class="p">)</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">}},</span> <span class="p">`</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;TimeDrift&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-View</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span><span class="p">).</span><span class="n">Config</span><span class="p">.</span><span class="n">DateTimeInfo</span><span class="p">.</span><span class="n">SystemClockResolution</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;NTP&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-VMHostNtpServer</span><span class="p">)</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">}},</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;TimeDrift&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-View</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span><span class="p">).</span><span class="n">Config</span><span class="p">.</span><span class="n">DateTimeInfo</span><span class="p">.</span><span class="n">SystemClockResolution</span><span class="p">}}</span>
 </code></pre></div>
 <p><strong>Expected output:</strong> All hosts show NTP servers configured, no host drift &gt; 5 seconds.</p>
 <p>Check for host hardware warnings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;HWStatus&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">OverallStatus</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="nb">Where-Object</span> <span class="n">HWStatus</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;HWStatus&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">OverallStatus</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="nb">Where-Object</span> <span class="n">HWStatus</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span>
 </code></pre></div>
 <p><strong>Expected output:</strong> No output (all green).</p>
 <p><strong>Escalate if:</strong> Any host disconnected · HA admission control breached · NTP drift &gt; 30 s on any host · Hardware status yellow/red.</p>
 <hr />
 <h2 id="3-vsan">3. vSAN<a class="headerlink" href="#3-vsan" title="Permanent link">&para;</a></h2>
 <p><strong>Goal:</strong> health green, no degraded objects, capacity safe, no stuck resync.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to any ESXi host in the vSAN cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Green\|green&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to any ESXi host in the vSAN cluster</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Green\|green&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cluster Status: yellow
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Memory Usage: yellow
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Network Latency: yellow
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Disk Capacity: yellow
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect timed out</code></strong> — Verify the ESXi host is reachable and SSH is enabled via <code>esxcli system ssh set --enabled=true</code> on the target host.
+<strong><code>Unknown command or namespace</code></strong> — Ensure you're connected to an ESXi host with vSAN enabled; run <code>esxcli vsan cluster list</code> first to confirm vSAN is active on the cluster.
+<strong><code>Permission denied</code></strong> — Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host.</p>
+</div>
 <p><strong>Expected output:</strong> No output (all checks green). Any non-green line needs investigation.</p>
 <p>Check object health:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state:healthy&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state:healthy&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Object UUID                          State          Space Used
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>52a4c8f1-2b3e-4a9c-8d1f-7e6c5b4a3d2c state:degraded 2.1 GB
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>7f9e8d7c-6b5a-4938-2c1b-0a9f8e7d6c5b state:absent    0 B
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>3c2b1a0f-9e8d-7c6b-5a4938-2c1b0a9f8e state:congested 5.8 GB
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>9d8c7b6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a state:degraded 1.2 GB
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>1a0f9e8d-7c6b5a49-38-2c1b0a9f8e7d6c state:inaccessible 0 B
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>6b5a4938-2c1b-0a9f-8e7d-6c5b4a3d2c1b state:degraded 3.4 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first.
+<strong><code>VSAN is not enabled on this cluster</code></strong> — Verify VSAN is licensed and enabled on the cluster by checking vSphere Client &gt; Cluster &gt; Configure &gt; vSAN &gt; General.</p>
+</div>
 <p><strong>Expected output:</strong> No output, or only objects in <code>state:resyncing</code> (acceptable if resync is making progress).</p>
 <p>Check capacity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Total Capacity&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Total Capacity&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Used Capacity: 2.34 TB
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Total Capacity: 5.12 TB
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Used Capacity: 1.87 TB
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Total Capacity: 5.12 TB
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Used Capacity: 3.21 TB
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Total Capacity: 5.12 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect to localhost failed. Error: Unable to connect to the vSAN Health Service</code></strong> — Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with <code>systemctl restart vsanvpd</code> if needed.
+<strong><code>Unknown command or namespace vsan</code></strong> — Verify the ESXi host has vSAN licensed and enabled; check with <code>esxcli vsan cluster get</code> to confirm vSAN is active on the cluster.</p>
+</div>
 <p><strong>Expected output:</strong> Used capacity &lt; 70% of total. At 70% set a ticket; at 80% escalate immediately.</p>
 <p>Check resync throughput (if objects are resyncing):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># vSphere Client: Cluster → Monitor → vSAN → Resyncing Objects</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Must show progress (bytes remaining decreasing over 5 min intervals)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># vSphere Client: Cluster → Monitor → vSAN → Resyncing Objects</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c"># Must show progress (bytes remaining decreasing over 5 min intervals)</span>
 </code></pre></div>
 <p><strong>Escalate if:</strong> Any object in ABSENT or DEGRADED state · Capacity ≥ 80% · Resync stuck (no progress &gt; 30 min) · Health check not green after 2 attempts.</p>
 <hr />
@@ -8975,17 +9045,25 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 <li>Management cluster status: <strong>Stable</strong></li>
 </ul>
 <p>Check Edge nodes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># NSX Manager → Fabric → Nodes → Edge Transport Nodes</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Each Edge: Status = Up, BFD = Up, Tunnel = Up</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># NSX Manager → Fabric → Nodes → Edge Transport Nodes</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Each Edge: Status = Up, BFD = Up, Tunnel = Up</span>
 </code></pre></div>
 <p>Check BGP sessions (NSX UI or API):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># NSX Manager → Networking → Tier-0 Gateways → &lt;T0&gt; → BGP → Neighbors</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># All BGP neighbors: State = Established</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># NSX Manager → Networking → Tier-0 Gateways → &lt;T0&gt; → BGP → Neighbors</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># All BGP neighbors: State = Established</span>
 </code></pre></div>
 <p>Spot-check DFW rule count (should not have changed overnight):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>https://&lt;nsx-mgr&gt;/api/v1/firewall/sections<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f&#39;DFW sections: {d[\&quot;result_count\&quot;]}&#39;)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>https://&lt;nsx-mgr&gt;/api/v1/firewall/sections<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f&#39;DFW sections: {d[\&quot;result_count\&quot;]}&#39;)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>DFW sections: 47
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed).
+<strong><code>curl: (7) Failed to connect to &lt;nsx-mgr&gt;: Name or service not known</code></strong> — Verify the NSX Manager hostname or IP address is correct and resolvable from your network.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON.</p>
+</div>
 <p><strong>Expected output:</strong> DFW section count matches previous day. An unexpected increase may indicate a runaway automation job.</p>
 <p><strong>Escalate if:</strong> Any NSX Manager node not active · Any Edge node down · BGP session not Established · DFW count changed unexpectedly by &gt; 5.</p>
 <hr />
@@ -9003,23 +9081,23 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 <li>No agents showing as disconnected</li>
 </ul>
 <p>Check Aria Operations adapters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Aria Ops → Administration → Solutions → Collection State
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Aria Ops → Administration → Solutions → Collection State
 </code></pre></div>
 <p><strong>Expected output:</strong> All adapters show <strong>Data Receiving</strong> in last 5 minutes.</p>
 <p><strong>Escalate if:</strong> Alert storm (sudden spike &gt; 50 alerts in 1 hour) · Capacity alert on any cluster · Log ingestion dropped to zero · Any adapter not collecting for &gt; 15 min.</p>
 <hr />
 <h2 id="sign-off-checklist">Sign-off Checklist<a class="headerlink" href="#sign-off-checklist" title="Permanent link">&para;</a></h2>
 <p>Copy this block into your shift log after completing the check:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Date/Time : _______________
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Completed by : _______________
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>1. vCenter    ☐ Clean  ☐ Issues: _______________________
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>2. ESXi       ☐ Clean  ☐ Issues: _______________________
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>3. vSAN       ☐ Clean  ☐ Issues: _______________________
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>4. NSX        ☐ Clean  ☐ Issues: _______________________
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>5. Aria Ops   ☐ Clean  ☐ Issues: _______________________
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Overall status : ☐ All clear  ☐ Monitoring  ☐ Incident open (ticket: ______)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Date/Time : _______________
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Completed by : _______________
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>1. vCenter    ☐ Clean  ☐ Issues: _______________________
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>2. ESXi       ☐ Clean  ☐ Issues: _______________________
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>3. vSAN       ☐ Clean  ☐ Issues: _______________________
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>4. NSX        ☐ Clean  ☐ Issues: _______________________
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>5. Aria Ops   ☐ Clean  ☐ Issues: _______________________
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>Overall status : ☐ All clear  ☐ Monitoring  ☐ Incident open (ticket: ______)
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9059,7 +9137,7 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

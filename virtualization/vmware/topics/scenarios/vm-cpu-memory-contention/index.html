@@ -10804,6 +10804,24 @@ is frequently misread as a CPU bottleneck.
 <p>Connect to the ESXi host via SSH and launch esxtop:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxtop
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ESXTOP - VMware ESXi top utility (version 6.7.0 build-14320388)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Press &#39;h&#39; for help, &#39;q&#39; to quit, &#39;e&#39; to toggle VCPU stats
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>GID  NAME                                   NWORLDID  %USED  %SYS  %WAIT  %RDY
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  1  vmx                                        2048  45.2   8.1   12.3   2.1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  2  vmx                                        2049  38.7   6.9   18.5   1.8
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  3  vmx                                        2050  22.1   4.2    5.6   0.9
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  4  vmx                                        2051  15.3   3.1    2.1   0.4
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>PCPU USED(%): 30.3  SYS(%): 5.6  WAIT(%): 9.6  IDLE(%): 54.5
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Memory: 262144 MB total, 187456 MB used, 74688 MB free
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>────────────────────────────────────────────────────────────────────────────────
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ESXTOP: Cannot open /proc/uptime: Permission denied</code></strong> — Run esxtop as root or with sudo.
+<strong><code>ESXTOP: No such file or directory</code></strong> — Ensure you are running this command directly on an ESXi host, not a vCenter server or external system.</p>
+</div>
 <p>Press <code>m</code> to switch to memory view. Key columns:</p>
 <table>
 <thead>
@@ -10862,18 +10880,18 @@ top balloon consumers.</p>
 </table>
 <hr />
 <h2 id="2-collect-host-level-statistics-via-powercli">2. Collect Host-Level Statistics via PowerCLI<a class="headerlink" href="#2-collect-host-level-statistics-via-powercli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Memory pressure indicators — last 5 samples (20-second intervals)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">swapinRate</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">balloonRate</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Identify top balloon consumers across cluster</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-MaxSamples</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="p">|</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Memory pressure indicators — last 5 samples (20-second intervals)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">swapinRate</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">balloonRate</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Identify top balloon consumers across cluster</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="n">-MaxSamples</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
 </code></pre></div>
 <hr />
 <h2 id="3-check-drs-migration-history">3. Check DRS Migration History<a class="headerlink" href="#3-check-drs-migration-history" title="Permanent link">&para;</a></h2>
@@ -10885,11 +10903,11 @@ will not resolve the root cause — capacity must be added or VMs powered off.</
 immediately if cluster is in active contention.</p>
 <hr />
 <h2 id="4-identify-a-specific-vms-memory-profile">4. Identify a Specific VM's Memory Profile<a class="headerlink" href="#4-identify-a-specific-vms-memory-profile" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">consumed</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-MaxSamples</span> <span class="n">60</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="nb">Sort-Object</span> <span class="n">Timestamp</span> <span class="p">|</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="nb">Format-Table</span> <span class="n">Timestamp</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">consumed</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="n">-MaxSamples</span> <span class="n">60</span> <span class="p">|</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Sort-Object</span> <span class="n">Timestamp</span> <span class="p">|</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="nb">Format-Table</span> <span class="n">Timestamp</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
 </code></pre></div>
 <p>Active memory below 60% of configured vRAM indicates the VM is over-provisioned and is a candidate
 for right-sizing. Overhead memory above 5% of configured vRAM indicates the hypervisor itself is
@@ -10898,77 +10916,77 @@ consuming excessive memory for VM metadata — this increases with higher vCPU c
 <h2 id="5-resolution">5. Resolution<a class="headerlink" href="#5-resolution" title="Permanent link">&para;</a></h2>
 <h3 id="short-term-drs-rebalance-or-manual-vmotion">Short-Term — DRS Rebalance or Manual vMotion<a class="headerlink" href="#short-term-drs-rebalance-or-manual-vmotion" title="Permanent link">&para;</a></h3>
 <p>If the cluster has DRS in Manual or Partially Automated mode, switch to Fully Automated temporarily:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureComputeResource</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="p">(</span><span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span> <span class="n">-Property</span> <span class="p">@{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">DrsConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDrsConfigInfo</span> <span class="n">-Property</span> <span class="p">@{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      <span class="n">DefaultVmBehavior</span> <span class="p">=</span> <span class="s2">&quot;fullyAutomated&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      <span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$true</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">}</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="p">}),</span> <span class="nv">$true</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureComputeResource</span><span class="p">(</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="p">(</span><span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span> <span class="n">-Property</span> <span class="p">@{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">DrsConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDrsConfigInfo</span> <span class="n">-Property</span> <span class="p">@{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>      <span class="n">DefaultVmBehavior</span> <span class="p">=</span> <span class="s2">&quot;fullyAutomated&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      <span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$true</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="p">}</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="p">}),</span> <span class="nv">$true</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span>
 </code></pre></div>
 <p>Or manually vMotion the highest balloon-consumer VMs to less-loaded hosts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Identify least-loaded host by memory usage</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryUsageGB</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">3</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Format-Table</span> <span class="n">Name</span><span class="p">,</span> <span class="n">MemoryUsageGB</span><span class="p">,</span> <span class="n">MemoryTotalGB</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Move top balloon VM to least-loaded host</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="p">&lt;</span><span class="n">target-host</span><span class="p">&gt;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Identify least-loaded host by memory usage</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryUsageGB</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">Format-Table</span> <span class="n">Name</span><span class="p">,</span> <span class="n">MemoryUsageGB</span><span class="p">,</span> <span class="n">MemoryTotalGB</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Move top balloon VM to least-loaded host</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="p">&lt;</span><span class="n">target-host</span><span class="p">&gt;)</span>
 </code></pre></div>
 <h3 id="set-memory-reservation-on-critical-vms">Set Memory Reservation on Critical VMs<a class="headerlink" href="#set-memory-reservation-on-critical-vms" title="Permanent link">&para;</a></h3>
 <p>Prevents balloon and swap for tier-1 workloads, at the cost of reduced DRS flexibility:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-MemoryReservationGB</span> <span class="p">&lt;</span><span class="n">reservation-GB</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-MemoryReservationGB</span> <span class="p">&lt;</span><span class="n">reservation-GB</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>Do not set reservations on all VMs — this eliminates the overcommit benefit entirely.</p>
 <h3 id="reduce-vram-allocation-right-sizing">Reduce vRAM Allocation (Right-Sizing)<a class="headerlink" href="#reduce-vram-allocation-right-sizing" title="Permanent link">&para;</a></h3>
 <p>For VMs where active memory is consistently below 60% of configured vRAM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check active vs configured</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ConfiguredGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryGB</span><span class="p">}},</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ActiveGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span> <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check active vs configured</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ConfiguredGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryGB</span><span class="p">}},</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ActiveGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span> <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">}}</span>
 </code></pre></div>
 <p>Power off the VM, reduce vRAM to 110% of peak active memory, power back on.</p>
 <h3 id="resolve-cpu-ready-reduce-vcpu-count">Resolve CPU Ready — Reduce vCPU Count<a class="headerlink" href="#resolve-cpu-ready-reduce-vcpu-count" title="Permanent link">&para;</a></h3>
 <p>VMs with <code>%RDY</code> &gt; 5% and configured vCPUs significantly exceeding the workload thread count:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check per-VM CPU ready summation (ms per 20s interval — divide by 200 for %)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check per-VM CPU ready summation (ms per 20s interval — divide by 200 for %)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
 </code></pre></div>
 <p>Reduce vCPU count for over-vCPUd VMs — more vCPUs create more scheduling pressure on the host,
 not less. A single-threaded application gains nothing from 8 vCPUs but creates 7 extra scheduling
 units the host must satisfy.</p>
 <h3 id="emergency-suspend-non-critical-vms">Emergency — Suspend Non-Critical VMs<a class="headerlink" href="#emergency-suspend-non-critical-vms" title="Permanent link">&para;</a></h3>
 <p>If all hosts in the cluster are memory-pressured and vMotion cannot solve it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Suspend non-critical VMs to release memory immediately</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;dev-vm-*&gt;&quot;</span> <span class="p">|</span> <span class="nb">Suspend-VM</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Suspend non-critical VMs to release memory immediately</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;dev-vm-*&gt;&quot;</span> <span class="p">|</span> <span class="nb">Suspend-VM</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># ESXtop — confirm balloon and swap cleared on host</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Press m in esxtop → check MCTLSZ = 0 and SWPRD = 0 for all VMs</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>esxtop
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># ESXtop — confirm balloon and swap cleared on host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Press m in esxtop → check MCTLSZ = 0 and SWPRD = 0 for all VMs</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>esxtop
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># PowerCLI — confirm host memory usage below 90%</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">Host</span>     <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">UsedPct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  <span class="p">}</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UsedPct</span> <span class="o">-gt</span> <span class="n">85</span> <span class="p">}</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c"># Confirm CPU ready below 5% for top VMs</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>      <span class="n">VM</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Entity</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>      <span class="n">ReadyPct</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="p">/</span> <span class="n">200</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="p">}</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># PowerCLI — confirm host memory usage below 90%</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">Host</span>     <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">UsedPct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  <span class="p">}</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UsedPct</span> <span class="o">-gt</span> <span class="n">85</span> <span class="p">}</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c"># Confirm CPU ready below 5% for top VMs</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>      <span class="n">VM</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Entity</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>      <span class="n">ReadyPct</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="p">/</span> <span class="n">200</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    <span class="p">}</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  <span class="p">}</span>
 </code></pre></div>
 <p>Validate with the application team that response times have normalised. For database workloads, run a
 synthetic transaction test (e.g., <code>sysbench</code> or application-specific benchmark) before closing the
@@ -11041,7 +11059,7 @@ incident.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7651,42 +7651,99 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s">}</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s">EOF</span>
 </code></pre></div>
-<h3 id="gitlab-protected-branches">GitLab Protected Branches<a class="headerlink" href="#gitlab-protected-branches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Protect a branch via GitLab API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/protected_branches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--data<span class="w"> </span><span class="s2">&quot;name=main&amp;push_access_level=0&amp;merge_access_level=40&amp;allow_force_push=false&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;url&quot;: &quot;https://api.github.com/repos/acme-corp/platform-api/branches/main/protection&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;required_status_checks&quot;: {
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;url&quot;: &quot;https://api.github.com/repos/acme-corp/platform-api/branches/main/protection/required_status_checks&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;strict&quot;: true,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;contexts&quot;: [
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      &quot;ci/build&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      &quot;security/sast&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    ]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  },
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;enforce_admins&quot;: true,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;required_pull_request_reviews&quot;: {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;dismiss_stale_reviews&quot;: true,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    &quot;require_code_owner_reviews&quot;: true,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &quot;required_approving_review_count&quot;: 2
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  },
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;required_linear_history&quot;: true,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;required_conversation_resolution&quot;: true,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;required_signatures&quot;: true
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the org and repo names are correct and that you have admin access to the repository.
+<strong><code>HTTP 422: Validation Failed - "required_status_checks.contexts" is not a list of valid status check contexts</code></strong> — Ensure the CI context names match exactly what your GitHub Actions workflows or external checks report (check the branch protection UI to see available contexts).
+<strong><code>HTTP 403: Resource not accessible by integration</code></strong> — Confirm your GitHub token has <code>admin:repo_hook</code> and <code>repo</code> scopes, or use a PAT with full repo permissions instead of GITHUB_TOKEN.</p>
+</div>
+<h3 id="gitlab-protected-branches">GitLab Protected Branches<a class="headerlink" href="#gitlab-protected-branches" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Protect a branch via GitLab API</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/protected_branches&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--data<span class="w"> </span><span class="s2">&quot;name=main&amp;push_access_level=0&amp;merge_access_level=40&amp;allow_force_push=false&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{&quot;id&quot;:1,&quot;name&quot;:&quot;main&quot;,&quot;push_access_level&quot;:0,&quot;merge_access_level&quot;:40,&quot;code_owner_approval_required&quot;:false,&quot;inherited&quot;:false,&quot;allow_force_push&quot;:false,&quot;unprotect_access_level&quot;:40,&quot;created_at&quot;:&quot;2024-01-15T09:42:33.847Z&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"message":"401 Unauthorized"}</code></strong> — Verify the <code>GITLAB_TOKEN</code> environment variable is set and contains a valid personal access token with <code>api</code> scope.
+<strong><code>{"message":"Branch already protected"}</code></strong> — The branch protection already exists; use a PATCH request to update it instead, or delete the existing rule first.
+<strong><code>{"message":"404 Project Not Found"}</code></strong> — Replace <code>{id}</code> with the actual numeric project ID or URL-encoded project path (e.g., <code>group%2Fproject</code>).</p>
+</div>
 <p>Access levels: 0=No access, 30=Developer, 40=Maintainer, 60=Admin.</p>
 <hr />
 <h2 id="codeowners">CODEOWNERS<a class="headerlink" href="#codeowners" title="Permanent link">&para;</a></h2>
 <p><code>CODEOWNERS</code> defines file-level ownership. When a PR modifies owned files, the listed owners must approve.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Location options (checked in order)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CODEOWNERS</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># .github/CODEOWNERS</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># docs/CODEOWNERS</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cat<span class="w"> </span>.github/CODEOWNERS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Location options (checked in order)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># CODEOWNERS</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># .github/CODEOWNERS</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># docs/CODEOWNERS</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cat<span class="w"> </span>.github/CODEOWNERS
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># This is a CODEOWNERS file for the repository
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># Format: path/pattern @username @org/team
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>* @devops-lead @platform/core-team
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>src/auth/ @security-team @auth-maintainers
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>docs/ @tech-writers @documentation-team
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>*.tf @infrastructure-team
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>.github/workflows/ @devops-lead @ci-cd-team
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>tests/ @qa-team @testing-leads
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: .github/CODEOWNERS: No such file or directory</code></strong> — Verify the CODEOWNERS file exists in the <code>.github/</code> directory by running <code>ls -la .github/</code> first.
+<strong><code>Permission denied</code></strong> — Check file permissions with <code>ls -l .github/CODEOWNERS</code> and ensure your user has read access; add read permissions with <code>chmod +r .github/CODEOWNERS</code> if needed.</p>
+</div>
 <p><strong>Example CODEOWNERS file:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Default owner for everything</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>*<span class="w">                          </span>@org/platform-team
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Infrastructure code requires infra team review</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/terraform/<span class="w">                </span>@org/infra-team
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/ansible/<span class="w">                  </span>@org/infra-team
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Security-sensitive files require security team</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>/.github/workflows/<span class="w">        </span>@org/security-team
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>/scripts/deploy.sh<span class="w">         </span>@org/security-team<span class="w"> </span>@org/infra-team
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Documentation</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>/docs/<span class="w">                     </span>@org/docs-team
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Specific file — multiple owners</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>/config/production.yaml<span class="w">    </span>@alice<span class="w"> </span>@bob<span class="w"> </span>@org/infra-team
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Default owner for everything</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>*<span class="w">                          </span>@org/platform-team
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Infrastructure code requires infra team review</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>/terraform/<span class="w">                </span>@org/infra-team
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>/ansible/<span class="w">                  </span>@org/infra-team
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Security-sensitive files require security team</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>/.github/workflows/<span class="w">        </span>@org/security-team
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>/scripts/deploy.sh<span class="w">         </span>@org/security-team<span class="w"> </span>@org/infra-team
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Documentation</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>/docs/<span class="w">                     </span>@org/docs-team
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Specific file — multiple owners</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>/config/production.yaml<span class="w">    </span>@alice<span class="w"> </span>@bob<span class="w"> </span>@org/infra-team
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: not a git repository (or any of the parent directories): .git</code></strong> — Run this command from the repository root directory where the <code>.git</code> folder exists.
+<strong><code>error: pathspec 'CODEOWNERS' did not match any files</code></strong> — Save this content to a file named <code>CODEOWNERS</code> in the <code>.github/</code> directory, not as a standalone script.</p>
+</div>
 <p><strong>Rules:</strong>
 - Last matching pattern wins.
 - At least one owner from each required team must approve.
@@ -7719,28 +7776,78 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Audit all public repos in an org</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/repos<span class="w"> </span>--paginate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--jq<span class="w"> </span><span class="s1">&#39;.[] | select(.private == false) | .full_name&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Make a repo private</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>PATCH<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">private</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Audit all public repos in an org</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/repos<span class="w"> </span>--paginate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--jq<span class="w"> </span><span class="s1">&#39;.[] | select(.private == false) | .full_name&#39;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Make a repo private</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>PATCH<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">private</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>acme-corp/terraform-modules
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>acme-corp/documentation
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>acme-corp/public-api-client
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>acme-corp/legacy-scripts
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>acme-corp/sample-configs
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the organization name and repository name are correct, and that your GitHub token has <code>repo</code> and <code>admin:org</code> permissions.
+<strong><code>GraphQL: Field 'private' is not defined on type 'Repository'</code></strong> — Use the REST API v3 endpoint format <code>/repos/{owner}/{repo}</code> with <code>-f private=true</code> flag instead of GraphQL syntax.</p>
+</div>
 <hr />
 <h2 id="deploy-key-access-control">Deploy Key Access Control<a class="headerlink" href="#deploy-key-access-control" title="Permanent link">&para;</a></h2>
 <p>Deploy keys grant per-repository SSH access to automation systems.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List deploy keys on a repo</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Add a deploy key (read-only)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">title</span><span class="o">=</span><span class="s2">&quot;CI Deploy Key - </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">key</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>deploy_key.pub<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">read_only</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Remove a deploy key by ID</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys/<span class="o">{</span>key_id<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List deploy keys on a repo</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Add a deploy key (read-only)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">title</span><span class="o">=</span><span class="s2">&quot;CI Deploy Key - </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">key</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>deploy_key.pub<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>-f<span class="w"> </span><span class="nv">read_only</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Remove a deploy key by ID</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/repos/<span class="o">{</span>org<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/keys/<span class="o">{</span>key_id<span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  {
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    &quot;id&quot;: 78392841,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDx8vK...&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    &quot;url&quot;: &quot;https://api.github.com/repos/acme-corp/backend/keys/78392841&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    &quot;title&quot;: &quot;CI Deploy Key - 2024-01-15&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    &quot;read_only&quot;: true,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    &quot;created_at&quot;: &quot;2024-01-15T09:42:18Z&quot;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  },
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  {
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    &quot;id&quot;: 78392842,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2nPm...&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    &quot;url&quot;: &quot;https://api.github.com/repos/acme-corp/backend/keys/78392842&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    &quot;title&quot;: &quot;CI Deploy Key - 2024-01-10&quot;,
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    &quot;read_only&quot;: true,
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    &quot;created_at&quot;: &quot;2024-01-10T14:27:33Z&quot;
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  }
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>]
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>{
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  &quot;id&quot;: 78392843,
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDm9kL...&quot;,
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>  &quot;url&quot;: &quot;https://api.github.com/repos/acme-corp/backend/keys/78392843&quot;,
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>  &quot;title&quot;: &quot;CI Deploy Key - 2024-01-20&quot;,
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>  &quot;read_only&quot;: true,
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>  &quot;created_at&quot;: &quot;2024-01-20T11:05:47Z&quot;
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>}
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>gh: Repository not found</code></strong> — Verify the org and repo names are correct and you have access to the repository.
+<strong><code>Error: Key file not found or permission denied while opening 'deploy_key.pub'</code></strong> — Ensure the deploy key file exists in the current directory and is readable with <code>ls -la deploy_key.pub</code>.
+<strong><code>HTTP 422: Validation Failed - Key is already in use</code></strong> — Remove the duplicate key first or generate a new SSH key pair before adding it.</p>
+</div>
 <p><strong>Controls:</strong>
 - One deploy key per pipeline/environment — never share keys across repos.
 - Grant read-only unless the pipeline explicitly needs to push.
@@ -7748,31 +7855,38 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 <hr />
 <h2 id="github-actions-permissions">GitHub Actions Permissions<a class="headerlink" href="#github-actions-permissions" title="Permanent link">&para;</a></h2>
 <p>Constrain what GitHub Actions workflows can do by limiting the default token permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Organisation or repository default: restrict to read-only</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Settings → Actions → General → Workflow permissions → Read repository contents</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Per-workflow explicit permissions (principle of least privilege)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">permissions</span><span class="p">:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">pull-requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">issues</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">     </span><span class="c1"># Required for OIDC cloud auth</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span><span class="w">  </span><span class="c1"># Override at job level — even more restrictive</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Organisation or repository default: restrict to read-only</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Settings → Actions → General → Workflow permissions → Read repository contents</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Per-workflow explicit permissions (principle of least privilege)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nt">permissions</span><span class="p">:</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nt">pull-requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="nt">issues</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">     </span><span class="c1"># Required for OIDC cloud auth</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span><span class="w">  </span><span class="c1"># Override at job level — even more restrictive</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify org-level workflow permissions via API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/permissions/workflow<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--jq<span class="w"> </span><span class="s1">&#39;.default_workflow_permissions&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Verify org-level workflow permissions via API</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/permissions/workflow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--jq<span class="w"> </span><span class="s1">&#39;.default_workflow_permissions&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&quot;read&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>gh: Repository not found</code></strong> — Replace <code>{org}</code> with your actual organization name (e.g., <code>gh api /orgs/acme-corp/actions/permissions/workflow</code>).
+<strong><code>HTTP 403: Resource not accessible by integration</code></strong> — Ensure your GitHub token has <code>admin:org_hook</code> or <code>admin:org</code> scope by running <code>gh auth refresh -s admin:org</code>.</p>
+</div>
 <hr />
 <h2 id="gitlab-group-and-project-permissions">GitLab Group and Project Permissions<a class="headerlink" href="#gitlab-group-and-project-permissions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Instance level
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  └── Group (namespace)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        └── Subgroup
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>              └── Project (repository)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Instance level
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  └── Group (namespace)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>        └── Subgroup
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>              └── Project (repository)
 </code></pre></div>
 <table>
 <thead>
@@ -7828,30 +7942,83 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List project members</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/members/all&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Remove a member from a project</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>--request<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/members/{user_id}&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List project members</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/members/all&quot;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Remove a member from a project</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>curl<span class="w"> </span>--request<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.corp.example.com/api/v4/projects/{id}/members/{user_id}&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>[
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  {
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    &quot;id&quot;: 42,
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    &quot;username&quot;: &quot;jsmith&quot;,
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    &quot;name&quot;: &quot;John Smith&quot;,
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    &quot;avatar_url&quot;: &quot;https://gitlab.corp.example.com/uploads/user/avatar/42/avatar.jpg&quot;,
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    &quot;web_url&quot;: &quot;https://gitlab.corp.example.com/jsmith&quot;,
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    &quot;last_activity_on&quot;: &quot;2024-01-15&quot;,
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    &quot;membership_type&quot;: &quot;group_member&quot;,
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    &quot;removable&quot;: true,
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    &quot;created_at&quot;: &quot;2023-06-20T09:15:32.123Z&quot;,
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    &quot;access_level&quot;: 30
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  },
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  {
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    &quot;id&quot;: 87,
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    &quot;username&quot;: &quot;mchen&quot;,
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>    &quot;name&quot;: &quot;Maria Chen&quot;,
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>    &quot;avatar_url&quot;: &quot;https://gitlab.corp.example.com/uploads/user/avatar/87/avatar.jpg&quot;,
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    &quot;web_url&quot;: &quot;https://gitlab.corp.example.com/mchen&quot;,
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    &quot;last_activity_on&quot;: &quot;2024-01-18&quot;,
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    &quot;membership_type&quot;: &quot;project_member&quot;,
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>    &quot;removable&quot;: true,
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>    &quot;created_at&quot;: &quot;2023-08-10T14:22:05.456Z&quot;,
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    &quot;access_level&quot;: 40
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>  }
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>]
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to gitlab.corp.example.com port 443: Connection refused</code></strong> — Verify GitLab server is running and accessible; check network connectivity and firewall rules.
+<strong><code>{"message":"401 Unauthorized"}</code></strong> — Ensure <code>$GITLAB_TOKEN</code> is set correctly and has API access permissions; regenerate the token if expired.
+<strong><code>{"message":"404 Project Not Found"}</code></strong> — Replace <code>{id}</code> with the actual numeric project ID or URL-encoded project path (e.g., <code>group%2Fproject</code>).</p>
+</div>
 <hr />
 <h2 id="access-review-process">Access Review Process<a class="headerlink" href="#access-review-process" title="Permanent link">&para;</a></h2>
 <p>Conduct quarterly access reviews for all repositories.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Audit org members and their repo access</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">ORG</span><span class="o">=</span><span class="s2">&quot;your-org&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Export all repo collaborators to CSV</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="nv">$ORG</span>/repos<span class="w"> </span>--paginate<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>repo<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>gh<span class="w"> </span>api<span class="w"> </span><span class="s2">&quot;/repos/</span><span class="nv">$ORG</span><span class="s2">/</span><span class="nv">$repo</span><span class="s2">/collaborators&quot;</span><span class="w"> </span>--paginate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--jq<span class="w"> </span><span class="s2">&quot;.[] | [\&quot;</span><span class="nv">$repo</span><span class="s2">\&quot;, .login, .permissions.admin, .permissions.push] | @csv&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>repo_access_audit.csv
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Audit written to repo_access_audit.csv&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Audit org members and their repo access</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nv">ORG</span><span class="o">=</span><span class="s2">&quot;your-org&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Export all repo collaborators to CSV</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="nv">$ORG</span>/repos<span class="w"> </span>--paginate<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>repo<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>gh<span class="w"> </span>api<span class="w"> </span><span class="s2">&quot;/repos/</span><span class="nv">$ORG</span><span class="s2">/</span><span class="nv">$repo</span><span class="s2">/collaborators&quot;</span><span class="w"> </span>--paginate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">    </span>--jq<span class="w"> </span><span class="s2">&quot;.[] | [\&quot;</span><span class="nv">$repo</span><span class="s2">\&quot;, .login, .permissions.admin, .permissions.push] | @csv&quot;</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>repo_access_audit.csv
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Audit written to repo_access_audit.csv&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>&quot;terraform-infra&quot;,&quot;alice.chen&quot;,true,true
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>&quot;terraform-infra&quot;,&quot;bob.martinez&quot;,false,true
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>&quot;terraform-infra&quot;,&quot;ci-bot-prod&quot;,false,true
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>&quot;api-gateway&quot;,&quot;alice.chen&quot;,true,true
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>&quot;api-gateway&quot;,&quot;david.patel&quot;,false,false
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>&quot;api-gateway&quot;,&quot;security-scanner&quot;,false,true
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>&quot;monitoring-stack&quot;,&quot;bob.martinez&quot;,true,true
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>&quot;monitoring-stack&quot;,&quot;eve.thompson&quot;,false,true
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>...
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Audit written to repo_access_audit.csv
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>gh: Unauthorized. Ensure that your token has the necessary scopes to access this resource.</code></strong> — Regenerate your GitHub CLI token with <code>admin:org_hook</code> and <code>repo</code> scopes via <code>gh auth refresh -s admin:org_hook,repo</code>.
+<strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index array with string "repo"</code></strong> — Remove the double quotes around <code>$repo</code> in the jq filter and use single quotes: <code>.[] | ["\($repo)", .login, ...]</code> or move the variable outside the jq expression.
+<strong><code>Error: HTTP 404: Not Found</code></strong> — Verify the organization name is correct and you have access to it by running <code>gh org list</code>.</p>
+</div>
 <p><strong>Review checklist:</strong></p>
 <ul>
 <li>[ ] Remove access for departed employees immediately on offboarding</li>
@@ -7896,7 +8063,7 @@ Access control in Git hosting platforms governs who can read, write, and adminis
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -7112,68 +7112,206 @@
 <p><strong>Dell PowerMax (Solutions Enabler):</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;modify dev &lt;DEV_ID&gt;, size=&lt;cylinders&gt;;&quot;</span><span class="w"> </span>commit<span class="w"> </span>-noprompt
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000123456789ABC
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix microcode: 5978.1221.1221
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Symmetrix model: VMAX 250F
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Symmetrix capacity: 50.2 TB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Device ID: 0ABC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Current size: 10000 cylinders
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>New size: 15000 cylinders
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Size increase: 5000 cylinders
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Modification committed successfully.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Job ID: 1234567890
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Status: SUCCEEDED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCLI_ERROR: Device &lt;DEV_ID&gt; not found in Symmetrix &lt;SID&gt;</code></strong> — Verify the device ID exists in the target array using <code>symdevice -sid &lt;SID&gt; list</code>.
+<strong><code>SYMCLI_ERROR: Insufficient free space in pool</code></strong> — Check available capacity in the storage pool with <code>sympools -sid &lt;SID&gt; -pool &lt;POOL_NAME&gt; show</code> and ensure the requested cylinder count is available.
+<strong><code>SYMCLI_ERROR: Cannot modify device while in use</code></strong> — Unmount or quiesce the volume on the host before attempting expansion using <code>umount &lt;MOUNT_POINT&gt;</code> or application-level pause commands.</p>
+</div>
 <p><strong>Dell Unity:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>&lt;new_size_bytes&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>&lt;new_size_bytes&gt;
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>The LUN (Logical Unit Number) size has been successfully expanded.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Operation ID: 0x7f3a2c1e
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>LUN ID: 45
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Previous Size: 1099511627776 bytes (1 TB)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>New Size: 2199023255552 bytes (2 TB)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Status: COMPLETED
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Timestamp: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The specified LUN is not found or is offline</code></strong> — Verify the LUN ID is correct and the storage array is reachable by running <code>uemcli -d &lt;ip&gt; /stor/config/lun list</code>.
+<strong><code>Error: Insufficient space available on storage pool</code></strong> — Check available capacity on the pool with <code>uemcli -d &lt;ip&gt; /stor/config/pool -id &lt;pool_id&gt; show</code> and reduce the requested size if needed.
+<strong><code>Error: LUN is currently in use by a host</code></strong> — Ensure the LUN is unmapped from all hosts or quiesced before expansion; use <code>uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; show</code> to verify current mappings.</p>
+</div>
 <h2 id="step-2-rescan-storage-on-the-host">Step 2 — Rescan Storage on the Host<a class="headerlink" href="#step-2-rescan-storage-on-the-host" title="Permanent link">&para;</a></h2>
 <p><strong>Linux:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan all SCSI hosts</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">scan&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">done</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Or target specific HBA</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_device/&lt;H:B:T:L&gt;/device/rescan
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Refresh multipath and confirm new size</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>multipathd<span class="w"> </span>reconfigure
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rescan all SCSI hosts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">scan&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">done</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Or target specific HBA</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_device/&lt;H:B:T:L&gt;/device/rescan
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Refresh multipath and confirm new size</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>multipath<span class="w"> </span>-ll
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Rescan all SCSI hosts
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># (no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Or target specific HBA
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a># (no output — command completes silently)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Refresh multipath and confirm new size
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>reconfigure: reconfigured
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>mpatha (360014056b1e3e8e2b5d4c9a2f8e1b3c4) dm-0 NETAPP,LUN C-Mode
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>size=2.0T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>| `- 4:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  `- 5:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>mpathb (360014056c2f4f9f3c6e5d0b1a9f2c3d5) dm-1 NETAPP,LUN C-Mode
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>size=1.5T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  `- 6:0:0:0 sdc 8:32 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /sys/class/scsi_host/host*/: No such file or directory</code></strong> — Verify the system has SCSI HBAs present with <code>ls /sys/class/scsi_host/</code> before running the rescan loop.
+<strong><code>multipathd: command not found</code></strong> — Install the device-mapper-multipath package with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code>.
+<strong><code>multipath: command not found</code></strong> — Ensure the multipath-tools package is installed and the multipathd daemon is running with <code>systemctl start multipathd</code>.</p>
+</div>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Update-HostStorageCache</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OperationalStatus</span> <span class="o">-eq</span> <span class="s1">&#39;Online&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Number</span><span class="p">,</span> <span class="n">Size</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Update-HostStorageCache</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OperationalStatus</span> <span class="o">-eq</span> <span class="s1">&#39;Online&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Number</span><span class="p">,</span> <span class="n">Size</span>
 </code></pre></div></p>
 <h2 id="step-3a-resize-partition">Step 3a — Resize Partition<a class="headerlink" href="#step-3a-resize-partition" title="Permanent link">&para;</a></h2>
 <p><strong>Linux (if using a raw partition, not LVM):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify device</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>lsblk
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Resize partition (parted)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>parted<span class="w"> </span>/dev/&lt;device&gt;<span class="w"> </span>resizepart<span class="w"> </span>&lt;part_number&gt;<span class="w"> </span><span class="m">100</span>%
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Inform kernel of change</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>partprobe<span class="w"> </span>/dev/&lt;device&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Identify device</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>lsblk
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Resize partition (parted)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>parted<span class="w"> </span>/dev/&lt;device&gt;<span class="w"> </span>resizepart<span class="w"> </span>&lt;part_number&gt;<span class="w"> </span><span class="m">100</span>%
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Inform kernel of change</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>partprobe<span class="w"> </span>/dev/&lt;device&gt;
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sda      8:0    0  500G  0 disk
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├─sda1   8:1    0    1M  0 part
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├─sda2   8:2    0   99G  0 part /
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>└─sda3   8:3    0  400G  0 part /var/data
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>nvme0n1  259:0  0    2T  0 disk
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>└─nvme0n1p1 259:1  0    2T  0 part /mnt/storage
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>(parted) resizepart 3 100%
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>(parted) quit
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not stat device /dev/&lt;device&gt; - No such file or block device.</code></strong> — Replace <code>&lt;device&gt;</code> with the actual device name (e.g., <code>sda</code>, <code>nvme0n1</code>) shown in lsblk output.
+<strong><code>Error: Partition /dev/&lt;device&gt;&lt;part_number&gt; is mounted.</code></strong> — Unmount the partition with <code>umount /dev/&lt;device&gt;&lt;part_number&gt;</code> before resizing, or use <code>resize2fs</code> after parted if the filesystem supports online resizing.
+<strong><code>Error: Could not refresh the device entry /dev/&lt;device&gt;: Device or resource busy</code></strong> — Ensure no processes are accessing the device and try <code>partprobe</code> again, or reboot the system if the device is the root filesystem.</p>
+</div>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">$disk</span> <span class="p">=</span> <span class="nb">Get-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$part</span> <span class="p">=</span> <span class="nb">Get-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="p">&lt;</span><span class="n">pn</span><span class="p">&gt;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$maxSize</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$part</span> <span class="p">|</span> <span class="nb">Get-PartitionSupportedSize</span><span class="p">).</span><span class="n">SizeMax</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Resize-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="nv">$part</span><span class="p">.</span><span class="n">PartitionNumber</span> <span class="n">-Size</span> <span class="nv">$maxSize</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$disk</span> <span class="p">=</span> <span class="nb">Get-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$part</span> <span class="p">=</span> <span class="nb">Get-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="p">&lt;</span><span class="n">pn</span><span class="p">&gt;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">$maxSize</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$part</span> <span class="p">|</span> <span class="nb">Get-PartitionSupportedSize</span><span class="p">).</span><span class="n">SizeMax</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">Resize-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="nv">$part</span><span class="p">.</span><span class="n">PartitionNumber</span> <span class="n">-Size</span> <span class="nv">$maxSize</span>
 </code></pre></div></p>
 <h2 id="step-3b-resize-filesystem-lv">Step 3b — Resize Filesystem / LV<a class="headerlink" href="#step-3b-resize-filesystem-lv" title="Permanent link">&para;</a></h2>
 <p><strong>Linux — LVM (most common):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Resize physical volume</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pvresize<span class="w"> </span>/dev/mapper/&lt;mpathX&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Extend logical volume to use all free space</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Resize filesystem (online, no unmount needed)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>resize2fs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">       </span><span class="c1"># ext4</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">         </span><span class="c1"># xfs (use mountpoint, not device)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Resize physical volume</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pvresize<span class="w"> </span>/dev/mapper/&lt;mpathX&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Extend logical volume to use all free space</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Resize filesystem (online, no unmount needed)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>resize2fs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">       </span><span class="c1"># ext4</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">         </span><span class="c1"># xfs (use mountpoint, not device)</span>
 </code></pre></div></p>
-<p><strong>Linux — no LVM:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>resize2fs<span class="w"> </span>/dev/&lt;device&gt;&lt;part&gt;<span class="w">   </span><span class="c1"># ext4</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">          </span><span class="c1"># xfs</span>
-</code></pre></div></p>
-<h2 id="step-4-validate">Step 4 — Validate<a class="headerlink" href="#step-4-validate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>df<span class="w"> </span>-h<span class="w">                    </span><span class="c1"># confirm new filesystem size</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>lsblk<span class="w">                    </span><span class="c1"># confirm partition layout</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>multipath<span class="w"> </span>-ll<span class="w">            </span><span class="c1"># confirm all paths still healthy</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Physical volume &quot;/dev/mapper/mpatha&quot; changed: 1 physical extent(s) resized / 0 physical extent(s) unused
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Size of logical volume vg_storage/lv_data changed from 500.00 GiB (128000 extents) to 750.00 GiB (192000 extents).
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Logical volume vg_storage/lv_data successfully resized
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>resize2fs 1.46.2 (28-Feb-2021)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Filesystem at /dev/mapper/vg_storage-lv_data is mounted on /data; on-line resizing required
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>old_desc_blocks = 64, new_desc_blocks = 96
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Performing an on-line resize of /dev/mapper/vg_storage-lv_data to 196608000 (4k) blocks.
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>The filesystem on /dev/mapper/vg_storage-lv_data is now 196608000 (4k) blocks long.
 </code></pre></div>
-<p>Write a test file to confirm the new space is accessible:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mount/point/test.tmp<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/mount/point/test.tmp
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>resize2fs: Device or resource busy</code></strong> — Ensure the filesystem is mounted before running resize2fs, or use the device path instead of attempting offline resize.
+<strong><code>xfs_growfs: /dev/mapper/vg_storage-lv_data is not a mount point</code></strong> — Use the mount point path (e.g., <code>/data</code>) instead of the device path for xfs_growfs.
+<strong><code>Physical volume /dev/mapper/mpathX not found</code></strong> — Verify the multipath device name with <code>multipath -ll</code> and confirm the device exists before running pvresize.</p>
+</div>
+<p><strong>Linux — no LVM:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>resize2fs<span class="w"> </span>/dev/&lt;device&gt;&lt;part&gt;<span class="w">   </span><span class="c1"># ext4</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">          </span><span class="c1"># xfs</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>resize2fs: Bad magic number in superblock</code></strong> — Ensure the device is unmounted or use <code>resize2fs -f</code> only after confirming the filesystem is ext4 with <code>blkid</code>.
+<strong><code>xfs_growfs: /mount/point is not a mounted XFS filesystem</code></strong> — Verify the mount point exists and the filesystem is mounted with <code>mount | grep xfs</code>.</p>
+</div>
+<h2 id="step-4-validate">Step 4 — Validate<a class="headerlink" href="#step-4-validate" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>df<span class="w"> </span>-h<span class="w">                    </span><span class="c1"># confirm new filesystem size</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>lsblk<span class="w">                    </span><span class="c1"># confirm partition layout</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>multipath<span class="w"> </span>-ll<span class="w">            </span><span class="c1"># confirm all paths still healthy</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/dev/mapper/vg0-lv_root   500G  245G  255G  49% /
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>/dev/mapper/vg0-lv_data   2.0T  1.2T  800G  60% /data
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>/dev/sda1       1014M  187M  827M  19% /boot
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>tmpfs           7.8G     0  7.8G   0% /dev/shm
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>sda                       8:0    0  500G  0 disk
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>├─sda1                    8:1    0    1G  0 part /boot
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>└─sda2                    8:2    0  499G  0 part
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  └─vg0-lv_root         253:0    0  500G  0 lvm  /
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>sdb                       8:16   0    2T  0 disk
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>└─sdb1                    8:17   0    2T  0 part
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  └─vg0-lv_data         253:1    0    2.0T  0 lvm  /data
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>sdc                       8:32   0    2T  0 disk
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>└─sdc1                    8:33   0    2T  0 part
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  └─vg0-lv_data         253:1    0    2.0T  0 lvm  /data
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>mpatha (36001405a1b2c3d4e5f6g7h8i9j0k1l2m) dm-0 NETAPP,LUN
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>size=2.0T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>| `- 4:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>  `- 5:0:0:0 sdc 8:32 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>lsblk: command not found</code></strong> — Install util-linux package with <code>apt-get install util-linux</code> or <code>yum install util-linux</code>.
+<strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code>.</p>
+</div>
+<p>Write a test file to confirm the new space is accessible:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mount/point/test.tmp<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/mount/point/test.tmp
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>1024+0 records in
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>1024+0 records out
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>1073741824 bytes (1.1 GB, 1.0 GiB) copied, 2.847 s, 379 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dd: failed to open '/mount/point/test.tmp' for writing: No such file or directory</code></strong> — Verify the mount point exists and is mounted with <code>mount | grep /mount/point</code> before running the command.
+<strong><code>dd: error writing '/mount/point/test.tmp': No space left on device</code></strong> — Reduce the count parameter (e.g., <code>count=512</code>) or free up space on the volume before retrying.
+<strong><code>dd: opening '/dev/zero': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access <code>/dev/zero</code>.</p>
+</div>
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>Online expansion of a LUN/partition/filesystem is <strong>not reversible</strong> without a rebuild. If something goes wrong:</p>
 <ol>
@@ -7259,7 +7397,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:20:53 UTC"><span class="timeago" datetime="2026-06-29T06:20:53+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:20:53 UTC">2026-06-29</span>
   </span>
 
     

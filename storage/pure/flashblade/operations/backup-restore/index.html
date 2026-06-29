@@ -8460,125 +8460,278 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify the snapshot was created</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--source<span class="w"> </span>prod-ml-training-data
 </code></pre></div>
-<h3 id="list-and-filter-snapshots">List and Filter Snapshots<a class="headerlink" href="#list-and-filter-snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all snapshots</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List snapshots for a specific filesystem</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--source<span class="w"> </span>prod-ml-training-data
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List snapshots sorted by creation time (newest first)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>created-
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Snapshot pre-maint-20260507 created successfully
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Source: prod-ml-training-data
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Created: 2026-05-07T14:32:18Z
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Size: 847.3 GB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Snapshots weekly-20260506 created successfully
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Source: prod-nfs, prod-analytics
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Created: 2026-05-07T14:32:45Z
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show space consumed by each snapshot</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Name                          Source                    Created                Size      
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pre-maint-20260507            prod-ml-training-data     2026-05-07T14:32:18Z  847.3 GB  
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>weekly-20260506               prod-ml-training-data     2026-05-07T14:32:45Z  1.2 TB
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Source filesystem 'prod-ml-training-data' not found</code></strong> — Verify the filesystem name exists with <code>purefb filesystem list</code> and check for typos.
+<strong><code>Error: Snapshot 'pre-maint-20260507' already exists</code></strong> — Use a unique snapshot name or delete the existing snapshot with <code>purefb snapshot delete --name pre-maint-20260507</code>.
+<strong><code>Error: Insufficient space to create snapshot</code></strong> — Check available capacity with <code>purefb capacity</code> and free up space or expand the array.</p>
+</div>
+<h3 id="list-and-filter-snapshots">List and Filter Snapshots<a class="headerlink" href="#list-and-filter-snapshots" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all snapshots</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List snapshots for a specific filesystem</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--source<span class="w"> </span>prod-ml-training-data
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List snapshots sorted by creation time (newest first)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>created-
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show space consumed by each snapshot</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--space
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                                    Source                      Created                 Size
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>backup-archive.snap-20240110            backup-archive              2024-01-10T22:15:00Z    1.8TB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dev-test-env.daily-01-17                dev-test-env                2024-01-17T02:00:00Z    890GB
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>...
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Name                                    Source                      Created                 Size
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Name                                    Source                      Created                 Size
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Name                                    Source                      Created                 Physical    Logical
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    1.2TB       2.3TB
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    1.1TB       2.3TB
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    1.0TB       2.3TB
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>backup-archive.snap-20240110            backup-archive              2024-01-10T22:15:00Z    890GB       1.8TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid source filesystem 'prod-ml-training-data' not found</code></strong> — Verify the filesystem name with <code>purefb filesystem list</code> and use the correct name.
+<strong><code>Error: Authentication failed. Check API token and array connectivity</code></strong> — Ensure the Pure FlashBlade array is reachable and your API credentials are valid in your environment configuration.</p>
+</div>
 <h3 id="configure-snapshot-policies-automated-schedules">Configure Snapshot Policies (Automated Schedules)<a class="headerlink" href="#configure-snapshot-policies-automated-schedules" title="Permanent link">&para;</a></h3>
 <p>Snapshot policies define automatic schedules. Attach a policy to one or more filesystems to create retention-managed snapshots without manual intervention.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List existing snapshot policies</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create a daily snapshot policy — keep 7 days</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--name<span class="w"> </span>daily-7d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--keep-for<span class="w"> </span>7d
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create a weekly snapshot policy — keep 4 weeks</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--name<span class="w"> </span>weekly-4w<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--keep-for<span class="w"> </span>28d
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Attach a policy to a filesystem</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--rule<span class="w"> </span>daily-7d
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Attach the weekly policy to the same filesystem (multiple policies are supported)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>--rule<span class="w"> </span>weekly-4w
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Verify the attachment</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>list<span class="w"> </span>--filesystem<span class="w"> </span>prod-nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List existing snapshot policies</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a daily snapshot policy — keep 7 days</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--name<span class="w"> </span>daily-7d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--keep-for<span class="w"> </span>7d
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Create a weekly snapshot policy — keep 4 weeks</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>--name<span class="w"> </span>weekly-4w<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>--keep-for<span class="w"> </span>28d
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Attach a policy to a filesystem</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span>--rule<span class="w"> </span>daily-7d
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Attach the weekly policy to the same filesystem (multiple policies are supported)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>--rule<span class="w"> </span>weekly-4w
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># Verify the attachment</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>purefb<span class="w"> </span>filesystem-snapshot-rule<span class="w"> </span>list<span class="w"> </span>--filesystem<span class="w"> </span>prod-nfs
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name          Keep For  Interval
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>daily-7d      7d        1d
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>weekly-4w     28d       7d
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>legacy-snap   30d       1d
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Snapshot rule &#39;daily-7d&#39; created successfully
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Snapshot rule &#39;weekly-4w&#39; created successfully
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Filesystem snapshot rule attached: prod-nfs -&gt; daily-7d
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Filesystem snapshot rule attached: prod-nfs -&gt; weekly-4w
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Filesystem: prod-nfs
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Rule Name     Keep For  Interval  Status
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>daily-7d      7d        1d        active
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>weekly-4w     28d       7d        active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Snapshot rule 'daily-7d' already exists</code></strong> — Use <code>purefb snapshot-rule list</code> to verify existing policies and choose a unique name or delete the conflicting rule first.
+<strong><code>Error: Filesystem 'prod-nfs' not found</code></strong> — Verify the filesystem name with <code>purefb filesystem list</code> and ensure it exists before attaching snapshot rules.
+<strong><code>Error: Snapshot rule 'daily-7d' not found</code></strong> — Confirm the rule was created successfully by running <code>purefb snapshot-rule list</code> before attaching it to a filesystem.</p>
+</div>
 <hr />
 <h2 id="file-restore-procedures">File Restore Procedures<a class="headerlink" href="#file-restore-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="self-service-file-restore-via-nfs-snapshot">Self-Service File Restore via NFS <code>.snapshot</code><a class="headerlink" href="#self-service-file-restore-via-nfs-snapshot" title="Permanent link">&para;</a></h3>
 <p>The <code>.snapshot</code> directory is visible to NFS clients when the <code>snapshot_directory_accessible</code> option is enabled on the filesystem. Users can browse and restore individual files without administrator involvement.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the FlashBlade — enable snapshot directory access on the filesystem</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span>--snapshot-directory-accessible<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># On the NFS client — browse available snapshots</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>/mnt/prod-nfs/.snapshot/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Output:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># daily-7d.2026-05-06_00-00-00</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># daily-7d.2026-05-07_00-00-00</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># pre-maint-20260507</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Restore a single file from a snapshot</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>cp<span class="w"> </span>/mnt/prod-nfs/.snapshot/pre-maint-20260507/data/config.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">   </span>/mnt/prod-nfs/data/config.json
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Restore an entire directory from a snapshot</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/mnt/prod-nfs/.snapshot/daily-7d.2026-05-06_00-00-00/data/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">          </span>/mnt/prod-nfs/data/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the FlashBlade — enable snapshot directory access on the filesystem</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span>--snapshot-directory-accessible<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># On the NFS client — browse available snapshots</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ls<span class="w"> </span>/mnt/prod-nfs/.snapshot/
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Output:</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># daily-7d.2026-05-06_00-00-00</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># daily-7d.2026-05-07_00-00-00</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># pre-maint-20260507</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Restore a single file from a snapshot</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>cp<span class="w"> </span>/mnt/prod-nfs/.snapshot/pre-maint-20260507/data/config.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">   </span>/mnt/prod-nfs/data/config.json
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Restore an entire directory from a snapshot</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/mnt/prod-nfs/.snapshot/daily-7d.2026-05-06_00-00-00/data/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">          </span>/mnt/prod-nfs/data/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Filesystem prod-nfs updated successfully
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Snapshot directory access enabled
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>daily-7d.2026-05-06_00-00-00
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>daily-7d.2026-05-07_00-00-00
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pre-maint-20260507
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>sending incremental file list
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>data/
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>data/config.json
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>data/app.conf
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>data/schema.sql
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>data/logs/
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>data/logs/app.log
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>sent 2,847,392 bytes  received 156 bytes  2,847,548 bytes/sec
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>total size is 2,846,921  speedup is 1.00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>permission denied</code></strong> — Verify the NFS client has read permissions on the snapshot directory and the FlashBlade export allows snapshot access.
+<strong><code>No such file or directory</code></strong> — Confirm the snapshot name exists by running <code>ls /mnt/prod-nfs/.snapshot/</code> and verify the source path within the snapshot is correct.
+<strong><code>Stale NFS file handle</code></strong> — Remount the NFS filesystem on the client with <code>umount /mnt/prod-nfs &amp;&amp; mount &lt;flashblade-ip&gt;:/prod-nfs /mnt/prod-nfs</code> to refresh the connection.</p>
+</div>
 <h3 id="restore-a-filesystem-to-a-snapshot-full-overwrite">Restore a Filesystem to a Snapshot (Full Overwrite)<a class="headerlink" href="#restore-a-filesystem-to-a-snapshot-full-overwrite" title="Permanent link">&para;</a></h3>
 <p>This replaces all current data in the live filesystem with the contents of the snapshot. Use only when a complete point-in-time recovery is required. All data written after the snapshot was created is lost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm the snapshot exists</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--source<span class="w"> </span>prod-nfs
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Overwrite the live filesystem with the snapshot — irreversible</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>restore<span class="w"> </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--from-snapshot<span class="w"> </span>prod-nfs.pre-maint-20260507
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify the filesystem is accessible after restore</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm the snapshot exists</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>--source<span class="w"> </span>prod-nfs
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Overwrite the live filesystem with the snapshot — irreversible</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>restore<span class="w"> </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--from-snapshot<span class="w"> </span>prod-nfs.pre-maint-20260507
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify the filesystem is accessible after restore</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-nfs
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                          Source Snapshot              Created
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>prod-nfs.pre-maint-20260507   prod-nfs                     2026-05-07T14:32:18Z
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>prod-nfs.daily-20260506       prod-nfs                     2026-05-06T02:15:42Z
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>prod-nfs.hourly-20260507-1400 prod-nfs                     2026-05-07T14:00:05Z
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Restoring filesystem &#39;prod-nfs&#39; from snapshot &#39;prod-nfs.pre-maint-20260507&#39;...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Restore operation initiated. Snapshot recovery in progress.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Restore completed successfully in 47 seconds.
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Name      Provisioned  Used      NFS Enabled  SMB Enabled  HTTP Enabled  Created
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>prod-nfs  2.0 TB       1.847 TB  true         false        false         2026-05-07T14:32:18Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Snapshot 'prod-nfs.pre-maint-20260507' not found</code></strong> — Verify the exact snapshot name with <code>purefb snapshot list --source prod-nfs</code> and correct any typos in the <code>--from-snapshot</code> parameter.
+<strong><code>Error: Filesystem 'prod-nfs' is currently in use by 47 active NFS clients</code></strong> — Unmount or disconnect all clients from the filesystem before initiating the restore operation.
+<strong><code>Error: Restore operation failed — insufficient space for snapshot data</code></strong> — Verify the filesystem has at least 20% free provisioned capacity before attempting the restore.</p>
+</div>
 <h3 id="clone-a-snapshot-to-a-new-filesystem">Clone a Snapshot to a New Filesystem<a class="headerlink" href="#clone-a-snapshot-to-a-new-filesystem" title="Permanent link">&para;</a></h3>
 <p>This creates an independent writable filesystem from a snapshot, leaving the original live filesystem intact. Use for parallel investigations, DR testing, or application testing against production data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Copy the snapshot to a new writable filesystem</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs.pre-maint-20260507<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--target<span class="w"> </span>prod-nfs-clone-20260507
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># The new filesystem is immediately mountable</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-nfs-clone-20260507
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Export via NFS (if needed)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs-clone-20260507<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash)&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Mount on a client</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;fb-data-vip&gt;:/prod-nfs-clone-20260507<span class="w"> </span>/mnt/restore-test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Copy the snapshot to a new writable filesystem</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>snapshot<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs.pre-maint-20260507<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--target<span class="w"> </span>prod-nfs-clone-20260507
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># The new filesystem is immediately mountable</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-nfs-clone-20260507
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Export via NFS (if needed)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs-clone-20260507<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash)&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Mount on a client</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;fb-data-vip&gt;:/prod-nfs-clone-20260507<span class="w"> </span>/mnt/restore-test
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Snapshot copy started: prod-nfs.pre-maint-20260507 → prod-nfs-clone-20260507
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Copy progress: 100%
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Snapshot copy completed successfully
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Name                          Size      Provisioned  NFS Enabled  SMB Enabled  Created
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>prod-nfs-clone-20260507       2.3 TiB   2.3 TiB      No           No           2026-05-07T14:32:18Z
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Filesystem prod-nfs-clone-20260507 updated
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>NFS export rules applied: 10.0.1.0/24(rw,no_root_squash)
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>(no output — mount completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Snapshot 'prod-nfs.pre-maint-20260507' not found</code></strong> — Verify the snapshot exists with <code>purefb snapshot list</code> and confirm the exact name spelling.
+<strong><code>mount.nfs: access denied by server while mounting &lt;fb-data-vip&gt;:/prod-nfs-clone-20260507</code></strong> — Ensure the NFS export rule includes the client IP and that the filesystem NFS service is enabled with <code>purefb filesystem update --name prod-nfs-clone-20260507 --nfs-enabled true</code>.
+<strong><code>mount: special device &lt;fb-data-vip&gt;:/prod-nfs-clone-20260507 does not exist</code></strong> — Confirm the FlashBlade data VIP is correct and reachable; verify with <code>ping &lt;fb-data-vip&gt;</code> and check that the filesystem name matches exactly.</p>
+</div>
 <hr />
 <h2 id="object-store-restore-procedures">Object Store Restore Procedures<a class="headerlink" href="#object-store-restore-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="restore-an-object-from-a-bucket-snapshot">Restore an Object from a Bucket Snapshot<a class="headerlink" href="#restore-an-object-from-a-bucket-snapshot" title="Permanent link">&para;</a></h3>
 <p>Bucket snapshots are accessible via the S3 API by specifying the snapshot as an object store endpoint path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List snapshots for a specific bucket</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>list<span class="w"> </span>--bucket<span class="w"> </span>prod-analytics-raw
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Create a manual bucket snapshot</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--bucket<span class="w"> </span>prod-analytics-raw<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-raw.pre-maint-20260507
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Copy a snapshot to a new bucket for recovery</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-raw.pre-maint-20260507<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>--target<span class="w"> </span>prod-analytics-raw-restore
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Access the restored bucket via S3 using AWS CLI</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://prod-analytics-raw-restore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Copy an object from the restored bucket back to production</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>s3://prod-analytics-raw-restore/data/2026/05/dataset.parquet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">          </span>s3://prod-analytics-raw/data/2026/05/dataset.parquet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">          </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List snapshots for a specific bucket</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>list<span class="w"> </span>--bucket<span class="w"> </span>prod-analytics-raw
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Create a manual bucket snapshot</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--bucket<span class="w"> </span>prod-analytics-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-raw.pre-maint-20260507
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Copy a snapshot to a new bucket for recovery</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>purefb<span class="w"> </span>bucket-snapshot<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-raw.pre-maint-20260507<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span>--target<span class="w"> </span>prod-analytics-raw-restore
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Access the restored bucket via S3 using AWS CLI</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://prod-analytics-raw-restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Copy an object from the restored bucket back to production</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>s3://prod-analytics-raw-restore/data/2026/05/dataset.parquet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">          </span>s3://prod-analytics-raw/data/2026/05/dataset.parquet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">          </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                                    Created                Size      
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>prod-analytics-raw.daily-20260506       2026-05-06T02:15:33Z  847.3 GB  
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>prod-analytics-raw.weekly-20260501      2026-05-01T00:30:12Z  892.1 GB  
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>prod-analytics-raw.pre-maint-20260430   2026-04-30T18:45:22Z  841.7 GB  
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Snapshot created: prod-analytics-raw.pre-maint-20260507
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Snapshot ID: 12345678-abcd-ef01-2345-6789abcdef01
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Snapshot copy initiated
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Source: prod-analytics-raw.pre-maint-20260507
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Target bucket: prod-analytics-raw-restore
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Status: In Progress (estimated 8 minutes remaining)
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>2026-05-07 14:32:18       0 data/
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>2026-05-07 14:32:19  2847291 data/2026/05/dataset.parquet
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>2026-05-07 14:32:20  1924847 data/2026/04/historical.parquet
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>upload: s3://prod-analytics-raw-restore/data/2026/05/dataset.parquet to s3://prod-analytics-raw/data/2026/05/dataset.parquet
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Bucket 'prod-analytics-raw' not found</code></strong> — Verify the bucket name matches exactly and that your FlashBlade credentials are configured with <code>purefb login</code>.
+<strong><code>An error occurred (InvalidAccessKeyId) when calling the ListBucket operation</code></strong> — Ensure the S3 endpoint URL is correct and the AWS credentials have permissions for the target bucket by checking IAM policy and endpoint configuration.
+<strong><code>Error: Snapshot 'prod-analytics-raw.pre-maint-20260507' already exists</code></strong> — Use a unique snapshot name or delete the existing snapshot before creating a new one with the same name.</p>
+</div>
 <hr />
 <h2 id="veeam-backup-replication-integration">Veeam Backup &amp; Replication Integration<a class="headerlink" href="#veeam-backup-replication-integration" title="Permanent link">&para;</a></h2>
 <p>Veeam integrates with FlashBlade via its NFS backup repository and, with the Pure Storage plugin, as a snapshot-integrated repository that enables instant recovery.</p>
@@ -8586,12 +8739,27 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 <ol>
 <li>On FlashBlade — create a dedicated filesystem for Veeam backups:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>--name<span class="w"> </span>prod-veeam-daily<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--size<span class="w"> </span>50T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>--name<span class="w"> </span>prod-veeam-daily<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--size<span class="w"> </span>50T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Creating filesystem &#39;prod-veeam-daily&#39;...
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Filesystem created successfully.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Name: prod-veeam-daily
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Size: 50T
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Protocol: NFS
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Status: Available
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Mount Point: /prod-veeam-daily
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Filesystem 'prod-veeam-daily' already exists</code></strong> — Use a unique filesystem name or delete the existing filesystem with <code>purefb filesystem delete --name prod-veeam-daily</code> first.
+<strong><code>Error: Insufficient space available. Required: 50T, Available: 32T</code></strong> — Reduce the filesystem size with <code>--size</code> to a value less than available capacity or add additional FlashBlade capacity.
+<strong><code>Error: Invalid NFS rule format</code></strong> — Ensure NFS rules follow the format <code>&lt;subnet&gt;(option1,option2)</code> such as <code>10.0.10.0/24(rw,no_root_squash)</code> without spaces.</p>
+</div>
 <ol>
 <li>In Veeam — add the NFS share as a repository:</li>
 <li>Navigate to <strong>Backup Infrastructure &gt; Backup Repositories &gt; Add Repository</strong></li>
@@ -8605,43 +8773,99 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 <p>Verify the repository is accessible:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From the Veeam backup server — test NFS mount</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;fb-data-vip&gt;:/prod-veeam-daily<span class="w"> </span>/mnt/veeam-test
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/veeam-test
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>umount<span class="w"> </span>/mnt/veeam-test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># From the Veeam backup server — test NFS mount</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;fb-data-vip&gt;:/prod-veeam-daily<span class="w"> </span>/mnt/veeam-test
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/veeam-test
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>umount<span class="w"> </span>/mnt/veeam-test
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>10.42.18.55:/prod-veeam-daily  50T   12T   38T  24% /mnt/veeam-test
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: access denied by server while mounting 10.42.18.55:/prod-veeam-daily</code></strong> — Verify the FlashBlade export rule permits the Veeam server's IP and check that the NFS service is running on the blade with <code>purectl list --nfs</code>.
+<strong><code>umount: /mnt/veeam-test: target is busy</code></strong> — Close any open files or processes accessing the mount with <code>lsof /mnt/veeam-test</code> and retry umount, or use <code>umount -l</code> for lazy unmount.</p>
+</div>
 <h3 id="veeam-with-pure-storage-plugin-snapshot-integration">Veeam with Pure Storage Plugin (Snapshot Integration)<a class="headerlink" href="#veeam-with-pure-storage-plugin-snapshot-integration" title="Permanent link">&para;</a></h3>
 <p>The Pure Storage Plugin for Veeam enables backup-from-snapshot mode: Veeam triggers a FlashBlade snapshot before reading data, then streams from the snapshot. Production filesystem performance is not impacted during backup windows.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm the Pure Storage Plugin is installed and configured in Veeam</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Plugin path on Veeam server: %ProgramFiles%\Veeam\Backup and Replication\Plugins\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Configuration: Storage Infrastructure &gt; Add Storage &gt; Pure Storage FlashBlade</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Confirm the Pure Storage Plugin is installed and configured in Veeam</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Plugin path on Veeam server: %ProgramFiles%\Veeam\Backup and Replication\Plugins\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Configuration: Storage Infrastructure &gt; Add Storage &gt; Pure Storage FlashBlade</span>
 </code></pre></div>
 <p><strong>FlashBlade REST API token for Veeam plugin:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On FlashBlade — create a service account and API token for Veeam</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam<span class="w"> </span>--role<span class="w"> </span>storage_admin
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>purefb<span class="w"> </span>user<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Output includes the API token — store it securely; it is shown only once</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># On FlashBlade — create a service account and API token for Veeam</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>purefb<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam<span class="w"> </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>purefb<span class="w"> </span>user<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Output includes the API token — store it securely; it is shown only once</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>User svc-veeam created successfully
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Name: svc-veeam
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Role: storage_admin
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Status: enabled
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>API Token created successfully
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Token ID: 8f4c9e2a-1b7d-4f3c-9d2e-5a8c1b6f3e9a
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Token: T-8f4c9e2a1b7d4f3c9d2e5a8c1b6f3e9a_8a2f5c9e1d3b4a7c6e9f2a5b8c1d3e4f
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Created: 2024-01-15T14:32:18Z
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Expires: never
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'svc-veeam' already exists</code></strong> — Delete the existing user with <code>purefb user delete --name svc-veeam</code> or use a different service account name.
+<strong><code>Error: Invalid role 'storage_admin'</code></strong> — Verify the correct role name using <code>purefb user list --roles</code> and use an available role like <code>storage_admin</code> or <code>readonly</code>.
+<strong><code>Error: API token creation failed — user not found</code></strong> — Ensure the user creation command completed successfully before attempting to create the API token.</p>
+</div>
 <p><strong>Instant VM Recovery from FlashBlade snapshot:</strong></p>
 <p>When Veeam has integrated FlashBlade snapshots, instant recovery starts VMs directly from the snapshot without waiting for data to be copied. Recovery time is near-zero — the VM boots from the snapshot-backed filesystem, then Veeam storage motions data back to the production datastore in the background.</p>
 <hr />
 <h2 id="commvault-integration">Commvault Integration<a class="headerlink" href="#commvault-integration" title="Permanent link">&para;</a></h2>
 <p>Commvault IntelliSnap integrates with FlashBlade to create array-level snapshots as backup sources.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># FlashBlade service account for Commvault</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purefb<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-commvault<span class="w"> </span>--role<span class="w"> </span>storage_admin
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>purefb<span class="w"> </span>user<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-commvault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># FlashBlade service account for Commvault</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>purefb<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-commvault<span class="w"> </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>purefb<span class="w"> </span>user<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-commvault
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>User svc-commvault created successfully
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>API token: 00000000-1111-2222-3333-444455556666
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Token expires: Never
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'svc-commvault' already exists</code></strong> — Delete the existing user with <code>purefb user delete --name svc-commvault</code> before recreating it.
+<strong><code>Error: Invalid role 'storage_admin'</code></strong> — Verify the correct role name with <code>purefb user list --roles</code> and use an available role like <code>storage_admin</code> or <code>readonly</code>.
+<strong><code>Error: You do not have permission to perform this operation</code></strong> — Ensure your FlashBlade admin account has user management privileges or contact your FlashBlade administrator.</p>
+</div>
 <p>In Commvault:
 - Navigate to <strong>Storage &gt; Array Management &gt; Add Array</strong>
 - Select <strong>Pure Storage FlashBlade</strong>
 - Enter the FlashBlade management IP and the API token for <code>svc-commvault</code>
 - Configure IntelliSnap subclient policies to trigger FlashBlade snapshots before streaming</p>
 <p><strong>Best practice:</strong> Use a dedicated FlashBlade filesystem per Commvault retention tier:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>prod-commvault-daily<span class="w"> </span>--size<span class="w"> </span>20T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>--nfs<span class="w"> </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>prod-commvault-weekly<span class="w"> </span>--size<span class="w"> </span>60T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--nfs<span class="w"> </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>prod-commvault-daily<span class="w"> </span>--size<span class="w"> </span>20T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span>--nfs<span class="w"> </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>prod-commvault-weekly<span class="w"> </span>--size<span class="w"> </span>60T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span>--nfs<span class="w"> </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.0/24(rw,no_root_squash)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Creating filesystem prod-commvault-daily (20T)...
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Filesystem prod-commvault-daily created successfully
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>  Name: prod-commvault-daily
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>  Size: 20T
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  Protocol: nfs
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>  NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>  Status: available
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>Creating filesystem prod-commvault-weekly (60T)...
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>Filesystem prod-commvault-weekly created successfully
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>  Name: prod-commvault-weekly
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>  Size: 60T
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>  Protocol: nfs
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>  NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>  Status: available
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Filesystem 'prod-commvault-daily' already exists</code></strong> — Check existing filesystems with <code>purefb filesystem list</code> and use a unique name or delete the existing filesystem first.
+<strong><code>Error: Invalid NFS rules syntax</code></strong> — Verify the NFS rules format matches <code>&lt;subnet&gt;(option1,option2)</code> with no spaces inside parentheses.
+<strong><code>Error: Insufficient capacity on array</code></strong> — Reduce the requested size or check available capacity with <code>purefb hardware list</code> and confirm the array has at least 80T free space.</p>
+</div>
 <hr />
 <h2 id="safemode-snapshot-protection">SafeMode Snapshot Protection<a class="headerlink" href="#safemode-snapshot-protection" title="Permanent link">&para;</a></h2>
 <p>SafeMode prevents local admins — including <code>array_admin</code> accounts — from deleting snapshots or modifying snapshot retention until the retention window expires. Enabling SafeMode requires Pure Support involvement.</p>
@@ -8649,14 +8873,29 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 - Snapshot schedules cannot be modified or deleted once locked
 - Snapshot retention periods cannot be shortened
 - Any attempt to eradicate a SafeMode-protected snapshot returns an error until the retention period expires naturally</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Verify SafeMode status after enablement</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--safemode
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Expected: &#39;safe_mode: enabled&#39; in the output</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Confirm existing snapshot policies are protected</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>list
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># SafeMode-protected policies display with a lock indicator in the GUI</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Verify SafeMode status after enablement</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--safemode
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># Expected: &#39;safe_mode: enabled&#39; in the output</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Confirm existing snapshot policies are protected</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>purefb<span class="w"> </span>snapshot-rule<span class="w"> </span>list
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># SafeMode-protected policies display with a lock indicator in the GUI</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Name          Model           Version        Safe Mode
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>flashblade-1  //E25M-100      4.2.1.1        enabled
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>flashblade-2  //E25M-200      4.2.1.1        enabled
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Name                    Frequency    Keep For    Enabled    Protected
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>daily-backup            daily        30 days     true       ✓
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>hourly-incremental      hourly       7 days      true       ✓
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>weekly-archive          weekly       52 weeks    true       ✓
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>monthly-retention       monthly      10 years    true       ✓
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or insufficient permissions</code></strong> — Verify your Pure Storage API token is valid and your user account has administrative privileges.
+<strong><code>Error: SafeMode is not enabled on this array</code></strong> — Run <code>purefb array safemode --enable</code> before attempting to verify SafeMode status.</p>
+</div>
 <p><strong>Enabling SafeMode:</strong> Contact Pure Storage Support. SafeMode cannot be enabled from the array CLI alone — it requires a second-factor confirmation from Pure Support to activate, and Pure Support must also be involved to make any subsequent changes to protected schedules.</p>
 <hr />
 <h2 id="backup-verification-procedure">Backup Verification Procedure<a class="headerlink" href="#backup-verification-procedure" title="Permanent link">&para;</a></h2>
@@ -8787,7 +9026,7 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:06:42 UTC"><span class="timeago" datetime="2026-06-29T06:06:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:06:42 UTC">2026-06-29</span>
   </span>
 
     

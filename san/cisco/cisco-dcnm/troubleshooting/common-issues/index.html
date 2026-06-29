@@ -7757,75 +7757,234 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Step 3: Check DCNM discovery log</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;switch-ip&gt;&quot;</span><span class="w"> </span>/var/log/dcnm/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check PM service status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dcnm-pm
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check PM log for polling errors</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/pm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|timeout\|failed&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Restart PM service</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-pm
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify SNMP polling is working manually</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>ifInOctets
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Expected: output with interface counter values</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cisco Nexus Operating System (NX-OS) Software
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>TAC support: http://www.cisco.com/tac
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Copyright (c) 2002-2023, Cisco and/or its affiliates
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Kernel uptime is 127 day(s), 14 hour(s), 22 minute(s), 58 second(s)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Last reset at 1234567890 (Wed Mar 15 10:22:30 2023)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Reason: Requested reload
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>System uptime is 126 day(s), 23 hour(s), 11 minute(s), 12 second(s)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>SNMPv3 User-based Security Model (USM) User Table
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Engine ID: 800007E5-03A0B8C10F4E
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>User Name: dcnm_poll
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Authentication Protocol: HMAC-SHA
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Privacy Protocol: AES
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>2024-01-18T14:32:15.847Z [INFO] Discovery initiated for switch 192.168.1.105
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>2024-01-18T14:32:18.923Z [INFO] SSH authentication successful for 192.168.1.105
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>2024-01-18T14:32:21.156Z [INFO] SNMP polling enabled for 192.168.1.105
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2024-01-18T14:32:45.234Z [INFO] Device 192.168.1.105 added to inventory (N9K-C93180YC-EX)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP from DCNM appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=dcnm-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=&lt;test-user&gt;)&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password)</code></strong> — Verify dcnm_mgmt user exists on switch and SSH key/password is correct in DCNM credentials.
+<strong><code>Timeout: No Response from 192.168.1.x</code></strong> — Confirm network connectivity to switch IP, firewall rules allow SNMP/SSH ports, and switch management interface is reachable.
+<strong><code>No such file or directory: /var/log/dcnm/discovery.log</code></strong> — Verify DCNM service is running with <code>systemctl status dcnm</code> and check correct log path for your DCNM installation.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check PM service status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dcnm-pm
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check PM log for polling errors</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/pm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|timeout\|failed&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Restart PM service</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-pm
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify SNMP polling is working manually</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>ifInOctets
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Expected: output with interface counter values</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check resource usage</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>free<span class="w"> </span>-h
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check disk I/O</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check database connections</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity WHERE state=&#39;active&#39;;&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># If &gt; 50 active connections: connection pool exhaustion</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check for runaway queries</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">SELECT pid, now() - query_start AS duration, query </span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">FROM pg_stat_activity </span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">WHERE state = &#39;active&#39; </span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s2">ORDER BY duration DESC </span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s2">LIMIT 10;&quot;</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Restart DCNM if Java memory leak suspected</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>● dcnm-pm.service - Cisco DCNM Policy Manager
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>     Loaded: loaded (/usr/lib/systemd/system/dcnm-pm.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Main PID: 8742 (java)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      Tasks: 47 (limit: 4096)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>     Memory: 512.3M
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        CPU: 18min 32.450s
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     CGroup: /system.slice/dcnm-pm.service
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>             └─8742 /usr/lib/jvm/java-11-openjdk/bin/java -Xmx2g...
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15 14:45:22 dcnm-pm[8742]: ERROR [PollingThread-12] Timeout polling switch 10.48.22.105 after 30s
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15 14:46:15 dcnm-pm[8742]: ERROR [SNMPv3Handler] Authentication failed for user dcnm_poll on 10.48.22.106
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>2024-01-15 14:47:03 dcnm-pm[8742]: WARN [PollingThread-8] Failed to retrieve ifInOctets from 10.48.22.104
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Restarting dcnm-pm.service...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Job for dcnm-pm.service is queued for restart, will take approx. 45 seconds.
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>SNMPv3 Session Details:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>User Name:            dcnm_poll
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Authentication:       SHA
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Privacy:              AES
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Engine ID:            0x80001f8800051a2c4f5a3b
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Boots:                1247
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>IF-MIB::ifInOctets.1 = Counter64: 2847362951
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>IF-MIB::ifInOctets.2 = Counter64: 1923847502
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>IF-MIB::ifInOctets.3 = Counter64: 4102938475
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>IF-MIB::ifInOctets.4 = Counter64: 892374619
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Capture to confirm traps are arriving</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If not arriving: confirm trap destination on the switch</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># On MDS switch:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>snmp<span class="w"> </span>host
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Should list DCNM IP</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># If arriving but not processed: check event manager</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/events.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;trap\|SNMP&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Restart event service</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-events
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>snmpwalk: Unknown user name dcnm_poll</code></strong> — Verify the SNMPv3 user exists on the switch with <code>show snmp user</code> and matches the credentials in DCNM PM configuration.
+<strong><code>Timeout: No Response from &lt;switch-ip&gt;</code></strong> — Check network connectivity to the switch IP, verify SNMP port 161 is open in firewall rules, and confirm the switch is reachable with <code>ping &lt;switch-ip&gt;</code>.
+<strong><code>Authentication failed for user dcnm_poll</code></strong> — Ensure the authentication password and privacy password match exactly what is configured on the switch, and verify the switch supports SHA/AES algorithms with <code>show snmp engineID</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test LDAP from DCNM appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=dcnm-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=&lt;test-user&gt;)&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check upgrade log</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/install.log
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check if DCNM services started after upgrade</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check for database migration errors (common cause of upgrade failure)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;liquibase\|migration\|flyway\|ERROR&quot;</span><span class="w"> </span>/var/log/dcnm/install.log
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># If upgrade is unrecoverable: revert to pre-upgrade VM snapshot</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Then contact Cisco TAC with the install log</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># extended LDIF
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>#
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a># LDAPv3
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># base &lt;DC=corp,DC=example,DC=com&gt; with scope subtree
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a># filter: (sAMAccountName=testuser)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a># requesting: ALL
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>#
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># testuser, Users, corp.example.com
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>dn: CN=testuser,CN=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>objectClass: top
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>objectClass: person
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>objectClass: organizationalPerson
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>objectClass: user
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>cn: testuser
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sn: User
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>givenName: Test
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>mail: testuser@corp.example.com
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>memberOf: CN=dcnm-admins,CN=Groups,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>userAccountControl: 512
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>pwdLastSet: 133412567890123456
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a># search result
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>search: 2
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>result: 0 Success
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a># numResponses: 2
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a># numEntries: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></strong> — Verify LDAP server hostname/IP is reachable and port 636 is open; check firewall rules from DCNM appliance to LDAP server.
+<strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Confirm the service account password is correct and the DN format matches your Active Directory structure exactly.
+<strong><code>ldap_search: No such object (32)</code></strong> — Verify the base DN <code>DC=corp,DC=example,DC=com</code> exists in your directory and matches your domain structure.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check resource usage</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>free<span class="w"> </span>-h
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check disk I/O</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check database connections</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity WHERE state=&#39;active&#39;;&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># If &gt; 50 active connections: connection pool exhaustion</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check for runaway queries</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">SELECT pid, now() - query_start AS duration, query </span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">FROM pg_stat_activity </span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">WHERE state = &#39;active&#39; </span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">ORDER BY duration DESC </span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s2">LIMIT 10;&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Restart DCNM if Java memory leak suspected</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
+</code></pre></div>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>top - 14:32:18 up 18 days,  3:45,  2 users,  load average: 2.14, 1.87, 1.62
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Tasks: 247 total,   3 running, 244 sleeping,   0 stopped,   0 zombie
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>%Cpu(s):  18.2 us,  4.3 sy,  0.0 ni, 76.8 id,  0.5 wa,  0.2 hi,  0.0 si,  0.0 st
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>MiB Mem :  32768.0 total,  24512.3 free,   6144.2 used,   2111.5 buff/cache
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>MiB Swap:   8192.0 total,   8192.0 free,      0.0 used.  25856.1 avail Mem
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  PID USER      PR  NI    VIRT    RES  SHR S  %CPU %MEM     TIME+ COMMAND
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a> 4521 root      20   0 8456320 2048m  45m S  42.1 6.4   1247:33 java
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> 8934 postgres  20   0  892456  512m  28m S  12.3 1.6    456:12 postgres
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a> 1203 root      20   0  234567   89m  12m S   3.2 0.3     78:45 dcnm-server
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>...
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Mem:           31Gi       6.2Gi        24Gi       512Mi       1.2Gi        25Gi
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Swap:          8.0Gi          0B       8.0Gi
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Linux 5.10.0-8-amd64 (dcnm-prod-01)     01/15/2025  _x86_64_    (16 CPU)
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>          18.45    0.12    4.23    2.34    0.00   74.86
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz %util
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>sda              45.2   123.4      2.1       8.7     2.1      18.3   4.4   12.9   12.3    28.4   3.45  18.2
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>sdb              12.1    34.5      0.8       2.3     0.5       4.2   3.9   10.8    8.1    15.2   0.89   5.3
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a> count
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>------
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    47
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>(1 row)
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>   pid   |   duration   |                                    query
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>---------+--------------+---------------------------------------------------------------
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>  18234  | 00:12:34.567 | SELECT * FROM fabric_inventory WHERE status=&#39;sync&#39; LIMIT 1000
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>  18456  | 00:08:23.123 | UPDATE device_config SET last_sync=now() WHERE device_id=...
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  18567  | 00:05:12.890 | SELECT count(*) FROM
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Capture to confirm traps are arriving</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># If not arriving: confirm trap destination on the switch</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># On MDS switch:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>snmp<span class="w"> </span>host
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Should list DCNM IP</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># If arriving but not processed: check event manager</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/events.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;trap\|SNMP&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Restart event service</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-events
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>22:14:33.445821 IP 10.48.12.55.40821 &gt; 10.48.12.200.162: UDP, length 156
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>22:14:34.112547 IP 10.48.12.55.40821 &gt; 10.48.12.200.162: UDP, length 148
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>22:14:35.667890 IP 10.48.12.55.40821 &gt; 10.48.12.200.162: UDP, length 152
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>22:14:36.334521 IP 10.48.12.55.40821 &gt; 10.48.12.200.162: UDP, length 160
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>22:14:37.891234 IP 10.48.12.55.40821 &gt; 10.48.12.200.162: UDP, length 144
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>20 packets captured
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>20 packets received by filter
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>0 packets dropped by kernel
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>SNMP host IP address: 10.48.12.200
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Community: public
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Trap port: 162
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>2024-01-15T22:14:33.521Z [INFO] SNMP trap received from 10.48.12.55 (MDS9706-01)
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>2024-01-15T22:14:34.089Z [INFO] Processing linkDown trap for port Ethernet1/1
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>2024-01-15T22:14:35.667Z [DEBUG] Trap OID: 1.3.6.1.6.3.1.1.5.3
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>2024-01-15T22:14:36.334Z [INFO] Event queued for fabric-01
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tcpdump: eth0: No such device</code></strong> — Verify the correct interface name with <code>ip link show</code> and replace eth0 with the actual interface (e.g., ens0, bond0).
+<strong><code>tail: cannot open '/var/log/dcnm/events.log' for reading: No such file or directory</code></strong> — Confirm DCNM is installed and running with <code>systemctl status dcnm-events</code>, or check the correct log path with <code>find /var/log -name '*dcnm*'</code>.
+<strong><code>Failed to restart dcnm-events.service: Unit dcnm-events.service not found.</code></strong> — Verify the correct service name with <code>systemctl list-units --type=service | grep dcnm</code> and use the actual service name.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check upgrade log</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/install.log
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check if DCNM services started after upgrade</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check for database migration errors (common cause of upgrade failure)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;liquibase\|migration\|flyway\|ERROR&quot;</span><span class="w"> </span>/var/log/dcnm/install.log
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># If upgrade is unrecoverable: revert to pre-upgrade VM snapshot</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Then contact Cisco TAC with the install log</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVkztv2zAQgHf9ikN2t5CcyUMLW1IRF3AgxEC7eLmQJ4k1RQokZdco-t97lJukBZgAmXjgvb57SeVIBGXNCpzq-pBl63wFN-v8Bn75HkfifzZA02n6na0L1n1RP8FQOFt3hI_QcoAzan0w38ip9gJDNwTYNoBGgnAkfTrSkiM90AKlBH9WQfQHU_YkjrC_3zVwWgJOoQdPISjTvRLjNtLgo1Nizraf48DW-4nSHht22KQ1serO0QhSeWFP5C4ftO2eq9rv7645_tLNlT0hSzugMrCtQFjTaiXCK-mL9wKX7FCmNRHYX3ygQQQNPmCYPEhhhsU4_NfL0WoNA5qJp3Q5mAdiWxeg2XF33UkJSsePrA251jr2FfQWZcWmVVoTKa8stUYflPCEjmvmLh9XIFtY8OAbNxkCqyWM_ySUGPAFtyrvd6Ba-IonhJ5whHbSOp30Heg1m9ZpTUT_YSdnUMcOzwDknHXPc682ceDmekA-sp4UnUEZRtY67g8wAwyqcxhNoEWVRq4j8jpufNyLRmOI8G-B79nhe48BlIfQE_jLMAY7fE5fSoye1PC5w-ITrIsnYcmnOQu32Sa-m5xvYxaKrIxvmfPuzUKRVfGtch7zLBRZHd865-bNQpH9AaC2czg=?" /></p>
@@ -7875,7 +8034,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

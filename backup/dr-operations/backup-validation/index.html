@@ -7625,6 +7625,23 @@ Backup validation is the systematic process of confirming that backup data is in
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exit code: </span><span class="nv">$?</span><span class="s2">&quot;</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 0 = success, 1 = partial failure, 2 = failure</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Backup image verification started for client sql-prod-01.example.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Backup ID: 1716800000
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Backup type: FULL
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Start time: 05/01/2026 00:00:00
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Status: VERIFIED
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Verification completed successfully
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Total files verified: 2847
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Total size verified: 1.2 TB
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Elapsed time: 12 minutes 34 seconds
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Exit code: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpverify: client sql-prod-01.example.local not found in client list</code></strong> — Verify the client hostname is correct and registered in the NetBackup master server with <code>bpplclients</code>.
+<strong><code>bpverify: backup image 1716800000 not found or expired</code></strong> — Check that the backup ID exists and has not been pruned; use <code>bplist -client sql-prod-01.example.local</code> to list available backups.
+<strong><code>bpverify: insufficient permissions to access backup catalog</code></strong> — Ensure your user account has NetBackup administrator privileges or is in the appropriate security group.</p>
+</div>
 <h3 id="bpverify-exit-code-reference"><code>bpverify</code> Exit Code Reference<a class="headerlink" href="#bpverify-exit-code-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7818,67 +7835,78 @@ Backup validation is the systematic process of confirming that backup data is in
 <hr />
 <h2 id="alerting-on-failed-validations">Alerting on Failed Validations<a class="headerlink" href="#alerting-on-failed-validations" title="Permanent link">&para;</a></h2>
 <h3 id="veeam-powershell-alert-script">Veeam — PowerShell Alert Script<a class="headerlink" href="#veeam-powershell-alert-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Run after SureBackup jobs complete — alert on any failure</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$sessions</span> <span class="p">=</span> <span class="nb">Get-VBRSureBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">25</span><span class="p">)</span> <span class="o">-and</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$s</span> <span class="k">in</span> <span class="nv">$sessions</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="s2">&quot;SureBackup FAILED: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | Result: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Result</span><span class="p">)</span><span class="s2"> | Time: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">CreationTime</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">&quot;backup-alerts@corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">-From</span> <span class="s2">&quot;veeam-noreply@corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Backup Validation Failed — </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="p">`</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Run after SureBackup jobs complete — alert on any failure</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$sessions</span> <span class="p">=</span> <span class="nb">Get-VBRSureBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">25</span><span class="p">)</span> <span class="o">-and</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$s</span> <span class="k">in</span> <span class="nv">$sessions</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="s2">&quot;SureBackup FAILED: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | Result: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Result</span><span class="p">)</span><span class="s2"> | Time: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">CreationTime</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">&quot;backup-alerts@corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">-From</span> <span class="s2">&quot;veeam-noreply@corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Backup Validation Failed — </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="p">`</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="netbackup-unix-alert-integration">NetBackup — UNIX Alert Integration<a class="headerlink" href="#netbackup-unix-alert-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># /usr/local/bin/nbverify-alert.sh</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">LOGFILE</span><span class="o">=</span><span class="s2">&quot;/var/log/netbackup/verify_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.log&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>bpverify<span class="w"> </span>-client<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOGFILE</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">EXIT</span><span class="o">=</span><span class="nv">$?</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$EXIT</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NetBackup bpverify FAILED for </span><span class="nv">$1</span><span class="s2"> — Exit: </span><span class="nv">$EXIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;ALERT: NBU Validation Failure — </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>backup-alerts@corp.local
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">fi</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /usr/local/bin/nbverify-alert.sh</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">LOGFILE</span><span class="o">=</span><span class="s2">&quot;/var/log/netbackup/verify_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.log&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>bpverify<span class="w"> </span>-client<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOGFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">EXIT</span><span class="o">=</span><span class="nv">$?</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$EXIT</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NetBackup bpverify FAILED for </span><span class="nv">$1</span><span class="s2"> — Exit: </span><span class="nv">$EXIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;ALERT: NBU Validation Failure — </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>backup-alerts@corp.local
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">fi</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NetBackup bpverify FAILED for prod-db-01 — Exit: 1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Subject: ALERT: NBU Validation Failure — prod-db-01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>To: backup-alerts@corp.local
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Message sent
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpverify: command not found</code></strong> — Ensure NetBackup client binaries are in PATH or source the NetBackup environment setup script (typically <code>. /usr/openv/netbackup/bin/bp.env</code>).
+<strong><code>mail: command not found</code></strong> — Install mailutils package (<code>apt-get install mailutils</code> on Debian/Ubuntu or <code>yum install mailx</code> on RHEL/CentOS) or configure an alternative mail transport.
+<strong><code>Permission denied: /var/log/netbackup/verify_*.log</code></strong> — Create the log directory with write permissions (<code>mkdir -p /var/log/netbackup &amp;&amp; chmod 755 /var/log/netbackup</code>) or run the script with appropriate privileges.</p>
+</div>
 <hr />
 <h2 id="validation-report-template">Validation Report Template<a class="headerlink" href="#validation-report-template" title="Permanent link">&para;</a></h2>
 <p>Generate and retain a validation report monthly. Minimum fields:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>BACKUP VALIDATION REPORT
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Period:          YYYY-MM
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Prepared by:     &lt;name&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Reviewed by:     &lt;manager&gt;
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>AUTOMATED VALIDATION SUMMARY
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Total backup jobs:               ____
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Successful jobs:                 ____
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  Failed jobs:                     ____
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Job success rate:                ____%
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  SureBackup sessions run:         ____
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  VMs verified (boot test):        ____
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  SureBackup failures:             ____
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>MANUAL RESTORE TESTS
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  File-level restores performed:   ____
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  VM-level restores performed:     ____
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  Application restores performed:  ____
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  All tests passed (Y/N):          ____
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>RPO COMPLIANCE
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  Workloads with defined RPO:      ____
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  Workloads meeting RPO this month:____
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>  RPO compliance rate:             ____%
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>FAILURES AND INCIDENTS
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>  [List any validation failures, root cause, and resolution]
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>SIGN-OFF
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>  Backup Admin:   ______________ Date: __________
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>  IT Manager:     ______________ Date: __________
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>BACKUP VALIDATION REPORT
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Period:          YYYY-MM
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Prepared by:     &lt;name&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Reviewed by:     &lt;manager&gt;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>AUTOMATED VALIDATION SUMMARY
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Total backup jobs:               ____
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Successful jobs:                 ____
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  Failed jobs:                     ____
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  Job success rate:                ____%
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  SureBackup sessions run:         ____
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  VMs verified (boot test):        ____
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  SureBackup failures:             ____
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>MANUAL RESTORE TESTS
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  File-level restores performed:   ____
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>  VM-level restores performed:     ____
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>  Application restores performed:  ____
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  All tests passed (Y/N):          ____
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>RPO COMPLIANCE
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>  Workloads with defined RPO:      ____
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  Workloads meeting RPO this month:____
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  RPO compliance rate:             ____%
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>FAILURES AND INCIDENTS
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>  [List any validation failures, root cause, and resolution]
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>SIGN-OFF
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>  Backup Admin:   ______________ Date: __________
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>  IT Manager:     ______________ Date: __________
 </code></pre></div>
 
 
@@ -7902,7 +7930,7 @@ Backup validation is the systematic process of confirming that backup data is in
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

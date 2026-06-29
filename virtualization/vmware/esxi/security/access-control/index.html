@@ -9494,32 +9494,86 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Via vSphere API (PowerCLI)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-01.example.local&quot;</span><span class="o">)</span>.ExtensionData.Config.LocalAccountManager.QueryUserList<span class="o">()</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>UserID  UserName                 Description
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>------  --------                 -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    0   root                     Administrator
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  100   ntp                      NTP Daemon Account
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  101   vpxuser                  vCenter Server Account
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  102   dcui                     DCUI User
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  103   vsan                     vSAN Daemon Account
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  104   vsanmgmt                 vSAN Management Account
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Id     Name                     Description
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>--     ----                     -----------
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>0      root                     Administrator
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>100    ntp                      NTP Daemon Account
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>101    vpxuser                  vCenter Server Account
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>102    dcui                     DCUI User
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>103    vsan                     vSAN Daemon Account
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect to localhost:443 failed: Connection refused</code></strong> — Ensure SSH is enabled on the ESXi host and the firewall rule for SSH is active in the ESXi security profile.
+<strong><code>The term 'Get-VMHost' is not recognized</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.
+<strong><code>Permission denied</code></strong> — Verify you are logged in as root or a user with administrative privileges; use <code>whoami</code> to confirm your current user.</p>
+</div>
 <h3 id="add-a-local-account">Add a Local Account<a class="headerlink" href="#add-a-local-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s2">&quot;Str0ngP@ssw0rd!!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Break-glass account&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Set role on the account</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span>-r<span class="w"> </span>Admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s2">&quot;Str0ngP@ssw0rd!!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Break-glass account&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Set role on the account</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span>-r<span class="w"> </span>Admin
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The account already exists</code></strong> — Delete the existing account with <code>esxcli system account remove -i "breakglass"</code> before recreating it.
+<strong><code>Error: Password does not meet complexity requirements</code></strong> — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.
+<strong><code>Error: Unknown role name Admin</code></strong> — Replace <code>Admin</code> with the correct role identifier <code>admin</code> (lowercase).</p>
+</div>
 <h3 id="delete-an-unused-local-account">Delete an Unused Local Account<a class="headerlink" href="#delete-an-unused-local-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The object has invalid or missing key member 'key'.</code></strong> — Verify the username exists by running <code>esxcli system account list</code> before attempting removal.
+<strong><code>Error: Permission denied.</code></strong> — Ensure you are logged in as root or a user with Administrator privileges on the ESXi host.</p>
+</div>
 <h3 id="set-root-password">Set Root Password<a class="headerlink" href="#set-root-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Interactively</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>passwd<span class="w"> </span>root
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Via PowerCLI (across all hosts)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nv">$hostObj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.HostAccountSpec
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nv">$spec</span>.id<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nv">$spec</span>.password<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NewRootPassword!!&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nv">$hostObj</span>.ExtensionData.ConfigManager.AccountManager.UpdateUser<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Root password updated: </span><span class="k">$(</span><span class="nv">$hostObj</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interactively</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>passwd<span class="w"> </span>root
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Via PowerCLI (across all hosts)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nv">$hostObj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.HostAccountSpec
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nv">$spec</span>.id<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="nv">$spec</span>.password<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NewRootPassword!!&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="nv">$hostObj</span>.ExtensionData.ConfigManager.AccountManager.UpdateUser<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Root password updated: </span><span class="k">$(</span><span class="nv">$hostObj</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Changing password for user root.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>New password: 
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Retype new password: 
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>passwd: password updated successfully
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Root password updated: esx-prod-01.lab.local
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Root password updated: esx-prod-02.lab.local
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Root password updated: esx-prod-03.lab.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>passwd: Authentication token manipulation error</code></strong> — Ensure the root account is unlocked with <code>pam_unix(passwd:chauthtok): authentication token lock busy</code> and retry after a few seconds.
+<strong><code>You do not have permission to run this command</code></strong> — Verify your PowerCLI session has Administrator privileges on the vCenter Server with <code>Get-VIPrivilege -Role Admin</code>.
+<strong><code>Unable to cast object of type 'System.String' to type 'VMware.Vim.HostAccountSpec'</code></strong> — Ensure you are connected to vCenter with <code>Connect-VIServer</code> before running the ForEach-Object loop.</p>
+</div>
 <hr />
 <h2 id="vcenter-role-based-access-control">vCenter Role-Based Access Control<a class="headerlink" href="#vcenter-role-based-access-control" title="Permanent link">&para;</a></h2>
 <p>Roles assigned in vCenter propagate to ESXi hosts — this is the primary access control mechanism for day-to-day operations.</p>
@@ -9557,14 +9611,14 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </table>
 <p>Create custom roles in vCenter with only the privileges required for the specific use case.</p>
 <h3 id="assign-a-role-powercli">Assign a Role (PowerCLI)<a class="headerlink" href="#assign-a-role-powercli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create a custom role</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="s2">&quot;VirtualMachine.Interact.*&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Assign role to a user on a specific cluster</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span><span class="p">)</span> <span class="p">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\vm-operators&quot;</span> <span class="p">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="p">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Create a custom role</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="s2">&quot;VirtualMachine.Interact.*&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Assign role to a user on a specific cluster</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\vm-operators&quot;</span> <span class="p">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="p">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <h3 id="least-privilege-assignment-checklist">Least-Privilege Assignment Checklist<a class="headerlink" href="#least-privilege-assignment-checklist" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9578,42 +9632,109 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 <h2 id="esxi-shell-and-ssh-access-controls">ESXi Shell and SSH Access Controls<a class="headerlink" href="#esxi-shell-and-ssh-access-controls" title="Permanent link">&para;</a></h2>
 <p>The ESXi Shell and SSH service provide direct command-line access to the host. Both must be disabled in production and enabled only during maintenance or break-glass.</p>
 <h3 id="disable-shell-and-ssh">Disable Shell and SSH<a class="headerlink" href="#disable-shell-and-ssh" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via ESXCLI on the host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Via PowerCLI across a cluster</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHostService<span class="w"> </span>-Policy<span class="w"> </span>Off
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Via ESXCLI on the host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Via PowerCLI across a cluster</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHostService<span class="w"> </span>-Policy<span class="w"> </span>Off
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Services for host &#39;esx-prod-01.lab.local&#39; have been disabled.
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>SSH has been disabled.
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ESX Shell has been disabled.
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Name                 State    Running   Policy
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>----                 -----    -------   ------
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>SSH                  Stopped  False     Off
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ESX Shell            Stopped  False     Off
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vim-cmd: Unknown command</code></strong> — Ensure you are running vim-cmd directly on the ESXi host console or via SSH, not from a vCenter server.
+<strong><code>The term 'Get-VMHost' is not recognized</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.
+<strong><code>Connect-VIServer : The server certificate could not be validated</code></strong> — Add <code>-SkipCertificateCheck</code> to your <code>Connect-VIServer</code> command or set <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</p>
+</div>
 <h3 id="set-shell-timeout">Set Shell Timeout<a class="headerlink" href="#set-shell-timeout" title="Permanent link">&para;</a></h3>
 <p>If ESXi Shell or SSH must remain enabled temporarily:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Shell auto-closes after 10 minutes of inactivity</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Interactive shell sessions timeout after 5 minutes</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Shell auto-closes after 10 minutes of inactivity</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Interactive shell sessions timeout after 5 minutes</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>(no output — command completes silently)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'</code></strong> — Verify the parameter name is correct; use <code>esxcli system settings advanced list | grep -i timeout</code> to confirm available timeout settings.
+<strong><code>Error: Permission denied</code></strong> — Run the commands as root or with appropriate ESXi administrative privileges; non-root users cannot modify system settings.</p>
+</div>
 <h3 id="restrict-ssh-access-by-ip">Restrict SSH Access by IP<a class="headerlink" href="#restrict-ssh-access-by-ip" title="Permanent link">&para;</a></h3>
 <p>Use the ESXi built-in firewall to limit SSH access to specific source IPs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>(no output — command completes silently)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>(no output — command completes silently)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Ruleset: sshServer
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>   Allowed IP Addresses: 10.0.1.0/24
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '--ruleset-id sshServer'</code></strong> — Use the correct flag syntax: <code>esxcli network firewall ruleset set --rulesetid sshServer</code> (no hyphen between ruleset and id).
+<strong><code>Error: The IP address 10.0.1.0/24 is invalid</code></strong> — Verify the CIDR notation is correct and the network address matches the subnet (e.g., use <code>10.0.1.0/24</code> not <code>10.0.1.5/24</code>).</p>
+</div>
 <hr />
 <h2 id="firewall-ruleset-management">Firewall Ruleset Management<a class="headerlink" href="#firewall-ruleset-management" title="Permanent link">&para;</a></h2>
 <p>ESXi's host-based firewall controls which services are accessible and from which source IPs.</p>
 <h3 id="review-current-state">Review Current State<a class="headerlink" href="#review-current-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All rulesets and their state</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Specific ruleset detail</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>vSphereClient
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># All rulesets and their state</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Specific ruleset detail</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>vSphereClient
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Ruleset                             Enabled
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>----------------------------------  -------
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>sshServer                           true
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>webAccess                           true
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>vSphereClient                       true
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>vMotion                             false
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>faultTolerance                      false
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>vSAN                                false
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>NFC                                 false
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>...
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>Name: sshServer
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>Enabled: true
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>Implicit Allow: false
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>Logging Enabled: false
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>Description: SSH access to ESXi host
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>Name: webAccess
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>Enabled: true
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>Implicit Allow: false
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>Logging Enabled: false
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>Description: vSphere Web Client access
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>Name: vSphereClient
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>Enabled: true
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>Implicit Allow: false
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>Logging Enabled: false
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>Description: vSphere Client access
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or malformed command</code></strong> — Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> and use the correct spelling (case-sensitive).
+<strong><code>Error: Unable to connect to the host</code></strong> — Ensure you are connected to the ESXi host via SSH or have proper credentials configured in your vSphere client.</p>
+</div>
 <h3 id="minimum-required-rulesets-production">Minimum Required Rulesets (Production)<a class="headerlink" href="#minimum-required-rulesets-production" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9657,9 +9778,16 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </tbody>
 </table>
 <p>All other rulesets (FTP, telnet, etc.) should be disabled:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Disable an unused ruleset</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Disable an unused ruleset</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '--ruleset-id'.</code></strong> — Use the correct flag name <code>--ruleset-id</code> or check your ESXi version; some versions use <code>--rulesetid</code> without the hyphen.
+<strong><code>Error: Ruleset 'ftpClient' not found.</code></strong> — Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> before disabling, as ruleset IDs are case-sensitive.</p>
+</div>
 <h3 id="host-profile-enforcement">Host Profile Enforcement<a class="headerlink" href="#host-profile-enforcement" title="Permanent link">&para;</a></h3>
 <p>Firewall ruleset configuration is captured in Host Profiles. Changes on individual hosts that drift from the profile are flagged as non-compliant. Use <strong>Check Compliance</strong> after any firewall change to confirm the host profile still matches.</p>
 <hr />
@@ -9696,24 +9824,49 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Find all SSH login events (successful and failed)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sshd\|Accepted\|Failed\|Invalid&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Find shell commands executed</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;exec\|cmd&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Find DCUI logins</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;dcui\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Find all SSH login events (successful and failed)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sshd\|Accepted\|Failed\|Invalid&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Find shell commands executed</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;exec\|cmd&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Find DCUI logins</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;dcui\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>2024-01-15T09:23:47Z sshd[2847]: Accepted publickey for root from 192.168.1.105 port 54321 ssh2: RSA SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uv
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>2024-01-15T09:15:22Z sshd[2801]: Failed password for invalid user admin from 10.50.12.44 port 49876 ssh2
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>2024-01-15T09:12:11Z sshd[2756]: Invalid user testuser from 172.16.0.88 port 38291
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>2024-01-15T09:08:45Z sshd[2698]: Accepted publickey for vmware from 192.168.1.110 port 52134 ssh2: ECDSA SHA256:xYz9876aBcD5432efGH1234ijKL5678mnOP9012qr
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>2024-01-15T08:54:33Z sshd[2512]: Failed password for root from 203.0.113.5 port 41203 ssh2
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>2024-01-15T08:42:19Z sshd[2401]: Accepted publickey for root from 192.168.1.105 port 51847 ssh2: RSA SHA256:pQrS1234tUvW5678xyZA9012bcDE3456fgHI7890jk
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>2024-01-15T08:31:05Z sshd[2287]: Invalid user oracle from 198.51.100.22 port 37654
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>2024-01-15T08:19:47Z sshd[2156]: Failed password for root from 192.168.1.200 port 45123 ssh2
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>2024-01-15T08:07:22Z sshd[2045]: Accepted publickey for root from 192.168.1.105 port 50912 ssh2: RSA SHA256:lMnO5678pQrS9012tUvW3456xyZA7890bcDE1234fg
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>2024-01-15T07:55:11Z sshd[1934]: Failed password for root from 10.20.30.40 port 33456 ssh2
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>2024-01-15T07:43:08Z sshd[1823]: Accepted publickey for root from 192.168.1.105 port 49765 ssh2: RSA SHA256:iJkL1234mNoP5678qRsT9012uvWX3456yzAB7890cd
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>2024-01-15T07:31:44Z sshd[1712]: Invalid user guest from 203.0.113.15 port 42891
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>2024-01-15T07:19:33Z sshd[1601]: Failed password for root from 192.168.1.50 port 38765 ssh2
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>2024-01-15T07:08:19Z sshd[1490]: Accepted publickey for root from 192.168.1.105 port 48901 ssh2: RSA SHA256:eFgH5678ijKL9012mnOP3456qRsT7890uvWX
 </code></pre></div>
 <h3 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h3>
 <p>All access events must be forwarded to a central SIEM. Logs stored only in ESXi ramdisk are lost on reboot.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Configure syslog forwarding</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>loghost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Configure syslog forwarding</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>loghost
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>(no output — command completes silently)
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>(no output — command completes silently)
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>loghost = tcp://syslog.example.local:514
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect to syslog.example.local failed</code></strong> — Verify the syslog server hostname/IP is reachable and listening on port 514 with <code>ping syslog.example.local</code> and <code>nc -zv syslog.example.local 514</code>.
+<strong><code>Unknown option loghost</code></strong> — Ensure you're running this command on ESXi 6.0 or later; older versions use different syslog configuration syntax.
+<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi administrative privileges via SSH or vSphere Client.</p>
+</div>
 <p>Configure via Host Profile to enforce consistently across all cluster hosts.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9742,7 +9895,7 @@ ESXi Access Control reference covering Exception Users, Local Account Management
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

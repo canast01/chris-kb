@@ -8188,48 +8188,146 @@ Restores a system to its last known-good state when a change produces failures, 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows — uninstall cumulative update</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>wusa<span class="w"> </span>/uninstall<span class="w"> </span>/kb:&lt;KBnumber&gt;<span class="w"> </span>/quiet<span class="w"> </span>/norestart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: 0x80240017 - CBS_E_NOT_APPLICABLE</code></strong> — Verify the KB number matches an installed update using <code>wmic qfe list brief</code> and confirm the update is not a prerequisite for other installed patches.
+<strong><code>Error: 0x80070005 - Access Denied</code></strong> — Run the command prompt as Administrator; right-click cmd.exe and select "Run as administrator" before executing wusa.</p>
+</div>
 <h2 id="method-3-configuration-revert">Method 3 — Configuration Revert<a class="headerlink" href="#method-3-configuration-revert" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ansible — revert to previous playbook version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>&lt;previous-commit&gt;<span class="w"> </span>--<span class="w"> </span>playbooks/site.yml
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>playbooks/site.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Manual file revert from backup copy</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cp<span class="w"> </span>/etc/nginx/nginx.conf.bak.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="w"> </span>/etc/nginx/nginx.conf
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Cisco IOS — revert to startup config</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>copy<span class="w"> </span>startup-config<span class="w"> </span>running-config
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Arista EOS</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>configure<span class="w"> </span>replace<span class="w"> </span>checkpoint://pre-change-&lt;hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ansible — revert to previous playbook version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>&lt;previous-commit&gt;<span class="w"> </span>--<span class="w"> </span>playbooks/site.yml
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>playbooks/site.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Manual file revert from backup copy</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cp<span class="w"> </span>/etc/nginx/nginx.conf.bak.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="w"> </span>/etc/nginx/nginx.conf
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Cisco IOS — revert to startup config</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>copy<span class="w"> </span>startup-config<span class="w"> </span>running-config
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Arista EOS</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>configure<span class="w"> </span>replace<span class="w"> </span>checkpoint://pre-change-&lt;hostname&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Updated 1 path from the index
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>PLAY [all] *********************************************************************
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>TASK [Gathering Facts] *********************************************************
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ok: [web-prod-01.internal]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>TASK [Deploy site configuration] ***********************************************
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ok: [web-prod-01.internal]
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>PLAY RECAP *********************************************************************
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>web-prod-01.internal       : ok=2    changed=0    unreachable=0    failed=0
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nginx: configuration file /etc/nginx/nginx.conf test is successful
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Reloading nginx: [  OK  ]
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>*Mar 15 14:32:18.456 UTC: %SYS-5-CONFIG_I: Configured from console by admin on vty0 (10.45.12.8)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Preparing to replace running-config with startup-config
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>[OK]
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Executing checkpoint replace on device
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Rollback completed successfully. 1247 lines restored.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: your current branch 'main' is ahead of &lt;previous-commit&gt;</code></strong> — Ensure the commit hash exists in your repository history using <code>git log</code> and verify the correct commit SHA.
+<strong><code>nginx: [error] open() "/etc/nginx/nginx.conf.bak.2025-01-15" failed (2: No such file or directory)</code></strong> — Confirm the backup file exists with the correct date format using <code>ls -la /etc/nginx/nginx.conf.bak.*</code> before attempting restore.
+<strong><code>% Invalid command</code></strong> — Verify the device is in enable mode with <code>enable</code> and that the startup-config exists using <code>show startup-config | include Running</code>.</p>
+</div>
 <h2 id="method-4-database-rollback">Method 4 — Database Rollback<a class="headerlink" href="#method-4-database-rollback" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — restore from pre-change dump</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_restore<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>--clean<span class="w"> </span>/backups/&lt;db&gt;-pre-change-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.dump
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># SQL Server</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>RESTORE<span class="w"> </span>DATABASE<span class="w"> </span><span class="o">[</span>dbname<span class="o">]</span><span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backups\dbname_pre_change.bak&#39;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>WITH<span class="w"> </span>REPLACE,<span class="w"> </span>RECOVERY,<span class="w"> </span><span class="nv">STATS</span><span class="o">=</span><span class="m">10</span><span class="p">;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># PostgreSQL PITR</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># In recovery.conf:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># recovery_target_time = &#39;2026-05-10 02:00:00&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PostgreSQL — restore from pre-change dump</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pg_restore<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>--clean<span class="w"> </span>/backups/&lt;db&gt;-pre-change-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.dump
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>RESTORE<span class="w"> </span>DATABASE<span class="w"> </span><span class="o">[</span>dbname<span class="o">]</span><span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backups\dbname_pre_change.bak&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>WITH<span class="w"> </span>REPLACE,<span class="w"> </span>RECOVERY,<span class="w"> </span><span class="nv">STATS</span><span class="o">=</span><span class="m">10</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># PostgreSQL PITR</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># In recovery.conf:</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># recovery_target_time = &#39;2026-05-10 02:00:00&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pg_restore: connecting to database &quot;servicenow_prod&quot;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pg_restore: dropping DATABASE servicenow_prod
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pg_restore: creating DATABASE servicenow_prod
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pg_restore: connecting to new database &quot;servicenow_prod&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pg_restore: processing data for table &quot;public.incident&quot;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>pg_restore: processing data for table &quot;public.change_request&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>pg_restore: processing data for table &quot;public.cmdb_ci_server&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>pg_restore: restoring table data for ID 2847 (public.incident)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>pg_restore: restoring table data for ID 2851 (public.change_request)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>pg_restore: [archiver] worker process failed: Exit code 1
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>pg_restore: setting owner and privileges on schema public
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>pg_restore: [archiver] set_session_authorization must be called after the initial connection
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pg_restore: [archiver] could not open input file "/backups/servicenow_prod-pre-change-2026-05-10.dump": No such file or directory</code></strong> — Verify the backup file exists at the specified path and the date variable expands correctly by running <code>ls -la /backups/</code> first.
+<strong><code>FATAL: role "postgres" does not exist</code></strong> — Create the postgres user with <code>createuser -s postgres</code> or use an existing superuser role with the <code>-U</code> flag.
+<strong><code>ERROR: database "servicenow_prod" is being accessed by other users</code></strong> — Terminate active connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='servicenow_prod';</code> before restore.</p>
+</div>
 <h2 id="method-5-full-backup-restore">Method 5 — Full Backup Restore<a class="headerlink" href="#method-5-full-backup-restore" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Veeam — restore entire VM from backup</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$backup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRBackup<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$restorePoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRRestorePoint<span class="w"> </span>-Backup<span class="w"> </span><span class="nv">$backup</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Start-VBRRestoreVM<span class="w"> </span>-RestorePoint<span class="w"> </span><span class="nv">$restorePoint</span><span class="w"> </span>-PowerState<span class="w"> </span>PowerOn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Veeam — restore entire VM from backup</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$backup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRBackup<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$restorePoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRRestorePoint<span class="w"> </span>-Backup<span class="w"> </span><span class="nv">$backup</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Start-VBRRestoreVM<span class="w"> </span>-RestorePoint<span class="w"> </span><span class="nv">$restorePoint</span><span class="w"> </span>-PowerState<span class="w"> </span>PowerOn
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                    : HOSTNAME
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>BackupId                : 36d4a8c2-7f1b-4e9a-b2d1-5c8e9f3a1b2c
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>CreationTime            : 2024-01-15 02:30:45
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Size                    : 487 GB
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>IsCorrupted             : False
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Restore job started: Job_20240115_143022
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>JobId                   : 8b9c2d1e-4f5a-6b7c-8d9e-0f1a2b3c4d5e
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Status                  : Running
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Progress                : 45%
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ETA                     : 00:12:30
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>VM HOSTNAME restore completed successfully
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>PowerState              : PowerOn
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>RestoreTime             : 2024-01-15 14:45:22
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VBRBackup : Cannot find backup with name "Production VMs"</code></strong> — Verify the exact backup name with <code>Get-VBRBackup | Select-Object Name</code> and update the script accordingly.
+<strong><code>Start-VBRRestoreVM : Restore point is corrupted or inaccessible</code></strong> — Check backup integrity with <code>Get-VBRBackup -Name "Production VMs" | Get-VBRRestorePoint | Where-Object {$_.IsCorrupted -eq $true}</code> and select an earlier restore point.
+<strong><code>Access denied: Insufficient permissions to restore VM</code></strong> — Ensure your Veeam service account has Restore operator role or higher in Veeam Backup &amp; Replication console.</p>
+</div>
 <p><strong>Expected time:</strong> 30–120 minutes depending on backup size.</p>
 <h2 id="post-rollback-validation">Post-Rollback Validation<a class="headerlink" href="#post-rollback-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm the specific change is reverted</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>&lt;version-check-command&gt;<span class="w">   </span><span class="c1"># e.g. rpm -q nginx, vmware -v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Confirm the specific change is reverted</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>&lt;version-check-command&gt;<span class="w">   </span><span class="c1"># e.g. rpm -q nginx, vmware -v</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>● nginx.service
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>● postgresql.service
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>2 units in failed state.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Jan 15 10:42:33 app-prod-01 nginx[2847]: error: bind() to 0.0.0.0:443 failed (98: Address already in use)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Jan 15 10:42:32 app-prod-01 systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Jan 15 10:42:15 app-prod-01 postgresql[3124]: FATAL: could not access private key file &quot;/etc/pgsql/server.key&quot;: Permission denied
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Jan 15 10:42:14 app-prod-01 kernel: Out of memory: Kill process 5891 (java) score 412 or sacrifice child
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Jan 15 10:41:58 app-prod-01 systemd[1]: postgresql.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>{
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  &quot;status&quot;: &quot;unhealthy&quot;,
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;version&quot;: &quot;2.14.3-rev847&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;uptime_seconds&quot;: 142,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;database&quot;: &quot;disconnected&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;timestamp&quot;: &quot;2025-01-15T10:43:22Z&quot;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>}
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>nginx-1.24.0-1.el8.x86_64
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.
+<strong><code>journalctl: command not found</code></strong> — Install systemd-devel package or use <code>tail -f /var/log/messages</code> on systems without journalctl support.
+<strong><code>systemctl: command not found</code></strong> — Verify you are running as root or with sudo, and that systemd is installed on this system.</p>
+</div>
 <h2 id="rollback-checklist">Rollback Checklist<a class="headerlink" href="#rollback-checklist" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8315,7 +8413,7 @@ Restores a system to its last known-good state when a change produces failures, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

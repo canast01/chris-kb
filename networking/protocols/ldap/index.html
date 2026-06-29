@@ -8192,38 +8192,153 @@ Lightweight Directory Access Protocol — directory service query and authentica
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span><span class="s2">&quot;(&amp;(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=2))&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span>sAMAccountName
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># dn: dc=domain,dc=com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># objectClass: top
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># objectClass: dcObject
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># objectClass: organization
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># o: domain
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># dc: domain
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Enter LDAP Password: 
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># extended LDIF
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>#
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># LDAPv3
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># base &lt;DC=domain,DC=com&gt; with scope baseObject
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># filter: (sAMAccountName=username)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># requesting: cn mail memberOf
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>#
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>dn: CN=John Doe,OU=Users,DC=domain,DC=com
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>cn: John Doe
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>mail: john.doe@domain.com
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>memberOf: CN=Engineering,OU=Groups,DC=domain,DC=com
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>memberOf: CN=VPN-Users,OU=Groups,DC=domain,DC=com
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># search result
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>search: 2
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>result: 0 Success
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># numResponses: 2
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># numEntries: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account has not been locked out; check with <code>net user svc-ldap /domain</code> on a domain controller.
+<strong><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves and port 389 is reachable; test with <code>nc -zv &lt;dc-host&gt; 389</code>.
+<strong><code>No such object (32)</code></strong> — Verify the base DN matches your Active Directory structure; run <code>ldapsearch -x -H ldap://&lt;dc-host&gt; -b "" -s base "(objectclass=*)" namingContexts</code> to confirm the correct DN.</p>
+</div>
 <h2 id="ldaps-verification">LDAPS Verification<a class="headerlink" href="#ldaps-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test LDAPS connectivity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;dc-host&gt;:636<span class="w"> </span>-showcerts
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># ldapsearch over TLS</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://&lt;dc-host&gt;:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-W<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=username)&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Test LDAP StartTLS (port 389)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-host&gt;:389<span class="w"> </span>-Z<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-W<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=username)&quot;</span>
-</code></pre></div>
-<h2 id="application-ldap-integration-linux-pamsssd">Application LDAP Integration (Linux PAM/SSSD)<a class="headerlink" href="#application-ldap-integration-linux-pamsssd" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check SSSD status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAPS connectivity</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;dc-host&gt;:636<span class="w"> </span>-showcerts
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test user lookup via SSSD</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>id<span class="w"> </span>username
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span>username
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Clear SSSD cache</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># ldapsearch over TLS</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://&lt;dc-host&gt;:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-W<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=username)&quot;</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># SSSD debug log</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/sssd/sssd_&lt;domain&gt;.log
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Test LDAP StartTLS (port 389)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-host&gt;:389<span class="w"> </span>-Z<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-W<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=domain,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=username)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CONNECTED(00000003)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>depth=0 C = US, ST = California, L = San Francisco, O = ACME Corp, CN = dc01.domain.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>verify return:1 (ok)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-----BEGIN CERTIFICATE-----
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>MIIDazCCAlOgAwIBAgIUK7m8x9pQ2vL4nZ8xK9mR5c7D8+0wDQYJKoZIhvcNAQEL
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>...
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>-----END CERTIFICATE-----
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>read:errno=0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Enter LDAP Password: 
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a># extended LDIF
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>#
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a># LDAPv3
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a># base &lt;DC=domain,DC=com&gt; with scope subtree
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a># filter: (sAMAccountName=username)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a># requesting: ALL
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>#
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a># username, Users, domain.com
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>dn: CN=username,CN=Users,DC=domain,DC=com
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>objectClass: person
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>sAMAccountName: username
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>mail: username@domain.com
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a># search result
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>search: 2
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>result: 0 Success
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Enter LDAP Password: 
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a># extended LDIF
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a># base &lt;DC=domain,DC=com&gt; with scope subtree
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a># filter: (sAMAccountName=username)
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a># requesting: ALL
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>#
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a># username, Users, domain.com
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>dn: CN=username,CN=Users,DC=domain,DC=com
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>objectClass: person
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>sAMAccountName: username
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>mail: username@domain.com
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a># search result
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>search: 2
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>result: 0 Success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account has not been locked out on the domain controller.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves correctly with <code>nslookup &lt;dc-host&gt;</code> and port 636/389 is accessible via <code>telnet &lt;dc-host&gt; 636</code>.
+<strong><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></strong> — Add the DC's CA certificate to your system's trusted store or use <code>ldapsearch -H ldaps://&lt;dc-host&gt;:636 -o LDTLS_CACERTDIR=/etc/ssl/certs</code> to specify the certificate path.</p>
+</div>
+<h2 id="application-ldap-integration-linux-pamsssd">Application LDAP Integration (Linux PAM/SSSD)<a class="headerlink" href="#application-ldap-integration-linux-pamsssd" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SSSD status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test user lookup via SSSD</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>id<span class="w"> </span>username
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span>username
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Clear SSSD cache</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># SSSD debug log</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/sssd/sssd_&lt;domain&gt;.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>● sssd.service - System Security Services Daemon
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>     Loaded: loaded (/usr/lib/systemd/system/sssd.service; enabled; vendor preset: enabled)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    Process: 2847 ExecStart=/usr/sbin/sssd -i (code=exited, status=0/SUCCESS)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>   Main PID: 2848 (sssd)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      Tasks: 8 (limit: 4915)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>     Memory: 24.3M
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        CPU: 1min 23s
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>     CGroup: /system.slice/sssd.service
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>             ├─2848 /usr/sbin/sssd -i
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>             └─2951 /usr/libexec/sssd/sssd_nss
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>uid=1042(username) gid=10002(domain_users) groups=10002(domain_users),10045(engineering)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>username:*:1042:10002:User Name:/home/username:/bin/bash
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Clearing cache for domain &#39;default&#39;...
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Cache cleared successfully.
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>[2024-01-15 14:35:22] [sssd[be[default]]] [be_get_account_info] (0x0100): User lookup by name [username@default]
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>[2024-01-15 14:35:22] [sssd[nss]] [nss_cmd_getpwnam_search] (0x0400): Requesting info for user [username]
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>[2024-01-15 14:35:23] [sssd[be[default]]] [sdap_get_generic_op_finished] (0x0200): LDAP operation completed, result: Success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>systemctl: command not found</code></strong> — Install systemd or use <code>service sssd status</code> on systems without systemd.
+<strong><code>sssctl: command not found</code></strong> — Install sssd-tools package with <code>apt install sssd-tools</code> or <code>yum install sssd-tools</code>.
+<strong><code>tail: cannot open '/var/log/sssd/sssd_&lt;domain&gt;.log' for reading: No such file or directory</code></strong> — Replace <code>&lt;domain&gt;</code> with your actual SSSD domain name (e.g., <code>sssd_ldap.log</code>) or check <code>/etc/sssd/sssd.conf</code> for the configured domain.</p>
+</div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8283,7 +8398,7 @@ Lightweight Directory Access Protocol — directory service query and authentica
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

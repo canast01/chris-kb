@@ -8999,6 +8999,25 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Delete a local user (cannot delete the last Administrator account)</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>-name<span class="w"> </span>storageadmin01<span class="w"> </span>delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>User Name                Role                 Enabled  Locked
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>admin                    Administrator        Yes      No
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>guest                    Guest                Yes      No
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>storageadmin01           Storage Administrator Yes      No
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>User storageadmin01 created successfully.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>User storageadmin01 role changed to operator.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>User storageadmin01 password changed successfully.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>User storageadmin01 deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User admin does not exist or access denied</code></strong> — Verify the management IP address with <code>-d</code> flag and ensure the admin account credentials are correct.
+<strong><code>Error: Cannot delete user admin - last Administrator account cannot be removed</code></strong> — Create an additional Administrator account before deleting the current one, or delete a non-Administrator user instead.
+<strong><code>Error: Password does not meet complexity requirements</code></strong> — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.</p>
+</div>
 <h3 id="local-account-best-practices">Local Account Best Practices<a class="headerlink" href="#local-account-best-practices" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Keep the number of local Administrator accounts to a minimum — ideally one break-glass account.</li>
@@ -9010,48 +9029,98 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 <p>Unity can authenticate Unisphere users via LDAP or Active Directory and map LDAP groups to Unity roles. This eliminates the need to manage local accounts for each operator.</p>
 <h3 id="configuring-directory-services">Configuring Directory Services<a class="headerlink" href="#configuring-directory-services" title="Permanent link">&para;</a></h3>
 <p>In Unisphere: <strong>Settings &gt; Access &gt; Directory Services</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View directory service configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create an LDAP directory service configuration</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;ldap_server_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-protocol<span class="w"> </span>ldap<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">389</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-baseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-bindDN<span class="w"> </span><span class="s2">&quot;CN=unity-svc,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-bindPasswd<span class="w"> </span><span class="s2">&quot;ServiceAccountPassword&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Modify an existing LDAP configuration</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>-id<span class="w"> </span>&lt;ldap_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;new_ldap_server_ip&gt;
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Test LDAP connectivity</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>-id<span class="w"> </span>&lt;ldap_id&gt;<span class="w"> </span>verify
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View directory service configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create an LDAP directory service configuration</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;ldap_server_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-protocol<span class="w"> </span>ldap<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">389</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-baseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-bindDN<span class="w"> </span><span class="s2">&quot;CN=unity-svc,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-bindPasswd<span class="w"> </span><span class="s2">&quot;ServiceAccountPassword&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Modify an existing LDAP configuration</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>-id<span class="w"> </span>&lt;ldap_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;new_ldap_server_ip&gt;
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Test LDAP connectivity</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/ldap<span class="w"> </span>-id<span class="w"> </span>&lt;ldap_id&gt;<span class="w"> </span>verify
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ID: ldap_1
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Addr: 192.168.10.50
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Protocol: ldap
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Port: 389
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>BaseDN: DC=corp,DC=local
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>BindDN: CN=unity-svc,OU=Service Accounts,DC=corp,DC=local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Status: Connected
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Last Verified: 2024-01-15 14:32:18
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>The operation completed successfully.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ID: ldap_1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Addr: 192.168.10.51
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Protocol: ldap
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Port: 389
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>BaseDN: DC=corp,DC=local
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>BindDN: CN=unity-svc,OU=Service Accounts,DC=corp,DC=local
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Status: Connected
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Last Verified: 2024-01-15 14:35:42
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>LDAP connectivity test passed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Authentication failed for user admin</code></strong> — Verify the admin credentials and ensure the user has sufficient privileges to manage LDAP configurations.
+<strong><code>Error: Unable to connect to LDAP server at &lt;ldap_server_ip&gt;:389</code></strong> — Confirm the LDAP server IP address is correct, the server is online, and network connectivity exists from the Unity array to the LDAP server.
+<strong><code>Error: Invalid bindDN or bindPasswd</code></strong> — Verify the service account credentials are correct and the account has permission to bind to the LDAP directory.</p>
+</div>
 <h3 id="mapping-ldap-groups-to-unity-roles">Mapping LDAP Groups to Unity Roles<a class="headerlink" href="#mapping-ldap-groups-to-unity-roles" title="Permanent link">&para;</a></h3>
 <p>Once directory services are configured, map LDAP/AD security groups to Unity roles:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List existing role mappings</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Map an AD group to the Storage Administrator role</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-role<span class="w"> </span>storageadmin
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Map an AD group to Operator role (for NOC teams)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-Operators,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-role<span class="w"> </span>operator
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Map an AD group to Viewer role (for read-only access)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-Viewers,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>-role<span class="w"> </span>viewer
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Delete a role mapping</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>-id<span class="w"> </span>&lt;mapping_id&gt;<span class="w"> </span>delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List existing role mappings</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Map an AD group to the Storage Administrator role</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>-role<span class="w"> </span>storageadmin
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Map an AD group to Operator role (for NOC teams)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-Operators,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-role<span class="w"> </span>operator
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Map an AD group to Viewer role (for read-only access)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;CN=Unity-Viewers,OU=Groups,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span>-role<span class="w"> </span>viewer
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Delete a role mapping</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>-id<span class="w"> </span>&lt;mapping_id&gt;<span class="w"> </span>delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ID  Name                                              Role              Domain
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1   CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local  storageadmin      corp.local
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2   CN=Unity-Operators,OU=Groups,DC=corp,DC=local      operator          corp.local
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>3   CN=Unity-Viewers,OU=Groups,DC=corp,DC=local        viewer            corp.local
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Role mapping created successfully.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ID: 4
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Role mapping created successfully.
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ID: 5
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Role mapping created successfully.
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ID: 6
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Role mapping with ID 4 deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The specified user/role does not exist</code></strong> — Verify the AD group DN is correct and the group exists in Active Directory with <code>ldapsearch</code> or Active Directory Users and Computers.
+<strong><code>Error: Connection failed to &lt;ip&gt;. Check IP address and network connectivity</code></strong> — Confirm the Unity array IP is reachable with <code>ping &lt;ip&gt;</code> and that admin credentials are correct.
+<strong><code>Error: Insufficient privileges to perform this operation</code></strong> — Ensure the admin account used has Storage Administrator role assigned on the Unity array.</p>
+</div>
 <h2 id="iscsi-chap-authentication">iSCSI CHAP Authentication<a class="headerlink" href="#iscsi-chap-authentication" title="Permanent link">&para;</a></h2>
 <p>For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -9096,49 +9165,81 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure CHAP on a host object in Unity</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-chapUser<span class="w"> </span>&lt;chap_username&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-chapPassword<span class="w"> </span>&lt;chap_secret&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># For mutual CHAP, also configure the reverse CHAP credentials</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># (Unity as initiator authenticating to host)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-reverseChapUser<span class="w"> </span>&lt;reverse_username&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-reverseChapPassword<span class="w"> </span>&lt;reverse_secret&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure CHAP on a host object in Unity</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-chapUser<span class="w"> </span>&lt;chap_username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-chapPassword<span class="w"> </span>&lt;chap_secret&gt;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># For mutual CHAP, also configure the reverse CHAP credentials</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># (Unity as initiator authenticating to host)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-reverseChapUser<span class="w"> </span>&lt;reverse_username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>-reverseChapPassword<span class="w"> </span>&lt;reverse_secret&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>The operation completed successfully.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>The operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The host object with id '&lt;host_id&gt;' was not found.</code></strong> — Verify the host ID exists on the array using <code>uemcli -d &lt;ip&gt; -u admin /remote/host list</code> and use the correct ID from the output.
+<strong><code>Error: Authentication failed for user 'admin'.</code></strong> — Confirm the admin credentials are correct and the user has sufficient privileges; try <code>uemcli -d &lt;ip&gt; -u admin /remote/system get</code> to test connectivity first.
+<strong><code>Error: CHAP password does not meet minimum complexity requirements (minimum 12 characters).</code></strong> — Use a CHAP secret that is at least 12 characters long and includes uppercase, lowercase, numbers, and special characters.</p>
+</div>
 <p>On the Linux host side, configure <code>/etc/iscsi/iscsid.conf</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">node.session.auth.authmethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CHAP</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">node.session.auth.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;chap_username&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="na">node.session.auth.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;chap_secret&gt;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># For mutual CHAP:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="na">node.session.auth.username_in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;reverse_username&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="na">node.session.auth.password_in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;reverse_secret&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="na">node.session.auth.authmethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CHAP</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">node.session.auth.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;chap_username&gt;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">node.session.auth.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;chap_secret&gt;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># For mutual CHAP:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="na">node.session.auth.username_in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;reverse_username&gt;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="na">node.session.auth.password_in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;reverse_secret&gt;</span>
 </code></pre></div>
 <h2 id="nfs-export-access-control">NFS Export Access Control<a class="headerlink" href="#nfs-export-access-control" title="Permanent link">&para;</a></h2>
 <p>NFS access to Unity file systems is controlled at the export level. Each NFS export has an access control list that specifies which hosts or subnets can mount the export and with what permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List NFS exports and their access controls</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Create an NFS export with restricted read-write access to a subnet</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>-rwHosts<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>-rootHosts<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span>-noAccessHosts<span class="w"> </span><span class="m">0</span>.0.0.0/0
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Modify NFS export access — add a read-only host</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>-id<span class="w"> </span>&lt;nfs_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span>-roHosts<span class="w"> </span><span class="m">10</span>.10.20.0/24
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># NFS access levels</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># -rwHosts   : read-write access</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># -roHosts   : read-only access</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># -rootHosts : root squash disabled for these hosts (root on client = root on share)</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># -noAccessHosts : explicitly deny access</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List NFS exports and their access controls</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create an NFS export with restricted read-write access to a subnet</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span>-rwHosts<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span>-rootHosts<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span>-noAccessHosts<span class="w"> </span><span class="m">0</span>.0.0.0/0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Modify NFS export access — add a read-only host</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>-id<span class="w"> </span>&lt;nfs_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span>-roHosts<span class="w"> </span><span class="m">10</span>.10.20.0/24
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># NFS access levels</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># -rwHosts   : read-write access</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># -roHosts   : read-only access</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># -rootHosts : root squash disabled for these hosts (root on client = root on share)</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># -noAccessHosts : explicitly deny access</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ID                                    Server    Path  Filesystem  RW Hosts        RO Hosts        Root Hosts      No Access Hosts
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nfs_1                                 nas_1     /     fs_1        10.10.10.0/24   —               10.10.10.0/24   0.0.0.0/0
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>nfs_2                                 nas_1     /data fs_2        192.168.1.0/24  192.168.2.0/24  192.168.1.0/24  —
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>NFS Export created successfully.
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ID: nfs_3
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Server: nas_1
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Path: /
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Filesystem: fs_1
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>RW Hosts: 10.10.10.0/24
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Root Hosts: 10.10.10.0/24
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>No Access Hosts: 0.0.0.0/0
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>NFS Export modified successfully.
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ID: nfs_1
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>RO Hosts: 10.10.20.0/24
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid filesystem ID '&lt;fs_id&gt;'</code></strong> — Verify the filesystem exists with <code>uemcli -d &lt;ip&gt; -u admin /stor/fs show</code> and use the correct ID.
+<strong><code>Error: Access denied — insufficient privileges</code></strong> — Ensure the admin user has NFS management permissions or use an account with higher privileges.
+<strong><code>Error: Subnet mask format invalid for '-rwHosts 10.10.10.0'</code></strong> — Specify hosts in CIDR notation (e.g., <code>10.10.10.0/24</code>) or as individual IPs separated by commas.</p>
+</div>
 <p><strong>Root squash:</strong> By default, Unity maps the root user from NFS clients to a non-privileged <code>nobody</code> account (root squash enabled). To allow root access from specific trusted hosts (such as backup servers), add those hosts to <code>-rootHosts</code>.</p>
 <h2 id="smb-share-permissions">SMB Share Permissions<a class="headerlink" href="#smb-share-permissions" title="Permanent link">&para;</a></h2>
 <p>SMB share permissions on Unity work in conjunction with NTFS file permissions. Unity applies two permission layers:</p>
@@ -9146,19 +9247,44 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 <li><strong>Share-level permissions</strong> — set in Unity; control who can connect to the share at all.</li>
 <li><strong>NTFS permissions</strong> — set on directories within the share; control file and directory access.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List SMB shares and their current configuration</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Create an SMB share with the default share permissions (Everyone: Full Control)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-name<span class="w"> </span>OracleBackups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Restrict share to a specific AD user or group (via Unisphere GUI)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># GUI path: Storage &gt; File &gt; File Systems &gt; [filesystem] &gt; SMB Shares &gt; [share] &gt; Permissions</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List SMB shares and their current configuration</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Create an SMB share with the default share permissions (Everyone: Full Control)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/smb<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>-name<span class="w"> </span>OracleBackups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Restrict share to a specific AD user or group (via Unisphere GUI)</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># GUI path: Storage &gt; File &gt; File Systems &gt; [filesystem] &gt; SMB Shares &gt; [share] &gt; Permissions</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SMB Protocol Configuration:
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  ID                          | Name              | Server    | Path     | State
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  ============================================================================
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  SMB_1                       | OracleBackups     | nas-unity-01 | /        | Enabled
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  SMB_2                       | ComplianceArchive | nas-unity-02 | /archive | Enabled
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  SMB_3                       | UserProfiles      | nas-unity-01 | /home    | Enabled
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Share Permissions (Default):
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  Share Name: OracleBackups
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  Everyone: Full Control (Read, Write, Modify, Delete)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  Inheritance: Enabled
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Created SMB share &#39;OracleBackups&#39; successfully.
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  Share ID: SMB_4
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  Server: nas-unity-01
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>  File System: fs_oracle_001
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  Path: /
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>  State: Online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid server ID '&lt;nas_id&gt;'</code></strong> — Verify the NAS server ID exists by running <code>uemcli -d &lt;ip&gt; -u admin /prot/smb/server show</code> and use the correct ID from the output.
+<strong><code>Error: File system '&lt;fs_id&gt;' not found</code></strong> — Confirm the filesystem ID with <code>uemcli -d &lt;ip&gt; -u admin /stor/fs show</code> and substitute the correct filesystem identifier.
+<strong><code>Error: Access denied: insufficient privileges</code></strong> — Ensure the admin user account has SMB management permissions or use a service account with appropriate UEMCLI roles assigned.</p>
+</div>
 <p>For production environments, restrict share-level permissions to the AD groups that require access, then use NTFS permissions for fine-grained control within the share. Do not leave the default "Everyone: Full Control" share permission in place.</p>
 <h2 id="management-interface-restrictions">Management Interface Restrictions<a class="headerlink" href="#management-interface-restrictions" title="Permanent link">&para;</a></h2>
 <p>Restrict which IP ranges can access the Unity management interfaces to reduce the attack surface:</p>
@@ -9201,12 +9327,33 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 <p>Configure session timeout in Unisphere under <strong>Settings &gt; Access &gt; Session Management</strong>. Password and lockout policy is enforced on local accounts; for LDAP/AD accounts, the policy is inherited from Active Directory.</p>
 <h2 id="audit-log-review">Audit Log Review<a class="headerlink" href="#audit-log-review" title="Permanent link">&para;</a></h2>
 <p>All Unisphere administrative actions are recorded in the Unity audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View recent audit events (administrative actions)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/audit<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># View system events (including security-related events)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/syslog<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># View recent audit events (administrative actions)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/audit<span class="w"> </span>show
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># View system events (including security-related events)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/syslog<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ID              Timestamp                    User      Action                          Resource                Status
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>1847            2024-01-15 14:32:18 UTC      admin     Modify User Account             user_operator1          Success
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>1846            2024-01-15 14:28:45 UTC      admin     Change Password Policy          Security Settings       Success
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>1845            2024-01-15 13:55:12 UTC      svc_backup Login                         System Access           Success
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>1844            2024-01-15 13:22:33 UTC      admin     Modify NTP Server               ntp.corp.local          Success
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>1843            2024-01-15 12:18:07 UTC      admin     Export Configuration            unity-backup-20240115   Success
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>...
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Timestamp                    Severity  Component        Message
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>2024-01-15 14:35:22 UTC      INFO      SecurityManager  User admin logged in from 192.168.1.105
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>2024-01-15 14:32:18 UTC      WARNING   UserManagement   Password policy updated: min length 12
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>2024-01-15 14:28:45 UTC      INFO      Authentication   Failed login attempt from 192.168.1.200
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>2024-01-15 13:55:12 UTC      INFO      SystemHealth     Certificate expiration warning: 45 days remaining
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>2024-01-15 13:22:33 UTC      INFO      TimeSync         NTP synchronization successful with ntp.corp.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Authentication failed: Invalid credentials</code></strong> — Verify the admin user password and ensure the management IP address is correct and reachable.
+<strong><code>Connection timeout: Unable to reach &lt;ip&gt;</code></strong> — Confirm the storage array IP is accessible from your management station and that firewall rules permit UEMCLI traffic on port 443.
+<strong><code>Permission denied: User 'admin' does not have audit view privileges</code></strong> — Ensure the admin account has the required audit log read permissions assigned in the Unity security role configuration.</p>
+</div>
 <p>Review the audit log regularly for:
 - Logins from unexpected IP addresses or user accounts.
 - Configuration changes made outside of approved change windows.
@@ -9242,7 +9389,7 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:59:39 UTC"><span class="timeago" datetime="2026-06-29T04:59:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:59:39 UTC">2026-06-29</span>
   </span>
 
     

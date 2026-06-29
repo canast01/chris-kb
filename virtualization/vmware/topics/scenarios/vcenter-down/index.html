@@ -10816,27 +10816,115 @@ continue operating without vCenter — VMs keep running throughout.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Service                                    Running  Stopped
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>----------------------------------------------------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VMware vCenter Server                       Yes      No
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>VMware vSphere Web Client                   Yes      No
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>VMware Identity Management Service          Yes      No
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>VMware vCenter Inventory Service            Yes      No
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>VMware vCenter Orchestrator Configuration   No       Yes
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>VMware vCenter Orchestrator                 No       Yes
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VMware vSphere Update Manager               Yes      No
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>VMware vCenter Statistics                   Yes      No
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>VMware vCenter Orchestrator Configuration
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>VMware vCenter Orchestrator
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>service-control: command not found</code></strong> — Ensure you are running this command on a vCenter Server host and that the VMware tools are installed in the system PATH.
+<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with elevated privileges using <code>sudo service-control --status --all | grep -i stopped</code>.</p>
+</div>
 <p>Start an individual stopped service first before attempting a full restart:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sso
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sso
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Waiting for services to be available...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Service vmware-vpxd started successfully
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Service vmware-vpostgres started successfully
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Service vmware-sso started successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to the Service Control Agent</code></strong> — Ensure the Service Control Agent daemon is running with <code>service-control --status</code> and restart it if needed.
+<strong><code>Error: Service vmware-vpxd is already running</code></strong> — Check if the service is already active with <code>service-control --status vmware-vpxd</code> before attempting to start it again.</p>
+</div>
 <p>Full restart (last resort — do not use until you have read logs, as it masks root cause):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Stopping all services...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Stopping service &#39;vsphere-ui&#39;... done
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Stopping service &#39;vpxd&#39;... done
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Stopping service &#39;vsan-health&#39;... done
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Stopping service &#39;rhttpproxy&#39;... done
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Stopping service &#39;sps&#39;... done
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>All services stopped successfully.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Starting all services...
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Starting service &#39;sps&#39;... done
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Starting service &#39;rhttpproxy&#39;... done
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Starting service &#39;vpxd&#39;... done
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Starting service &#39;vsan-health&#39;... done
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Starting service &#39;vsphere-ui&#39;... done
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>All services started successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>service-control: command not found</code></strong> — Ensure you are running this command on a vCenter Server appliance with root privileges, as <code>service-control</code> is only available on VCSA.
+<strong><code>Error: Unable to stop service 'vpxd': Service dependency violation</code></strong> — Wait 30–60 seconds between the stop and start commands to allow dependent services to fully shut down, or run <code>service-control --stop --all</code> with the <code>--force</code> flag.</p>
+</div>
 <hr />
 <h2 id="3-check-disk-space-the-most-common-cause">3. Check Disk Space — the Most Common Cause<a class="headerlink" href="#3-check-disk-space-the-most-common-cause" title="Permanent link">&para;</a></h2>
 <p>Full disk partitions are the single most common cause of vCenter service failures — check this before anything else.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>df<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/dev/sda1       100G   45G   55G  45% /
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/dev/sda2       500G  320G  180G  64% /var
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>/dev/sdb1       2.0T  1.8T  200G  90% /vmfs/volumes/datastore1
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/dev/sdc1       1.0T  450G  550G  45% /vmfs/volumes/datastore2
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>tmpfs           32G  128M   32G   1% /dev/shm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>df: cannot access '/mnt/nfs': Stale NFS file handle</code></strong> — Remount the NFS datastore with <code>mount -o remount /mnt/nfs</code> or check ESXi host connectivity to the NFS server.
+<strong><code>df: /dev/mapper/vg0-lv_data: No such file or directory</code></strong> — Verify the logical volume exists with <code>lvdisplay</code> and activate it with <code>lvchange -ay /dev/vg0/lv_data</code> if needed.</p>
+</div>
 <p>Look for: any partition at 100% utilisation, especially <code>/storage/log</code>. Clean old logs using the VMware-provided script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Cleaning up VMware vCenter appliance logs...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Processing log directory: /var/log/vmware/
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Removing logs older than 30 days
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Cleaned up 2.3 GB from /var/log/vmware/vpxd/
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Cleaned up 1.1 GB from /var/log/vmware/sso/
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Cleaned up 856 MB from /var/log/vmware/vpostgres/
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Cleaned up 512 MB from /var/log/vmware/vsan/
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Total disk space reclaimed: 4.8 GB
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Cleanup completed successfully at 2024-01-15 03:45:22 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied</code></strong> — Run the script with sudo or as root user since it requires write access to system log directories.
+<strong><code>No such file or directory: /usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py</code></strong> — Verify the vCenter Server is installed and the VMware VPX package is present; reinstall if necessary.
+<strong><code>ERROR: Log directory /var/log/vmware/ is not accessible</code></strong> — Ensure the vCenter appliance is running and the log partition has sufficient inode availability.</p>
+</div>
 <p>After freeing space, start services and confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpxd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpxd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Shutting down VMware services...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Waiting for services to shut down...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Starting VMware services...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Waiting for services to start...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Service vmware-vpxd is running.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to VMware Authorization Service</code></strong> — Ensure the VMware Authorization Service (vmware-authd) is running first with <code>service-control --start vmware-authd</code>.
+<strong><code>Service vmware-vpxd is not running.</code></strong> — Check system resources and review <code>/var/log/vmware/vpxd/vpxd.log</code> for startup errors, then retry the start command.</p>
+</div>
 <hr />
 <h2 id="4-use-vami-for-health-overview">4. Use VAMI for Health Overview<a class="headerlink" href="#4-use-vami-for-health-overview" title="Permanent link">&para;</a></h2>
 <p>VAMI at <code>https://vcenter-fqdn:5480</code> is a lightweight separate process that often remains up when vpxd has crashed — use it as the fastest first check.</p>
@@ -10849,38 +10937,110 @@ continue operating without vCenter — VMs keep running throughout.
 <hr />
 <h2 id="5-check-the-postgresql-embedded-database">5. Check the PostgreSQL Embedded Database<a class="headerlink" href="#5-check-the-postgresql-embedded-database" title="Permanent link">&para;</a></h2>
 <p>vCenter's embedded database must be accepting connections before vpxd can start.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vpostgres/current/bin/pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/usr/lib/vmware-vpostgres/current/bin/pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>accepting connections
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pg_isready: could not translate host name "localhost" to address: Name or service not known</code></strong> — Verify the PostgreSQL service is running with <code>systemctl status vmware-vpostgres</code> and that localhost resolution is configured in <code>/etc/hosts</code>.
+<strong><code>pg_isready: could not connect to server: Connection refused</code></strong> — Ensure the vPostgres service is listening on localhost by checking the postgresql.conf listen_addresses setting and restarting the service with <code>systemctl restart vmware-vpostgres</code>.</p>
+</div>
 <p>Expected output when healthy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>localhost:5432 - accepting connections
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>localhost:5432 - accepting connections
 </code></pre></div>
 <p>If the database is not accepting connections, read its log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vpostgres/postgresql*.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vpostgres/postgresql*.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>2024-01-15 14:23:47.123 UTC [12847] LOG:  connection received: host=192.168.1.45 port=54321
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>2024-01-15 14:23:47.456 UTC [12847] LOG:  connection authorized: user=postgres database=VCDB
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>2024-01-15 14:23:48.789 UTC [12848] LOG:  statement: SELECT version();
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>2024-01-15 14:23:49.012 UTC [12848] LOG:  duration: 0.234 ms
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>2024-01-15 14:23:52.345 UTC [12849] LOG:  checkpoint starting: time
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>2024-01-15 14:23:55.678 UTC [12849] LOG:  checkpoint complete: wrote 1247 buffers (98.5%); write=2.156 s, sync=0.891 s, total=3.047 s
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>2024-01-15 14:24:01.901 UTC [12850] LOG:  autovacuum launcher started
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>2024-01-15 14:24:15.234 UTC [12851] LOG:  connection received: host=192.168.1.50 port=54322
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>2024-01-15 14:24:15.567 UTC [12851] LOG:  connection authorized: user=vpxd database=VCDB
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>2024-01-15 14:24:20.890 UTC [12852] WARNING:  could not write block 4095 of relation base/16384/16385: No space left on device
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>2024-01-15 14:24:21.123 UTC [12852] ERROR:  could not extend relation base/16384/16385: No space left on device
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>2024-01-15 14:24:25.456 UTC [12853] LOG:  statement: VACUUM ANALYZE;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>2024-01-15 14:24:30.789 UTC [12853] LOG:  duration: 4.567 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR:  could not extend relation base/16384/16385: No space left on device</code></strong> — Check available disk space on the vPostgres partition with <code>df -h /storage/db</code> and expand the volume or clean up old logs.
+<strong><code>tail: cannot open '/var/log/vmware/vpostgres/postgresql*.log' for reading: No such file or directory</code></strong> — Verify the vPostgres service is running with <code>systemctl status vpostgres</code> and confirm the log directory exists.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the root user since vPostgres logs are typically readable only by root or the postgres service account.</p>
+</div>
 <p>Look for: disk full errors (cannot write WAL), corrupt data files after ungraceful shutdown, or connection limit exhausted messages.</p>
 <hr />
 <h2 id="6-read-vpxdlog-for-startup-errors">6. Read vpxd.log for Startup Errors<a class="headerlink" href="#6-read-vpxdlog-for-startup-errors" title="Permanent link">&para;</a></h2>
 <p>If services fail to start, vpxd.log contains the startup sequence and the exact failure point.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fatal|failed|exception&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fatal|failed|exception&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>2024-01-15T09:42:31.847Z | ERROR [vpxd.log] Failed to connect to vCenter database: Connection timeout after 30s
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>2024-01-15T09:43:12.923Z | FATAL [vpxd.log] Exception in com.vmware.vc.VcEventManager: NullPointerException at line 1247
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>2024-01-15T09:44:05.156Z | ERROR [vpxd.log] SSL certificate validation failed for host esx-host-04.lab.local (192.168.1.145)
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>2024-01-15T09:45:33.441Z | ERROR [vpxd.log] Failed to retrieve inventory from datacenter DC-PROD: Permission denied
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>2024-01-15T09:46:18.762Z | FATAL [vpxd.log] Heap space exhausted - OutOfMemoryError in garbage collector
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>2024-01-15T09:47:02.334Z | ERROR [vpxd.log] Task &#39;task-1847&#39; failed: Host &#39;esx-host-02&#39; is not responding
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory</code></strong> — Verify vpxd service is running with <code>systemctl status vpxd</code> and check the correct log path with <code>find /var/log -name vpxd.log</code>.
+<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>root</code> or <code>vpxd</code> group with <code>sudo usermod -aG vpxd $USER</code>.
+<strong><code>No matches found</code></strong> — The log file exists but contains no errors; this is normal for a healthy vCenter instance, so verify the service is actually running with <code>systemctl status vpxd</code>.</p>
+</div>
 <p>Common fatal startup errors:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Failed to connect to database          → PostgreSQL down or credentials mismatch
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>SSL handshake failed                   → certificate expired or NTP drift
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Address already in use: port 443       → previous vpxd process still running (kill it)
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>VMOMI::Exception: timeout             → SSO service not yet ready; wait and retry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Failed to connect to database          → PostgreSQL down or credentials mismatch
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>SSL handshake failed                   → certificate expired or NTP drift
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Address already in use: port 443       → previous vpxd process still running (kill it)
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>VMOMI::Exception: timeout             → SSO service not yet ready; wait and retry
 </code></pre></div>
 <p>For the "address in use" error, find and kill the stale process:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxd
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;pid&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxd
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;pid&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>root      12847  0.5 12.3 2847392 512048 ?      Ssl  08:14   2:47 /usr/lib/vmware-vpxd/bin/vpxd
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>root      15234  0.0  0.0  12112  1024 pts/0    S+   14:22   0:00 grep vpxd
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>(no output — command completes silently)
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Operation finished successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>kill: (12847): Operation not permitted</code></strong> — Run the command with sudo or as root user.
+<strong><code>Service 'vmware-vpxd' is not registered with service-control.</code></strong> — Use <code>service-control --list</code> to verify the correct service name, or restart using <code>systemctl restart vmware-vpxd</code> instead.</p>
+</div>
 <hr />
 <h2 id="7-certificate-failures-aria-suitelc-or-certificate-manager">7. Certificate Failures — Aria SuiteLC or certificate-manager<a class="headerlink" href="#7-certificate-failures-aria-suitelc-or-certificate-manager" title="Permanent link">&para;</a></h2>
 <p>If vpxd.log shows a certificate expiry error, use the appropriate renewal tool — never both at once.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SSL Exception: certificate has expired
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>SSL Exception: certificate has expired
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>VMware Certificate Manager
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Please select an option [1-9]:
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>1. Generate Certificate Signing Request (CSR) and replace an existing VMCA-signed certificate
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>2. Generate a new VMCA certificate for an existing CSR
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>3. Regenerate a new VMCA root certificate
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>4. Replace an existing certificate with VMCA signed certificate
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>5. Replace an existing certificate with Custom Certificate
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>6. Replace an existing VMCA root certificate with Custom Certificate
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>7. Regenerate a new certificate and replace an existing certificate
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>8. Reset all certificates to default
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>9. Exit
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>Option [1-9]:
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to VMCA service</code></strong> — Ensure the VMware Certificate Authority service is running with <code>systemctl status vmware-vmca</code> and restart if needed.
+<strong><code>Error: Permission denied</code></strong> — Run the command with elevated privileges using <code>sudo /usr/lib/vmware-vmca/bin/certificate-manager</code>.
+<strong><code>Error: Certificate file not found at /etc/vmware-vpx/ssl/rui.crt</code></strong> — Verify the certificate path exists and check file permissions with <code>ls -la /etc/vmware-vpx/ssl/</code>.</p>
+</div>
 <p>If Aria SuiteLC is deployed and managing certificates, initiate renewal from Aria SuiteLC →
 <strong>Certificate Management → vCenter → Renew</strong>. Do not run certificate-manager and Aria SuiteLC on the
 same VCSA simultaneously — they will conflict and leave the certificate chain broken.</p>
@@ -10997,7 +11157,7 @@ same VCSA simultaneously — they will conflict and leave the certificate chain 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

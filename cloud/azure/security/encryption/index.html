@@ -8926,199 +8926,512 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Check Key Vault firewall — restrict to known subnets and private endpoint</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>az<span class="w"> </span>keyvault<span class="w"> </span>network-rule<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;
 </code></pre></div>
-<h3 id="key-vault-operations">Key Vault Operations<a class="headerlink" href="#key-vault-operations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a key</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;key-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--kty<span class="w"> </span>RSA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--ops<span class="w"> </span>wrapKey<span class="w"> </span>unwrapKey
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># List keys</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># List secrets</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Show a secret value</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span>show<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;secret-name&gt;<span class="w"> </span>--query<span class="w"> </span>value<span class="w"> </span>-o<span class="w"> </span>tsv
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Set a secret</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--name<span class="w"> </span>&lt;secret-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--value<span class="w"> </span><span class="s2">&quot;&lt;secret-value&gt;&quot;</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Rotate a key (creates a new version; old version retained until explicitly deleted)</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>rotate<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;key-name&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/kv-prod-sec-001&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;name&quot;: &quot;kv-prod-sec-001&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;enablePurgeProtection&quot;: true,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;enableSoftDelete&quot;: true,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;enableRbacAuthorization&quot;: false,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;retentionDays&quot;: 90,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;sku&quot;: &quot;standard&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  },
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;type&quot;: &quot;Microsoft.KeyVault/vaults&quot;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>}
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>{
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/objectId/98f76543-21ab-cdef-5678-90abcdef1234&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;permissions&quot;: {
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;keys&quot;: [&quot;get&quot;, &quot;list&quot;, &quot;create&quot;, &quot;delete&quot;, &quot;unwrapKey&quot;, &quot;wrapKey&quot;],
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    &quot;secrets&quot;: [&quot;get&quot;, &quot;list&quot;, &quot;set&quot;, &quot;delete&quot;]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  }
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>}
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>(no output — command completes silently)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>{
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  &quot;canDelegate&quot;: false,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/kv-prod-sec-001/providers/Microsoft.Authorization/roleAssignments/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;principalId&quot;: &quot;98f76543-21ab-cdef-5678-90abcdef1234&quot;,
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;principalType&quot;: &quot;ServicePrincipal&quot;,
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  &quot;roleDefinitionId&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/providers/Microsoft.Authorization/roleDefinitions/14b78a9a-5a6c-4d36-9478-88fefc3126de&quot;,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  &quot;scope&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/kv-prod-sec-001&quot;,
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  &quot;type&quot;: &quot;Microsoft.Authorization/roleAssignments&quot;
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>}
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>{
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  &quot;bypass&quot;: &quot;AzureServices&quot;,
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  &quot;defaultAction&quot;: &quot;Allow&quot;,
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  &quot;ipRules&quot;: [],
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  &quot;virtualNetworkRules&quot;: [
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    {
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>      &quot;id&quot;: &quot;/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/vnet-prod/subnets/app-subnet&quot;,
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>      &quot;ignoreMissingVnetServiceEndpoint&quot;: false
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    }
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>  ]
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>}
 </code></pre></div>
-<hr />
-<h2 id="customer-managed-keys-for-storage">Customer-Managed Keys for Storage<a class="headerlink" href="#customer-managed-keys-for-storage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a key for storage encryption</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The operation failed because the Key Vault name 'kv-name' is not globally unique.</code></strong> — Replace <code>&lt;kv-name&gt;</code> with a globally unique name (e.g., <code>kv-prod-sec-001-$(date +%s)</code>).
+**`Principal object ID not</p>
+</div>
+<h3 id="key-vault-operations">Key Vault Operations<a class="headerlink" href="#key-vault-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a key</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span>storage-cmk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;key-name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--kty<span class="w"> </span>RSA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">4096</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Enable CMK on a storage account</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--encryption-key-source<span class="w"> </span>Microsoft.Keyvault<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--encryption-key-vault<span class="w"> </span><span class="s2">&quot;https://&lt;kv-name&gt;.vault.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--encryption-key-name<span class="w"> </span>storage-cmk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--encryption-key-version<span class="w"> </span>&lt;key-version&gt;
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Verify CMK is active</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;encryption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--output<span class="w"> </span>json
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--ops<span class="w"> </span>wrapKey<span class="w"> </span>unwrapKey
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># List keys</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># List secrets</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Show a secret value</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span>show<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;secret-name&gt;<span class="w"> </span>--query<span class="w"> </span>value<span class="w"> </span>-o<span class="w"> </span>tsv
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Set a secret</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--name<span class="w"> </span>&lt;secret-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--value<span class="w"> </span><span class="s2">&quot;&lt;secret-value&gt;&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Rotate a key (creates a new version; old version retained until explicitly deleted)</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>rotate<span class="w"> </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;key-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Key created successfully with kid: https://prodkv-eastus.vault.azure.net/keys/encryption-key-prod/a7f2c9e1b4d6f8h2j5k3l9m1n4o7p2q5
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Name                 Enabled  Expires  Created             Updated
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-------------------  -------  -------  ------------------  ------------------
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>encryption-key-prod  True              2024-01-15T09:42:18Z 2024-01-15T09:42:18Z
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>db-backup-key        True              2024-01-14T14:22:05Z 2024-01-14T14:22:05Z
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Name                    Enabled  Expires  Created             Updated
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>-------------------     -------  -------  ------------------  ------------------
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>db-password             True              2024-01-12T11:33:22Z 2024-01-13T08:15:44Z
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>api-token-staging       True              2024-01-10T16:45:10Z 2024-01-10T16:45:10Z
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>tls-cert-passphrase     True              2024-01-08T13:20:33Z 2024-01-08T13:20:33Z
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>MyP@ssw0rd!Secure#2024
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>(no output — command completes silently)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Key rotated successfully. New version: a7f2c9e1b4d6f8h2j5k3l9m1n4o7p2q6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The user, group or application 'appid=&lt;id&gt;;oid=&lt;oid&gt;' does not have secrets get permission on key vault '&lt;kv-name&gt;'.</code></strong> — Add the required permissions using <code>az keyvault set-policy --vault-name &lt;kv-name&gt; --object-id &lt;oid&gt; --secret-permissions get list</code>.
+<strong><code>Vault '&lt;kv-name&gt;' not found.</code></strong> — Verify the vault name is correct and exists in your subscription with <code>az keyvault list --output table</code>.
+<strong><code>The operation 'wrapKey' is not allowed by the key policy.</code></strong> — Update the key operations when creating it or use <code>az keyvault key update</code> to add the missing operations to the key's policy.</p>
+</div>
+<hr />
+<h2 id="customer-managed-keys-for-storage">Customer-Managed Keys for Storage<a class="headerlink" href="#customer-managed-keys-for-storage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a key for storage encryption</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--name<span class="w"> </span>storage-cmk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--kty<span class="w"> </span>RSA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">4096</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Enable CMK on a storage account</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--encryption-key-source<span class="w"> </span>Microsoft.Keyvault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--encryption-key-vault<span class="w"> </span><span class="s2">&quot;https://&lt;kv-name&gt;.vault.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--encryption-key-name<span class="w"> </span>storage-cmk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--encryption-key-version<span class="w"> </span>&lt;key-version&gt;
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Verify CMK is active</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;encryption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--output<span class="w"> </span>json
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;keySource&quot;: &quot;Microsoft.Keyvault&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;keyvaultproperties&quot;: {
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    &quot;keyname&quot;: &quot;storage-cmk&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    &quot;keyversion&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;keyvaulturi&quot;: &quot;https://prod-kv-001.vault.azure.net&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  },
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  &quot;services&quot;: {
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    &quot;blob&quot;: {
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;enabled&quot;: true,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;lastEnabledTime&quot;: &quot;2024-01-15T09:42:33.000000+00:00&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    },
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    &quot;file&quot;: {
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;enabled&quot;: true,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;lastEnabledTime&quot;: &quot;2024-01-15T09:42:33.000000+00:00&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    },
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    &quot;queue&quot;: {
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      &quot;enabled&quot;: true,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>      &quot;lastEnabledTime&quot;: &quot;2024-01-15T09:42:33.000000+00:00&quot;
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    },
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    &quot;table&quot;: {
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>      &quot;enabled&quot;: true,
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>      &quot;lastEnabledTime&quot;: &quot;2024-01-15T09:42:33.000000+00:00&quot;
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    }
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  }
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The client does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/write' over scope</code></strong> — Ensure your Azure user or service principal has Key Vault Crypto Officer or equivalent role assigned on the key vault.
+<strong><code>The Key Vault URI provided is invalid or the key does not exist</code></strong> — Verify the key vault name is correct, the key exists with <code>az keyvault key list --vault-name &lt;kv-name&gt;</code>, and the storage account has network access to the key vault.
+<strong><code>Storage account does not support customer-managed keys in this region</code></strong> — Confirm the storage account region supports CMK (most standard regions do) and use a supported account kind like StorageV2 or BlobStorage.</p>
+</div>
 <hr />
 <h2 id="customer-managed-keys-for-managed-disks">Customer-Managed Keys for Managed Disks<a class="headerlink" href="#customer-managed-keys-for-managed-disks" title="Permanent link">&para;</a></h2>
 <p>Disk Encryption Sets (DES) link a Key Vault key to managed disk encryption.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a Disk Encryption Set</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>disk-encryption-set<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;des-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--key-url<span class="w"> </span><span class="s2">&quot;https://&lt;kv-name&gt;.vault.azure.net/keys/&lt;key-name&gt;/&lt;key-version&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--source-vault<span class="w"> </span>&lt;kv-resource-id&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Grant the DES access to the Key Vault key</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">DES_IDENTITY</span><span class="o">=</span><span class="k">$(</span>az<span class="w"> </span>disk-encryption-set<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--name<span class="w"> </span>&lt;des-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;identity.principalId&quot;</span><span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Key Vault Crypto Service Encryption User&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--assignee<span class="w"> </span><span class="nv">$DES_IDENTITY</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--scope<span class="w"> </span>&lt;kv-resource-id&gt;
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Create a managed disk using the DES</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>az<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>--name<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span>--size-gb<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>--disk-encryption-set<span class="w"> </span>&lt;des-resource-id&gt;
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Apply DES to an existing VM&#39;s OS disk</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>az<span class="w"> </span>vm<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span>--disk-encryption-set<span class="w"> </span>&lt;des-resource-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a Disk Encryption Set</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>disk-encryption-set<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;des-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--key-url<span class="w"> </span><span class="s2">&quot;https://&lt;kv-name&gt;.vault.azure.net/keys/&lt;key-name&gt;/&lt;key-version&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--source-vault<span class="w"> </span>&lt;kv-resource-id&gt;
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Grant the DES access to the Key Vault key</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">DES_IDENTITY</span><span class="o">=</span><span class="k">$(</span>az<span class="w"> </span>disk-encryption-set<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--name<span class="w"> </span>&lt;des-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;identity.principalId&quot;</span><span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Key Vault Crypto Service Encryption User&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>--assignee<span class="w"> </span><span class="nv">$DES_IDENTITY</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--scope<span class="w"> </span>&lt;kv-resource-id&gt;
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Create a managed disk using the DES</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>az<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>--name<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">  </span>--size-gb<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span>--disk-encryption-set<span class="w"> </span>&lt;des-resource-id&gt;
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="c1"># Apply DES to an existing VM&#39;s OS disk</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>az<span class="w"> </span>vm<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span>--disk-encryption-set<span class="w"> </span>&lt;des-resource-id&gt;
 </code></pre></div>
-<hr />
+<h2 id="expected-output-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftcomputediskencryptionsetsdes-prod-001-location-eastus-name-des-prod-001-resourcegroup-prod-rg-identity-principalid-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-tenantid-72f988bf-86f1-41af-91ab-2d7cd011db47-type-systemassigned-keyvaultproperties-keyurl-httpskv-prodvaultazurenetkeyscmk-key-01a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-candelegate-false-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftauthorizationroleassignments9d8c7b6a-5f4e-3d2c-1b0a-f9e8d7c6b5a4-principalid-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-principaltype-serviceprincipal-roledefinitionid-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6providersmicrosoftauthorizationroledefinitionse147488a-f6f5-4113-8e2d-b22465e65bf6-scope-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftkeyvaultvaultskv-prod-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftcomputedisksdisk-data-001-name-disk-data-001-resourcegroup-prod-rg-location-eastus-sizegb-128-encryptionsettings-enabled-true-id-subscriptionsa1b2c3"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/prod-rg/providers/Microsoft.Compute/diskEncryptionSets/des-prod-001&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;name&quot;: &quot;des-prod-001&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;identity&quot;: {
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    &quot;principalId&quot;: &quot;f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    &quot;tenantId&quot;: &quot;72f988bf-86f1-41af-91ab-2d7cd011db47&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    &quot;type&quot;: &quot;SystemAssigned&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  },
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;keyVaultProperties&quot;: {
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    &quot;keyUrl&quot;: &quot;https://kv-prod.vault.azure.net/keys/cmk-key-01/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  }
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>}
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>{
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;canDelegate&quot;: false,
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/prod-rg/providers/Microsoft.Authorization/roleAssignments/9d8c7b6a-5f4e-3d2c-1b0a-f9e8d7c6b5a4&quot;,
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  &quot;principalId&quot;: &quot;f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f&quot;,
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  &quot;principalType&quot;: &quot;ServicePrincipal&quot;,
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  &quot;roleDefinitionId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/providers/Microsoft.Authorization/roleDefinitions/e147488a-f6f5-4113-8e2d-b22465e65bf6&quot;,
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  &quot;scope&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/kv-prod&quot;
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>}
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>{
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/prod-rg/providers/Microsoft.Compute/disks/disk-data-001&quot;,
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  &quot;name&quot;: &quot;disk-data-001&quot;,
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  &quot;sizeGb&quot;: 128,
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>  &quot;encryptionSettings&quot;: {
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    &quot;enabled&quot;: true
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>  }
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>}
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>{
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3
+</code></pre></div><a class="headerlink" href="#expected-output-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftcomputediskencryptionsetsdes-prod-001-location-eastus-name-des-prod-001-resourcegroup-prod-rg-identity-principalid-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-tenantid-72f988bf-86f1-41af-91ab-2d7cd011db47-type-systemassigned-keyvaultproperties-keyurl-httpskv-prodvaultazurenetkeyscmk-key-01a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-candelegate-false-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftauthorizationroleassignments9d8c7b6a-5f4e-3d2c-1b0a-f9e8d7c6b5a4-principalid-f7e8d9c0-b1a2-3c4d-5e6f-7a8b9c0d1e2f-principaltype-serviceprincipal-roledefinitionid-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6providersmicrosoftauthorizationroledefinitionse147488a-f6f5-4113-8e2d-b22465e65bf6-scope-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftkeyvaultvaultskv-prod-id-subscriptionsa1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6resourcegroupsprod-rgprovidersmicrosoftcomputedisksdisk-data-001-name-disk-data-001-resourcegroup-prod-rg-location-eastus-sizegb-128-encryptionsettings-enabled-true-id-subscriptionsa1b2c3" title="Permanent link">&para;</a></h2>
 <h2 id="azure-disk-encryption-ade">Azure Disk Encryption (ADE)<a class="headerlink" href="#azure-disk-encryption-ade" title="Permanent link">&para;</a></h2>
 <p>ADE encrypts VM disks at the OS level using BitLocker (Windows) or DM-Crypt (Linux). Keys are stored in Key Vault.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable ADE on a Windows VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--disk-encryption-keyvault<span class="w"> </span>&lt;kv-resource-id&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Enable ADE on a Linux VM</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--disk-encryption-keyvault<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--volume-type<span class="w"> </span>All
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check ADE status</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable ADE on a Windows VM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--disk-encryption-keyvault<span class="w"> </span>&lt;kv-resource-id&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Enable ADE on a Linux VM</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--disk-encryption-keyvault<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--volume-type<span class="w"> </span>All
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Check ADE status</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;disks&quot;: [
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    {
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      &quot;name&quot;: &quot;myvm_OsDisk_1_a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;encryptionSettings&quot;: {
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        &quot;enabled&quot;: true,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        &quot;version&quot;: &quot;1.1&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      },
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>      &quot;statuses&quot;: [
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        {
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>          &quot;code&quot;: &quot;ProvisioningState/succeeded&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>          &quot;displayStatus&quot;: &quot;Provisioning succeeded&quot;,
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>          &quot;time&quot;: &quot;2024-01-15T14:32:18.000000+00:00&quot;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        }
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>      ]
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    },
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    {
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      &quot;name&quot;: &quot;myvm_DataDisk_0_b2c3d4e5f6g7h8i9&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      &quot;encryptionSettings&quot;: {
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>        &quot;enabled&quot;: true,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>        &quot;version&quot;: &quot;1.1&quot;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      },
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      &quot;statuses&quot;: [
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>        {
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>          &quot;code&quot;: &quot;ProvisioningState/succeeded&quot;,
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>          &quot;displayStatus&quot;: &quot;Provisioning succeeded&quot;,
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>          &quot;time&quot;: &quot;2024-01-15T14:35:22.000000+00:00&quot;
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>        }
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>      ]
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    }
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  ],
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  &quot;osProfile&quot;: {
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>    &quot;computerName&quot;: &quot;myvm&quot;
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>  }
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The Key Vault 'kv-name' is not enabled for disk encryption.</code></strong> — Enable the Key Vault for Azure Disk Encryption by running <code>az keyvault update --name &lt;kv-name&gt; --enabled-for-disk-encryption true</code>.
+<strong><code>The user does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/read' on resource.</code></strong> — Ensure the VM's managed identity or service principal has Key Vault Crypto Officer or equivalent RBAC role assigned.
+<strong><code>VM must be deallocated before encryption can be enabled.</code></strong> — Stop the VM first with <code>az vm deallocate --name &lt;vm-name&gt; --resource-group &lt;rg-name&gt;</code>, then retry the encryption command.</p>
+</div>
 <blockquote>
 <p><strong>ADE vs Server-Side Encryption (SSE):</strong> SSE with CMK (Disk Encryption Set) encrypts at the storage layer — simpler to manage and works for all disk types. ADE encrypts at the OS layer — required for some compliance standards (FIPS 140-2). Do not apply both; pick one per workload.</p>
 </blockquote>
 <hr />
 <h2 id="tls-enforcement">TLS Enforcement<a class="headerlink" href="#tls-enforcement" title="Permanent link">&para;</a></h2>
 <h3 id="storage-account">Storage Account<a class="headerlink" href="#storage-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Require TLS 1.2 minimum on storage accounts</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--min-tls-version<span class="w"> </span>TLS1_2
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify minimum TLS version</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;minimumTlsVersion&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Require HTTPS-only (disable HTTP)</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--https-only<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Require TLS 1.2 minimum on storage accounts</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--min-tls-version<span class="w"> </span>TLS1_2
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify minimum TLS version</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;minimumTlsVersion&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Require HTTPS-only (disable HTTP)</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span>--https-only<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg2024&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;name&quot;: &quot;prodstg2024&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;type&quot;: &quot;Microsoft.Storage/storageAccounts&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;minimumTlsVersion&quot;: &quot;TLS1_2&quot;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>}
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>&quot;TLS1_2&quot;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>{
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg2024&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  &quot;name&quot;: &quot;prodstg2024&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  &quot;type&quot;: &quot;Microsoft.Storage/storageAccounts&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  &quot;httpsTrafficOnlyEnabled&quot;: true,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;minimumTlsVersion&quot;: &quot;TLS1_2&quot;
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></strong> — Verify the storage account name and resource group name are correct and exist in your subscription.
+<strong><code>The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;/providers/Microsoft.Storage/storageAccounts/&lt;storage-account&gt;'.</code></strong> — Ensure your Azure account has Storage Account Contributor or Owner role on the target resource group.</p>
+</div>
 <h3 id="app-service-api-management">App Service / API Management<a class="headerlink" href="#app-service-api-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set minimum TLS on App Service</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>webapp<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--min-tls-version<span class="w"> </span><span class="m">1</span>.2
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Enforce HTTPS redirect</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>az<span class="w"> </span>webapp<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--https-only<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Set minimum TLS on App Service</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>az<span class="w"> </span>webapp<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--min-tls-version<span class="w"> </span><span class="m">1</span>.2
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Enforce HTTPS redirect</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>az<span class="w"> </span>webapp<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>--https-only<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p/resourceGroups/prod-rg/providers/Microsoft.Web/sites/myapp-prod&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;name&quot;: &quot;myapp-prod&quot;,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;type&quot;: &quot;Microsoft.Web/sites&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;tags&quot;: {},
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;kind&quot;: &quot;app,linux&quot;,
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  &quot;properties&quot;: {
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;serverFarmId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p/resourceGroups/prod-rg/providers/Microsoft.Web/serverfarms/myapp-plan&quot;,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    &quot;minTlsVersion&quot;: &quot;1.2&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    &quot;httpsOnly&quot;: true,
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    &quot;state&quot;: &quot;Running&quot;
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  }
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The specified resource group '&lt;rg-name&gt;' could not be found.</code></strong> — Verify the resource group name with <code>az group list</code> and ensure you are in the correct subscription.
+<strong><code>The specified App Service '&lt;app-name&gt;' does not exist in the specified resource group.</code></strong> — Confirm the app name matches exactly with <code>az webapp list --resource-group &lt;rg-name&gt;</code> and check for typos.
+<strong><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Web/sites/write' over scope '/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/sites/xxx'.</code></strong> — Ensure your Azure account has Contributor or Web Plan Contributor role on the resource group.</p>
+</div>
 <hr />
 <h2 id="private-endpoints-for-key-vault">Private Endpoints for Key Vault<a class="headerlink" href="#private-endpoints-for-key-vault" title="Permanent link">&para;</a></h2>
 <p>Key Vault should only be accessible from private endpoints — no public network access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Disable public network access on Key Vault</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--public-network-access<span class="w"> </span>Disabled
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Create a private endpoint</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--name<span class="w"> </span>pe-keyvault<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--subnet<span class="w"> </span>&lt;subnet-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--private-connection-resource-id<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>--group-id<span class="w"> </span>vault<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>--connection-name<span class="w"> </span>pec-keyvault
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Create DNS record for private endpoint resolution</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>zone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>dns-zone-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span>--endpoint-name<span class="w"> </span>pe-keyvault<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">  </span>--name<span class="w"> </span>keyvault-dns-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">  </span>--private-dns-zone<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">  </span>--zone-name<span class="w"> </span>keyvault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable public network access on Key Vault</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>--public-network-access<span class="w"> </span>Disabled
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Create a private endpoint</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span>--name<span class="w"> </span>pe-keyvault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span>--subnet<span class="w"> </span>&lt;subnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>--private-connection-resource-id<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span>--group-id<span class="w"> </span>vault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span>--connection-name<span class="w"> </span>pec-keyvault
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Create DNS record for private endpoint resolution</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>zone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>dns-zone-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">  </span>--endpoint-name<span class="w"> </span>pe-keyvault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">  </span>--name<span class="w"> </span>keyvault-dns-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">  </span>--private-dns-zone<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">  </span>--zone-name<span class="w"> </span>keyvault
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/prod-kv-001&quot;,
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;name&quot;: &quot;prod-kv-001&quot;,
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  &quot;publicNetworkAccess&quot;: &quot;Disabled&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    &quot;tenantId&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    &quot;sku&quot;: {
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>      &quot;family&quot;: &quot;A&quot;,
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>      &quot;name&quot;: &quot;standard&quot;
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    }
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  }
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>}
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>{
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.Network/privateEndpoints/pe-keyvault&quot;,
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  &quot;name&quot;: &quot;pe-keyvault&quot;,
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  &quot;privateLinkServiceConnections&quot;: [
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    {
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>      &quot;name&quot;: &quot;pec-keyvault&quot;,
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>      &quot;privateLinkServiceId&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/prod-kv-001&quot;,
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>      &quot;groupIds&quot;: [&quot;vault&quot;],
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>      &quot;requestMessage&quot;: &quot;&quot;,
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>      &quot;privateLinkServiceConnectionState&quot;: {
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>        &quot;status&quot;: &quot;Approved&quot;,
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>        &quot;description&quot;: &quot;Auto-approved&quot;,
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>        &quot;actionsRequired&quot;: &quot;None&quot;
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>      }
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    }
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>  ]
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>}
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>{
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net&quot;,
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>  &quot;name&quot;: &quot;privatelink.vaultcore.azure.net&quot;,
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>  &quot;type&quot;: &quot;Microsoft.Network/privateDnsZones&quot;,
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>  &quot;location&quot;: &quot;global&quot;
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>}
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>{
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.Network/privateEndpoints/pe-keyvault/privateDnsZoneGroups/keyvault-dns-group&quot;,
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>  &quot;name&quot;: &quot;keyvault-dns-group&quot;,
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>  &quot;privateDnsZoneConfigs&quot;: [
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>    {
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>      &quot;name&quot;: &quot;keyvault&quot;,
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>      &quot;privateDnsZoneId&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cd2/resourceGroups/prod-rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net&quot;
+<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>    }
+<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>  ]
+<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/&lt;kv-name&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></strong> — Verify the Key Vault name and resource group name are correct and exist in your subscription.
+<strong><code>(InvalidResourceId) The provided resource ID is invalid or does not exist.</code></strong> — Ensure the `&lt;kv-</p>
+</div>
 <hr />
 <h2 id="key-vault-diagnostics">Key Vault Diagnostics<a class="headerlink" href="#key-vault-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable audit logging to Log Analytics</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--name<span class="w"> </span>kv-diagnostics<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--resource<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--workspace<span class="w"> </span>&lt;log-analytics-workspace-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;: &quot;AuditEvent&quot;, &quot;enabled&quot;: true}]&#39;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Query Key Vault access logs in Log Analytics</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># AzureDiagnostics</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># | where ResourceType == &quot;VAULTS&quot;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># | where OperationName in (&quot;SecretGet&quot;, &quot;KeyUnwrap&quot;, &quot;KeyWrap&quot;)</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># | project TimeGenerated, CallerIPAddress, identity_claim_oid_g, OperationName, ResultType</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># | order by TimeGenerated desc</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Alert on Key Vault secret access by unexpected principals</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Create a scheduled query rule in Azure Monitor targeting the above query</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Enable audit logging to Log Analytics</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--name<span class="w"> </span>kv-diagnostics<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>--resource<span class="w"> </span>&lt;kv-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>--workspace<span class="w"> </span>&lt;log-analytics-workspace-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;: &quot;AuditEvent&quot;, &quot;enabled&quot;: true}]&#39;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Query Key Vault access logs in Log Analytics</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># AzureDiagnostics</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># | where ResourceType == &quot;VAULTS&quot;</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># | where OperationName in (&quot;SecretGet&quot;, &quot;KeyUnwrap&quot;, &quot;KeyWrap&quot;)</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># | project TimeGenerated, CallerIPAddress, identity_claim_oid_g, OperationName, ResultType</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># | order by TimeGenerated desc</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Alert on Key Vault secret access by unexpected principals</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Create a scheduled query rule in Azure Monitor targeting the above query</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/rg-security/providers/microsoft.insights/diagnosticsettings/kv-diagnostics&quot;,
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  &quot;identity&quot;: null,
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  &quot;kind&quot;: null,
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  &quot;location&quot;: null,
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  &quot;name&quot;: &quot;kv-diagnostics&quot;,
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  &quot;resourceGroup&quot;: &quot;rg-security&quot;,
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  &quot;tags&quot;: null,
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  &quot;type&quot;: &quot;Microsoft.Insights/diagnosticSettings&quot;,
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  &quot;properties&quot;: {
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    &quot;logs&quot;: [
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>      {
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        &quot;category&quot;: &quot;AuditEvent&quot;,
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>        &quot;categoryGroup&quot;: null,
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>        &quot;enabled&quot;: true,
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>        &quot;retentionPolicy&quot;: {
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>          &quot;days&quot;: 0,
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>          &quot;enabled&quot;: false
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>        }
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>      }
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    ],
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    &quot;metrics&quot;: [],
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    &quot;workspaceId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/rg-security/providers/microsoft.operationalinsights/workspaces/law-audit&quot;,
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>    &quot;storageAccountId&quot;: null,
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>    &quot;serviceBusRuleId&quot;: null,
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    &quot;eventHubAuthorizationRuleId&quot;: null,
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>    &quot;eventHubName&quot;: null,
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    &quot;logAnalyticsDestinationType&quot;: null
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>  }
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound : The resource '/subscriptions/.../providers/Microsoft.KeyVault/vaults/kv-prod' could not be found.</code></strong> — Verify the Key Vault resource ID is correct and exists in the specified subscription using <code>az keyvault show --name &lt;vault-name&gt; --query id</code>.
+<strong><code>AuthorizationFailed : The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'microsoft.insights/diagnosticsettings/write' on resource '...'.</code></strong> — Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource using <code>az role assignment create --role "Monitoring Contributor" --assignee &lt;principal-id&gt; --scope &lt;kv-resource-id&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9148,7 +9461,7 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

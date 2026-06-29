@@ -8959,69 +8959,152 @@ Dell Flex on Demand (FoD) escalation: how to collect array serial number, licens
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Physical label: the SN is printed on a label on the front of the array chassis</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Photo the label — include in the case if there is any mismatch concern</span>
 </code></pre></div>
-<h3 id="2-collect-the-error-from-the-failed-key-import">2. Collect the error from the failed key import<a class="headerlink" href="#2-collect-the-error-from-the-failed-key-import" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># PowerMax: capture the error from Unisphere or from the Solutions Enabler import command</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fod-install-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Unity / PowerStore: capture from Unisphere event log</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Navigate to: Unisphere → Administration → Events</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Filter by: Severity = Error, Time = last 24 hours, Source = Licensing</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export the filtered view as CSV: /tmp/unity-license-events.csv</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># PowerMax (via Unisphere for PowerMax or Solutions Enabler)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Symmetrix Version: PowerMax 2000
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Model: PowerMax 2000
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Director Count: 4
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Symmetrix State: Ready
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Cache (MB): 131072
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Alternatively, use CLI on Unity:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/event/alert<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;severity eq error&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/unity-alerts.txt
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Unity / PowerStore (via CLI)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Storage System Information
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    ID: APM00123456789
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    Name: Unity-SAN-01
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Model: Unity 550F
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Serial Number: APM00123456789
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    System Version: 5.1.0.0.5.123
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    Health State: OK
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    Capacity (GB): 102400
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># PowerFlex (via Gateway)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># See PowerFlex admin guide for system ID retrieval
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Physical label: the SN is printed on a label on the front of the array chassis
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Photo the label — include in the case if there is any mismatch concern
 </code></pre></div>
-<h3 id="3-collect-currently-active-licenses">3. Collect currently active licenses<a class="headerlink" href="#3-collect-currently-active-licenses" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PowerMax: list all active licenses</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: command not found</code></strong> — Install Solutions Enabler or verify the symcli package is in your PATH.
+<strong><code>Error: Connection refused (port 443)</code></strong> — Verify the management IP is reachable and Unisphere/REST API service is running on the array.
+<strong><code>uemcli: Authentication failed</code></strong> — Confirm credentials and that the management IP is correct for the Unity/PowerStore system.</p>
+</div>
+<h3 id="2-collect-the-error-from-the-failed-key-import">2. Collect the error from the failed key import<a class="headerlink" href="#2-collect-the-error-from-the-failed-key-import" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PowerMax: capture the error from Unisphere or from the Solutions Enabler import command</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fod-install-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Unity / PowerStore: via Unisphere</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Navigate to: Licensing → Current Licenses</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Export: list of active FoD features and their status</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Export license state for the case</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/fod-active-licenses.txt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Unity / PowerStore: capture from Unisphere event log</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Navigate to: Unisphere → Administration → Events</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Filter by: Severity = Error, Time = last 24 hours, Source = Licensing</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Export the filtered view as CSV: /tmp/unity-license-events.csv</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Alternatively, use CLI on Unity:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/event/alert<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;severity eq error&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/unity-alerts.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Installing license file: /path/to/fod-key.lic
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>License Key: EMC-SYMM-POWERMAX-FOD-2024
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Installation Status: SUCCESS
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>License Expiration Date: 2025-12-31
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Features Enabled: SRDF, RecoverPoint, TimeFinder
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Symmetrix Capacity: 500 TB
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Installation completed successfully on 2024-01-15 14:32:47
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Log file saved to: /tmp/fod-install-2024-01-15.txt
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>uemcli -d 192.168.1.50 /event/alert show -filter &quot;severity eq error&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ID    | Timestamp           | Severity | Source    | Message
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>------|---------------------|----------|-----------|------------------------------------------
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>1247  | 2024-01-15 10:22:15 | Error    | Licensing | License expiration warning: 30 days
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>1248  | 2024-01-15 11:45:33 | Error    | Licensing | FOD key validation failed
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>1249  | 2024-01-15 13:12:09 | Error    | System    | Storage pool capacity threshold exceeded
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: command not found</code></strong> — Ensure Solutions Enabler is installed and the <code>$PATH</code> includes the Solutions Enabler bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>License Key validation failed: Invalid signature</code></strong> — Verify the FOD license file is not corrupted by comparing its checksum against the vendor-provided value and re-download if necessary.
+<strong><code>uemcli: Unable to connect to management IP 192.168.1.50</code></strong> — Confirm the management IP is reachable with <code>ping</code> and that the Unity/PowerStore system is online and accessible from your network.</p>
+</div>
+<h3 id="3-collect-currently-active-licenses">3. Collect currently active licenses<a class="headerlink" href="#3-collect-currently-active-licenses" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PowerMax: list all active licenses</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Unity / PowerStore: via Unisphere</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Navigate to: Licensing → Current Licenses</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Export: list of active FoD features and their status</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Export license state for the case</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/fod-active-licenses.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>License Information for Symmetrix ID: 000297900001
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Product                          Status      Expiration Date    Capacity
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>─────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VMAX All Flash                   Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Snapshots                        Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Replication                      Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Fast Cache                       Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Thin Provisioning                Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>RecoverPoint                     Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>SRDF/Metro                       Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Unisphere for PowerMax           Licensed    2025-12-31         Unlimited
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>License file exported to: /tmp/fod-active-licenses.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: Command not found</code></strong> — Install the EMC Solutions Enabler package or ensure the Symmetrix CLI tools are in your PATH (verify with <code>which symlicense</code>).
+<strong><code>Error: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix ID (e.g., <code>000297900001</code>) and verify connectivity to the array with <code>symcfg list</code>.
+<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges (use <code>sudo</code> or ensure your user is in the <code>symadmin</code> group).</p>
+</div>
 <h3 id="4-collect-the-fod-license-file-details">4. Collect the FoD license file details<a class="headerlink" href="#4-collect-the-fod-license-file-details" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># The .lic file is plain text — view key fields (do NOT share publicly)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Important fields to note:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># - VENDOR_SN: the array serial number the key is bound to</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># - FEATURES: the features this key enables</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># - ExpiryDate: when the key expires (perpetual = none)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check if SN in key file matches your array SN</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN|SERIAL&quot;</span><span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Do not attach the raw key file to the SR — share only the SN and error output</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># If the licensing team requests the key file, upload only through the secure case attachment</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># The .lic file is plain text — view key fields (do NOT share publicly)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Important fields to note:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># - VENDOR_SN: the array serial number the key is bound to</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># - FEATURES: the features this key enables</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># - ExpiryDate: when the key expires (perpetual = none)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check if SN in key file matches your array SN</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN|SERIAL&quot;</span><span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Do not attach the raw key file to the SR — share only the SN and error output</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># If the licensing team requests the key file, upload only through the secure case attachment</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VENDOR_SN=SN123456789ABCDEF
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>SN=SN123456789ABCDEF
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>SERIAL=ABC-123-DEF-456
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /path/to/fod-key.lic: No such file or directory</code></strong> — Replace <code>/path/to/fod-key.lic</code> with the actual path to your license file (e.g., <code>/opt/dell/fod/licenses/array.lic</code>).
+<strong><code>grep: /path/to/fod-key.lic: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the license file.</p>
+</div>
 <h3 id="5-write-the-timeline-and-case-info">5. Write the timeline and case info<a class="headerlink" href="#5-write-the-timeline-and-case-info" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Array: PowerMax 8000 / SN: 000120000001
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Unisphere version: 9.2.0.28
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Firmware version: 5978.221.221 (PowerMaxOS)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Issue first observed: 2026-06-15 10:00 UTC
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Error message (from symlicense install):
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  SYMAPI_C_INVALID_LICENSE: License key serial number mismatch.
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  License SN: 000120000002
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Array SN:   000120000001
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>License file details:
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  Features: Cloud Tiering (FoD), Dynamic Virtual Matrix
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  Expiry: None (perpetual)
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  Key source: Dell order ORD-2026-12345
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Steps already taken:
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  - Compared chassis label SN to key file VENDOR_SN — MISMATCH found
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  - Did NOT retry the failed import
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>Root cause suspected:
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>  - Key was generated for a different array (incorrect SN binding by Dell Licensing)
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  - OR: array was recently replaced and key was not rebound for the new SN
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>Escalation needed:
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  - Dell Licensing team to re-issue key with correct SN
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Array: PowerMax 8000 / SN: 000120000001
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Unisphere version: 9.2.0.28
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Firmware version: 5978.221.221 (PowerMaxOS)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Issue first observed: 2026-06-15 10:00 UTC
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Error message (from symlicense install):
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  SYMAPI_C_INVALID_LICENSE: License key serial number mismatch.
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  License SN: 000120000002
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Array SN:   000120000001
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>License file details:
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Features: Cloud Tiering (FoD), Dynamic Virtual Matrix
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  Expiry: None (perpetual)
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  Key source: Dell order ORD-2026-12345
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Steps already taken:
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  - Compared chassis label SN to key file VENDOR_SN — MISMATCH found
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  - Did NOT retry the failed import
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>Root cause suspected:
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>  - Key was generated for a different array (incorrect SN binding by Dell Licensing)
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  - OR: array was recently replaced and key was not rebound for the new SN
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>Escalation needed:
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>  - Dell Licensing team to re-issue key with correct SN
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-dell-support-case">How to Open a Dell Support Case<a class="headerlink" href="#how-to-open-a-dell-support-case" title="Permanent link">&para;</a></h2>
@@ -9107,22 +9190,52 @@ Dell Flex on Demand (FoD) escalation: how to collect array serial number, licens
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Array SN and model — include in every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Current license state</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Test a key file (dry run — PowerMax only)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check firmware version</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Unity CLI — license and event summary</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/event/alert<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;severity eq error&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Array SN and model — include in every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Current license state</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Test a key file (dry run — PowerMax only)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Check firmware version</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Unity CLI — license and event summary</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/event/alert<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;severity eq error&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Symmetrix Model: PowerMax 2000
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>License Status: Valid
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Capacity License: 500 TB
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Installed Features: SRDF/Metro, RecoverPoint, TimeFinder
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>License Preview: Valid
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Capacity: 500 TB
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Effective Date: 2024-01-15
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Expiration Date: 2026-01-14
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Firmware Version: T253U8P1Q1
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>System Information
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    Health: OK
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    Name: UNITY-SN-APM00123456789
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    Model: Unity 380
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    Serial Number: APM00123456789
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    System Version: 5.1.0.0.5.1
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Alert Summary
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>    ID: 1847293 | Severity: Error | Source: SPA | Message: Battery backup unit degraded
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>    ID: 1847291 | Severity: Error | Source: SPB | Message: Disk 0_0_0 predictive failure
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: Command not found</code></strong> — Verify the Symmetrix CLI package is installed and /opt/emc/SYMCLI/bin is in your PATH.
+<strong><code>Error: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix ID from <code>symcfg list</code> output.
+<strong><code>uemcli: Connection refused on &lt;mgmt-ip&gt;:443</code></strong> — Confirm the management IP is reachable and the Unisphere service is running with <code>systemctl status unisphere</code>.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9159,7 +9272,7 @@ Dell Flex on Demand (FoD) escalation: how to collect array serial number, licens
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:59:33 UTC"><span class="timeago" datetime="2026-06-29T03:59:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:59:33 UTC">2026-06-29</span>
   </span>
 
     

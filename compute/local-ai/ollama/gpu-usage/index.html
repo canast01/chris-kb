@@ -7419,36 +7419,113 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ollama<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Look for: &quot;detected GPU&quot; or &quot;loaded model ... on GPU&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Hello
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>NVIDIA-SMI 535.104.05    Driver Version: 535.104.05    CUDA Version: 12.2     |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  0  NVIDIA RTX 4090      Off  | 00:1E.0     Off |                  0 |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  0%   45C    P2    89W / 575W |   7842MiB / 24576MiB |     68%      Default |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  1  NVIDIA RTX 4090      Off  | 00:1F.0     Off |                  0 |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  0%   38C    P8     5W / 575W |      0MiB / 24576MiB |      0%      Default |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;parameter_size&quot;: &quot;8.0B&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;quantization_level&quot;: &quot;Q4_K_M&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;family&quot;: &quot;llama&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;families&quot;: [&quot;llama&quot;],
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;object_type&quot;: &quot;model&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Nov 15 14:32:18 gpu-server ollama[2847]: time=2024-11-15T14:32:18.234Z level=INFO msg=&quot;detected GPU&quot; id=0 name=&quot;NVIDIA RTX 4090&quot; vram=24576000000
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Nov 15 14:32:19 gpu-server ollama[2847]: time=2024-11-15T14:32:19.567Z level=INFO msg=&quot;loaded model llama3.1:8b on GPU 0&quot; layers=33/33
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Nov 15 14:32:20 gpu-server ollama[2847]: time=2024-11-15T14:32:20.891Z level=INFO msg=&quot;inference complete&quot; duration=2.3s tokens_per_sec=45.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Ensure Ollama service is running with <code>systemctl start ollama</code> and listening on port 11434.
+<strong><code>jq: parse error: Cannot index object with string "details"</code></strong> — The API response structure differs; use <code>curl http://localhost:11434/api/show -d '{"name":"llama3.1:8b"}' | jq '.'</code> to inspect the full response first.
+<strong><code>Unit ollama.service could not be found</code></strong> — Install and enable the Ollama systemd service, or check logs directly with <code>ollama serve</code> in foreground mode instead of journalctl.</p>
+</div>
 <p>Ollama outputs the number of GPU layers loaded at model start. If <code>num_gpu: 0</code> appears, Ollama is running on CPU only.</p>
 <h2 id="cuda-setup">CUDA Setup<a class="headerlink" href="#cuda-setup" title="Permanent link">&para;</a></h2>
 <p>Ollama bundles its own CUDA libraries and only requires the NVIDIA driver — the CUDA toolkit does not need to be installed separately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify driver is present</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nvidia-smi
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check Ollama detects the GPU</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>gpu
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set specific GPU(s) (CUDA device index)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">   </span><span class="c1"># Use GPU 0 only</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w"> </span><span class="c1"># Use GPUs 0 and 1</span>
-</code></pre></div>
-<h2 id="rocm-amd-gpu-setup">ROCm (AMD GPU) Setup<a class="headerlink" href="#rocm-amd-gpu-setup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install ROCm 6.x (Ubuntu 22.04)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wget<span class="w"> </span>https://repo.radeon.com/amdgpu-install/6.1.2/ubuntu/jammy/amdgpu-install_6.1.60102-1_all.deb
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dpkg<span class="w"> </span>-i<span class="w"> </span>amdgpu-install_6.1.60102-1_all.deb
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>apt-get<span class="w"> </span>update
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>amdgpu-install<span class="w"> </span>--usecase<span class="o">=</span>rocm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify driver is present</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nvidia-smi
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check Ollama detects the GPU</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>gpu
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add user to render and video groups</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>render,video<span class="w"> </span><span class="nv">$USER</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify ROCm</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>rocm-smi
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>rocminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>gfx
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Ollama uses ROCm automatically when detected</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">HSA_OVERRIDE_GFX_VERSION</span><span class="o">=</span><span class="m">11</span>.0.0<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">  </span><span class="c1"># Override for unsupported gfx version</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set specific GPU(s) (CUDA device index)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">   </span><span class="c1"># Use GPU 0 only</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w"> </span><span class="c1"># Use GPUs 0 and 1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Fri Jan 10 14:32:15 2025
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>+---------------------------------------------------------------------------------------+
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| NVIDIA-SMI 535.104.05    Driver Version: 535.104.05    CUDA Version: 12.2             |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|---------------------------------------------------------------------------------------|
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|===============================+======================+======================|
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|   0  NVIDIA RTX 4090      Off  | 00:1F.0     Off |                  Off |
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| 30%   42C    P0    89W / 575W |   8192MiB / 24576MiB |     45%      Default |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>|   1  NVIDIA RTX 4090      Off  | 00:20.0     Off |                  Off |
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>| 25%   38C    P0    72W / 575W |   6144MiB / 24576MiB |     32%      Default |
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>+---------------------------------------------------------------------------------------+
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>time=2025-01-10T14:32:47.123Z level=INFO msg=&quot;GPU detected&quot; device_id=0 device_name=&quot;NVIDIA RTX 4090&quot; compute_capability=&quot;8.9&quot;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>time=2025-01-10T14:32:47.124Z level=INFO msg=&quot;GPU detected&quot; device_id=1 device_name=&quot;NVIDIA RTX 4090&quot; compute_capability=&quot;8.9&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></strong> — Reinstall the NVIDIA driver with <code>sudo apt install nvidia-driver-535</code> (or appropriate version) and reboot.
+<strong><code>time=2025-01-10T14:32:47.123Z level=ERROR msg="no CUDA-capable device is detected"</code></strong> — Verify GPU visibility with <code>nvidia-smi</code> and ensure <code>CUDA_VISIBLE_DEVICES</code> is not restricting access to all devices.</p>
+</div>
+<h2 id="rocm-amd-gpu-setup">ROCm (AMD GPU) Setup<a class="headerlink" href="#rocm-amd-gpu-setup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install ROCm 6.x (Ubuntu 22.04)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>wget<span class="w"> </span>https://repo.radeon.com/amdgpu-install/6.1.2/ubuntu/jammy/amdgpu-install_6.1.60102-1_all.deb
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dpkg<span class="w"> </span>-i<span class="w"> </span>amdgpu-install_6.1.60102-1_all.deb
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>apt-get<span class="w"> </span>update
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>amdgpu-install<span class="w"> </span>--usecase<span class="o">=</span>rocm
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Add user to render and video groups</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>render,video<span class="w"> </span><span class="nv">$USER</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify ROCm</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>rocm-smi
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>rocminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>gfx
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Ollama uses ROCm automatically when detected</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nv">HSA_OVERRIDE_GFX_VERSION</span><span class="o">=</span><span class="m">11</span>.0.0<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">  </span><span class="c1"># Override for unsupported gfx version</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Get:1 https://repo.radeon.com/amdgpu-install/6.1.2/ubuntu/jammy InRelease [1,247 B]
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Get:2 https://repo.radeon.com/amdgpu-install/6.1.2/ubuntu/jammy/amdgpu-install all [45.2 MB]
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Fetched 45.2 MB in 8s (5.6 MB/s)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Reading package lists... Done
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Setting up amdgpu-install (6.1.60102-1) ...
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Reading package lists... Done
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Building dependency tree... Done
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>The following NEW packages will be installed:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  rocm-core rocm-device-libs rocm-runtime hip-runtime-amd rocm-smi
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Processing triggers for man-db (2.10.2-1) ...
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ROCm version: 6.1.60102
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>GPU 0: AMD Radeon RX 7900 XTX
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  GPU Memory: 24576 MB
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Temperature: 45 C
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  GPU Load: 0 %
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>gfx1100
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>gfx1101
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Ollama running on 127.0.0.1:11434
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dpkg: error processing archive (--unpack): cannot open file '/root/amdgpu-install_6.1.60102-1_all.deb': No such file or directory</code></strong> — Run <code>wget</code> first to download the .deb file, or verify the file exists with <code>ls -la amdgpu-install*.deb</code>.
+<strong><code>usermod: user 'root' is already a member of 'render' group</code></strong> — This is informational when running as root; the command succeeds and the user is already in the required groups.
+<strong><code>rocm-smi: command not found</code></strong> — Ensure ROCm installation completed successfully by running <code>apt-get install rocm-smi</code> explicitly, or verify <code>/opt/rocm/bin</code> is in your PATH with <code>echo $PATH</code>.</p>
+</div>
 <h2 id="vram-requirements-by-model-size">VRAM Requirements by Model Size<a class="headerlink" href="#vram-requirements-by-model-size" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7506,28 +7583,81 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </table>
 <h2 id="controlling-gpu-layer-count">Controlling GPU Layer Count<a class="headerlink" href="#controlling-gpu-layer-count" title="Permanent link">&para;</a></h2>
 <p>Ollama automatically calculates how many layers fit in VRAM. Override with <code>OLLAMA_NUM_GPU</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force specific number of layers to GPU (0 = CPU only, 99 = all layers)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">OLLAMA_NUM_GPU</span><span class="o">=</span><span class="m">32</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or in Modelfile</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>FROM<span class="w"> </span>llama3.1:8b
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>PARAMETER<span class="w"> </span>num_gpu<span class="w"> </span><span class="m">32</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Force specific number of layers to GPU (0 = CPU only, 99 = all layers)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">OLLAMA_NUM_GPU</span><span class="o">=</span><span class="m">32</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or in Modelfile</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>FROM<span class="w"> </span>llama3.1:8b
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>PARAMETER<span class="w"> </span>num_gpu<span class="w"> </span><span class="m">32</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pulling manifest
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pulling 6a0746a1ec1a
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pulling 4fa551d4061c
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pulling c41d6999ee2d
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pulling 2e0d4e6c4f21
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pulling 8b6f3522f969
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>verifying sha256 digest
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>writing manifest
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>removing any unused layers
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>success
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>&gt;&gt;&gt; What is machine learning?
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It uses algorithms and statistical models to identify patterns in data and make predictions or decisions based on those patterns.
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>&gt;&gt;&gt; /bye
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: model not found</code></strong> — Run <code>ollama pull llama3.1:8b</code> first to download the model.
+<strong><code>Error: CUDA out of memory</code></strong> — Reduce <code>OLLAMA_NUM_GPU</code> value (e.g., set to 16 or 24) to offload fewer layers to GPU.</p>
+</div>
 <h2 id="multi-gpu-configuration">Multi-GPU Configuration<a class="headerlink" href="#multi-gpu-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ollama distributes layers across multiple GPUs automatically</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Check layer distribution in debug output</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:70b<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;layer&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Restrict to specific GPUs</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1,2,3<span class="w"> </span>ollama<span class="w"> </span>serve
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Monitor all GPUs during inference</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>u<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ollama distributes layers across multiple GPUs automatically</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Check layer distribution in debug output</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:70b<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;layer&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Restrict to specific GPUs</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1,2,3<span class="w"> </span>ollama<span class="w"> </span>serve
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Monitor all GPUs during inference</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>u<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[1] &quot;llm_load_tensors: ggml_cuda_host_alloc: allocated 0 bytes on CPU&quot;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[1] &quot;llm_load_tensors: offloading 48 layers to GPU 0&quot;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[1] &quot;llm_load_tensors: offloading 22 layers to GPU 1&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[1] &quot;llm_load_tensors: layer 0 -&gt; GPU 0 (2048 MB)&quot;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>[1] &quot;llm_load_tensors: layer 24 -&gt; GPU 1 (1856 MB)&quot;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[1] &quot;llm_load_tensors: layer 48 -&gt; GPU 0 (2104 MB)&quot;
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Listening on 127.0.0.1:11434
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>#gpu   pid  sm   mem   enc   dec
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>   0 12847  42  8532     0     0
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>   1 12847  38  7104     0     0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>   2 12847  15  2240     0     0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>   3 12847   8   512     0     0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>CUDA_VISIBLE_DEVICES: command not found</code></strong> — Set the environment variable before the command: <code>CUDA_VISIBLE_DEVICES=0,1,2,3 ollama serve</code> (not as a separate line).
+<strong><code>nvidia-smi: command not found</code></strong> — Install NVIDIA GPU drivers and CUDA toolkit; verify with <code>nvidia-smi</code> alone first.
+<strong><code>Error: could not connect to ollama server</code></strong> — Ensure <code>ollama serve</code> is running in another terminal before executing inference commands.</p>
+</div>
 <h2 id="flash-attention">Flash Attention<a class="headerlink" href="#flash-attention" title="Permanent link">&para;</a></h2>
 <p>Enable flash attention for lower VRAM usage and faster inference on supported models:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">OLLAMA_FLASH_ATTENTION</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">OLLAMA_FLASH_ATTENTION</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>serve
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>time=2024-01-15T09:42:33.847Z level=INFO msg=&quot;Starting Ollama server&quot;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>time=2024-01-15T09:42:33.912Z level=INFO msg=&quot;Listening on 127.0.0.1:11434&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>time=2024-01-15T09:42:34.156Z level=INFO msg=&quot;Loaded dynamic library /usr/lib/libcuda.so.1&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>time=2024-01-15T09:42:34.203Z level=INFO msg=&quot;GPU detected: NVIDIA A100 (compute capability 8.0)&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>time=2024-01-15T09:42:34.245Z level=INFO msg=&quot;Flash Attention enabled for GPU acceleration&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>time=2024-01-15T09:42:34.312Z level=INFO msg=&quot;VRAM available: 40960 MB&quot;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>time=2024-01-15T09:42:34.401Z level=INFO msg=&quot;Ollama server ready&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error loading CUDA library: libnvml.so.1: cannot open shared object file</code></strong> — Install NVIDIA GPU drivers with <code>sudo apt install nvidia-driver-550</code> or equivalent for your distribution.
+<strong><code>OLLAMA_FLASH_ATTENTION=1: command not found</code></strong> — Use <code>export OLLAMA_FLASH_ATTENTION=1</code> before running ollama serve, or run as <code>OLLAMA_FLASH_ATTENTION=1 ollama serve</code> with proper shell quoting.
+<strong><code>listen tcp 127.0.0.1:11434: bind: address already in use</code></strong> — Kill the existing ollama process with <code>pkill ollama</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</p>
+</div>
 <p>Flash attention reduces the KV cache memory footprint significantly, allowing longer context windows with less VRAM.</p>
 
 
@@ -7551,7 +7681,7 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -6816,50 +6816,259 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>telnet<span class="w"> </span>destination-host<span class="w"> </span>port
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ss<span class="w"> </span>-tulnp
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From a host behind the firewall</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>traceroute<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>telnet://&lt;dest&gt;:&lt;port&gt;<span class="w">    </span><span class="c1"># test specific TCP port</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># From Linux — test TCP port</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nc: connect to destination-host port 22 (tcp) succeeded!
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Trying destination-host...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Connected to destination-host.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Escape character is &#39;^]&#39;.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Connection closed by foreign host.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1024/sshd           
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      2048/nginx          
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      2048/nginx          
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      3072/postgres       
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>tcp6       0      0 :::22                   :::*                    LISTEN      1024/sshd           
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>udp        0      0 0.0.0.0:53              0.0.0.0:*               UNCONN      512/systemd-resolve
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PAN-OS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>log<span class="w"> </span>traffic<span class="w"> </span><span class="nv">action</span><span class="o">=</span>deny<span class="w"> </span><span class="p">|</span><span class="w"> </span>last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Linux iptables</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-v<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DPT=&lt;port&gt;&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Verify the hostname is correct and resolvable with <code>nslookup destination-host</code> or use an IP address instead.
+<strong><code>telnet: Unable to connect to remote host: Connection refused</code></strong> — Confirm the service is running on the target port with <code>ss -tulnp | grep :port</code> on the destination host.
+<strong><code>Permission denied</code></strong> — Run <code>ss -tulnp</code> with <code>sudo</code> to view process names and PIDs for all listening ports.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From a host behind the firewall</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>traceroute<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>telnet://&lt;dest&gt;:&lt;port&gt;<span class="w">    </span><span class="c1"># test specific TCP port</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># From Linux — test TCP port</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Identify which policy matched a session (PAN-OS)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>session<span class="w"> </span>all<span class="w"> </span>filter<span class="w"> </span>destination<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>destination-port<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PING 10.45.200.15 (10.45.200.15) 56(84) bytes of data.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>64 bytes from 10.45.200.15: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>64 bytes from 10.45.200.15: icmp_seq=2 ttl=64 time=2.41 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>64 bytes from 10.45.200.15: icmp_seq=3 ttl=64 time=2.38 ms
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>--- 10.45.200.15 statistics ---
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>rtt min/avg/max/stddev = 2.34/2.37/2.41/0.03 ms
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>traceroute to 10.45.200.15 (10.45.200.15), 30 hops max, 60 byte packets
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a> 1  gateway.internal (10.0.1.1)  1.23 ms  1.19 ms  1.25 ms
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a> 2  core-router-02.dc1 (10.20.0.5)  3.45 ms  3.52 ms  3.48 ms
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a> 3  10.45.200.15 (10.45.200.15)  2.38 ms  2.41 ms  2.39 ms
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>*   Trying 10.45.200.15:8443...
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>* Connected to 10.45.200.15 port 8443 (#0)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>* Trying to connect to 10.45.200.15 port 8443...
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Connection to 10.45.200.15 22 [tcp/ssh] succeeded!
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>show<span class="w"> </span>running<span class="w"> </span>nat-policy<span class="w">           </span><span class="c1"># PAN-OS</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>ip<span class="w"> </span>nat<span class="w"> </span>translations<span class="w">          </span><span class="c1"># Cisco IOS</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: sendto: Operation not permitted</code></strong> — Verify ICMP is not blocked by host firewall rules (check <code>iptables -L</code> or security group rules).
+<strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Confirm the hostname resolves correctly with <code>nslookup &lt;host&gt;</code> or use the IP address directly.
+<strong><code>curl: (7) Failed to connect to &lt;dest&gt; port &lt;port&gt;: Connection refused</code></strong> — Verify the service is running on the target host and listening on that port with <code>netstat -tlnp</code> or <code>ss -tlnp</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PAN-OS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>log<span class="w"> </span>traffic<span class="w"> </span><span class="nv">action</span><span class="o">=</span>deny<span class="w"> </span><span class="p">|</span><span class="w"> </span>last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Linux iptables</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-v<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DPT=&lt;port&gt;&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>show<span class="w"> </span>vpn-sessiondb<span class="w">                  </span><span class="c1"># all active VPN sessions</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev2<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv2 Phase 1 status</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IPsec Phase 2 status</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev1<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv1 Phase 1</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>isakmp<span class="w"> </span>sa<span class="w">               </span><span class="c1"># IKEv1 ISAKMP</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>=== PAN-OS Traffic Log (Last 100 Denied) ===
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024/01/15 14:32:18 192.168.1.105 203.0.113.42 tcp/443 deny application=ssl-tls action=deny rule=BlockMalware
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024/01/15 14:31:52 10.0.2.50 198.51.100.89 tcp/22 deny application=ssh action=deny rule=DenySSH_External
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024/01/15 14:30:15 172.16.0.200 192.0.2.15 udp/53 deny application=dns action=deny rule=BlockDNS_Tunneling
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024/01/15 14:29:44 192.168.1.110 203.0.113.100 tcp/445 deny application=smb action=deny rule=BlockSMB
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024/01/15 14:28:33 10.0.3.75 198.51.100.200 tcp/3389 deny application=rdp action=deny rule=DenyRDP_Inbound
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>...
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Total denied: 847 entries in last 24 hours
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>=== Linux iptables DROP Rules ===
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Chain INPUT (policy ACCEPT 1250K packets, 890M bytes)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    0  0 DROP       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    0  0 DROP       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3389
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    0  0 DROP       udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Chain FORWARD (policy DROP 0 packets, 0 bytes)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>=== Journalctl Filtered Output ===
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Jan 15 14:32:18 web-server-01 kernel: [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:34:56:08:00:45:00 SRC=203.0.113.42 DST=192.168.1.105 PROTO=TCP SPT=54821 DPT=443 WINDOW=65535
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Jan 15 14:31:52 web-server-01 kernel: [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:34:57:08:00:45:00 SRC=198.51.100.89 DST=10.0.2.50 PROTO=TCP SPT=49152 DPT=22 WINDOW=64240
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Jan 15 14:30:15 web-server-01 kernel: [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:34:58:08:00:45:00 SRC=192.0.2.15 DST=172.16.0.200 PROTO=UDP SPT=53 DPT=53 WINDOW=0
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show<span class="w"> </span>vpn<span class="w"> </span>ike-sa
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>vpn<span class="w"> </span>ipsec-sa
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>show<span class="w"> </span>vpn<span class="w"> </span>tunnel
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Verify you are connected to the PAN-OS device via SSH or CLI and have proper credentials;</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Identify which policy matched a session (PAN-OS)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>session<span class="w"> </span>all<span class="w"> </span>filter<span class="w"> </span>destination<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>destination-port<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ping<span class="w"> </span>&lt;remote_subnet_ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;local_subnet_ip&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>traceroute<span class="w"> </span>&lt;remote_ip&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ID    Application    Source              Destination         Sport  Dport  State      Type      Timeout
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1234  ssh            192.168.1.50        203.0.113.42        54321  22     ACTIVE     FLOW      1800
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>5678  http           192.168.1.51        203.0.113.42        54322  80     ACTIVE     FLOW      1800
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>9012  https          192.168.1.52        203.0.113.42        54323  443    ACTIVE     FLOW      1800
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Policy matched: &quot;Allow-SSH-Outbound&quot; (Policy ID: 5)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Action: allow
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Log Setting: default-log-forwarding
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check certificate validity</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert_file&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check PKI enrollment status (Cisco IOS)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>pki<span class="w"> </span>certificate
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command: show session all filter</code></strong> — Verify you are in the correct operational mode (use <code>set cli operational-mode normal</code> if in XML mode).
+<strong><code>No matching session found</code></strong> — Confirm the destination IP and port are correct, and that an active session exists (use <code>show session all</code> to list all sessions).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>show<span class="w"> </span>running<span class="w"> </span>nat-policy<span class="w">           </span><span class="c1"># PAN-OS</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>ip<span class="w"> </span>nat<span class="w"> </span>translations<span class="w">          </span><span class="c1"># Cisco IOS</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Cisco IOS — view VTI state</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>interface<span class="w"> </span>tunnel<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tunnel
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># PAN-OS output:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Total rules: 12
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Rule Name                          Source Zone    Dest Zone    Action
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>nat-rule-01                        trust          untrust      dynamic-ip-and-port
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nat-rule-02                        dmz            untrust      dynamic-ip
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>nat-rule-03                        guest          untrust      dynamic-ip-and-port
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>nat-rule-04                        trust          dmz          none
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>nat-rule-05                        untrust        trust        static-ip
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a># Cisco IOS output:
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Pro Inside global      Inside local       Outside local      Outside global
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>tcp 203.0.113.45:8080  192.168.1.100:80   10.20.30.40:443    10.20.30.40:443
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>tcp 203.0.113.46:22    192.168.1.101:22   10.20.30.41:22     10.20.30.41:22
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>udp 203.0.113.47:53    192.168.1.50:53    0.0.0.0:0          0.0.0.0:0
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>tcp 203.0.113.48:443   192.168.1.102:443  10.20.30.50:443    10.20.30.50:443
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the device is in the correct mode (enable mode for Cisco, operational mode for PAN-OS) and check the exact command syntax for your OS version.
+<strong><code>% Incomplete command</code></strong> — Add required parameters or use <code>?</code> to view available options for the specific command variant.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>show<span class="w"> </span>vpn-sessiondb<span class="w">                  </span><span class="c1"># all active VPN sessions</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev2<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv2 Phase 1 status</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IPsec Phase 2 status</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev1<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv1 Phase 1</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>isakmp<span class="w"> </span>sa<span class="w">               </span><span class="c1"># IKEv1 ISAKMP</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Total VPN-Sessiondb: 2
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Session Type: IPsecOverTcp
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Username    : vpn_user_01
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Tunnel IP   : 10.8.45.12
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Public IP   : 203.0.113.87
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Duration    : 0h:45m:32s
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Bytes Sent  : 2847392
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Bytes Rcvd  : 5124768
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Session Type: IPsecOverUdp
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Username    : vpn_user_02
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Tunnel IP   : 10.8.45.13
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Public IP   : 198.51.100.42
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Duration    : 2h:12m:15s
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Bytes Sent  : 891245
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>Bytes Rcvd  : 3456789
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>IKEv2 Phase-1 Status:
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Tunnel Name: SITE-A-TO-SITE-B
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Peer IP    : 192.0.2.50
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Status     : UP
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Encryption : AES-GCM-256
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>Integrity  : SHA512
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>DH Group   : 20
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>IPsec Phase-2 Status:
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>Tunnel Name: SITE-A-TO-SITE-B
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>Peer IP    : 192.0.2.50
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>Status     : UP
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>Encryption : AES-GCM-256
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>Protocol   : ESP
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>SPI        : 0x4a2b1c3d
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>Bytes In   : 15728640
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>Bytes Out  : 8912384
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>IKEv1 Phase-1 Status:
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>(no active sessions)
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>IKEv1 ISAKMP Status:
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>(no active sessions)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the device supports these commands; older ASA/Cisco models may use different syntax like <code>show crypto ipsec transform-set</code>.
+<strong><code>% Incomplete command.</code></strong> — Add a specific tunnel name or use <code>all</code> keyword; some devices require <code>show crypto ipsec sa detail</code> for full output.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>show<span class="w"> </span>vpn<span class="w"> </span>ike-sa
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>show<span class="w"> </span>vpn<span class="w"> </span>ipsec-sa
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>show<span class="w"> </span>vpn<span class="w"> </span>tunnel
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Tunnel ID    State      Peer Address      Encapsulation
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>1            up         203.0.113.42      tunnel
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>2            up         198.51.100.88     tunnel
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>3            down       192.0.2.15        tunnel
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>IKE SA Information:
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  Tunnel 1: IKEv2, DPD enabled, Rekey in 3421s
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  Tunnel 2: IKEv2, DPD enabled, Rekey in 7834s
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  Tunnel 3: IKEv2, DPD enabled, Rekey in 0s (inactive)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>IPSec SA Information:
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  Tunnel 1: AES-GCM-256, Replay window 64, Bytes in: 2.4GB, Bytes out: 1.8GB
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  Tunnel 2: AES-GCM-256, Replay window 64, Bytes in: 856MB, Bytes out: 923MB
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  Tunnel 3: (no active SAs)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>show: command not found</code></strong> — Verify you are in the correct CLI mode (use <code>configure</code> or <code>operational</code> mode as appropriate for your platform).
+<strong><code>VPN subsystem not initialized</code></strong> — Ensure VPN services are running with <code>systemctl status vpn</code> or equivalent platform command.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ping<span class="w"> </span>&lt;remote_subnet_ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;local_subnet_ip&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>traceroute<span class="w"> </span>&lt;remote_ip&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>PING 192.168.45.10 from 192.168.10.5: 56 data bytes
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>64 bytes from 192.168.45.10: icmp_seq=0 ttl=64 time=12.345 ms
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>64 bytes from 192.168.45.10: icmp_seq=1 ttl=64 time=11.892 ms
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>64 bytes from 192.168.45.10: icmp_seq=2 ttl=64 time=12.156 ms
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>^C
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>--- 192.168.45.10 statistics ---
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>3 packets transmitted, 3 packets received, 0.0% packet loss
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>round-trip min/avg/max/stddev = 11.892/12.131/12.345/0.187 ms
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>traceroute to 203.0.113.42 (203.0.113.42), 30 hops max, 60 byte packets
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a> 1  gateway.internal (10.0.0.1)  2.341 ms  2.156 ms  2.289 ms
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a> 2  isp-router-01.net (198.51.100.1)  8.923 ms  9.045 ms  8.756 ms
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a> 3  core-backbone-02.isp.net (198.51.100.65)  18.234 ms  18.567 ms  18.401 ms
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a> 4  203.0.113.42 (203.0.113.42)  22.145 ms  21.987 ms  22.334 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: invalid option -- 's'</code></strong> — Use <code>-S</code> (uppercase) instead of <code>source</code> for the source IP parameter: <code>ping -S &lt;local_subnet_ip&gt; &lt;remote_subnet_ip&gt;</code>.
+<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check certificate validity</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert_file&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check PKI enrollment status (Cisco IOS)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>pki<span class="w"> </span>certificate
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>notBefore=Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Certificate Information for router.example.com
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  Status: Available
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Certificate serial number: 0x4A2B1C9E7F3D5A1B
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  Certificate Usage: General Purpose
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  Issuer: CN=Internal-CA, O=Example Corp, C=US
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Subject: CN=router.example.com, O=Example Corp, C=US
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Validity: Jan 15 10:23:45 2024 GMT to Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Public Key Size: 2048 bits
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  Fingerprint (SHA1): A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D:7E:8F:9A:0B
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the certificate file path is correct and readable with <code>ls -la &lt;cert_file&gt;</code>.
+<strong><code>error in x509 certificate</code></strong> — Ensure the file is in PEM or DER format; convert with <code>openssl x509 -inform DER -in &lt;cert_file&gt; -out cert.pem</code> if needed.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Cisco IOS — view VTI state</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>show<span class="w"> </span>interface<span class="w"> </span>tunnel<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tunnel
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkDELwjAQhff-iqODm7h3EEpxEBwEcS4huaYH9VKSKyrifzexFVGy5d69j7x3hjxqIccVGHflosCboGc1VLBbXrCBM4ufgqCBR-jViBUkSrEd8FmM6OmC0dtqF31uCBWUx48IzSKWOZYMspDcW6U1hgTuFwVWUL-1LKcmQ9IOzlpiG6k6zRE5zEqW0c5HoTyhnnz6oInz19jjTVnHz-8FYL2FXDfxqutIA3GmeoL-Sv2XTJaf_L9t0nqOGlLSePNRSV-8ADOvmuE=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6891,7 +7100,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

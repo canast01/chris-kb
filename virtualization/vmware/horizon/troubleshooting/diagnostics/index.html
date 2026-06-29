@@ -9344,77 +9344,160 @@ Horizon diagnostic commands: read Connection Server debug-*.log and vlsi-*.log l
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;uag-fqdn&gt;:9443/rest/v1/config/logs/collect&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-o<span class="w"> </span>uag-logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.zip
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;ok&quot;: true,
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;version&quot;: &quot;2312.1&quot;,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;components&quot;: {
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &quot;gateway&quot;: &quot;healthy&quot;,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    &quot;authmanager&quot;: &quot;healthy&quot;,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &quot;connectionserver&quot;: &quot;connected&quot;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  }
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>}
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Connection to uag.corp.local 443 port [tcp/https] succeeded!
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Connection to uag.corp.local 8443 port [tcp/https] succeeded!
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Connection to uag.corp.local 4172 port [tcp] succeeded!
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>traceroute to uag.corp.local (10.50.12.45), 30 hops max, 60 byte packets
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a> 1  gateway.corp.local (10.50.0.1)  2.145 ms  1.987 ms  2.034 ms
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a> 2  core-rtr-01.corp.local (10.50.1.1)  8.234 ms  8.156 ms  8.301 ms
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a> 3  10.50.12.45 (10.50.12.45)  12.567 ms  12.489 ms  12.634 ms
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>Last login: Mon Jan 15 14:28:33 2024 from 10.50.8.92
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>root@uag-prod-01:~# tail -100 /opt/vmware/gateway/logs/esmanager.log
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>[2024-01-15T14:31:22.456Z] INFO  [ConnectionServer] Connected to cs-01.corp.local:443
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>[2024-01-15T14:31:45.123Z] INFO  [SessionManager] Active sessions: 247
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>[2024-01-15T14:32:01.789Z] DEBUG [AuthManager] SAML assertion validated
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>root@uag-prod-01:~# tail -100 /opt/vmware/gateway/logs/gateway.log
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>[2024-01-15T14:30:15.234Z] INFO  [GatewayServer] Listening on 0.0.0.0:443
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>[2024-01-15T14:31:33.567Z] INFO  [BlastServer] DTLS handshake successful from 192.168.1.105
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>[2024-01-15T14:32:18.901Z] INFO  [LoadBalancer] Health check passed
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>root@uag-prod-01:~# exit
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>  % Total    % Received % Xferd  Average Speed   Time     Time      Time  Current
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>                 Dload  Upload   Download Speed   Time     Time     Time  Current
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>100 18.4M  100 18.4M    0     0  2847k      0  --:--:--  --:--:--  --:--:--  0:00:06
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the UAG's CA certificate into your system trust store.
+<strong><code>Connection refused</code></strong> — Verify the UAG hostname/IP is correct, the appliance is powered on, and firewall rules allow traffic from your client to the UAG on the tested port.
+<strong><code>ssh: Permission denied (publickey,password)</code></strong> — Ensure you are using the correct root password and that SSH</p>
+</div>
 <hr />
 <h2 id="step-5-use-vdmadmin-for-session-and-assignment-diagnostics">Step 5 — Use vdmadmin for session and assignment diagnostics<a class="headerlink" href="#step-5-use-vdmadmin-for-session-and-assignment-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># vdmadmin.exe is in C:\Program Files\VMware\VMware View\Server\tools\bin\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vdmadmin</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># List active sessions for a specific pool</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-L</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Shows: user, machine, session state, protocol, start time</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># List user assignments to a dedicated desktop pool</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-A</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Shows: which machines are assigned to which users</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># List all Connection Servers in the pod</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-S</span> <span class="n">-list</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># Shows: CS hostname, version, connection state</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># For floating pool — list current desktop state</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-M</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># vdmadmin.exe is in C:\Program Files\VMware\VMware View\Server\tools\bin\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$vdmadmin</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># List active sessions for a specific pool</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-L</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Shows: user, machine, session state, protocol, start time</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># List user assignments to a dedicated desktop pool</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-A</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Shows: which machines are assigned to which users</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># List all Connection Servers in the pod</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-S</span> <span class="n">-list</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Shows: CS hostname, version, connection state</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c"># For floating pool — list current desktop state</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="p">&amp;</span> <span class="nv">$vdmadmin</span> <span class="n">-M</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
 </code></pre></div>
 <hr />
 <h2 id="step-6-query-horizon-rest-api">Step 6 — Query Horizon REST API<a class="headerlink" href="#step-6-query-horizon-rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Authenticate to Horizon REST API (Connection Server)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin).get(&#39;access_token&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$TOKEN</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Expected: JWT string; empty = auth failed (check domain suffix)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Get Connection Server health</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/monitor/connection-servers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">for cs in json.load(sys.stdin):</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">    print(cs.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, cs.get(&#39;status&#39;,&#39;&#39;), &#39;|&#39;, cs.get(&#39;cs_replications_status&#39;,&#39;&#39;))</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">&quot;</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Expected: status = OK for all Connection Servers</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Get desktop pool summary</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/inventory/v1/desktop-pools&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s2">for p in json.load(sys.stdin):</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s2">    print(p.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, p.get(&#39;type&#39;,&#39;&#39;), &#39;|&#39;, p.get(&#39;enabled&#39;,&#39;&#39;))</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s2">&quot;</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="c1"># Get active sessions count</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/monitor/v2/sessions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate to Horizon REST API (Connection Server)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin).get(&#39;access_token&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$TOKEN</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected: JWT string; empty = auth failed (check domain suffix)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Get Connection Server health</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/monitor/connection-servers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">import json,sys</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">for cs in json.load(sys.stdin):</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">    print(cs.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, cs.get(&#39;status&#39;,&#39;&#39;), &#39;|&#39;, cs.get(&#39;cs_replications_status&#39;,&#39;&#39;))</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Expected: status = OK for all Connection Servers</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Get desktop pool summary</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/inventory/v1/desktop-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s2">import json,sys</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s2">for p in json.load(sys.stdin):</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="s2">    print(p.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, p.get(&#39;type&#39;,&#39;&#39;), &#39;|&#39;, p.get(&#39;enabled&#39;,&#39;&#39;))</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1"># Get active sessions count</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span><span class="s2">&quot;https://&lt;cs-fqdn&gt;/rest/monitor/v2/sessions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImRvbWFpbiI6ImNvcnAiLCJleHAiOjE3MDk4MzIwMDB9.a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cs-prod-01.corp.local | OK | OK
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cs-prod-02.corp.local | OK | OK
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>cs-prod-03.corp.local | OK | OK
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>POOL-WIN10-PERSISTENT | MANAGED | true
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>POOL-WIN11-FLOATING | MANAGED | true
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>POOL-LINUX-KIOSK | MANAGED | false
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>{
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;query_filter_and&quot;: [],
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;query_filter_or&quot;: [],
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;offset&quot;: 0,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;limit&quot;: 100,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  &quot;sort_by&quot;: &quot;session_id&quot;,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;sort_order&quot;: &quot;asc&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;results&quot;: [
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    {
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>      &quot;session_id&quot;: &quot;s-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p&quot;,
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>      &quot;user_id&quot;: &quot;corp\\jsmith&quot;,
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>      &quot;desktop_id&quot;: &quot;POOL-WIN10-PERSISTENT_1&quot;,
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>      &quot;state&quot;: &quot;CONNECTED&quot;,
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>      &quot;start_time&quot;: 1709745600000
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    },
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    {
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>      &quot;session_id&quot;: &quot;s-2x3y4z5a-6b7c-8d9e-0f1g-2h3i4j5k6l7m&quot;,
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>      &quot;user_id&quot;: &quot;corp\\mchen&quot;,
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>      &quot;desktop_id&quot;: &quot;POOL-WIN11-FLOATING_42&quot;,
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>      &quot;state&quot;: &quot;CONNECTED&quot;,
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>      &quot;start_time&quot;: 1709746200000
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    },
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>    {
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>      &quot;session_id&quot;: &quot;s-3p4q5r6s-7t8u-9v0w-1x2y-3z4a5b6c7d8e&quot;,
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>      &quot;user_id&quot;: &quot;corp\\dwalker&quot;,
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>      &quot;desktop_id&quot;: &quot;POOL-LINUX-KIOSK_7&quot;,
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>      &quot;state&quot;: &quot;IDLE&quot;,
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>      &quot;start_time&quot;: 1709740800000
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    }
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>  ],
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>  &quot;total&quot;: 3
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error":"Invalid credentials","error_code":"INVALID_CREDENTIALS"}</code></strong> — Verify the username, password, and domain are correct; check that the admin account is not locked.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command (already present) or import the Connection Server's CA certificate into your system trust store.
+<strong><code>jq: parse error: Cannot index string with string "access_token"</code></strong> — Ensure the login endpoint returned valid JSON; check that <code>&lt;cs-fqdn&gt;</code> resolves and the Connection Server is responding on port 443.</p>
+</div>
 <hr />
 <h2 id="step-7-collect-horizon-support-bundle">Step 7 — Collect Horizon support bundle<a class="headerlink" href="#step-7-collect-horizon-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Via Horizon Admin UI (recommended for CS logs + vCenter events)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Navigate to: Horizon Admin → Troubleshooting → Generate Support Bundle</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># Click: Generate → Download</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># The bundle includes: all CS log files, ADAM DB export, event log, vCenter events</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Via PowerShell on Connection Server (if UI is unavailable)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># The bundle location after UI generation:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;C:\ProgramData\VMware\VDM\logs\*bundle*&quot;</span> <span class="p">|</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># For escalation, include:</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># - Horizon support bundle (from CS or Admin UI)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># - Horizon Agent debug log from affected desktop VM</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># - UAG log bundle (from UAG REST API)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># - Session ID or username, time of failure, and error code from the UI or client</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Via Horizon Admin UI (recommended for CS logs + vCenter events)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Navigate to: Horizon Admin → Troubleshooting → Generate Support Bundle</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># Click: Generate → Download</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># The bundle includes: all CS log files, ADAM DB export, event log, vCenter events</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Via PowerShell on Connection Server (if UI is unavailable)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># The bundle location after UI generation:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;C:\ProgramData\VMware\VDM\logs\*bundle*&quot;</span> <span class="p">|</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># For escalation, include:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># - Horizon support bundle (from CS or Admin UI)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c"># - Horizon Agent debug log from affected desktop VM</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c"># - UAG log bundle (from UAG REST API)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c"># - Session ID or username, time of failure, and error code from the UI or client</span>
 </code></pre></div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9500,7 +9583,7 @@ Horizon diagnostic commands: read Connection Server debug-*.log and vlsi-*.log l
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

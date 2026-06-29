@@ -7833,159 +7833,371 @@ Linux diagnostic commands: query journald for service errors, read dmesg for har
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># If &gt; 2GB: vacuum to 7 days</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>7d
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Jun 01 14:32:15 web-prod-01 nginx[2847]: error connecting to upstream: connection refused
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Jun 01 14:32:16 web-prod-01 systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Jun 01 14:32:18 web-prod-01 kernel: Out of memory: Kill process 3421 (java) score 892 or sacrifice child
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Jun 01 14:32:19 web-prod-01 kernel: Killed process 3421 (java) total-vm:4096000kB, anon-rss:3891200kB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Jun 01 14:32:22 web-prod-01 systemd[1]: systemd-journald.service: Assertion failed: n_inotify_watches &lt; n_inotify_watches_max
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Jun 01 14:33:01 web-prod-01 sshd[5612]: error: connect_to 10.42.8.15 port 22: Connection refused
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Jun 01 14:33:45 web-prod-01 kernel: audit: type=1130 audit(1748901225.123:456): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=&#39;unit=docker-compose comm=&quot;systemd&quot; exe=&quot;/lib/systemd/systemd&quot; hostname=? addr=? terminal=? res=success&#39;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Jun 01 14:25:00 web-prod-01 nginx[2847]: 2026/06/01 14:25:15 [warn] 2847#2847: *1234 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.50, server: api.internal, request: &quot;GET /health HTTP/1.1&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Jun 01 14:27:33 web-prod-01 systemd[1]: [warn] Watchdog timeout (limit 30s)!
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Jun 01 14:29:12 web-prod-01 postgresql[1923]: [warn] connection timeout after 300 seconds
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Searching for OOM/SIGKILL/timeout/refused:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Jun 01 14:32:18 web-prod-01 kernel: Out of memory: Kill process 3421 (java) score 892
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Jun 01 14:32:19 web-prod-01 kernel: Killed process 3421 (java) total-vm:4096000kB
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Jun 01 14:33:01 web-prod-01 sshd[5612]: error: connect_to 10.42.8.15 port 22: Connection refused
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Jun 01 14:29:12 web-prod-01 postgresql[1923]: connection timeout after 300 seconds
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Disk usage of journal:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Archived and volatile journals take up 1.2G on disk.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>journalctl: command not found</code></strong> — Install systemd-journal or verify systemd is running with <code>systemctl status systemd-journald</code>.
+<strong><code>Failed to get realtime timestamp: Cannot assign requested address</code></strong> — Ensure system time is synchronized with <code>timedatectl set-ntp true</code> or manually set the date.
+**`Vacuuming journal files... Deleted archived</p>
+</div>
 <hr />
 <h2 id="step-2-read-dmesg-for-kernel-and-hardware-events">Step 2 — Read dmesg for kernel and hardware events<a class="headerlink" href="#step-2-read-dmesg-for-kernel-and-hardware-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Timestamped kernel ring buffer (most recent last)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Filter for hardware errors</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn\|ECC\|MCE\|SCSI\|NVMe\|OOM&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># OOM kills (memory pressure killing processes)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Out of memory\|Killed process&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Shows: killed process name, PID, and rss (resident memory in KB at time of kill)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Storage SCSI/NVMe errors</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SCSI\|timeout\|reset\|exception\|I/O error&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Shows: device name (sda/sdb), error type, and LBA address</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># NIC errors</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;eth\|em\|bond\|link\|carrier\|reset&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># MCE (Machine Check Exceptions — hardware faults)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;MCE\|DIMM\|memory controller&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Timestamped kernel ring buffer (most recent last)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Filter for hardware errors</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn\|ECC\|MCE\|SCSI\|NVMe\|OOM&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># OOM kills (memory pressure killing processes)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Out of memory\|Killed process&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Shows: killed process name, PID, and rss (resident memory in KB at time of kill)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Storage SCSI/NVMe errors</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SCSI\|timeout\|reset\|exception\|I/O error&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Shows: device name (sda/sdb), error type, and LBA address</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># NIC errors</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;eth\|em\|bond\|link\|carrier\|reset&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># MCE (Machine Check Exceptions — hardware faults)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;MCE\|DIMM\|memory controller&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[Mon Dec 19 14:23:47 2024] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[Mon Dec 19 14:23:48 2024] usb 1-1: New USB device found, idVendor=0951, idProduct=1666, bcdDevice= 1.10
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[Mon Dec 19 14:24:12 2024] audit: type=1130 audit(1734614652.891:42): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=&#39;unit=systemd-tmpfiles-setup-dev comm=&quot;systemd&quot; exe=&quot;/lib/systemd/systemd&quot; hostname=? addr=? terminal=? res=success&#39;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>[Mon Dec 19 14:25:33 2024] WARNING: CPU: 3 PID: 8421 at drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1234 dc_create+0x4a8/0x5c0 [amdgpu]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[Mon Dec 19 14:26:01 2024] Out of memory: Kill process 2847 (java) score 312 or sacrifice child
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[Mon Dec 19 14:26:01 2024] Killed process 2847 (java) total-vm:8388608kB, anon-rss:7654321kB, file-rss:0kB, shmem-rss:0kB, UID:1001 pgtables:15234kB oom_score_adj:300
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>[Mon Dec 19 14:27:15 2024] sd 2:0:0:0: [sda] Assuming drive cache: write through
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[Mon Dec 19 14:28:42 2024] ata2.00: exception Emask 0x10 SAct 0x0 SErr 0x0 action 0x6
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>[Mon Dec 19 14:28:42 2024] ata2.00: failed command: READ DMA
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>[Mon Dec 19 14:28:42 2024] ata2.00: cmd 25/00:08:00:00:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>[Mon Dec 19 14:29:10 2024] bond0: link status definitely down for interface eth0, disabling it
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>[Mon Dec 19 14:29:11 2024] bond0: making interface eth1 the new active one
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>[Mon Dec 19 14:30:05 2024] MCE: CPU0: Thermal monitoring enabled (TM1)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>[Mon Dec 19 14:30:06 2024] EDAC sbridge MC0: HANDLING MCE MEMORY ERROR
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>[Mon Dec 19 14:30:06 2024] EDAC sbridge MC0: CPU#0_CHANNEL#0_DIMM#0 Unknown error: ADDR=0x00000000 EDAC agg=FATAL SERRORCNT=1 ERRCOUNT=1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dmesg: read kernel buffer failed: Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root user</p>
+</div>
 <hr />
 <h2 id="step-3-search-audit-log-for-selinux-denials-and-auth-events">Step 3 — Search audit log for SELinux denials and auth events<a class="headerlink" href="#step-3-search-audit-log-for-selinux-denials-and-auth-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SELinux denials (most common reason for unexpected permission denied)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Shows: type=AVC avc: denied { action } for pid=X scontext=source tcontext=target</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Summarize SELinux denials by type</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aureport<span class="w"> </span>--avc<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Failed login events today</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Shows: who tried to log in, from which terminal, and the auth result</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Changes to sensitive files</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/passwd<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Commands run via sudo today</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ausearch<span class="w"> </span>-ua<span class="w"> </span>root<span class="w"> </span>--start<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>EXECVE
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Summary report of all audit events today</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aureport<span class="w"> </span>--summary<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aureport<span class="w"> </span>--login<span class="w"> </span>--failed<span class="w"> </span>--start<span class="w"> </span>today
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SELinux denials (most common reason for unexpected permission denied)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Shows: type=AVC avc: denied { action } for pid=X scontext=source tcontext=target</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Summarize SELinux denials by type</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aureport<span class="w"> </span>--avc<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Failed login events today</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Shows: who tried to log in, from which terminal, and the auth result</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Changes to sensitive files</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/passwd<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Commands run via sudo today</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ausearch<span class="w"> </span>-ua<span class="w"> </span>root<span class="w"> </span>--start<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>EXECVE
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Summary report of all audit events today</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>aureport<span class="w"> </span>--summary<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>aureport<span class="w"> </span>--login<span class="w"> </span>--failed<span class="w"> </span>--start<span class="w"> </span>today
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>time-&gt;Thu Dec 19 10:34:22 2024
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>type=AVC msg=audit(1734607462.891:2847): avc:  denied  { read } for  pid=3421 comm=&quot;httpd&quot; name=&quot;shadow&quot; dev=&quot;dm-0&quot; ino=1048592 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:shadow_t:s0 tclass=file permissive=0
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>type=AVC msg=audit(1734607463.102:2848): avc:  denied  { write } for  pid=5847 comm=&quot;nginx&quot; name=&quot;access.log&quot; dev=&quot;dm-0&quot; ino=1048601 scontext=system_u:system_r:nginx_t:s0 tcontext=system_u:object_r:var_log_t:s0 tclass=file permissive=0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>AVC Report
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a># total  type
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2         denied
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>----
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>USER_AUTH Report
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>type=USER_AUTH msg=audit(1734607891.445:2849): pid=892 uid=0 auid=1001 ses=15 msg=&#39;op=PAM:authentication acct=&quot;admin&quot; exe=&quot;/usr/sbin/sshd&quot; hostname=192.168.1.50 addr=192.168.1.50 terminal=ssh res=failed&#39;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>type=USER_AUTH msg=audit(1734607902.556:2850): pid=893 uid=0 auid=4294967295 ses=4294967295 msg=&#39;op=PAM:authentication acct=&quot;root&quot; exe=&quot;/usr/sbin/sshd&quot; hostname=10.0.0.15 addr=10.0.0.15 terminal=ssh res=failed&#39;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>type=EXECVE msg=audit(1734608234.778:2851): argc=3 a0=&quot;/usr/bin/cat&quot; a1=&quot;/etc/shadow&quot; a2=(null) ppid=1234 pid=5678 auid=0 uid=0 gid=0 euid=0 egid=0 exe=&quot;/usr/bin/sudo&quot;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Summary Report
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Range of time in logs: 12/19/2024 00:00:00.000 - 12/19/2024 23:59:59.999
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Total Events: 847
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>...
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Failed Logins Report
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a># date             time     acct host
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>12/19/2024 10:15 admin    192.168.1.50
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>12/19/2024 10:22 root     10.0.0.15
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>12/19/2024 14:47 testuser 172.16.0.8
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No events found in logs.</code></strong> — Ensure auditd daemon is running with <code>systemctl start auditd</code> and audit rules are loaded with <code>auditctl -l</code>.
+<strong><code>ausearch: command not found</code></strong> — Install audit tools with <code>yum install audit</code> or <code>apt-get install auditd audispd-plugins</code>.
+<strong><code>Error: invalid start time</code></strong> — Use valid time formats like <code>--start today</code>, <code>--start recent</code>, or <code>--start 12/19/2024</code> instead of custom formats.</p>
+</div>
 <hr />
 <h2 id="step-4-diagnose-authentication-and-ssh-events">Step 4 — Diagnose authentication and SSH events<a class="headerlink" href="#step-4-diagnose-authentication-and-ssh-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Failed SSH password attempts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Successful SSH logins</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Accepted&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Account lockouts (pam_tally or pam_faillock)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pam_tally\|account locked\|pam_unix.*authentication failure&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check current pam_faillock lockout state (RHEL 8/9)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Reset a locked account</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Check sudo usage today</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>journalctl<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>sudo<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Recent su or su-l events (privilege escalation)</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>journalctl<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;su\[|su-l&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Failed SSH password attempts</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Successful SSH logins</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Accepted&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Account lockouts (pam_tally or pam_faillock)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pam_tally\|account locked\|pam_unix.*authentication failure&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check current pam_faillock lockout state (RHEL 8/9)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Reset a locked account</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check sudo usage today</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>journalctl<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>sudo<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Recent su or su-l events (privilege escalation)</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>journalctl<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;su\[|su-l&quot;</span>
 </code></pre></div>
-<hr />
+<h2 id="expected-outputnov-15-102345-prod-web-01-sshd2847-failed-password-for-invalid-user-admin-from-1921681105-port-54321-ssh2-nov-15-102412-prod-web-01-sshd2851-failed-password-for-root-from-203011342-port-45678-ssh2-nov-15-102533-prod-web-01-sshd2856-failed-password-for-invalid-user-test-from-1985110088-port-33221-ssh2-nov-15-102601-prod-web-01-sshd2861-accepted-password-for-jsmith-from-100215-port-22456-ssh2-nov-15-102645-prod-web-01-sshd2865-accepted-publickey-for-automation-from-1005200-port-51234-ssh2-nov-15-102712-prod-web-01-sshd2869-accepted-password-for-mchen-from-100388-port-48901-ssh2-nov-15-102803-prod-web-01-sshd2873-failed-password-for-invalid-user-oracle-from-203011399-port-39876-ssh2-nov-15-102915-prod-web-01-sshd2878-accepted-publickey-for-deploy-from-100645-port-52341-ssh2-nov-15-103022-prod-web-01-sshd2882-pam_unixsshdauth-authentication-failure-logname-uid0-euid0-ttyssh-ruser-rhost203011355-userroot-nov-15-103144-prod-web-01-sshd2887-pam_faillocksshdauth-consecutive-login-failures-for-user-jdoe-3-nov-15-103210-prod-web-01-sshd2891-account-locked-due-to-5-failed-logins-when-devnull-21-is-reached-user-jdoe-failures-5-latest-failure-nov-15-103209-2024-failure-since-last-success-5-time-interval-1200-attempts-left-before-permanent-lockout-0-nov-15-104522-prod-web-01-sudo-jsmith-ttypts0-pwdhomejsmith-userroot-commandbinsystemctl-restart-nginx-nov-15-104601-prod-web-01-sudo-mchen-ttypts1-pwdvarlog-userroot-commandusrbintail-f-varlogsecure-nov-15-104733-prod-web-01-sudo-automation-ttyunknown-pwdoptscripts-userroot-commandusrlocalbinbackupsh-nov-15-104815-prod-web-01-su3142-to-root-jsmith-on-pts0-nov-15-10"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Nov 15 10:23:45 prod-web-01 sshd[2847]: Failed password for invalid user admin from 192.168.1.105 port 54321 ssh2
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Nov 15 10:24:12 prod-web-01 sshd[2851]: Failed password for root from 203.0.113.42 port 45678 ssh2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Nov 15 10:25:33 prod-web-01 sshd[2856]: Failed password for invalid user test from 198.51.100.88 port 33221 ssh2
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Nov 15 10:26:01 prod-web-01 sshd[2861]: Accepted password for jsmith from 10.0.2.15 port 22456 ssh2
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Nov 15 10:26:45 prod-web-01 sshd[2865]: Accepted publickey for automation from 10.0.5.200 port 51234 ssh2
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Nov 15 10:27:12 prod-web-01 sshd[2869]: Accepted password for mchen from 10.0.3.88 port 48901 ssh2
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Nov 15 10:28:03 prod-web-01 sshd[2873]: Failed password for invalid user oracle from 203.0.113.99 port 39876 ssh2
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Nov 15 10:29:15 prod-web-01 sshd[2878]: Accepted publickey for deploy from 10.0.6.45 port 52341 ssh2
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Nov 15 10:30:22 prod-web-01 sshd[2882]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=203.0.113.55 user=root
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Nov 15 10:31:44 prod-web-01 sshd[2887]: pam_faillock(sshd:auth): Consecutive login failures for user &quot;jdoe&quot; (3)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Nov 15 10:32:10 prod-web-01 sshd[2891]: account locked due to 5 failed logins
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>When /dev/null 2&gt;&amp;1 is reached:
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>User:                    jdoe
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Failures:                5
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Latest failure:          Nov 15 10:32:09 2024
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Failure since last success: 5
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Time interval:           1200
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Attempts left before permanent lockout: 0
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Nov 15 10:45:22 prod-web-01 sudo: jsmith : TTY=pts/0 ; PWD=/home/jsmith ; USER=root ; COMMAND=/bin/systemctl restart nginx
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Nov 15 10:46:01 prod-web-01 sudo: mchen : TTY=pts/1 ; PWD=/var/log ; USER=root ; COMMAND=/usr/bin/tail -f /var/log/secure
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Nov 15 10:47:33 prod-web-01 sudo: automation : TTY=unknown ; PWD=/opt/scripts ; USER=root ; COMMAND=/usr/local/bin/backup.sh
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Nov 15 10:48:15 prod-web-01 su[3142]: (to root) jsmith on pts/0
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Nov 15 10:
+</code></pre></div><a class="headerlink" href="#expected-outputnov-15-102345-prod-web-01-sshd2847-failed-password-for-invalid-user-admin-from-1921681105-port-54321-ssh2-nov-15-102412-prod-web-01-sshd2851-failed-password-for-root-from-203011342-port-45678-ssh2-nov-15-102533-prod-web-01-sshd2856-failed-password-for-invalid-user-test-from-1985110088-port-33221-ssh2-nov-15-102601-prod-web-01-sshd2861-accepted-password-for-jsmith-from-100215-port-22456-ssh2-nov-15-102645-prod-web-01-sshd2865-accepted-publickey-for-automation-from-1005200-port-51234-ssh2-nov-15-102712-prod-web-01-sshd2869-accepted-password-for-mchen-from-100388-port-48901-ssh2-nov-15-102803-prod-web-01-sshd2873-failed-password-for-invalid-user-oracle-from-203011399-port-39876-ssh2-nov-15-102915-prod-web-01-sshd2878-accepted-publickey-for-deploy-from-100645-port-52341-ssh2-nov-15-103022-prod-web-01-sshd2882-pam_unixsshdauth-authentication-failure-logname-uid0-euid0-ttyssh-ruser-rhost203011355-userroot-nov-15-103144-prod-web-01-sshd2887-pam_faillocksshdauth-consecutive-login-failures-for-user-jdoe-3-nov-15-103210-prod-web-01-sshd2891-account-locked-due-to-5-failed-logins-when-devnull-21-is-reached-user-jdoe-failures-5-latest-failure-nov-15-103209-2024-failure-since-last-success-5-time-interval-1200-attempts-left-before-permanent-lockout-0-nov-15-104522-prod-web-01-sudo-jsmith-ttypts0-pwdhomejsmith-userroot-commandbinsystemctl-restart-nginx-nov-15-104601-prod-web-01-sudo-mchen-ttypts1-pwdvarlog-userroot-commandusrbintail-f-varlogsecure-nov-15-104733-prod-web-01-sudo-automation-ttyunknown-pwdoptscripts-userroot-commandusrlocalbinbackupsh-nov-15-104815-prod-web-01-su3142-to-root-jsmith-on-pts0-nov-15-10" title="Permanent link">&para;</a></h2>
 <h2 id="step-5-trace-a-failing-process">Step 5 — Trace a failing process<a class="headerlink" href="#step-5-trace-a-failing-process" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Attach strace to a running process (shows all system calls)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Press Ctrl-C to stop</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Summarize syscall count and time (less verbose)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>strace<span class="w"> </span>-c<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Shows table: calls, errors, total time, avg time, syscall name</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Trace a new command from start with output</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>strace<span class="w"> </span>-o<span class="w"> </span>/tmp/strace-out.txt<span class="w"> </span>&lt;command&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># List all open files and sockets for a process</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>lsof<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Count open file descriptors (check for fd leak)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ls<span class="w"> </span>/proc/&lt;PID&gt;/fd<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Compare against ulimit -n (typically 1024 or 65536 soft limit)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Check per-process memory maps</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>cat<span class="w"> </span>/proc/&lt;PID&gt;/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VmRSS|VmPeak|Threads&quot;</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Check what a process is waiting for (D = uninterruptible I/O wait)</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>ps<span class="w"> </span>-eo<span class="w"> </span>pid,comm,stat,wchan<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; D &quot;</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># D state processes = waiting for I/O (storage or network filesystem)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Attach strace to a running process (shows all system calls)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Press Ctrl-C to stop</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Summarize syscall count and time (less verbose)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>strace<span class="w"> </span>-c<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Shows table: calls, errors, total time, avg time, syscall name</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Trace a new command from start with output</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>strace<span class="w"> </span>-o<span class="w"> </span>/tmp/strace-out.txt<span class="w"> </span>&lt;command&gt;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># List all open files and sockets for a process</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>lsof<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Count open file descriptors (check for fd leak)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>ls<span class="w"> </span>/proc/&lt;PID&gt;/fd<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Compare against ulimit -n (typically 1024 or 65536 soft limit)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Check per-process memory maps</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>cat<span class="w"> </span>/proc/&lt;PID&gt;/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VmRSS|VmPeak|Threads&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># Check what a process is waiting for (D = uninterruptible I/O wait)</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>ps<span class="w"> </span>-eo<span class="w"> </span>pid,comm,stat,wchan<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; D &quot;</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># D state processes = waiting for I/O (storage or network filesystem)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$ strace -p 4521
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>strace: attach: ptrace(PTRACE_SEIZE, 4521): Operation not permitted
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>$ strace -c -p 4521
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>% time     seconds  usecs/call     calls    errors syscall
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>------ ----------- ----------- --------- --------- ----------------
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a> 45.23    0.156234          12     13045           epoll_wait
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a> 23.18    0.080156           8      9876           read
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a> 18.45    0.063789           7      8934           write
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  8.92    0.030845           5      6123           futex
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  4.22    0.014589           3      4567      102  recvfrom
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>------ ----------- ----------- --------- --------- ----------------
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>100.00    0.345613                 42545      102 total
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>$ strace -o /tmp/strace-out.txt /usr/bin/curl https://example.com
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>100  1234  100  1234    0     0   5678      0 --:--:-- --:--:-- --:--:--     0
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>$ lsof -p 8934
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>COMMAND    PID USER   FD   TYPE             DEVICE SIZE/OFF       NODE NAME
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>nginx    8934 www-data cwd    DIR                8,1     4096    1048577 /var/www
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>nginx    8934 www-data rtd    DIR                8,1     4096          2 /
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>nginx    8934 www-data txt    REG                8,1   987654      65432 /usr/sbin/nginx
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>nginx    8934 www-data mem    REG                8,1  2097152      78901 /lib/x86_64-linux-gnu/libc.so.6
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>nginx    8934 www-data    0u   CHR                1,3      0t0       6045 /dev/null
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>nginx    8934 www-data    3u  IPv4           234567      0t0        TCP *:80 (LISTEN)
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>nginx    8934 www-data    4u  IPv4           234568      0t0        TCP *:443 (LISTEN)
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>$ ls /proc/8934/fd | wc -l
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>42
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>$ cat /proc/8934/status | grep -E &quot;VmRSS|VmPeak|Threads&quot;
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>VmPeak:   456789 kB
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>VmRSS:     234567 kB
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>Threads:    8
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>$ ps -eo pid,comm,stat,wchan | grep &quot; D &quot;
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a> 2847 kworker/u8:2    D  io_schedule
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a> 5634 java             D  wait_on_page_bit_killable
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>strace: attach: ptrace(PTRACE_SEIZE, &lt;PID&gt;): Operation not permitted</code></strong> — Run strace with <code>sudo</code> or ensure the user has CAP_SYS_PTRACE capability.
+<strong><code>lsof: command not found</code></strong> — Install lsof with <code>apt-get install lsof</code> (Debian/Ubuntu) or <code>yum install lsof</code> (</p>
+</div>
 <hr />
 <h2 id="step-6-profile-performance">Step 6 — Profile performance<a class="headerlink" href="#step-6-profile-performance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Memory, swap, and I/O per second (run for 10 iterations)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Columns: r=run queue, b=blocked, swpd=swap, bi/bo=block I/O, wa=wait%</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># CPU utilization per second (10 samples)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sar<span class="w"> </span>-u<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># %user, %system, %iowait — iowait &gt; 20% = storage bottleneck</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Disk I/O per device (1-second intervals)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Key: await (avg wait ms); util% (device saturation); &gt; 20ms await or &gt; 80% util = issue</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Top processes by CPU</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>perf<span class="w"> </span>top<span class="w"> </span>--sort<span class="w"> </span>comm
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Press Ctrl-C to stop</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Flamegraph via perf (captures 30 seconds of CPU samples)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>perf<span class="w"> </span>record<span class="w"> </span>-ag<span class="w"> </span>-F<span class="w"> </span><span class="m">99</span><span class="w"> </span>--<span class="w"> </span>sleep<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>perf<span class="w"> </span>report<span class="w"> </span>--stdio<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Network I/O per interface</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># rxkB/s and txkB/s per interface</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Find large files or directories consuming disk</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>df<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Memory, swap, and I/O per second (run for 10 iterations)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Columns: r=run queue, b=blocked, swpd=swap, bi/bo=block I/O, wa=wait%</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># CPU utilization per second (10 samples)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>sar<span class="w"> </span>-u<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># %user, %system, %iowait — iowait &gt; 20% = storage bottleneck</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Disk I/O per device (1-second intervals)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Key: await (avg wait ms); util% (device saturation); &gt; 20ms await or &gt; 80% util = issue</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Top processes by CPU</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>perf<span class="w"> </span>top<span class="w"> </span>--sort<span class="w"> </span>comm
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Press Ctrl-C to stop</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Flamegraph via perf (captures 30 seconds of CPU samples)</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>perf<span class="w"> </span>record<span class="w"> </span>-ag<span class="w"> </span>-F<span class="w"> </span><span class="m">99</span><span class="w"> </span>--<span class="w"> </span>sleep<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>perf<span class="w"> </span>report<span class="w"> </span>--stdio<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Network I/O per interface</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># rxkB/s and txkB/s per interface</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c1"># Find large files or directories consuming disk</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>df<span class="w"> </span>-h
 </code></pre></div>
-<hr />
+<h2 id="expected-outputprocs-memory-swap-io-system-cpu-r-b-swpd-free-buff-cache-si-so-bi-bo-in-cs-us-sy-id-wa-st-2-0-0-2847104-156832-3921456-0-0-12-45-1204-892-18-4-76-2-0-1-0-0-2851920-156832-3925680-0-0-8-32-1089-756-16-3-79-2-0-0-0-0-2856448-156832-3929104-0-0-4-18-987-654-14-2-82-2-0-1-0-0-2854672-156832-3927328-0-0-14-52-1156-823-19-5-74-2-0-0-0-0-2859216-156832-3931872-0-0-6-28-1021-712-15-3-80-2-0-1-0-0-2852544-156832-3925200-0-0-11-41-1098-768-17-4-77-2-0-0-0-0-2858880-156832-3930816-0-0-7-24-945-621-13-2-83-2-0-1-0-0-2855104-156832-3927040-0-0-13-48-1167-841-20-5-73-2-0-0-0-0-2860672-156832-3932528-0-0-5-19-876-589-12-1-85-2-0-0-0-0-2857936-156832-3929792-0-0-9-35-1032-701-16-3-79-2-0-linux-5150-84-generic-prod-app-01-01152025-_x86_64_-8-cpu-123456-pm-cpu-user-nice-system-iowait-steal-idle-123457-pm-all-1824-000-418-214-000-7544-123458-pm-all-1687-000-392-198-000-7723-123459-pm-all-1945-000-501-267-000-7287-123500-pm-all-1756-000-434-211-000-7600-123501-pm-all-1892-000-467-189-000-7452-linux-5150-84-generic-prod-app-01-01152025-_x86_64_-8-cpu-device-rs-ws-rmbs-wmbs-rrqms-wrqms-await-svctm-util-sda-82-124"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a> 2  0      0 2847104 156832 3921456  0    0    12    45  1204  892 18  4 76  2  0
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> 1  0      0 2851920 156832 3925680  0    0     8    32  1089  756 16  3 79  2  0
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a> 0  0      0 2856448 156832 3929104  0    0     4    18   987  654 14  2 82  2  0
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a> 1  0      0 2854672 156832 3927328  0    0    14    52  1156  823 19  5 74  2  0
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a> 0  0      0 2859216 156832 3931872  0    0     6    28  1021  712 15  3 80  2  0
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a> 1  0      0 2852544 156832 3925200  0    0    11    41  1098  768 17  4 77  2  0
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a> 0  0      0 2858880 156832 3930816  0    0     7    24   945  621 13  2 83  2  0
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a> 1  0      0 2855104 156832 3927040  0    0    13    48  1167  841 20  5 73  2  0
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a> 0  0      0 2860672 156832 3932528  0    0     5    19   876  589 12  1 85  2  0
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a> 0  0      0 2857936 156832 3929792  0    0     9    35  1032  701 16  3 79  2  0
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Linux 5.15.0-84-generic (prod-app-01)   01/15/2025  _x86_64_    (8 CPU)
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>12:34:56 PM     CPU     %user     %nice   %system   %iowait    %steal     %idle
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>12:34:57 PM     all     18.24      0.00      4.18      2.14      0.00     75.44
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>12:34:58 PM     all     16.87      0.00      3.92      1.98      0.00     77.23
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>12:34:59 PM     all     19.45      0.00      5.01      2.67      0.00     72.87
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>12:35:00 PM     all     17.56      0.00      4.34      2.11      0.00     76.00
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>12:35:01 PM     all     18.92      0.00      4.67      1.89      0.00     74.52
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Linux 5.15.0-84-generic (prod-app-01)   01/15/2025  _x86_64_    (8 CPU)
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s  await svctm  %util
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>sda               8.2    12.4
+</code></pre></div><a class="headerlink" href="#expected-outputprocs-memory-swap-io-system-cpu-r-b-swpd-free-buff-cache-si-so-bi-bo-in-cs-us-sy-id-wa-st-2-0-0-2847104-156832-3921456-0-0-12-45-1204-892-18-4-76-2-0-1-0-0-2851920-156832-3925680-0-0-8-32-1089-756-16-3-79-2-0-0-0-0-2856448-156832-3929104-0-0-4-18-987-654-14-2-82-2-0-1-0-0-2854672-156832-3927328-0-0-14-52-1156-823-19-5-74-2-0-0-0-0-2859216-156832-3931872-0-0-6-28-1021-712-15-3-80-2-0-1-0-0-2852544-156832-3925200-0-0-11-41-1098-768-17-4-77-2-0-0-0-0-2858880-156832-3930816-0-0-7-24-945-621-13-2-83-2-0-1-0-0-2855104-156832-3927040-0-0-13-48-1167-841-20-5-73-2-0-0-0-0-2860672-156832-3932528-0-0-5-19-876-589-12-1-85-2-0-0-0-0-2857936-156832-3929792-0-0-9-35-1032-701-16-3-79-2-0-linux-5150-84-generic-prod-app-01-01152025-_x86_64_-8-cpu-123456-pm-cpu-user-nice-system-iowait-steal-idle-123457-pm-all-1824-000-418-214-000-7544-123458-pm-all-1687-000-392-198-000-7723-123459-pm-all-1945-000-501-267-000-7287-123500-pm-all-1756-000-434-211-000-7600-123501-pm-all-1892-000-467-189-000-7452-linux-5150-84-generic-prod-app-01-01152025-_x86_64_-8-cpu-device-rs-ws-rmbs-wmbs-rrqms-wrqms-await-svctm-util-sda-82-124" title="Permanent link">&para;</a></h2>
 <h2 id="step-7-collect-diagnostic-bundle-for-escalation">Step 7 — Collect diagnostic bundle for escalation<a class="headerlink" href="#step-7-collect-diagnostic-bundle-for-escalation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># RHEL — generate sosreport (full diagnostic bundle)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sosreport
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output: /var/tmp/sosreport-&lt;hostname&gt;-&lt;date&gt;.tar.xz</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Prompts for a case number to embed in the filename</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Include specific plugins for targeted analysis</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>sosreport<span class="w"> </span>--only-plugins<span class="o">=</span>networking,storage,systemd
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Ubuntu — generate support bundle</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ubuntu-advantage<span class="w"> </span>collect-logs<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/linux-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>/var/log/syslog<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>/var/log/kern.log<span class="w"> </span>/var/log/messages<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Manual log collection for any distro</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/linux-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>/var/log/messages<span class="w"> </span>/var/log/secure<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>/etc/os-release<span class="w"> </span>/proc/cpuinfo
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Always include:</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-boot.txt
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>dmesg<span class="w"> </span>-T<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dmesg.txt
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>ps<span class="w"> </span>auxf<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ps-tree.txt
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span>/tmp/memory.txt
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span>/tmp/disk.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># RHEL — generate sosreport (full diagnostic bundle)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sosreport
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Output: /var/tmp/sosreport-&lt;hostname&gt;-&lt;date&gt;.tar.xz</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Prompts for a case number to embed in the filename</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Include specific plugins for targeted analysis</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>sosreport<span class="w"> </span>--only-plugins<span class="o">=</span>networking,storage,systemd
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Ubuntu — generate support bundle</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>ubuntu-advantage<span class="w"> </span>collect-logs<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/linux-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span>/var/log/syslog<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span>/var/log/kern.log<span class="w"> </span>/var/log/messages<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Manual log collection for any distro</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/linux-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span>/var/log/messages<span class="w"> </span>/var/log/secure<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span>/etc/os-release<span class="w"> </span>/proc/cpuinfo
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># Always include:</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-boot.txt
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>dmesg<span class="w"> </span>-T<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dmesg.txt
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>ps<span class="w"> </span>auxf<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ps-tree.txt
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span>/tmp/memory.txt
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span>/tmp/disk.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Please enter your case number (or leave blank): 
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Running plugins. This may take a while.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a> Setting up archive ...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>sosreport (version 4.4)
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>The following plugins are currently enabled:
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a> networking, storage, systemd
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Running plugins. This may take a while.
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>[plugin:networking] collecting network interface status
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>[plugin:storage] collecting disk and filesystem information
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>[plugin:systemd] collecting systemd journal and unit files
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Creating compressed archive...
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Your sosreport has been generated and saved in:
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  /var/tmp/sosreport-prod-web-01-20240215.tar.xz (287 MB)
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>tar: /var/log/messages: No such file or directory
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>tar: /var/log/secure: No such file or directory
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>/tmp/linux-diag-20240215.tar.gz
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>              total        used      available use%
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>Mem:           31Gi       18Gi         12Gi  59%
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Swap:          4.0Gi      512Mi        3.5Gi  13%
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>Filesystem      Size  Used Avail Use%
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>/dev/sda1       100G   67G   28G  71%
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>/dev/sda2       500G  412G   75G  83%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sosreport: command not found</code></strong> — Install sos package with <code>sudo yum install sos</code> on RHEL or <code>sudo apt install sosreport</code> on Ubuntu.
+<strong><code>tar: /var/log/messages: No such file or directory</code></strong> — Remove non-existent log paths from the tar command or add <code>2&gt;/dev/null</code> to suppress warnings; the archive will still be created with available files.
+<strong><code>Permission denied</code></strong> — Run the entire diagnostic collection with <code>sudo</code> since many log files and /proc entries require root access.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -8065,7 +8277,7 @@ Linux diagnostic commands: query journald for service errors, read dmesg for har
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

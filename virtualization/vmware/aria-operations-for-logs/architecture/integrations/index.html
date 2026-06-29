@@ -9234,66 +9234,127 @@ Integrations reference covering Integration with Aria Operations (vROps), NSX-T 
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   Hostname: vrli-prod-01.example.local
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   Port: 514
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   Protocol: udp
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   LogLevel: info
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   LogToFile: true
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   DefaultRotate: 10
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   DefaultSize: 1024
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to resolve hostname vrli-prod-01.example.local</code></strong> — Verify the FQDN is correct and that DNS resolution is working on the ESXi host with <code>nslookup vrli-prod-01.example.local</code>.
+<strong><code>Error: Connection refused to 192.168.1.50:514</code></strong> — Ensure the vRealize Log Insight server is running and listening on UDP port 514 with <code>netstat -tuln | grep 514</code> on the VRLI host.
+<strong><code>Error: This command requires root privileges</code></strong> — Run the esxcli commands as root or with appropriate sudo permissions on the ESXi host.</p>
+</div>
 <hr />
 <h2 id="nsx-t-syslog-integration">NSX-T Syslog Integration<a class="headerlink" href="#nsx-t-syslog-integration" title="Permanent link">&para;</a></h2>
 <p>Forward NSX Manager and Edge node syslog to Aria Ops for Logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via NSX-T API — add syslog exporter on NSX Manager</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-mgr-01.example.local/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;server&quot;: &quot;vrli-prod-01.example.local&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;port&quot;: 514,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;protocol&quot;: &quot;UDP&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;exporter_name&quot;: &quot;aria-ops-for-logs&quot;,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;level&quot;: &quot;INFO&quot;,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;facility&quot;: &quot;USER&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via NSX-T API — add syslog exporter on NSX Manager</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-mgr-01.example.local/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;server&quot;: &quot;vrli-prod-01.example.local&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;port&quot;: 514,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;protocol&quot;: &quot;UDP&quot;,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;exporter_name&quot;: &quot;aria-ops-for-logs&quot;,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;level&quot;: &quot;INFO&quot;,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    &quot;facility&quot;: &quot;USER&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;exporter_id&quot;: &quot;exporter-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;server&quot;: &quot;vrli-prod-01.example.local&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;port&quot;: 514,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;protocol&quot;: &quot;UDP&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;exporter_name&quot;: &quot;aria-ops-for-logs&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;level&quot;: &quot;INFO&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;facility&quot;: &quot;USER&quot;,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;status&quot;: &quot;ACTIVE&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;created_time&quot;: 1704067200000,
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  &quot;_links&quot;: {
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;self&quot;: {
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;href&quot;: &quot;/api/v1/node/services/syslog/exporters/exporter-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    }
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  }
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted if removing <code>-k</code>).
+<strong><code>{"httpStatus":401,"error_code":"UNAUTHENTICATED","module_name":"common-services","error_message":"The credentials were invalid"}</code></strong> — Verify the NSX Manager admin password is correct and URL-encode special characters in the password.
+<strong><code>{"httpStatus":400,"error_code":"INVALID_REQUEST","error_message":"Invalid facility value"}</code></strong> — Use valid syslog facility values (USER, LOCAL0–LOCAL7, DAEMON, etc.) and verify JSON syntax is valid.</p>
+</div>
 <p>For NSX Edge nodes, apply the syslog configuration via a transport node profile or per-edge configuration in NSX-T Manager UI:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>NSX-T UI → Fabric → Nodes → Edge Transport Nodes → select node → Syslog → Add
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NSX-T UI → Fabric → Nodes → Edge Transport Nodes → select node → Syslog → Add
 </code></pre></div></p>
 <hr />
 <h2 id="linux-log-forwarding-agent">Linux Log Forwarding Agent<a class="headerlink" href="#linux-log-forwarding-agent" title="Permanent link">&para;</a></h2>
 <p>Install the Aria Operations for Logs Agent (formerly vRealize Log Insight Agent) on Linux VMs for structured log collection:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Download agent from Aria Ops for Logs UI: Administration → Agents → Agent Downloads</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Transfer to target and install</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>VMware-Log-Insight-Agent-*.bin
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>./VMware-Log-Insight-Agent-*.bin
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Configure agent — edit /var/lib/loginsight-agent/liagent.ini</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="o">[</span>server<span class="o">]</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">hostname</span><span class="o">=</span>vrli-prod-01.example.local
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">port</span><span class="o">=</span><span class="m">9543</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">proto</span><span class="o">=</span>cfapi
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">ssl</span><span class="o">=</span>yes
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="o">[</span>storage<span class="o">]</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">max_disk_mb</span><span class="o">=</span><span class="m">200</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Restart agent service</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>liagentd
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>liagentd
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Verify connectivity</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>sudo<span class="w"> </span>/usr/lib/loginsight-agent/bin/liagent-binary<span class="w"> </span>verify
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Download agent from Aria Ops for Logs UI: Administration → Agents → Agent Downloads</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Transfer to target and install</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>VMware-Log-Insight-Agent-*.bin
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>./VMware-Log-Insight-Agent-*.bin
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Configure agent — edit /var/lib/loginsight-agent/liagent.ini</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="o">[</span>server<span class="o">]</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">hostname</span><span class="o">=</span>vrli-prod-01.example.local
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">port</span><span class="o">=</span><span class="m">9543</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nv">proto</span><span class="o">=</span>cfapi
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nv">ssl</span><span class="o">=</span>yes
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="o">[</span>storage<span class="o">]</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">max_disk_mb</span><span class="o">=</span><span class="m">200</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Restart agent service</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>liagentd
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>liagentd
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Verify connectivity</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>sudo<span class="w"> </span>/usr/lib/loginsight-agent/bin/liagent-binary<span class="w"> </span>verify
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Installing VMware Log Insight Agent 8.14.0 (build 21567890)...
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Extracting files to /var/lib/loginsight-agent/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Creating system user &#39;liagent&#39;...
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Installation completed successfully.
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Configuration file updated: /var/lib/loginsight-agent/liagent.ini
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Restarting liagentd service...
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>liagentd.service restarted successfully.
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>liagentd.service enabled for auto-start.
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Verifying agent connectivity...
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Agent version: 8.14.0-21567890
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Connected to: vrli-prod-01.example.local:9543 (cfapi/ssl)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Status: CONNECTED
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Last heartbeat: 2024-01-15T14:32:18Z
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Disk usage: 45 MB / 200 MB max
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>Verification completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>./VMware-Log-Insight-Agent-*.bin: Permission denied</code></strong> — Run <code>chmod +x VMware-Log-Insight-Agent-*.bin</code> before executing the installer.
+<strong><code>[server] hostname=vrli-prod-01.example.local: Name or service not known</code></strong> — Verify the VRLI hostname is resolvable by running <code>nslookup vrli-prod-01.example.local</code> and update <code>/var/lib/loginsight-agent/liagent.ini</code> with the correct IP or FQDN.
+<strong><code>liagentd.service: Unit not found.</code></strong> — Ensure the agent installation completed without errors and check <code>/var/log/loginsight-agent/liagent.log</code> for installation failures.</p>
+</div>
 <hr />
 <h2 id="windows-log-forwarding-agent">Windows Log Forwarding Agent<a class="headerlink" href="#windows-log-forwarding-agent" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Install the agent (MSI)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">msiexec</span> <span class="p">/</span><span class="n">i</span> <span class="s2">&quot;VMware-Log-Insight-Agent-*.msi&quot;</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">SERVERHOST</span><span class="p">=</span><span class="n">vrli-prod</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="n">SERVERPORT</span><span class="p">=</span><span class="n">9543</span> <span class="n">SERVERPROTOCOL</span><span class="p">=</span><span class="n">cfapi</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Verify agent service is running</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Log Insight Agent&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Configuration file location on Windows</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># C:\ProgramData\VMware\Log Insight Agent\liagent.ini</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Install the agent (MSI)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">msiexec</span> <span class="p">/</span><span class="n">i</span> <span class="s2">&quot;VMware-Log-Insight-Agent-*.msi&quot;</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">SERVERHOST</span><span class="p">=</span><span class="n">vrli-prod</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">SERVERPORT</span><span class="p">=</span><span class="n">9543</span> <span class="n">SERVERPROTOCOL</span><span class="p">=</span><span class="n">cfapi</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Verify agent service is running</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Log Insight Agent&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Configuration file location on Windows</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># C:\ProgramData\VMware\Log Insight Agent\liagent.ini</span>
 </code></pre></div>
 <hr />
 <h2 id="snmp-trap-receiver">SNMP Trap Receiver<a class="headerlink" href="#snmp-trap-receiver" title="Permanent link">&para;</a></h2>
 <p>Aria Ops for Logs can receive SNMP traps from network devices (switches, firewalls):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Administration → General → SNMP Traps → Enable SNMP Trap Receiver
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Administration → General → SNMP Traps → Enable SNMP Trap Receiver
 </code></pre></div>
 <ul>
 <li>Port: 162 (UDP)</li>
@@ -9339,18 +9400,50 @@ Integrations reference covering Integration with Aria Operations (vROps), NSX-T 
 <hr />
 <h2 id="webhook-rest-api-for-external-alerting">Webhook / REST API for External Alerting<a class="headerlink" href="#webhook-rest-api-for-external-alerting" title="Permanent link">&para;</a></h2>
 <p>Aria Ops for Logs alert notifications can POST JSON payloads to external systems (ServiceNow, Slack, PagerDuty):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Administration → Notification Channels → Add Channel → Webhook
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Administration → Notification Channels → Add Channel → Webhook
 </code></pre></div>
 <p>Provide:
 - Webhook URL (e.g., <code>https://hooks.slack.com/services/...</code>)
 - Authentication headers if required
 - Test with a sample payload</p>
 <p>Alternatively, use the REST API to query recent alerts for external integration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Get recent critical alerts</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&amp;limit=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {name: .name, status: .status, timestamp: .timestamp}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get recent critical alerts</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&amp;limit=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {name: .name, status: .status, timestamp: .timestamp}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;name&quot;: &quot;vSAN Disk Group Degraded&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;timestamp&quot;: &quot;2024-01-15T14:32:18.000Z&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>}
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>{
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  &quot;name&quot;: &quot;ESXi Host Memory Pressure&quot;,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  &quot;timestamp&quot;: &quot;2024-01-15T13:47:52.000Z&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>}
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>{
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  &quot;name&quot;: &quot;Log Storage Capacity Warning&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  &quot;status&quot;: &quot;acknowledged&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;timestamp&quot;: &quot;2024-01-15T12:15:33.000Z&quot;
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>}
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>{
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  &quot;name&quot;: &quot;Cluster Network Latency Spike&quot;,
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  &quot;timestamp&quot;: &quot;2024-01-15T11:28:09.000Z&quot;
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>}
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>{
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  &quot;name&quot;: &quot;Database Connection Pool Exhausted&quot;,
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>  &quot;status&quot;: &quot;resolved&quot;,
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>  &quot;timestamp&quot;: &quot;2024-01-15T10:05:41.000Z&quot;
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the CA certificate into your system's trust store with <code>update-ca-certificates</code>.
+<strong><code>jq: parse error: Cannot index string with string "name"</code></strong> — Verify the API response structure matches your jq filter by running <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&amp;limit=1" | jq '.'</code> to inspect the raw JSON.
+<strong><code>curl: (401) Unauthorized</code></strong> — Confirm the admin credentials are correct and the user has API access permissions in Aria Operations for Logs.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../how-it-works/">Aria Operations for Logs — How It Works</a></li>
@@ -9378,7 +9471,7 @@ Integrations reference covering Integration with Aria Operations (vROps), NSX-T 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

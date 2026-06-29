@@ -8638,22 +8638,76 @@ Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a cons
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--savings-plan-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--savings-plan-id<span class="w"> </span>&lt;savings-plan-id&gt;
 </code></pre></div>
-<h3 id="choosing-the-right-hourly-commitment">Choosing the Right Hourly Commitment<a class="headerlink" href="#choosing-the-right-hourly-commitment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use Advisor to get a recommended commitment amount</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;savings plan&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Query current compute spend to estimate commitment baseline</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--type<span class="w"> </span>Usage<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--timeframe<span class="w"> </span>MonthToDate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--dataset-aggregation<span class="w"> </span><span class="s1">&#39;{&quot;totalCost&quot;:{&quot;name&quot;:&quot;Cost&quot;,&quot;function&quot;:&quot;Sum&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--dataset-grouping<span class="w"> </span><span class="s1">&#39;[{&quot;type&quot;:&quot;Dimension&quot;,&quot;name&quot;:&quot;MeterCategory&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.rows[?@[1]==&#39;Virtual Machines&#39;]&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                             OrderId                              Status    ExpiryDate          BillingPlan
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-------------------------------  ------------------------------------  --------  -------------------  -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sp-order-prod-2024              /subscriptions/12a4b5c6-d7e8-9f0a-1b2c-3d4e5f6g7h8i/providers/Microsoft.BillingBenefits/savingsPlanOrders/sp-order-prod-2024  Active    2027-03-15           Monthly
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sp-order-dev-2024               /subscriptions/87f6e5d4-c3b2-a1f0-9e8d-7c6b5a4f3e2d/providers/Microsoft.BillingBenefits/savingsPlanOrders/sp-order-dev-2024    Active    2026-11-20           Upfront
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;id&quot;: &quot;/subscriptions/12a4b5c6-d7e8-9f0a-1b2c-3d4e5f6g7h8i/providers/Microsoft.BillingBenefits/savingsPlanOrders/sp-order-prod-2024&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;name&quot;: &quot;sp-order-prod-2024&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;status&quot;: &quot;Active&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;expiryDate&quot;: &quot;2027-03-15&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;billingPlan&quot;: &quot;Monthly&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;term&quot;: &quot;P3Y&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>}
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SavingsPlanId                    DisplayName              Status    Term    AppliedScopeType
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>---------------------------------  -----------------------  --------  ------  ------------------
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>sp-vm-prod-001                   Production VM Savings    Active    P3Y     Single
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>sp-sql-prod-002                  SQL Database Savings     Active    P3Y     Shared
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;id&quot;: &quot;/subscriptions/12a4b5c6-d7e8-9f0a-1b2c-3d4e5f6g7h8i/providers/Microsoft.BillingBenefits/savingsPlanOrders/sp-order-prod-2024/savingsPlans/sp-vm-prod-001&quot;,
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;displayName&quot;: &quot;Production VM Savings&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;status&quot;: &quot;Active&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  &quot;term&quot;: &quot;P3Y&quot;,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;appliedScopeType&quot;: &quot;Single&quot;,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;commitment&quot;: {
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    &quot;currencyCode&quot;: &quot;USD&quot;,
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    &quot;amount&quot;: 15000.00
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  }
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>}
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>(ResourceNotFound) The resource 'Microsoft.BillingBenefits/savingsPlanOrders/&lt;order-id&gt;' does not exist.</code></strong> — Verify the savings plan order ID is correct and exists in your subscription using <code>az billing savings-plan-order list</code>.
+<strong><code>(AuthorizationFailed) The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.BillingBenefits/savingsPlanOrders/read'.</code></strong> — Ensure your Azure account has Billing Reader or Owner role assigned at the subscription or billing account scope.</p>
+</div>
+<h3 id="choosing-the-right-hourly-commitment">Choosing the Right Hourly Commitment<a class="headerlink" href="#choosing-the-right-hourly-commitment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Use Advisor to get a recommended commitment amount</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;savings plan&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Query current compute spend to estimate commitment baseline</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--type<span class="w"> </span>Usage<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--timeframe<span class="w"> </span>MonthToDate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--dataset-aggregation<span class="w"> </span><span class="s1">&#39;{&quot;totalCost&quot;:{&quot;name&quot;:&quot;Cost&quot;,&quot;function&quot;:&quot;Sum&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--dataset-grouping<span class="w"> </span><span class="s1">&#39;[{&quot;type&quot;:&quot;Dimension&quot;,&quot;name&quot;:&quot;MeterCategory&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.rows[?@[1]==&#39;Virtual Machines&#39;]&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>RecommendationId                          Category    Impact    ShortDescription
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>────────────────────────────────────────  ──────────  ────────  ──────────────────────────────────────────────────────────
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>d4f8c2a1-9e3b-4d7f-b1c6-2a5e8f3d9c1b     Cost        High      Consider purchasing a compute savings plan to reduce costs
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>a7b2e9f1-3c5d-4a8b-9e2f-1d6c7a4b5e8f     Cost        Medium    Savings plan recommendation for your VM workloads
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>MeterCategory              TotalCost
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>─────────────────────────  ──────────
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Virtual Machines           $4,287.32
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Storage                    $892.15
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Bandwidth                  $156.48
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>SQL Database               $423.67
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The subscription '&lt;subscription-id&gt;' could not be found.</code></strong> — Replace <code>&lt;subscription-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code>.
+<strong><code>InvalidApiVersionForOperation: The api-version '2021-10-01' does not support operations for this resource.</code></strong> — Update the Azure CLI to the latest version with <code>az upgrade</code>.
+<strong><code>No recommendations found matching the specified criteria.</code></strong> — Ensure your subscription has been enrolled in Azure Advisor for at least 24 hours and has active compute resources.</p>
+</div>
 <h2 id="flexibility-scope">Flexibility Scope<a class="headerlink" href="#flexibility-scope" title="Permanent link">&para;</a></h2>
 <p>Savings plans apply across the breadth of Azure compute. The scope determines which subscriptions benefit.</p>
 <table>
@@ -8678,20 +8732,63 @@ Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a cons
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Update the scope of an existing savings plan</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>billing<span class="w"> </span>savings-plan-order<span class="w"> </span>savings-plan<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--savings-plan-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--savings-plan-id<span class="w"> </span>&lt;savings-plan-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--applied-scope-type<span class="w"> </span>Shared
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Update the scope of an existing savings plan</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>billing<span class="w"> </span>savings-plan-order<span class="w"> </span>savings-plan<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--savings-plan-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--savings-plan-id<span class="w"> </span>&lt;savings-plan-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--applied-scope-type<span class="w"> </span>Shared
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.BillingBenefits/savingsPlanOrders/sporder-20240115-abc123/savingsPlans/sp-789def456&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;name&quot;: &quot;sp-789def456&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;type&quot;: &quot;Microsoft.BillingBenefits/savingsPlans&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;displayName&quot;: &quot;Compute Savings Plan&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    &quot;appliedScopeType&quot;: &quot;Shared&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    &quot;appliedScopeProperties&quot;: null,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    &quot;commitment&quot;: {
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;grain&quot;: &quot;Hourly&quot;,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      &quot;currencyCode&quot;: &quot;USD&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      &quot;amount&quot;: 3650.0
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    },
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    &quot;userFriendlyAppliedScopeType&quot;: &quot;Shared&quot;,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    &quot;effectiveDateTime&quot;: &quot;2024-01-15T00:00:00Z&quot;,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    &quot;expiryDateTime&quot;: &quot;2025-01-15T00:00:00Z&quot;,
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    &quot;purchaseDateTime&quot;: &quot;2024-01-15T12:30:45Z&quot;,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    &quot;status&quot;: &quot;Active&quot;
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  }
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The savings plan order ID '&lt;order-id&gt;' does not exist or you do not have access to it.</code></strong> — Verify the order ID is correct and you have appropriate permissions on the subscription using <code>az billing savings-plan-order list</code>.
+<strong><code>Invalid appliedScopeType 'Shared'. Valid values are: 'Single', 'Shared', 'ManagementGroup'.</code></strong> — Ensure the <code>--applied-scope-type</code> parameter uses one of the three valid scope types.
+<strong><code>The savings plan cannot be updated because it is in 'Expired' status.</code></strong> — Only active or pending savings plans can be updated; check the plan status with <code>az billing savings-plan-order savings-plan show</code>.</p>
+</div>
 <h2 id="utilisation-monitoring">Utilisation Monitoring<a class="headerlink" href="#utilisation-monitoring" title="Permanent link">&para;</a></h2>
 <p>Monitor savings plan utilisation to ensure the committed hourly spend is being consumed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get utilisation summary for a savings plan</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>consumption<span class="w"> </span>savings-plan-utilization-summary<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--savings-plan-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--grain<span class="w"> </span>daily<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get utilisation summary for a savings plan</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>consumption<span class="w"> </span>savings-plan-utilization-summary<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--savings-plan-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--grain<span class="w"> </span>daily<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Grain    UsageDate            UtilizationPercentage    TotalHours    UsedHours
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-------  -------------------  ----------------------  -----------  -----------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Daily    2024-01-15T00:00:00Z  87.5                    24           21
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Daily    2024-01-16T00:00:00Z  92.3                    24           22.15
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Daily    2024-01-17T00:00:00Z  78.9                    24           18.94
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Daily    2024-01-18T00:00:00Z  100.0                   24           24
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Daily    2024-01-19T00:00:00Z  65.4                    24           15.7
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Daily    2024-01-20T00:00:00Z  81.2                    24           19.49
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The provided savings plan order ID is invalid or does not exist.</code></strong> — Verify the order ID format and confirm it exists in your subscription using <code>az consumption savings-plan-order list</code>.
+<strong><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Consumption/savingsPlanOrders/read'.</code></strong> — Ensure your Azure account has the Reader or Contributor role assigned on the subscription or savings plan resource.
+<strong><code>--savings-plan-order-id: expected one argument</code></strong> — Replace <code>&lt;order-id&gt;</code> with an actual savings plan order ID value (e.g., <code>spplan-12345678-1234-1234-1234-123456789012</code>).</p>
+</div>
 <h3 id="utilisation-benchmarks">Utilisation Benchmarks<a class="headerlink" href="#utilisation-benchmarks" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8783,7 +8880,7 @@ Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a cons
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

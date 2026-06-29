@@ -9215,47 +9215,159 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/consistency-groups/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    Name                              Enabled  Detached  Operational  Transferring
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    cg-prod-db-01                     true     false     true         false
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    cg-prod-db-02                     true     false     true         false
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    cg-prod-app-tier                  true     false     true         false
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    cg-dr-replica-01                  true     false     false        true
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    cg-archive-backup                 false    false     true         false
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VPlexcli:/&gt; ll /clusters/cluster-2/consistency-groups/
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    Name                              Enabled  Detached  Operational  Transferring
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    cg-prod-db-01                     true     false     true         false
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    cg-prod-db-02                     true     false     true         false
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    cg-prod-app-tier                  true     false     true         false
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    cg-dr-replica-02                  true     false     true         false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid path /clusters/cluster-2/consistency-groups/</code></strong> — Verify cluster-2 exists with <code>ll /clusters/</code> and confirm the cluster name spelling.
+<strong><code>Error: Permission denied accessing consistency-groups</code></strong> — Ensure your VPlexcli user role has read permissions for consistency group objects; contact your VPLEX administrator.</p>
+</div>
 <h3 id="view-cg-details">View CG Details<a class="headerlink" href="#view-cg-details" title="Permanent link">&para;</a></h3>
 <p><img alt="View CG Details" src="../../../../../assets/vplex-proc-view-cg-details.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                                    Size      Date
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>consistency-group-1                     4.0 KB    2024-01-15 14:32:18
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>consistency-group-1/virtual-volumes     -         2024-01-15 14:32:18
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>consistency-group-1/snapshots           -         2024-01-15 14:32:18
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>consistency-group-1/recoverpoint        -         2024-01-15 14:32:18
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>consistency-group-1/replication-sets    -         2024-01-15 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No such object: /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/</code></strong> — Replace <code>&lt;cg_name&gt;</code> with the actual consistency group name (e.g., <code>cg-prod-db-01</code>).
+<strong><code>Permission denied</code></strong> — Verify your VPLEX user account has read access to the consistency group; contact your VPLEX administrator if needed.</p>
+</div>
 <p>Key attributes:
 - <code>operational-status</code> — should be <code>ok</code>
 - <code>type</code> — <code>local</code> or <code>distributed</code>
 - <code>virtual-volumes</code> — list of member volumes</p>
 <h3 id="create-a-consistency-group">Create a Consistency Group<a class="headerlink" href="#create-a-consistency-group" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Consistency Group" src="../../../../../assets/vplex-proc-create-a-consistency-group.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--cluster-name<span class="w"> </span>cluster-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--cluster-name<span class="w"> </span>cluster-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VPlexcli:/&gt; consistency-group create --name prod-cg-01 --cluster-name cluster-1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Created consistency group &#39;prod-cg-01&#39; with ID: 5f8c3a2b-1e4d-47f9-9c2a-8d6e1f4a9b7c
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Consistency group is now available on cluster-1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Consistency group 'prod-cg-01' already exists</code></strong> — Use a unique name or delete the existing consistency group with <code>consistency-group delete --name prod-cg-01</code> first.
+<strong><code>Error: Cluster 'cluster-1' not found or is offline</code></strong> — Verify the cluster name with <code>cluster list</code> and ensure both cluster nodes are online and communicating.</p>
+</div>
 <h3 id="add-volumes-to-a-cg">Add Volumes to a CG<a class="headerlink" href="#add-volumes-to-a-cg" title="Permanent link">&para;</a></h3>
 <p><img alt="Add Volumes to a CG" src="../../../../../assets/vplex-proc-add-volumes-to-a-cg.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>add-virtual-volume<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>add-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VPlexcli:/&gt; consistency-group add-virtual-volume \
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    --consistency-group /clusters/cluster-1/consistency-groups/prod-cg-01 \
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    --virtual-volume /clusters/cluster-1/virtual-volumes/prod-vol-app-tier
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Virtual volume &#39;prod-vol-app-tier&#39; successfully added to consistency group &#39;prod-cg-01&#39;.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Consistency group updated. Current member count: 8
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Consistency group '/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;' not found</code></strong> — Verify the consistency group name exists using <code>consistency-group list</code> and confirm the full path is correct.
+<strong><code>Error: Virtual volume '/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;' is already a member of another consistency group</code></strong> — Remove the virtual volume from its current consistency group first using <code>consistency-group remove-virtual-volume</code> before adding it to a new one.</p>
+</div>
 <h3 id="remove-a-volume-from-a-cg">Remove a Volume from a CG<a class="headerlink" href="#remove-a-volume-from-a-cg" title="Permanent link">&para;</a></h3>
 <p><img alt="Remove a Volume from a CG" src="../../../../../assets/vplex-proc-remove-a-volume-from-a-cg.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>remove-virtual-volume<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>remove-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Removing virtual volume vol-prod-db-01 from consistency group cg-finance-tier1...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Virtual volume successfully removed from consistency group.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Consistency group cg-finance-tier1 now contains 3 virtual volumes (was 4).
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Operation completed in 2.341 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Consistency group not found: /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;</code></strong> — Verify the consistency group name exists by running <code>consistency-group list</code> and use the exact path shown in the output.
+<strong><code>Error: Virtual volume is not a member of this consistency group</code></strong> — Confirm the virtual volume belongs to the target consistency group using <code>consistency-group show --consistency-group &lt;cg_name&gt;</code> before removal.
+<strong><code>Error: Cannot remove virtual volume while replication is in progress</code></strong> — Wait for any active replication or snapshot operations to complete before attempting removal.</p>
+</div>
 <h3 id="distributed-consistency-groups">Distributed Consistency Groups<a class="headerlink" href="#distributed-consistency-groups" title="Permanent link">&para;</a></h3>
 <p><img alt="Distributed Consistency Groups" src="../../../../../assets/vplex-proc-distributed-consistency-groups.svg" /></p>
 <p>For Metro configurations, CGs span both clusters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Check: type = distributed</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check: operational-status = ok on both clusters</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Check: type = distributed</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Check: operational-status = ok on both clusters</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/cg-prod-db-01/
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    name                          cg-prod-db-01
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    type                          distributed
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    operational-status            ok
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    transfer-size                 1048576
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    cluster-1-status              ok
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    cluster-2-status              ok
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    visibility                    cluster-1,cluster-2
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    recoverpoint-enabled          false
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    recoverpoint-copy-enabled     false
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    virtual-volumes              
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        vv-prod-db-01-lun1
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        vv-prod-db-01-lun2
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        vv-prod-db-01-lun3
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    storage-containers
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>        sc-array-1-pool-1
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>        sc-array-2-pool-1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid path: /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/</code></strong> — Replace <code>&lt;cg_name&gt;</code> with the actual consistency group name (e.g., <code>cg-prod-db-01</code>).
+<strong><code>operational-status = degraded</code></strong> — Check cluster connectivity and array backend status with <code>ll /clusters/cluster-1/</code> and verify no storage array failures exist.</p>
+</div>
 <h3 id="detach-re-attach-cg-metro-failover">Detach / Re-attach CG (Metro Failover)<a class="headerlink" href="#detach-re-attach-cg-metro-failover" title="Permanent link">&para;</a></h3>
 <p><img alt="Detach / Re-attach CG (Metro Failover)" src="../../../../../assets/vplex-proc-detach-re-attach-cg-metro-failover.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Detach from cluster-2 (planned maintenance or failover)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>detach<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Re-attach after recovery</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>attach<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Detach from cluster-2 (planned maintenance or failover)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>detach<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Re-attach after recovery</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>attach<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Detaching consistency group cg-prod-db-01 from cluster-2...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  Status: In Progress
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  Detach initiated at 2024-01-15T14:32:18Z
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  Estimated time remaining: 45 seconds
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Detach completed successfully.
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  Consistency group: /clusters/cluster-1/consistency-groups/cg-prod-db-01
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  Status: Detached
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  Detach completed at 2024-01-15T14:33:03Z
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Re-attaching consistency group cg-prod-db-01 to cluster-2...
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  Status: In Progress
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  Attach initiated at 2024-01-15T14:45:22Z
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  Estimated time remaining: 60 seconds
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Attach completed successfully.
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  Consistency group: /clusters/cluster-1/consistency-groups/cg-prod-db-01
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  Status: Attached
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>  Attach completed at 2024-01-15T14:46:22Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Consistency group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt; not found</code></strong> — Verify the consistency group name matches exactly and use <code>consistency-group list</code> to confirm it exists.
+<strong><code>Error: Cannot detach consistency group in use by active I/O operations</code></strong> — Quiesce all application I/O to the consistency group before attempting detach.
+<strong><code>Error: Cluster-2 is unreachable or in degraded state</code></strong> — Check cluster connectivity with <code>cluster status</code> and ensure both clusters are healthy before re-attaching.</p>
+</div>
 <h2 id="metro-operations">Metro Operations<a class="headerlink" href="#metro-operations" title="Permanent link">&para;</a></h2>
 <p>VPLEX Metro stretches virtual volumes across two sites with synchronous mirroring, enabling transparent failover.</p>
 <h3 id="metro-architecture-overview">Metro Architecture Overview<a class="headerlink" href="#metro-architecture-overview" title="Permanent link">&para;</a></h3>
@@ -9270,25 +9382,78 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U01v00AQvedXjCpVnCLaaw8gkdIqUqsiIgEHXzbrib1iM5PO7hpFCIkTPwDxC_tLmF03sUtNb56vtzPvPddO0EbHdAHimjbOZs76K-N8uICT5eIGNvqdBKHGqI1Yn8D30Jodar_GhhqPP2bfXCQMYdF-1alLxgCf-wxYpmhsrGjNsQXrU4go4e1LKNdiKObnDxhNScB9YknbiiLDxkmIOnqfMERHzQF4EjYk6VzHsmTFXJVgNFJRXtGRIsHy9R0Qy9Z4v5-E0htQVinskGoFu8vhAQhqF6K4dVKSKqqxcxbBYxMg9AP_4U75_qhXsOAj49JH090mRdb2PVnt_vTh5v0XyKm5lFxFguvkfD3fCTeSyXv49RvOz85Op9-mVY90OewO_eoVOZpnTHj4-QduMQq_vBnxo14K924sNiRSCRSQN4DGtlBYfKW8RBNxei8eSM6iHBkEpopUHlhcQ8c-bTFMAmwNJaO8Wu5QFOS2xLkjJ_Z6XI2q-mYPak7XFaGOoumZCjyJe_w7YP4GBtePfoBRoTfyU1vn8mDI57Wxw0bOzaXBKCPP5MLgiZE9ykSR95_ljjoNipXeA-UD-Tn9hMjZXx3HiaQ=?" /></p>
 <h3 id="check-distributed-device-status">Check Distributed Device Status<a class="headerlink" href="#check-distributed-device-status" title="Permanent link">&para;</a></h3>
 <p><img alt="Check Distributed Device Status" src="../../../../../assets/vplex-proc-check-distributed-device-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>VPlexcli:/&gt; ll /distributed-storage/distributed-devices/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Name                              Capacity        Status
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>device-1                          2.0 TB          ok
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>device-2                          2.0 TB          ok
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>device-3                          1.5 TB          ok
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>device-4                          1.5 TB          ok
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>VPlexcli:/&gt; ll /distributed-storage/distributed-devices/device-1/
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Name                              Value
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>capacity                          2.0 TB
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>status                            ok
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>operational-status               ok
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>health-state                      healthy
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>rebuild-progress                  100%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No such object: /distributed-storage/distributed-devices/&lt;device_name&gt;/</code></strong> — Replace <code>&lt;device_name&gt;</code> with an actual device name from the first command output (e.g., <code>device-1</code>).
+<strong><code>Connection refused</code></strong> — Ensure you are connected to the VPLEX CLI with valid credentials and the management server is reachable.</p>
+</div>
 <p>Key attributes:
 - <code>service-status: running</code> — both legs active
 - <code>operational-status: ok</code>
 - <code>active-leg</code> — which cluster is currently active</p>
 <h3 id="planned-failover-migrate-active-leg">Planned Failover (Migrate Active Leg)<a class="headerlink" href="#planned-failover-migrate-active-leg" title="Permanent link">&para;</a></h3>
 <p><img alt="Planned Failover (Migrate Active Leg)" src="../../../../../assets/vplex-proc-planned-failover-migrate-active-leg.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Move active leg to cluster-2</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--target-cluster<span class="w"> </span>cluster-2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Move active leg to cluster-2</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span>--target-cluster<span class="w"> </span>cluster-2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Checking device /distributed-storage/distributed-devices/prod-lun-001...
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Device is currently active on cluster-1
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Initiating migration to cluster-2...
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Migration started: job-id 4f8c2a91-7e3a-4d2b-9f1c-6e2d5a3b8c1a
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Progress: 10%
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Progress: 25%
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Progress: 50%
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Progress: 75%
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Progress: 100%
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Migration completed successfully
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Device /distributed-storage/distributed-devices/prod-lun-001 is now active on cluster-2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Device /distributed-storage/distributed-devices/&lt;device_name&gt; not found</code></strong> — Verify the device name is correct and exists by running <code>device list</code> to confirm the full path.
+<strong><code>Error: Cannot migrate device - active I/O detected on target cluster</code></strong> — Wait for I/O operations to complete or quiesce the device with <code>device quiesce</code> before retrying the migration.
+<strong><code>Error: Cluster cluster-2 is not in a healthy state</code></strong> — Check cluster-2 status with <code>cluster status</code> and resolve any connectivity or component failures before attempting migration.</p>
+</div>
 <h3 id="witness-configuration">Witness Configuration<a class="headerlink" href="#witness-configuration" title="Permanent link">&para;</a></h3>
 <p><img alt="Witness Configuration" src="../../../../../assets/vplex-proc-witness-configuration.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/witness/
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Check: witness-connectivity = connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/witness/
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Check: witness-connectivity = connected</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>total 48
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>drwxr-xr-x  4 root root  4096 Nov 15 10:23 .
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>drwxr-xr-x 15 root root  4096 Nov 15 10:23 ..
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>-rw-r--r--  1 root root  2048 Nov 15 10:22 witness.conf
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>-rw-r--r--  1 root root  1024 Nov 15 10:22 witness.status
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>drwxr-xr-x  2 root root  4096 Nov 15 10:23 logs
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>drwxr-xr-x  2 root root  4096 Nov 15 10:23 cache
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>witness-connectivity = connected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>witness-connectivity = disconnected</code></strong> — Verify network connectivity between VPLEX cluster and witness appliance, and confirm witness service is running with <code>service witness status</code>.
+<strong><code>ls: cannot access '/distributed-storage/witness/': No such file or directory</code></strong> — Ensure you are logged into the VPLEX management console and the witness path is mounted; check with <code>df -h | grep witness</code>.</p>
+</div>
 <h3 id="split-brain-recovery">Split-Brain Recovery<a class="headerlink" href="#split-brain-recovery" title="Permanent link">&para;</a></h3>
 <p><img alt="Split-Brain Recovery" src="../../../../../assets/vplex-proc-split-brain-recovery.svg" /></p>
 <p>If WAN COM link fails and both clusters believe they are active:</p>
@@ -9298,20 +9463,64 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 <li>Identify which cluster has the most recent I/O</li>
 <li>Suspend the stale cluster leg:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--clusters<span class="w"> </span>cluster-2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>--clusters<span class="w"> </span>cluster-2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>VPlexcli:/&gt; device suspend \
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    --device /distributed-storage/distributed-devices/dev-lun-prod-01 \
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    --clusters cluster-2
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Suspending device dev-lun-prod-01 on cluster-2...
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Device suspension initiated. Device will enter suspended state.
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Current device status: SUSPENDED
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Cluster-2 node-2: Device I/O suspended
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Cluster-2 node-1: Device I/O suspended
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Suspension completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Device not found at path /distributed-storage/distributed-devices/&lt;device_name&gt;</code></strong> — Verify the device name exists by running <code>device list</code> and use the correct path from the output.
+<strong><code>Error: Cluster cluster-2 is not reachable or does not exist</code></strong> — Confirm cluster-2 is online and accessible using <code>cluster list</code>, then retry the suspension.
+<strong><code>Error: Device is already in SUSPENDED state</code></strong> — The device is already suspended; use <code>device resume</code> if you need to restore I/O operations.</p>
+</div>
 <ol>
 <li>After link recovery, resync:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>rebuild<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>rebuild<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Rebuild initiated for device: dev-lun-prod-01
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Device: /distributed-storage/distributed-devices/dev-lun-prod-01
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Status: REBUILDING
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Progress: 0%
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Estimated time remaining: 4h 32m
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Current rebuild rate: 125 MB/s
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Rebuild started at: 2024-01-15 14:23:47 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device not found: /distributed-storage/distributed-devices/&lt;device_name&gt;</code></strong> — Verify the device name exists by running <code>device list</code> and use the correct path from the output.
+<strong><code>Device is already rebuilding</code></strong> — Wait for the current rebuild to complete or cancel it with <code>device rebuild --cancel</code> before initiating a new rebuild.
+<strong><code>Insufficient cluster resources for rebuild operation</code></strong> — Check cluster health with <code>cluster status</code> and ensure both nodes have adequate free capacity before retrying.</p>
+</div>
 <h3 id="wan-com-health">WAN COM Health<a class="headerlink" href="#wan-com-health" title="Permanent link">&para;</a></h3>
 <p><img alt="WAN COM Health" src="../../../../../assets/vplex-proc-wan-com-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/connectivity/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/connectivity/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Name                                    Size      Date
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>cluster-1-node-a                        -         Nov 15 10:23
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>cluster-1-node-b                        -         Nov 15 10:23
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>san-fabric-a                            -         Nov 15 10:18
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>san-fabric-b                            -         Nov 15 10:18
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>iscsi-initiators                        -         Nov 15 09:45
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>fc-initiators                           -         Nov 15 09:45
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>backend-storage-arrays                  -         Nov 15 10:12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid path /clusters/cluster-1/connectivity/</code></strong> — Verify the cluster name with <code>ll /clusters/</code> and confirm the connectivity directory exists in your VPLEX version.
+<strong><code>Permission denied</code></strong> — Ensure your VPLEX user account has read permissions for the cluster connectivity paths; contact your VPLEX administrator to grant access.</p>
+</div>
 <p>Monitor inter-cluster latency — VPLEX Metro requires &lt; 5ms RTT between sites.</p>
 <h3 id="common-metro-issues">Common Metro Issues<a class="headerlink" href="#common-metro-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Common Metro Issues" src="../../../../../assets/vplex-proc-common-metro-issues.svg" /></p>
@@ -9348,70 +9557,172 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 </table>
 <h2 id="create-a-virtual-volume">Create a Virtual Volume<a class="headerlink" href="#create-a-virtual-volume" title="Permanent link">&para;</a></h2>
 <p>A VPLEX virtual volume is built from a backend storage LUN through a four-step process: claim the backend storage volume, create an extent, create a device, and expose it as a virtual volume to a host cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Step 1 — Claim backend storage volume into VPLEX</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>VPlexcli:/&gt;<span class="w"> </span>storage-volume<span class="w"> </span>claim-storage-volumes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>--storage-volumes<span class="w"> </span>/clusters/cluster-1/storage-elements/storage-volumes/&lt;sv-name&gt;
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Step 2 — Create an extent from the claimed storage volume</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>VPlexcli:/&gt;<span class="w"> </span>extent<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>--storage-volume<span class="w"> </span>/clusters/cluster-1/storage-elements/storage-volumes/&lt;sv-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>--name<span class="w"> </span>&lt;extent-name&gt;
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Step 3 — Create a local device from the extent</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span>--extents<span class="w"> </span>/clusters/cluster-1/storage-elements/extents/&lt;extent-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span>--geometry<span class="w"> </span>raid-0<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span>--name<span class="w"> </span>&lt;device-name&gt;
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Step 4 — Create a virtual volume from the device</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>VPlexcli:/&gt;<span class="w"> </span>virtual-volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span>--device<span class="w"> </span>/clusters/cluster-1/devices/&lt;device-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span>--name<span class="w"> </span>&lt;vv-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Step 1 — Claim backend storage volume into VPLEX</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>VPlexcli:/&gt;<span class="w"> </span>storage-volume<span class="w"> </span>claim-storage-volumes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">    </span>--storage-volumes<span class="w"> </span>/clusters/cluster-1/storage-elements/storage-volumes/&lt;sv-name&gt;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Step 2 — Create an extent from the claimed storage volume</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>VPlexcli:/&gt;<span class="w"> </span>extent<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span>--storage-volume<span class="w"> </span>/clusters/cluster-1/storage-elements/storage-volumes/&lt;sv-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">    </span>--name<span class="w"> </span>&lt;extent-name&gt;
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Step 3 — Create a local device from the extent</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">    </span>--extents<span class="w"> </span>/clusters/cluster-1/storage-elements/extents/&lt;extent-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="w">    </span>--geometry<span class="w"> </span>raid-0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="w">    </span>--name<span class="w"> </span>&lt;device-name&gt;
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="c1"># Step 4 — Create a virtual volume from the device</span>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>VPlexcli:/&gt;<span class="w"> </span>virtual-volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="w">    </span>--device<span class="w"> </span>/clusters/cluster-1/devices/&lt;device-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a><span class="w">    </span>--name<span class="w"> </span>&lt;vv-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>VPlexcli:/&gt; storage-volume claim-storage-volumes \
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    --storage-volumes /clusters/cluster-1/storage-elements/storage-volumes/sv-prod-lun-01
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Storage volume sv-prod-lun-01 claimed successfully.
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Capacity: 500.00 GB
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>VPlexcli:/&gt; extent create \
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>    --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/sv-prod-lun-01 \
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>    --name extent-prod-01
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Extent extent-prod-01 created successfully.
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>Extent ID: 7a3f8c2e-91d4-4b6a-9e1f-2c5d8a7b4e9f
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>Size: 500.00 GB
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>VPlexcli:/&gt; device create \
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>    --extents /clusters/cluster-1/storage-elements/extents/extent-prod-01 \
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>    --geometry raid-0 \
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>    --name device-prod-01
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Device device-prod-01 created successfully.
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>Device ID: 4d2e1a9c-7f5b-4e8d-a3c6-9b2f1e7d5a8c
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>Total Capacity: 500.00 GB
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>VPlexcli:/&gt; virtual-volume create \
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>    --device /clusters/cluster-1/devices/device-prod-01 \
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>    --name vv-prod-01
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>Virtual volume vv-prod-01 created successfully.
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>Virtual Volume ID: 8f9e2d1c-5a7b-4c3e-9f1a-6d8b2e4c7a9f
+<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>Capacity: 500.00 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Storage volume sv-prod-lun-01 is already claimed</code></strong> — Verify the storage volume is unclaimed using <code>storage-volume list</code> and unclaim it if necessary with <code>storage-volume unclaim-storage-volumes</code>.
+<strong><code>Error: Extent extent-prod-01 already exists</code></strong> — Use a unique extent name or delete the existing extent with <code>extent delete --name extent-prod-01</code> before recreating.
+<strong><code>Error: Device path /clusters/cluster-1/devices/device-prod-01 not found</code></strong> — Ensure the device was created successfully in the previous step and verify the exact device name matches the path.</p>
+</div>
 <p>After creation, expose the virtual volume to hosts by adding it to a storage view: <code>storage-view add-virtual-volumes --storage-view /clusters/cluster-1/exports/storage-views/&lt;sv-name&gt; --virtual-volumes /clusters/cluster-1/virtual-volumes/&lt;vv-name&gt;</code>.</p>
 <h2 id="add-a-storage-volume-to-a-device">Add a Storage Volume to a Device<a class="headerlink" href="#add-a-storage-volume-to-a-device" title="Permanent link">&para;</a></h2>
 <p>Extend an existing VPLEX device to increase its capacity by adding a new extent. This is used to grow a virtual volume without disrupting host access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Extend an existing device with a new extent</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>extend<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-d<span class="w"> </span>&lt;device-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-e<span class="w"> </span>&lt;new-extent&gt;
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Verify device redundancy and extent membership after extension</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>show<span class="w"> </span>&lt;device-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Extend an existing device with a new extent</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>extend<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>-d<span class="w"> </span>&lt;device-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>-e<span class="w"> </span>&lt;new-extent&gt;
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1"># Verify device redundancy and extent membership after extension</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>show<span class="w"> </span>&lt;device-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>VPlexcli:/&gt; device extend -d device_lun_01 -e extent_005
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Device device_lun_01 extended successfully.
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>New extent extent_005 added to device.
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Rebuild initiated: 34% complete
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>VPlexcli:/&gt; device show device_lun_01
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>Device Name:           device_lun_01
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>Device State:          REBUILDING
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>Redundancy:            RAID-1
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Extents:               extent_001, extent_002, extent_005
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Extent States:         CLEAN, CLEAN, REBUILDING
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>Capacity:              2.0 TB
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>Rebuild Progress:      34%
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>Last Modified:         2024-01-15 14:22:33 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Extent extent_005 is already in use by device device_lun_02</code></strong> — Choose a different extent that is not currently assigned to another device.
+<strong><code>Error: Device device_lun_01 does not support additional extents (max capacity reached)</code></strong> — Verify the device's extent limit has not been exceeded or create a new device instead.</p>
+</div>
 <p>Confirm the device shows the expected number of extents and that <code>operational-status</code> is <code>ok</code> before considering the procedure complete. If the device is part of a distributed virtual volume, allow time for the Metro resync to complete.</p>
 <h2 id="migrate-a-virtual-volume-to-new-storage">Migrate a Virtual Volume to New Storage<a class="headerlink" href="#migrate-a-virtual-volume-to-new-storage" title="Permanent link">&para;</a></h2>
 <p>Data migration moves a virtual volume's backend data from one set of storage to another without host disruption. Use this when decommissioning old arrays or rebalancing across backends.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Navigate to the VPLEX management server via browser or CLI</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># VPLEX GUI: Data Services → Data Migration → New Migration</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Step 1 — Select the source virtual volume in the migration wizard</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Step 2 — Select the target backend storage (new array LUNs claimed into VPLEX)</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Step 3 — Start the migration and monitor progress</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Monitor migration progress via CLI</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>VPlexcli:/&gt;<span class="w"> </span>data-migration<span class="w"> </span>show
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Check: transfer-size, completion-percentage, status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Navigate to the VPLEX management server via browser or CLI</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="c1"># VPLEX GUI: Data Services → Data Migration → New Migration</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Step 1 — Select the source virtual volume in the migration wizard</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># Step 2 — Select the target backend storage (new array LUNs claimed into VPLEX)</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="c1"># Step 3 — Start the migration and monitor progress</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># Monitor migration progress via CLI</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>VPlexcli:/&gt;<span class="w"> </span>data-migration<span class="w"> </span>show
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="c1"># Check: transfer-size, completion-percentage, status</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>VPlexcli:/&gt; data-migration show
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>    Migration Name: vol-prod-db-001_migration
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>    Source Volume: vol-prod-db-001
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>    Target Volume: vol-prod-db-001-new
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>    Transfer Size: 2.5 TB
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>    Completion Percentage: 67%
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    Status: in-progress
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    Elapsed Time: 2h 14m
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>    Estimated Time Remaining: 1h 06m
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>    Throughput: 412 MB/s
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>    Migration ID: migration-uuid-a7f2c9e1-4b8d-11ed-9e2a
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>data-migration show: command not found</code></strong> — Ensure you are logged into the VPLEX CLI with proper credentials and in the correct management context (use <code>connect-mgmt-server</code> first).
+<strong><code>Error: No active migrations found</code></strong> — Verify the migration was actually started in the GUI under Data Services → Data Migration and that the source and target volumes are properly claimed into VPLEX.
+<strong><code>Permission denied: insufficient privileges for data-migration operations</code></strong> — Confirm your VPLEX user account has the Administrator or Data Migration operator role assigned in the management server's access control settings.</p>
+</div>
 <p>Migration runs in the background without interrupting host I/O. Monitor until <code>status: complete</code> is shown. After migration completes, verify the virtual volume now points to the new backend storage before decommissioning the old storage volumes.</p>
 <h2 id="test-metro-node-failover">Test Metro Node Failover<a class="headerlink" href="#test-metro-node-failover" title="Permanent link">&para;</a></h2>
 <p>Use this procedure to test that a VPLEX Metro consistency group correctly fails over to cluster-2 and resumes replication after the test, without production data loss.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Step 1 — Suspend the consistency group on cluster-1 (simulates site failure)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg-name&gt;
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Verify cluster-2 is serving I/O — confirm hosts on cluster-2 site have full I/O access</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/consistency-groups/&lt;cg-name&gt;/
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check: operational-status = ok; active-leg = cluster-2</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Step 2 — Resume the consistency group to restore Metro replication</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>resume<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg-name&gt;
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Step 3 — Verify Metro replication has resumed</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/*/health-indications/
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Expected: health-state: ok on both distributed device legs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Step 1 — Suspend the consistency group on cluster-1 (simulates site failure)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg-name&gt;
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Verify cluster-2 is serving I/O — confirm hosts on cluster-2 site have full I/O access</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/consistency-groups/&lt;cg-name&gt;/
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Check: operational-status = ok; active-leg = cluster-2</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="c1"># Step 2 — Resume the consistency group to restore Metro replication</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>resume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg-name&gt;
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="c1"># Step 3 — Verify Metro replication has resumed</span>
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/*/health-indications/
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a><span class="c1"># Expected: health-state: ok on both distributed device legs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>VPlexcli:/&gt; consistency-group suspend --consistency-group /clusters/cluster-1/consistency-groups/prod-cg-01
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Task: consistency-group suspend
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Status: COMPLETED
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>Completion time: 2024-01-15 14:32:18
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>VPlexcli:/&gt; ll /clusters/cluster-2/consistency-groups/prod-cg-01/
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>    operational-status: ok
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>    active-leg: cluster-2
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>    transfer-size: 1048576
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>    policy-name: sync
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>    cluster-id: 4a7c9e2b-1f3d-4e8a-b2c1-9d5f8e3a6b4c
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>    consistency-group-id: cg-prod-01
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>VPlexcli:/&gt; consistency-group resume --consistency-group /clusters/cluster-1/consistency-groups/prod-cg-01
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>Task: consistency-group resume
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>Status: COMPLETED
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>Completion time: 2024-01-15 14:33:45
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>VPlexcli:/&gt; ll /distributed-storage/distributed-devices/*/health-indications/
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>    device: dev-prod-01-leg1
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>    health-state: ok
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>    device: dev-prod-01-leg2
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>    health-state: ok
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>    replication-status: in-sync
+<a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a>    last-sync-time: 2024-01-15 14:33:52
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>consistency-group suspend: consistency group not found</code></strong> — Verify the consistency group name matches exactly and use <code>consistency-group list</code> to confirm it exists on cluster-1.
+<strong><code>consistency-group resume: operation failed — replication link down</code></strong> — Check WAN connectivity between cluster-1 and cluster-2 using <code>cluster connectivity-status</code> before resuming.</p>
+</div>
 <p>After the test, confirm all distributed devices return to <code>in-sync</code> status and that the Witness connection is healthy on both clusters before closing the change record.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9449,7 +9760,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:07:24 UTC"><span class="timeago" datetime="2026-06-29T05:07:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:07:24 UTC">2026-06-29</span>
   </span>
 
     

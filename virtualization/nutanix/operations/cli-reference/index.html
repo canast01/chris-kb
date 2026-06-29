@@ -7911,212 +7911,808 @@ Complete reference for Nutanix CLIs: ncli (cluster management), acli (AHV VM man
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Default password (change immediately): nutanix/4u</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The authenticity of host &#39;10.20.30.45 (10.20.30.45)&#39; can&#39;t be established.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ECDSA key fingerprint is SHA256:aBcD1234eFgH5678iJkL9012mNoPqRsT3456uVwXyZ.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Warning: Permanently added &#39;10.20.30.45&#39; (ECDSA) to /home/admin/.ssh/known_hosts.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nutanix@10.20.30.45&#39;s password: 
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.100
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Nutanix Controller VM (CVM) 2025.1.1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nutanix@NTNX-001-A ~$
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname &lt;cvm-ip&gt;: Name or service not known</code></strong> — Replace <code>&lt;cvm-ip&gt;</code> with the actual CVM IP address (e.g., <code>10.20.30.45</code>).
+<strong><code>Permission denied (publickey,password).</code></strong> — Verify the default credentials are still active; if changed, use the correct password or SSH key configured by your administrator.
+<strong><code>Connection refused</code></strong> — Confirm the CVM is powered on and the SSH service is running; check network connectivity to the CVM IP address.</p>
+</div>
 <hr />
 <h2 id="ncli-cluster-management">ncli — Cluster Management<a class="headerlink" href="#ncli-cluster-management" title="Permanent link">&para;</a></h2>
 <h3 id="cluster">Cluster<a class="headerlink" href="#cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info<span class="w">                          </span><span class="c1"># cluster name, VIP, version, RF</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>new-name<span class="o">=</span>&lt;name&gt;<span class="w">  </span><span class="c1"># rename cluster</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-ip-address<span class="o">=</span>&lt;vip&gt;<span class="w">  </span><span class="c1"># set/change VIP</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>dns-server-ip-address-list<span class="o">=</span>&lt;dns1&gt;,&lt;dns2&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>ntp-server-ip-address-list<span class="o">=</span>&lt;ntp1&gt;,&lt;ntp2&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node<span class="w">  </span><span class="c1"># resilience check</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-usage-stats<span class="w">               </span><span class="c1"># storage efficiency stats</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info<span class="w">                          </span><span class="c1"># cluster name, VIP, version, RF</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>new-name<span class="o">=</span>&lt;name&gt;<span class="w">  </span><span class="c1"># rename cluster</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-ip-address<span class="o">=</span>&lt;vip&gt;<span class="w">  </span><span class="c1"># set/change VIP</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>dns-server-ip-address-list<span class="o">=</span>&lt;dns1&gt;,&lt;dns2&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>ntp-server-ip-address-list<span class="o">=</span>&lt;ntp1&gt;,&lt;ntp2&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node<span class="w">  </span><span class="c1"># resilience check</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-usage-stats<span class="w">               </span><span class="c1"># storage efficiency stats</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster Information
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                           ==================
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>             Cluster Name: prod-cluster-01
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                     UUID: 00051234-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>              Cluster VIP: 10.20.30.40
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>         Cluster Timezone: UTC
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>              NTP Servers: 10.20.30.1, 10.20.30.2
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>              DNS Servers: 8.8.8.8, 8.8.4.4
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>           Replication Factor: 2
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            Cluster Version: el7.9-5.15.2-stable.1
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>         External IP Address: 10.20.30.40
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                    Domain Fault Tolerance Status
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                    ==============================
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Fault Domain Type: node
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Current Redundancy: 2
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Tolerable Node Failures: 1
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Status: HEALTHY
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>                         Cluster Usage Statistics
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>                         ========================
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  Total Capacity: 10.5 TB
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  Used Capacity: 7.2 TB
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  Free Capacity: 3.3 TB
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  Data Reduction Ratio: 2.8x
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  Efficiency: 73.5%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cluster is not in a healthy state. Please resolve cluster issues before making changes.</code></strong> — Run <code>ncli cluster get-domain-fault-tolerance-status</code> to identify unhealthy nodes and resolve issues before retrying the edit command.
+<strong><code>Error: Invalid IP address format for external-ip-address: &lt;vip&gt;</code></strong> — Ensure the VIP is a valid IPv4 address (e.g., <code>10.20.30.40</code>) and is routable on your management network.</p>
+</div>
 <h3 id="hosts-nodes">Hosts (Nodes)<a class="headerlink" href="#hosts-nodes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w">                             </span><span class="c1"># all nodes, IPs, status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncli<span class="w"> </span>host<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;<span class="w">                 </span><span class="c1"># specific node details</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ncli<span class="w"> </span>host<span class="w"> </span>enter-maintenance-mode<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># enter maintenance mode</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ncli<span class="w"> </span>host<span class="w"> </span>exit-maintenance-mode<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;id&gt;<span class="w">   </span><span class="c1"># exit maintenance mode</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w">                             </span><span class="c1"># all nodes, IPs, status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncli<span class="w"> </span>host<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;<span class="w">                 </span><span class="c1"># specific node details</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ncli<span class="w"> </span>host<span class="w"> </span>enter-maintenance-mode<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># enter maintenance mode</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ncli<span class="w"> </span>host<span class="w"> </span>exit-maintenance-mode<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;id&gt;<span class="w">   </span><span class="c1"># exit maintenance mode</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ncli host list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Host ID                              IP Address      Status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  ========================================================================================================
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  00058c84-1234-5678-abcd-ef1234567890  192.168.1.45    Normal
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  00058c84-9876-5432-dcba-fe0987654321  192.168.1.46    Normal
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  00058c84-aaaa-bbbb-cccc-dd1111222233  192.168.1.47    Normal
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  00058c84-eeee-ffff-0000-aa2222333344  192.168.1.48    Normal
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ncli host get id=00058c84-1234-5678-abcd-ef1234567890
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Host ID                              : 00058c84-1234-5678-abcd-ef1234567890
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  IP Address                           : 192.168.1.45
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Status                               : Normal
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Hypervisor Type                      : kKvm
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Number of CPU Cores                  : 32
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Memory Capacity (GiB)                : 256
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Block Serial Number                  : NTNX-ABC123XYZ456
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>ncli host enter-maintenance-mode id=00058c84-1234-5678-abcd-ef1234567890
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  Host 00058c84-1234-5678-abcd-ef1234567890 is entering maintenance mode...
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  Host successfully entered maintenance mode.
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>ncli host exit-maintenance-mode id=00058c84-1234-5678-abcd-ef1234567890
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  Host 00058c84-1234-5678-abcd-ef1234567890 is exiting maintenance mode...
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  Host successfully exited maintenance mode.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host with id '&lt;host-id&gt;' not found</code></strong> — Verify the host ID is correct by running <code>ncli host list</code> and copy the exact UUID.
+<strong><code>Error: Host is not in maintenance mode</code></strong> — Ensure the host is actually in maintenance mode before attempting to exit; check status with <code>ncli host get id=&lt;host-id&gt;</code>.
+<strong><code>Error: Unable to enter maintenance mode - VMs are still running on this host</code></strong> — Migrate or shut down all virtual machines on the host before entering maintenance mode.</p>
+</div>
 <h3 id="disks">Disks<a class="headerlink" href="#disks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w">                             </span><span class="c1"># all disks, size, tier, status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ncli<span class="w"> </span>disk<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;disk-id&gt;<span class="w">                 </span><span class="c1"># specific disk details</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>NORMAL<span class="w">           </span><span class="c1"># only non-healthy disks</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w">                             </span><span class="c1"># all disks, size, tier, status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>disk<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;disk-id&gt;<span class="w">                 </span><span class="c1"># specific disk details</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>NORMAL<span class="w">           </span><span class="c1"># only non-healthy disks</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Disk ID                          Size       Tier    Status    Node
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>disk-001a2b3c-4d5e-6f7g-8h9i   1.09 TB    SSD     NORMAL    node-1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>disk-002b3c4d-5e6f-7g8h-9i0j   1.09 TB    SSD     NORMAL    node-2
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>disk-003c4d5e-6f7g-8h9i-0j1k   1.09 TB    HDD     NORMAL    node-3
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>disk-004d5e6f-7g8h-9i0j-1k2l   1.09 TB    SSD     DEGRADED  node-1
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>disk-005e6f7g-8h9i-0j1k-2l3m   512 GB     SSD     FAILED    node-4
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Disk ID: disk-004d5e6f-7g8h-9i0j-1k2l
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Size: 1.09 TB
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Tier: SSD
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Status: DEGRADED
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Node: node-1
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Serial Number: WDC-SN850X-12345
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Firmware: 405100WD
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Disk ID                          Size       Tier    Status    Node
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>disk-004d5e6f-7g8h-9i0j-1k2l   1.09 TB    SSD     DEGRADED  node-1
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>disk-005e6f7g-8h9i-0j1k-2l3m   512 GB     SSD     FAILED    node-4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncli: command not found</code></strong> — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed and in your PATH.
+<strong><code>Error: Invalid disk ID format</code></strong> — Verify the disk ID exists by running <code>ncli disk list</code> first and use the exact ID from the output.</p>
+</div>
 <h3 id="storage-pools-and-containers">Storage Pools and Containers<a class="headerlink" href="#storage-pools-and-containers" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ncli<span class="w"> </span>sp<span class="w"> </span>list<span class="w">                               </span><span class="c1"># storage pools</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w">                              </span><span class="c1"># containers (datastores)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;<span class="w">         </span><span class="c1"># specific container details</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;name&gt;<span class="w"> </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w">  </span><span class="c1"># enable compression</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;name&gt;<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>replication-factor<span class="o">=</span><span class="m">2</span><span class="w">      </span><span class="c1"># create container</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ncli<span class="w"> </span>sp<span class="w"> </span>list<span class="w">                               </span><span class="c1"># storage pools</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w">                              </span><span class="c1"># containers (datastores)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;<span class="w">         </span><span class="c1"># specific container details</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;name&gt;<span class="w"> </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w">  </span><span class="c1"># enable compression</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;name&gt;<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>replication-factor<span class="o">=</span><span class="m">2</span><span class="w">      </span><span class="c1"># create container</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Storage Pool
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                                   ============
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Name                          Uuid
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>----                          ----
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>default-storage-pool          550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ssd-pool                      6ba7b810-9dad-11d1-80b4-00c04fd430c8
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>                                   Container
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>                                   =========
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Name                          Uuid
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>----                          ----
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>datastore-prod                7f8b1234-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>datastore-dev                 8g9c2345-6789-01bc-def0-2345678901bc
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Name                          : datastore-prod
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Uuid                          : 7f8b1234-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Compression Enabled           : true
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Replication Factor            : 2
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Advertised Capacity           : 5.00 TB
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Used Capacity                 : 2.34 TB
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>(no output — command completes silently)
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Container created successfully with UUID: 9h0d3456-7890-12cd-ef01-3456789012cd
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Storage pool 'default-storage-pool' not found</code></strong> — Verify the storage pool name with <code>ncli sp list</code> and use the correct name in the sp-name parameter.
+<strong><code>Error: Container with name '&lt;name&gt;' already exists</code></strong> — Choose a unique container name or delete the existing container with <code>ncli ctr delete name=&lt;name&gt;</code> before recreating.
+<strong><code>Error: Insufficient capacity in storage pool</code></strong> — Check available capacity with <code>ncli sp get name=&lt;pool-name&gt;</code> and reduce the container size or add more disks to the pool.</p>
+</div>
 <h3 id="virtual-disks-vdisks">Virtual Disks (vDisks)<a class="headerlink" href="#virtual-disks-vdisks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>list<span class="w">                            </span><span class="c1"># all vDisks</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>list<span class="w"> </span>container-name<span class="o">=</span>&lt;name&gt;<span class="w">     </span><span class="c1"># vDisks in a container</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;vdisk-name&gt;<span class="w">           </span><span class="c1"># specific vDisk info</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>list<span class="w">                            </span><span class="c1"># all vDisks</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>list<span class="w"> </span>container-name<span class="o">=</span>&lt;name&gt;<span class="w">     </span><span class="c1"># vDisks in a container</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ncli<span class="w"> </span>vdisk<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;vdisk-name&gt;<span class="w">           </span><span class="c1"># specific vDisk info</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ncli vdisk list
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>                                    vDisk Details
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>================================================================================
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>                              vDisk Name: vm-prod-01-disk
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>                           Container Name: container-ssd-01
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>                              vDisk UUID: 500e46c2-8f3a-4a2c-9b1d-7c3e5f8a2b4d
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>                         vDisk Size (GB): 100
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>                              vDisk Type: DATA_DISK
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                          Attached VM(s): prod-vm-01
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                         Is Clone: False
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>                    On-Disk Dedup Ratio: 2.45
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                  Compression Enabled: True
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>                              vDisk Name: vm-prod-02-disk
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                           Container Name: container-ssd-01
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                              vDisk UUID: 600f57d3-9g4b-5b3d-ac2e-8d4f6g9b3c5e
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                         vDisk Size (GB): 250
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>                              vDisk Type: DATA_DISK
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>                          Attached VM(s): prod-vm-02
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>...
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>ncli vdisk list container-name=container-ssd-01
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>                                    vDisk Details
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>================================================================================
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>                              vDisk Name: vm-prod-01-disk
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>                           Container Name: container-ssd-01
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>                              vDisk UUID: 500e46c2-8f3a-4a2c-9b1d-7c3e5f8a2b4d
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>                         vDisk Size (GB): 100
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>                              vDisk Type: DATA_DISK
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>ncli vdisk get name=vm-prod-01-disk
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>                                    vDisk Details
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>================================================================================
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>                              vDisk Name: vm-prod-01-disk
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>                           Container Name: container-ssd-01
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>                              vDisk UUID: 500e46c2-8f3a-4a2c-9b1d-7c3e5f8a2b4d
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>                         vDisk Size (GB): 100
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>                              vDisk Type: DATA_DISK
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>                          Attached VM(s): prod-vm-01
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>                         Is Clone: False
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>                    On-Disk Dedup Ratio: 2.45
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>                  Compression Enabled: True
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>                        Creation Time: 2024-01-15 10:23:45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: vDisk &lt;name&gt; not found</code></strong> — Verify the vDisk name is correct using <code>ncli vdisk list</code> and check for typos or special characters.
+<strong><code>Error: Container &lt;name&gt; not found</code></strong> — Confirm the container name exists with <code>ncli container list</code> before filtering by container-name.</p>
+</div>
 <h3 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w">                            </span><span class="c1"># all active alerts</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical<span class="w">          </span><span class="c1"># critical alerts only</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">resolved</span><span class="o">=</span><span class="nb">false</span><span class="w">             </span><span class="c1"># unresolved alerts</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ncli<span class="w"> </span>alert<span class="w"> </span>acknowledge<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;alert-id&gt;<span class="w">       </span><span class="c1"># acknowledge an alert</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ncli<span class="w"> </span>alert<span class="w"> </span>resolve<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;alert-id&gt;<span class="w">           </span><span class="c1"># resolve an alert</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w">                            </span><span class="c1"># all active alerts</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">severity</span><span class="o">=</span>critical<span class="w">          </span><span class="c1"># critical alerts only</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ncli<span class="w"> </span>alert<span class="w"> </span>list<span class="w"> </span><span class="nv">resolved</span><span class="o">=</span><span class="nb">false</span><span class="w">             </span><span class="c1"># unresolved alerts</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ncli<span class="w"> </span>alert<span class="w"> </span>acknowledge<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;alert-id&gt;<span class="w">       </span><span class="c1"># acknowledge an alert</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ncli<span class="w"> </span>alert<span class="w"> </span>resolve<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;alert-id&gt;<span class="w">           </span><span class="c1"># resolve an alert</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Alert ID                             | Severity | Status     | Message                              | Timestamp
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>-------------------------------------|----------|------------|--------------------------------------|------------------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>alert-20240115-001                   | critical | unresolved | Cluster CPU usage exceeded 95%       | 2024-01-15 14:32:18
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>alert-20240115-002                   | warning  | unresolved | Node ntnx-node-04 disk space low     | 2024-01-15 13:45:22
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>alert-20240115-003                   | critical | unresolved | Replication lag on container prod-db | 2024-01-15 12:18:05
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>alert-20240114-998                   | info     | resolved   | Scheduled backup completed           | 2024-01-14 22:00:00
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Alert alert-20240115-001 acknowledged successfully.
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Alert alert-20240115-002 resolved successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Alert ID not found: &lt;alert-id&gt;</code></strong> — Verify the alert ID exists by running <code>ncli alert list</code> and copy the exact ID from the output.
+<strong><code>Permission denied: User does not have alert management privileges</code></strong> — Request elevated permissions or use an admin account with alert management role.</p>
+</div>
 <h3 id="users-and-authentication">Users and Authentication<a class="headerlink" href="#users-and-authentication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ncli<span class="w"> </span>user<span class="w"> </span>list<span class="w">                             </span><span class="c1"># local users</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ncli<span class="w"> </span>user<span class="w"> </span>change-password<span class="w"> </span><span class="nv">username</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>current-password<span class="o">=</span>&lt;old&gt;<span class="w"> </span>new-password<span class="o">=</span>&lt;new&gt;<span class="w">  </span><span class="c1"># change password</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services<span class="w">    </span><span class="c1"># AD/LDAP config status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ncli<span class="w"> </span>user<span class="w"> </span>list<span class="w">                             </span><span class="c1"># local users</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ncli<span class="w"> </span>user<span class="w"> </span>change-password<span class="w"> </span><span class="nv">username</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>current-password<span class="o">=</span>&lt;old&gt;<span class="w"> </span>new-password<span class="o">=</span>&lt;new&gt;<span class="w">  </span><span class="c1"># change password</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services<span class="w">    </span><span class="c1"># AD/LDAP config status</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>User Information
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>================================================================================
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>                 Username                          Email Address
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>================================================================================
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>                    admin                     admin@nutanix.local
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>                 nutanix                    nutanix@nutanix.local
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>                  operator                  operator@nutanix.local
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>================================================================================
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>(no output — command completes silently)
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>                          Directory Services Configuration
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>================================================================================
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>                           Directory Service Status: Disabled
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>                    Directory Service Type: Not Configured
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>                         Domain Name: None
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>                    Search Base DN: None
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>================================================================================
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid username or password</code></strong> — Verify the current password is correct and the admin user exists with <code>ncli user list</code>.
+<strong><code>Error: Password does not meet complexity requirements</code></strong> — Ensure the new password meets minimum length (8 characters) and includes uppercase, lowercase, numbers, and special characters.</p>
+</div>
 <h3 id="protection-domains-legacy-backup">Protection Domains (Legacy Backup)<a class="headerlink" href="#protection-domains-legacy-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>list<span class="w">                               </span><span class="c1"># protection domains</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">                 </span><span class="c1"># PD details and schedule</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ncli<span class="w"> </span>pd<span class="w"> </span>activate<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">            </span><span class="c1"># activate PD replication</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">            </span><span class="c1"># take manual snapshot</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>list<span class="w">                               </span><span class="c1"># protection domains</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">                 </span><span class="c1"># PD details and schedule</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ncli<span class="w"> </span>pd<span class="w"> </span>activate<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">            </span><span class="c1"># activate PD replication</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w">            </span><span class="c1"># take manual snapshot</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Name                          Replication State    Snapshot Count    Last Snapshot Time
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>prod-db-cluster              Active               12                2024-01-15 14:32:18
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>backup-vms                   Syncing              8                 2024-01-15 13:45:02
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>dev-environment              Inactive             3                 2024-01-14 09:22:41
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Name: prod-db-cluster
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Description: Production database protection domain
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Replication State: Active
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>RPO Target (minutes): 60
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Snapshot Schedule: Every 4 hours
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Last Snapshot: 2024-01-15 14:32:18
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Snapshot Count: 12
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Remote Site: dr-site-01 (10.20.50.100)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>(no output — command completes silently)
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>Snapshot created successfully
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>Snapshot UUID: 00051234-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>Snapshot Time: 2024-01-15 15:08:44
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection domain 'prod-db-cluster' not found</code></strong> — Verify the PD name with <code>ncli pd list</code> and use the exact name shown in the output.
+<strong><code>Error: Cannot activate replication - remote site unreachable</code></strong> — Check network connectivity to the remote site and confirm the remote Prism Element is accessible.
+<strong><code>Error: Snapshot creation failed - insufficient free space on cluster</code></strong> — Free up storage space or reduce snapshot retention policy before attempting another manual snapshot.</p>
+</div>
 <hr />
 <h2 id="acli-ahv-vm-management">acli — AHV VM Management<a class="headerlink" href="#acli-ahv-vm-management" title="Permanent link">&para;</a></h2>
 <p><code>acli</code> manages VMs on AHV hypervisor clusters. Not available on ESXi clusters.</p>
 <h3 id="vm-lifecycle">VM Lifecycle<a class="headerlink" href="#vm-lifecycle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>acli<span class="w"> </span>vm.list<span class="w">                               </span><span class="c1"># list all VMs (name, state, IPs)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>acli<span class="w"> </span>vm.get<span class="w"> </span>&lt;vm-name&gt;<span class="w">                      </span><span class="c1"># detailed VM config</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;<span class="w">                       </span><span class="c1"># power on</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;<span class="w">                      </span><span class="c1"># power off (graceful)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>acli<span class="w"> </span>vm.reset<span class="w"> </span>&lt;vm-name&gt;<span class="w">                    </span><span class="c1"># force reset (hard reboot)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>acli<span class="w"> </span>vm.pause<span class="w"> </span>&lt;vm-name&gt;<span class="w">                    </span><span class="c1"># pause (freeze) VM</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>acli<span class="w"> </span>vm.resume<span class="w"> </span>&lt;vm-name&gt;<span class="w">                   </span><span class="c1"># resume paused VM</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-name&gt;<span class="w">  </span><span class="c1"># clone a VM</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>acli<span class="w"> </span>vm.delete<span class="w"> </span>&lt;vm-name&gt;<span class="w">                   </span><span class="c1"># delete VM (confirm prompt)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>acli<span class="w"> </span>vm.list<span class="w">                               </span><span class="c1"># list all VMs (name, state, IPs)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>acli<span class="w"> </span>vm.get<span class="w"> </span>&lt;vm-name&gt;<span class="w">                      </span><span class="c1"># detailed VM config</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;<span class="w">                       </span><span class="c1"># power on</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;<span class="w">                      </span><span class="c1"># power off (graceful)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>acli<span class="w"> </span>vm.reset<span class="w"> </span>&lt;vm-name&gt;<span class="w">                    </span><span class="c1"># force reset (hard reboot)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>acli<span class="w"> </span>vm.pause<span class="w"> </span>&lt;vm-name&gt;<span class="w">                    </span><span class="c1"># pause (freeze) VM</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>acli<span class="w"> </span>vm.resume<span class="w"> </span>&lt;vm-name&gt;<span class="w">                   </span><span class="c1"># resume paused VM</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-name&gt;<span class="w">  </span><span class="c1"># clone a VM</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>acli<span class="w"> </span>vm.delete<span class="w"> </span>&lt;vm-name&gt;<span class="w">                   </span><span class="c1"># delete VM (confirm prompt)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>acli vm.list
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  web-prod-01                                    ON    192.168.1.45
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  db-backup-02                                   ON    192.168.1.67
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  dev-test-03                                    OFF   10.0.2.89
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  monitoring-04                                  ON    192.168.1.102
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  legacy-app-05                                  PAUSED 192.168.1.78
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>  ...
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>acli vm.get web-prod-01
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  UUID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  Name: web-prod-01
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  State: ON
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  Memory: 8192 MB
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  vCPUs: 4
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  vDisks: 2
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>  Networks: vlan-prod (192.168.1.45/24)
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>  Created: 2024-01-15 09:23:15
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>acli vm.on db-backup-02
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>  Task UUID: 7f8a9b2c-1d4e-4f5a-8c3b-9e2d1a4f6c8b
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>  Status: Succeeded
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>acli vm.clone web-prod-01 clone_vm_name=web-prod-01-backup
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>  Task UUID: 3c5e7a9f-2b1d-4e6a-9c8f-1a3d5b7e9f2c
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>  Status: Succeeded
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>  Clone Name: web-prod-01-backup
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM &lt;vm-name&gt; not found</code></strong> — Verify the exact VM name with <code>acli vm.list</code> and check for typos or case sensitivity.
+<strong><code>Error: VM is already in the requested state</code></strong> — Confirm the current VM state before issuing power/pause commands; use <code>acli vm.get &lt;vm-name&gt;</code> to check.
+<strong><code>Error: Operation timed out after 300 seconds</code></strong> — Increase timeout or check cluster health; ensure the Nutanix cluster is responsive with <code>acli cluster info</code>.</p>
+</div>
 <h3 id="vm-configuration">VM Configuration<a class="headerlink" href="#vm-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a VM</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>acli<span class="w"> </span>vm.create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nv">num_cores_per_vcpu</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nv">memory</span><span class="o">=</span>8G
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Add a disk (create new)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nv">create_size</span><span class="o">=</span>50G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nv">container</span><span class="o">=</span>VMs
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Add a disk (clone from image)</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nv">clone_from_image</span><span class="o">=</span>&lt;image-name&gt;
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Add a NIC</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>acli<span class="w"> </span>vm.nic_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">network</span><span class="o">=</span>&lt;network-name&gt;
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># List VM NICs</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>acli<span class="w"> </span>vm.nic_list<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="c1"># Update VM CPU/RAM (VM must be off)</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>acli<span class="w"> </span>vm.update<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">8</span><span class="w"> </span><span class="nv">memory</span><span class="o">=</span>16G
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create a VM</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>acli<span class="w"> </span>vm.create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nv">num_cores_per_vcpu</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="nv">memory</span><span class="o">=</span>8G
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Add a disk (create new)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span><span class="nv">create_size</span><span class="o">=</span>50G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span><span class="nv">container</span><span class="o">=</span>VMs
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Add a disk (clone from image)</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">  </span><span class="nv">clone_from_image</span><span class="o">=</span>&lt;image-name&gt;
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1"># Add a NIC</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>acli<span class="w"> </span>vm.nic_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">network</span><span class="o">=</span>&lt;network-name&gt;
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="c1"># List VM NICs</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>acli<span class="w"> </span>vm.nic_list<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="c1"># Update VM CPU/RAM (VM must be off)</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>acli<span class="w"> </span>vm.update<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">8</span><span class="w"> </span><span class="nv">memory</span><span class="o">=</span>16G
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Creating VM web-server-01...
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>VM created successfully with UUID: 50b8d4c2-7f3a-4e21-9c1a-2b6e8f9d3c45
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Adding disk to web-server-01...
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Disk added successfully. Disk UUID: 8a2f1b9c-5e7d-4a6f-8b3c-1d9e2f4a5b6c
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Adding disk from image centos-7-base...
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Disk cloned successfully. Disk UUID: 3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Adding NIC to web-server-01 on network prod-vlan-100...
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>NIC added successfully. MAC: 50:6b:8d:c0:2e:f4
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>web-server-01 NICs:
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  eth0: 50:6b:8d:c0:2e:f4 (prod-vlan-100)
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Updating web-server-01 CPU and memory...
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>VM updated successfully. Pending restart required.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM &lt;vm-name&gt; not found</code></strong> — Verify the VM name matches exactly and exists in the cluster using <code>acli vm.list</code>.
+<strong><code>Error: Container VMs not found</code></strong> — Confirm the container name is correct and accessible with <code>acli container.list</code>.
+<strong><code>Error: VM must be powered off to modify CPU/memory</code></strong> — Power off the VM first using <code>acli vm.off &lt;vm-name&gt;</code> before running the update command.</p>
+</div>
 <h3 id="vm-migration">VM Migration<a class="headerlink" href="#vm-migration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Live migrate a VM to a specific host</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>acli<span class="w"> </span>vm.migrate<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">host</span><span class="o">=</span>&lt;host-name&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List hosts available for migration</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>acli<span class="w"> </span>host.list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Live migrate a VM to a specific host</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>acli<span class="w"> </span>vm.migrate<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">host</span><span class="o">=</span>&lt;host-name&gt;
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># List hosts available for migration</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>acli<span class="w"> </span>host.list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a># Live migrate a VM to a specific host
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>acli vm.migrate web-server-01 host=host-05
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Request submitted successfully. VM migration job ID: 12345678-90ab-cdef-1234-567890abcdef
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a># List hosts available for migration
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>acli host.list
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  Name                     Hypervisor  State      Memory(GB)  vCPU  Powered On VMs
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>  host-01.dc1.local        AHV         Normal     512         96    18
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>  host-02.dc1.local        AHV         Normal     512         96    22
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>  host-03.dc1.local        AHV         Normal     512         96    15
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  host-04.dc1.local        AHV         Normal     512         96    19
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>  host-05.dc1.local        AHV         Normal     512         96    21
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>  ...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM &lt;vm-name&gt; not found</code></strong> — Verify the VM name with <code>acli vm.list</code> and ensure it is powered on before migration.
+<strong><code>Error: Host &lt;host-name&gt; is not available for migration</code></strong> — Check that the target host is in Normal state and has sufficient resources using <code>acli host.list</code>.</p>
+</div>
 <h3 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a snapshot</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># List snapshots</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Revert to snapshot</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Delete snapshot</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>acli<span class="w"> </span>vm.snapshot_delete<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Revert to snapshot</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># Delete snapshot</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>acli<span class="w"> </span>vm.snapshot_delete<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a># Create a snapshot
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>acli vm.snapshot_create web-server-01 snapshot_name=pre-patch-2024
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>VM &#39;web-server-01&#39; snapshot &#39;pre-patch-2024&#39; created successfully.
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>UUID: 12a4f8c9-3b2e-47d1-9f6a-8c2d5e1b4a9f
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a># List snapshots
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>acli vm.snapshot_list web-server-01
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>                              UUID                             | Snapshot Name       | Created Time         | Size (GB)
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>12a4f8c9-3b2e-47d1-9f6a-8c2d5e1b4a9f | pre-patch-2024      | 2024-01-15 14:32:18 | 45.2
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>8f7e2c1a-9d4b-41c5-8a3f-7b6e9c2d1f5a | backup-weekly       | 2024-01-08 02:15:00 | 48.7
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>...
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a># Revert to snapshot
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>acli vm.snapshot_revert web-server-01 snapshot_name=pre-patch-2024
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>Reverting VM &#39;web-server-01&#39; to snapshot &#39;pre-patch-2024&#39;...
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>Revert completed successfully. VM state restored to 2024-01-15 14:32:18.
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a># Delete snapshot
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>acli vm.snapshot_delete web-server-01 snapshot_name=backup-weekly
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>Snapshot &#39;backup-weekly&#39; deleted successfully.
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>Freed space: 48.7 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: VM 'web-server-01' not found</code></strong> — Verify the VM name is correct and exists in the cluster using <code>acli vm.list</code>.
+<strong><code>Error: Snapshot 'pre-patch-2024' does not exist</code></strong> — Check the exact snapshot name with <code>acli vm.snapshot_list &lt;vm-name&gt;</code> and ensure you're using the correct spelling.
+<strong><code>Error: Cannot revert VM while it is powered on</code></strong> — Power off the VM first using <code>acli vm.off &lt;vm-name&gt;</code> before reverting to a snapshot.</p>
+</div>
 <h3 id="networks-and-images">Networks and Images<a class="headerlink" href="#networks-and-images" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List virtual networks</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>acli<span class="w"> </span>net.list
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Create a VLAN-backed network</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>acli<span class="w"> </span>net.create<span class="w"> </span>&lt;network-name&gt;<span class="w"> </span><span class="nv">vlan</span><span class="o">=</span>&lt;vlan-id&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># List uploaded images (ISOs / disk images)</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>acli<span class="w"> </span>image.list
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Upload an image from URL</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>acli<span class="w"> </span>image.create<span class="w"> </span>&lt;image-name&gt;<span class="w"> </span><span class="nv">source_url</span><span class="o">=</span>http://&lt;server&gt;/image.iso<span class="w"> </span><span class="nv">image_type</span><span class="o">=</span>ISO_IMAGE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># List virtual networks</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>acli<span class="w"> </span>net.list
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Create a VLAN-backed network</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>acli<span class="w"> </span>net.create<span class="w"> </span>&lt;network-name&gt;<span class="w"> </span><span class="nv">vlan</span><span class="o">=</span>&lt;vlan-id&gt;
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># List uploaded images (ISOs / disk images)</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>acli<span class="w"> </span>image.list
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Upload an image from URL</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>acli<span class="w"> </span>image.create<span class="w"> </span>&lt;image-name&gt;<span class="w"> </span><span class="nv">source_url</span><span class="o">=</span>http://&lt;server&gt;/image.iso<span class="w"> </span><span class="nv">image_type</span><span class="o">=</span>ISO_IMAGE
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>acli net.list
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>  net-prod-01
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>  net-prod-02
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>  net-mgmt-vlan100
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>  net-dev-isolated
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>  net-backup
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>acli net.create web-tier-vlan vlan=250
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Network web-tier-vlan created successfully (UUID: 500e3086-005e-4f11-aece-b5d1f8c2a9e3)
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>acli image.list
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>  CentOS-7.9-x86_64-dvd.iso (2.1 GB, ISO_IMAGE)
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>  Ubuntu-20.04-server-amd64.iso (1.8 GB, ISO_IMAGE)
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>  Windows-Server-2019.iso (5.4 GB, ISO_IMAGE)
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>  rhel-8.5-x86_64-dvd.iso (10.2 GB, ISO_IMAGE)
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>acli image.create win2022-base source_url=http://repo.internal/iso/Windows-Server-2022.iso image_type=ISO_IMAGE
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>Image upload initiated (UUID: a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6)
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>Upload progress: 45%
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>Upload progress: 100%
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>Image win2022-base created successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Network with name '&lt;network-name&gt;' already exists</code></strong> — Use a unique network name or delete the existing network with <code>acli net.delete &lt;network-name&gt;</code> first.
+<strong><code>Error: Invalid VLAN ID '&lt;vlan-id&gt;'. VLAN ID must be between 0 and 4094</code></strong> — Specify a valid VLAN ID in the range 0–4094.
+<strong><code>Error: Failed to download image from source_url: Connection timeout</code></strong> — Verify the URL is accessible from the cluster and the HTTP server is reachable on port 80.</p>
+</div>
 <h3 id="host-management-ahv">Host Management (AHV)<a class="headerlink" href="#host-management-ahv" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>acli<span class="w"> </span>host.list<span class="w">                             </span><span class="c1"># all AHV hosts, state, resources</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>acli<span class="w"> </span>host.get<span class="w"> </span>&lt;host-name&gt;<span class="w">                  </span><span class="c1"># host details</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>acli<span class="w"> </span>host.enter_maintenance_mode<span class="w"> </span>&lt;host-name&gt;<span class="w">  </span><span class="c1"># enter maintenance (VMs migrated)</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>acli<span class="w"> </span>host.exit_maintenance_mode<span class="w"> </span>&lt;host-name&gt;<span class="w">   </span><span class="c1"># exit maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>acli<span class="w"> </span>host.list<span class="w">                             </span><span class="c1"># all AHV hosts, state, resources</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>acli<span class="w"> </span>host.get<span class="w"> </span>&lt;host-name&gt;<span class="w">                  </span><span class="c1"># host details</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>acli<span class="w"> </span>host.enter_maintenance_mode<span class="w"> </span>&lt;host-name&gt;<span class="w">  </span><span class="c1"># enter maintenance (VMs migrated)</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>acli<span class="w"> </span>host.exit_maintenance_mode<span class="w"> </span>&lt;host-name&gt;<span class="w">   </span><span class="c1"># exit maintenance</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>acli host.list
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  Host1 (192.168.1.10): NORMAL, CPU: 32, Memory: 512 GB, VMs: 12
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  Host2 (192.168.1.11): NORMAL, CPU: 32, Memory: 512 GB, VMs: 8
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  Host3 (192.168.1.12): NORMAL, CPU: 32, Memory: 512 GB, VMs: 15
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  Host4 (192.168.1.13): MAINTENANCE_MODE, CPU: 32, Memory: 512 GB, VMs: 0
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>acli host.get Host1
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>  Host: Host1
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>  IP Address: 192.168.1.10
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>  State: NORMAL
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>  CPU Cores: 32
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>  Memory: 512 GB
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>  VMs Running: 12
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>  Hypervisor: AHV
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>  Build: 20230815.1234
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>acli host.enter_maintenance_mode Host2
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>  Host Host2 entering maintenance mode...
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>  VM migration in progress: 8 VMs
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>  Migration completed successfully
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>acli host.exit_maintenance_mode Host4
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>  Host Host4 exiting maintenance mode...
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>  State transition: MAINTENANCE_MODE → NORMAL
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host '&lt;host-name&gt;' not found</code></strong> — Verify the exact hostname with <code>acli host.list</code> and check for typos or case sensitivity.
+<strong><code>Error: Cannot enter maintenance mode - VMs still running on host</code></strong> — Wait for all VM migrations to complete or manually migrate remaining VMs before retrying.
+<strong><code>Error: Connection refused - acli not authenticated</code></strong> — Authenticate with <code>acli</code> using valid Nutanix cluster credentials before executing host commands.</p>
+</div>
 <hr />
 <h2 id="ncc-nutanix-cluster-check">ncc — Nutanix Cluster Check<a class="headerlink" href="#ncc-nutanix-cluster-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Run all health checks</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Run only critical checks</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span>--include_category<span class="o">=</span>critical
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Run a specific check</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>&lt;check_name&gt;
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># List all available checks</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>list
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Common useful checks:</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>cluster_services_status_check
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>ntp_synchronization_check
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>dns_server_check
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>disk_usage_check
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>cvm_memory_check
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>hypervisor_ntp_check
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># View last NCC run results</span>
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>ncli<span class="w"> </span>ncc<span class="w"> </span>get-ncc-result
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Run all health checks</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Run only critical checks</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span>--include_category<span class="o">=</span>critical
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># Run a specific check</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>&lt;check_name&gt;
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="c1"># List all available checks</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>list
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="c1"># Common useful checks:</span>
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>cluster_services_status_check
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>ntp_synchronization_check
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>dns_server_check
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>disk_usage_check
+<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>cvm_memory_check
+<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>hypervisor_ntp_check
+<a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a>
+<a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a><span class="c1"># View last NCC run results</span>
+<a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a>ncli<span class="w"> </span>ncc<span class="w"> </span>get-ncc-result
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Running NCC health checks...
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>[2024-01-15 14:32:18] Starting health check run_all
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>[2024-01-15 14:32:45] cluster_services_status_check: PASSED
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>[2024-01-15 14:33:12] ntp_synchronization_check: PASSED
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>[2024-01-15 14:33:38] dns_server_check: PASSED
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>[2024-01-15 14:34:05] disk_usage_check: WARNING - /var at 78% capacity
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>[2024-01-15 14:34:31] cvm_memory_check: PASSED
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>[2024-01-15 14:34:58] hypervisor_ntp_check: PASSED
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>[2024-01-15 14:35:22] Health check run completed
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>Summary: 5 passed, 1 warning, 0 failed
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>NCC Result ID: ncc-run-20240115-143522-a7f2c9e1
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>Status: COMPLETED
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>Timestamp: 2024-01-15 14:35:22 UTC
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>Overall Health: GOOD (with warnings)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncc: command not found</code></strong> — Ensure NCC is installed on the CVM and the PATH includes /usr/local/bin, or run the command with full path /usr/local/nutanix/bin/ncc.
+<strong><code>Health check &lt;check_name&gt; not found in registry</code></strong> — Verify the check name is correct by running <code>ncc --health_checks list</code> to see available checks.
+<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges (sudo or as nutanix user) since NCC requires elevated permissions to access cluster health data.</p>
+</div>
 <hr />
 <h2 id="allssh-multi-cvm-commands">allssh — Multi-CVM Commands<a class="headerlink" href="#allssh-multi-cvm-commands" title="Permanent link">&para;</a></h2>
 <p><code>allssh</code> runs a command on every CVM in the cluster in parallel.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status&quot;</span><span class="w">                    </span><span class="c1"># AOS service status on all CVMs</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>allssh<span class="w"> </span><span class="s2">&quot;ntp -q&quot;</span><span class="w">                            </span><span class="c1"># NTP status across all CVMs</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">                   </span><span class="c1"># Cassandra ring on all CVMs</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>allssh<span class="w"> </span><span class="s2">&quot;df -h /&quot;</span><span class="w">                           </span><span class="c1"># CVM disk usage across all nodes</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>allssh<span class="w"> </span><span class="s2">&quot;free -m&quot;</span><span class="w">                           </span><span class="c1"># CVM memory usage</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>allssh<span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w">                              </span><span class="c1"># time sync check (all should match within 1s)</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>allssh<span class="w"> </span><span class="s2">&quot;ping -c 1 -W 1 &lt;external-ip&gt;&quot;</span><span class="w">      </span><span class="c1"># network reachability from all CVMs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>allssh<span class="w"> </span><span class="s2">&quot;genesis status&quot;</span><span class="w">                    </span><span class="c1"># AOS service status on all CVMs</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>allssh<span class="w"> </span><span class="s2">&quot;ntp -q&quot;</span><span class="w">                            </span><span class="c1"># NTP status across all CVMs</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">                   </span><span class="c1"># Cassandra ring on all CVMs</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>allssh<span class="w"> </span><span class="s2">&quot;df -h /&quot;</span><span class="w">                           </span><span class="c1"># CVM disk usage across all nodes</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>allssh<span class="w"> </span><span class="s2">&quot;free -m&quot;</span><span class="w">                           </span><span class="c1"># CVM memory usage</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>allssh<span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w">                              </span><span class="c1"># time sync check (all should match within 1s)</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>allssh<span class="w"> </span><span class="s2">&quot;ping -c 1 -W 1 &lt;external-ip&gt;&quot;</span><span class="w">      </span><span class="c1"># network reachability from all CVMs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>=== CVM-1 (10.0.0.10) ===
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Genesis Status: RUNNING
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>  - Cassandra: UP
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>  - Zookeeper: UP
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>  - Chronos: UP
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>=== CVM-2 (10.0.0.11) ===
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>Genesis Status: RUNNING
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>  - Cassandra: UP
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>  - Zookeeper: UP
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>  - Chronos: UP
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>=== CVM-3 (10.0.0.12) ===
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>Genesis Status: RUNNING
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>  - Cassandra: UP
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>  - Zookeeper: UP
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>  - Chronos: UP
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>NTP synchronized on all nodes: stratum 2, offset &lt; 5ms
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>Cassandra ring: 3 nodes, all UN (Up/Normal)
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>Filesystem /: 45G used / 100G total (45%)
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>Memory: 32000M total, 28500M free, 3500M used
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>Time sync: 2024-01-15 14:32:47 UTC (all CVMs within 500ms)
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>Network: 3/3 CVMs reachable to 8.8.8.8 (0% packet loss)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>allssh: command not found</code></strong> — Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.
+<strong><code>Connection refused on CVM-2 (10.0.0.11)</code></strong> — Verify the CVM is powered on and SSH is running; restart the CVM if necessary.
+<strong><code>NTP not synchronized: stratum 16</code></strong> — Check NTP configuration and upstream NTP server connectivity; restart ntpd service with <code>service ntpd restart</code>.</p>
+</div>
 <hr />
 <h2 id="genesis-aos-service-manager">genesis — AOS Service Manager<a class="headerlink" href="#genesis-aos-service-manager" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>genesis<span class="w"> </span>status<span class="w">                             </span><span class="c1"># list all AOS services and state</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>genesis<span class="w"> </span>restart<span class="w">                            </span><span class="c1"># restart all AOS services on this CVM</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">                                           </span><span class="c1"># ⚠ use with caution — CVM I/O disrupted briefly</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>genesis<span class="w"> </span>status<span class="w">                             </span><span class="c1"># list all AOS services and state</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>genesis<span class="w"> </span>restart<span class="w">                            </span><span class="c1"># restart all AOS services on this CVM</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">                                           </span><span class="c1"># ⚠ use with caution — CVM I/O disrupted briefly</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Genesis Status Report
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>=====================
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>Service Name                    Status      PID       Uptime
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>acropolis                       running     4521      45d 12h 23m
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>cassandra                       running     3847      45d 12h 18m
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>curator                         running     5102      45d 12h 15m
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>zookeeper                       running     2934      45d 12h 20m
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>cerebro                         running     4156      45d 12h 14m
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>prism                           running     5678      45d 12h 10m
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>uhura                           running     3421      45d 12h 08m
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>stargate                        running     4892      45d 12h 05m
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>...
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>Total Services: 23 | Running: 23 | Failed: 0
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>Restarting all AOS services...
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>Stopping services in dependency order...
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>[OK] acropolis stopped
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>[OK] stargate stopped
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a>[OK] prism stopped
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>[OK] cerebro stopped
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a>[OK] zookeeper stopped
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>[OK] cassandra stopped
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>[OK] curator stopped
+<a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>Starting services in dependency order...
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>[OK] cassandra started (PID: 3847)
+<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>[OK] zookeeper started (PID: 2934)
+<a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a>[OK] curator started (PID: 5102)
+<a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>[OK] acropolis started (PID: 4521)
+<a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a>[OK] cerebro started (PID: 4156)
+<a id="__codelineno-35-30" name="__codelineno-35-30" href="#__codelineno-35-30"></a>[OK] prism started (PID: 5678)
+<a id="__codelineno-35-31" name="__codelineno-35-31" href="#__codelineno-35-31"></a>[OK] stargate started (PID: 4892)
+<a id="__codelineno-35-32" name="__codelineno-35-32" href="#__codelineno-35-32"></a>[OK] uhura started (PID: 3421)
+<a id="__codelineno-35-33" name="__codelineno-35-33" href="#__codelineno-35-33"></a>Genesis restart completed successfully in 87 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: Cannot restart genesis — cluster is in rebalancing state</code></strong> — Wait for rebalancing to complete using <code>cluster status</code> before restarting services.
+<strong><code>ERROR: genesis restart failed — insufficient disk space on /home/nutanix</code></strong> — Free up disk space on the CVM or check for log file bloat with <code>du -sh /home/nutanix/logs/*</code>.</p>
+</div>
 <hr />
 <h2 id="nodetool-cassandra-ring-management">nodetool — Cassandra Ring Management<a class="headerlink" href="#nodetool-cassandra-ring-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>nodetool<span class="w"> </span>status<span class="w">                            </span><span class="c1"># ring node status (UN = Up/Normal)</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>nodetool<span class="w"> </span>ring<span class="w">                              </span><span class="c1"># token distribution</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>nodetool<span class="w"> </span>compactionstats<span class="w">                   </span><span class="c1"># compaction queue</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>nodetool<span class="w"> </span>info<span class="w">                              </span><span class="c1"># node-specific metadata stats</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>nodetool<span class="w"> </span>status<span class="w">                            </span><span class="c1"># ring node status (UN = Up/Normal)</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>nodetool<span class="w"> </span>ring<span class="w">                              </span><span class="c1"># token distribution</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>nodetool<span class="w"> </span>compactionstats<span class="w">                   </span><span class="c1"># compaction queue</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>nodetool<span class="w"> </span>info<span class="w">                              </span><span class="c1"># node-specific metadata stats</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Datacenter: dc1
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>===============
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>Address         Load       Tokens  Owns (effective)  Host ID                              Rack
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>127.0.0.1       256.5 KB   256     100.0%            a1b2c3d4-e5f6-7890-abcd-ef1234567890  rack1
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>UN  10.42.15.201  512.3 KB   256     33.3%             b2c3d4e5-f6a7-8901-bcde-f12345678901  rack1
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>UN  10.42.15.202  498.7 KB   256     33.3%             c3d4e5f6-a7b8-9012-cdef-123456789012  rack1
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>UN  10.42.15.203  501.2 KB   256     33.4%             d4e5f6a7-b8c9-0123-defg-234567890123  rack1
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>TokenRange(start_token:0, end_token:36028797018963968, endpoints:[10.42.15.201], rpc_endpoints:[10.42.15.201], host_ids:[b2c3d4e5-f6a7-8901-bcde-f12345678901])
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>TokenRange(start_token:36028797018963969, end_token:72057594037927936, endpoints:[10.42.15.202], rpc_endpoints:[10.42.15.202], host_ids:[c3d4e5f6-a7b8-9012-cdef-123456789012])
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>TokenRange(start_token:72057594037927937, end_token:108086391056891904, endpoints:[10.42.15.203], rpc_endpoints:[10.42.15.203], host_ids:[d4e5f6a7-b8c9-0123-defg-234567890123])
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>Compaction from [/var/lib/cassandra/data/system/peers-7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b/na-1-big-Data.db] (1.2 MiB) to [/var/lib/cassandra/data/system/peers-7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b/na-2-big-Data.db] (892 KiB)
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>Active compaction remaining time :   0h00m12s
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>pending tasks: 3
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a>
+<a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>Node ID:            d4e5f6a7-b8c9-0123-defg-234567890123
+<a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a>Gossip active:      true
+<a id="__codelineno-37-19" name="__codelineno-37-19" href="#__codelineno-37-19"></a>Thrift active:      false
+<a id="__codelineno-37-20" name="__codelineno-37-20" href="#__codelineno-37-20"></a>Native Transport active: true
+<a id="__codelineno-37-21" name="__codelineno-37-21" href="#__codelineno-37-21"></a>Load:               501.2 KB
+<a id="__codelineno-37-22" name="__codelineno-37-22" href="#__codelineno-37-22"></a>Generation No:      1702156789
+<a id="__codelineno-37-23" name="__codelineno-37-23" href="#__codelineno-37-23"></a>Uptime (seconds):   864521
+<a id="__codelineno-37-24" name="__codelineno-37-24" href="#__codelineno-37-24"></a>Heap Memory (MB):   2048.5 / 4096
+<a id="__codelineno-37-25" name="__codelineno-37-25" href="#__codelineno-37-25"></a>Data Center:        dc1
+<a id="__codelineno-37-26" name="__codelineno-37-26" href="#__codelineno-37-26"></a>Rack:               rack1
+<a id="__codelineno-37-27" name="__codelineno-37-27" href="#__codelineno-37-27"></a>Exceptions:         0
+<a id="__codelineno-37-28" name="__codelineno-37-28" href="#__codelineno-37-28"></a>Key Cache Size (MB): 45.3
+<a id="__codelineno-37-29" name="__codelineno-37-29" href="#__codelineno-37-29"></a>Row Cache Size (MB): 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nodetool: command not found</code></strong> — Ensure Cassandra is installed and the nodetool binary is in your PATH, or use the full</p>
+</div>
 <p><strong>Status codes:</strong> <code>UN</code> = Up/Normal (healthy), <code>DN</code> = Down, <code>?N</code> = Unknown — investigate any non-UN nodes.</p>
 <hr />
 <h2 id="curator_cli-background-jobs">curator_cli — Background Jobs<a class="headerlink" href="#curator_cli-background-jobs" title="Permanent link">&para;</a></h2>
 <p>Curator manages tiering, deduplication, erasure coding, and rebalancing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">      </span><span class="c1"># list recent Curator scan runs</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active Curator tasks</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">   </span><span class="c1"># details of a specific scan</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">      </span><span class="c1"># list recent Curator scan runs</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active Curator tasks</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">   </span><span class="c1"># details of a specific scan</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Scan ID: scan-20240115-prod-001 | Status: COMPLETED | Duration: 2h 14m | Objects: 847,291
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>Scan ID: scan-20240114-prod-002 | Status: COMPLETED | Duration: 2h 08m | Objects: 847,291
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>Scan ID: scan-20240113-prod-001 | Status: COMPLETED | Duration: 2h 19m | Objects: 847,291
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>Scan ID: scan-20240112-prod-003 | Status: COMPLETED | Duration: 2h 11m | Objects: 847,291
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>Task ID: curator-task-5847 | Type: METADATA_SCAN | Progress: 87% | Node: 10.42.18.5
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>Task ID: curator-task-5846 | Type: DEDUP_ANALYSIS | Progress: 42% | Node: 10.42.18.7
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>Task ID: curator-task-5845 | Type: CONSISTENCY_CHECK | Progress: 15% | Node: 10.42.18.9
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>Scan Details for scan-20240115-prod-001:
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>  Status: COMPLETED
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a>  Start Time: 2024-01-15 03:22:14 UTC
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>  End Time: 2024-01-15 05:36:48 UTC
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a>  Total Objects Scanned: 847,291
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>  Errors Detected: 0
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>  Warnings: 3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curator_cli: command not found</code></strong> — Ensure Nutanix cluster tools are installed and the curator_cli binary is in your PATH, or use the full path <code>/opt/nutanix/bin/curator_cli</code>.
+<strong><code>Error: Invalid scan_id format</code></strong> — Verify the scan ID exists by running <code>curator_cli get_last_successful_scans</code> first and use the exact ID from the output.
+<strong><code>Error: Connection refused to Curator service</code></strong> — Confirm the Curator service is running with <code>systemctl status nutanix-curator</code> and that cluster connectivity is active.</p>
+</div>
 <hr />
 <h2 id="useful-diagnostics">Useful Diagnostics<a class="headerlink" href="#useful-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check AOS log for errors (last 50 lines)</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/home/nutanix/data/logs/stargate.ERROR<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check CVM kernel messages</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Check disk health via smartctl</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>sudo<span class="w"> </span>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sda
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># List CVMs that can&#39;t be reached</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>allssh<span class="w"> </span><span class="s2">&quot;echo OK&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Check Zeus (ZooKeeper) cluster config</span>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Check AOS log for errors (last 50 lines)</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/home/nutanix/data/logs/stargate.ERROR<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Check CVM kernel messages</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="c1"># Check disk health via smartctl</span>
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>sudo<span class="w"> </span>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sda
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="c1"># List CVMs that can&#39;t be reached</span>
+<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>allssh<span class="w"> </span><span class="s2">&quot;echo OK&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a>
+<a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a><span class="c1"># Check Zeus (ZooKeeper) cluster config</span>
+<a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>2024-01-15 14:23:45 ERROR: [STARGATE] Failed to acquire lock on container &#39;default&#39; (timeout after 30s)
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>2024-01-15 14:23:52 ERROR: [IO_MANAGER] Disk I/O latency spike detected: 450ms (threshold: 100ms)
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>2024-01-15 14:24:01 WARN: [REPLICATION] Snapshot transfer incomplete for VM uuid-a7f3-4d2c-9e1b
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>2024-01-15 14:24:15 ERROR: [EXTENT_STORE] Checksum mismatch on extent 0x2f4a8c9d
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>2024-01-15 14:25:30 WARN: [CURATOR] Inconsistent replica count detected
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>[14523.456789] kernel: Out of memory: Kill process 2847 (stargate) score 612 or sacrifice child
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>[14524.123456] kernel: Killed process 2847 (stargate) total-vm:8192000kB, anon-rss:7856000kB
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>[14525.789012] kernel: WARNING: CPU0: Core temperature/speed normal
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>[14526.234567] kernel: EXT4-fs warning (device sda3): ext4_dx_add_entry:2847: Directory index full!
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a>[14527.567890] kernel: audit: type=1130 audit(1705334675.123:456): pid=1 uid=0 auid=4294967295
+<a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>
+<a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a>SMARTCTL version 7.3 -- Copyright (C) 2002-21 Bruce Allen
+<a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>Device Model: SAMSUNG SSD 870 EVO 1TB
+<a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a>Serial Number: S6SSNF0R123456A
+<a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a>LU WWN Device Id: 5 002 4d7 20a1b2c3d
+<a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a>Firmware Version: SVT04B6Q
+<a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a>User Capacity: 1,000,204,886,016 bytes [1.00 TB]
+<a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a>SMART overall-health self-assessment test result: PASSED
+<a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a>Current Drive Temperature: 38 Celsius
+<a id="__codelineno-41-21" name="__codelineno-41-21" href="#__codelineno-41-21"></a>
+<a id="__codelineno-41-22" name="__codelineno-41-22" href="#__codelineno-41-22"></a>10.20.1.45: ssh: connect to host 10.20.1.45 port 22: Connection timed out
+<a id="__codelineno-41-23" name="__codelineno-41-23" href="#__codelineno-41-23"></a>10.20.1.67: Permission denied (publickey,password).
+<a id="__codelineno-41-24" name="__codelineno-41-24" href="#__codelineno-41-24"></a>10.20.1.89: ssh: connect to host 10.20.1.89 port 22: No route to host
+<a id="__codelineno-41-25" name="__codelineno-41-25" href="#__codelineno-41-25"></a>
+<a id="__codelineno-41-26" name="__codelineno-41-26" href="#__codelineno-41-26"></a>Zeus Cluster Configuration:
+<a id="__codelineno-41-27" name="__codelineno-41-27" href="#__codelineno-41-27"></a>  Cluster UUID: 00051234-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-41-28" name="__codelineno-41-28" href="#__codelineno-41-28"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-41-29" name="__codelineno-41-29" href="#__codelineno-41-29"></a>  Replication Factor: 3
+<a id="__codelineno-41-30" name="__codelineno-41-30" href="#__codelineno-41-30"></a>  Quorum Size: 3
+<a id="__codelineno-41-31" name="__codelineno-41-31" href="#__codelineno-41-31"></a>  ZooKeeper Servers:
+<a id="__codelineno-41-32" name="__codelineno-41-32" href="#__codelineno-41-32"></a>    - 10.20.1.10:2181 (Leader)
+<a id="__codelineno-41-33" name="__codelineno-41-33" href="#__codelineno-41-33"></a>    - 10.20.1.11:2181 (Follower)
+<a id="__codelineno-41-34" name="__codelineno-41-34" href="#__codelineno-41-34"></a>    - 10.20.1.12:2181 (Follower)
+<a id="__codelineno-41-35" name="__codelineno-41-35" href="#__codelineno-41-35"></a>  Genesis IP: 10.20.1.1
+<a id="__codelineno-41-36" name="__codelineno-41-36" href="#__codelineno-41-36"></a>  Metadata Service: ACTIVE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory</code></strong> — Verify the log file path is correct; on some AOS versions it may be `/home/nutanix/data/</p>
+</div>
 <hr />
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8155,7 +8751,7 @@ Complete reference for Nutanix CLIs: ncli (cluster management), acli (AHV VM man
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

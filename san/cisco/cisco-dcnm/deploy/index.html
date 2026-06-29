@@ -7601,6 +7601,28 @@
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/root/packaged-files/scripts/appmgr<span class="w"> </span>initial_setup
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Initializing DCNM Application Manager...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Checking system prerequisites...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  ✓ Docker daemon running (v20.10.12)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  ✓ Memory available: 32GB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  ✓ Disk space: 450GB free
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  ✓ Network connectivity verified
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Loading configuration from /etc/dcnm/appmgr.conf...
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Setting up database connections...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  ✓ PostgreSQL connection established (dcnm_db@10.45.120.15:5432)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  ✓ Redis cache initialized (10.45.120.16:6379)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Deploying core services...
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  ✓ dcnm-api service started (PID: 2847)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  ✓ dcnm-ui service started (PID: 2851)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  ✓ dcnm-worker service started (PID: 2855)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Initial setup completed successfully. Web UI available at https://localhost:8443
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Docker daemon is not running</code></strong> — Start the Docker service with <code>systemctl start docker</code> before running the setup script.
+<strong><code>Error: Configuration file not found at /etc/dcnm/appmgr.conf</code></strong> — Create the configuration file or verify the path with <code>ls -la /etc/dcnm/</code> and update the script path accordingly.
+<strong><code>Error: Insufficient disk space. Required: 100GB, Available: 45GB</code></strong> — Free up disk space on the target partition or mount an additional volume before retrying the setup.</p>
+</div>
 <p>The wizard prompts for:</p>
 <ul>
 <li>Management IP, subnet mask, gateway</li>
@@ -7701,22 +7723,52 @@
 <li>Check the event log under <strong>Monitor &gt; Events</strong> — no critical events should be present post-deployment.</li>
 </ol>
 <p><strong>Configuration consistency:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On a deployed Nexus switch, confirm DCNM-generated config is applied:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>nv<span class="w"> </span>overlay
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># BGP neighbors (spine) should show Established state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On a deployed Nexus switch, confirm DCNM-generated config is applied:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>nv<span class="w"> </span>overlay
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># BGP neighbors (spine) should show Established state</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nv overlay enable
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nv overlay evpn
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nv overlay evpn multisite border-gateway 65000
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>BGP router ID: 10.20.1.5    Local AS: 65100   cfg peers: 4, estab: 4
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>10.20.1.1       4 65000   45821   45819  1024567    0    0 5d02h    Established
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>10.20.1.2       4 65000   45803   45815  1024567    0    0 5d02h    Established
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>10.20.2.1       4 65001   12456   12458  1024567    0    0 1d14h    Established
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>10.20.2.2       4 65001   12455   12457  1024567    0    0 1d14h    Established
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the switch is running NX-OS with DCNM fabric mode enabled; older OS versions may not support <code>nv overlay</code> syntax.
+<strong><code>BGP router ID not set</code></strong> — Configure a loopback interface and assign it as the BGP router ID before DCNM deploys the overlay configuration.
+<strong><code>Neighbor ... Idle</code></strong> — Check physical connectivity and BGP timers on both spine and leaf; verify the neighbor IP addresses match DCNM's fabric topology definition.</p>
+</div>
 <p><strong>SNMP trap test:</strong></p>
 <ol>
 <li>On one of the managed switches, generate a link-down event by shutting down an access port.</li>
 <li>In DCNM under <strong>Monitor &gt; Events</strong>, the event should appear within 30 seconds.</li>
 </ol>
 <p><strong>Save DCNM application backup:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From DCNM CLI:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>appmgr<span class="w"> </span>backup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Creates a .tar.gz backup of the DCNM database and configuration</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Store this in an external location</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From DCNM CLI:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>appmgr<span class="w"> </span>backup
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Creates a .tar.gz backup of the DCNM database and configuration</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Store this in an external location</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Backup initiated for DCNM application...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Backup location: /var/dcnm/backup/dcnm_backup_20240115_143022.tar.gz
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Backup size: 2.3 GB
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Backup status: SUCCESS
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Backup completed in 47 seconds
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Backup file verified: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Insufficient disk space for backup operation</code></strong> — Ensure at least 5 GB of free space is available in the /var/dcnm/backup directory before running the backup.
+<strong><code>Error: Permission denied writing to backup directory</code></strong> — Verify the DCNM service account has read-write permissions on /var/dcnm/backup using <code>chmod 755</code> or <code>chown dcnm:dcnm</code>.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7753,7 +7805,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

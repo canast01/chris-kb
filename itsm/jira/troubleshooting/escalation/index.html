@@ -7590,24 +7590,49 @@ Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation 
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cat<span class="w"> </span>atlassian-jira-software-version.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Build Number&quot;</span><span class="w"> </span>atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>8.20.11
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15 09:47:32,156 INFO [main] [com.atlassian.jira.startup] Build Number: 820011
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: atlassian-jira-software-version.txt: No such file or directory</code></strong> — Ensure you are running the command from the correct Jira installation directory (typically <code>/opt/atlassian/jira</code> or <code>/var/atlassian/jira</code>).
+<strong><code>grep: atlassian-jira.log: No such file or directory</code></strong> — Check that the Jira logs directory exists at the expected path; if Jira uses a custom log location, adjust the grep command to point to the correct log file path.</p>
+</div>
 <h3 id="2-create-the-support-zip-takes-210-minutes">2. Create the support zip (takes 2–10 minutes)<a class="headerlink" href="#2-create-the-support-zip-takes-210-minutes" title="Permanent link">&para;</a></h3>
 <p>Admin &gt; <strong>System</strong> &gt; <strong>Troubleshooting and support tools</strong> &gt; <strong>Create support zip</strong>. Select the time window covering the incident.</p>
 <h3 id="3-capture-thread-dumps-for-hangs-or-slow-performance">3. Capture thread dumps (for hangs or slow performance)<a class="headerlink" href="#3-capture-thread-dumps-for-hangs-or-slow-performance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Take 3 dumps, 10 seconds apart, during the slow/hung period</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-1.txt<span class="p">;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-2.txt<span class="p">;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-3.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Take 3 dumps, 10 seconds apart, during the slow/hung period</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-1.txt<span class="p">;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-2.txt<span class="p">;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>jstack<span class="w"> </span>&lt;jira_pid&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-thread-3.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>jstack: command not found</code></strong> — Ensure the JDK is installed and <code>jstack</code> is in your PATH, or use the full path <code>/usr/lib/jvm/java-11-openjdk/bin/jstack</code>.
+<strong><code>&lt;jira_pid&gt;: No such process</code></strong> — Replace <code>&lt;jira_pid&gt;</code> with the actual Jira process ID from <code>pgrep -f jira</code> or <code>ps aux | grep jira</code>.
+<strong><code>Permission denied</code></strong> — Run the command as the same user running Jira or use <code>sudo</code> to capture thread dumps with sufficient privileges.</p>
+</div>
 <h3 id="4-capture-a-heap-dump-for-outofmemoryerror">4. Capture a heap dump (for OutOfMemoryError)<a class="headerlink" href="#4-capture-a-heap-dump-for-outofmemoryerror" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>jmap<span class="w"> </span>-dump:format<span class="o">=</span>b,file<span class="o">=</span>/tmp/jira-heap.hprof<span class="w"> </span>&lt;jira_pid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>jmap<span class="w"> </span>-dump:format<span class="o">=</span>b,file<span class="o">=</span>/tmp/jira-heap.hprof<span class="w"> </span>&lt;jira_pid&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Dumping heap to /tmp/jira-heap.hprof ...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Heap dump file created [2847392512 bytes in 12.453 secs]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error attaching to process: sun.jvm.attach.AttachNotSupportedException</code></strong> — Ensure the JIRA process is running as the same user executing jmap, or run jmap with sudo.
+<strong><code>Could not attach to &lt;jira_pid&gt;: No such process</code></strong> — Verify the PID is correct by running <code>ps aux | grep jira</code> and use the actual Java process PID.
+<strong><code>Permission denied (/tmp/jira-heap.hprof)</code></strong> — Check that /tmp is writable and has sufficient free space (heap dumps can be several GB); consider using an alternate directory like <code>/var/tmp</code>.</p>
+</div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Jira version: 9.x.x build NNNNN
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Issue first observed: YYYY-MM-DD HH:MM UTC
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Last known good state: YYYY-MM-DD HH:MM UTC
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Changes made in the 24h before the issue: [plugin install, upgrade, config change]
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Steps already taken: [restarted service, checked logs, ran Known Error DB search]
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Blast radius: [single project / all users / specific feature]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Jira version: 9.x.x build NNNNN
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Issue first observed: YYYY-MM-DD HH:MM UTC
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Last known good state: YYYY-MM-DD HH:MM UTC
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Changes made in the 24h before the issue: [plugin install, upgrade, config change]
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Steps already taken: [restarted service, checked logs, ran Known Error DB search]
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Blast radius: [single project / all users / specific feature]
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-case-on-atlassian-support">How to Open the Case on Atlassian Support<a class="headerlink" href="#how-to-open-the-case-on-atlassian-support" title="Permanent link">&para;</a></h2>
@@ -7667,15 +7692,15 @@ Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation 
 </table>
 <hr />
 <h3 id="resolution-notification">Resolution Notification<a class="headerlink" href="#resolution-notification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[JIRA RESOLVED] — HH:MM UTC
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ISSUE: [Brief description]
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>RESOLVED AT: HH:MM UTC (Duration: Xh Ym)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ROOT CAUSE: [One sentence]
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>FIX APPLIED: [What was done]
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>PREVENTIVE ACTION: [What will be done to prevent recurrence]
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Post-mortem scheduled: [Date/time or &quot;within 5 business days&quot;]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[JIRA RESOLVED] — HH:MM UTC
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ISSUE: [Brief description]
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>RESOLVED AT: HH:MM UTC (Duration: Xh Ym)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ROOT CAUSE: [One sentence]
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>FIX APPLIED: [What was done]
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>PREVENTIVE ACTION: [What will be done to prevent recurrence]
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Post-mortem scheduled: [Date/time or &quot;within 5 business days&quot;]
 </code></pre></div>
 <hr />
 <h2 id="post-incident-review-pir-checklist">Post-Incident Review (PIR) Checklist<a class="headerlink" href="#post-incident-review-pir-checklist" title="Permanent link">&para;</a></h2>
@@ -7727,7 +7752,7 @@ Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

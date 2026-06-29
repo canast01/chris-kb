@@ -7995,6 +7995,26 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>section<span class="w"> </span>&lt;changed-feature&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@switch-ip&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>switch# show running-config | section interface
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>interface Ethernet1/1
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  description uplink-to-core
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  no shutdown
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  speed 40000
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  mtu 9216
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>interface Ethernet1/2
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  description reserved
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  shutdown
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>interface port-channel1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  description lag-to-fabric
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  speed 40000
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>switch#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the admin account credentials and ensure SSH is enabled on the switch with <code>feature ssh</code>.
+<strong><code>Connection timed out</code></strong> — Check network connectivity to the switch IP, confirm the IP address is correct, and verify firewall rules allow SSH port 22 to the switch.</p>
+</div>
 <hr />
 <h2 id="configure-vrf-and-l3-gateway">Configure VRF and L3 Gateway<a class="headerlink" href="#configure-vrf-and-l3-gateway" title="Permanent link">&para;</a></h2>
 <p>VRFs partition the IP routing table across the VXLAN fabric. The L3 gateway (anycast gateway) is the distributed default gateway for each network segment.</p>
@@ -8007,10 +8027,33 @@
 <li>Configure the anycast gateway MAC: in <strong>LAN &gt; Fabrics &gt; [Fabric] &gt; Fabric Settings</strong>, set a consistent <strong>Anycast GW MAC</strong> (e.g., <code>0000.2222.3333</code>) applied across all leaves.</li>
 <li>Validate L3 routing on a leaf:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>show<span class="w"> </span>vrf<span class="w"> </span>PROD-VRF
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>vrf<span class="w"> </span>PROD-VRF
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>show<span class="w"> </span>vrf<span class="w"> </span>PROD-VRF
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>vrf<span class="w"> </span>PROD-VRF
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VRF Name                             Vlan    IP Addr         Flags
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>PROD-VRF                             100     10.50.0.1/24    Up
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>PROD-VRF                             101     10.51.0.1/24    Up
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Routing Table for VRF PROD-VRF
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>IP Route Source                    AD/Metric    Next Hop         Interface
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>10.50.0.0/24   connected          0/0          direct           Vlan100
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>10.51.0.0/24   connected          0/0          direct           Vlan101
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>172.16.0.0/16  bgp                200/2048     10.200.1.5       Eth1/1
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>192.168.0.0/16 static             1/0          10.200.1.1       Eth1/2
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>10.100.0.0/8   ospf               110/512      10.50.0.254      Vlan100
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>BGP summary for l2vpn evpn
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>BGP router identifier 10.200.1.1, local AS number 65001
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer InQ OutQ Up/Down State
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>10.200.1.5      4 65002   45821   45803   128456   0    0 5w2d    Established
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>10.200.1.6      4 65002   41203   41198   128456   0    0 3w4d    Established
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax matches your Cisco DCNM/NX-OS version; use <code>?</code> to view available options.
+<strong><code>% VRF PROD-VRF not found</code></strong> — Confirm the VRF exists with <code>show vrf</code> and verify the name spelling and case sensitivity.</p>
+</div>
 <hr />
 <h2 id="run-fabric-compliance-check">Run Fabric Compliance Check<a class="headerlink" href="#run-fabric-compliance-check" title="Permanent link">&para;</a></h2>
 <p>DCNM compliance checking compares the running configuration on each switch against the intended configuration stored in DCNM and reports deviations.</p>
@@ -8032,18 +8075,40 @@
 <li>Select the time range covering the incident window and click <strong>Download</strong> — the bundle is a <code>.tar.gz</code> archive.</li>
 <li>For the affected switches, collect tech-support directly via SSH:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;&gt;<span class="w"> </span>/bootflash/&lt;switch-name&gt;-techsupport.log
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>copy<span class="w"> </span>bootflash:&lt;switch-name&gt;-techsupport.log<span class="w"> </span>scp://&lt;admin&gt;@&lt;server-ip&gt;/&lt;path&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;&gt;<span class="w"> </span>/bootflash/&lt;switch-name&gt;-techsupport.log
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>copy<span class="w"> </span>bootflash:&lt;switch-name&gt;-techsupport.log<span class="w"> </span>scp://&lt;admin&gt;@&lt;server-ip&gt;/&lt;path&gt;/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>admin@switch-ip&#39;s password: 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Generating tech-support output... (this may take 2-3 minutes)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Tech-support data collection completed successfully.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Preparing SCP transfer...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Sending file &lt;switch-name&gt;-techsupport.log
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>File transferred successfully to scp://admin@server-ip/path/
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Transfer complete. 1234567 bytes copied in 45.32 secs (27234 bytes/sec)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the switch IP is reachable and admin credentials are correct; check if SSH is enabled on the switch.
+<strong><code>Error opening bootflash:&lt;switch-name&gt;-techsupport.log (No such file or directory)</code></strong> — Ensure the tech-support command completed successfully and the filename matches exactly; check bootflash space with <code>dir bootflash:</code>.
+<strong><code>SCP transfer failed: Authentication failed for scp://&lt;admin&gt;@&lt;server-ip&gt;</code></strong> — Verify the SCP server credentials and IP address are correct, and that the target directory path exists and is writable.</p>
+</div>
 <ol>
 <li>Collect the relevant logs from DCNM server (Linux):</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On DCNM server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/local/cisco/dcm/fm/logs/
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Collect: dcm.log, event.log, discovery.log</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/dcnm-logs-&lt;date&gt;.tar.gz<span class="w"> </span>/usr/local/cisco/dcm/fm/logs/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On DCNM server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/local/cisco/dcm/fm/logs/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Collect: dcm.log, event.log, discovery.log</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/dcnm-logs-&lt;date&gt;.tar.gz<span class="w"> </span>/usr/local/cisco/dcm/fm/logs/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tar: /usr/local/cisco/dcm/fm/logs/: Cannot open: No such file or directory</code></strong> — Verify the DCNM installation path with <code>ls -la /usr/local/cisco/dcm/fm/logs/</code> and adjust the path if DCNM is installed elsewhere.
+<strong><code>tar: Error is not recoverable: exiting now</code></strong> — Ensure you have read permissions on the logs directory by running <code>sudo tar czf</code> or checking permissions with <code>ls -ld /usr/local/cisco/dcm/fm/logs/</code>.
+<strong><code>/tmp/dcnm-logs-&lt;date&gt;.tar.gz: Permission denied</code></strong> — Verify write permissions to <code>/tmp</code> or specify an alternate writable directory like <code>/home/admin/</code> in the tar output path.</p>
+</div>
 <ol>
 <li>Open the TAC case at <code>https://mycase.cloudapps.cisco.com/</code> with product <strong>Data Center Network Manager</strong> and upload the collected bundles.</li>
 <li>Include the following in the case notes: DCNM version, NX-OS versions of affected switches, issue description, and first occurrence timestamp.</li>
@@ -8057,9 +8122,36 @@
 <li>Deploy the PTP configuration across all fabric switches via DCNM</li>
 <li>After deployment, verify PTP synchronisation on each switch:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>ptp<span class="w"> </span>clock
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>ptp<span class="w"> </span>clock
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>admin@switch-ip&#39;s password: 
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>PTP Clock Information
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>=====================
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Clock ID:                 00:11:22:33:44:55:66:77
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Clock Class:              248
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Clock Accuracy:           0xFE
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Offsetting Scaled Log Variance: 0x4E5D
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Priority1:                128
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Priority2:                255
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Domain Number:            0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Slave Only:               False
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Two Step Flag:            True
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Grandmaster Clock ID:     00:11:22:33:44:55:66:77
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Grandmaster Class:        248
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Grandmaster Accuracy:      0xFE
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Time Source:              GPS
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>UTC Offset Valid:         True
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Leap59:                   False
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Leap61:                   False
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Current UTC Offset:       37
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the admin account credentials and ensure SSH is enabled on the switch with <code>show feature | grep ssh</code>.
+<strong><code>Connection timed out</code></strong> — Check network connectivity to the switch IP address and confirm the management interface is reachable with <code>ping &lt;switch-ip&gt;</code>.
+<strong><code>% Invalid command</code></strong> — Confirm PTP is licensed and enabled on the switch; use <code>show license</code> and <code>show feature | grep ptp</code> to verify.</p>
+</div>
 <p>Confirm the <strong>Clock Identity</strong> field matches the grandmaster and the <strong>Offset from master</strong> is within the acceptable range (typically &lt; 1 µs for media networks). Investigate any switch showing <strong>Free-run</strong> state or high offset values.</p>
 <hr />
 <h2 id="back-up-and-restore-dcnm-configuration">Back Up and Restore DCNM Configuration<a class="headerlink" href="#back-up-and-restore-dcnm-configuration" title="Permanent link">&para;</a></h2>
@@ -8091,28 +8183,80 @@
 <li>Click <strong>Upgrade</strong> — DCNM will restart services; the web UI will be unavailable for 20–45 minutes.</li>
 <li>Monitor upgrade progress via the DCNM console (vCenter VM console or serial) or SSH to check service status:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After DCNM services restart</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dcnm_mgmt_server<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># After DCNM services restart</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dcnm_mgmt_server<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>DCNM Management Server Status Report
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>=====================================
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Service Name: dcnm-mgmt-server
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Status: RUNNING
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>PID: 4827
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Uptime: 2 days, 14 hours, 33 minutes
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Memory Usage: 2.8 GB / 8.0 GB
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>CPU Usage: 3.2%
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Last Health Check: 2024-01-15 09:47:22 UTC
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Database Connection: CONNECTED
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Cluster Status: HEALTHY (3/3 nodes online)
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>API Server: LISTENING on 0.0.0.0:8443
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Fabric Count: 12
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Managed Switches: 847
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dcnm_mgmt_server: command not found</code></strong> — Ensure DCNM is installed in the system PATH or source the DCNM environment setup script before running the command.
+<strong><code>Error: Unable to connect to management server on localhost:8443</code></strong> — Verify DCNM services have fully started by checking <code>systemctl status dcnm-*</code> and wait 30-60 seconds for all components to initialize.
+<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges using <code>sudo dcnm_mgmt_server status</code> or ensure your user is in the dcnm admin group.</p>
+</div>
 <ol>
 <li>Log back in to the DCNM web UI and confirm the version under <strong>Administration &gt; About DCNM</strong>; verify all fabrics show <strong>Connected</strong> and fabric discovery is functional.</li>
 </ol>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># CSV format: alias_name,wwn</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># esxi01-hba0,500010000abcdef0</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># esxi01-hba1,500010000abcdef1</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># REST API bulk import</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/devicealias?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    &quot;aliases&quot;: [</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">      {&quot;aliasName&quot;: &quot;esxi01-hba0&quot;, &quot;pwwn&quot;: &quot;50:00:10:00:00:ab:cd:ef&quot;},</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">      {&quot;aliasName&quot;: &quot;purestor01-ct0-fc0&quot;, &quot;pwwn&quot;: &quot;52:4a:93:70:ab:cd:ef:00&quot;}</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s1">    ]</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># CSV format: alias_name,wwn</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># esxi01-hba0,500010000abcdef0</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># esxi01-hba1,500010000abcdef1</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># REST API bulk import</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/devicealias?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">    &quot;aliases&quot;: [</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">      {&quot;aliasName&quot;: &quot;esxi01-hba0&quot;, &quot;pwwn&quot;: &quot;50:00:10:00:00:ab:cd:ef&quot;},</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s1">      {&quot;aliasName&quot;: &quot;purestor01-ct0-fc0&quot;, &quot;pwwn&quot;: &quot;52:4a:93:70:ab:cd:ef:00&quot;}</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s1">    ]</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;status&quot;: &quot;success&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;statusCode&quot;: 200,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;message&quot;: &quot;Device aliases imported successfully&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;data&quot;: {
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    &quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    &quot;aliasesCreated&quot;: 2,
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    &quot;aliasesUpdated&quot;: 0,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;aliasFailed&quot;: 0,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    &quot;details&quot;: [
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>      {
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        &quot;aliasName&quot;: &quot;esxi01-hba0&quot;,
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>        &quot;pwwn&quot;: &quot;50:00:10:00:00:ab:cd:ef&quot;,
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>        &quot;status&quot;: &quot;created&quot;
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>      },
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>      {
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        &quot;aliasName&quot;: &quot;purestor01-ct0-fc0&quot;,
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        &quot;pwwn&quot;: &quot;52:4a:93:70:ab:cd:ef:00&quot;,
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>        &quot;status&quot;: &quot;created&quot;
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>      }
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>    ]
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>  },
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>  &quot;requestId&quot;: &quot;req-8f3c-4a92-b1e2-7d9c5e1f2a3b&quot;
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the DCNM CA certificate into your system trust store.
+<strong><code>error: 401 Unauthorized</code></strong> — Ensure the dcnm-cookie.txt file is valid and not expired; re-authenticate with <code>curl -sk -c dcnm-cookie.txt -u admin:password https://${DCNM}/rest/login</code>.
+<strong><code>error: 400 Bad Request - Invalid PWWN format</code></strong> — Verify PWWN values use colon-separated format (50:00:10:00:00:ab:cd:ef) and are exactly 16 hex characters.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8149,7 +8293,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

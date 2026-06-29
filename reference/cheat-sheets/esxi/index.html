@@ -7460,12 +7460,95 @@ Top-10 ESXi shell commands for host management, networking, storage, and VM cont
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span><span class="w">  </span><span class="c1"># exit maintenance mode</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>esxcli<span class="w"> </span>system<span class="w"> </span>shutdown<span class="w"> </span>poweroff<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;hw fix&quot;</span><span class="w"> </span><span class="c1"># power off host (with reason)</span>
 </code></pre></div>
-<h2 id="quick-diagnostics">Quick diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w">                </span><span class="c1"># syslog target and rotation config</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span><span class="m">8</span>.8.8.8<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w">      </span><span class="c1"># ICMP ping from VMkernel</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ssd<span class="w"> </span><span class="c1"># list SSD-flagged devices</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv<span class="w">         </span><span class="c1"># batch esxtop snapshot (2 iterations)</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>System Version: 7.0.3, Build 19193900
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Hostname: esx-prod-01.datacenter.local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Domain Name: datacenter.local
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Vendor Name: Dell Inc.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Model: PowerEdge R750
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Name    Driver      Link State  Speed
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmnic0  ixgbe       Up          10000 Mbps
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vmnic1  ixgbe       Up          10000 Mbps
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vmnic2  bnx2x       Down        10000 Mbps
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Name           IPAddress        Netmask          Broadcast        ArpSettings
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>vmk0           192.168.1.100    255.255.255.0    192.168.1.255    Enabled
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vmk1           192.168.2.50     255.255.255.0    192.168.2.255    Enabled
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>World ID  Num Ports  Team Uplink  Active Filters  Config Port ID
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>2048      1          vmnic0       0               4200
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Device                   State  Paths  Vendor   Model
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>naa.60060e80157d2700012d7d8c6d4e511  Active  4      NETAPP   LUN
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>naa.60060e80157d2700012d7d8c6d4e512  Active  2      EMC      LUN
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Adapter  Type     Driver  State
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>vmhba0   FC       lpfc    link up
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>vmhba1   iSCSI    iscsi_vmk  link up
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>vmhba2   NVMe     nvme    link up
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Mount Point  Volume Name        Capacity     Free Space
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>/vmfs/volumes/datastore1  ds-prod-ssd-01  2.0 TB  1.2 TB
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>/vmfs/volumes/datastore2  ds-prod-hdd-02  5.0 TB  2.8 TB
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Vmid  Name                 File
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>1     prod-web-01          [datastore1] prod-web-01/prod-web-01.vmx
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>2     prod-db-02           [datastore2] prod-db-02/prod-db-02.vmx
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>3     prod-app-03          [datastore1] prod-app-03/prod-app-03.vmx
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>Retrieved runtime info for VM 1
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>Power State: poweredOn
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>(no output — command completes silently)
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Snapshot created.
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>(no output — command completes silently)
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>(no output — command completes silently)
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>Shutting down the system. Reason: hw fix
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The object or item referenced could not be found.</code></strong> — Verify the vmid exists by running <code>vim-cmd vmsvc/getallvms</code> and use the correct numeric ID.
+<strong><code>Error: Unable to change maintenance mode. Host has running virtual machines.</code></strong> — Migrate or power off all VMs before entering maintenance mode with <code>esxcli system maintenanceMode set --enable true</code>.
+<strong><code>Error: The ESXCLI command is not recognized.</code></strong> — Ensure you are connected to an ESXi host directly (not vCenter) and that the command syntax matches your ESXi version with <code>esxcli --version</code>.</p>
+</div>
+<h2 id="quick-diagnostics">Quick diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w">                </span><span class="c1"># syslog target and rotation config</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span><span class="m">8</span>.8.8.8<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w">      </span><span class="c1"># ICMP ping from VMkernel</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ssd<span class="w"> </span><span class="c1"># list SSD-flagged devices</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv<span class="w">         </span><span class="c1"># batch esxtop snapshot (2 iterations)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Syslog Configuration:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   Loghost: syslog.corp.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   Loghost SSL Thumbprint: 
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Default Network Retry Timeout: 180
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   Default Network Retry Attempts: 3
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   Queue Drop Mark: 90
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   Rotation Size: 1024
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   Number of Rotations: 8
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>PING 8.8.8.8 (8.8.8.8): 56 data bytes
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>64 bytes from 8.8.8.8: icmp_seq=0 ttl=119 time=12.45 ms
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=11.89 ms
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=12.12 ms
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>round-trip min/avg/max = 11.89/12.15/12.45 ms
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Device Name                                VSANID  Display Name
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>mpx.vmhba2.C0:T0:L0                        N/A     SSD Samsung PM1735 3.2TB
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>mpx.vmhba3.C0:T1:L0                        N/A     SSD Intel Optane 1.5TB
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Uptime: 45 days 3:22:15
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>PCPU USED(%): 8.45  RUN(%): 2.12  OVRLP(%): 0.00  LATCY(us): 145
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>MEMORY STATS (MB): 262144 TOTAL, 198456 VMKERNL, 45678 OTHER, 18010 FREE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to syslog server syslog.corp.local</code></strong> — Verify the syslog server hostname/IP is reachable and the firewall allows UDP 514 from the ESXi host.
+<strong><code>Connect timed out</code></strong> — Check network connectivity to 8.8.8.8 and ensure the VMkernel management network route is configured correctly.
+<strong><code>/tmp/esxtop.csv: Permission denied</code></strong> — Run the command with elevated privileges or redirect output to a writable directory like /var/tmp instead.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../virtualization/vmware/esxi/operations/procedures/">ESXi Operations</a></li>
@@ -7494,7 +7577,7 @@ Top-10 ESXi shell commands for host management, networking, storage, and VM cont
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

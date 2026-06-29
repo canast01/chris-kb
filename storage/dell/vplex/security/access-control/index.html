@@ -8966,6 +8966,24 @@ VPLEX access control operates at two layers: management plane access (who can ch
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /management/accounts&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /management/accounts/&lt;username&gt;/&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>User: admin
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>User: monitor
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>User: backup_svc
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>User: readonly_ops
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Name: admin
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Type: local
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Role: administrator
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Created: 2024-01-15T09:23:47Z
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Last-Modified: 2024-03-22T14:51:32Z
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Password-Expiry: never
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Account-Status: active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: /management/accounts: No such file or directory</code></strong> — Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods.
+<strong><code>Error: Authentication failed for user vplexcli</code></strong> — Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use <code>sudo vplexcli</code> if permitted.</p>
+</div>
 <h2 id="data-plane-access-control-storage-views">Data Plane Access Control — Storage Views<a class="headerlink" href="#data-plane-access-control-storage-views" title="Permanent link">&para;</a></h2>
 <p>Host access to VPLEX virtual volumes is exclusively controlled via storage views. A host can only see volumes that are:</p>
 <ol>
@@ -8974,50 +8992,70 @@ VPLEX access control operates at two layers: management plane access (who can ch
 <li>Zoned (at the SAN fabric level) between the host HBA and the VPLEX front-end port.</li>
 </ol>
 <h3 id="storage-view-access-model">Storage View Access Model<a class="headerlink" href="#storage-view-access-model" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Host HBA (WWN)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    → FC Zone (SAN fabric)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        → VPLEX Front-End Port
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>            → Storage View
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                → Virtual Volume(s) presented to this host
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Host HBA (WWN)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    → FC Zone (SAN fabric)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        → VPLEX Front-End Port
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>            → Storage View
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                → Virtual Volume(s) presented to this host
 </code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkTFrwzAQhXf_isO7qOytGgpOsMlQSiBgSvEiS7ItUCQjKU6h9L_3XMc0gwsBDe-ddB93T1J7JaJ2loHX_RCTZHAhHnYFg_SAClA2NqOMrkc8M94yIZnqUvgKAx8V9iKE296o76QTH85iKa32MKvGnoo36HjrtYBw1VEMm33TaNRnVWJjfXwt36HyzkZSWglH52NjC0qqPaXwBLtFbVJCdJ73qtbqiqTT4mC2jQ0TkS0ZvZOEZtszaB8v3NTOZPMciwO0lzPuMU0EccKoBxn5A4x8k7F-ApAXWPK8xToXbkGtgc2lu63vE_h9_bfS_1d58gNbYbE7?" /></p>
 <p>All three layers must be aligned for a host to access a volume. Missing any layer results in the host not seeing the volume.</p>
 <h3 id="creating-a-storage-view-step-by-step">Creating a Storage View (Step-by-Step)<a class="headerlink" href="#creating-a-storage-view-step-by-step" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Confirm the host HBA WWN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (Obtain from host: cat /sys/class/fc_host/host*/port_name  or  systool -c fc_host -v)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Step 2: Register the host initiator port with VPLEX</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port register \</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">  --port-wwn 10:00:00:00:c9:ab:cd:ef \</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">  --name db_prod_01_hba0&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 3: Create the storage view</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view create \</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">  --name sv_db_prod_01 \</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">  --cluster /clusters/cluster-1&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Step 4: Add VPLEX front-end ports to the view</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Identify available front-end ports:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/ports&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-ports \</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s2">  --ports /clusters/cluster-1/exports/ports/A0-FC00,/clusters/cluster-1/exports/ports/B0-FC00&quot;</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Step 5: Add the host initiator port to the view</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-initiator-ports \</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s2">  --initiator-ports /clusters/cluster-1/exports/initiator-ports/db_prod_01_hba0&quot;</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Step 6: Add virtual volumes to the view</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-virtual-volumes \</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01,/virtual-volumes/vv_oracle_prod_02&quot;</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Verify the completed storage view</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/sv_db_prod_01/&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1: Confirm the host HBA WWN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># (Obtain from host: cat /sys/class/fc_host/host*/port_name  or  systool -c fc_host -v)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2: Register the host initiator port with VPLEX</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port register \</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">  --port-wwn 10:00:00:00:c9:ab:cd:ef \</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">  --name db_prod_01_hba0&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 3: Create the storage view</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view create \</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">  --name sv_db_prod_01 \</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">  --cluster /clusters/cluster-1&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Step 4: Add VPLEX front-end ports to the view</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Identify available front-end ports:</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/ports&quot;</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-ports \</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s2">  --ports /clusters/cluster-1/exports/ports/A0-FC00,/clusters/cluster-1/exports/ports/B0-FC00&quot;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Step 5: Add the host initiator port to the view</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-initiator-ports \</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="s2">  --initiator-ports /clusters/cluster-1/exports/initiator-ports/db_prod_01_hba0&quot;</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="c1"># Step 6: Add virtual volumes to the view</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-virtual-volumes \</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01,/virtual-volumes/vv_oracle_prod_02&quot;</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="c1"># Verify the completed storage view</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/sv_db_prod_01/&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/clusters/cluster-1/exports/ports/A0-FC00
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/clusters/cluster-1/exports/ports/A0-FC01
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/clusters/cluster-1/exports/ports/B0-FC00
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/clusters/cluster-1/exports/ports/B0-FC01
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/clusters/cluster-1/exports/ports/B0-FC02
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Name                 sv_db_prod_01
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Cluster              /clusters/cluster-1
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Front-end Ports      A0-FC00, B0-FC00
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Initiator Ports      db_prod_01_hba0 (10:00:00:00:c9:ab:cd:ef)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Virtual Volumes      vv_oracle_prod_01, vv_oracle_prod_02
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>LUN Assignments      0, 1
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>View State           Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found</code></strong> — Verify the WWN is correctly obtained from the host and registered before adding it to the storage view.
+<strong><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist</code></strong> — Confirm the virtual volume names exist in VPLEX using <code>vplexcli -q -e "ls /virtual-volumes"</code> before adding them to the view.
+<strong><code>Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view</code></strong> — Use different front-end ports or remove the port from the conflicting storage view first.</p>
+</div>
 <h3 id="storage-view-design-principles">Storage View Design Principles<a class="headerlink" href="#storage-view-design-principles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9050,27 +9088,54 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </tbody>
 </table>
 <h3 id="storage-view-audit-and-cleanup">Storage View Audit and Cleanup<a class="headerlink" href="#storage-view-audit-and-cleanup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage views on all clusters</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List all registered initiator ports (check for orphaned/unrecognised WWNs)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/initiator-ports&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Unregister an orphaned initiator port</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port unregister \</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">  --initiator-port /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Remove a virtual volume from a storage view (before decommissioning the volume)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view remove-virtual-volumes \</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01&quot;</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Destroy a storage view when a host is decommissioned</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view destroy \</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 --force&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all storage views on all clusters</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List all registered initiator ports (check for orphaned/unrecognised WWNs)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/initiator-ports&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Unregister an orphaned initiator port</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port unregister \</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">  --initiator-port /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Remove a virtual volume from a storage view (before decommissioning the volume)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view remove-virtual-volumes \</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01&quot;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Destroy a storage view when a host is decommissioned</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view destroy \</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 --force&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/clusters/cluster-1/exports/storage-views/sv_db_prod_01
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/clusters/cluster-1/exports/storage-views/sv_db_prod_02
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/clusters/cluster-2/exports/storage-views/sv_app_tier_01
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>/clusters/cluster-2/exports/storage-views/sv_app_tier_02
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iqn.1991-05.com.example:host-db-01
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>iqn.1991-05.com.example:host-db-02
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>wwn.500143800000a1b2:500143800000a1b3
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>wwn.500143800000c4d5:500143800000c4d6
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Initiator Port: wwn.500143800000a1b2:500143800000a1b3
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  Cluster: /clusters/cluster-1
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  Port WWN: 50:01:43:80:00:00:a1:b2
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  Node WWN: 50:01:43:80:00:00:a1:b3
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  Status: Registered
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  Storage Views: sv_db_prod_01
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>Virtual volume vv_oracle_prod_01 removed from storage view sv_db_prod_01
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>Storage view sv_db_prod_01 destroyed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found</code></strong> — Verify the storage view path exists using <code>vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"</code> and correct the name.
+<strong><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators</code></strong> — Remove all initiator mappings from the virtual volume before removal using <code>storage-view remove-virtual-volumes</code> or unregister initiators first.
+<strong><code>Error: Cannot destroy storage view: active I/O detected</code></strong> — Ensure all host I/O is quiesced and the storage view has no active connections before retrying with <code>--force</code>.</p>
+</div>
 <p><strong>Quarterly review task</strong>: list all storage views and cross-reference initiator WWNs against the CMDB. Remove any views for decommissioned hosts and unregister their initiators.</p>
 <h2 id="san-fabric-zoning">SAN Fabric Zoning<a class="headerlink" href="#san-fabric-zoning" title="Permanent link">&para;</a></h2>
 <p>SAN fabric zoning is the enforcement layer at the fibre channel switch level, separate from VPLEX storage views. Both layers must be correctly configured for host-to-volume access.</p>
@@ -9106,23 +9171,65 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </tbody>
 </table>
 <h3 id="verifying-zoning">Verifying Zoning<a class="headerlink" href="#verifying-zoning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the SAN switch (Brocade example): show active zone configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>zoneshow<span class="w"> </span>--active
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># On the SAN switch: show zones containing a specific WWN</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>zoneshow<span class="w"> </span>--name<span class="w"> </span>&lt;zone_name&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># On a Linux host: verify visible VPLEX paths</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># On a Linux host (Device Mapper): check path count and status</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># On VMware ESXi: list storage adapters and paths</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># On a host using EMC PowerPath: list all paths</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the SAN switch (Brocade example): show active zone configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>zoneshow<span class="w"> </span>--active
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># On the SAN switch: show zones containing a specific WWN</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>zoneshow<span class="w"> </span>--name<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># On a Linux host: verify visible VPLEX paths</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># On a Linux host (Device Mapper): check path count and status</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># On VMware ESXi: list storage adapters and paths</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># On a host using EMC PowerPath: list all paths</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># zoneshow --active
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Defined configuration:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a> cfg: PROD_SAN_CFG
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  zone: PROD_ZONE_01
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    member: 50:00:14:40:5d:2a:b1:c3
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    member: 50:00:09:73:48:1f:a2:e7
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  zone: PROD_ZONE_02
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    member: 50:00:14:40:5d:2a:b1:c4
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    member: 50:00:14:40:5d:2a:b1:c5
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a># zoneshow --name PROD_ZONE_01
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>zone: PROD_ZONE_01
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  member: 50:00:14:40:5d:2a:b1:c3
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  member: 50:00:09:73:48:1f:a2:e7
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a># multipath -ll
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>mpatha (360001405d2ab1c3a1b2c3d4e5f6g7h8) dm-0 EMC,VPLEX
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>size=500G features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>| |- 2:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>| `- 3:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  |- 4:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  `- 5:0:0:0 sdd 8:48 active ready running
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a># multipathd show paths
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>hcil    dev dev_t pri dm_st chk_st next_check
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>2:0:0:0 sda 8:0   50  active ready  /dev/sda
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>3:0:0:0 sdb 8:16  50  active ready  /dev/sdb
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>4:0:0:0 sdc 8:32  10  active ready  /dev/sdc
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>5:0:0:0 sdd 8:48  10  active ready  /dev/sdd
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a># esxcli storage nmp path list -d naa.60001405d2ab1c3a1b2c3d4e5f6g7h8
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>naa.60001405d2ab1c3a1b2c3d4e5f6g7h8
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>   vmhba2:C0:T0:L0 fc.500014405d2ab1c3:50000940735d2ab1c naa.60001405d2ab1c3a1b2c3d4e5f6g7h8 active ready
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>   vmhba3:C0:T0:L0 fc.500014405d2ab1c4:50000940735d2ab1d naa.60001405d2ab1c3a1b2c3d4e5f6g7h8 active ready
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a># powermt display dev=all
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>Symmetrix ID: 000297900123
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>Logical Device ID: 0ABC
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>state=alive; policy=SymmO
 </code></pre></div>
 <h2 id="privileged-access-management">Privileged Access Management<a class="headerlink" href="#privileged-access-management" title="Permanent link">&para;</a></h2>
 <p>For production environments handling sensitive workloads:</p>
@@ -9185,7 +9292,7 @@ VPLEX access control operates at two layers: management plane access (who can ch
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:07:24 UTC"><span class="timeago" datetime="2026-06-29T05:07:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:07:24 UTC">2026-06-29</span>
   </span>
 
     

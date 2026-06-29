@@ -7569,189 +7569,663 @@ Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening b
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span>&lt;interface&gt;
 </code></pre></div>
-<p>Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ip<span class="w"> </span>route
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;GW&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/42)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: unknown or ambiguous command 'mod'.</code></strong> — Use <code>nmcli connection modify</code> or ensure NetworkManager version is 1.0+; older versions use <code>nmcli con modify</code> syntax differently.
+<strong><code>Error: Connection activation failed: No suitable device found for this connection.</code></strong> — Verify the interface name is correct with <code>nmcli device status</code> and ensure the device exists and is not already managed by another connection.
+<strong><code>Error: invalid prefix '24a' in address '&lt;IP&gt;/24a'.</code></strong> — Remove extra characters from the prefix value; it must be a number between 0–32 for IPv4 (e.g., <code>/24</code> not <code>/24a</code>).</p>
+</div>
+<p>Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>route
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;GW&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span>.8.8.8
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    inet 127.0.0.1/8 scope host lo
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    inet6 ::1/128 scope host
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    link/ether 52:54:00:a1:b2:c3 brd ff:ff:ff:ff:ff:ff
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    inet 192.168.1.45/24 brd 192.168.1.255 scope global eth0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    inet6 fe80::5054:ff:fea1:b2c3/64 scope link
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>default via 192.168.1.1 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=1.23 ms
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.45 ms
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=1.12 ms
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>--- 192.168.1.1 statistics ---
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=12.34 ms
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=11.98 ms
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>64 bytes from 8.8.8.8: icmp_seq=3 ttl=119 time=12.11 ms
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device "eth0" does not exist.</code></strong> — Replace <code>&lt;interface&gt;</code> with a valid interface name from <code>ip link show</code> output.
+<strong><code>ping: sendto: Operation not permitted</code></strong> — Ensure the user has sufficient privileges or run with <code>sudo</code>.
+<strong><code>ping: unknown host 8.8.8.8</code></strong> — Verify DNS resolution is working with <code>cat /etc/resolv.conf</code> and check network connectivity to the gateway first.</p>
+</div>
 <p><strong>Ubuntu (Netplan):</strong></p>
 <p>Edit <code>/etc/netplan/00-installer-config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">network</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">ens3</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP&gt;/&lt;prefix&gt;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;GW&gt;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;DNS1&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;DNS2&gt;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">dhcp4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">network</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">ens3</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP&gt;/&lt;prefix&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;GW&gt;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;DNS1&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;DNS2&gt;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">dhcp4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <p>Apply:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>netplan<span class="w"> </span>apply
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>netplan<span class="w"> </span>apply
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid YAML in /etc/netplan/*.yaml</code></strong> — Validate YAML syntax with <code>netplan validate</code> before applying, or check for tabs instead of spaces in the configuration file.
+<strong><code>Error: Failed to apply network config: Permission denied</code></strong> — Run the command with <code>sudo netplan apply</code> as root or a user with sudo privileges.
+<strong><code>Error: Cannot find netplan executable</code></strong> — Install netplan with <code>apt install netplan.io</code> on Debian/Ubuntu systems where it may not be pre-installed.</p>
+</div>
 <hr />
 <h2 id="configure-ntp">Configure NTP<a class="headerlink" href="#configure-ntp" title="Permanent link">&para;</a></h2>
 <p>Accurate time is required for Kerberos (domain join), log correlation, and certificate validity.</p>
 <p><strong>RHEL / Rocky:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>chrony<span class="w"> </span>-y
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>chrony<span class="w"> </span>-y
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 07 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Dependencies resolved.
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>================================================================================
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a> Package             Arch         Version              Repository        Size
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>================================================================================
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Installing:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a> chrony              x86_64       4.3-1.fc39           fedora           566 kB
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Transaction Summary
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>================================================================================
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>Install  1 Package
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Total download size: 566 kB
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Installed size: 1.3 MiB
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Downloading Packages:
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>chrony-4.3-1.fc39.x86_64.rpm                       100% |████████| 566 kB
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Running transaction
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>Preparing        :                                                        1/1
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>Installing       : chrony-4.3-1.fc39.x86_64.rpm                          1/1
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>Running scriptlet: chrony-4.3-1.fc39.x86_64.rpm                          1/1
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>Verifying        : chrony-4.3-1.fc39.x86_64.rpm                          1/1
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>Installed:
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  chrony-4.3-1.fc39.x86_64
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>Complete!
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>Created symlink /etc/systemd/system/multi-user.target.wants/chronyd.service → /usr/lib/systemd/system/chronyd.service.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: chrony</code></strong> — Ensure the system repositories are enabled with <code>dnf repolist</code> and run <code>dnf makecache</code> to refresh metadata.
+<strong><code>Error: Failed to enable unit: Unit file /usr/lib/systemd/system/chronyd.service not found.</code></strong> — Verify the chrony package installed successfully and check <code>/usr/lib/systemd/system/</code> for the chronyd.service file.</p>
+</div>
 <p>Edit <code>/etc/chrony.conf</code> — replace the default pool with your NTP server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>server &lt;NTP-server&gt; iburst
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>server &lt;NTP-server&gt; iburst
 </code></pre></div>
 <p>Restart and verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chronyc<span class="w"> </span>tracking
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>chronyc<span class="w"> </span>tracking
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>210 Number of sources = 4
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  .-- Source mode  &#39;^&#39; = server, &#39;=&#39; = peer, &#39;#&#39; = local clock.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> / .- Sample mode  &#39;+&#39; = combined, &#39;-&#39; = not combined, &#39;?&#39; = not combined.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>| /  .- Poll adjustment. &#39;+&#39; = adj. larger, &#39;-&#39; = adj. smaller.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>|| /   - Leap status.  &#39;+&#39; = leap second pending, &#39;-&#39; = no leap second.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>|| |
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>MS Name/IP address         Stratum Poll Reach LastRx Last sample
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>===============================================================================
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>^+ ntp1.example.com              2  10   377    42  -1.234ms[-1.456ms] +/-   12ms
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>^+ 91.189.89.199                 2  10   377    51  +2.341ms[+2.123ms] +/-   18ms
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>^- 162.159.200.123               3  10   377    38  +8.234ms[+8.012ms] +/-   45ms
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>^? 203.0.113.45                  0  10     0     -     +0ns[   +0ns] +/-    0ns
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Reference ID    : C0A80101 (192.168.1.1)
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Leap status     : Normal
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>RMS offset      : 1.234 ms
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Frequency       : -2.341 ppm
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Residual freq   : +0.012 ppm
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Skew            : 1.456 ppm
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Root delay      : 28.456 ms
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Root dispersion : 34.123 ms
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Update interval : 1024.5 s
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>Estimated error : 2.341 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chronyd: command not found</code></strong> — Install chrony with <code>apt install chrony</code> (Debian/Ubuntu) or <code>yum install chrony</code> (RHEL/CentOS).
+<strong><code>Failed to restart chronyd.service: Unit chronyd.service not found.</code></strong> — Enable and start the service with <code>systemctl enable chronyd &amp;&amp; systemctl start chronyd</code>.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as the root user.</p>
+</div>
 <p><code>Reference ID</code> should show your NTP server, and <code>System time</code> offset should be under 100ms.</p>
 <p><strong>Ubuntu:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>timedatectl<span class="w"> </span>show-timesync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>timedatectl<span class="w"> </span>show-timesync
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>System clock synchronized: yes
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>              RTC adjusted: yes
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>       RTC time now: Wed 2024-01-17 14:32:18
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>       Time zone: UTC (UTC, +0000)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a> Network time on: yes
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>NTP synchronized: yes
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a> RTC in local TZ: no
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      DST active: n/a
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>       Leap sec: normal
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Human time adjustment: 0
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>       Leap second: 0
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>       Poll interval: 34min 8s
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>      Frequency adjustment: +12.345ppm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>System has not been booted with systemd as init system (PID 1). Cannot operate.</code></strong> — Ensure the system is running systemd; this command is not compatible with other init systems like SysVinit.
+<strong><code>Failed to set ntp: Unit systemd-timesyncd.service not found.</code></strong> — Install or enable the systemd-timesyncd service with <code>systemctl enable systemd-timesyncd</code>.</p>
+</div>
 <hr />
 <h2 id="register-with-subscription-manager-rhel">Register with Subscription Manager (RHEL)<a class="headerlink" href="#register-with-subscription-manager-rhel" title="Permanent link">&para;</a></h2>
 <p>If deploying RHEL (not Rocky/AlmaLinux), register with Red Hat Subscription Manager to enable package repos.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>subscription-manager<span class="w"> </span>register<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>--username<span class="w"> </span>&lt;redhat-user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--password<span class="w"> </span>&lt;redhat-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--auto-attach
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>subscription-manager<span class="w"> </span>register<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>--username<span class="w"> </span>&lt;redhat-user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--password<span class="w"> </span>&lt;redhat-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--auto-attach
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Registering to: subscription.rhsm.redhat.com:443/subscription
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>The system has been registered with ID: 12a3b4c5-6d7e-8f9g-0h1i-2j3k4l5m6n7o
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Red Hat Enterprise Linux Server 8.6 (Ootpa) RHEL for x86_64 Subscribed
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Red Hat Enterprise Linux for SAP Applications 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Red Hat Enterprise Linux (for High Availability) 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Red Hat Enterprise Linux (for Resilient Storage) 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Red Hat Enterprise Linux (for SAP) 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>...
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Red Hat Enterprise Linux (for Real Time) 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Red Hat Enterprise Linux (for NFV) 8.6 (Ootpa) Not Subscribed
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Installed Product Current Version Status:
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Red Hat Enterprise Linux Server 8.6 (Ootpa) Subscribed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid username or password</code></strong> — Verify credentials are correct and the Red Hat account has active subscriptions.
+<strong><code>Error: This system is already registered</code></strong> — Run <code>subscription-manager unregister</code> first to clear the existing registration.
+<strong><code>Error: Unable to reach subscription.rhsm.redhat.com</code></strong> — Ensure the system has network connectivity and firewall rules allow HTTPS traffic to Red Hat's subscription servers.</p>
+</div>
 <p>Verify attached subscriptions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>subscription-manager<span class="w"> </span>status
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>subscription-manager<span class="w"> </span>status
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+-------------------------------------------+
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>   System Status Details
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>+-------------------------------------------+
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Overall Status: Current
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>System Purpose Status
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Purpose Level: Self Support
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Content Status
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Red Hat Enterprise Linux Server (release 8.9)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Subscription Name: Red Hat Enterprise Linux Server, Standard (Physical or Virtual Nodes)
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>SKU: RH00604F5
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Contract: 12345678
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Serial: a1b2c3d4e5f6g7h8
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Active: True
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Quantity: 1
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>Starts: 06/15/2024
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>Ends: 06/14/2025
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>System Type: Physical
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>Subscription Name: Red Hat Satellite Infrastructure Subscription
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>SKU: RH00888ABC
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>Serial: x9y8z7w6v5u4t3s2
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>Active: True
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>Quantity: 1
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>Starts: 06/15/2024
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>Ends: 06/14/2025
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>This system is not registered with an entitlement server. See your system administrator for more information.</code></strong> — Register the system using <code>subscription-manager register --username &lt;user&gt; --password &lt;pass&gt;</code> and attach a subscription with <code>subscription-manager attach --auto</code>.
+<strong><code>Traceback (most recent call last): ... dbus.exceptions.DBusException: org.freedesktop.DBus.Error.ServiceUnknown</code></strong> — Start the subscription manager daemon with <code>sudo systemctl start rhsmcertd</code> and ensure it is enabled.</p>
+</div>
 <p>For Rocky or AlmaLinux, repos are enabled by default — skip this step.</p>
 <hr />
 <h2 id="apply-security-baseline">Apply Security Baseline<a class="headerlink" href="#apply-security-baseline" title="Permanent link">&para;</a></h2>
 <p>Update all packages and install baseline security tooling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Full system update</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dnf<span class="w"> </span>update<span class="w"> </span>-y
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Core security packages</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>aide<span class="w"> </span>firewalld
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Enable firewall</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>firewalld
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Verify SELinux is enforcing</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>sestatus
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Full system update</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>dnf<span class="w"> </span>update<span class="w"> </span>-y
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Core security packages</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>aide<span class="w"> </span>firewalld
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Enable firewall</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>firewalld
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Verify SELinux is enforcing</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>sestatus
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Dependencies resolved.
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>================================================================================
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a> Package                    Arch       Version              Repository   Size
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>================================================================================
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Installing:
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a> kernel                     x86_64     6.8.2-1.fc40         updates     65 M
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a> systemd                    x86_64     255.4-1.fc40         updates     4.2 M
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a> glibc                      x86_64     2.39-4.fc40          updates     2.1 M
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Complete! 47 packages upgraded, 8 newly installed.
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Dependencies resolved.
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>================================================================================
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a> Package                    Arch       Version              Repository   Size
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>================================================================================
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>Installing:
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a> aide                       x86_64     0.18.5-1.fc40        fedora      456 k
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a> firewalld                  noarch     1.3.0-1.fc40         fedora      2.1 M
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Complete! 2 packages installed.
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>Created symlink /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service → /usr/lib/systemd/unit/firewalld.service.
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>Created symlink /etc/systemd/system/multi-user.target.wants/firewalld.service → /usr/lib/systemd/unit/firewalld.service.
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a> firewalld.service - firewalld - dynamic firewall daemon
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>   Loaded: loaded (/usr/lib/systemd/unit/firewalld.service; enabled; preset: enabled)
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>   Active: active (running) since Thu 2024-12-19 14:23:45 UTC; 2s ago
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>     Docs: man:firewalld(1)
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>  Process: 8742 ExecStart=/usr/sbin/firewalld --nofork --nopid $FIREWALLD_ARGS (code=0/exited)
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a> Main PID: 8743 (firewalld)
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>    Tasks: 3 (limit: 4915)
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>   Memory: 42.3M
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>      CPU: 187ms
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>   CGroup: /system.slice/firewalld.service
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>           └─8743 /usr/sbin/firewalld --nofork --nopid
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a> SELinux status:                 enabled
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a> Current mode:                   enforcing
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a> Mode from config file:          enforcing
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a> Policy version:                 33
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a> Policy MLS status:              enabled
+<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a> Max logins before policy reload: 2147483647
+<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a> Process count:                  287
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: aide</code></strong> — Verify the EPEL or appropriate repository is enabled with <code>dnf repolist</code> and enable it if needed.
+<strong><code>Error: firewalld.service is masked</code></strong> — Unmask the service first with <code>systemctl unmask firewalld</code> before enabling it.</p>
+</div>
 <p>If SELinux is in permissive mode, set it to enforcing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>setenforce<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=permissive/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>setenforce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=permissive/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>setenforce: command not found</code></strong> — Install SELinux tools with <code>yum install policycoreutils-python-utils</code> or <code>apt install selinux-utils</code> depending on your distribution.
+<strong><code>sed: can't read /etc/selinux/config: No such file or directory</code></strong> — SELinux is not installed on this system; install it first with your package manager before attempting to configure it.</p>
+</div>
 <p>Initialise AIDE (file integrity baseline) — this takes several minutes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aide<span class="w"> </span>--init
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>mv<span class="w"> </span>/var/lib/aide/aide.db.new.gz<span class="w"> </span>/var/lib/aide/aide.db.gz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>aide<span class="w"> </span>--init
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>mv<span class="w"> </span>/var/lib/aide/aide.db.new.gz<span class="w"> </span>/var/lib/aide/aide.db.gz
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>AIDE initialized.
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Database has been successfully initialized.
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>aide: error while loading shared libraries: libmhash.so.2: cannot open shared object file</code></strong> — Install the libmhash library with <code>apt-get install libmhash2</code> (Debian/Ubuntu) or <code>yum install mhash</code> (RHEL/CentOS).
+<strong><code>mv: cannot stat '/var/lib/aide/aide.db.new.gz': No such file or directory</code></strong> — Verify the aide --init command completed successfully and check that /var/lib/aide/ directory exists with <code>ls -la /var/lib/aide/</code>.</p>
+</div>
 <p>Schedule a daily integrity check:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 3 * * * root /usr/sbin/aide --check&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/cron.d/aide
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 3 * * * root /usr/sbin/aide --check&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/cron.d/aide
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /etc/cron.d/aide: Permission denied</code></strong> — Run the command with <code>sudo</code> to gain write access to the cron.d directory.
+<strong><code>bash: /etc/cron.d/aide: No such file or directory</code></strong> — Create the file first with <code>sudo touch /etc/cron.d/aide</code> or use <code>sudo tee</code> instead of <code>&gt;&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="configure-ssh-hardening">Configure SSH Hardening<a class="headerlink" href="#configure-ssh-hardening" title="Permanent link">&para;</a></h2>
 <p>Edit <code>/etc/ssh/sshd_config</code> to restrict SSH access:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable root login</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Disable password authentication (key-based only)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Restrict to specific users or groups</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>wheel
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Use only strong ciphers</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Reduce idle timeout</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Disable X11 forwarding</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>X11Forwarding<span class="w"> </span>no
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Disable root login</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Disable password authentication (key-based only)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Restrict to specific users or groups</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>wheel
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Use only strong ciphers</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="c1"># Reduce idle timeout</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="c1"># Disable X11 forwarding</span>
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>X11Forwarding<span class="w"> </span>no
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Ensure SSH host keys exist in <code>/etc/ssh/</code> before applying these settings; regenerate with <code>ssh-keygen -A</code> if missing.
+<strong><code>sshd_config: line X: Bad cipher type 'aes256-gcm@openssh.com'</code></strong> — Verify your OpenSSH version supports the specified ciphers; use <code>ssh -Q cipher</code> to list available options and adjust accordingly.
+<strong><code>AllowGroups: no such group 'sshusers'</code></strong> — Create the required groups with <code>groupadd sshusers</code> and <code>groupadd wheel</code> before applying the configuration, or use existing groups.</p>
+</div>
 <p>Validate the configuration and restart:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sshd<span class="w"> </span>-t
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sshd<span class="w"> </span>-t
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Generate SSH host keys with <code>ssh-keygen -A</code> before starting sshd.
+<strong><code>Job for ssh.service failed because the control process exited with error code.</code></strong> — Check <code>/etc/ssh/sshd_config</code> for syntax errors using <code>sshd -t</code> and review <code>/var/log/auth.log</code> for details.</p>
+</div>
 <p>Open the SSH port in the firewall:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>firewall-cmd<span class="w"> </span>--reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>success
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: INVALID_SERVICE: ssh not available</code></strong> — Verify the service is defined in <code>/etc/firewalld/services/ssh.xml</code> or use <code>firewall-cmd --get-services</code> to list available services.
+<strong><code>Error: COMMAND_FAILED: '/usr/sbin/iptables -t filter -I INPUT_direct -p tcp -m tcp --dport 22 -j ACCEPT' failed</code></strong> — Ensure firewalld is running with <code>systemctl start firewalld</code> and iptables/nftables backend is properly configured.</p>
+</div>
 <hr />
 <h2 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h2>
 <p>Forward logs to a central syslog server (e.g., a SIEM or syslog aggregator).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>rsyslog<span class="w"> </span>-y
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>rsyslog<span class="w"> </span>-y
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rsyslog
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Dependencies resolved.
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>================================================================================
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a> Package             Arch         Version              Repository        Size
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>================================================================================
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>Installing:
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a> rsyslog             x86_64       8.2102.0-109.el9     appstream        664 k
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>Transaction Summary
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>================================================================================
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>Install  1 Package
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>Total download size: 664 k
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>Installed size: 1.8 M
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>Downloading Packages:
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>rsyslog-8.2102.0-109.el9.x86_64.rpm                    892 kB/s | 664 kB     00:01
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>Running transaction
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>Preparing        :                                                        1/1
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>Installing       : rsyslog-8.2102.0-109.el9.x86_64                       1/1
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>Running scriptlets: rsyslog-8.2102.0-109.el9.x86_64                       1/1
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>Verifying        : rsyslog-8.2102.0-109.el9.x86_64                       1/1
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>Complete!
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>Created symlink /etc/systemd/system/syslog.target.wants/rsyslog.service → /usr/lib/systemd/system/rsyslog.service.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: rsyslog</code></strong> — Verify repository access with <code>dnf repolist</code> and ensure appstream repository is enabled.
+<strong><code>Failed to enable unit: Unit file /usr/lib/systemd/system/rsyslog.service not found.</code></strong> — Confirm the package installed successfully with <code>rpm -q rsyslog</code> before enabling the service.</p>
+</div>
 <p>Add a remote target to <code>/etc/rsyslog.conf</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a># Forward all logs to central syslog server (TCP)
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>*.* @@&lt;syslog-server&gt;:514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a># Forward all logs to central syslog server (TCP)
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>*.* @@&lt;syslog-server&gt;:514
 </code></pre></div>
 <p>Restart and verify forwarding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>logger<span class="w"> </span>-p<span class="w"> </span>local0.info<span class="w"> </span><span class="s2">&quot;Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>logger<span class="w"> </span>-p<span class="w"> </span>local0.info<span class="w"> </span><span class="s2">&quot;Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>(no output — command completes silently)
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to restart rsyslog.service: Unit rsyslog.service not found.</code></strong> — Install rsyslog with <code>apt-get install rsyslog</code> (Debian/Ubuntu) or <code>yum install rsyslog</code> (RHEL/CentOS), then retry the restart.
+<strong><code>sudo: systemctl: command not found</code></strong> — Run the command with <code>sudo systemctl restart rsyslog</code> or as the root user, as systemctl requires elevated privileges.</p>
+</div>
 <p>Confirm the test message appears on the syslog server.</p>
 <hr />
 <h2 id="domain-join-if-required">Domain Join (if required)<a class="headerlink" href="#domain-join-if-required" title="Permanent link">&para;</a></h2>
 <p>Join the server to Active Directory using <code>realmd</code> and <code>sssd</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sssd<span class="w"> </span>realmd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common-tools
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># Discover the domain</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>realm<span class="w"> </span>discover<span class="w"> </span>corp.local
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Join the domain</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>&lt;domain-admin&gt;<span class="w"> </span>corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sssd<span class="w"> </span>realmd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common-tools
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="c1"># Discover the domain</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>realm<span class="w"> </span>discover<span class="w"> </span>corp.local
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="c1"># Join the domain</span>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>&lt;domain-admin&gt;<span class="w"> </span>corp.local
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>Dependencies resolved.
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>================================================================================
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a> Package                      Arch       Version              Repository   Size
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>================================================================================
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>Installing:
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a> sssd                         x86_64     2.9.1-4.el9          baseos      1.2 M
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a> realmd                       x86_64     0.17.10-1.el9        baseos      412 k
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a> oddjob                       x86_64     0.34.7-2.el9         baseos      98 k
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a> oddjob-mkhomedir            x86_64     0.34.7-2.el9         baseos      52 k
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a> adcli                        x86_64     0.9.2-2.el9          baseos      156 k
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a> samba-common-tools          x86_64     4.18.5-2.el9         baseos      2.1 M
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>...
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>Complete! 
+<a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>
+<a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a> realm-name: CORP.LOCAL
+<a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a> kerberos-realm: CORP.LOCAL
+<a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a> configured: kerberos-password
+<a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a> server-software: active-directory
+<a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a> client-software: sssd
+<a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a> required-package: sssd
+<a id="__codelineno-38-22" name="__codelineno-38-22" href="#__codelineno-38-22"></a> required-package: adcli
+<a id="__codelineno-38-23" name="__codelineno-38-23" href="#__codelineno-38-23"></a> required-package: samba-common-tools
+<a id="__codelineno-38-24" name="__codelineno-38-24" href="#__codelineno-38-24"></a>
+<a id="__codelineno-38-25" name="__codelineno-38-25" href="#__codelineno-38-25"></a>Password for corp-admin@CORP.LOCAL:
+<a id="__codelineno-38-26" name="__codelineno-38-26" href="#__codelineno-38-26"></a> * Successfully enrolled machine in realm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>realm: Couldn't resolve host: corp.local</code></strong> — Verify DNS resolution with <code>nslookup corp.local</code> and ensure the domain controller is reachable on port 389/636.
+<strong><code>adcli: couldn't connect to corp.local: SASL(-1): generic failure</code></strong> — Confirm the domain admin credentials are correct and the user account has permission to join computers to the domain.
+<strong><code>Error: Failed to start sssd.service</code></strong> — Run <code>systemctl status sssd</code> to check logs, then verify <code>/etc/sssd/sssd.conf</code> has correct domain and server settings.</p>
+</div>
 <p>Verify join status:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>realm<span class="w"> </span>list
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>id<span class="w"> </span>&lt;domain-user&gt;@corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>realm<span class="w"> </span>list
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>id<span class="w"> </span>&lt;domain-user&gt;@corp.local
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>corp.local
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>  type: kerberos
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>  realm-name: CORP.LOCAL
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>  domain-name: corp.local
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>  configured: kerberos-member
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>  server-software: active-directory
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>  client-software: sssd
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>  uid=1234601106(domain-user@corp.local) gid=1234600513(domain users@corp.local) groups=1234600513(domain users@corp.local),1234600512(domain admins@corp.local)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>realm: command not found</code></strong> — Install the realmd package with <code>sudo apt-get install realmd</code> or <code>sudo yum install realmd</code>.
+<strong><code>id: domain-user@corp.local: no such user</code></strong> — Ensure the domain user is enrolled in the realm with <code>sudo realm join corp.local</code> and SSSD is running via <code>sudo systemctl restart sssd</code>.</p>
+</div>
 <p>Configure home directory creation on first login:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>authselect<span class="w"> </span><span class="k">select</span><span class="w"> </span>sssd<span class="w"> </span>with-mkhomedir<span class="w"> </span>--force
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>authselect<span class="w"> </span><span class="k">select</span><span class="w"> </span>sssd<span class="w"> </span>with-mkhomedir<span class="w"> </span>--force
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>Selecting sssd with-mkhomedir...
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>Backup stored at /etc/authselect/backups/2024-01-15-14-32-45-user
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>Profile installed successfully.
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>Created symlink /etc/systemd/system/multi-user.target.wants/oddjobd.service → /etc/systemd/system/oddjobd.service.
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>oddjobd.service is being started.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Profile 'sssd with-mkhomedir' was not found.</code></strong> — Verify the profile name is correct and run <code>authselect list-profiles</code> to see available options.
+<strong><code>Unit oddjobd.service could not be found.</code></strong> — Install the oddjob package first with <code>yum install oddjob</code> or <code>apt install oddjob</code>.</p>
+</div>
 <p>Restrict SSH access to specific AD groups:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;Linux Admins&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;Linux Admins&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>realm: command not found</code></strong> — Install the realmd package with <code>sudo apt-get install realmd</code> (Debian/Ubuntu) or <code>sudo yum install realmd</code> (RHEL/CentOS).
+<strong><code>Error: Couldn't find realm configuration for domain</code></strong> — Ensure the system is already joined to an Active Directory domain with <code>realm join domain.com</code> before granting permissions.</p>
+</div>
 <hr />
 <h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
 <p>Run the following checks and confirm all pass before handing off the server.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># No failed services</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Network connectivity</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;DNS-server&gt;
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>nslookup<span class="w"> </span>corp.local
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># NTP sync status</span>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>
-<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="c1"># SELinux enforcing</span>
-<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>sestatus
-<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
-<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="c1"># Firewall active</span>
-<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>firewall-cmd<span class="w"> </span>--state
-<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>firewall-cmd<span class="w"> </span>--list-all
-<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
-<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="c1"># SSH hardening confirmed</span>
-<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;permitrootlogin|passwordauthentication&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># No failed services</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="c1"># Network connectivity</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;DNS-server&gt;
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>nslookup<span class="w"> </span>corp.local
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="c1"># NTP sync status</span>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>
+<a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="c1"># SELinux enforcing</span>
+<a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a>sestatus
+<a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a>
+<a id="__codelineno-45-16" name="__codelineno-45-16" href="#__codelineno-45-16"></a><span class="c1"># Firewall active</span>
+<a id="__codelineno-45-17" name="__codelineno-45-17" href="#__codelineno-45-17"></a>firewall-cmd<span class="w"> </span>--state
+<a id="__codelineno-45-18" name="__codelineno-45-18" href="#__codelineno-45-18"></a>firewall-cmd<span class="w"> </span>--list-all
+<a id="__codelineno-45-19" name="__codelineno-45-19" href="#__codelineno-45-19"></a>
+<a id="__codelineno-45-20" name="__codelineno-45-20" href="#__codelineno-45-20"></a><span class="c1"># SSH hardening confirmed</span>
+<a id="__codelineno-45-21" name="__codelineno-45-21" href="#__codelineno-45-21"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;permitrootlogin|passwordauthentication&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>(no output — command completes silently)
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=2.14 ms
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a>64 bytes from 10.0.0.1: icmp_seq=2 ttl=64 time=1.98 ms
+<a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a>64 bytes from 10.0.0.1: icmp_seq=3 ttl=64 time=2.05 ms
+<a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a>
+<a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=18.42 ms
+<a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=17.89 ms
+<a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a>64 bytes from 8.8.8.8: icmp_seq=3 ttl=119 time=18.21 ms
+<a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a>
+<a id="__codelineno-46-13" name="__codelineno-46-13" href="#__codelineno-46-13"></a>Server:     10.0.0.2
+<a id="__codelineno-46-14" name="__codelineno-46-14" href="#__codelineno-46-14"></a>Address:    10.0.0.2#53
+<a id="__codelineno-46-15" name="__codelineno-46-15" href="#__codelineno-46-15"></a>
+<a id="__codelineno-46-16" name="__codelineno-46-16" href="#__codelineno-46-16"></a>Name:   corp.local
+<a id="__codelineno-46-17" name="__codelineno-46-17" href="#__codelineno-46-17"></a>Address: 10.20.30.40
+<a id="__codelineno-46-18" name="__codelineno-46-18" href="#__codelineno-46-18"></a>
+<a id="__codelineno-46-19" name="__codelineno-46-19" href="#__codelineno-46-19"></a>               Local time: Wed 2024-01-17 14:32:18 UTC
+<a id="__codelineno-46-20" name="__codelineno-46-20" href="#__codelineno-46-20"></a>           Universal time: Wed 2024-01-17 14:32:18 UTC
+<a id="__codelineno-46-21" name="__codelineno-46-21" href="#__codelineno-46-21"></a>                 RTC time: Wed 2024-01-17 14:32:18
+<a id="__codelineno-46-22" name="__codelineno-46-22" href="#__codelineno-46-22"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-46-23" name="__codelineno-46-23" href="#__codelineno-46-23"></a>System clock synchronized: yes
+<a id="__codelineno-46-24" name="__codelineno-46-24" href="#__codelineno-46-24"></a>              NTP service: active
+<a id="__codelineno-46-25" name="__codelineno-46-25" href="#__codelineno-46-25"></a>                 RTC in UTC: yes
+<a id="__codelineno-46-26" name="__codelineno-46-26" href="#__codelineno-46-26"></a>
+<a id="__codelineno-46-27" name="__codelineno-46-27" href="#__codelineno-46-27"></a>Reference ID    : 91F2A8C1 (ntp.ubuntu.com)
+<a id="__codelineno-46-28" name="__codelineno-46-28" href="#__codelineno-46-28"></a>Stratum         : 2
+<a id="__codelineno-46-29" name="__codelineno-46-29" href="#__codelineno-46-29"></a>Root distance   : 0.038472 seconds
+<a id="__codelineno-46-30" name="__codelineno-46-30" href="#__codelineno-46-30"></a>Update interval : 1024.0 seconds
+<a id="__codelineno-46-31" name="__codelineno-46-31" href="#__codelineno-46-31"></a>Leap status     : Normal
+<a id="__codelineno-46-32" name="__codelineno-46-32" href="#__codelineno-46-32"></a>
+<a id="__codelineno-46-33" name="__codelineno-46-33" href="#__codelineno-46-33"></a>SELinux status:                 enabled
+<a id="__codelineno-46-34" name="__codelineno-46-34" href="#__codelineno-46-34"></a>Current mode:                   enforcing
+<a id="__codelineno-46-35" name="__codelineno-46-35" href="#__codelineno-46-35"></a>Mode from config file:          enforcing
+<a id="__codelineno-46-36" name="__codelineno-46-36" href="#__codelineno-46-36"></a>
+<a id="__codelineno-46-37" name="__codelineno-46-37" href="#__codelineno-46-37"></a>active
+<a id="__codelineno-46-38" name="__codelineno-46-38" href="#__codelineno-46-38"></a>
+<a id="__codelineno-46-39" name="__codelineno-46-39" href="#__codelineno-46-39"></a>public
+<a id="__codelineno-46-40" name="__codelineno-46-40" href="#__codelineno-46-40"></a>  target: default
+<a id="__codelineno-46-41" name="__codelineno-46-41" href="#__codelineno-46-41"></a>  icmp-block-inversion: no
+<a id="__codelineno-46-42" name="__codelineno-46-42" href="#__codelineno-46-42"></a>  interfaces: eth0
+<a id="__codelineno-46-43" name="__codelineno-46-43" href="#__codelineno-46-43"></a>  sources: 
+<a id="__codelineno-46-44" name="__codelineno-46-44" href="#__codelineno-46-44"></a>  services: ssh
+<a id="__codelineno-46-45" name="__codelineno-46-45" href="#__codelineno-46-45"></a>  ports: 
+<a id="__codelineno-46-46" name="__codelineno-46-46" href="#__codelineno-46-46"></a>  protocols: 
+<a id="__codelineno-46-47" name="__codelineno-46-47" href="#__codelineno-46-47"></a>  masquerade: no
+<a id="__codelineno-46-48" name="__codelineno-46-48" href="#__codelineno-46-48"></a>  forward-ports: 
+<a id="__codelineno-46-49" name="__codelineno-46-49" href="#__codelineno-46-49"></a>  source-ports: 
+<a id="__codelineno-46-50" name="__codelineno-46-50" href="#__codelineno-46-50"></a>  icmp-blocks: 
+<a id="__codelineno-46-51" name="__codelineno-46-51" href="#__codelineno-46-51"></a>  rich rules: 
+<a id="__codelineno-46-52" name="__codelineno-46-52" href="#__codelineno-46-52"></a>
+<a id="__codelineno-46-53" name="__codelineno-46-53" href="#__codelineno-46-53"></a>permitrootlogin no
+<a id="__codelineno-46-54" name="__codelineno-46-54" href="#__codelineno-46-54"></a>passwordauthentication no
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: &lt;gateway&gt;: Name or service not known</code></strong> — Replace <code>&lt;gateway&gt;</code> and <code>&lt;DNS-server&gt;</code> placeholders with actual IP addresses (e.g., <code>10.0.0.1</code> and <code>8.8.8.8</code>).
+<strong><code>nslookup: command not found</code></strong> — Install <code>bind-utils</code> (RHEL/CentOS) or <code>dnsutils</code> (Debian/Ubuntu) package.
+<strong><code>Unit chrony.service could not be found</code></strong> — Verify NTP daemon is installed and running with <code>systemctl status chrony</code> or <code>systemctl status ntpd</code>.</p>
+</div>
 <p>Expected results: <code>systemctl --failed</code> returns empty, <code>sestatus</code> shows <code>SELinux status: enabled</code> and <code>Current mode: enforcing</code>, and SSH hardening settings match what was configured.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>● nginx.service - The NGINX HTTP and reverse proxy server
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: disabled)
+<a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a>       Docs: man:nginx(1)
+<a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a>    Process: 2847 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+<a id="__codelineno-48-6" name="__codelineno-48-6" href="#__codelineno-48-6"></a>   Main PID: 2851 (nginx)
+<a id="__codelineno-48-7" name="__codelineno-48-7" href="#__codelineno-48-7"></a>      Tasks: 3 (limit: 4915)
+<a id="__codelineno-48-8" name="__codelineno-48-8" href="#__codelineno-48-8"></a>     Memory: 12.4M
+<a id="__codelineno-48-9" name="__codelineno-48-9" href="#__codelineno-48-9"></a>        CPU: 2.3s
+<a id="__codelineno-48-10" name="__codelineno-48-10" href="#__codelineno-48-10"></a>     CGroup: /system.slice/nginx.service
+<a id="__codelineno-48-11" name="__codelineno-48-11" href="#__codelineno-48-11"></a>             ├─2851 nginx: master process /usr/sbin/nginx
+<a id="__codelineno-48-12" name="__codelineno-48-12" href="#__codelineno-48-12"></a>             ├─2852 nginx: worker process
+<a id="__codelineno-48-13" name="__codelineno-48-13" href="#__codelineno-48-13"></a>             └─2853 nginx: worker process
+<a id="__codelineno-48-14" name="__codelineno-48-14" href="#__codelineno-48-14"></a>
+<a id="__codelineno-48-15" name="__codelineno-48-15" href="#__codelineno-48-15"></a>Jan 15 14:32:18 prod-web-01 systemd[1]: Starting The NGINX HTTP and reverse proxy server...
+<a id="__codelineno-48-16" name="__codelineno-48-16" href="#__codelineno-48-16"></a>Jan 15 14:32:18 prod-web-01 systemd[1]: Started The NGINX HTTP and reverse proxy server.
+<a id="__codelineno-48-17" name="__codelineno-48-17" href="#__codelineno-48-17"></a>Jan 15 14:32:45 prod-web-01 nginx[2851]: 192.168.1.100 - - [15/Jan/2024:14:32:45 +0000] &quot;GET / HTTP/1.1&quot; 200 612
+<a id="__codelineno-48-18" name="__codelineno-48-18" href="#__codelineno-48-18"></a>Jan 15 14:35:12 prod-web-01 nginx[2851]: 192.168.1.105 - - [15/Jan/2024:14:35:12 +0000] &quot;GET /api/health HTTP/1.1&quot; 200 45
+<a id="__codelineno-48-19" name="__codelineno-48-19" href="#__codelineno-48-19"></a>
+<a id="__codelineno-48-20" name="__codelineno-48-20" href="#__codelineno-48-20"></a>LISTEN  0  511  0.0.0.0:80   0.0.0.0:*  users:((&quot;nginx&quot;,pid=2851,fd=6),(&quot;nginx&quot;,pid=2852,fd=6),(&quot;nginx&quot;,pid=2853,fd=6))
+<a id="__codelineno-48-21" name="__codelineno-48-21" href="#__codelineno-48-21"></a>LISTEN  0  511  0.0.0.0:443  0.0.0.0:*  users:((&quot;nginx&quot;,pid=2851,fd=7),(&quot;nginx&quot;,pid=2852,fd=7),(&quot;nginx&quot;,pid=2853,fd=7))
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit &lt;service-name&gt;.service could not be found.</code></strong> — Verify the correct service name with <code>systemctl list-units --type=service</code> and check for typos.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root to access systemd and socket information.
+<strong><code>(no output from ss command)</code></strong> — Confirm the service is actually listening on the expected port and that the port number in the grep filter matches the service configuration.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7781,7 +8255,7 @@ Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening b
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

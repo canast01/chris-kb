@@ -7353,6 +7353,30 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Stargate logs</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tail<span class="w"> </span>-f<span class="w"> </span>/home/nutanix/data/logs/stargate.ERROR
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>stargate                             RUNNING                 19256
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>stargate-worker-1                    RUNNING                 19257
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>stargate-worker-2                    RUNNING                 19258
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>stargate-worker-3                    RUNNING                 19259
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;version&quot;: &quot;2.0.5.1&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;uptime_seconds&quot;: 847293,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;active_connections&quot;: 42,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;total_requests&quot;: 5847291,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;cache_hit_ratio&quot;: 0.8734,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;avg_latency_ms&quot;: 3.2
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>}
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>==&gt; /home/nutanix/data/logs/stargate.ERROR &lt;==
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>2024-01-15 14:23:47.123 [stargate-worker-2] ERROR: Failed to replicate extent to replica 10.42.8.45:2009 - Connection timeout after 5000ms
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>2024-01-15 14:23:52.456 [stargate-worker-1] ERROR: Checksum mismatch detected on vdisk uuid-12345-abcde - CRC32: expected 0xdeadbeef, got 0xcafebabe
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2024-01-15 14:24:01.789 [stargate-worker-3] WARN: Slow I/O operation detected - latency 245ms for read on extent group 567
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to localhost port 2009: Connection refused</code></strong> — Verify Stargate is running with <code>genesis status | grep stargate</code> and check that the CVM network interface is accessible.
+<strong><code>tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory</code></strong> — Confirm you are running this command on a Nutanix CVM (Controller VM) and that Stargate has been initialized with <code>genesis start stargate</code>.</p>
+</div>
 <hr />
 <h2 id="cassandra-distributed-metadata-store">Cassandra — Distributed Metadata Store<a class="headerlink" href="#cassandra-distributed-metadata-store" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Nutanix-modified Apache Cassandra stores all cluster metadata.</p>
@@ -7365,9 +7389,32 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - Every CVM is a Cassandra node with a token range
 - Metadata is replicated RF=3 across CVMs (even for storage RF=2 clusters)
 - <code>nodetool status</code> shows ring health — all nodes must be <code>UN</code> (Up/Normal)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">   </span><span class="c1"># check ring — all should be UN</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool compactionstats&quot;</span><span class="w">  </span><span class="c1"># compaction queue (large = recovering)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">   </span><span class="c1"># check ring — all should be UN</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool compactionstats&quot;</span><span class="w">  </span><span class="c1"># compaction queue (large = recovering)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>node-01: Datacenter: dc1
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>node-01: ===============
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>node-01: Status=Up/Down
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>node-01: |/ State=Normal/Leaving/Joining/Moving
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>node-01: --  Address          Load       Tokens  Owns (effective)  Host ID                               Rack
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>node-01: UN  192.168.1.101    156.42 GB  256     33.3%             a1b2c3d4-e5f6-7890-abcd-ef1234567890  rack1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>node-01: UN  192.168.1.102    148.91 GB  256     33.3%             b2c3d4e5-f6a7-8901-bcde-f12345678901  rack1
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>node-01: UN  192.168.1.103    151.27 GB  256     33.4%             c3d4e5f6-a7b8-9012-cdef-123456789012  rack1
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>node-02: Datacenter: dc1
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>node-02: UN  192.168.1.101    156.42 GB  256     33.3%             a1b2c3d4-e5f6-7890-abcd-ef1234567890  rack1
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>node-02: UN  192.168.1.102    148.91 GB  256     33.3%             b2c3d4e5-f6a7-8901-bcde-f12345678901  rack1
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>node-02: UN  192.168.1.103    151.27 GB  256     33.4%             c3d4e5f6-a7b8-9012-cdef-123456789012  rack1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>node-01: Compaction from [/var/lib/cassandra/data/system/local/na-1-big-Data.db] complete
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>node-01: Pending tasks: 0
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>node-02: Compaction from [/var/lib/cassandra/data/system/peers/na-2-big-Data.db] complete
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>node-02: Pending tasks: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nodetool: command not found</code></strong> — Ensure Cassandra is installed and <code>$CASSANDRA_HOME/bin</code> is in your PATH, or use the full path <code>/opt/cassandra/bin/nodetool</code>.
+<strong><code>Connection refused</code></strong> — Verify Cassandra JMX port (default 7199) is listening with <code>netstat -tlnp | grep 7199</code> and restart Cassandra if needed.
+<strong><code>DN  192.168.1.102</code></strong> (node showing DOWN status) — Restart the down node with <code>systemctl restart cassandra</code> and wait 30 seconds for it to rejoin the ring.</p>
+</div>
 <hr />
 <h2 id="zeus-zookeeper-cluster-config">Zeus / ZooKeeper — Cluster Config<a class="headerlink" href="#zeus-zookeeper-cluster-config" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Zeus is Nutanix's configuration store built on ZooKeeper. It is the single source of truth for cluster config and service leadership.</p>
@@ -7375,12 +7422,43 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - Node membership (which CVMs are in the cluster)
 - Service leader elections
 - Cluster-wide configuration parameters (DNS, NTP, VIP, RF)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Print cluster configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-80
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Inspect ZooKeeper directly</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/local/zookeeper/bin/zkCli.sh<span class="w"> </span>-server<span class="w"> </span>localhost:9876
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Print cluster configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-80
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Inspect ZooKeeper directly</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/usr/local/zookeeper/bin/zkCli.sh<span class="w"> </span>-server<span class="w"> </span>localhost:9876
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Cluster UUID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Cluster Name: prod-cluster-01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Redundancy Factor: 3
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Replication Factor: 3
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Block Serial: NX-3060-G7-12SFF-001
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Hypervisor: AHV 20231015.1234
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>NOS Version: 6.5.2.1-20231201
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Controller VM Count: 3
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Data IP Range: 10.42.0.0/16
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Prism Central: 10.42.1.50
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Storage Pool: default
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Disk Count: 36
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Memory Total: 2.0 TB
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>CPU Count: 288 cores
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Metadata Replication: enabled
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Dedup Status: active
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Compression: enabled
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Erasure Coding: disabled
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Connecting to localhost:9876
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>[zk: localhost:9876(CONNECTING) 0]
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Welcome to ZooKeeper CLI version 3.4.14-4c25d480e66aadd371de8bd2712133f8.3435ecc0a5b5c557357162b5c6614e6c, built on 03/06/2020 22:33 GMT
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>JLine support is enabled
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>[zk: localhost:9876(CONNECTED) 0]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify ZooKeeper service is running with <code>systemctl status zookeeper</code> and listening on port 9876.
+<strong><code>zeus_config_printer: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node with the Acropolis OS installed, not a remote management station.</p>
+</div>
 <hr />
 <h2 id="curator-background-worker">Curator — Background Worker<a class="headerlink" href="#curator-background-worker" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Curator runs background scans and maintenance jobs across the cluster.</p>
@@ -7394,10 +7472,31 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - <strong>Erasure Coding:</strong> Convert RF=2 extents to EC-X to save 50% space after data goes cold
 - <strong>Tiering:</strong> Move cold data from SSD to HDD tier (hybrid clusters)
 - <strong>Rebalancing:</strong> Redistribute extents when cluster imbalance exceeds threshold</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">     </span><span class="c1"># recent scan history</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active tasks now</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># detailed scan results</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">     </span><span class="c1"># recent scan history</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active tasks now</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># detailed scan results</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Scan ID: scan_20240115_093847, Cluster: PHX-PROD-01, Status: SUCCESS, Timestamp: 2024-01-15 09:45:22 UTC
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Scan ID: scan_20240115_082103, Cluster: PHX-PROD-01, Status: SUCCESS, Timestamp: 2024-01-15 08:23:45 UTC
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Scan ID: scan_20240114_195634, Cluster: PHX-PROD-01, Status: SUCCESS, Timestamp: 2024-01-14 19:58:12 UTC
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Scan ID: scan_20240114_142201, Cluster: PHX-PROD-01, Status: SUCCESS, Timestamp: 2024-01-14 14:24:33 UTC
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Task ID: curator_task_8472, Type: METADATA_SCAN, Status: RUNNING, Progress: 67%, Started: 2024-01-15 10:12:05 UTC
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Task ID: curator_task_8471, Type: CONSISTENCY_CHECK, Status: QUEUED, Progress: 0%, Started: 2024-01-15 10:11:22 UTC
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Scan Details for scan_20240115_093847:
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  Cluster: PHX-PROD-01
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Duration: 2m 34s
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Containers Scanned: 847
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Objects Processed: 2,156,432
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Inconsistencies Found: 0
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Status: PASSED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curator_cli: command not found</code></strong> — Ensure the Nutanix curator CLI is installed and its path is added to your system PATH variable.
+<strong><code>Error: Invalid scan_id format or scan not found</code></strong> — Verify the scan ID exists by running <code>curator_cli get_last_successful_scans</code> first and use the exact Scan ID from the output.</p>
+</div>
 <hr />
 <h2 id="medusa-metadata-access-layer">Medusa — Metadata Access Layer<a class="headerlink" href="#medusa-metadata-access-layer" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Medusa is the API layer between AOS services (Stargate) and Cassandra. Services never query Cassandra directly — they use Medusa.</p>
@@ -7414,20 +7513,82 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - <strong>QEMU</strong> — VM emulator (one QEMU process per running VM)
 - <strong>Open vSwitch (OVS)</strong> — virtual networking fabric; supports VLAN trunking and bonding
 - <strong>acropolis</strong> — Nutanix AHV management daemon (bridges acli/Prism to libvirt)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On AHV host (root required):</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>virsh<span class="w"> </span>list<span class="w"> </span>--all<span class="w">        </span><span class="c1"># all VMs including CVM</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>virsh<span class="w"> </span>nodeinfo<span class="w">          </span><span class="c1"># host CPU/memory</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ovs-vsctl<span class="w"> </span>show<span class="w">          </span><span class="c1"># OVS switch config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On AHV host (root required):</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>virsh<span class="w"> </span>list<span class="w"> </span>--all<span class="w">        </span><span class="c1"># all VMs including CVM</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>virsh<span class="w"> </span>nodeinfo<span class="w">          </span><span class="c1"># host CPU/memory</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ovs-vsctl<span class="w"> </span>show<span class="w">          </span><span class="c1"># OVS switch config</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Id   Name                                  State
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>----------------------------------------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a> 1    NTNX-00051234567890ab-CVM             running
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a> 2    VM-prod-web-01                        running
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a> 3    VM-prod-db-02                         running
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a> 4    VM-dev-test-03                        paused
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a> -    VM-archive-old-04                     shut off
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Host:                 NTNX-00051234567890ab
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>CPU model:            Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>CPU(s):               32
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>CPU frequency:        2400.052 MHz
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>CPU socket(s):        2
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Core(s) per socket:   8
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Thread(s) per core:   2
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>NUMA cell(s):         2
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Memory size:          262144 MiB
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Manager &quot;br0&quot;
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    Bridge &quot;br0&quot;
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>        fail_mode: secure
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>        Port &quot;br0&quot;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>            Interface &quot;br0&quot;
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>                type: internal
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>        Port &quot;bond0&quot;
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>            Interface &quot;eth0&quot;
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>            Interface &quot;eth1&quot;
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    ovs_version: &quot;2.9.2&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: failed to connect to the hypervisor</code></strong> — Ensure you are running as root and the libvirtd service is active with <code>systemctl status libvirtd</code>.
+<strong><code>ovs-vsctl: unix:/var/run/openvswitch/db.sock: database connection failed</code></strong> — Verify Open vSwitch is running with <code>systemctl status openvswitch</code> and restart if necessary.</p>
+</div>
 <hr />
 <h2 id="genesis-service-manager">Genesis — Service Manager<a class="headerlink" href="#genesis-service-manager" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Genesis is the Nutanix equivalent of systemd for AOS services. It monitors and restarts all AOS services on each CVM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>genesis<span class="w"> </span>status<span class="w">           </span><span class="c1"># list all services and state (UP/DOWN)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>genesis<span class="w"> </span>restart<span class="w">          </span><span class="c1"># restart all services on this CVM</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>genesis<span class="w"> </span>status<span class="w">           </span><span class="c1"># list all services and state (UP/DOWN)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>genesis<span class="w"> </span>restart<span class="w">          </span><span class="c1"># restart all services on this CVM</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Service Name                          State      PID
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>acropolis                             UP         2847
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>cassandra                             UP         3124
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>chronos                               UP         2956
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>curator                               UP         3201
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>genesis                               UP         1842
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>prism                                 UP         3456
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>uhura                                 UP         2734
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>zookeeper                             UP         2891
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Restarting all services on this CVM...
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Stopping services...
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Starting services...
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>All services restarted successfully. Elapsed time: 47 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>genesis: command not found</code></strong> — Ensure you are running this command on a Nutanix Controller VM (CVM), not a hypervisor host; SSH to the CVM first.
+<strong><code>Permission denied</code></strong> — Run the command with sudo or as the root user: <code>sudo genesis restart</code>.</p>
+</div>
 <p>Genesis itself is started by the OS init system. If genesis is completely crashed, it must be restarted at the OS level:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nutanix-genesis
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nutanix-genesis
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to restart nutanix-genesis.service: Unit nutanix-genesis.service not found.</code></strong> — Verify the Nutanix cluster node is properly initialized and the genesis service is installed with <code>systemctl list-unit-files | grep nutanix</code>.
+<strong><code>sudo: systemctl: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node (CVM or host) where systemd is available, not on an unsupported OS.
+<strong><code>Failed to restart nutanix-genesis.service: Access denied</code></strong> — Run the command with proper sudo privileges or as root; verify your user account has passwordless sudo configured for this service.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7457,7 +7618,7 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

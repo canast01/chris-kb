@@ -9220,7 +9220,7 @@
 <hr />
 <h2 id="replication-fails-with-connection-refused-connection-timeout">Replication Fails with "Connection Refused" / "Connection Timeout"<a class="headerlink" href="#replication-fails-with-connection-refused-connection-timeout" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Replication status error: network connectivity to target VRA</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From source ESXi host shell:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From source ESXi host shell:</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-amsterdam.example.local<span class="w"> </span><span class="m">31031</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># If connection refused → firewall blocking TCP 31031</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If timeout → no route to target VRA</span>
@@ -9228,19 +9228,57 @@
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Verify from ESXi:</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;target-VRA-IP&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>admin@vra-london.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check /opt partition — VRA appliance partition</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Clear old log files if disk is full:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>find<span class="w"> </span>/opt/vmware/logs<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Connection to vra-amsterdam.example.local 31031 port [tcp/*] succeeded!
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>PING 192.168.42.15 (192.168.42.15): 56 data bytes
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>64 bytes from 192.168.42.15: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>64 bytes from 192.168.42.15: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>64 bytes from 192.168.42.15: icmp_seq=2 ttl=64 time=2.289 ms
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>--- 192.168.42.15 statistics ---
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>round-trip min/avg/max = 2.156/2.262/2.341 ms
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter<span class="w"> </span>→<span class="w"> </span><span class="o">[</span>VRA<span class="w"> </span>VM<span class="o">]</span><span class="w"> </span>→<span class="w"> </span>Edit<span class="w"> </span>Settings<span class="w"> </span>→<span class="w"> </span>Disk<span class="w"> </span>→<span class="w"> </span>increase<span class="w"> </span>size
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Then<span class="w"> </span>expand<span class="w"> </span>filesystem<span class="w"> </span>inside<span class="w"> </span>VRA:
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>sudo<span class="w"> </span>growpart<span class="w"> </span>/dev/sda<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>sudo<span class="w"> </span>resize2fs<span class="w"> </span>/dev/sda1
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup vra-amsterdam.example.local</code> or use the VRA's IP address directly instead of hostname.
+<strong><code>(no response / timeout after 5 seconds)</code></strong> — Check network routing with <code>esxcli network ip route ipv4 list</code> and confirm the VRA subnet is reachable from the ESXi management network.
+<strong><code>PING: sendto() failed (Permission denied)</code></strong> — Ensure you are running the command from the ESXi host shell (SSH/console) with appropriate network stack permissions, not from a vSphere client.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>admin@vra-london.example.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check /opt partition — VRA appliance partition</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Clear old log files if disk is full:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>find<span class="w"> </span>/opt/vmware/logs<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/dev/sda1        50G   48G  1.2G  98% /
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/dev/sda2       100G   87G   13G  87% /opt
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/dev/sda3        20G  5.2G   15G  26% /var
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tmpfs           7.9G     0  7.9G   0% /dev/shm
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/dev/sda4        30G  8.1G   22G  27% /home
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>(no output — command completes silently)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Vacuumed 847 journal files, freed 512.3M of disk space.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: find: command not found</code></strong> — Verify the full path <code>/usr/bin/find</code> exists or reinstall findutils package with <code>apt-get install findutils</code>.
+<strong><code>Permission denied</code></strong> — Ensure the admin user has passwordless sudo configured or run <code>sudo -l</code> to verify sudo privileges for the find and journalctl commands.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter<span class="w"> </span>→<span class="w"> </span><span class="o">[</span>VRA<span class="w"> </span>VM<span class="o">]</span><span class="w"> </span>→<span class="w"> </span>Edit<span class="w"> </span>Settings<span class="w"> </span>→<span class="w"> </span>Disk<span class="w"> </span>→<span class="w"> </span>increase<span class="w"> </span>size
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Then<span class="w"> </span>expand<span class="w"> </span>filesystem<span class="w"> </span>inside<span class="w"> </span>VRA:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>sudo<span class="w"> </span>growpart<span class="w"> </span>/dev/sda<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>sudo<span class="w"> </span>resize2fs<span class="w"> </span>/dev/sda1
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NODEV: growpart: error: partition 1 is size 0. it cannot be grown</code></strong> — Ensure the disk was actually resized in vCenter settings and the VM was powered off before expanding, or try <code>sudo partprobe</code> to refresh the partition table.
+<strong><code>resize2fs: Bad magic number in super-block while trying to open /dev/sda1</code></strong> — Verify the correct partition number with <code>lsblk</code> or <code>fdisk -l</code> and confirm the filesystem type matches (ext4 vs ext3); if using LVM, use <code>sudo pvresize /dev/sda1</code> instead.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9277,7 +9315,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8568,26 +8568,138 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>svm<span class="w"> </span>show
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster Identification
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Cluster Serial Number: 4082368-50-147852
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Node                  Health  Eligibility
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>--------------------  ------  -----------
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>node-01.prod.local    true    true
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>node-02.prod.local    true    true
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                                    Local  Remote            Local  Remote
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Node           Partner              HA     HA    Takeover   Giveback
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>-----------    --------------------  -----  -----  --------  --------
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>node-01        node-02              ready  ready  possible  not-possible
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>node-02        node-01              ready  ready  possible  not-possible
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Aggregate     Used%  State
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>-----------   -----  ------
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aggr0_node01   72%   online
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>aggr0_node02   68%   online
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>aggr1_ssd      91%   online
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>data_pool_01   84%   online
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Volume                 State      %Used
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>---------------------  ---------  -----
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>svm01_root             online      45%
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>prod_database_vol      online      78%
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>backup_archive_01      online      92%
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>logs_tier2             online      38%
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>...
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Source Path                    Destination Path               Lag Time  Healthy  State
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>-----------------------------  ----------------------------  ---------  -------  ------
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>prod-cluster-01:prod_db_vol    dr-cluster-02:prod_db_vol_dr  00:15:32   true     snapmirrored
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>prod-cluster-01:archive_vol    dr-cluster-02:archive_vol_dr  02:45:18   false    paused
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Broken Disks: None.
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>Alert ID  Severity  Node              Resource  Description
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>--------  --------  ----------------  --------  -----------------------------------------------
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>1847      minor     node-02           aggr1     Aggregate aggr1_ssd is 91% full
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>2104      warning   node-01           disk      Disk shelf 1.1 temperature elevated (68°C)
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>Event Log Entries: None. (No callhome events in last 24 hours)
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>Vserver Name             State   Subtype
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>----------------------  -------  ---------
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>svm_prod                running  default
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>svm_dr                  running  dp_destination
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>svm_admin               running  admin
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>Interface      Vserver         Node         Status  Oper Status
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>-----------    ---------------  -----------  ------  -----------
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>e0a            svm_prod         node-01      up      down
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>e0c            svm_prod         node-02      up      down
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster show</code></strong> — Verify you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP).
+<strong><code>Error: More than one match found for "snapmirror show"</code></strong> — Add the <code>-instance</code> flag or filter by source/destination path to narrow results.
+<strong><code>Warning: Aggregate aggr1_ssd is 91% full</code></strong> — Add capacity or move volumes to lower-utilization aggregates immediately to prevent write failures above 95%.</p>
+</div>
 <h2 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Cluster Health" src="../../../../../assets/storage-netapp-ontap-hc-cluster-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># All nodes should show health: true and eligibility: true</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Overall status should be: ok</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># All nodes should show health: true and eligibility: true</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Overall status should be: ok</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Cluster Name: prod-cluster-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Cluster UUID: 4a3c8b92-1f47-11ee-a456-00a0985f1234
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Cluster Serial Number: 4082068-50-123456
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Cluster Location:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Cluster Contact:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Cluster Web URL: https://10.50.12.100:443
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Cluster fully qualified domain name: prod-cluster-01.corp.local
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Node                  Health  Eligibility   Model       Owner             Location
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>--------------------- ------- ------------- ----------- ----------------  --------
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>prod-node-01          true    true          A400        NetApp Inc.       DC1-Rack3
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>prod-node-02          true    true          A400        NetApp Inc.       DC1-Rack3
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>prod-node-03          true    true          A400        NetApp Inc.       DC1-Rack4
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>prod-node-04          true    true          A400        NetApp Inc.       DC1-Rack4
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>System Health Status
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Status: ok
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Node prod-node-02 health: false</code></strong> — Check node logs with <code>system node run -node prod-node-02 syslog tail</code> and resolve hardware or software faults before proceeding.
+<strong><code>Eligibility: false for prod-node-03</code></strong> — Verify the node has completed boot and cluster join with <code>cluster ring show -node prod-node-03</code>, then wait for automatic recovery or manually rejoin if needed.</p>
+</div>
 <h3 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Node Health" src="../../../../../assets/storage-netapp-ontap-hc-node-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>node<span class="w"> </span>show
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># All nodes should be: up</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>uptime,health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>system<span class="w"> </span>node<span class="w"> </span>show
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># All nodes should be: up</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>uptime,health
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Node      Health  Uptime
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>--------- ------- ---------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>node-01   true    730 days 14:32:18
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>node-02   true    730 days 14:28:45
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Node      Uptime
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>--------- ---------------
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>node-01   730 days 14:32:18
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>node-02   730 days 14:28:45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: system</code></strong> — Ensure you are connected to the ONTAP cluster CLI (SSH to cluster management IP) rather than the local shell.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Log in with an admin-level account or request cluster administrator credentials.</p>
+</div>
 <h3 id="ha-pair-status">HA Pair Status<a class="headerlink" href="#ha-pair-status" title="Permanent link">&para;</a></h3>
 <p><img alt="HA Pair Status" src="../../../../../assets/storage-netapp-ontap-hc-ha-pair-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Both nodes should show: Connected, Not in takeover</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Both nodes should show: Connected, Not in takeover</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Takeover
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Node           Partner        State Status
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>-------------- -------------- ----- ---------
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>node-01        node-02        Connected Not in takeover
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>node-02        node-01        Connected Not in takeover
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are logged into the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Verify your ONTAP user account has the "admin" or equivalent role with cluster-wide permissions.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8612,36 +8724,113 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 </table>
 <h3 id="disk-health">Disk Health<a class="headerlink" href="#disk-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Disk Health" src="../../../../../assets/storage-netapp-ontap-hc-disk-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Any output here requires investigation</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm spare disks are available for RAID rebuild</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Any output here requires investigation</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Confirm spare disks are available for RAID rebuild</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Broken Disks:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no disks)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Spare Disks:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Shelf Bay Container Type Owner Disk Type Size Status
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>----- --- -------------- ----- --------- ---- ------
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>1.0   1   spare          -     SSD       960GB normal
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>1.0   2   spare          -     SSD       960GB normal
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>1.0   3   spare          -     HDD       4TB  normal
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>2.0   5   spare          -     HDD       4TB  normal
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>2.0   6   spare          -     HDD       4TB  normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are logged into the ONTAP cluster CLI (not the local shell); use <code>ssh admin@&lt;cluster-ip&gt;</code> to connect.
+<strong><code>Error: No disks match the criteria</code></strong> — This is informational output indicating no broken disks exist; if spares also show no output, contact NetApp support as the cluster may have insufficient spare capacity.</p>
+</div>
 <h3 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Aggregate Health" src="../../../../../assets/storage-netapp-ontap-hc-aggregate-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Should return no output if all aggregates are healthy</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Should return no output if all aggregates are healthy</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Aggregate                       State            Status
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>aggr0                           online           normal
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>aggr1                           online           normal
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>data_svm01                      online           normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not in a bash shell.
+<strong><code>Error: more than one administrative Vserver matches the supplied name</code></strong> — Specify the SVM explicitly with <code>-vserver &lt;svm_name&gt;</code> if multiple SVMs exist on the cluster.</p>
+</div>
 <h3 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Health" src="../../../../../assets/storage-netapp-ontap-hc-volume-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Should return no output under normal conditions</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Should return no output under normal conditions</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Volume            State      Health Status
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>vol_backup        online     true
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vol_data          online     true
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>vol_logs          online     true
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>vol_archive       online     true
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>vol_temp          online     true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell.
+<strong><code>Error: invalid field name "state"</code></strong> — Verify the field name is correct for your ONTAP version; use <code>volume show -help</code> to list available fields.</p>
+</div>
 <h3 id="interface-health">Interface Health<a class="headerlink" href="#interface-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Interface Health" src="../../../../../assets/storage-netapp-ontap-hc-interface-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Any interfaces down should be investigated</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Any interfaces down should be investigated</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Vserver         Interface       Address         Admin/Oper
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-------         ---------       -------         ----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>cluster1        e0a             192.168.1.10    up/down
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>cluster1        e0b             192.168.1.11    up/down
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>cluster1-01     e0c             10.0.50.5       up/down
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>cluster1-02     e0d             10.0.50.6       up/down
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>svm_nfs         e0e             172.16.8.20     up/down
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>5 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not your local shell.
+<strong><code>Error: Invalid command</code></strong> — Verify the ONTAP version supports the <code>-status-oper</code> parameter; use <code>network interface show</code> without filters on older releases and pipe to grep instead.
+<strong><code>Error: No entries were displayed</code></strong> — This is expected if no interfaces are down; check interface status with <code>network interface show</code> to confirm all are operational.</p>
+</div>
 <h3 id="ems-events-recent-errors">EMS Events (Recent Errors)<a class="headerlink" href="#ems-events-recent-errors" title="Permanent link">&para;</a></h3>
 <p><img alt="EMS Events (Recent Errors)" src="../../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Time                Severity Event
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>------------------- -------- -----------------------------------------------
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15 14:32:18 ERROR    WAFL: Low free space on aggregate aggr_ssd_01
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15 14:28:45 ERROR    CIFS: Failed to authenticate user domain\admin01
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15 14:15:22 ERROR    NFS: Mount request denied from 192.168.1.50
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15 13:47:09 ERROR    Replication: SnapMirror transfer lag exceeded threshold
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Time                Severity Event
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>------------------- -------- -----------------------------------------------
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>2024-01-15 10:22:33 CRITICAL HA: Takeover initiated on node-02
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>2024-01-15 09:15:47 CRITICAL Storage: Disk shelf ps2-shelf-01 power supply failure
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>2024-01-15 08:44:12 CRITICAL Network: Cluster interconnect link down on e0e
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid time range format</code></strong> — Use valid time range syntax like "1h", "24h", or "7d" without quotes in the command.
+<strong><code>Error: Unknown severity level</code></strong> — Specify severity as one of: EMERGENCY, ALERT, CRITICAL, ERROR, WARNING, NOTICE, INFO, or DEBUG.</p>
+</div>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All nodes <code>health: true</code></li>
@@ -8729,7 +8918,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

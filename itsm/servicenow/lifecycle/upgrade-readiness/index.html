@@ -8234,11 +8234,62 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># DNS resolution</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
 </code></pre></div>
-<h2 id="5-vendor-compatibility-matrix">5. Vendor Compatibility Matrix<a class="headerlink" href="#5-vendor-compatibility-matrix" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># VMware HCL — check driver/firmware compatibility before ESXi upgrade</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;bnx|igb|i40e|lpfc|nfnic|enic&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>firmware<span class="w"> </span>get
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 10.0.1.1 (10.0.1.1) 56(84) bytes of data.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>64 bytes from 10.0.1.1: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>64 bytes from 10.0.1.1: icmp_seq=2 ttl=64 time=2.41 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>64 bytes from 10.0.1.1: icmp_seq=3 ttl=64 time=2.38 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>--- 10.0.1.1 statistics ---
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=18.92 ms
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=19.07 ms
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>64 bytes from 8.8.8.8: icmp_seq=3 ttl=119 time=18.99 ms
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>rtt min/avg/max/stddev = 18.92/19.00/19.07/0.07 ms
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>PING 91.189.89.198 (91.189.89.198) 56(84) bytes of data.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>64 bytes from 91.189.89.198: icmp_seq=1 ttl=54 time=42.18 ms
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>64 bytes from 91.189.89.198: icmp_seq=2 ttl=54 time=42.31 ms
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>64 bytes from 91.189.89.198: icmp_seq=3 ttl=54 time=42.25 ms
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>--- 91.189.89.198 statistics ---
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>rtt min/avg/max/stddev = 42.18/42.25/42.31/0.06 ms
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>System time   : 0.000000123 seconds slow of NTP time
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Server          Address
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Name:   app-server-01.example.com
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Address: 192.168.1.45
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: &lt;gateway&gt;: Name or service not known</code></strong> — Replace <code>&lt;gateway&gt;</code> with the actual IP address or hostname of your gateway (e.g., <code>10.0.1.1</code>).
+<strong><code>chronyc: command not found</code></strong> — Install chrony with <code>sudo apt install chrony</code> or <code>sudo yum install chrony</code> depending on your distribution.
+<strong><code>** server can't find &lt;hostname&gt;.example.com: NXDOMAIN</code></strong> — Verify the hostname is correct and that DNS is properly configured; check <code>/etc/resolv.conf</code> for valid nameserver entries.</p>
+</div>
+<h2 id="5-vendor-compatibility-matrix">5. Vendor Compatibility Matrix<a class="headerlink" href="#5-vendor-compatibility-matrix" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VMware HCL — check driver/firmware compatibility before ESXi upgrade</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;bnx|igb|i40e|lpfc|nfnic|enic&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>firmware<span class="w"> </span>get
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                           Version                        Vendor  Acceptance Level  Install Date
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>net-bnx2-2.2.5f-1OEM.670.0.0.8169922  2.2.5f                         Broadcom  PartnerSupported  2024-01-15
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>net-igb-5.4.6-1OEM.670.0.0.8169922    5.4.6                          Intel     PartnerSupported  2024-01-15
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>net-i40e-2.18.6-1OEM.670.0.0.8169922  2.18.6                         Intel     PartnerSupported  2024-01-15
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>lpfc-12.8.405.3-1OEM.670.0.0.8169922  12.8.405.3                     Broadcom  PartnerSupported  2024-01-15
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>System UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>BIOS Version: DELL A13 12/18/2023
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Firmware Version: 2.11.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: Unknown option or subcommand 'software vib list' under 'software'</code></strong> — Verify ESXi version supports the command; use <code>esxcli software vib list --help</code> to confirm syntax.
+<strong><code>Unable to retrieve firmware information: Connection refused</code></strong> — Ensure you are connected to the ESXi host via SSH or vSphere Client with proper credentials.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8282,31 +8333,42 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 </tbody>
 </table>
 <h2 id="6-pre-upgrade-snapshot-vms">6. Pre-Upgrade Snapshot (VMs)<a class="headerlink" href="#6-pre-upgrade-snapshot-vms" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Take quiesced snapshot immediately before change</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-CHG-XXXX-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — CHG-XXXX&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-Memory:<span class="nv">$false</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Created,<span class="w"> </span>SizeMB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Take quiesced snapshot immediately before change</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-CHG-XXXX-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — CHG-XXXX&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-Memory:<span class="nv">$false</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Created,<span class="w"> </span>SizeMB
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                                    Created              SizeMB
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>----                                    -------              ------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pre-upgrade-CHG-0047291-20250114        1/14/2025 2:34:15 PM 12847
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pre-upgrade-CHG-0047290-20250113        1/13/2025 9:12:08 AM 12802
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>base-golden-image-v8.2                  1/10/2025 4:47:22 PM 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>New-Snapshot : The operation is not valid for the current state of the object.</code></strong> — Ensure the VM is powered on and not already in a snapshot operation; check vCenter for any pending tasks.
+<strong><code>Get-VM : The object 'HOSTNAME' was not found.</code></strong> — Verify the exact VM name matches vCenter inventory and that you have sufficient vSphere permissions.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Snapshot retention</p>
 <p>Remove pre-upgrade snapshots within 48 hours of successful completion. Stale snapshots degrade VM performance and consume datastore space.</p>
 </div>
 <h2 id="7-rollback-plan">7. Rollback Plan<a class="headerlink" href="#7-rollback-plan" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Rollback Plan — CHG-XXXX
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>System:           &lt;hostname&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Upgrade:          &lt;from version&gt; → &lt;to version&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Rollback method:  [ ] Snapshot  [ ] Backup restore  [ ] Config revert
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Snapshot name:    pre-upgrade-CHG-XXXX-YYYY-MM-DD
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Estimated time:   &lt;X&gt; minutes
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Rollback trigger: Service fails to start / error rate &gt; 5% / app team reports failures
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Decision authority: &lt;name / role&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Rollback Plan — CHG-XXXX
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>System:           &lt;hostname&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Upgrade:          &lt;from version&gt; → &lt;to version&gt;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Rollback method:  [ ] Snapshot  [ ] Backup restore  [ ] Config revert
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Snapshot name:    pre-upgrade-CHG-XXXX-YYYY-MM-DD
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Estimated time:   &lt;X&gt; minutes
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Rollback trigger: Service fails to start / error rate &gt; 5% / app team reports failures
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Decision authority: &lt;name / role&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </code></pre></div>
 <h2 id="go-no-go-sign-off">Go / No-Go Sign-Off<a class="headerlink" href="#go-no-go-sign-off" title="Permanent link">&para;</a></h2>
 <table>
@@ -8377,7 +8439,7 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

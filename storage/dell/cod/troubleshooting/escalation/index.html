@@ -8924,76 +8924,174 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check Unisphere version</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Unisphere web UI → Help → About</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000987654321098
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Symmetrix ID: 000555444333222
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Symmetrix Model: VMAX 250F
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Microcode Version: 5978.669.669
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>System Serial Number: 123ABC456DEF
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>System Capacity: 50.2 TB
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Number of Engines: 2
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Number of Directors: 16
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Cache Size: 384 GB
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Firmware Version: T10.2.0.0.5978.669.669
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Command not found</code></strong> — Ensure Solutions Enabler is installed and the <code>$PATH</code> includes the SE installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>Symmetrix ID: &lt;SID&gt; -- Not Found</code></strong> — Verify the SID is correct and the array is properly discovered by running <code>symcfg list</code> first to see all available arrays.
+<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges (use <code>sudo</code> or ensure your user is in the <code>symcli</code> or <code>root</code> group).</p>
+</div>
 <h3 id="2-collect-current-license-state">2. Collect current license state<a class="headerlink" href="#2-collect-current-license-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all currently active licenses and their state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-licenses-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show detailed license info for a specific feature</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-feature<span class="w"> </span>CLOUD_ON_DEMAND<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Preview a key file before importing (dry run — does not apply the key)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-preview.txt
-</code></pre></div>
-<h3 id="3-capture-the-error-from-a-failed-key-import">3. Capture the error from a failed key import<a class="headerlink" href="#3-capture-the-error-from-a-failed-key-import" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Attempt to import the CoD key and capture all output</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-install-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all currently active licenses and their state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-licenses-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Common error codes:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># SYMAPI_C_INVALID_LICENSE: key file is invalid or SN mismatch</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># SYMAPI_C_LICENSE_CONFLICT: conflicting license already active</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># SYMAPI_C_NO_LICENSE:       feature requires additional license</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show detailed license info for a specific feature</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-feature<span class="w"> </span>CLOUD_ON_DEMAND<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Preview a key file before importing (dry run — does not apply the key)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-preview.txt
 </code></pre></div>
-<h3 id="4-collect-unisphere-events-and-symapi-logs">4. Collect Unisphere events and SYMAPI logs<a class="headerlink" href="#4-collect-unisphere-events-and-symapi-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SYMAPI error log (on the Solutions Enabler host)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cat<span class="w"> </span>/var/symapi/log/symapi_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|license\|cod&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/symapi-errors.txt
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># PowerMax event log via CLI (requires Solutions Enabler)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;license\|key\|cod\|error&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/powermax-events.txt
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>License Summary for SID: 000123456789ABC
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Feature Name              State       Expiration      Capacity
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>CLOUD_ON_DEMAND          ACTIVE      2025-12-31      Unlimited
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>REPLICATION_MANAGER      ACTIVE      2025-06-15      500
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>SNAPSHOTS                EXPIRED     2024-03-20      1000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>LOCAL_MIRROR             INACTIVE    N/A             0
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>...
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Alternatively: Unisphere web UI → Events → filter by Source = Licensing, Severity = Error</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Export as CSV</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Feature: CLOUD_ON_DEMAND
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  State: ACTIVE
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Expiration Date: 2025-12-31
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  License Type: Perpetual
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Installed Capacity: Unlimited
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Used Capacity: 847 GB
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Grace Period Remaining: N/A
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Preview License File: /path/to/cod-key.lic
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Feature: CLOUD_ON_DEMAND
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Serial Number: 000123456789ABC
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  Expiration: 2025-12-31
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  Action: INSTALL (would add license)
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  Validation: PASSED
 </code></pre></div>
-<h3 id="5-check-key-file-fields-do-not-share-key-file-publicly">5. Check key file fields (do not share key file publicly)<a class="headerlink" href="#5-check-key-file-fields-do-not-share-key-file-publicly" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Key files are plain text — check the VENDOR_SN field to confirm it matches your array SID</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN=|FEATURE|Expiry|PERMANENT&quot;</span><span class="w"> </span>/path/to/cod-key.lic
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: command not found</code></strong> — Ensure the Dell EMC Symmetrix CLI tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>Error: Invalid SID &lt;SID&gt; — SID not found in configuration</code></strong> — Replace <code>&lt;SID&gt;</code> with an actual Symmetrix array ID from <code>symcfg list</code> output.
+<strong><code>Error: License file not found: /path/to/cod-key.lic</code></strong> — Verify the license key file path exists and is readable by the user running the command.</p>
+</div>
+<h3 id="3-capture-the-error-from-a-failed-key-import">3. Capture the error from a failed key import<a class="headerlink" href="#3-capture-the-error-from-a-failed-key-import" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Attempt to import the CoD key and capture all output</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-install-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Key fields to note:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># VENDOR_SN: should match your array&#39;s full SID (e.g., 000120000001)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># FEATURE:   lists the CoD features/capacity blocks</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expiry:    date or PERMANENT</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Do NOT share the raw key file in the SR — share only the VENDOR_SN and error output</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># If the licensing team requests the key file, upload only through the secure case attachment</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Common error codes:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># SYMAPI_C_INVALID_LICENSE: key file is invalid or SN mismatch</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># SYMAPI_C_LICENSE_CONFLICT: conflicting license already active</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># SYMAPI_C_NO_LICENSE:       feature requires additional license</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Importing CoD license key...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>License file: /path/to/cod-key.lic
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Serial Number: DGC00123456789ABC
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Product: Dell EMC CoD (Capacity on Demand)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>License Type: Perpetual
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Expiration: 2026-12-31
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Status: Successfully installed
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>License ID: LIC-2024-001-COD-789
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Activation Code: ACT-9F2E8D1C7B4A
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Installation completed successfully at 2024-01-15 14:32:47 UTC
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Output saved to: /tmp/cod-install-2024-01-15.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMAPI_C_INVALID_LICENSE: License key file is invalid or serial number mismatch</code></strong> — Verify the license file path is correct and the serial number in the key matches your array's SN using <code>symlicense -sid &lt;SID&gt; query</code>.
+<strong><code>SYMAPI_C_LICENSE_CONFLICT: A conflicting license is already active on this array</code></strong> — Remove the existing license with <code>symlicense -sid &lt;SID&gt; remove -id &lt;LICENSE_ID&gt;</code> before installing the new key.
+<strong><code>SYMAPI_C_NO_LICENSE: Feature requires additional license entitlement</code></strong> — Confirm your CoD key file includes the required feature codes and contact Dell EMC support if the key is incomplete.</p>
+</div>
+<h3 id="4-collect-unisphere-events-and-symapi-logs">4. Collect Unisphere events and SYMAPI logs<a class="headerlink" href="#4-collect-unisphere-events-and-symapi-logs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SYMAPI error log (on the Solutions Enabler host)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cat<span class="w"> </span>/var/symapi/log/symapi_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|license\|cod&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/symapi-errors.txt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># PowerMax event log via CLI (requires Solutions Enabler)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;license\|key\|cod\|error&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/powermax-events.txt
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Alternatively: Unisphere web UI → Events → filter by Source = Licensing, Severity = Error</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Export as CSV</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>2024-01-15 14:32:18 ERROR: License key validation failed for array 000296900001
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2024-01-15 14:32:19 ERROR: COD entitlement mismatch - expected 10 licenses, found 8
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15 14:32:45 WARNING: License expiration in 45 days for Snapshots feature
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15 14:33:02 ERROR: Failed to contact licensing server at 192.168.1.45:443
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15 14:33:15 ERROR: COD grace period expired for array SID 000296900001
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-01-15 14:34:01 WARNING: License renewal required - contact Dell support
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2024-01-15 14:35:22 ERROR: Invalid license file format in /opt/emc/symapi/licenses/
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2024-01-15 14:36:10 ERROR: COD audit mismatch - last audit 92 days ago (limit: 90)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>...
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Symaudit audit list completed - 100 events retrieved
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /var/symapi/log/symapi_log.txt: No such file or directory</code></strong> — Verify Solutions Enabler is installed and running with <code>symcfg list</code>, or check the correct log path for your SE version.
+<strong><code>symaudit: command not found</code></strong> — Add Solutions Enabler bin directory to PATH with <code>export PATH=$PATH:/opt/emc/symapi/bin</code> or use the full path <code>/opt/emc/symapi/bin/symaudit</code>.
+<strong><code>ERROR: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with an actual array serial number from <code>symcfg list</code> output (e.g., <code>000296900001</code>).</p>
+</div>
+<h3 id="5-check-key-file-fields-do-not-share-key-file-publicly">5. Check key file fields (do not share key file publicly)<a class="headerlink" href="#5-check-key-file-fields-do-not-share-key-file-publicly" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Key files are plain text — check the VENDOR_SN field to confirm it matches your array SID</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN=|FEATURE|Expiry|PERMANENT&quot;</span><span class="w"> </span>/path/to/cod-key.lic
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Key fields to note:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># VENDOR_SN: should match your array&#39;s full SID (e.g., 000120000001)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># FEATURE:   lists the CoD features/capacity blocks</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Expiry:    date or PERMANENT</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Do NOT share the raw key file in the SR — share only the VENDOR_SN and error output</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># If the licensing team requests the key file, upload only through the secure case attachment</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>VENDOR_SN=000120000001
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>SN=000120000001
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>FEATURE=TIER_CAPACITY_1TB
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>FEATURE=TIER_CAPACITY_2TB
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>FEATURE=REPLICATION_LICENSE
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Expiry=2025-12-31
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>PERMANENT=FALSE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /path/to/cod-key.lic: No such file or directory</code></strong> — Replace <code>/path/to/cod-key.lic</code> with the actual path to your license file (typically <code>/opt/dell/storage/cod-key.lic</code> or similar).
+<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure the file path is quoted correctly and the file exists; verify with <code>ls -la /path/to/cod-key.lic</code> first.
+<strong><code>VENDOR_SN field not found or does not match array SID</code></strong> — Confirm the SID from your array's management interface matches the VENDOR_SN in the key file; contact Dell licensing if they differ.</p>
+</div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Array SID: 000120000001 (PowerMax 8000)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Unisphere version: 9.2.0.28
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Firmware: 5978.221.221 (PowerMaxOS)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Issue first observed: 2026-06-15 11:00 UTC
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Error from symlicense install:
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  SYMAPI_C_INVALID_LICENSE: The license key serial number does not match this array.
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  License VENDOR_SN: 000120000002
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Array SID:         000120000001
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Key file details:
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  FEATURE: COD_ENTERPRISE_CAPACITY_100TB
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Expiry: PERMANENT
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Order: ORD-2026-45678
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Steps already taken:
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  - Compared chassis label SN to key file VENDOR_SN — MISMATCH
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  - Did NOT retry the failed import
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Root cause suspected:
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  - Key was generated for a different array (wrong SN binding by Dell Licensing)
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  - OR: array was recently replaced and key was not rebound to new SID
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Escalation needed:
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  - Dell Licensing team to re-issue key with correct SID binding
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Array SID: 000120000001 (PowerMax 8000)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Unisphere version: 9.2.0.28
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Firmware: 5978.221.221 (PowerMaxOS)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Issue first observed: 2026-06-15 11:00 UTC
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Error from symlicense install:
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  SYMAPI_C_INVALID_LICENSE: The license key serial number does not match this array.
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  License VENDOR_SN: 000120000002
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  Array SID:         000120000001
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Key file details:
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  FEATURE: COD_ENTERPRISE_CAPACITY_100TB
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  Expiry: PERMANENT
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  Order: ORD-2026-45678
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>Steps already taken:
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  - Compared chassis label SN to key file VENDOR_SN — MISMATCH
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>  - Did NOT retry the failed import
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Root cause suspected:
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>  - Key was generated for a different array (wrong SN binding by Dell Licensing)
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>  - OR: array was recently replaced and key was not rebound to new SID
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>Escalation needed:
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>  - Dell Licensing team to re-issue key with correct SID binding
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-dell-support-case">How to Open a Dell Support Case<a class="headerlink" href="#how-to-open-a-dell-support-case" title="Permanent link">&para;</a></h2>
@@ -9092,22 +9190,50 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </ul>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Quick state snapshot — paste into every case update</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Dry-run import (safe — does not apply the key)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Firmware version</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>microcode
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># NSR audit log for license events</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;license\|cod\|key&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># SYMAPI log errors</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/symapi/log/symapi_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|license&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Quick state snapshot — paste into every case update</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Dry-run import (safe — does not apply the key)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/cod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Firmware version</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>microcode
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># NSR audit log for license events</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;license\|cod\|key&quot;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># SYMAPI log errors</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/symapi/log/symapi_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|license&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Symmetrix Model: VMAX 250F
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Licensed Capacity (TB): 50.0
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Unisphere Version: 9.2.1.0
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Preview: License key valid
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Issuer: Dell EMC
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Expiration Date: 2026-12-31
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Capacity Addition: 100 TB
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Status: Ready to import
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Build: 1221
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>2024-01-15 09:23:45 License key imported successfully (SID: 000123456789012)
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>2024-01-14 14:12:10 COD activation event recorded
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>2024-01-10 11:45:33 License audit completed
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>2024-01-15 09:23:45 License import completed for SID 000123456789012
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>2024-01-15 09:22:10 SYMAPI connection established
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: Cannot connect to SYMAPI daemon</code></strong> — Verify SYMAPI is running with <code>service symapi status</code> and restart if needed with <code>service symapi restart</code>.
+<strong><code>Preview: License key expired or invalid</code></strong> — Confirm the .lic file path is correct and the key has not passed its expiration date by checking with Dell EMC support.
+<strong><code>symaudit: SID not found in configuration</code></strong> — Ensure the SID is correct and the array is discovered by running <code>symcfg discover</code> first.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9147,7 +9273,7 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

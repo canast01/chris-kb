@@ -8610,22 +8610,57 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># All guest users</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">(</span>user.userType<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Guest&quot;</span><span class="o">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create dynamic group</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>ad<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--mail-nickname<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--group-types<span class="w"> </span><span class="s2">&quot;DynamicMembership&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--membership-rule<span class="w"> </span><span class="s1">&#39;(user.department -eq &quot;Engineering&quot;)&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--membership-rule-processing-state<span class="w"> </span><span class="s2">&quot;On&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(no output — these are Azure AD dynamic group membership rule expressions, not executable commands)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Syntax error: unexpected token 'eq'</code></strong> — Ensure the rule is entered in the Azure Portal's "Dynamic membership rules" editor or via Microsoft Graph API, not executed as a bash command.
+<strong><code>Property 'jobTitle' is not a valid user property</code></strong> — Verify the attribute name exists in your Azure AD schema; use <code>user.jobTitle</code> (camelCase) rather than <code>user.job_title</code> or other variations.
+<strong><code>The rule contains an unsupported operator or property</code></strong> — Confirm you are using supported operators (<code>-eq</code>, <code>-ne</code>, <code>-contains</code>, <code>-notContains</code>, <code>-startsWith</code>, <code>-notStartsWith</code>) and valid user object properties documented in Azure AD.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create dynamic group</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>ad<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--mail-nickname<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--group-types<span class="w"> </span><span class="s2">&quot;DynamicMembership&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--membership-rule<span class="w"> </span><span class="s1">&#39;(user.department -eq &quot;Engineering&quot;)&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--membership-rule-processing-state<span class="w"> </span><span class="s2">&quot;On&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;displayName&quot;: &quot;dynamic-engineers&quot;,
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;id&quot;: &quot;a7c2f891-4e3a-4b9c-8d1f-2e5a9c3b7f4a&quot;,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;mailNickname&quot;: &quot;dynamic-engineers&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;mailEnabled&quot;: false,
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  &quot;securityEnabled&quot;: true,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  &quot;groupTypes&quot;: [
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &quot;DynamicMembership&quot;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  ],
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  &quot;membershipRule&quot;: &quot;(user.department -eq \&quot;Engineering\&quot;)&quot;,
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  &quot;membershipRuleProcessingState&quot;: &quot;On&quot;,
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  &quot;createdDateTime&quot;: &quot;2024-01-15T10:32:47.123Z&quot;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid membership rule syntax</code></strong> — Verify the membership rule uses correct Azure AD query syntax (e.g., property names are case-sensitive and must match Azure AD schema).
+<strong><code>Error: Insufficient privileges to create groups</code></strong> — Ensure your Azure AD account has the Directory.ReadWrite.All permission or Group.Create permission in the target tenant.
+<strong><code>Error: Mail nickname 'dynamic-engineers' is already in use</code></strong> — Choose a unique mail-nickname value that doesn't conflict with existing groups or distribution lists.</p>
+</div>
 <p>Dynamic group updates can take up to 24 hours after a rule or attribute change.</p>
 <h2 id="nested-groups">Nested Groups<a class="headerlink" href="#nested-groups" title="Permanent link">&para;</a></h2>
 <p>Security groups can be nested — a group can be a member of another group. Azure RBAC honours transitive membership.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add group-B as a member of group-A</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>ad<span class="w"> </span>group<span class="w"> </span>member<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--group<span class="w"> </span>&lt;group-A-object-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--member-id<span class="w"> </span>&lt;group-B-object-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add group-B as a member of group-A</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>ad<span class="w"> </span>group<span class="w"> </span>member<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--group<span class="w"> </span>&lt;group-A-object-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--member-id<span class="w"> </span>&lt;group-B-object-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The following arguments are required: --group, --member-id</code></strong> — Ensure both <code>&lt;group-A-object-id&gt;</code> and <code>&lt;group-B-object-id&gt;</code> are replaced with actual Azure AD object IDs (run <code>az ad group list --query "[].{name:displayName, id:objectId}"</code> to retrieve them).
+<strong><code>Error: Authorization_RequestDenied: Insufficient privileges to complete the operation.</code></strong> — Verify your Azure CLI account has the "Groups Administrator" or "Directory Administrator" role in the target Azure AD tenant.</p>
+</div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8685,7 +8720,7 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 13:38:25 UTC"><span class="timeago" datetime="2026-06-29T13:38:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 13:38:25 UTC">2026-06-29</span>
   </span>
 
     

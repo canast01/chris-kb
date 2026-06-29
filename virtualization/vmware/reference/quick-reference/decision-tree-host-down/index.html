@@ -9921,32 +9921,82 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 <h2 id="step-1-can-you-ping-the-host-management-ip">Step 1 — Can You Ping the Host Management IP?<a class="headerlink" href="#step-1-can-you-ping-the-host-management-ip" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;esxi-management-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PING 172.16.10.42 (172.16.10.42) 56(84) bytes of data.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>64 bytes from 172.16.10.42: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>64 bytes from 172.16.10.42: icmp_seq=2 ttl=64 time=2.18 ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>64 bytes from 172.16.10.42: icmp_seq=3 ttl=64 time=2.41 ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>64 bytes from 172.16.10.42: icmp_seq=4 ttl=64 time=2.29 ms
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>--- 172.16.10.42 statistics ---
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>rtt min/avg/max/stddev = 2.18/2.30/2.41/0.09 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;esxi-management-ip&gt;</code></strong> — Replace the placeholder with the actual ESXi management IP address (e.g., <code>ping -c 4 172.16.10.42</code>).
+<strong><code>PING &lt;esxi-management-ip&gt; (PING: sendto: Operation not permitted)</code></strong> — Verify firewall rules allow ICMP traffic to the ESXi host and check that the management network is reachable from your current network segment.
+<strong><code>100% packet loss</code></strong> — Confirm the ESXi host is powered on, the management IP is correct, and the network cable is connected to the management vmnic.</p>
+</div>
 <p><strong>No response:</strong>
 → Check physical network switch — port enabled? VLAN correct?
 → Check iDRAC/iLO — is the host powered on?
 → If iDRAC unreachable: escalate to data centre for physical check</p>
 <p><strong>Response received</strong> → proceed to Step 2</p>
 <h2 id="step-2-can-you-ssh-to-the-host">Step 2 — Can You SSH to the Host?<a class="headerlink" href="#step-2-can-you-ssh-to-the-host" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>The authenticity of host &#39;192.168.1.42 (192.168.1.42)&#39; can&#39;t be established.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ECDSA key fingerprint is SHA256:aBcD1234eFgH5678iJkL9012mNoPqRsT3456uVwXyZ.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Warning: Permanently added &#39;192.168.1.42&#39; (ECDSA) to the known_hosts file.
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Password: 
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Last login: Wed Jan 15 10:23:47 2025 from 192.168.1.100
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>   VMware ESXi 8.0.1 Build 21495797
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>root@esx-prod-01:~#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname &lt;esxi-management-ip&gt;: Name or service not known</code></strong> — Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi host IP address (e.g., 192.168.1.42).
+<strong><code>Permission denied (publickey,password).</code></strong> — Verify the root password is correct and the ESXi host has SSH enabled (Configuration &gt; Security Profile &gt; Services &gt; SSH).
+<strong><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></strong> — Enable SSH on the ESXi host via vCenter or DCUI, as the SSH service is disabled by default.</p>
+</div>
 <p><strong>SSH fails:</strong>
 → vSphere management agents may be down
 → Try restarting from iDRAC console: <code>services.sh restart</code>
 → Or ESXi Direct Console UI (DCUI) → Restart Management Agents</p>
 <p><strong>SSH succeeds</strong> → proceed to Step 3</p>
 <h2 id="step-3-check-management-agent-status">Step 3 — Check Management Agent Status<a class="headerlink" href="#step-3-check-management-agent-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the ESXi host via SSH</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Restart if stopped</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check logs for errors</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Error|WARN&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Error|WARN&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the ESXi host via SSH</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Restart if stopped</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check logs for errors</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Error|WARN&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Error|WARN&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>hostd is running.
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vpxa is running.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Restarting hostd...
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>hostd stopped.
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>hostd started.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Restarting vpxa...
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>vpxa stopped.
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vpxa started.
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>2024-01-15T09:42:18.123Z [WARN] Connection pool exhausted for vm-123
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>2024-01-15T09:43:05.456Z [Error] Failed to retrieve datastore inventory: timeout
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>2024-01-15T09:44:22.789Z [WARN] Memory pressure detected on host esx-prod-04
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>hostd is stopped.</code></strong> — Run <code>/etc/init.d/hostd start</code> to bring the service online.
+<strong><code>/var/log/hostd.log: No such file or directory</code></strong> — Verify the ESXi host is accessible via SSH and the log file exists; check <code>/var/log/</code> directory contents with <code>ls -la /var/log/</code>.
+<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or have sudo privileges; use <code>sudo -i</code> to escalate if needed.</p>
+</div>
 <p>After restart: wait 2–3 minutes and check if vCenter shows the host as Connected.</p>
 <h2 id="step-4-psod-purple-screen-of-death">Step 4 — PSOD (Purple Screen of Death)?<a class="headerlink" href="#step-4-psod-purple-screen-of-death" title="Permanent link">&para;</a></h2>
 <p>Check via iDRAC console if the host shows a PSOD:
@@ -9955,20 +10005,51 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 - Submit a support bundle to VMware (KB2072908 procedure)</p>
 <h2 id="step-5-host-reconnects-but-vms-are-missing">Step 5 — Host Reconnects but VMs Are Missing?<a class="headerlink" href="#step-5-host-reconnects-but-vms-are-missing" title="Permanent link">&para;</a></h2>
 <p>Check for maintenance mode or an accidental disconnect event:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Via vCenter PowerCLI</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Via vCenter PowerCLI</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
 </code></pre></div></p>
 <p>If VMs were migrated by DRS during the disconnect: check the DRS history for migration events.</p>
 <h2 id="step-6-hardware-issues">Step 6 — Hardware Issues?<a class="headerlink" href="#step-6-hardware-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check hardware health from ESXi shell</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Check SMART data for disk issues</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>smart<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check hardware health from ESXi shell</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check SMART data for disk issues</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>smart<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name   Physical Memory
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------  ----------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>System  65536 MB
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>CPU 0:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Vendor: Intel
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Hz: 2400000000
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Bus MHz: 100
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Cache Size: 15360 KB
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Cores Per Socket: 8
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Threads Per Socket: 16
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Device: naa.60000000000000000000000000000001
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Display Name: Local SSD (naa.60000000000000000000000000000001)
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Size: 476940 MB
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Device Type: SSD
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  Multipath Plugin: NMP
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  ...
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Device: naa.60000000000000000000000000000001
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  Overall Health: Good
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  Temperature: 35C
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  Predictive Failure: No
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>  Reallocated Sectors: 0
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>  Power On Hours: 12847
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace esxcli hardware</code></strong> — Verify ESXi version supports the hardware namespace (6.5+) and run from ESXi shell, not vCenter.
+<strong><code>Error: Could not find device &lt;device_id&gt;</code></strong> — Use <code>esxcli storage core device list</code> first to get the exact naa device identifier and replace <code>&lt;device_id&gt;</code> with the full device name.</p>
+</div>
 <p>Review iDRAC/iLO system event log for hardware faults.</p>
 <h2 id="escalation">Escalation<a class="headerlink" href="#escalation" title="Permanent link">&para;</a></h2>
 <p>If none of the above resolves the issue within 30 minutes:
@@ -9997,7 +10078,7 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7784,6 +7784,26 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2024-12-19 14:23:45,123 ERROR [http-nio-8080-exec-42] com.atlassian.jira.issue.search.SearchProvider - Error executing JQL query: Field &#39;customfield_10042&#39; not found
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-12-19 14:31:12,456 WARN [scheduler_Worker-2] com.atlassian.jira.service.ServiceManager - Service &#39;Mail Handler&#39; took 8234ms to execute
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-12-19 14:45:33,789 ERROR [http-nio-8080-exec-15] com.atlassian.crowd.manager.DirectoryManager - LDAP sync failed: Connection timeout after 30000ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-12-19 14:52:01,234 WARN [http-nio-8080-exec-8] com.atlassian.jira.upgrade.UpgradeTaskManager - Pending upgrade task detected: com.atlassian.jira.upgrade.tasks.UpgradeTask_v8_13_0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-12-19 14:58:47,567 ERROR [scheduler_Worker-5] com.atlassian.jira.issue.index.IssueIndexManager - Reindex failed for project KEY-1234: java.io.IOException: Disk space low
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-12-19 14:15:22.891 [GC (Allocation Failure) 2024-12-19T14:15:22.891+0000: 45.234: [ParNew: 524288K-&gt;65536K(589824K), 0.3456789 secs]
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-12-19 14:42:11.567 [Full GC (System.gc()) 2024-12-19T14:42:11.567+0000: 892.123: [CMS: 1048576K-&gt;987654K(1048576K), 2.1234567 secs]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-12-19 14:33:44,123 INFO [http-nio-8080-exec-22] com.atlassian.jira.issue.search.SearchProvider - Query took 5432ms: project = PROJ AND status = Open
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2024-12-19 14:51:09,456 WARN [http-nio-8080-exec-31] com.atlassian.jira.issue.search.SearchProvider - Slow query detected (8901ms): assignee = currentUser() AND updated &gt;= -7d
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>342
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Verify JIRA is installed at <code>/opt/atlassian/jira</code> or adjust the log path to match your installation directory.
+<strong><code>grep: /opt/atlassian/jira/logs/catalina.out: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the Tomcat catalina logs.
+<strong><code>date: invalid date format</code></strong> — Ensure your system's <code>date</code> command supports <code>+%H</code> and <code>+%Y-%m-%d</code> format specifiers (standard on Linux/macOS).</p>
+</div>
 <h3 id="key-error-patterns">Key Error Patterns<a class="headerlink" href="#key-error-patterns" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7838,19 +7858,49 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </table>
 <hr />
 <h2 id="3-disk-space">3. Disk Space<a class="headerlink" href="#3-disk-space" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all relevant mount points</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>df<span class="w"> </span>-hT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Filesystem|/var/atlassian|/opt/atlassian|/backup&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Shared home breakdown</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/shared/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-hr<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Find large files</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>find<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t/<span class="w"> </span>-k1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Log directory size</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/atlassian/jira/logs/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all relevant mount points</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-hT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Filesystem|/var/atlassian|/opt/atlassian|/backup&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Shared home breakdown</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/shared/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-hr<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Find large files</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>find<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t/<span class="w"> </span>-k1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Log directory size</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/atlassian/jira/logs/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Filesystem     Type     Size  Used Avail Use% Mounted on
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/dev/sda1      ext4     500G  385G  115G  77% /
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/dev/sdb1      ext4     2.0T  1.8T  200G  90% /var/atlassian
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/dev/sdc1      ext4     5.0T  3.2T  1.8T  64% /backup
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>847G    /var/atlassian/application-data/jira/shared
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>312G    /var/atlassian/application-data/jira/shared/plugins
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>156G    /var/atlassian/application-data/jira/shared/export
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>89G /var/atlassian/application-data/jira/shared/attachments
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>34G /var/atlassian/application-data/jira/shared/index
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>18G /var/atlassian/application-data/jira/shared/analytics
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>12G /var/atlassian/application-data/jira/shared/logos
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>8.4G    /var/atlassian/application-data/jira/shared/temp
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2.1G    /var/atlassian/application-data/jira/shared/config
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>/var/atlassian/application-data/jira/shared/export/archive-2024-01-15.tar.gz    245M
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>/var/atlassian/application-data/jira/shared/attachments/proj-KEY-12847-image.zip    187M
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>/var/atlassian/application-data/jira/shared/plugins/marketplace-bundle-8.9.2.jar    156M
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>/var/atlassian/application-data/jira/shared/export/backup-full-2024-02-10.tar   134M
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>/var/atlassian/application-data/jira/shared/attachments/bulk-import-data.csv    118M
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>23G /opt/atlassian/jira/logs/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/var/atlassian/application-data/jira/shared': No such file or directory</code></strong> — Verify JIRA installation path with <code>ls -la /var/atlassian/application-data/</code> and adjust the path if using a custom installation directory.
+<strong><code>df: /var/atlassian: No such file or directory</code></strong> — Mount the shared storage volume or check that <code>/var/atlassian</code> exists; confirm with <code>mount | grep atlassian</code>.
+<strong><code>du: cannot access '/opt/atlassian/jira/logs/': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the logs directory with <code>sudo chmod o+rx /opt/atlassian/jira/logs/</code>.</p>
+</div>
 <h3 id="disk-usage-thresholds">Disk Usage Thresholds<a class="headerlink" href="#disk-usage-thresholds" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7890,30 +7940,80 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </table>
 <hr />
 <h2 id="4-database-connectivity">4. Database Connectivity<a class="headerlink" href="#4-database-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test connection from app node</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;\conninfo&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check active connections</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*), state FROM pg_stat_activity WHERE datname=&#39;jiradb&#39; GROUP BY state;&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check for long-running queries (&gt; 30 seconds)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">SELECT pid, now() - query_start AS duration, state, query</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">FROM pg_stat_activity</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">WHERE datname = &#39;jiradb&#39;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">  AND state != &#39;idle&#39;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">  AND query_start &lt; now() - interval &#39;30 seconds&#39;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">ORDER BY duration DESC;&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Check replication lag (if using replica)</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>psql<span class="w"> </span>-h<span class="w"> </span>db-replica.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test connection from app node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;\conninfo&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check active connections</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*), state FROM pg_stat_activity WHERE datname=&#39;jiradb&#39; GROUP BY state;&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check for long-running queries (&gt; 30 seconds)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">SELECT pid, now() - query_start AS duration, state, query</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">FROM pg_stat_activity</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">WHERE datname = &#39;jiradb&#39;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">  AND state != &#39;idle&#39;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">  AND query_start &lt; now() - interval &#39;30 seconds&#39;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">ORDER BY duration DESC;&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Check replication lag (if using replica)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>psql<span class="w"> </span>-h<span class="w"> </span>db-replica.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You are connected to database &quot;jiradb&quot; as user &quot;jira&quot; via socket in &quot;/var/run/postgresql&quot; at port &quot;5432&quot;.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> count | state  
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>-------+--------
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    12 | active
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    28 | idle
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>     3 | idle in transaction
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>(3 rows)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a> pid  |   duration   | state  |                          query                           
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>------+--------------+--------+----------------------------------------------------------
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a> 4521 | 00:01:45.234 | active | SELECT * FROM jira_issue WHERE updated &gt; now() - interval
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a> 4687 | 00:00:52.891 | active | UPDATE jira_worklog SET time_spent = $1 WHERE id = $2 AND
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a> 4702 | 00:00:31.456 | active | INSERT INTO audit_log (event_type, timestamp) VALUES ($1,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>(3 rows)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a> replication_lag 
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>-----------------
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a> 00:00:02.341
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>(1 row)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup db.example.com</code> or update the hostname in your connection string to match your actual database server.
+<strong><code>psql: error: FATAL: password authentication failed for user "jira"</code></strong> — Confirm the jira user password is correct and check that the <code>.pgpass</code> file has the correct credentials in format <code>hostname:port:database:username:password</code>.
+<strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — Increase PostgreSQL's <code>max_connections</code> parameter or terminate idle connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle' AND query_start &lt; now() - interval '10 minutes'</code>.</p>
+</div>
 <h3 id="connection-pool-health-via-rest">Connection Pool Health (via REST)<a class="headerlink" href="#connection-pool-health-via-rest" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;baseUrl&quot;: &quot;https://jira.company.internal&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;version&quot;: &quot;8.20.6&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;versionNumbers&quot;: [
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    8,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    20,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    6
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  ],
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;deploymentType&quot;: &quot;Server&quot;,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;buildNumber&quot;: 820006,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;buildDate&quot;: &quot;2023-11-15T09:42:00.000-0500&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;serverTime&quot;: &quot;2024-01-18T14:32:47.123-0500&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  &quot;scmInfo&quot;: &quot;abc1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9&quot;,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;serverTitle&quot;: &quot;JIRA Production&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;licenseVersion&quot;: 2
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.company.internal port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the JIRA instance is running and accessible from this host.
+<strong><code>curl: (401) Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that the JIRA REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</p>
+</div>
 <p>Via UI: <code>Admin → System → Database → Connection Pool Monitoring</code></p>
 <table>
 <thead>
@@ -7943,24 +8043,49 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </table>
 <hr />
 <h2 id="5-search-index-status">5. Search Index Status<a class="headerlink" href="#5-search-index-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check index age via REST</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check index age via REST</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;currentProgress&quot;: 87,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;currentSubTask&quot;: &quot;Indexing issues&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;description&quot;: &quot;Reindex in progress&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;entityCount&quot;: 12847,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  &quot;lastIndexTime&quot;: 1704067200000,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;progressUrl&quot;: &quot;/secure/admin/IndexAdmin.jspa?taskId=reindex-1&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;remainingEstimate&quot;: &quot;2m 34s&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;startTime&quot;: 1704067140000,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify JIRA_URL is correct and the Jira instance is running and accessible from your network.
+<strong><code>{"errorMessages":["User does not have permission to administer Jira"]}</code></strong> — Ensure JIRA_USER has the Jira Administrators global permission or System Administrators group membership.
+<strong><code>curl: (6) Could not resolve host: ${JIRA_URL}</code></strong> — Check that JIRA_URL environment variable is set and contains a valid hostname (e.g., <code>export JIRA_URL=https://jira.example.com</code>).</p>
+</div>
 <p>Expected response when healthy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;progressUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/rest/api/2/reindex/progress&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BACKGROUND_PREFERRED&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;submittedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:00.000+0000&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:05.000+0000&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">&quot;finishTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:23:45.000+0000&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nt">&quot;currentSubTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Completed&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;progressUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/rest/api/2/reindex/progress&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BACKGROUND_PREFERRED&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;submittedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:00.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:05.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">&quot;finishTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:23:45.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nt">&quot;currentSubTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Completed&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">}</span>
 </code></pre></div>
 <p>Check index size on disk:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>2.3G    /var/atlassian/application-data/jira/caches/indexes/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': Permission denied</code></strong> — Run the command with <code>sudo</code> or as the <code>jira</code> user to access the directory.
+<strong><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': No such file or directory</code></strong> — Verify the JIRA installation path matches your environment; check <code>$JIRA_HOME</code> or review the JIRA installation documentation for your version.</p>
+</div>
 <p>Signs of index problems:</p>
 <ul>
 <li>JQL searches returning 0 results for known issues</li>
@@ -7969,21 +8094,70 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </ul>
 <hr />
 <h2 id="6-cluster-node-status">6. Cluster Node Status<a class="headerlink" href="#6-cluster-node-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Database-level cluster check</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s2">SELECT node_id, node_name, status, ip, last_heartbeat,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s2">       EXTRACT(EPOCH FROM (now() - last_heartbeat)) AS seconds_since_heartbeat</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s2">FROM clusternodeinfo</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s2">ORDER BY last_heartbeat DESC;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Database-level cluster check</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="s2">SELECT node_id, node_name, status, ip, last_heartbeat,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s2">       EXTRACT(EPOCH FROM (now() - last_heartbeat)) AS seconds_since_heartbeat</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s2">FROM clusternodeinfo</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="s2">ORDER BY last_heartbeat DESC;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>node_id | node_name | status |      ip      |       last_heartbeat       | seconds_since_heartbeat
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>---------+-----------+--------+--------------+----------------------------+-------------------------
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>       1 | jira-node-01 | ONLINE | 10.42.18.105 | 2024-01-15 14:23:47.234561 |                       2.1
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>       2 | jira-node-02 | ONLINE | 10.42.18.106 | 2024-01-15 14:23:45.891234 |                       4.4
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>       3 | jira-node-03 | ONLINE | 10.42.18.107 | 2024-01-15 14:23:46.567890 |                       3.7
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>       4 | jira-node-04 | OFFLINE | 10.42.18.108 | 2024-01-15 14:18:12.123456 |                     335.8
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>(4 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: FATAL: Ident authentication failed for user "jira"</code></strong> — Verify the <code>.pgpass</code> file exists at <code>~/.pgpass</code> with correct credentials and permissions (chmod 600), or use password prompt with <code>-W</code> flag.
+<strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Confirm the database hostname is correct and resolvable by running <code>nslookup db.example.com</code> or checking your <code>/etc/hosts</code> file.
+<strong><code>ERROR: relation "clusternodeinfo" does not exist</code></strong> — Verify you are connected to the correct JIRA database and the table name matches your JIRA version (may be <code>jiraclusternode</code> in older versions).</p>
+</div>
 <p>Via UI: <code>Admin → System → Clustering</code></p>
 <p>All expected nodes should appear with:
 - Status: <code>ACTIVE</code>
 - Last heartbeat: &lt; 60 seconds ago</p>
 <p>Via REST:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  &quot;nodes&quot;: [
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    {
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>      &quot;nodeId&quot;: &quot;node-001&quot;,
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>      &quot;name&quot;: &quot;jira-prod-01.internal&quot;,
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>      &quot;state&quot;: &quot;ACTIVE&quot;,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>      &quot;buildNumber&quot;: 100156,
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>      &quot;version&quot;: &quot;8.20.11&quot;,
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>      &quot;ipAddress&quot;: &quot;10.42.18.45&quot;
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    },
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    {
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>      &quot;nodeId&quot;: &quot;node-002&quot;,
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>      &quot;name&quot;: &quot;jira-prod-02.internal&quot;,
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>      &quot;state&quot;: &quot;ACTIVE&quot;,
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>      &quot;buildNumber&quot;: 100156,
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>      &quot;version&quot;: &quot;8.20.11&quot;,
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>      &quot;ipAddress&quot;: &quot;10.42.18.46&quot;
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>    },
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>    {
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>      &quot;nodeId&quot;: &quot;node-003&quot;,
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>      &quot;name&quot;: &quot;jira-prod-03.internal&quot;,
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>      &quot;state&quot;: &quot;OFFLINE&quot;,
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>      &quot;buildNumber&quot;: 100156,
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>      &quot;version&quot;: &quot;8.20.11&quot;,
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>      &quot;ipAddress&quot;: &quot;10.42.18.47&quot;
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>    }
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>  ]
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the Jira instance is running and accessible from your network.
+<strong><code>401 Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Check that the Jira REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</p>
+</div>
 <hr />
 <h2 id="7-key-metrics-reference">7. Key Metrics Reference<a class="headerlink" href="#7-key-metrics-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8078,66 +8252,74 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </table>
 <hr />
 <h2 id="8-automated-health-check-script">8. Automated Health Check Script<a class="headerlink" href="#8-automated-health-check-script" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># jira-health-check.sh — Run daily via cron</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">JIRA_URL</span><span class="o">=</span><span class="s2">&quot;https://jira.example.com&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">JIRA_USER</span><span class="o">=</span><span class="s2">&quot;health-check-svc&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">JIRA_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_HEALTH_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops-team@example.com&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">FAILURES</span><span class="o">=()</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># --- 1. HTTP health endpoint ---</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="k">)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Jira health endpoint returned HTTP </span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">fi</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># --- 2. Disk space ---</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="nv">DISK_PCT</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">85</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — CRITICAL&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">70</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — WARNING&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="k">fi</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># --- 3. DB connectivity ---</span>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span><span class="w"> </span>-q<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;PostgreSQL connection failed&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="k">fi</span>
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="c1"># --- 4. Error log check ---</span>
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="nv">ERROR_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="k">)</span>
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;High error rate: </span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2"> errors today&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="k">fi</span>
-<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>
-<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="c1"># --- 5. Cluster node heartbeat ---</span>
-<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="nv">STALE_NODES</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-tAc<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="s2">  SELECT count(*) FROM clusternodeinfo</span>
-<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="s2">  WHERE status = &#39;ACTIVE&#39;</span>
-<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="s2">    AND last_heartbeat &lt; now() - interval &#39;2 minutes&#39;&quot;</span><span class="k">)</span>
-<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2"> cluster node(s) have stale heartbeat&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a><span class="k">fi</span>
-<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>
-<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a><span class="c1"># --- Report ---</span>
-<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="si">${#</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a><span class="w">  </span><span class="nv">BODY</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BODY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[JIRA HEALTH] </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> — </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ALERT_EMAIL</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HEALTH CHECK FAILED:&quot;</span>
-<a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;  - %s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-9-54" name="__codelineno-9-54" href="#__codelineno-9-54"></a><span class="k">else</span>
-<a id="__codelineno-9-55" name="__codelineno-9-55" href="#__codelineno-9-55"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Health check passed: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-56" name="__codelineno-9-56" href="#__codelineno-9-56"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-9-57" name="__codelineno-9-57" href="#__codelineno-9-57"></a><span class="k">fi</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># jira-health-check.sh — Run daily via cron</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nv">JIRA_URL</span><span class="o">=</span><span class="s2">&quot;https://jira.example.com&quot;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">JIRA_USER</span><span class="o">=</span><span class="s2">&quot;health-check-svc&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nv">JIRA_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_HEALTH_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops-team@example.com&quot;</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nv">FAILURES</span><span class="o">=()</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># --- 1. HTTP health endpoint ---</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="k">)</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Jira health endpoint returned HTTP </span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="k">fi</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1"># --- 2. Disk space ---</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="nv">DISK_PCT</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">85</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — CRITICAL&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">70</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — WARNING&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="k">fi</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="c1"># --- 3. DB connectivity ---</span>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span><span class="w"> </span>-q<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;PostgreSQL connection failed&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="k">fi</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="c1"># --- 4. Error log check ---</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="nv">ERROR_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="k">)</span>
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;High error rate: </span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2"> errors today&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="k">fi</span>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a><span class="c1"># --- 5. Cluster node heartbeat ---</span>
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a><span class="nv">STALE_NODES</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-tAc<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a><span class="s2">  SELECT count(*) FROM clusternodeinfo</span>
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a><span class="s2">  WHERE status = &#39;ACTIVE&#39;</span>
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a><span class="s2">    AND last_heartbeat &lt; now() - interval &#39;2 minutes&#39;&quot;</span><span class="k">)</span>
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2"> cluster node(s) have stale heartbeat&quot;</span><span class="o">)</span>
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a><span class="k">fi</span>
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a><span class="c1"># --- Report ---</span>
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="si">${#</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a><span class="w">  </span><span class="nv">BODY</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BODY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[JIRA HEALTH] </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> — </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ALERT_EMAIL</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HEALTH CHECK FAILED:&quot;</span>
+<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;  - %s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a><span class="k">else</span>
+<a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Health check passed: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a><span class="k">fi</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Health check passed: Wed Jan 15 02:30:45 UTC 2025
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "db.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></strong> — Verify PostgreSQL is running on db.example.com and the network route is accessible; check <code>psql -h db.example.com -U jira -d jiradb -c "SELECT 1"</code> manually.
+<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm the Jira installation path and log file location match your deployment; adjust the path in the script or verify the Jira service is running.
+<strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection timed out</code></strong> — Check that the JIRA_URL is correct, the Jira service is running, and firewall/network rules allow outbound HTTPS from the monitoring host.</p>
+</div>
 <p>Schedule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>*/15 * * * * jira /opt/scripts/jira-health-check.sh &gt;&gt; /var/log/jira-health.log 2&gt;&amp;1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>*/15 * * * * jira /opt/scripts/jira-health-check.sh &gt;&gt; /var/log/jira-health.log 2&gt;&amp;1
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8175,7 +8357,7 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

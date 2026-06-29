@@ -8609,6 +8609,38 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--ids<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Advisor/recommendations/&lt;rec-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                                    Category    Impact    Risk Level    Description
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>--------------------------------------  ----------  --------  -----------  -----------------------------------------------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>reduce-vm-size-prod-eastus-01           Cost        High      Medium        Right-size underutilized Virtual Machines
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>delete-unattached-disks-rg-storage      Cost        Medium    Low           Remove unattached managed disks
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>optimize-sql-database-dtu-usage         Cost        High      Medium        Reduce Azure SQL Database DTU allocation
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>consolidate-storage-accounts            Cost        Medium    Low           Consolidate redundant storage accounts
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>enable-reserved-instances-compute       Cost        High      Medium        Purchase reserved instances for VMs
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c/providers/Microsoft.Advisor/recommendations/reduce-vm-size-prod-eastus-01&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;name&quot;: &quot;reduce-vm-size-prod-eastus-01&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;type&quot;: &quot;Microsoft.Advisor/recommendations&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;category&quot;: &quot;Cost&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;impact&quot;: &quot;High&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;riskLevel&quot;: &quot;Medium&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;description&quot;: &quot;Virtual machine prod-eastus-01 is underutilized. Consider resizing to a smaller SKU.&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;resourceMetadata&quot;: {
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    &quot;resourceId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/prod-eastus-01&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  },
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;shortDescription&quot;: {
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    &quot;problem&quot;: &quot;Virtual machine is underutilized&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    &quot;solution&quot;: &quot;Resize to Standard_B2s&quot;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  }
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The subscription '&lt;subscription-id&gt;' could not be found.</code></strong> — Replace <code>&lt;subscription-id&gt;</code> with a valid subscription ID from <code>az account list</code>.
+<strong><code>No recommendations found for the specified criteria.</code></strong> — Verify the subscription has completed the Advisor assessment (can take 24 hours) or check that the <code>--category</code> filter value matches available categories (Cost, Performance, Security, OperationalExcellence).
+<strong><code>Invalid resource ID format in --ids parameter.</code></strong> — Ensure the recommendation ID follows the full path format <code>/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Advisor/recommendations/&lt;rec-id&gt;</code> with no extra spaces or characters.</p>
+</div>
 <h3 id="recommendation-categories">Recommendation Categories<a class="headerlink" href="#recommendation-categories" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8655,25 +8687,58 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 <li><strong>Right-size App Service plans</strong> — underutilised plan SKUs</li>
 <li><strong>Idle SQL databases</strong> — databases with no connections over 14 days</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get cost savings estimate across all recommendations</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:shortDescription.solution, Savings:extendedProperties.annualSavingsAmount, Currency:extendedProperties.savingsCurrency}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-</code></pre></div>
-<h2 id="right-sizing-recommendations">Right-Sizing Recommendations<a class="headerlink" href="#right-sizing-recommendations" title="Permanent link">&para;</a></h2>
-<p>Advisor compares actual CPU, memory, and network metrics against the allocated SKU and recommends downsizing where appropriate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List VM right-size recommendations</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get cost savings estimate across all recommendations</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;right-size&#39;) || contains(shortDescription.solution, &#39;Right-size&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:shortDescription.solution, Savings:extendedProperties.annualSavingsAmount, Currency:extendedProperties.savingsCurrency}&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># View extended properties for a recommendation (includes target SKU)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;recommendation-resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;extendedProperties&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                                                    Savings      Currency
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>------------------------------------------------------  -----------  ----------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Delete unattached managed disks                         1250.00      USD
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Reduce compute costs by resizing or shutting down...    8750.50      USD
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Purchase reserved instances for predictable workloads   15320.25     USD
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Eliminate unprovisioned ExpressRoute circuits           3100.00      USD
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Right-size underutilized virtual machines               5680.75      USD
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --subscription</code></strong> — Add <code>--subscription &lt;subscription-id&gt;</code> or set the default subscription with <code>az account set --subscription &lt;id&gt;</code>.
+<strong><code>ERROR: (AuthorizationFailed) The client '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/&lt;id&gt;'</code></strong> — Ensure your Azure account has the Reader role or higher assigned on the subscription.</p>
+</div>
+<h2 id="right-sizing-recommendations">Right-Sizing Recommendations<a class="headerlink" href="#right-sizing-recommendations" title="Permanent link">&para;</a></h2>
+<p>Advisor compares actual CPU, memory, and network metrics against the allocated SKU and recommends downsizing where appropriate.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List VM right-size recommendations</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;right-size&#39;) || contains(shortDescription.solution, &#39;Right-size&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># View extended properties for a recommendation (includes target SKU)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;recommendation-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;extendedProperties&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                                          Category    Impact    Risk Level    Short Description
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>────────────────────────────────────────────  ──────────  ────────  ────────────  ──────────────────────────────────────────
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vm-prod-web-01-rightsize-rec-2024-01-15      Cost        High      Medium        Right-size underutilized VM Standard_D4s_v3
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vm-staging-db-02-rightsize-rec-2024-01-14    Cost        Medium    Low           Right-size overprovisioned instance Standard_E8s_v4
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vm-dev-app-03-rightsize-rec-2024-01-13       Cost        High      Medium        Right-size idle compute resource Standard_B2s
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vm-prod-cache-04-rightsize-rec-2024-01-12    Cost        Medium    Low           Right-size underutilized VM Standard_D2s_v3
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>{
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  &quot;targetSku&quot;: &quot;Standard_B4ms&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;currentSku&quot;: &quot;Standard_D4s_v3&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  &quot;estimatedMonthlySavings&quot;: &quot;$145.32&quot;,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  &quot;utilizationPercentage&quot;: &quot;18&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  &quot;recommendationReason&quot;: &quot;VM is running at 18% CPU and 22% memory utilization over the past 30 days&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --ids</code></strong> — Provide the full resource ID of the recommendation from the first command's output.
+<strong><code>ERROR: (ResourceNotFound) The resource 'Microsoft.Advisor/recommendations/&lt;id&gt;' does not exist.</code></strong> — Verify the recommendation ID is current and hasn't expired; re-run the list command to get active recommendation IDs.</p>
+</div>
 <h3 id="right-sizing-decision-criteria">Right-Sizing Decision Criteria<a class="headerlink" href="#right-sizing-decision-criteria" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8708,39 +8773,101 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 </table>
 <h2 id="dismissing-recommendations">Dismissing Recommendations<a class="headerlink" href="#dismissing-recommendations" title="Permanent link">&para;</a></h2>
 <p>Dismiss a recommendation when it does not apply (e.g., a VM must remain on for compliance). Dismissed recommendations are suppressed for 90 days by default.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Dismiss a single recommendation</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>disable<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--ids<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Advisor/recommendations/&lt;rec-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--days<span class="w"> </span><span class="m">90</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List suppressed (dismissed) recommendations</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>advisor<span class="w"> </span>suppression<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Delete a suppression to re-enable a recommendation</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>az<span class="w"> </span>advisor<span class="w"> </span>suppression<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;suppression-resource-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Dismiss a single recommendation</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>disable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--ids<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Advisor/recommendations/&lt;rec-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--days<span class="w"> </span><span class="m">90</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List suppressed (dismissed) recommendations</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>az<span class="w"> </span>advisor<span class="w"> </span>suppression<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Delete a suppression to re-enable a recommendation</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>az<span class="w"> </span>advisor<span class="w"> </span>suppression<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;suppression-resource-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Name                                          Type                                    ResourceGroup
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>────────────────────────────────────────────  ──────────────────────────────────────  ─────────────
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>high-availability-suppression-001             Microsoft.Advisor/suppressions          prod-rg
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cost-optimization-vm-resize-suppression       Microsoft.Advisor/suppressions          prod-rg
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>security-nsg-rules-suppression-2024           Microsoft.Advisor/suppressions          dev-rg
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>unused-storage-account-suppression            Microsoft.Advisor/suppressions          staging-rg
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The provided resource ID is invalid or does not exist.</code></strong> — Verify the recommendation ID format matches <code>/subscriptions/{subscriptionId}/providers/Microsoft.Advisor/recommendations/{recommendationId}</code> and the subscription is correct.
+<strong><code>The suppression resource was not found.</code></strong> — Confirm the suppression resource ID exists by running <code>az advisor suppression list</code> and copy the exact Name value from the output.</p>
+</div>
 <blockquote>
 <p><strong>Note:</strong> Dismissals should be documented. Add a comment in the ticket or tag the resource with a justification before dismissing.</p>
 </blockquote>
 <h2 id="automation-and-reporting">Automation and Reporting<a class="headerlink" href="#automation-and-reporting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export recommendations to JSON for reporting</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>advisor-cost-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Count open cost recommendations</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;length(@)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Export recommendations to JSON for reporting</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>advisor-cost-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Count open cost recommendations</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;length(@)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  {
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Advisor/recommendations/cost-001&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    &quot;name&quot;: &quot;cost-001&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    &quot;type&quot;: &quot;Microsoft.Advisor/recommendations&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    &quot;category&quot;: &quot;Cost&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;impact&quot;: &quot;High&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    &quot;impactedValue&quot;: &quot;1250.50&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    &quot;impactedValueUnit&quot;: &quot;USD&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;recommendation&quot;: &quot;Delete unattached managed disks&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    &quot;shortDescription&quot;: &quot;Remove 3 unattached disks to save $1,250.50/month&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    &quot;potentialBenefit&quot;: &quot;1250.50 USD per month&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  },
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  {
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Advisor/recommendations/cost-002&quot;,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    &quot;name&quot;: &quot;cost-002&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    &quot;type&quot;: &quot;Microsoft.Advisor/recommendations&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    &quot;category&quot;: &quot;Cost&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    &quot;impact&quot;: &quot;Medium&quot;,
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    &quot;impactedValue&quot;: &quot;425.75&quot;,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    &quot;impactedValueUnit&quot;: &quot;USD&quot;,
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    &quot;recommendation&quot;: &quot;Resize underutilized virtual machines&quot;,
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    &quot;shortDescription&quot;: &quot;Downsize 2 VMs to save $425.75/month&quot;,
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    &quot;potentialBenefit&quot;: &quot;425.75 USD per month&quot;
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>  }
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>]
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The subscription of type 'Microsoft.Subscription/subscriptions' could not be found.</code></strong> — Ensure you are logged in with <code>az login</code> and the correct subscription is set via <code>az account set --subscription &lt;subscription-id&gt;</code>.
+<strong><code>ERROR: This operation requires the 'Microsoft.Advisor/register/action' permission.</code></strong> — Register the Advisor resource provider with <code>az provider register --namespace Microsoft.Advisor</code>.</p>
+</div>
 <h3 id="recommendation-score">Recommendation Score<a class="headerlink" href="#recommendation-score" title="Permanent link">&para;</a></h3>
 <p>Advisor calculates an overall Advisor Score (0–100) per category. Track score improvements as a KPI.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get Advisor score per category</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>score<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get Advisor score per category</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>score<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Category                 Percentage    ImpactedResourceCount
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>-----------------------  -----------  ----------------------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Cost                     87            12
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Reliability              92            3
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Security                 78            8
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Operational Excellence   85            5
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Performance Efficiency   81            6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --subscription</code></strong> — Add <code>--subscription &lt;subscription-id&gt;</code> or set the default subscription with <code>az account set --subscription &lt;id&gt;</code>.
+<strong><code>ERROR: This operation is not supported by your current Azure CLI version.</code></strong> — Upgrade Azure CLI with <code>az upgrade</code> to ensure Advisor commands are available.</p>
+</div>
 
 
 
@@ -8763,7 +8890,7 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

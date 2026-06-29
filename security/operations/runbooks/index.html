@@ -7219,15 +7219,58 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>host1.corp: notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>host2.corp: notAfter=Feb 28 14:17:22 2025 GMT
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>You are about to be asked to enter information that will be incorporated
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>into your certificate request.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-----
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Country Name (2 letter code) [AU]:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>State or Province Name (full name) []:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Locality Name (locality name) []:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Organization Name (organization name) [Corp]:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Organizational Unit Name (organizational unit name) []:
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Common Name (common name) [host.corp.local]:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Email Address []:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>(no output — command completes silently)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>(no output — command completes silently)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>(no output — command completes silently)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>notAfter=Dec 10 09:45:33 2026 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load Private Key</code></strong> — Verify the private key path is correct and readable by the current user with <code>ls -l /etc/ssl/private/server.key</code>.
+<strong><code>Connection refused</code></strong> — Ensure the target host is reachable and the service is listening on port 443 with <code>nc -zv host.corp.local 443</code>.
+<strong><code>No such file or directory</code></strong> — Confirm the new certificate file exists at the specified path before running the <code>cp</code> command with <code>ls -l new-cert.crt</code>.</p>
+</div>
 <p><strong>Expected output (step 5):</strong> <code>notAfter</code> shows the new expiry date (≥ 1 year from today). Service responds normally — test with <code>curl -sk https://host.corp.local/health</code> returning HTTP 200.</p>
 <h2 id="cyberark-password-rotation-check">CyberArk Password Rotation Check<a class="headerlink" href="#cyberark-password-rotation-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify CPM rotation completed successfully</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># In CyberArk PVWA: Policies → Safe Management → select safe</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check Last Modified date for each account matches expected rotation interval</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test that rotated credential works</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mysql<span class="w"> </span>-u<span class="w"> </span>app_user<span class="w"> </span>-p<span class="k">$(</span>cyberark-cli<span class="w"> </span>get-password<span class="w"> </span>--safe<span class="w"> </span>AppSafe<span class="w"> </span>--account<span class="w"> </span>AppDB<span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify CPM rotation completed successfully</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># In CyberArk PVWA: Policies → Safe Management → select safe</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check Last Modified date for each account matches expected rotation interval</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Test that rotated credential works</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mysql<span class="w"> </span>-u<span class="w"> </span>app_user<span class="w"> </span>-p<span class="k">$(</span>cyberark-cli<span class="w"> </span>get-password<span class="w"> </span>--safe<span class="w"> </span>AppSafe<span class="w"> </span>--account<span class="w"> </span>AppDB<span class="k">)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Enter password: 
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Welcome to the MySQL monitor.  Commands end with ; or \g.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Your MySQL connection id is 47382
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Server version: 5.7.32-0ubuntu0.18.04.1-log (Ubuntu)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Copyright (c) 2000, 2023, Oracle and/or its affiliates. All rights reserved.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Oracle is a registered trademark of the Oracle Corporation and/or its
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>affiliates. Other trademarks are the property of their respective owners.
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current connection.
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>mysql&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cyberark-cli: command not found</code></strong> — Install the CyberArk CLI tool or ensure it is in your PATH environment variable.
+<strong><code>ERROR 1045 (28000): Access denied for user 'app_user'@'localhost'</code></strong> — Verify the rotated password was successfully retrieved from CyberArk and that the database user permissions have not changed.
+<strong><code>ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (111)</code></strong> — Confirm the database host is reachable and the MySQL service is running on the expected port.</p>
+</div>
 <h2 id="monthly-access-recertification">Monthly Access Recertification<a class="headerlink" href="#monthly-access-recertification" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Export user list from AD: <code>Get-ADGroupMember -Identity "SQL_DBA" | Select Name, SamAccountName</code></li>
@@ -7236,11 +7279,31 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <li>Disable dormant accounts; schedule for removal after 30 days</li>
 </ol>
 <h2 id="weekly-firewall-rule-review">Weekly Firewall Rule Review<a class="headerlink" href="#weekly-firewall-rule-review" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Review recently added rules (last 7 days from change log)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Check for any &quot;any any&quot; or overly broad rules</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state RELATED,ESTABLISHED&quot;</span><span class="w">  </span><span class="c1"># Linux</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Get-NetFirewallRule<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Enabled<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;True&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Direction<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Inbound&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Review recently added rules (last 7 days from change log)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Check for any &quot;any any&quot; or overly broad rules</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state RELATED,ESTABLISHED&quot;</span><span class="w">  </span><span class="c1"># Linux</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Get-NetFirewallRule<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Enabled<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;True&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Direction<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Inbound&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> pkts bytes target     prot opt in     out     source               destination
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> 1250  89K ACCEPT     tcp  --  eth0   *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  892  45K ACCEPT     tcp  --  eth0   *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  156  12K ACCEPT     tcp  --  eth0   *       10.0.0.0/8           0.0.0.0/0            tcp dpt:3306
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   45   2K DROP       all  --  eth0   *       0.0.0.0/0            0.0.0.0/0
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Chain FORWARD (policy DROP 0 packets, 0 bytes)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Chain OUTPUT (policy ACCEPT 1089 packets, 67K bytes)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Name                             : AllowRDP
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Enabled                          : True
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Direction                        : Inbound
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Action                           : Allow
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>DisplayName                      : Remote Desktop - User Mode (TCP-In)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: iptables: command not found</code></strong> — Install iptables with <code>sudo apt-get install iptables</code> on Linux or verify you're running on a Linux system, not Windows.
+<strong><code>Get-NetFirewallRule : The term 'Get-NetFirewallRule' is not recognized</code></strong> — Run PowerShell as Administrator and ensure you're on Windows; this cmdlet is not available on Linux.</p>
+</div>
 <h2 id="hardening-check-schedule">Hardening Check Schedule<a class="headerlink" href="#hardening-check-schedule" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7300,7 +7363,7 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

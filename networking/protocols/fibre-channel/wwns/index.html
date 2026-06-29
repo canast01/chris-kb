@@ -8173,24 +8173,91 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/port_name
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>cat<span class="w"> </span>/sys/class/fc_host/host1/port_name
 </code></pre></div>
-<h3 id="windows-hba">Windows (HBA)<a class="headerlink" href="#windows-hba" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Via Get-InitiatorPort</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-InitiatorPort</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NodeAddress</span><span class="p">,</span> <span class="n">PortAddress</span><span class="p">,</span> <span class="n">ConnectionType</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>0x500143800000001a
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>0x500143800000001b
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># QLogic SANsurfer / Emulex OneCommand Manager GUI also display WWPNs</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>port_name            = &quot;0x500143800000001a&quot;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>port_name            = &quot;0x500143800000001b&quot;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>host0  host1  host2
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>0x500143800000001a
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>0x500143800000001b
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /sys/class/fc_host/host0/port_name: No such file or directory</code></strong> — Verify the FC HBA is installed and recognized with <code>lspci | grep -i fibre</code> before querying sysfs paths.
+<strong><code>systool: command not found</code></strong> — Install the sysfsutils package with <code>apt-get install sysfsutils</code> or <code>yum install sysfsutils</code>.
+<strong><code>cat: /sys/class/fc_host/host1/port_name: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access sysfs FC host attributes.</p>
+</div>
+<h3 id="windows-hba">Windows (HBA)<a class="headerlink" href="#windows-hba" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Via Get-InitiatorPort</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-InitiatorPort</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NodeAddress</span><span class="p">,</span> <span class="n">PortAddress</span><span class="p">,</span> <span class="n">ConnectionType</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># QLogic SANsurfer / Emulex OneCommand Manager GUI also display WWPNs</span>
 </code></pre></div>
 <h3 id="esxi-vmkernel">ESXi (vmkernel)<a class="headerlink" href="#esxi-vmkernel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Shows WWPN, WWNN, speed, and port state for each HBA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Shows WWPN, WWNN, speed, and port state for each HBA</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>HBA Name  WWPN                  WWNN                  Speed  Port State
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmhba0    50:00:14:40:5a:2b:c1:d3  50:00:14:40:5a:2b:c1:d0  16Gb   Online
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vmhba1    50:00:14:40:5a:2b:c1:e5  50:00:14:40:5a:2b:c1:e0  16Gb   Online
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vmhba2    50:00:14:40:5a:2b:c2:f7  50:00:14:40:5a:2b:c2:f0  8Gb    Online
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vmhba3    50:00:14:40:5a:2b:c3:a9  50:00:14:40:5a:2b:c3:a0  4Gb    Offline
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vmhba4    50:00:14:40:5a:2b:c4:b2  50:00:14:40:5a:2b:c4:b0  16Gb   Link Failure
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not get HBA information. Error: Unknown command or namespace</code></strong> — Verify esxcli is available and you are running this command on an ESXi host with Fibre Channel adapters installed.
+<strong><code>Error: The object has already been deleted or has not been completely created</code></strong> — Wait 30 seconds for the HBA driver to fully initialize after a recent reboot or adapter insertion.</p>
+</div>
 <h3 id="brocade-switch-nameserver">Brocade switch (nameserver)<a class="headerlink" href="#brocade-switch-nameserver" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nsshow<span class="w">          </span><span class="c1"># all logged-in ports on this switch</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsallshow<span class="w">       </span><span class="c1"># nameserver entries across entire fabric</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nsshow<span class="w">          </span><span class="c1"># all logged-in ports on this switch</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsallshow<span class="w">       </span><span class="c1"># nameserver entries across entire fabric</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>R_A_Port_ID    Logged_In_Ports
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>0              50:00:09:73:00:1a:2b:4c
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>1              50:00:09:73:00:1a:2b:4d
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2              50:00:09:73:00:1a:2b:4e
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>3              50:00:09:73:00:1a:2b:4f
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>4              50:00:09:73:00:1a:2b:50
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>...
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Fabric Port Name Server
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Switch_A:1     50:00:09:73:00:1a:2b:4c  storage-array-01
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Switch_A:2     50:00:09:73:00:1a:2b:4d  storage-array-02
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Switch_B:1     50:00:09:73:00:1a:2b:5c  host-server-01
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Switch_B:2     50:00:09:73:00:1a:2b:5d  host-server-02
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Switch_C:3     50:00:09:73:00:1a:2b:6e  backup-appliance-01
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nsshow: command not found</code></strong> — Verify you are logged into a Fibre Channel switch (Brocade/Cisco) with admin credentials, not a Linux host.
+<strong><code>Permission denied</code></strong> — Elevate to admin role using <code>roleshow</code> and <code>userconfig</code> or re-authenticate with appropriate fabric credentials.</p>
+</div>
 <h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">          </span><span class="c1"># fabric login table</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># name server for VSAN 10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">          </span><span class="c1"># fabric login table</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># name server for VSAN 10</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>FLOGI Database for VSAN 1:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a> FCID           PORT NAME               NODE NAME               CLASS
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a> 0x010001       50:00:09:4d:1a:2b:3c:4d 50:00:09:4d:1a:2b:3c:5e   3
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a> 0x010002       50:00:09:4d:1a:2b:3c:4f 50:00:09:4d:1a:2b:3c:60   3
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a> 0x010100       50:00:14:40:5a:6b:7c:8d 50:00:14:40:5a:6b:7c:9e   3
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>FCNS Database for VSAN 10:
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a> FCID           TYPE PWWN               NWWN               SYMBOLIC NAME
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> 0x0a0001       NX   50:00:1b:21:aa:bb:cc:dd 50:00:1b:21:aa:bb:cc:ee storage-array-01
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a> 0x0a0002       NX   50:00:1b:21:aa:bb:cc:ff 50:00:1b:21:aa:bb:cc:11 storage-array-02
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> 0x0a0100       N    50:00:09:4d:1a:2b:3c:4d 50:00:09:4d:1a:2b:3c:5e hba-host-prod-01
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 0x0a0101       N    50:00:09:4d:1a:2b:3c:4f 50:00:09:4d:1a:2b:3c:60 hba-host-prod-02
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VSAN 10 not found</code></strong> — Verify the VSAN exists with <code>show vsan</code> and confirm it is active.
+<strong><code>% Invalid command</code></strong> — Ensure you are in the correct switch CLI mode (some switches require <code>show fcns database</code> without the vsan parameter for older firmware versions).</p>
+</div>
 <h2 id="wwn-standards">WWN Standards<a class="headerlink" href="#wwn-standards" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Document all server and storage WWPNs in CMDB at provisioning time</li>
@@ -8246,7 +8313,7 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

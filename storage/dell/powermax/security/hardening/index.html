@@ -9109,48 +9109,134 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-powermax,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=&lt;test_user&gt;)&quot;</span>
 </code></pre></div>
-<h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled (both should fail)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Verify TLS 1.2 is functional</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Enumerate active cipher suites — check for weak ciphers</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">8443</span><span class="w"> </span>&lt;unisphere-host&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Remove any ciphers rated &#39;C&#39; or lower by nmap</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Acceptable: ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-AES128-GCM-SHA256</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Reject: RC4, 3DES, EXPORT, NULL</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Configure TLS settings in Unisphere:</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Settings → Security → TLS Configuration</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># - Minimum Version: TLS 1.2</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># - Disabled: TLS 1.0, TLS 1.1</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># - Preferred ciphers: GCM-based AEAD suites</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># extended LDIF
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>#
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># LDAPv3
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># base &lt;DC=corp,DC=example,DC=com&gt; with scope subtree
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># filter: (sAMAccountName=&lt;test_user&gt;)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># requesting: All userApplicationAttributes
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>#
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dn: CN=Test User,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>objectClass: person
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>objectClass: organizationalPerson
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>objectClass: user
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>cn: Test User
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>sAMAccountName: test_user
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>userPrincipalName: test_user@corp.example.com
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>mail: test_user@corp.example.com
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>memberOf: CN=PowerMax-Admins,OU=Groups,DC=corp,DC=example,DC=com
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># search result
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>search: 2
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>result: 0 Success
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># numResponses: 2
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># numEntries: 1
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network.
+<strong><code>No such object (32)</code></strong> — Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly.</p>
+</div>
+<h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled (both should fail)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify TLS 1.2 is functional</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Enumerate active cipher suites — check for weak ciphers</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">8443</span><span class="w"> </span>&lt;unisphere-host&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Remove any ciphers rated &#39;C&#39; or lower by nmap</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Acceptable: ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-AES128-GCM-SHA256</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Reject: RC4, 3DES, EXPORT, NULL</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Configure TLS settings in Unisphere:</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Settings → Security → TLS Configuration</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># - Minimum Version: TLS 1.2</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># - Disabled: TLS 1.0, TLS 1.1</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># - Preferred ciphers: GCM-based AEAD suites</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>depth=0 C = US, ST = California, L = San Jose, O = Dell EMC, CN = unisphere-prod-01.corp.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>verify error:num=20:unable to get local issuer certificate
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>verify return:1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>CONNECTED(00000001)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>139876543210496:error:1409E0E5:SSL routines:SSL_CTX_set_tlsext_host_name:tlsv1 alert protocol version:../ssl/statem/statem_clnt.c:1089:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>SSL_ERROR_SSL
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>139876543210496:error:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure:../ssl/statem/statem_clnt.c:1089:
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SSL_ERROR_SSL
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Protocol  : TLSv1.2
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Session-ID: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:15 UTC
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Nmap scan report for unisphere-prod-01.corp.local (192.168.1.45)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Host is up (0.0042s latency).
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>PORT     STATE SERVICE
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>8443/tcp open  https-alt
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>| ssl-enum-ciphers:
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>|   TLSv1.2:
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>|     ECDHE-RSA-AES256-GCM-SHA384 (256 bits) - A
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>|     ECDHE-RSA-AES128-GCM-SHA256 (128 bits) - A
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>|     ECDHE-RSA-CHACHA20-POLY1305 (256 bits) - A
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>|_    DHE-RSA-AES256-GCM-SHA384 (256 bits) - A
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Nmap done at 2024-01-15 14:32:18 UTC; 1 IP address (1 host up) scanned in 3.12 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure</code></strong> — Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with <code>nslookup &lt;unisphere-host&gt;</code>.
+<strong><code>unable to get local issuer certificate</code></strong> — Add the Unisphere CA certificate to your system's trusted store with <code>sudo cp unisphere-ca.pem /etc/ssl/certs/ &amp;&amp; sudo update-ca-certificates</code>.
+<strong><code>Nmap done; 0 hosts up</code></strong> — Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host.</p>
+</div>
 <h3 id="certificate-hardening">Certificate Hardening<a class="headerlink" href="#certificate-hardening" title="Permanent link">&para;</a></h3>
 <p>Replace the factory-installed self-signed certificate before going into production:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Generate a private key and CSR on the Unisphere vApp</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/unisphere.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/unisphere.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/ST=London/O=Example Corp/OU=Storage/CN=unisphere.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:unisphere.corp.example.com,IP:192.168.1.100&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 2: Submit CSR to internal CA; receive signed certificate chain</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 3: Import into Unisphere</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Settings → Security → Certificates → Import Certificate</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Upload: signed certificate + private key + CA chain</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Step 4: Restart Unisphere web service (may happen automatically after import)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dell-unisphere<span class="w">    </span><span class="c1"># or equivalent on the vApp OS</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Step 5: Verify new certificate is in use</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer<span class="w"> </span>-subject<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Generate a private key and CSR on the Unisphere vApp</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/unisphere.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/unisphere.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/ST=London/O=Example Corp/OU=Storage/CN=unisphere.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:unisphere.corp.example.com,IP:192.168.1.100&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Step 2: Submit CSR to internal CA; receive signed certificate chain</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 3: Import into Unisphere</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Settings → Security → Certificates → Import Certificate</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Upload: signed certificate + private key + CA chain</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Step 4: Restart Unisphere web service (may happen automatically after import)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dell-unisphere<span class="w">    </span><span class="c1"># or equivalent on the vApp OS</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Step 5: Verify new certificate is in use</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer<span class="w"> </span>-subject<span class="w"> </span>-dates
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Generating RSA private key, 4096 bit long modulus (2 primes)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>.....................................................................+++++
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>.......................................................................+++++
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>e is 65537 (0x010001)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Redirecting to /bin/systemctl restart dell-unisphere
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>dell-unisphere.service: Stopped.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>dell-unisphere.service: Started.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>subject=C = GB, ST = London, O = Example Corp, OU = Storage, CN = unisphere.corp.example.com
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>issuer=C = GB, O = Example Corp, CN = Example Corp Root CA
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>notBefore=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>notAfter=Jan 15 10:23:45 2026 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: /tmp/unisphere.key: No such file or directory</code></strong> — Ensure /tmp has write permissions and sufficient disk space; run <code>ls -ld /tmp</code> to verify.
+<strong><code>unable to load certificate</code></strong> — Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using <code>openssl x509 -in &lt;cert&gt; -text -noout</code>.
+<strong><code>Connection refused</code></strong> — Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9183,140 +9269,268 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </table>
 <h3 id="network-access-hardening">Network Access Hardening<a class="headerlink" href="#network-access-hardening" title="Permanent link">&para;</a></h3>
 <p>Restrict access to the Unisphere management port (8443) at the network level:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Firewall rules — limit Unisphere access to management subnet only</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Example: Linux firewalld on the Unisphere host</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;192.168.10.0/24&quot; port protocol=&quot;tcp&quot; port=&quot;8443&quot; accept&#39;</span><span class="w"> </span>--permanent
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; port protocol=&quot;tcp&quot; port=&quot;8443&quot; drop&#39;</span><span class="w"> </span>--permanent
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>firewall-cmd<span class="w"> </span>--reload
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify only management hosts can reach port 8443</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;management-host-ip&gt;<span class="w"> </span><span class="m">8443</span><span class="w">   </span><span class="c1"># should succeed</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;untrusted-host-ip&gt;<span class="w"> </span><span class="m">8443</span><span class="w">    </span><span class="c1"># should fail/timeout</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Firewall rules — limit Unisphere access to management subnet only</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Example: Linux firewalld on the Unisphere host</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;192.168.10.0/24&quot; port protocol=&quot;tcp&quot; port=&quot;8443&quot; accept&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; port protocol=&quot;tcp&quot; port=&quot;8443&quot; drop&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>firewall-cmd<span class="w"> </span>--reload
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify only management hosts can reach port 8443</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;management-host-ip&gt;<span class="w"> </span><span class="m">8443</span><span class="w">   </span><span class="c1"># should succeed</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;untrusted-host-ip&gt;<span class="w"> </span><span class="m">8443</span><span class="w">    </span><span class="c1"># should fail/timeout</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>success
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>success
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>success
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Connection to 192.168.10.45 8443 port [tcp/https] succeeded!
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>nc: connect to 192.168.10.200 port 8443 (tcp) failed: Connection refused
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: INVALID_RULE</code></strong> — Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes.
+<strong><code>nc: connect to &lt;management-host-ip&gt; port 8443 (tcp) failed: Connection refused</code></strong> — Confirm Unisphere service is running on the target host with <code>systemctl status unisphere</code> and that port 8443 is listening via <code>netstat -tlnp | grep 8443</code>.</p>
+</div>
 <h2 id="solutions-enabler-hardening">Solutions Enabler Hardening<a class="headerlink" href="#solutions-enabler-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="symapi-daemon-hardening">SYMAPI Daemon Hardening<a class="headerlink" href="#symapi-daemon-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Restrict daemon access to management hosts only</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /var/symapi/config/netcnfg — use SECURE flag and limit by SID</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/var/symapi/config/netcnfg<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">SYMAPI_SERVER - 192.168.1.10 - 000123456789 - 2707 SECURE</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">SYMAPI_SERVER - 192.168.1.11 - 000987654321 - 2707 SECURE</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">EOF</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 2. Restrict daemon_users to named accounts only — no wildcards for admin</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/var/symapi/config/daemon_users<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">storadm      StorageAdmin   192.168.10.0/24</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s">secadm       SecurityAdmin  192.168.10.0/24</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s">monitor_svc  Monitor        192.168.20.50</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s">root         Administrator  127.0.0.1</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s">EOF</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># 3. Remove &#39;any&#39; / &#39;*&#39; entries for powerful roles</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Administrator|StorageAdmin&quot;</span><span class="w"> </span>/var/symapi/config/daemon_users<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;\*&#39;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># If this returns entries, replace &#39;*&#39; with specific IP ranges</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 4. Restart SE daemon after changes</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>storsrvd
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># 5. Verify daemon is listening only on expected interfaces</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>netstat<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">2707</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Restrict daemon access to management hosts only</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># /var/symapi/config/netcnfg — use SECURE flag and limit by SID</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/var/symapi/config/netcnfg<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s">SYMAPI_SERVER - 192.168.1.10 - 000123456789 - 2707 SECURE</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s">SYMAPI_SERVER - 192.168.1.11 - 000987654321 - 2707 SECURE</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s">EOF</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># 2. Restrict daemon_users to named accounts only — no wildcards for admin</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/var/symapi/config/daemon_users<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s">storadm      StorageAdmin   192.168.10.0/24</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s">secadm       SecurityAdmin  192.168.10.0/24</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s">monitor_svc  Monitor        192.168.20.50</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s">root         Administrator  127.0.0.1</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s">EOF</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># 3. Remove &#39;any&#39; / &#39;*&#39; entries for powerful roles</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Administrator|StorageAdmin&quot;</span><span class="w"> </span>/var/symapi/config/daemon_users<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;\*&#39;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># If this returns entries, replace &#39;*&#39; with specific IP ranges</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># 4. Restart SE daemon after changes</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>storsrvd
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># 5. Verify daemon is listening only on expected interfaces</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>netstat<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">2707</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SYMAPI_SERVER - 192.168.1.10 - 000123456789 - 2707 SECURE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>SYMAPI_SERVER - 192.168.1.11 - 000987654321 - 2707 SECURE
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>tcp        0      0 192.168.1.10:2707      0.0.0.0:*               LISTEN      4521/storsrvd
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>tcp        0      0 192.168.1.11:2707      0.0.0.0:*               LISTEN      4521/storsrvd
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/symapi/config/daemon_users: No such file or directory</code></strong> — Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with <code>mkdir -p /var/symapi/config</code> if needed.
+<strong><code>Failed to restart storsrvd: Unit storsrvd.service not found.</code></strong> — Verify the correct daemon name with <code>systemctl list-units | grep stor</code> and use the actual service name (may be <code>Symmetrix</code> or <code>emc-storsrvd</code> depending on version).
+<strong><code>netstat: command not found</code></strong> — Install net-tools with <code>apt-get install net-tools</code> or use <code>ss -tlnp | grep 2707</code> as a modern alternative.</p>
+</div>
 <h3 id="se-host-os-hardening">SE Host OS Hardening<a class="headerlink" href="#se-host-os-hardening" title="Permanent link">&para;</a></h3>
 <p>The Solutions Enabler host (typically a Linux VM) requires its own OS hardening:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Lock down SE installation directory permissions</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/symcli/bin
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/symapi/config
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>/var/symapi/config/daemon_users
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>/var/symapi/config/netcnfg
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/var/symapi/config/daemon_users
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/var/symapi/config/netcnfg
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Restrict SYMCLI binaries — only the storadm service account should execute them</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/usr/symcli/bin/sym*
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/symcli/bin/sym*
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Audit who has access to SYMCLI</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;storadm|symcli&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Lock down SE installation directory permissions</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/symcli/bin
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/symapi/config
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>/var/symapi/config/daemon_users
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>/var/symapi/config/netcnfg
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/var/symapi/config/daemon_users
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/var/symapi/config/netcnfg
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Restrict SYMCLI binaries — only the storadm service account should execute them</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>chown<span class="w"> </span>root:storadm<span class="w"> </span>/usr/symcli/bin/sym*
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/usr/symcli/bin/sym*
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Audit who has access to SYMCLI</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;storadm|symcli&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>/etc/sudoers:storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symcli
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/etc/sudoers.d/powermax-admin:storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/sym*
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symacl
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symdev
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symrdf
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /etc/sudoers.d/*: No such file or directory</code></strong> — Create the <code>/etc/sudoers.d/</code> directory with <code>mkdir -p /etc/sudoers.d/</code> if it does not exist, or adjust the grep pattern to <code>grep -r "storadm\|symcli" /etc/sudoers* 2&gt;/dev/null</code>.
+<strong><code>chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory</code></strong> — Verify the SYMCLI package is installed with <code>rpm -qa | grep symcli</code> and install it if missing before applying ownership changes.
+<strong><code>chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory</code></strong> — Ensure the Symmetrix SE daemon is installed and initialized with <code>symcfg discover</code> to create the required configuration files.</p>
+</div>
 <h3 id="logging-and-audit-on-se-host">Logging and Audit on SE Host<a class="headerlink" href="#logging-and-audit-on-se-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable auditd on the SE host to track SYMCLI execution</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>auditd
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>auditd
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Add audit rules to track SYMCLI executions</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/audit/rules.d/powermax.rules<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s"># Track all SYMCLI command executions</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s">-a always,exit -F dir=/usr/symcli/bin -F perm=x -F auid&gt;=1000 -F auid!=4294967295 -k symcli</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s"># Track changes to SE config files</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s">-w /var/symapi/config/daemon_users -p wa -k se_config</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s">-w /var/symapi/config/netcnfg -p wa -k se_config</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s">EOF</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>augenrules<span class="w"> </span>--load
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Verify audit rules are active</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>auditctl<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>symcli
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable auditd on the SE host to track SYMCLI execution</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>auditd
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>auditd
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Add audit rules to track SYMCLI executions</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/audit/rules.d/powermax.rules<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s"># Track all SYMCLI command executions</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">-a always,exit -F dir=/usr/symcli/bin -F perm=x -F auid&gt;=1000 -F auid!=4294967295 -k symcli</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s"># Track changes to SE config files</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">-w /var/symapi/config/daemon_users -p wa -k se_config</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">-w /var/symapi/config/netcnfg -p wa -k se_config</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s">EOF</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>augenrules<span class="w"> </span>--load
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Verify audit rules are active</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>auditctl<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>symcli
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Created symlink /etc/systemd/system/multi-user.target.wants/auditd.service → /etc/systemd/system/auditd.service.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>(no output — command completes silently)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Loading rules from /etc/audit/rules.d/powermax.rules
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>No rules loaded
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>-a always,exit -F dir=/usr/symcli/bin -F perm=x -F auid&gt;=1000 -F auid!=4294967295 -k symcli
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>augenrules: No such file or directory</code></strong> — Install audit-libs package with <code>yum install audit-libs</code> or use <code>auditctl -R /etc/audit/rules.d/powermax.rules</code> directly instead.
+<strong><code>Error: audit rules directory does not exist: /etc/audit/rules.d</code></strong> — Create the directory with <code>mkdir -p /etc/audit/rules.d</code> before appending rules.
+<strong><code>No rules loaded</code></strong> — Restart auditd with <code>systemctl restart auditd</code> after loading rules to activate them in the kernel.</p>
+</div>
 <h2 id="host-connectivity-hardening">Host Connectivity Hardening<a class="headerlink" href="#host-connectivity-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="zoning-and-initiator-group-isolation">Zoning and Initiator Group Isolation<a class="headerlink" href="#zoning-and-initiator-group-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Principle: each host&#39;s initiator group should contain only that host&#39;s WWNs</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Never share an initiator group between hosts with different security classifications</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify no initiator group contains WWNs from multiple different hosts</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># (requires cross-referencing with the SAN fabric zone database)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-v<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/ig_audit_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check for unusually large initiator groups (may indicate shared/misconfigured IG)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 &amp;&amp; $NF &gt; 4 {print $0}&#39;</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Verify zones match initiator groups (SAN fabric side)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># On Brocade:</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># switch:admin&gt; zoneshow | grep &lt;wwn&gt;</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># On Cisco MDS:</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># switch# show zone member &lt;wwn&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Principle: each host&#39;s initiator group should contain only that host&#39;s WWNs</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Never share an initiator group between hosts with different security classifications</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify no initiator group contains WWNs from multiple different hosts</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># (requires cross-referencing with the SAN fabric zone database)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-v<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/ig_audit_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Check for unusually large initiator groups (may indicate shared/misconfigured IG)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 &amp;&amp; $NF &gt; 4 {print $0}&#39;</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Verify zones match initiator groups (SAN fabric side)</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># On Brocade:</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># switch:admin&gt; zoneshow | grep &lt;wwn&gt;</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># On Cisco MDS:</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># switch# show zone member &lt;wwn&gt;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>                              Initiator Group
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>                              ---------------
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Name                          Type       Flags  Num WWNs
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>----                          ----       -----  --------
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>host-prod-01-ig               Fibre      (*)         2
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>host-prod-02-ig               Fibre      (*)         2
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>host-dev-03-ig                Fibre             1
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>host-backup-04-ig             Fibre      (*)         3
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>shared-legacy-ig              Fibre             6
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>host-prod-01-ig               Fibre      (*)         2
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  50:00:09:73:a4:2e:1b:c0
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  50:00:09:73:a4:2e:1b:c1
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>host-backup-04-ig             Fibre      (*)         3
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  50:00:09:73:a4:2e:1b:d2
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>  50:00:09:73:a4:2e:1b:d3
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  50:00:09:73:a4:2e:1b:d4
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>shared-legacy-ig              Fibre             6
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  50:00:09:73:a4:2e:1b:e0
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>  50:00:09:73:a4:2e:1b:e1
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  50:00:09:73:a4:2e:1b:e2
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>  50:00:09:73:a4:2e:1b:e3
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>  50:00:09:73:a4:2e:1b:e4
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>  50:00:09:73:a4:2e:1b:e5
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>shared-legacy-ig              Fibre             6
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>host-backup-04-ig             Fibre      (*)         3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCLI_ERROR (5): The specified Symmetrix does not exist</code></strong> — Verify the SID value matches your array's actual Symmetrix ID using <code>symcfg list -v</code>.
+<strong><code>awk: syntax error: unexpected newline or statement</code></strong> — Correct the awk syntax; use <code>awk 'NR&gt;2 &amp;&amp; $NF &gt; 4 {print $0}'</code> with proper field separator if needed.</p>
+</div>
 <h3 id="port-group-isolation">Port Group Isolation<a class="headerlink" href="#port-group-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Separate port groups for different security zones (e.g., production vs dev/test)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Production hosts should NOT share port groups with dev/test hosts</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List all port groups and their member ports</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span>-v
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify production port groups only contain production FA ports</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>symaccess<span class="w"> </span>show<span class="w"> </span>PROD_FABRIC_A_PG<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Identify any port groups with excessive member ports (may indicate misconfiguration)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 {print $1}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>pg<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nv">ports</span><span class="o">=</span><span class="k">$(</span>symaccess<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pg</span><span class="s2">&quot;</span><span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Dir\|Port&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pg</span><span class="s2">: </span><span class="nv">$ports</span><span class="s2"> ports&quot;</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Separate port groups for different security zones (e.g., production vs dev/test)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Production hosts should NOT share port groups with dev/test hosts</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># List all port groups and their member ports</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span>-v
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Verify production port groups only contain production FA ports</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>symaccess<span class="w"> </span>show<span class="w"> </span>PROD_FABRIC_A_PG<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Identify any port groups with excessive member ports (may indicate misconfiguration)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 {print $1}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>pg<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span><span class="nv">ports</span><span class="o">=</span><span class="k">$(</span>symaccess<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pg</span><span class="s2">&quot;</span><span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Dir\|Port&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pg</span><span class="s2">: </span><span class="nv">$ports</span><span class="s2"> ports&quot;</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>                                Port Group Name
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>                                ================
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>                           PROD_FABRIC_A_PG
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>                           PROD_FABRIC_B_PG
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>                           DEV_TEST_FABRIC_PG
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>                           DR_FABRIC_PG
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                           BACKUP_FABRIC_PG
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Director:Port                                  Port Group
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>===========                                    ==========
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>FA-1e:4                                        PROD_FABRIC_A_PG
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>FA-1e:5                                        PROD_FABRIC_A_PG
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>FA-2e:4                                        PROD_FABRIC_B_PG
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>FA-2e:5                                        PROD_FABRIC_B_PG
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>PROD_FABRIC_A_PG: 24 ports
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>BACKUP_FABRIC_PG: 18 ports
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>DR_FABRIC_PG: 16 ports
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>PROD_FABRIC_B_PG: 14 ports
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>DEV_TEST_FABRIC_PG: 8 ports
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symaccess: Error: Invalid Symmetrix ID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix serial number (e.g., <code>000297900001</code>) or use <code>-sid all</code> to query all arrays.
+<strong><code>symaccess: Error: Port group &lt;name&gt; not found</code></strong> — Verify the port group name exists with <code>symaccess list -sid &lt;SID&gt; -type port</code> and check for typos or case sensitivity.</p>
+</div>
 <h3 id="unused-object-cleanup">Unused Object Cleanup<a class="headerlink" href="#unused-object-cleanup" title="Permanent link">&para;</a></h3>
 <p>Regularly remove stale masking views, initiator groups, and port groups from decommissioned hosts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find masking views with no current host logins (potential orphans)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Step 1: Get all initiator groups referenced in masking views</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 {print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>/tmp/igs_in_mvs.txt
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Step 2: Get all initiator groups that have active host logins</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>logins<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>/tmp/igs_with_logins.txt
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Step 3: Find IGs in masking views but with no active logins</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>diff<span class="w"> </span>/tmp/igs_with_logins.txt<span class="w"> </span>/tmp/igs_in_mvs.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Review each result — these are IGs (and their masking views) with no current fabric logins</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Remove stale masking view after confirming host is decommissioned</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>symaccess<span class="w"> </span>delete<span class="w"> </span>view<span class="w"> </span>&lt;stale_mv_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>symaccess<span class="w"> </span>delete<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;stale_ig_name&gt;<span class="w"> </span>-type<span class="w"> </span>initiator
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Find masking views with no current host logins (potential orphans)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Step 1: Get all initiator groups referenced in masking views</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;2 {print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>/tmp/igs_in_mvs.txt
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Step 2: Get all initiator groups that have active host logins</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>logins<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>/tmp/igs_with_logins.txt
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Step 3: Find IGs in masking views but with no active logins</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>diff<span class="w"> </span>/tmp/igs_with_logins.txt<span class="w"> </span>/tmp/igs_in_mvs.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Review each result — these are IGs (and their masking views) with no current fabric logins</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># Remove stale masking view after confirming host is decommissioned</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>symaccess<span class="w"> </span>delete<span class="w"> </span>view<span class="w"> </span>&lt;stale_mv_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>symaccess<span class="w"> </span>delete<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;stale_ig_name&gt;<span class="w"> </span>-type<span class="w"> </span>initiator
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>symaccess list -sid 000123456789 view | awk &#39;NR&gt;2 {print $2}&#39; | sort -u &gt; /tmp/igs_in_mvs.txt
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>symaccess -sid 000123456789 list logins | awk &#39;{print $4}&#39; | sort -u &gt; /tmp/igs_with_logins.txt
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>IG_prod_web_01
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>IG_legacy_db_02
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>IG_test_app_03
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>symaccess delete view MV_legacy_db_02_prod -sid 000123456789
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Masking view MV_legacy_db_02_prod deleted successfully.
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>symaccess delete -sid 000123456789 -name IG_legacy_db_02 -type initiator
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Initiator group IG_legacy_db_02 deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symaccess: Command not found</code></strong> — Ensure the PowerMax CLI tools are installed and the <code>$PATH</code> includes the Symantec/Dell EMC bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>Error: Masking view MV_legacy_db_02_prod is still in use by active host connections</code></strong> — Verify the host is truly decommissioned by checking fabric logins with <code>symaccess list logins -sid &lt;SID&gt;</code> before deletion.
+<strong><code>Error: Initiator group IG_legacy_db_02 not found</code></strong> — Confirm the exact initiator group name using <code>symaccess list -sid &lt;SID&gt; -name IG_legacy_db_02 -type initiator</code> before attempting deletion.</p>
+</div>
 <h2 id="supportassist-and-remote-access-hardening">SupportAssist and Remote Access Hardening<a class="headerlink" href="#supportassist-and-remote-access-hardening" title="Permanent link">&para;</a></h2>
 <p>SupportAssist enables Dell to proactively monitor the array and create automated service requests for hardware faults. It also enables remote support sessions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify SupportAssist configuration</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Unisphere → Connectivity → SupportAssist</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># - Ensure the proxy server is configured (do not allow direct internet access)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># - Enable Connect Home: Yes (for proactive monitoring)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># - Restrict accepted connection types: Dell Support only (no third-party remote access)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Verify SupportAssist configuration</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Unisphere → Connectivity → SupportAssist</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># - Ensure the proxy server is configured (do not allow direct internet access)</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># - Enable Connect Home: Yes (for proactive monitoring)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># - Restrict accepted connection types: Dell Support only (no third-party remote access)</span>
 </code></pre></div>
 <table>
 <thead>
@@ -9540,7 +9754,7 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:08:41 UTC"><span class="timeago" datetime="2026-06-29T04:08:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:08:41 UTC">2026-06-29</span>
   </span>
 
     

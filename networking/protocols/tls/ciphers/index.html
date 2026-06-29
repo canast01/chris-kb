@@ -8252,30 +8252,80 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># testssl.sh — comprehensive cipher and vulnerability scan</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>./testssl.sh<span class="w"> </span>&lt;hostname&gt;:443
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Protocol  : TLSv1.2
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 10:42 UTC
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Nmap scan report for api.example.com (203.0.113.42)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Host is up (0.048s latency).
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>PORT    STATE SERVICE
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>443/tcp open  https
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>| ssl-enum-ciphers:
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>|   TLSv1.2:
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>|     strong ciphers:
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>|       ECDHE-RSA-AES256-GCM-SHA384 (256 bits) - A
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>|       ECDHE-RSA-AES128-GCM-SHA256 (128 bits) - A
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>|     weak ciphers:
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>|       DES-CBC3-SHA (168 bits) - D
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>|_  least strength: D
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>###################################################################
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>testssl.sh 3.0.7 from https://github.com/drwetter/testssl.sh
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>api.example.com:443
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>###################################################################
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>Testing protocols via sockets except NPN+ALPN
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>TLSv1.2     supported
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>TLSv1.3     supported
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>Testing cipher categories
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>Null Cipher           not offered
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>Weak Ciphers          offered (DES-CBC3-SHA)
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>Strong Ciphers        offered
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nmap: command not found</code></strong> — Install nmap with <code>apt-get install nmap</code> (Debian/Ubuntu) or <code>brew install nmap</code> (macOS).
+<strong><code>./testssl.sh: Permission denied</code></strong> — Make the script executable with <code>chmod +x testssl.sh</code>.
+<strong><code>SSL_ERROR_RX_RECORD_TOO_LONG</code></strong> — Verify the hostname and port are correct; this error often indicates a non-HTTPS service on port 443.</p>
+</div>
 <h2 id="configuring-ciphers">Configuring Ciphers<a class="headerlink" href="#configuring-ciphers" title="Permanent link">&para;</a></h2>
 <h3 id="nginx">nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!RC4:!3DES:!MD5&#39;</span><span class="p">;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!RC4:!3DES:!MD5&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="apache-httpd">Apache httpd<a class="headerlink" href="#apache-httpd" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">SSLProtocol</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>-SSLv3<span class="w"> </span>-TLSv1<span class="w"> </span>-TLSv1.1
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">SSLCipherSuite</span><span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:!aNULL:!RC4:!3DES
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">SSLHonorCipherOrder</span><span class="w"> </span><span class="k">on</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">SSLProtocol</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>-SSLv3<span class="w"> </span>-TLSv1<span class="w"> </span>-TLSv1.1
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">SSLCipherSuite</span><span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:!aNULL:!RC4:!3DES
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">SSLHonorCipherOrder</span><span class="w"> </span><span class="k">on</span>
 </code></pre></div>
 <h3 id="haproxy">HAProxy<a class="headerlink" href="#haproxy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>bind *:443 ssl crt /etc/ssl/haproxy.pem \
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384 \
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  no-sslv3 no-tlsv10 no-tlsv11
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>bind *:443 ssl crt /etc/ssl/haproxy.pem \
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384 \
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  no-sslv3 no-tlsv10 no-tlsv11
 </code></pre></div>
 <h3 id="openssl-system-wide-policy-rhelrocky">OpenSSL — System-Wide Policy (RHEL/Rocky)<a class="headerlink" href="#openssl-system-wide-policy-rhelrocky" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Set system-wide crypto policy</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT<span class="w">     </span><span class="c1"># balanced</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>FUTURE<span class="w">      </span><span class="c1"># strict — TLS 1.3 only</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>LEGACY<span class="w">      </span><span class="c1"># allows TLS 1.0 (avoid)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>update-crypto-policies<span class="w"> </span>--show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Set system-wide crypto policy</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT<span class="w">     </span><span class="c1"># balanced</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>FUTURE<span class="w">      </span><span class="c1"># strict — TLS 1.3 only</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>LEGACY<span class="w">      </span><span class="c1"># allows TLS 1.0 (avoid)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>update-crypto-policies<span class="w"> </span>--show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Setting crypto policy to DEFAULT
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Crypto policy set to DEFAULT
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Setting crypto policy to FUTURE
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Crypto policy set to FUTURE
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Setting crypto policy to LEGACY
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Crypto policy set to LEGACY
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>LEGACY
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>update-crypto-policies: command not found</code></strong> — Install the crypto-policies package with <code>sudo apt-get install crypto-policies</code> (Debian/Ubuntu) or <code>sudo dnf install crypto-policies</code> (RHEL/Fedora).
+<strong><code>Error: invalid policy name 'DEFAULT'</code></strong> — Use uppercase policy names only; valid options are DEFAULT, FUTURE, LEGACY, FIPS, or FIPS-NG.
+<strong><code>Error: cannot write to /etc/crypto-policies/state/current</code></strong> — Run the command with <code>sudo</code> to obtain root privileges required for system-wide policy changes.</p>
+</div>
 <h2 id="tls-version-standards">TLS Version Standards<a class="headerlink" href="#tls-version-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8367,7 +8417,7 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

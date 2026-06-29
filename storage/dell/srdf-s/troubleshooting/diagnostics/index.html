@@ -8864,6 +8864,33 @@ SRDF/S diagnostic commands: check pair state and link health with symrdf, measur
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1">#   Suspended:    manually paused; R2 frozen at point of suspension</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1">#   Failed Over:  DR failover is active; R2 is now R/W</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ symrdf -sid 000123456789 list -rdfg all
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>RDFG  Mode  Pair_Count  State           Link_State
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1     S     47          Ready           Ready
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2     S     52          Ready           Ready
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3     S     48          Ready           Ready
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$ symrdf query -sid 000123456789 -rdfg 1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Dev_Name  R1_ST  R2_ST           R2_PAIR_ST    LINK_ST  MODE
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dev001    Ready  Write Disabled  Synchronized  Ready    S
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>dev002    Ready  Write Disabled  Synchronized  Ready    S
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dev003    Ready  Write Disabled  Consistent    Ready    S
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>dev004    Ready  Write Disabled  Synchronized  Ready    S
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>...
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>$ symrdf query -g PROD_SRDF_GRP1 -detail
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Device  R1_State  R2_State        Pair_State    Link_State  Mode
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>0001    Ready     Write Disabled  Synchronized  Ready       S
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>0002    Ready     Write Disabled  Synchronized  Ready       S
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>0003    Ready     Write Disabled  Consistent    Ready       S
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>0004    Ready     Write Disabled  Synchronized  Ready       S
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>0005    Ready     Write Disabled  Synchronized  Ready       S
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCLI_ERROR_DB (191): Could not open the database</code></strong> — Verify the Symmetrix array is online and the SID is correct with <code>symcfg list -v</code>.
+<strong><code>Error: Invalid RDFG number &lt;rdfg-number&gt;</code></strong> — Confirm the RDFG exists by running <code>symrdf -sid &lt;SID&gt; list -rdfg all</code> first.</p>
+</div>
 <p><strong>Decision flow:</strong>
 - <code>Synchronized / Consistent</code> but hosts see high latency → measure RTT (Step 2)
 - <code>Partitioned</code> → network link between sites was interrupted; fix network first, then <code>symrdf establish</code> to re-sync
@@ -8872,84 +8899,205 @@ SRDF/S diagnostic commands: check pair state and link health with symrdf, measur
 <hr />
 <h2 id="step-2-measure-wan-round-trip-time">Step 2 — Measure WAN round-trip time<a class="headerlink" href="#step-2-measure-wan-round-trip-time" title="Permanent link">&para;</a></h2>
 <p>SRDF/S holds every host write until R2 confirms receipt. The WAN RTT is directly added to host write latency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Measure RTT between production and DR sites</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run from a host on the production network that can reach the DR network</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;dr-site-ip&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Key statistics:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#   avg RTT:     the baseline latency addition to all host writes</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   max RTT:     worst-case latency spike</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   packet loss: any loss causes SRDF/S to retry; &gt; 0% = link quality issue</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># For more detailed latency analysis (on Linux)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;dr-site-ip&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Shows per-hop latency; identifies where latency is being added in the path</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># For Windows from the DR site</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pathping<span class="w"> </span>&lt;production-site-ip&gt;<span class="w"> </span>/n<span class="w"> </span><span class="m">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Measure RTT between production and DR sites</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Run from a host on the production network that can reach the DR network</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;dr-site-ip&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Key statistics:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#   avg RTT:     the baseline latency addition to all host writes</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   max RTT:     worst-case latency spike</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   packet loss: any loss causes SRDF/S to retry; &gt; 0% = link quality issue</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># For more detailed latency analysis (on Linux)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;dr-site-ip&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Shows per-hop latency; identifies where latency is being added in the path</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># For Windows from the DR site</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pathping<span class="w"> </span>&lt;production-site-ip&gt;<span class="w"> </span>/n<span class="w"> </span><span class="m">100</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PING 10.45.120.8 (10.45.120.8) 56(84) bytes of data.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>64 bytes from 10.45.120.8: icmp_seq=1 ttl=62 time=8.34 ms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>64 bytes from 10.45.120.8: icmp_seq=2 ttl=62 time=8.41 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>64 bytes from 10.45.120.8: icmp_seq=3 ttl=62 time=8.29 ms
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>64 bytes from 10.45.120.8: icmp_seq=100 ttl=62 time=8.56 ms
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>--- 10.45.120.8 statistics ---
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>100 packets transmitted, 100 received, 0% packet loss, time 9847ms
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>rtt min/avg/max/stddev = 8.12/8.38/9.87/0.41 ms
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                                      My traceroute  [v0.93]
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>prod-host01 (10.20.50.15)                        Wed Jan 15 14:32:18 2025
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                                                           Packets               Pings
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a> Host                                                    Loss%   Snt   Last   Avg  Best  Wrst StDev
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a> 1. 10.20.50.1                                            0.0%   100   0.45  0.52  0.41  1.23  0.18
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a> 2. 172.16.1.254                                          0.0%   100   2.34  2.41  2.12  3.89  0.34
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a> 3. 10.45.120.8                                           0.0%   100   8.12  8.38  8.01  9.87  0.41
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;dr-site-ip&gt;</code></strong> — Replace <code>&lt;dr-site-ip&gt;</code> with the actual DR site IP address (e.g., 10.45.120.8) and verify DNS resolution or network routing.
+<strong><code>100% packet loss</code></strong> — Verify the DR site IP is reachable from the production network, check firewall rules allow ICMP, and confirm the network path is active.
+<strong><code>mtr: command not found</code></strong> — Install mtr using <code>apt-get install mtr</code> (Debian/Ubuntu) or <code>yum install mtr</code> (RHEL/CentOS), or use <code>traceroute</code> as an alternative.</p>
+</div>
 <p><strong>SRDF/S latency impact:</strong>
 - Maximum recommended RTT is typically <strong>5 ms</strong> for SRDF/S (check Dell sizing guide for your use case)
 - A 5 ms RTT adds 5 ms to every synchronous host write on R1 volumes
 - RTT &gt; 5 ms: engage the network team to investigate WAN link quality, QoS, or congestion</p>
 <hr />
 <h2 id="step-3-check-srdf-event-log">Step 3 — Check SRDF event log<a class="headerlink" href="#step-3-check-srdf-event-log" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show SRDF-specific events from the array event log</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Shows: event time, severity, message (e.g., &quot;SRDF link became not ready&quot;, &quot;pair partitioned&quot;)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Export to CSV for the Dell SR</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">200</span><span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.csv
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Filter to error-level events only</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check Unisphere alert log</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Unisphere for PowerMax → Monitor → Alerts</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Filter to: Category = SRDF; Severity = Warning, Error, Critical</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show SRDF-specific events from the array event log</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Shows: event time, severity, message (e.g., &quot;SRDF link became not ready&quot;, &quot;pair partitioned&quot;)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Export to CSV for the Dell SR</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">200</span><span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.csv
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Filter to error-level events only</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check Unisphere alert log</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Unisphere for PowerMax → Monitor → Alerts</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Filter to: Category = SRDF; Severity = Warning, Error, Critical</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Event ID    Time                 Severity  Message
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>12847       2024-01-15 14:32:18  Warning   SRDF link became not ready on director 4e
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>12851       2024-01-15 14:35:42  Error     RDF pair partitioned: RA-8:g0 &lt;-&gt; RA-8:g0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>12856       2024-01-15 14:38:05  Critical  Synchronization failed on symmetrix 000297123456
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>12862       2024-01-15 15:01:33  Warning   SRDF link recovered on director 4e
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>12868       2024-01-15 15:15:47  Error     RDF cache write pending threshold exceeded
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>12874       2024-01-15 16:22:11  Critical  Remote array unreachable: 000297654321
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Events exported to: /tmp/rdf_events_2024-01-15.csv (247 KB, 200 records)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Event ID    Time                 Severity  Message
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>12851       2024-01-15 14:35:42  Error     RDF pair partitioned: RA-8:g0 &lt;-&gt; RA-8:g0
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>12856       2024-01-15 14:38:05  Critical  Synchronization failed on symmetrix 000297123456
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>12868       2024-01-15 15:15:47  Error     RDF cache write pending threshold exceeded
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>12874       2024-01-15 16:22:11  Critical  Remote array unreachable: 000297654321
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix ID (e.g., <code>000297123456</code>) or use <code>symcfg list -v</code> to verify the correct SID.
+<strong><code>Error: No events found matching filter criteria</code></strong> — Expand the time range by increasing <code>-last</code> value or remove the <code>-severity</code> filter to confirm events exist in the log.
+<strong><code>Permission denied: /tmp/rdf_events_*.csv</code></strong> — Ensure the Symmetrix user has write permissions to <code>/tmp</code> or redirect output to a writable directory like <code>$HOME</code>.</p>
+</div>
 <hr />
 <h2 id="step-4-check-rf-director-ports-and-link-statistics">Step 4 — Check RF director ports and link statistics<a class="headerlink" href="#step-4-check-rf-director-ports-and-link-statistics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all SRDF director ports on the array</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdf<span class="w"> </span>-v
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Shows: director number, port number, link status, bandwidth</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Detailed RDFG configuration</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;<span class="w"> </span>-v
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Shows:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   Director: RA director handling this RDFG</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">#   Cycle time: for SRDF/A; not applicable for SRDF/S</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   Link speed: should match the provisioned link capacity</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">#   Mode: S (Sync) for SRDF/S</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Collect link performance statistics (samples over 60 seconds)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-delta_t<span class="w"> </span><span class="m">60</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Key metrics:</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1">#   Write Response Time (ms): should equal WAN RTT; spikes = WAN congestion</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1">#   Link Utilization (%): &gt; 80% = bandwidth saturation; consider link upgrade</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1">#   Throughput (MB/s): compare to link capacity; high = high write workload</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all SRDF director ports on the array</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdf<span class="w"> </span>-v
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Shows: director number, port number, link status, bandwidth</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Detailed RDFG configuration</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;<span class="w"> </span>-v
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Shows:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   Director: RA director handling this RDFG</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">#   Cycle time: for SRDF/A; not applicable for SRDF/S</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#   Link speed: should match the provisioned link capacity</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">#   Mode: S (Sync) for SRDF/S</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Collect link performance statistics (samples over 60 seconds)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-delta_t<span class="w"> </span><span class="m">60</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Key metrics:</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1">#   Write Response Time (ms): should equal WAN RTT; spikes = WAN congestion</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1">#   Link Utilization (%): &gt; 80% = bandwidth saturation; consider link upgrade</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1">#   Throughput (MB/s): compare to link capacity; high = high write workload</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Director Port Link Status Bandwidth
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------- ---- ----------- ---------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>RA-1e     0    UP          8 Gbps
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>RA-1e     1    UP          8 Gbps
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>RA-1f     0    UP          8 Gbps
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>RA-1f     1    DOWN        8 Gbps
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>RA-2e     0    UP          16 Gbps
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>RDFG Configuration Details
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Director: RA-1e
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Cycle Time: N/A (SRDF/S mode)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Link Speed: 8 Gbps
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Mode: S (Synchronous)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Timestamp                Write Response Time (ms)  Link Utilization (%)  Throughput (MB/s)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2024-01-15 14:32:15     45.2                      62.1                  512.8
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-15 14:33:15     47.8                      65.3                  528.4
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>2024-01-15 14:34:15     52.1                      71.2                  587.6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Error: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix ID (e.g., <code>000297900001</code>).
+<strong><code>symstat: Error: RDF link not configured for this array</code></strong> — Verify SRDF is licensed and configured; check <code>symcfg list -rdf</code> output shows active ports.</p>
+</div>
 <hr />
 <h2 id="step-5-collect-diagnostic-bundle-for-dell-sr">Step 5 — Collect diagnostic bundle for Dell SR<a class="headerlink" href="#step-5-collect-diagnostic-bundle-for-dell-sr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Complete SRDF/S diagnostic snapshot</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symrdf list (all RDFGs) ===&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symrdf query (pair state) ===&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>symrdf<span class="w"> </span>query<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symcfg rdf (RF port state) ===&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdf<span class="w"> </span>-v
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symcfg RDFG detail ===&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;<span class="w"> </span>-v
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symevent rdf (last 200 events) ===&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">200</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symstat rdf performance ===&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-delta_t<span class="w"> </span><span class="m">60</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Collect Unisphere logs via GUI</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Unisphere for PowerMax → System → Export Logs</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Select: time range covering the incident window</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Complete SRDF/S diagnostic snapshot</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="o">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symrdf list (all RDFGs) ===&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symrdf query (pair state) ===&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>symrdf<span class="w"> </span>query<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symcfg rdf (RF port state) ===&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdf<span class="w"> </span>-v
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symcfg RDFG detail ===&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg-number&gt;<span class="w"> </span>-v
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symevent rdf (last 200 events) ===&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">200</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== symstat rdf performance ===&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-delta_t<span class="w"> </span><span class="m">60</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf-s-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Collect Unisphere logs via GUI</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Unisphere for PowerMax → System → Export Logs</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Select: time range covering the incident window</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>=== symrdf list (all RDFGs) ===
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Symmetrix ID: 000296802151
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>RDFG#  Pair#  State  Remote SID  Remote RDFG#  Mode  Type
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>1      1      RDF    000296802152  1             Sync  R1
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>1      2      RDF    000296802152  1             Sync  R1
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>2      1      RDF    000296802153  2             Async ACP_OFF  R1
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>2      2      RDF    000296802153  2             Async ACP_OFF  R1
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>=== symrdf query (pair state) ===
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Symmetrix ID: 000296802151
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>RDFG#  Pair#  State  Hop#  Hop_ID  Link_Stat  RDF_Mode  Consistency
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>1      1      RDF    1     0       OK         Sync      Consistent
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>1      2      RDF    1     0       OK         Sync      Consistent
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>=== symcfg rdf (RF port state) ===
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Symmetrix ID: 000296802151
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Director  Port  Link_ID  State  Speed  Enclosure  Type
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>RF        0     0        ON     8Gbps  1          Fibre
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>RF        1     1        ON     8Gbps  1          Fibre
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>RF        2     2        ON     8Gbps  2          Fibre
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>RF        3     3        OFF    8Gbps  2          Fibre
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>=== symcfg RDFG detail ===
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Symmetrix ID: 000296802151
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>RDFG#  Pair#  State  R1_Dev  R2_Dev  R2_SID  Mode  Consistency
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>1      1      RDF    0001   0001    000296802152  Sync  Consistent
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>1      2      RDF    0002   0002    000296802152  Sync  Consistent
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>=== symevent rdf (last 200 events) ===
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>Timestamp            Severity  Event_ID  Message
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>2024-01-15 14:32:18  WARNING   0x0A1234  RDFG 1 Pair 1: Link degraded, speed reduced to 4Gbps
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>2024-01-15 13:47:02  INFO      0x0A5678  RDFG 2 Pair 1: Consistency restored
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>2024-01-15 12:15:44  ERROR     0x0A9ABC  RDFG 1 Pair 2: RDF link down on RF port 1
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>=== symstat rdf performance ===
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>Symmetrix ID: 000296802151
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>RDFG#  Pair#  Write_Pending  Consistency_Lag  Latency_ms  Throughput_MB
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>1      1      0              0                 2.3         145.2
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>1      2      0              0                 2.1         142.8
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>2      1      245            1250ms            45.7        12.4
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>2      2      0              0                 2.2         138.5
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>Diagnostic snapshot saved to: /tmp/srdf-s-diag-2024-01-15-1432.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Cannot open Symmetrix &lt;SID&gt;</code></strong></p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8987,7 +9135,7 @@ SRDF/S diagnostic commands: check pair state and link health with symrdf, measur
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:51:21 UTC"><span class="timeago" datetime="2026-06-29T04:51:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:51:21 UTC">2026-06-29</span>
   </span>
 
     

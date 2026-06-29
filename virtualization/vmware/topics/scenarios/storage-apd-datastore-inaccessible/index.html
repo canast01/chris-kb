@@ -10837,116 +10837,253 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Look for the first occurrence to establish when paths were lost</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|path.*dead&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>2024-01-15T08:23:45.123Z cpu15:2048)ScsiPath: 4282: Path vmhba4:C0:T5:L0 to device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2 state change: On -&gt; Dead
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2024-01-15T08:23:47.456Z cpu22:2105)ScsiPath: 4283: Marking path vmhba4:C0:T5:L0 as APD (All Paths Down)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2024-01-15T08:24:12.789Z cpu18:2156)ScsiPath: 4284: SCSI sense data: Key=0x3 ASC=0x11 ASCQ=0x00 (Medium Error)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>2024-01-15T08:24:15.234Z cpu8:2201)ScsiPath: 4285: Path vmhba5:C0:T3:L2 Lost Path detected on device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>2024-01-15T08:24:45.567Z cpu12:2289)ScsiPath: 4286: PDL (Permanent Device Loss) condition detected
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>2024-01-15T08:25:10.890Z cpu19:2334)ScsiPath: 4287: Path vmhba4:C0:T5:L0 state change: Dead -&gt; On
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>2024-01-15T08:26:33.123Z cpu5:2445)ScsiPath: 4288: SCSI sense Key=0x5 ASC=0x24 ASCQ=0x00 (Invalid Field)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>2024-01-15T08:23:45.123Z cpu15:2048)ScsiPath: 4282: Path vmhba4:C0:T5:L0 to device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2 state change: On -&gt; Dead
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>2024-01-15T08:23:47.456Z cpu22:2105)ScsiPath: 4283: Marking path vmhba4:C0:T5:L0 as APD (All Paths Down)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>2024-01-15T08:24:12.789Z cpu18:2156)ScsiPath: 4284: SCSI sense data: Key=0x3 ASC=0x11 ASCQ=0x00 (Medium Error)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>2024-01-15T08:24:15.234Z cpu8:2201)ScsiPath: 4285: Path vmhba5:C0:T3:L2 Lost Path detected on device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>2024-01-15T08:24:45.567Z cpu12:2289)ScsiPath: 4286: PDL (Permanent Device Loss) condition detected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify you are running the command directly on the ESXi host</p>
+</div>
 <p>Common vmkernel.log entries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NMP: nmp_PathDetermineState: ... path state changed to dead
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>     → Individual path to device marked dead
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vmw_psp_rr: psp_rr_get_path_fn: ... No more paths available
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>     → All paths to a device exhausted — APD begins
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ScsiDeviceIO: ... Failed to complete IO: H:0x0 D:0x2 P:0x0
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>     → I/O error being returned to guest; VM will freeze
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>APD START ... device already in APD state for &lt;N&gt; seconds
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>     → APD timer started; VMCP countdown begins
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NMP: nmp_PathDetermineState: ... path state changed to dead
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>     → Individual path to device marked dead
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vmw_psp_rr: psp_rr_get_path_fn: ... No more paths available
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>     → All paths to a device exhausted — APD begins
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ScsiDeviceIO: ... Failed to complete IO: H:0x0 D:0x2 P:0x0
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>     → I/O error being returned to guest; VM will freeze
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>APD START ... device already in APD state for &lt;N&gt; seconds
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>     → APD timer started; VMCP countdown begins
 </code></pre></div>
 <hr />
 <h2 id="4-check-the-fabric-fc-iscsi-or-nfs-root-cause">4. Check the Fabric — FC, iSCSI, or NFS Root Cause<a class="headerlink" href="#4-check-the-fabric-fc-iscsi-or-nfs-root-cause" title="Permanent link">&para;</a></h2>
 <p>Work from ESXi outward to find where path loss originated.</p>
 <p><strong>Fibre Channel:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List FC HBAs and their link state</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;HBA|LinkState|PortName&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check FC target path status</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>events<span class="w"> </span>get
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Log location for FC events</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|fibre\|hba&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List FC HBAs and their link state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;HBA|LinkState|PortName&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check FC target path status</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>events<span class="w"> </span>get
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Log location for FC events</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|fibre\|hba&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>HBA: vmhba0
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>LinkState: link up
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PortName: 50:00:14:40:5a:2b:c1:a0
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>HBA: vmhba1
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>LinkState: link up
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>PortName: 50:00:14:40:5a:2b:c1:a1
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>HBA: vmhba2
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>LinkState: link down
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>PortName: 50:00:14:40:5a:2b:c1:a2
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15T08:23:47.123Z: FC link up on vmhba0, target 50:0a:0985:2c1a3b4d
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15T08:15:22.456Z: FC link down on vmhba2, target 50:0a:0985:2c1a3b4e
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>2024-01-15T07:42:11.789Z: FC target discovery completed, 12 LUNs found
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>2024-01-15T08:23:47.123Z cpu0:2048)vmhba0: [HBA Link State Change] Link up on port 50:00:14:40:5a:2b:c1:a0
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>2024-01-15T08:15:22.456Z cpu2:4096)vmhba2: [HBA Link State Change] Link down on port 50:00:14:40:5a:2b:c1:a2
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2024-01-15T07:42:11.789Z cpu1:3072)Fibre Channel: Target discovery initiated on vmhba0
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-15T07:41:55.234Z cpu3:5120)HBA vmhba1: RSCN received, rescanning targets
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server.
+<strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Confirm the ESXi host is fully booted and the /var/log directory is mounted; try <code>ls -la /var/log/</code> to verify.
+<strong><code>No such FC HBA found</code></strong> — Check that FC HBAs are installed and recognized by running <code>esxcli storage san fc list</code> without filters to see all available adapters.</p>
+</div>
 <p><strong>iSCSI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List iSCSI adapters and sessions</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>list
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check iSCSI discovery targets</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify vmknic used for iSCSI binding</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List iSCSI adapters and sessions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check iSCSI discovery targets</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify vmknic used for iSCSI binding</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name    Driver      State   iscsi.MaxIoSize
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------  ----------  ------  ---------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vmhba64 iscsi       online  65536
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vmhba65 iscsi       online  65536
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>SessionName                              Portal          PortalGroup  State
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>---------------------------------------  --------------  -----------  ------
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>iqn.1991-05.com.example:storage.lun01    192.168.1.100   1            LOGGED_IN
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>iqn.1991-05.com.example:storage.lun02    192.168.1.101   1            LOGGED_IN
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Discovery Address  Discovery Status
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>------------------  ----------------
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>192.168.1.50        STATIC
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Adapter  PortalGroup  Portal              State
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>-------  -----------  ------------------  -------
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>vmhba64  1            192.168.1.100:3260  ACTIVE
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>vmhba64  1            192.168.1.101:3260  ACTIVE
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>vmhba65  2            192.168.1.102:3260  ACTIVE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace iscsi.adapter</code></strong> — Verify the iSCSI software adapter is installed and loaded with <code>esxcli iscsi adapter list</code>; if empty, enable it via vSphere Client or <code>esxcli iscsi adapter set --adapter=vmhba64 -e true</code>.
+<strong><code>Error: Could not find adapter vmhba64</code></strong> — Confirm the adapter name is correct by running <code>esxcli iscsi adapter list</code> first, as adapter numbers vary by host configuration.</p>
+</div>
 <p><strong>NFS:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NFS mount status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>list
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Re-mount an NFS datastore that dropped</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>remove<span class="w"> </span>-v<span class="w"> </span>&lt;volume-label&gt;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>add<span class="w"> </span>-H<span class="w"> </span>&lt;nfs-server-ip&gt;<span class="w"> </span>-s<span class="w"> </span>/path/to/export<span class="w"> </span>-v<span class="w"> </span>&lt;volume-label&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check NFS server connectivity</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;nfs-server-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NFS mount status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>list
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Re-mount an NFS datastore that dropped</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>remove<span class="w"> </span>-v<span class="w"> </span>&lt;volume-label&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>add<span class="w"> </span>-H<span class="w"> </span>&lt;nfs-server-ip&gt;<span class="w"> </span>-s<span class="w"> </span>/path/to/export<span class="w"> </span>-v<span class="w"> </span>&lt;volume-label&gt;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check NFS server connectivity</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;nfs-server-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NFS Mount List:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Volume Name                                    Host                Port   Type  Mounted  Read-Only
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>nfs-datastore-prod                             192.168.10.45       2049   NFS   true     false
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>nfs-datastore-backup                           192.168.10.46       2049   NFS   true     false
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>NFS datastore nfs-datastore-prod removed successfully.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>NFS datastore nfs-datastore-prod added and mounted successfully.
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>PING 192.168.10.45 (192.168.10.45): 56 data bytes
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>64 bytes from 192.168.10.45: icmp_seq=0 time=2.341 ms
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>64 bytes from 192.168.10.45: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>64 bytes from 192.168.10.45: icmp_seq=2 time=2.287 ms
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>--- 192.168.10.45 statistics ---
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>round-trip min/avg/max = 2.156, 2.261, 2.341 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NFS mount failed: Permission denied</code></strong> — Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable.
+<strong><code>vmkping: Unknown host 192.168.10.45</code></strong> — Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet.
+<strong><code>NFS datastore nfs-datastore-prod is still mounted</code></strong> — Unmount the datastore from all VMs and remove any locks using <code>esxcli storage nfs list</code> before attempting removal.</p>
+</div>
 <p>Look for: if FC HBA shows <code>LinkState = Link Down</code>, the issue is the physical link or SFP. If iSCSI sessions are absent, check network reachability from the VMkernel port. For NFS, a ping failure to the NFS server confirms a network or server outage.</p>
 <hr />
 <h2 id="5-vmcp-policy-apd-timeout-behaviour">5. VMCP Policy — APD Timeout Behaviour<a class="headerlink" href="#5-vmcp-policy-apd-timeout-behaviour" title="Permanent link">&para;</a></h2>
 <p>Check what your cluster is configured to do when APD timeout expires, so you understand whether VMCP has already acted on VMs.</p>
 <p>Navigate to <strong>Cluster → Configure → vSphere Availability → Failures and Responses → Datastore with APD</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VMCP APD response options:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Disabled                         — ESXi queues I/O indefinitely; VMs freeze until paths recover
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Issue events only                — alerts fire; no automatic action
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Power off and restart VMs        — after APD timeout, power off VMs; HA restarts on hosts with storage access
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>VMCP APD response options:
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Disabled                         — ESXi queues I/O indefinitely; VMs freeze until paths recover
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Issue events only                — alerts fire; no automatic action
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Power off and restart VMs        — after APD timeout, power off VMs; HA restarts on hosts with storage access
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check VMCP configuration via PowerCLI</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;cluster-name&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">$das</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$cluster</span>.ExtensionData.Configuration.DasConfig
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">$das</span>.DefaultVmSettings.VmComponentProtectionSettings
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check VMCP configuration via PowerCLI</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;cluster-name&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$das</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$cluster</span>.ExtensionData.Configuration.DasConfig
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$das</span>.DefaultVmSettings.VmComponentProtectionSettings
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>IsEnabled                    : True
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>VmStorageProtectionForAPD    : clusterWide
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>VmTerminateDelayForAPD       : 300
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>VmReactionOnAPDCleared       : reset
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>VmMoterationForAPDCleared    : disabled
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>VmStorageProtectionForPDL    : clusterWide
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>VmTerminateDelayForPDL       : 300
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>VmReactionOnPDLCleared       : reset
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>VmMoterationForPDLCleared    : disabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the command.
+<strong><code>Get-Cluster : Could not find cluster with name 'cluster-name'.</code></strong> — Replace <code>"cluster-name"</code> with the actual cluster name; verify it exists with <code>Get-Cluster | Select-Object Name</code>.
+<strong><code>Access to the resource is forbidden.</code></strong> — Ensure your vCenter user account has at least read-only permissions on the cluster object.</p>
+</div>
 <p>Look for: <code>vmReactionOnAPDCleared = reset</code> means vCenter automatically restores VMs when paths recover — monitor whether this triggers correctly after fabric is restored.</p>
 <hr />
 <h2 id="6-restore-storage-paths">6. Restore Storage Paths<a class="headerlink" href="#6-restore-storage-paths" title="Permanent link">&para;</a></h2>
 <p>Once the root cause is identified and remediated (fabric link up, switch recovered, NFS server back), force ESXi to re-scan for the recovered paths.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Re-scan all HBAs on the host for storage devices</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Or target a specific HBA</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>-A<span class="w"> </span>vmhba0
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># For NFS — verify mount recovers automatically; if not, remount</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Re-scan all HBAs on the host for storage devices</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Or target a specific HBA</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>-A<span class="w"> </span>vmhba0
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># For NFS — verify mount recovers automatically; if not, remount</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>HBA Rescan: Complete
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>vmhba0 Rescan: Complete
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>vmhba1 Rescan: Complete
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>vmhba2 Rescan: Complete
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>NFS Mount Information:
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Volume Name  Host          Accessible  Mounted  Read-Only
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>nfs-datastore-01  192.168.1.50  true       true     false
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>nfs-datastore-02  192.168.1.51  true       true     false
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>nfs-backup-vol    192.168.1.52  false      false    false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option --all</code></strong> — Use <code>-a</code> instead of <code>--all</code> for the rescan command.
+<strong><code>Error: Could not find HBA adapter vmhba0</code></strong> — Verify the HBA name with <code>esxcli storage core adapter list</code> before rescanning.
+<strong><code>NFS mount timeout or stale NFS handle detected</code></strong> — Remount the NFS datastore using <code>esxcli storage nfs remove -v &lt;volume-name&gt;</code> followed by <code>esxcli storage nfs add</code>.</p>
+</div>
 <p>In vCenter: <strong>Storage → Datastores → right-click affected datastore → Rescan Storage</strong>.</p>
 <p>After paths recover, monitor vmkernel.log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;path.*active\|APD cleared\|PDL cleared&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;path.*active\|APD cleared\|PDL cleared&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>2024-01-15T08:23:45.123Z cpu2:2051)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path &quot;vmhba2:C0:T1:L0&quot; changed to &quot;dead&quot;
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>2024-01-15T08:24:12.456Z cpu5:4103)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path &quot;vmhba3:C0:T2:L0&quot; changed to &quot;dead&quot;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>2024-01-15T08:25:33.789Z cpu1:1923)NMP: nmp_DeviceAttemptFailover:5421: Failing over device &quot;naa.60060e8007a2e0000007a2e000010001&quot; from path &quot;vmhba2:C0:T1:L0&quot;
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>2024-01-15T08:26:01.234Z cpu7:3456)APD cleared: Device naa.60060e8007a2e0000007a2e000010001 recovered after 28 seconds
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>2024-01-15T08:27:15.567Z cpu3:2789)PDL cleared: Device naa.60060e8007a2e0000007a2e000010002 path restored
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>2024-01-15T08:28:44.891Z cpu6:5012)NMP: nmp_PathStateChangeEvent:4782: Active path &quot;vmhba4:C0:T3:L0&quot; changed to &quot;active&quot;
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>2024-01-15T08:29:22.345Z cpu2:1834)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path &quot;vmhba1:C0:T0:L0&quot; changed to &quot;dead&quot;
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>2024-01-15T08:30:55.678Z cpu4:3267)APD cleared: Device naa.60060e8007a2e0000007a2e000010003 recovered after 45 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in <code>/var/log/vmkernel</code> or rotated to dated files like <code>vmkernel.1.log</code>.
+<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure you have read permissions on the vmkernel.log file; run the command with <code>sudo</code> or as root if access is denied.</p>
+</div>
 <p>Look for: <code>APD cleared</code> entries confirm all paths are restored. VMs that were not powered off by VMCP will resume I/O automatically within seconds.</p>
 <hr />
 <h2 id="7-recover-vms-powered-off-by-vmcp">7. Recover VMs Powered Off by VMCP<a class="headerlink" href="#7-recover-vms-powered-off-by-vmcp" title="Permanent link">&para;</a></h2>
 <p>If VMCP issued a power-off (PDL or APD timeout with power-off policy), some VMs will be powered off and waiting for HA restart. Check HA restart status before manually powering on anything.</p>
 <p>Navigate to <strong>Cluster → Monitor → vSphere HA → VM Restarts</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Check:
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Restart Status = Completed     → VM is already running on another host; verify via console
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Restart Status = Insufficient resources → HA could not find a host with storage access; manual action needed
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Restart Status = Not Attempted → HA restart priority = Disabled on this VM; power on manually
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Check:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  Restart Status = Completed     → VM is already running on another host; verify via console
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  Restart Status = Insufficient resources → HA could not find a host with storage access; manual action needed
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  Restart Status = Not Attempted → HA restart priority = Disabled on this VM; power on manually
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># List VMs in powered-off state after APD event</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c"># Check HA restart priority per VM</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  <span class="p">|</span> <span class="nb">Get-VMRestartPriority</span> <span class="p">`</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">RestartPriority</span> <span class="o">-eq</span> <span class="s2">&quot;Disabled&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># List VMs in powered-off state after APD event</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c"># Check HA restart priority per VM</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  <span class="p">|</span> <span class="nb">Get-VMRestartPriority</span> <span class="p">`</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">RestartPriority</span> <span class="o">-eq</span> <span class="s2">&quot;Disabled&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <p>Look for: any VM with <code>RestartPriority = Disabled</code> will not be automatically restarted by HA — these require a manual power-on after storage is confirmed accessible from the target host.</p>
 <hr />
 <h2 id="8-post-recovery-validation-checklist">8. Post-Recovery Validation Checklist<a class="headerlink" href="#8-post-recovery-validation-checklist" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>[ ] All storage paths showing Active (not dead/off) on all hosts
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>[ ] Datastore shows green in vCenter Storage view
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>[ ] esxcli storage core device list — no device in APD state
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>[ ] All VMs are running (HA restarted or manual power-on confirmed)
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>[ ] vmkernel.log shows &quot;APD cleared&quot; for all affected devices
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>[ ] No VM is showing &quot;Virtual machine disks consolidation is needed&quot; (check after recovery)
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>[ ] VMCP policy reviewed and set appropriately for your RTO requirements
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>[ ] Root cause documented: switch port, HBA, cable, NFS server, or array LUN
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>[ ] All storage paths showing Active (not dead/off) on all hosts
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>[ ] Datastore shows green in vCenter Storage view
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>[ ] esxcli storage core device list — no device in APD state
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>[ ] All VMs are running (HA restarted or manual power-on confirmed)
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>[ ] vmkernel.log shows &quot;APD cleared&quot; for all affected devices
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>[ ] No VM is showing &quot;Virtual machine disks consolidation is needed&quot; (check after recovery)
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>[ ] VMCP policy reviewed and set appropriately for your RTO requirements
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>[ ] Root cause documented: switch port, HBA, cable, NFS server, or array LUN
 </code></pre></div>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
@@ -11043,7 +11180,7 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

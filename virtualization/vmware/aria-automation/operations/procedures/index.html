@@ -9748,6 +9748,19 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected: 401 (Unauthorised — server is reachable)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Any other output (000, curl error) indicates network or DNS issue</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@vra-prod-01.example.local&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Welcome to VMware vRealize Automation 8.10.2
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Last login: Wed Jan 15 14:32:18 UTC 2025 from 192.168.1.45
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>root@vra-prod-01:~# curl -sk -o /dev/null -w &quot;%{http_code}&quot; https://vcenter-prod.example.local/rest/com/vmware/cis/session
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>401
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>root@vra-prod-01:~#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to vcenter-prod.example.local port 443: Connection refused</code></strong> — Verify vCenter is running and accessible; check firewall rules between vRA and vCenter networks.
+<strong><code>curl: (6) Could not resolve host: vcenter-prod.example.local</code></strong> — Confirm DNS resolution is working on the vRA appliance with <code>nslookup vcenter-prod.example.local</code> or update <code>/etc/hosts</code> with the vCenter IP.
+<strong><code>000</code></strong> — Check network connectivity with <code>ping vcenter-prod.example.local</code> and verify the vRA appliance has a route to the vCenter subnet.</p>
+</div>
 <hr />
 <h2 id="update-cloud-account-credentials">Update Cloud Account Credentials<a class="headerlink" href="#update-cloud-account-credentials" title="Permanent link">&para;</a></h2>
 <p>Use when a service account password has been rotated or an AWS access key has been replaced. Updating credentials in place avoids removing and re-adding the account, which would break existing projects and resource tags.</p>
@@ -9769,8 +9782,22 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <li>Monitor the data collection status — it transitions from <strong>Running</strong> to <strong>Completed</strong>.</li>
 <li>If data collection fails, check the iaas-gateway logs:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|vcenter\|cloud&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|vcenter\|cloud&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>2024-01-15T09:42:31.223Z INFO [iaas-gateway-5d7c9f2k1] vCenter connection established to vcenter.prod.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:42:35.891Z WARN [iaas-gateway-5d7c9f2k1] Cloud account sync delayed: 2.3s latency detected
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15T09:42:42.156Z ERROR [iaas-gateway-7x9m2n4p] Failed to authenticate with vCenter: invalid credentials for user svc-aria@vsphere.local
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T09:43:01.445Z INFO [iaas-gateway-5d7c9f2k1] Cloud provider AWS initialized successfully
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15T09:43:15.782Z ERROR [iaas-gateway-7x9m2n4p] vCenter SSL certificate validation failed: certificate expired on 2024-01-10
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15T09:43:28.334Z WARN [iaas-gateway-5d7c9f2k1] Cloud account quota check: 87% CPU utilization on cluster-prod-01
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2024-01-15T09:43:45.667Z INFO [iaas-gateway-5d7c9f2k1] vCenter inventory refresh completed: 342 VMs catalogued
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15T09:44:02.891Z ERROR [iaas-gateway-7x9m2n4p] Cloud sync timeout after 30s waiting for vCenter response
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: no matching resources found in prelude namespace</code></strong> — Verify the prelude namespace exists with <code>kubectl get ns prelude</code> and confirm iaas-gateway pods are deployed.
+<strong><code>error: unable to forward port because pod does not exist</code></strong> — Ensure iaas-gateway pods are running with <code>kubectl get pods -n prelude -l app=iaas-gateway</code> before querying logs.</p>
+</div>
 <hr />
 <h2 id="configure-image-mappings-and-flavor-mappings">Configure Image Mappings and Flavor Mappings<a class="headerlink" href="#configure-image-mappings-and-flavor-mappings" title="Permanent link">&para;</a></h2>
 <p>Image mappings translate an abstract OS name (e.g., <code>ubuntu-22</code>) to a concrete template per cloud zone. Flavor mappings translate a size name (e.g., <code>small</code>) to a vSphere CPU/memory configuration or an AWS instance type. Both must be configured for each cloud zone before blueprints can deploy.
@@ -9917,18 +9944,18 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 1. Navigate to <strong>Extensibility → Actions → New Action</strong>.
 2. Enter a name, select the runtime (Python 3, Node.js, or PowerShell), and choose the execution context (on-premises FaaS or cloud).
 3. Paste or write the action handler. The entry point must be <code>handler(context, inputs)</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;slackWebhook&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;deploymentName&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;:white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">}</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;slackWebhook&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;deploymentName&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;:white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
 </code></pre></div>
 <ol>
 <li>Add any required dependencies under <strong>Dependencies</strong> (pip packages for Python, npm packages for Node.js).</li>
@@ -9953,11 +9980,11 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <li>Click <strong>Test</strong>.</li>
 <li>In the test input panel, provide a JSON payload that mimics the properties the subscription would pass. Example:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;deploymentName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test-deploy-01&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jsmith@example.local&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;slackWebhook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/TEST/TEST/TEST&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;deploymentName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test-deploy-01&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jsmith@example.local&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;slackWebhook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/TEST/TEST/TEST&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
 </code></pre></div>
 <ol>
 <li>Click <strong>Run Test</strong>.</li>
@@ -9973,33 +10000,90 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <p>The force-delete API call removes the deployment record from vRA's database but does not guarantee the destroy workflow ran against the cloud account. After force-deleting, manually verify in vCenter (for vSphere deployments) or the cloud console (for AWS/Azure) that the VMs, disks, and networks created by the deployment have been removed. Orphaned VMs continue to consume resources and incur cost.</p>
 </div>
 <p>A deployment stuck in <code>CREATE_FAILED</code>, <code>DELETE_FAILED</code>, or <code>UPDATE_FAILED</code> cannot be removed through the normal UI delete flow. Use the API to force-delete it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Obtain a bearer token</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login?access_token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="k">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># List failed deployments</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=CREATE_FAILED&amp;size=50&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, owner: .ownedBy, status: .status}&#39;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Force-delete a specific deployment</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">DEPLOYMENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;id&gt;&quot;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments/</span><span class="nv">$DEPLOYMENT_ID</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Obtain a bearer token</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login?access_token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="k">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># List failed deployments</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=CREATE_FAILED&amp;size=50&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, owner: .ownedBy, status: .status}&#39;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Force-delete a specific deployment</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">DEPLOYMENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;id&gt;&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments/</span><span class="nv">$DEPLOYMENT_ID</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;dep-8f4c2a91-b3e2-4d7f-9c1a-5e6d7f8a9b0c&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;name&quot;: &quot;wordpress-prod-01&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;owner&quot;: &quot;admin@system-domain&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>}
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>{
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;id&quot;: &quot;dep-3c7e1f5a-9d2b-4a6c-8e3f-2b1a7c9d5e4f&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;name&quot;: &quot;database-cluster-02&quot;,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;owner&quot;: &quot;devops@system-domain&quot;,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>{
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;id&quot;: &quot;dep-6b9a2c4d-1e5f-47a8-b2c3-9f8e7d6c5a4b&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;name&quot;: &quot;api-gateway-staging&quot;,
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  &quot;owner&quot;: &quot;platform-team@system-domain&quot;,
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>}
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, so verify the certificate is actually trusted or use <code>-k</code>).
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "access_token"</code></strong> — Verify the username, password, and domain are correct, and that the vRA authentication service is responding by testing the login endpoint separately.
+<strong><code>curl: (7) Failed to connect to vra-prod-01.example.local port 443: Connection refused</code></strong> — Confirm the vRA appliance hostname is correct and the HTTPS service is running with <code>curl -sk https://vra-prod-01.example.local/</code>.</p>
+</div>
 <p>After the API call returns, refresh the deployments view in the UI to confirm the record is removed. If the underlying VMs were not cleaned up by the destroy workflow, delete them directly from vCenter.</p>
 <hr />
 <h2 id="find-and-clean-up-orphaned-deployments">Find and Clean Up Orphaned Deployments<a class="headerlink" href="#find-and-clean-up-orphaned-deployments" title="Permanent link">&para;</a></h2>
 <p>An orphaned deployment has a vRA record but no matching resource in the cloud account. This occurs when a VM is deleted directly in vCenter or AWS without going through vRA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all deployments via API and cross-reference with vCenter</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?size=200&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, status: .status, owner: .ownedBy}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all deployments via API and cross-reference with vCenter</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?size=200&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, status: .status, owner: .ownedBy}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;id&quot;: &quot;deployment-a4f2c891-7e3a-4d21-b8f9-2c1a5e9d3f47&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;name&quot;: &quot;prod-k8s-cluster-01&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;owner&quot;: &quot;svc-automation@example.local&quot;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>{
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;id&quot;: &quot;deployment-b6e8d124-9c2f-4a53-a1d3-7f2b8e4c6a92&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;name&quot;: &quot;dev-database-mysql-03&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;owner&quot;: &quot;devops-team@example.local&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>}
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>{
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;id&quot;: &quot;deployment-c3a9e567-2b1f-4e78-9a2c-1d5f3b8e7c41&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;name&quot;: &quot;staging-app-server-02&quot;,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;status&quot;: &quot;UPDATE_IN_PROGRESS&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;owner&quot;: &quot;platform-eng@example.local&quot;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>}
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>{
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  &quot;id&quot;: &quot;deployment-d7f1a234-5c8e-4b92-8d6f-4a2e9c1b5f73&quot;,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  &quot;name&quot;: &quot;legacy-windows-farm&quot;,
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;,
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  &quot;owner&quot;: &quot;infrastructure@example.local&quot;
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRA certificate into your system trust store.
+<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Verify the API token is valid and the vRA endpoint is responding with JSON; check <code>curl</code> output without piping to <code>jq</code> first.
+<strong><code>curl: (401) Unauthorized</code></strong> — Regenerate or verify the Bearer token has not expired; confirm it was issued with appropriate API scope permissions.</p>
+</div>
 <ol>
 <li>Export the deployment list from the API (above).</li>
 <li>Cross-reference against the vCenter VM inventory or AWS EC2 instance list.</li>
@@ -10024,10 +10108,18 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <li>Confirm SSO login works (vIDM relies on the same cert chain).</li>
 <li>Confirm the Service Broker catalog loads and deployments can be submitted.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify the new certificate expiry from the vRA appliance</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span>-servername<span class="w"> </span>vra-prod-01.example.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify the new certificate expiry from the vRA appliance</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span>-servername<span class="w"> </span>vra-prod-01.example.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>notBefore=Jan 15 10:22:33 2023 GMT
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>notAfter=Jan 15 10:22:33 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Ensure the vRA appliance is running and port 443 is accessible; verify firewall rules and network connectivity to vra-prod-01.example.local.
+<strong><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></strong> — Add <code>-showcerts</code> flag or use <code>openssl s_client -connect vra-prod-01.example.local:443 -servername vra-prod-01.example.local 2&gt;&amp;1 | grep -A 5 "subject="</code> to bypass verification and inspect the certificate chain.</p>
+</div>
 <hr />
 <h2 id="rotate-the-postgres-password">Rotate the Postgres Password<a class="headerlink" href="#rotate-the-postgres-password" title="Permanent link">&para;</a></h2>
 <p>vRA stores its configuration database password in <code>vracli</code>. Rotate this password when following periodic credential rotation policy or after a Postgres administrator password change.</p>
@@ -10035,18 +10127,55 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <p class="admonition-title">vracli rcs restart causes a full vRA service outage</p>
 <p><code>vracli rcs restart</code> stops and restarts all vRA microservices. During the restart (typically 5–10 minutes), the vRA UI, API, and catalog are unavailable. Active blueprint deployments in flight at the time of the restart may fail. Schedule this operation during a maintenance window and notify users before proceeding.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to the vRA primary appliance</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Update the Postgres password in vracli config</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vracli<span class="w"> </span>pg<span class="w"> </span>password<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--password<span class="w"> </span><span class="s1">&#39;&lt;new-password&gt;&#39;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Restart the vRA services to pick up the new credentials</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vracli<span class="w"> </span>rcs<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># SSH to the vRA primary appliance</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Update the Postgres password in vracli config</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vracli<span class="w"> </span>pg<span class="w"> </span>password<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--password<span class="w"> </span><span class="s1">&#39;&lt;new-password&gt;&#39;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Restart the vRA services to pick up the new credentials</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>vracli<span class="w"> </span>rcs<span class="w"> </span>restart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>root@vra-prod-01.example.local&#39;s password: 
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Welcome to vRealize Automation 8.10.2
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vra-prod-01:~ #
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Setting PostgreSQL password...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Password updated successfully for user &#39;postgres&#39;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Configuration synchronized across cluster nodes.
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>vra-prod-01:~ #
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Restarting vRA services...
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Stopping Identity Manager...
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Stopping vRealize Automation...
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Stopping PostgreSQL...
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Starting PostgreSQL...
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Starting vRealize Automation...
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Starting Identity Manager...
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>All services restarted successfully. Startup time: 3m 42s
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>vra-prod-01:~ #
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the vRA appliance is fully initialized; if just deployed, wait 10-15 minutes for the management agent to start.
+<strong><code>Error: Failed to update PostgreSQL password - Connection refused</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgres</code> and check that the database is not in recovery mode.
+<strong><code>Error: Service restart timed out after 10 minutes</code></strong> — Increase the timeout or check service logs with <code>vracli log view --service identity-manager</code> to identify which service is hung.</p>
+</div>
 <p>After the restart, verify the vRA UI is accessible and that data collection runs complete without database connection errors. Check the Postgres-related logs if services fail to come up:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|5[0-9][0-9]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|5[0-9][0-9]&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2024-01-15T09:42:31.245Z [ERROR] Connection timeout to identity provider: request_id=a7f2c9e1-4b2d-11ee-b0d9
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2024-01-15T09:42:45.123Z [WARN] 502 Bad Gateway - upstream service unavailable
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2024-01-15T09:43:12.567Z [ERROR] Database connection pool exhausted: max_connections=50
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>2024-01-15T09:43:28.891Z 503 Service Unavailable - vra-catalog pod restarting
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>2024-01-15T09:44:01.234Z [ERROR] SSL certificate validation failed for iaas-proxy.prelude.svc.cluster.local
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>2024-01-15T09:44:15.678Z 500 Internal Server Error - NullPointerException in workflow engine
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>2024-01-15T09:44:32.445Z [WARN] 504 Gateway Timeout - backend response exceeded 30s threshold
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: resource name may not be empty</code></strong> — Verify the namespace exists with <code>kubectl get namespace prelude</code> and check pod label selector with <code>kubectl get pods -n prelude --show-labels</code>.
+<strong><code>Unable to match a pod using the label selectors: app=vra-nginx</code></strong> — Confirm the correct label with <code>kubectl get pods -n prelude -o wide</code> and update the label selector if pods use different labels like <code>app.kubernetes.io/name=vra-nginx</code>.
+<strong><code>The connection to the server was refused</code></strong> — Ensure kubectl is configured to the correct cluster context with <code>kubectl config current-context</code> and verify API server connectivity.</p>
+</div>
 <hr />
 <h2 id="rotate-the-admin-account-password">Rotate the Admin Account Password<a class="headerlink" href="#rotate-the-admin-account-password" title="Permanent link">&para;</a></h2>
 <p>The vRA administrator account password is managed through the VAMI (Virtual Appliance Management Interface). Rotate this password when following credential rotation policy.</p>
@@ -10115,10 +10244,24 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <p><img alt="Step 3 — Inspect Detailed Logs" src="../../../../../assets/aria-automation-proc-step-3-inspect-detailed-logs.svg" /></p>
 <p>For ABX/extensibility failures, go to <strong>Extensibility → Activity → select the failed action run</strong> — full stdout/stderr from the script is recorded here.</p>
 <p>For vSphere provisioning failures, cross-reference the vCenter <strong>Tasks</strong> panel at the time of the failure — vSphere error messages are often more descriptive than what Aria Automation surfaces.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># For deeper Aria Automation logs (if SSH access available):</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ssh<span class="w"> </span>root@&lt;aria-automation-ip&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vra/deployment-service.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ERROR
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># For deeper Aria Automation logs (if SSH access available):</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh<span class="w"> </span>root@&lt;aria-automation-ip&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vra/deployment-service.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ERROR
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>root@aria-automation-01:~# tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15 14:23:47.892 ERROR [deployment-service] Failed to authenticate with vCenter: Connection timeout after 30000ms
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15 14:25:12.445 ERROR [deployment-service] Blueprint &#39;web-tier-v2&#39; deployment failed: Insufficient compute resources in cluster &#39;prod-dc1&#39;
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15 14:27:33.661 ERROR [deployment-service] AMQP connection lost to message broker at 192.168.1.45:5672
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15 14:29:01.234 ERROR [deployment-service] Invalid cloud account credentials for AWS-prod: AccessDenied
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15 14:31:44.556 ERROR [deployment-service] Deployment request &#39;req-8f4a2c9d&#39; exceeded maximum retry attempts (5)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>2024-01-15 14:33:19.778 ERROR [deployment-service] Certificate validation failed for endpoint https://vcenter.corp.local:443
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify SSH key is loaded with <code>ssh-add</code> and the root user's authorized_keys contains your public key.
+<strong><code>No such file or directory</code></strong> — Confirm the Aria Automation service is running with <code>systemctl status vra-deployment-service</code> and the log path exists.
+<strong><code>tail: cannot open '/var/log/vmware/vra/deployment-service.log' for reading: Permission denied</code></strong> — Run the command with <code>sudo</code> or switch to root user before executing tail.</p>
+</div>
 <h3 id="step-4-fix-and-retry">Step 4 — Fix and Retry<a class="headerlink" href="#step-4-fix-and-retry" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Fix and Retry" src="../../../../../assets/aria-automation-proc-step-4-fix-and-retry.svg" /></p>
 <p>After fixing the root cause:</p>
@@ -10258,7 +10401,7 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

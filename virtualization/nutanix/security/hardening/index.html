@@ -7677,53 +7677,129 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>failed-login-attempts<span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>lockout-period<span class="o">=</span><span class="m">30</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Password Complexity Policy:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Enabled: true
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Min Length: 14
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Min Uppercase: 1
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Min Lowercase: 1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Min Numeric: 1
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Min Special Chars: 1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  History: 6
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Password Aging Policy:
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Enabled: true
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Max Age (days): 90
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Account Lockout Policy:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Enabled: true
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  Failed Login Attempts: 5
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  Lockout Period (minutes): 30
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid value for failed-login-attempts. Must be between 1 and 10.</code></strong> — Reduce the failed-login-attempts value to a maximum of 10 or check your Nutanix version's supported range.
+<strong><code>Error: ncli: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node with ncli installed, not a remote management workstation.
+<strong><code>Error: Permission denied. User does not have cluster admin privileges.</code></strong> — Execute the command as a cluster administrator or use an account with full cluster permissions.</p>
+</div>
 <hr />
 <h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="restrict-ssh-access-cluster-lockdown">Restrict SSH Access (Cluster Lockdown)<a class="headerlink" href="#restrict-ssh-access-cluster-lockdown" title="Permanent link">&para;</a></h3>
 <p>Nutanix Cluster Lockdown disables SSH root access and allows key-only login per approved IP/key list.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Prism Element → Settings → Security → Cluster Lockdown
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Enable Cluster Lockdown: Yes
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Add SSH public keys for each admin user
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Optionally restrict to specific source IPs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Prism Element → Settings → Security → Cluster Lockdown
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Enable Cluster Lockdown: Yes
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Add SSH public keys for each admin user
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Optionally restrict to specific source IPs
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify lockdown is enabled via CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-security-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>lockdown
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify lockdown is enabled via CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-security-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>lockdown
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Lockdown Mode                    : ENABLED
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Lockdown Mode Status             : Active
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Lockdown Mode Last Modified      : 2024-01-15 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ncli: command not found</code></strong> — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI tools installed and in your PATH.
+<strong><code>Error: Unable to connect to cluster</code></strong> — Verify cluster connectivity and that your user account has appropriate permissions to query security configuration.</p>
+</div>
 <h3 id="cvm-ssh-key-management">CVM SSH Key Management<a class="headerlink" href="#cvm-ssh-key-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add an authorized key to all CVMs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>allssh<span class="w"> </span><span class="s2">&quot;echo &#39;ssh-rsa AAAA... user@host&#39; &gt;&gt; ~/.ssh/authorized_keys&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove a key (find and delete the specific line)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sed -i &#39;/user@host/d&#39; ~/.ssh/authorized_keys&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List current authorized keys</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>allssh<span class="w"> </span><span class="s2">&quot;cat ~/.ssh/authorized_keys&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add an authorized key to all CVMs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>allssh<span class="w"> </span><span class="s2">&quot;echo &#39;ssh-rsa AAAA... user@host&#39; &gt;&gt; ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Remove a key (find and delete the specific line)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sed -i &#39;/user@host/d&#39; ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List current authorized keys</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>allssh<span class="w"> </span><span class="s2">&quot;cat ~/.ssh/authorized_keys&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>node-1-cvm: ssh-rsa AAAA...B3Z9 user@host
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>node-1-cvm: ssh-rsa AAAA...K7M2 admin@bastion
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>node-2-cvm: ssh-rsa AAAA...B3Z9 user@host
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>node-2-cvm: ssh-rsa AAAA...K7M2 admin@bastion
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>node-3-cvm: ssh-rsa AAAA...B3Z9 user@host
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>node-3-cvm: ssh-rsa AAAA...K7M2 admin@bastion
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>node-4-cvm: ssh-rsa AAAA...B3Z9 user@host
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>node-4-cvm: ssh-rsa AAAA...K7M2 admin@bastion
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify the CVM SSH service is running with <code>allssh "systemctl status sshd"</code> and that your current SSH key is already in authorized_keys.
+<strong><code>sed: can't read ~/.ssh/authorized_keys: No such file or directory</code></strong> — Create the ~/.ssh directory and authorized_keys file first with <code>allssh "mkdir -p ~/.ssh &amp;&amp; touch ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code>.
+<strong><code>allssh: command not found</code></strong> — Ensure you are running this from a Nutanix cluster node or Prism Element host where allssh is available in the PATH.</p>
+</div>
 <h3 id="ssh-server-config-ahv-hypervisor">SSH Server Config (AHV Hypervisor)<a class="headerlink" href="#ssh-server-config-ahv-hypervisor" title="Permanent link">&para;</a></h3>
 <p>Apply on each AHV host (requires root access — only via Prism Element → Hardware → host console):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/ssh/sshd_config recommended settings:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Protocol<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>MaxAuthTries<span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>AllowUsers<span class="w"> </span>nutanix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/ssh/sshd_config recommended settings:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Protocol<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>MaxAuthTries<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>AllowUsers<span class="w"> </span>nutanix
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd[12345]: error: /etc/ssh/sshd_config line 1: unsupported option "PermitRootLogin no"</code></strong> — Ensure you are editing the actual sshd_config file with a text editor (e.g., <code>sudo nano /etc/ssh/sshd_config</code>) rather than pasting into the shell directly.
+<strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Verify SSH host keys exist in <code>/etc/ssh/</code> with <code>ls -la /etc/ssh/ssh_host_*</code> and regenerate them if missing using <code>ssh-keygen -A</code>.
+<strong><code>Permission denied (publickey).</code></strong> — Confirm the nutanix user has a valid public key in <code>~nutanix/.ssh/authorized_keys</code> and restart sshd with <code>sudo systemctl restart sshd</code> after making config changes.</p>
+</div>
 <hr />
 <h2 id="tls-ssl-configuration">TLS / SSL Configuration<a class="headerlink" href="#tls-ssl-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check current cipher suite policy</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-ssl-key-config
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Enforce TLS 1.2+ (disable TLS 1.0/1.1)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-ssl-key-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>key-type<span class="o">=</span>RSA_2048<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>cluster-certification-chain-key<span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w">  </span><span class="c1"># leave blank to use Nutanix self-signed</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># For custom SSL cert (recommended — avoids browser warnings):</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Prism Element → Settings → SSL Certificate → Import Certificate</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Upload your PEM-encoded cert, intermediate chain, and private key</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check current cipher suite policy</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-ssl-key-config
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Enforce TLS 1.2+ (disable TLS 1.0/1.1)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-ssl-key-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>key-type<span class="o">=</span>RSA_2048<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>cluster-certification-chain-key<span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w">  </span><span class="c1"># leave blank to use Nutanix self-signed</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># For custom SSL cert (recommended — avoids browser warnings):</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Prism Element → Settings → SSL Certificate → Import Certificate</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Upload your PEM-encoded cert, intermediate chain, and private key</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SSL Key Configuration
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>=====================
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Key Type: RSA_2048
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Certificate Chain Length: 1
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>TLS Version Support: TLS 1.0, TLS 1.1, TLS 1.2, TLS 1.3
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Cipher Suite: DEFAULT
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Certificate Expiry: 2025-03-15 14:22:18
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Issuer: Nutanix, Inc.
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Request ID: 00057d8a-0001-0000-0000-000000003a98
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Status: SUCCEEDED
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid key-type value. Supported types: RSA_2048, RSA_4096</code></strong> — Verify the key-type parameter matches one of the supported values exactly.
+<strong><code>Error: Certificate chain validation failed: Intermediate certificate not in PEM format</code></strong> — Ensure the intermediate certificate is PEM-encoded (-----BEGIN CERTIFICATE-----) and concatenated in the correct order (leaf → intermediate → root).
+<strong><code>Error: Private key does not match certificate: Key mismatch detected</code></strong> — Confirm the private key file corresponds to the certificate being imported by comparing their modulus values.</p>
+</div>
 <hr />
 <h2 id="port-exposure-lockdown">Port Exposure Lockdown<a class="headerlink" href="#port-exposure-lockdown" title="Permanent link">&para;</a></h2>
 <p>Nutanix uses a firewall (iptables on CVM, firewalld on AHV). The key principle is: <strong>only ports listed in the Nutanix Port Reference should be open</strong>.</p>
@@ -7774,26 +7850,52 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Review iptables rules on a CVM</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-L<span class="w"> </span>-n
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify AHV firewall</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sudo iptables -L -n -v | grep -E &#39;DROP|REJECT&#39; | head -20&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Review iptables rules on a CVM</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-L<span class="w"> </span>-n
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Verify AHV firewall</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sudo iptables -L -n -v | grep -E &#39;DROP|REJECT&#39; | head -20&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>target     prot opt source               destination         
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:22
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:2009
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:2010
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:23
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:25
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>REJECT     tcp  --  192.168.1.50/32      0.0.0.0/0           tcp dpt:3389
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Chain FORWARD (policy DROP 0 packets, 0 bytes)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>target     prot opt source               destination         
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>target     prot opt source               destination         
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>10.20.30.40: DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:23
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>10.20.30.40: DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:25
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>10.20.30.41: DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:23
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>10.20.30.41: REJECT     tcp  --  172.16.0.0/16       0.0.0.0/0           tcp dpt:3389
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>10.20.30.42: DROP       tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:25
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: iptables: command not found</code></strong> — Install iptables with <code>sudo yum install iptables-services</code> or verify the CVM is running a supported OS.
+<strong><code>allssh: command not found</code></strong> — Run this command from a Nutanix cluster node where allssh is available in the PATH, or source the Nutanix environment setup script.</p>
+</div>
 <hr />
 <h2 id="prism-element-security-settings">Prism Element Security Settings<a class="headerlink" href="#prism-element-security-settings" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Element → Settings → Security:
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>1. HTTP Strict Transport Security (HSTS)
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>   Enable HSTS for Prism Web Console
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2. Cluster Lockdown (SSH management — see above)
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>3. Data-at-Rest Encryption
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>   Enable per-container or cluster-wide (see Encryption page)
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>4. Authentication
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>   Configure LDAP/AD (see Authentication page)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Prism Element → Settings → Security:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>1. HTTP Strict Transport Security (HSTS)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>   Enable HSTS for Prism Web Console
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>2. Cluster Lockdown (SSH management — see above)
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>3. Data-at-Rest Encryption
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>   Enable per-container or cluster-wide (see Encryption page)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>4. Authentication
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>   Configure LDAP/AD (see Authentication page)
 </code></pre></div>
 <hr />
 <h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
@@ -7805,23 +7907,23 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </ul>
 <hr />
 <h2 id="nutanix-security-dashboard">Nutanix Security Dashboard<a class="headerlink" href="#nutanix-security-dashboard" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Central → Security → Security Planning
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Shows STIG/CIS compliance status per cluster
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Identifies deviations from the Security Configuration Guide
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Generates compliance reports
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Prism Central → Alerts → Security Alerts
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Monitors for brute force, unusual API access, failed auth, etc.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Prism Central → Security → Security Planning
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Shows STIG/CIS compliance status per cluster
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Identifies deviations from the Security Configuration Guide
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  Generates compliance reports
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Prism Central → Alerts → Security Alerts
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  Monitors for brute force, unusual API access, failed auth, etc.
 </code></pre></div>
 <hr />
 <h2 id="nutanix-insights-call-home">Nutanix Insights (Call-Home)<a class="headerlink" href="#nutanix-insights-call-home" title="Permanent link">&para;</a></h2>
 <p>Nutanix Insights sends cluster health telemetry to Nutanix for proactive support. Review what data is sent before disabling:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Element → Settings → Pulse → Disable Pulse
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Prism Element → Settings → Pulse → Disable Pulse
 </code></pre></div>
 <p>For air-gapped clusters, disable Pulse and LCM dark site mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure LCM dark site (local LCM repository)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Prism Central → LCM → Settings → Use Dark Site</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Point to your internal LCM mirror URL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Configure LCM dark site (local LCM repository)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Prism Central → LCM → Settings → Use Dark Site</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Point to your internal LCM mirror URL</span>
 </code></pre></div>
 <hr />
 <h2 id="hardening-verification-checklist">Hardening Verification Checklist<a class="headerlink" href="#hardening-verification-checklist" title="Permanent link">&para;</a></h2>
@@ -7896,7 +7998,7 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

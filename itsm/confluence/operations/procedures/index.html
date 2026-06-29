@@ -7723,157 +7723,472 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;version&quot;:{&quot;number&quot;:4},&quot;type&quot;:&quot;page&quot;,&quot;title&quot;:&quot;Updated Title&quot;,&quot;body&quot;:{&quot;storage&quot;:{&quot;value&quot;:&quot;&lt;p&gt;New content&lt;/p&gt;&quot;,&quot;representation&quot;:&quot;storage&quot;}}}&#39;</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get current restrictions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Add a view restriction for a specific group</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction/byOperation/read/group/developers&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Remove all restrictions (inherit from space)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;98765&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;type&quot;: &quot;page&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;title&quot;: &quot;My New Page&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;space&quot;: {
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;id&quot;: 45821,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;key&quot;: &quot;ENG&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;name&quot;: &quot;Engineering&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  },
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;ancestors&quot;: [
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    {
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      &quot;id&quot;: &quot;12345&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;type&quot;: &quot;page&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      &quot;title&quot;: &quot;Parent Page&quot;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    }
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  ],
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;version&quot;: {
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;by&quot;: {
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>      &quot;username&quot;: &quot;user&quot;,
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>      &quot;userKey&quot;: &quot;557058:a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    },
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    &quot;when&quot;: &quot;2024-01-15T09:42:18.523Z&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    &quot;number&quot;: 1
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  },
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;links&quot;: {
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    &quot;webui&quot;: &quot;/wiki/spaces/ENG/pages/98765/My+New+Page&quot;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  }
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>}
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>{
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  &quot;id&quot;: &quot;12345&quot;,
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  &quot;type&quot;: &quot;page&quot;,
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  &quot;title&quot;: &quot;Updated Title&quot;,
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  &quot;version&quot;: {
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    &quot;number&quot;: 4,
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    &quot;when&quot;: &quot;2024-01-15T09:43:22.891Z&quot;
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  }
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Watch a page (receive change notifications)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/user/watch/content/12345&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["AUTHENTICATION_DENIED"]}}</code></strong> — Verify the API token is valid and has not expired; regenerate it in Confluence user settings if needed.
+<strong><code>{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to see it."]}}</code></strong> — Confirm the page ID exists and your user account has edit permissions on that page in the target space.
+<strong><code>{"statusCode":409,"data":{"authorized":true,"valid":true,"errors":["Conflict: The version number you provided does not match the current version."]}}</code></strong> — Fetch the current page version number using a GET request before updating, then increment it by one in the PUT request.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get current restrictions</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction&quot;</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Unwatch</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/user/watch/content/12345&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add a view restriction for a specific group</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction/byOperation/read/group/developers&quot;</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># List watchers of a page</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/notification/child-created&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Remove all restrictions (inherit from space)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Archive a single page via REST API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;version&quot;:{&quot;number&quot;:3},&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;}&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List all archived pages in a space</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;status=archived&amp;limit=50&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;read&quot;: {
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    &quot;restrictions&quot;: [
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      {
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        &quot;type&quot;: &quot;group&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        &quot;name&quot;: &quot;confluence-users&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;key&quot;: &quot;confluence-users&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      }
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    ],
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    &quot;content&quot;: {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      &quot;id&quot;: &quot;12345&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;type&quot;: &quot;page&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;title&quot;: &quot;Operations Runbook&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    }
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  },
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;update&quot;: {
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    &quot;restrictions&quot;: [],
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    &quot;content&quot;: {
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      &quot;id&quot;: &quot;12345&quot;,
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;type&quot;: &quot;page&quot;
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    }
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  }
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>}
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Find pages with no parent using CQL in Advanced Search:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># space = &quot;ENG&quot; AND ancestor = null AND status = current</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Via API — fetch pages and filter for empty ancestors</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=ancestors&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.ancestors == []) | {id, title}&#39;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"message":"Authentication failed; invalid username, password, or token."}</code></strong> — Verify the API token is valid and has not expired; regenerate in Atlassian account settings if needed.
+<strong><code>{"statusCode":404,"message":"The content with id 12345 could not be found."}</code></strong> — Confirm the page ID is correct by checking the page URL or using the Confluence API to list content IDs.
+<strong><code>{"statusCode":403,"message":"You do not have permission to restrict this content."}</code></strong> — Ensure your user account has Edit permissions on the page and Admin role in the space.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Watch a page (receive change notifications)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/user/watch/content/12345&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Unwatch</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/user/watch/content/12345&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List watchers of a page</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/notification/child-created&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Delete a page by ID</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/67890&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Move multiple pages to a new parent</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">for</span><span class="w"> </span>PAGE_ID<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">111</span><span class="w"> </span><span class="m">222</span><span class="w"> </span><span class="m">333</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/</span><span class="si">${</span><span class="nv">PAGE_ID</span><span class="si">}</span><span class="s2">/move/append/TARGET_ID&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">done</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Export a page list to CSV for review</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;limit=200&amp;expand=version,ancestors&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[] | [.id, .title, .version.when] | @csv&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>space_audit.csv
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>{
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;results&quot;: [
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    {
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;type&quot;: &quot;user&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;user&quot;: {
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        &quot;type&quot;: &quot;known&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        &quot;username&quot;: &quot;jsmith&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        &quot;userKey&quot;: &quot;ff8080814d8a0d4f014d8a1234567890&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        &quot;fullName&quot;: &quot;John Smith&quot;,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        &quot;email&quot;: &quot;jsmith@company.com&quot;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      }
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    },
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    {
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;type&quot;: &quot;user&quot;,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      &quot;user&quot;: {
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        &quot;type&quot;: &quot;known&quot;,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        &quot;username&quot;: &quot;mchen&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        &quot;userKey&quot;: &quot;ff8080814d8a0d4f014d8a9876543210&quot;,
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        &quot;fullName&quot;: &quot;Maria Chen&quot;,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>        &quot;email&quot;: &quot;mchen@company.com&quot;
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>      }
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    }
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  ],
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  &quot;start&quot;: 0,
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  &quot;limit&quot;: 25,
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  &quot;size&quot;: 2
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find pages not updated in 365+ days (paste in Advanced Search CQL box)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># space = &quot;ENG&quot; AND lastModified &lt; &quot;2025-05-01&quot; AND status = current</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Find stub pages (under 100 characters of body content)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Use export + jq pipeline to check body length</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=body.storage&amp;limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select((.body.storage.value | length) &lt; 100) | {id, title}&#39;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>401 Unauthorized</code></strong> — Verify your Confluence API token is valid and base64-encoded correctly in the <code>-u user:token</code> parameter.
+<strong><code>404 Not Found</code></strong> — Confirm the page ID (12345) exists and you have permission to access it; use <code>GET /content</code> to list available pages.
+<strong><code>403 Forbidden</code></strong> — Ensure your user account has the required permissions to watch content or view watchers in the space.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Archive a single page via REST API</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;version&quot;:{&quot;number&quot;:3},&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;}&#39;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List all archived pages in a space</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;status=archived&amp;limit=50&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List attachments for a page</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/child/attachment&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Delete a specific attachment version</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/ATTACHMENT_ID/version/1&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{&quot;id&quot;:&quot;12345&quot;,&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;,&quot;title&quot;:&quot;Legacy Deployment Guide&quot;,&quot;version&quot;:{&quot;number&quot;:3,&quot;when&quot;:&quot;2024-01-15T09:42:31.000Z&quot;,&quot;by&quot;:{&quot;username&quot;:&quot;admin&quot;,&quot;userKey&quot;:&quot;557058:a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;}},&quot;space&quot;:{&quot;id&quot;:98765,&quot;key&quot;:&quot;ENG&quot;,&quot;name&quot;:&quot;Engineering&quot;},&quot;links&quot;:{&quot;self&quot;:&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345&quot;}}
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>{&quot;results&quot;:[{&quot;id&quot;:&quot;12345&quot;,&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;,&quot;title&quot;:&quot;Legacy Deployment Guide&quot;,&quot;version&quot;:{&quot;number&quot;:3}},{&quot;id&quot;:&quot;12346&quot;,&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;,&quot;title&quot;:&quot;Old Runbook v2.1&quot;,&quot;version&quot;:{&quot;number&quot;:5}},{&quot;id&quot;:&quot;12347&quot;,&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;,&quot;title&quot;:&quot;Deprecated API Docs&quot;,&quot;version&quot;:{&quot;number&quot;:2}},{&quot;id&quot;:&quot;12348&quot;,&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;,&quot;title&quot;:&quot;2022 Infrastructure Plan&quot;,&quot;version&quot;:{&quot;number&quot;:4}}],&quot;limit&quot;:50,&quot;size&quot;:4,&quot;start&quot;:0}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pages in a space modified in the last 30 days</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span><span class="w"> </span>AND<span class="w"> </span>lastModified<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;2025-04-01&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"data":{"authorized":false,"valid":false,"errors":["INVALID_USER_OR_PASSWORD"]}}</code></strong> — Verify the API token is valid and has not expired; regenerate it in your Atlassian account settings if needed.
+<strong><code>{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to modify this page"]}}</code></strong> — Ensure your user account has Edit or Admin permissions on the target page or space.
+<strong><code>{"statusCode":404,"data":{"errors":["Could not find content with id 12345"]}}</code></strong> — Confirm the page ID exists and has not already been deleted; retrieve the correct ID from the page URL or via a content search API call.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find pages with no parent using CQL in Advanced Search:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># space = &quot;ENG&quot; AND ancestor = null AND status = current</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Pages by title keyword</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>title<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;runbook&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Pages created by a specific user</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nv">creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;jsmith&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page<span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Pages with a specific label</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;incident&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Combine multiple filters</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>space<span class="w"> </span>IN<span class="w"> </span><span class="o">(</span><span class="s2">&quot;ENG&quot;</span>,<span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="o">)</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;on-call&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>current
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Via API — fetch pages and filter for empty ancestors</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=ancestors&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.ancestors == []) | {id, title}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Filter by content type</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">type</span><span class="w"> </span>IN<span class="w"> </span><span class="o">(</span>page,<span class="w"> </span>blogpost,<span class="w"> </span>comment,<span class="w"> </span>attachment<span class="o">)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Filter by ancestor page (all children and grandchildren)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">ancestor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12345</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Date range — ISO 8601 format</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>created<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;2025-01-01&quot;</span><span class="w"> </span>AND<span class="w"> </span>created<span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;2025-03-31&quot;</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Pages that do NOT have a specific label</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>label<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;archived&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Full-text body search</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>text<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;kubernetes deployment&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;id&quot;: &quot;327680&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;title&quot;: &quot;Engineering Standards&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>}
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>{
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  &quot;id&quot;: &quot;327681&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;title&quot;: &quot;On-Call Procedures&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>}
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>{
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;id&quot;: &quot;327682&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;title&quot;: &quot;Incident Response Runbook&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>}
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>{
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;id&quot;: &quot;327683&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;title&quot;: &quot;Infrastructure Deployment Guide&quot;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>}
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>{
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;id&quot;: &quot;327684&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  &quot;title&quot;: &quot;Network Architecture Overview&quot;
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run a CQL query from the command line</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND label = &quot;on-call&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;limit=25&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {title: .title, url: ._links.webui}&#39;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Paginate through large result sets</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">START</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="nv">LIMIT</span><span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nv">RESULT</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND type = page&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;limit=</span><span class="si">${</span><span class="nv">LIMIT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;start=</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RESULT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[].title&#39;</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="nv">SIZE</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RESULT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.size&#39;</span><span class="k">)</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SIZE</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LIMIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="nv">START</span><span class="o">=</span><span class="k">$((</span><span class="nv">START</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">LIMIT</span><span class="k">))</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="k">done</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual Confluence domain name (e.g., <code>company.atlassian.net</code>).
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API token is valid and the user has API access enabled; expired or revoked tokens return HTML error pages instead of JSON.
+<strong><code>401 Unauthorized</code></strong> — Ensure the user account and API token are correct; regenerate the token in Atlassian account settings if authentication fails.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Delete a page by ID</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/67890&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Move multiple pages to a new parent</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">for</span><span class="w"> </span>PAGE_ID<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">111</span><span class="w"> </span><span class="m">222</span><span class="w"> </span><span class="m">333</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/</span><span class="si">${</span><span class="nv">PAGE_ID</span><span class="si">}</span><span class="s2">/move/append/TARGET_ID&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">done</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Export a page list to CSV for review</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;limit=200&amp;expand=version,ancestors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[] | [.id, .title, .version.when] | @csv&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>space_audit.csv
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Add a label to a page</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/label&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;[{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;runbook&quot;}]&#39;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Remove a label</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/label/runbook&quot;</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># List all labels in a space</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/space/ENG/label&quot;</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Find all pages with a label</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=label = &quot;runbook&quot; AND space = &quot;OPS&quot;&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>(no output — command completes silently)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>(no output — command completes silently)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>(no output — command completes silently)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>$ cat space_audit.csv
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>&quot;67890&quot;,&quot;Getting Started with Kubernetes&quot;,&quot;2024-01-15T09:23:45.000Z&quot;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>&quot;67891&quot;,&quot;Network Configuration Guide&quot;,&quot;2024-01-14T14:52:12.000Z&quot;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>&quot;67892&quot;,&quot;Disaster Recovery Procedures&quot;,&quot;2024-01-13T11:08:33.000Z&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>&quot;67893&quot;,&quot;On-Call Runbook&quot;,&quot;2024-01-12T16:45:22.000Z&quot;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>&quot;67894&quot;,&quot;Incident Response Template&quot;,&quot;2024-01-11T10:19:47.000Z&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>...
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Export search results to a file for reporting</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND label = &quot;needs-review&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;limit=100&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[] | [.title, ._links.webui] | @tsv&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>needs_review.tsv
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"data":{"authorized":false,"valid":true,"allowedInPublicMode":false,"errors":[]}}</code></strong> — Verify the Atlassian API token is valid and has not expired; regenerate it in your account settings if needed.
+<strong><code>{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":[{"message":"The content with id 67890 was not found or you do not have permission to view it."}]}}</code></strong> — Confirm the page ID exists and your user account has delete/edit permissions on that space.
+<strong><code>jq: parse error: Invalid numeric literal at line 1 column 6</code></strong> — Ensure the API response is valid JSON by checking that your Confluence instance URL is correct and the API endpoint is accessible.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Find pages not updated in 365+ days (paste in Advanced Search CQL box)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># space = &quot;ENG&quot; AND lastModified &lt; &quot;2025-05-01&quot; AND status = current</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Find stub pages (under 100 characters of body content)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Use export + jq pipeline to check body length</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=body.storage&amp;limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select((.body.storage.value | length) &lt; 100) | {id, title}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;id&quot;: &quot;327680&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;title&quot;: &quot;Legacy API Deprecation Notice&quot;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>{
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;id&quot;: &quot;425891&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;title&quot;: &quot;Q3 Roadmap TBD&quot;
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>}
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>{
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  &quot;id&quot;: &quot;589234&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;title&quot;: &quot;Incident Response - Draft&quot;
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>}
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>{
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  &quot;id&quot;: &quot;612447&quot;,
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>  &quot;title&quot;: &quot;TODO: Update Runbook&quot;
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (401) Unauthorized</code></strong> — Verify your API token is valid and base64-encoded correctly in the Authorization header, or use <code>-u user:token</code> format with proper credentials.
+<strong><code>jq: parse error: Cannot index string with string "storage"</code></strong> — Ensure the <code>expand=body.storage</code> parameter is included in the URL and the Confluence instance is returning valid JSON with nested body objects.
+<strong><code>curl: (403) Forbidden</code></strong> — Confirm your user account has read access to the ENG space and the API token has the <code>read:confluence-content.all</code> permission scope.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List attachments for a page</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/child/attachment&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Delete a specific attachment version</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/ATTACHMENT_ID/version/1&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    {
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>      &quot;id&quot;: &quot;att123456789&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      &quot;type&quot;: &quot;attachment&quot;,
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>      &quot;title&quot;: &quot;deployment-guide-v2.pdf&quot;,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>      &quot;version&quot;: {
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        &quot;number&quot;: 3
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>      },
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>      &quot;extensions&quot;: {
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        &quot;fileSize&quot;: 2457600
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>      }
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    },
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    {
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>      &quot;id&quot;: &quot;att987654321&quot;,
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>      &quot;type&quot;: &quot;attachment&quot;,
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>      &quot;title&quot;: &quot;network-diagram.png&quot;,
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>      &quot;version&quot;: {
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>        &quot;number&quot;: 1
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>      },
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>      &quot;extensions&quot;: {
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>        &quot;fileSize&quot;: 1024000
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>      }
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>    }
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  ],
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>  &quot;start&quot;: 0,
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>  &quot;limit&quot;: 25,
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>  &quot;size&quot;: 2
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>}
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["INVALID_USER_OR_PASSWORD"]}}</code></strong> — Verify your Confluence API token is valid and base64-encoded correctly in the <code>-u user:token</code> parameter.
+<strong><code>{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to view it."]}}</code></strong> — Confirm the page ID (12345) exists and your user has read access to that Confluence space.
+<strong><code>{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to delete this attachment."]}}</code></strong> — Ensure your API token has edit/delete permissions on the page, or contact your Confluence space administrator.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Pages in a space modified in the last 30 days</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span><span class="w"> </span>AND<span class="w"> </span>lastModified<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;2025-04-01&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Pages by title keyword</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>title<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;runbook&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Pages created by a specific user</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="nv">creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;jsmith&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page<span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Pages with a specific label</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="nv">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;incident&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Combine multiple filters</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>space<span class="w"> </span>IN<span class="w"> </span><span class="o">(</span><span class="s2">&quot;ENG&quot;</span>,<span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="o">)</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;on-call&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>current
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>space = &quot;ENG&quot; AND lastModified &gt; &quot;2025-04-01&quot; AND type = page
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Results: 47 pages modified since April 1st, 2025
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Sample: &quot;Database Migration Runbook v3.2&quot;, &quot;Q2 Capacity Planning&quot;, &quot;Incident Response SOP&quot;
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>title ~ &quot;runbook&quot; AND space = &quot;OPS&quot;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Results: 12 pages matching &quot;runbook&quot;
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  Sample: &quot;AWS Runbook&quot;, &quot;Kubernetes Runbook&quot;, &quot;Network Failover Runbook&quot;
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>creator = &quot;jsmith&quot; AND type = page AND space = &quot;ENG&quot;
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Results: 23 pages created by jsmith
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Sample: &quot;CI/CD Pipeline Setup&quot;, &quot;Terraform State Management&quot;, &quot;Docker Registry Guide&quot;
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>label = &quot;incident&quot; AND type = page
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  Results: 156 pages with &quot;incident&quot; label across all spaces
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  Sample: &quot;P1 Incident Playbook&quot;, &quot;Post-Incident Review Template&quot;, &quot;On-Call Escalation&quot;
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>space IN (&quot;ENG&quot;, &quot;OPS&quot;) AND label = &quot;on-call&quot; AND status = current
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  Results: 8 current pages with on-call label
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  Sample: &quot;Primary On-Call Schedule&quot;, &quot;Secondary Escalation Matrix&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid CQL: Unexpected character at position 5</code></strong> — Remove spaces around the <code>=</code> operator; use <code>space="ENG"</code> instead of <code>space = "ENG"</code>.
+<strong><code>User 'jsmith' not found or permission denied</code></strong> — Verify the username exists in your Confluence instance and you have permission to search by creator; use the full display name if a username is not recognized.
+<strong><code>Label 'incident' does not exist in space 'ENG'</code></strong> — Confirm the label is applied to at least one page in the target space; check label spelling and capitalization.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Filter by content type</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">type</span><span class="w"> </span>IN<span class="w"> </span><span class="o">(</span>page,<span class="w"> </span>blogpost,<span class="w"> </span>comment,<span class="w"> </span>attachment<span class="o">)</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Filter by ancestor page (all children and grandchildren)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nv">ancestor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12345</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Date range — ISO 8601 format</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>created<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;2025-01-01&quot;</span><span class="w"> </span>AND<span class="w"> </span>created<span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;2025-03-31&quot;</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Pages that do NOT have a specific label</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>label<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;archived&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Full-text body search</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>text<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;kubernetes deployment&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENG&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>(no output — these are CQL query filter syntax examples, not executable bash commands)
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Note: These lines represent Confluence Query Language (CQL) filter syntax intended for use in Confluence search or API calls, not standalone bash execution. To use these filters, they must be passed to a Confluence API endpoint or search interface.
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Example API usage:
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>curl -u admin:token &quot;https://confluence.example.com/rest/api/content/search?cql=type%20IN%20(page,blogpost)%20AND%20ancestor%3D12345&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443</code></strong> — Verify the Confluence hostname is correct and the server is reachable from your network.
+<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure your API token is valid and has appropriate permissions; regenerate the token in Confluence user settings if needed.
+<strong><code>Invalid CQL: unexpected character</code></strong> — Check that special characters in the CQL query are properly URL-encoded (spaces as %20, quotes as %22) when passed via curl.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Run a CQL query from the command line</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND label = &quot;on-call&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;limit=25&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {title: .title, url: ._links.webui}&#39;</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Paginate through large result sets</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nv">START</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="nv">LIMIT</span><span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">  </span><span class="nv">RESULT</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND type = page&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;limit=</span><span class="si">${</span><span class="nv">LIMIT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">    </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;start=</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RESULT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[].title&#39;</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span><span class="nv">SIZE</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RESULT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.size&#39;</span><span class="k">)</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SIZE</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LIMIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="w">  </span><span class="nv">START</span><span class="o">=</span><span class="k">$((</span><span class="nv">START</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">LIMIT</span><span class="k">))</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;title&quot;: &quot;On-Call Runbook: Incident Response&quot;,
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  &quot;url&quot;: &quot;https://your-instance.atlassian.net/wiki/spaces/ENG/pages/524288/On-Call+Runbook&quot;
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>}
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>{
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  &quot;title&quot;: &quot;On-Call Escalation Procedures&quot;,
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  &quot;url&quot;: &quot;https://your-instance.atlassian.net/wiki/spaces/ENG/pages/655360/On-Call+Escalation&quot;
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>}
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>{
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  &quot;title&quot;: &quot;On-Call Contact Matrix&quot;,
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  &quot;url&quot;: &quot;https://your-instance.atlassian.net/wiki/spaces/ENG/pages/786432/Contact+Matrix&quot;
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>}
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>&quot;Database Migration Guide&quot;
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>&quot;API Rate Limiting Documentation&quot;
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>&quot;Kubernetes Deployment Checklist&quot;
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>&quot;Infrastructure Monitoring Setup&quot;
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>&quot;Load Balancer Configuration&quot;
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual Confluence domain name (e.g., <code>company.atlassian.net</code>).
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Add <code>-s</code> flag to curl to silence progress output, or verify the API token has read permissions on the space.
+<strong><code>401 Unauthorized</code></strong> — Ensure the API token is valid and has not expired; generate a new token from your Atlassian account settings if needed.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Add a label to a page</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/label&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;[{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;runbook&quot;}]&#39;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Remove a label</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/label/runbook&quot;</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1"># List all labels in a space</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/space/ENG/label&quot;</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="c1"># Find all pages with a label</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=label = &quot;runbook&quot; AND space = &quot;OPS&quot;&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>{&quot;results&quot;:[{&quot;id&quot;:&quot;12345&quot;,&quot;type&quot;:&quot;page&quot;,&quot;title&quot;:&quot;Database Failover Procedure&quot;,&quot;_links&quot;:{&quot;self&quot;:&quot;https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=12345&quot;}}]}
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>(no output — command completes silently)
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>{&quot;results&quot;:[{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;runbook&quot;,&quot;id&quot;:&quot;r1&quot;},{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;critical&quot;,&quot;id&quot;:&quot;c2&quot;},{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;automation&quot;,&quot;id&quot;:&quot;a3&quot;},{&quot;prefix&quot;:&quot;global&quot;,&quot;name&quot;:&quot;incident-response&quot;,&quot;id&quot;:&quot;i4&quot;}]}
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>{&quot;results&quot;:[{&quot;id&quot;:&quot;12345&quot;,&quot;type&quot;:&quot;page&quot;,&quot;title&quot;:&quot;Database Failover Procedure&quot;,&quot;space&quot;:{&quot;key&quot;:&quot;OPS&quot;}},{&quot;id&quot;:&quot;12346&quot;,&quot;type&quot;:&quot;page&quot;,&quot;title&quot;:&quot;Network Outage Response&quot;,&quot;space&quot;:{&quot;key&quot;:&quot;OPS&quot;}},{&quot;id&quot;:&quot;12347&quot;,&quot;type&quot;:&quot;page&quot;,&quot;title&quot;:&quot;Storage Expansion Runbook&quot;,&quot;space&quot;:{&quot;key&quot;:&quot;OPS&quot;}}],&quot;start&quot;:0,&quot;limit&quot;:25,&quot;size&quot;:3}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Verify the username and API token are correct, and that the token has API access permissions enabled.
+<strong><code>{"statusCode":404,"message":"Content with id 12345 not found"}</code></strong> — Confirm the page ID exists and is accessible to the authenticated user by checking the page URL or listing space contents.
+<strong><code>curl: (6) Could not resolve host: your-instance.atlassian.net</code></strong> — Replace <code>your-instance</code> with your actual Confluence domain name (e.g., <code>mycompany.atlassian.net</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Export search results to a file for reporting</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;cql=space = &quot;ENG&quot; AND label = &quot;needs-review&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;limit=100&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[] | [.title, ._links.webui] | @tsv&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>needs_review.tsv
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Engineering Team Review Queue   https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524288
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Database Migration Plan v2.3    https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524289
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>API Rate Limiting Documentation https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524290
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Kubernetes Cluster Setup Guide  https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524291
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Incident Response Runbook   https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524292
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Load Balancer Configuration https://your-instance.atlassian.net/wiki/pages/viewpage.action?pageId=524293
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual Confluence domain name (e.g., <code>company.atlassian.net</code>).
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API token is valid and the user has permission to access the Confluence REST API; expired or revoked tokens return HTML error pages instead of JSON.
+<strong><code>bash: jq: command not found</code></strong> — Install jq using your package manager (<code>apt-get install jq</code> on Debian/Ubuntu or <code>brew install jq</code> on macOS).</p>
+</div>
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kcFuwjAMhu99CovTduAFOEyCnSdVIM6RSa02gpooTk4T706crgKxlKt_fc6fz50LZKO78gaC64fYNDYQRjJoxKOlDay-ywAQDjpYwa8M6HOgIHJ_oVszImNPE2E8hdGJ5J2S6Z8STSy0j6i6Z36bO-PT6eJkyD185p9qcAftlOVKbc6qmwJJDM7GQhu0lkTb7P_GBYRtGb_7URIKSl8TRzHYjY4ffzrmUHeUED62mn7W2ySehZoT2nPy2iXxLBV2ZVhlXw4C6y9Y0r14B4UW3S5bV6wmsmr3qVjF2huh5ZV_gpo7EMj15g==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8005,7 +8320,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

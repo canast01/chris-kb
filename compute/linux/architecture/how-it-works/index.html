@@ -7755,38 +7755,102 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
 </code></pre></div>
-<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Service management (systemd)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Package updates</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>dnf<span class="w"> </span>check-update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>dnf<span class="w"> </span>upgrade<span class="w">    </span><span class="c1"># RHEL</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>upgrade<span class="w">  </span><span class="c1"># Ubuntu</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># LVM</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pvs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vgs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>lvs
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_data/lv_app<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>xfs_growfs<span class="w"> </span>/opt/app
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Network</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ss<span class="w"> </span>-tulnp
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Link detected|Speed&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Storage</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># SAN / iSCSI</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>rescan-scsi-bus.sh
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># Firewall</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection &#39;bond0&#39; (12a4c5d8-9f2e-4a2b-8c1f-7e3a2b9d4f6a) successfully added.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection &#39;ethernet-eth0&#39; (3f7b2c1a-5d9e-4a8b-9c2f-1e6a3b8d5f2c) successfully added.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Connection &#39;ethernet-eth1&#39; (8a2d4f1c-6e3b-5c9a-1d7f-2a9b4e8c3f5d) successfully added.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Connection &#39;bond0.100&#39; (5c9a1f3e-7b2d-4a8c-6e1b-9f3a2c5d8b7e) successfully added.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no output — command completes silently)
 </code></pre></div>
-<hr />
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid bond option 'mode=802.3ad,miimon=100': unknown option</code></strong> — Use <code>mode=active-backup</code> or <code>mode=balance-alb</code> instead; 802.3ad requires <code>mode=balance-alb</code> in nmcli syntax.
+<strong><code>Error: Connection activation failed: Device 'eth0' is already managed by another connection</code></strong> — Remove conflicting connections with <code>nmcli con delete ethernet-eth0</code> before adding to bond.
+<strong><code>Error: unknown or ambiguous command 'ipv4.addresses'</code></strong> — Use <code>ipv4.addresses "192.168.1.10/24"</code> with quotes around the IP/prefix value.</p>
+</div>
+<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Service management (systemd)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Package updates</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dnf<span class="w"> </span>check-update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>dnf<span class="w"> </span>upgrade<span class="w">    </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>upgrade<span class="w">  </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># LVM</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pvs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vgs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>lvs
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_data/lv_app<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>xfs_growfs<span class="w"> </span>/opt/app
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Network</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ss<span class="w"> </span>-tulnp
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Link detected|Speed&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Storage</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># SAN / iSCSI</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>rescan-scsi-bus.sh
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Firewall</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
+</code></pre></div>
+<h2 id="expected-output-nginxservice-the-nginx-http-and-web-server-loaded-loaded-usrlibsystemdsystemnginxservice-enabled-vendor-preset-disabled-active-active-running-since-thu-2024-01-18-143215-utc-2-days-ago-docs-mannginx8-process-8421-execstartpreusrsbinnginx-t-codeexited-status0success-main-pid-8422-nginx-tasks-3-limit-4915-memory-124m-cpu-2min-34821s-cgroup-systemslicenginxservice-8422-nginx-master-process-usrsbinnginx-8423-nginx-worker-process-8424-nginx-worker-process-jan-18-143215-prod-web-01-systemd1-started-the-nginx-http-and-web-server-pv-vg-fmt-attr-psize-pfree-devsda3-vg_data-lvm2-a-10000g-1523g-vg-pv-lv-sn-attr-vsize-vfree-vg_data-1-3-0-wz-n-10000g-1523g-lv-vg-attr-lsize-pool-origin-data-meta-lv_app-vg_data-wi-ao-5000g-lv_db-vg_data-wi-ao-3000g-lv_log-vg_data-wi-ao-477g-size-of-logical-volume-vg_datalv_app-changed-from-5000-gib-12800-extents-to-7000-gib-17920-extents-logical-volume-vg_datalv_app-successfully-resized-meta-datadevmappervg_data-lv_app-isize512-agcount4-agsize3276800-blks-data-blocks-changed-from-13107200-to-18350080-blks-name-ipaddrprefixlen-eth0-19216814524-eth1-10001224-lo-1270018-default-via-19216811-dev-eth0-proto-kernel-scope-link-src-192168145-1000024-dev-eth1-proto-kernel-scope-link-src-100012-listen-users-seqnum-pidprogram-name-tcp-root-0-8422nginx-tcp-mysql-0-1847mysqld-tcp-postgres-0-2156postgres-udp-root-0-945systemd-resolved-name-size-type-mountpoint-fstype-sda-200g-disk-sda1-1g-part-boot-ext4-sda2-98g-part-lvm-sda3-100g-part-optapp-xfs-sdb-500g-disk"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>● nginx.service - The NGINX HTTP and web server
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: disabled)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       Docs: man:nginx(8)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    Process: 8421 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   Main PID: 8422 (nginx)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      Tasks: 3 (limit: 4915)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     Memory: 12.4M
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        CPU: 2min 34.821s
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     CGroup: /system.slice/nginx.service
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>             ├─8422 &quot;nginx: master process /usr/sbin/nginx&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>             ├─8423 &quot;nginx: worker process&quot;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>             └─8424 &quot;nginx: worker process&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Jan 18 14:32:15 prod-web-01 systemd[1]: Started The NGINX HTTP and web server.
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>PV         VG       Fmt  Attr PSize   PFree
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>/dev/sda3  vg_data  lvm2 a--  100.00g 15.23g
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>VG       #PV #LV #SN Attr   VSize   VFree
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>vg_data    1   3   0 wz--n- 100.00g 15.23g
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>LV      VG       Attr       LSize   Pool Origin Data%  Meta%
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>lv_app  vg_data  -wi-ao---- 50.00g
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>lv_db   vg_data  -wi-ao---- 30.00g
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>lv_log  vg_data  -wi-ao----  4.77g
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Size of logical volume vg_data/lv_app changed from 50.00 GiB (12800 extents) to 70.00 GiB (17920 extents).
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Logical volume vg_data/lv_app successfully resized.
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>meta-data=/dev/mapper/vg_data-lv_app isize=512    agcount=4, agsize=3276800 blks
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>data blocks changed from 13107200 to 18350080 blks
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>NAME    IPADDR/PREFIXLEN
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>eth0    192.168.1.45/24
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>eth1    10.0.0.12/24
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>lo      127.0.0.1/8
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>default via 192.168.1.1 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>10.0.0.0/24 dev eth1 proto kernel scope link src 10.0.0.12
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>LISTEN    USERS      SEQNUM    PID/PROGRAM NAME
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>tcp       root       0         8422/nginx
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>tcp       mysql      0         1847/mysqld
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>tcp       postgres   0         2156/postgres
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>udp       root       0         945/systemd-resolved
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>NAME    SIZE TYPE MOUNTPOINT FSTYPE
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>sda     200G disk
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>├─sda1    1G part /boot      ext4
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>├─sda2   98G part            lvm
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>└─sda3  100G part /opt/app   xfs
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>sdb     500G disk
+</code></pre></div><a class="headerlink" href="#expected-output-nginxservice-the-nginx-http-and-web-server-loaded-loaded-usrlibsystemdsystemnginxservice-enabled-vendor-preset-disabled-active-active-running-since-thu-2024-01-18-143215-utc-2-days-ago-docs-mannginx8-process-8421-execstartpreusrsbinnginx-t-codeexited-status0success-main-pid-8422-nginx-tasks-3-limit-4915-memory-124m-cpu-2min-34821s-cgroup-systemslicenginxservice-8422-nginx-master-process-usrsbinnginx-8423-nginx-worker-process-8424-nginx-worker-process-jan-18-143215-prod-web-01-systemd1-started-the-nginx-http-and-web-server-pv-vg-fmt-attr-psize-pfree-devsda3-vg_data-lvm2-a-10000g-1523g-vg-pv-lv-sn-attr-vsize-vfree-vg_data-1-3-0-wz-n-10000g-1523g-lv-vg-attr-lsize-pool-origin-data-meta-lv_app-vg_data-wi-ao-5000g-lv_db-vg_data-wi-ao-3000g-lv_log-vg_data-wi-ao-477g-size-of-logical-volume-vg_datalv_app-changed-from-5000-gib-12800-extents-to-7000-gib-17920-extents-logical-volume-vg_datalv_app-successfully-resized-meta-datadevmappervg_data-lv_app-isize512-agcount4-agsize3276800-blks-data-blocks-changed-from-13107200-to-18350080-blks-name-ipaddrprefixlen-eth0-19216814524-eth1-10001224-lo-1270018-default-via-19216811-dev-eth0-proto-kernel-scope-link-src-192168145-1000024-dev-eth1-proto-kernel-scope-link-src-100012-listen-users-seqnum-pidprogram-name-tcp-root-0-8422nginx-tcp-mysql-0-1847mysqld-tcp-postgres-0-2156postgres-udp-root-0-945systemd-resolved-name-size-type-mountpoint-fstype-sda-200g-disk-sda1-1g-part-boot-ext4-sda2-98g-part-lvm-sda3-100g-part-optapp-xfs-sdb-500g-disk" title="Permanent link">&para;</a></h2>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../design-standards/">Linux — Design Standards</a></li>
@@ -7815,7 +7879,7 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

@@ -7356,51 +7356,182 @@ Installing and maintaining NVIDIA drivers correctly is critical for GPU workload
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvidia
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>rpm<span class="w"> </span>-qa<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvidia<span class="w">   </span><span class="c1"># RHEL/CentOS</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Fri Jan 17 14:32:45 2025
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| NVIDIA-SMI 550.90.07    Driver Version: 550.90.07       CUDA Version: 12.4             |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|-----------------------------------------+------------------------+----------------------+
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| 0    NVIDIA A100-PCIE-40GB  Off         | 00:1E.0       Off   |                  0   |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>+----------------------------------------+------------------------+----------------------+
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Processes:                                                       GPU Memory             |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|  GPU   GI   CI        PID   Type   Process name             Usage                      |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|  0    N/A  N/A      1847    G   /usr/lib/xorg/Xvfb       38MiB                       |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NVRM version: NVIDIA UNIX x86_64 Kernel Module  550.90.07  Wed Jan 15 18:22:14 UTC 2025
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>GCC version:  gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>nvcc: NVIDIA (R) Cuda compiler driver
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Copyright (c) 2005-2024 NVIDIA Corporation
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Built on Thu_Jan__2_11:59:59_PST_2025
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Cuda compilation tools, release 12.4, V12.4.131
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>ii  libnvidia-common-550:amd64           550.90.07-1ubuntu1              amd64        NVIDIA common files
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>ii  libnvidia-compute-550:amd64          550.90.07-1ubuntu1              amd64        NVIDIA compute utils
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ii  nvidia-driver-550                    550.90.07-1ubuntu1              amd64        NVIDIA driver metapackage
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ii  nvidia-utils                         550.90.07-1ubuntu1              amd64        NVIDIA driver utilities
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></strong> — Reload the kernel module with <code>sudo modprobe -r nvidia &amp;&amp; sudo modprobe nvidia</code>.
+<strong><code>cat: /proc/driver/nvidia/version: No such file or directory</code></strong> — Ensure the NVIDIA kernel module is loaded by running <code>sudo modprobe nvidia</code>.
+<strong><code>nvcc: command not found</code></strong> — Install the CUDA toolkit with <code>sudo apt install nvidia-cuda-toolkit</code> or download it from NVIDIA's developer site.</p>
+</div>
 <p>The NVIDIA driver includes a CUDA driver (minimum CUDA version). The CUDA toolkit is installed separately and must be compatible but can be newer than the driver's minimum.</p>
 <h2 id="installing-drivers-on-ubuntudebian">Installing Drivers on Ubuntu/Debian<a class="headerlink" href="#installing-drivers-on-ubuntudebian" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add NVIDIA repository</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wget<span class="w"> </span>https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dpkg<span class="w"> </span>-i<span class="w"> </span>cuda-keyring_1.1-1_all.deb
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>apt-get<span class="w"> </span>update
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Install the recommended driver (auto-detects GPU)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ubuntu-drivers<span class="w"> </span>autoinstall
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Or install a specific driver version</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-driver-535
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Reboot required after driver install</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>reboot
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Verify after reboot</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>nvidia-smi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add NVIDIA repository</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wget<span class="w"> </span>https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dpkg<span class="w"> </span>-i<span class="w"> </span>cuda-keyring_1.1-1_all.deb
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>apt-get<span class="w"> </span>update
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Install the recommended driver (auto-detects GPU)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ubuntu-drivers<span class="w"> </span>autoinstall
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Or install a specific driver version</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-driver-535
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Reboot required after driver install</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>reboot
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify after reboot</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>nvidia-smi
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Get:1 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb [13.3 kB]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Saved 13.3 kB in 2.4s
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Selecting previously unselected package cuda-keyring.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Unpacking cuda-keyring (1.1-1) ...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Setting up cuda-keyring (1.1-1) ...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Get:2 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64 InRelease [1,581 B]
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Reading package lists... Done
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Building dependency tree... Reading state information... Done
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>The following packages will be upgraded:
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  nvidia-driver-535 nvidia-utils
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2 upgraded, 0 newly installed, 0 removed.
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Processing triggers for initramfs-tools (0.142ubuntu16.1) ...
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>update-initramfs: Generating /boot/initramfs-img-6.1.0-21-generic.img
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>System rebooting...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>(system reboots)
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Fri Jan 17 14:32:18 2025
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>+-------------------------+----------------------+
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>| NVIDIA-SMI 535.104.05   Driver Version: 535.104.05 |
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>+-------------------------+----------------------+
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>| GPU  Name        Persistence-M| Bus-Id        Disp.A |
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>| 0  NVIDIA RTX 4090      Off  | 00:1E.0     Off |
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>+-------------------------+----------------------+
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>| GPU Memory |
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>| GPU   Name      Usage / Total |
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>| 0   NVIDIA RTX 4090   2048MiB / 24576MiB |
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>+-------------------------+----------------------+
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the entire script with <code>sudo</code> or prepend <code>sudo</code> to each apt command.
+<strong><code>ERROR: Unable to locate package nvidia-driver-535</code></strong> — Run <code>apt-get update</code> after adding the CUDA repository keyring before attempting to install the driver package.
+<strong><code>NVIDIA-SMI has FAILED because it couldn't communicate with the NVIDIA driver</code></strong> — Reboot the system to load the newly installed kernel module, or check <code>/var/log/nvidia-installer.log</code> for installation failures.</p>
+</div>
 <h2 id="installing-drivers-on-rhelrocky-linux">Installing Drivers on RHEL/Rocky Linux<a class="headerlink" href="#installing-drivers-on-rhelrocky-linux" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add CUDA repo for RHEL 9</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dnf<span class="w"> </span>config-manager<span class="w"> </span>--add-repo<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Install driver</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dnf<span class="w"> </span>module<span class="w"> </span>install<span class="w"> </span>nvidia-driver:535
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Load kernel module</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>modprobe<span class="w"> </span>nvidia
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>nvidia-smi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add CUDA repo for RHEL 9</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>config-manager<span class="w"> </span>--add-repo<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Install driver</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>dnf<span class="w"> </span>module<span class="w"> </span>install<span class="w"> </span>nvidia-driver:535
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Load kernel module</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>modprobe<span class="w"> </span>nvidia
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>nvidia-smi
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Adding repo from: https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>repo saved to /etc/yum.repos.d/cuda-rhel9.repo
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Dependencies resolved.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>================================================================================
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> Package                    Arch       Version           Repository      Size
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>================================================================================
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Installing:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a> nvidia-driver              x86_64     535.104.05-1      cuda-rhel9     185 M
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a> nvidia-driver-devel        x86_64     535.104.05-1      cuda-rhel9     892 M
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a> nvidia-driver-libs         x86_64     535.104.05-1      cuda-rhel9      45 M
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Transaction Summary
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>================================================================================
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Install  3 Packages
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Total download size: 1.1 G
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Installed size: 3.2 G
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Is this ok? [y/N]: y
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Downloading Packages:
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>[100%] Complete!
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Running transaction
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Installing : nvidia-driver-libs-535.104.05-1.x86_64                      1/3
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Installing : nvidia-driver-535.104.05-1.x86_64                           2/3
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Installing : nvidia-driver-devel-535.104.05-1.x86_64                     3/3
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Complete!
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>(no output — command completes silently)
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Fri Jan 17 14:32:45 2025
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>| NVIDIA-SMI 535.104.05    Driver Version: 535.104.05    CUDA Version: 12.2             |
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC           |
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M.            |
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>|   0  NVIDIA A100-PCIE-40GB  Off  | 00:1E.0     Off |                  0 |
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>| N/A   32C    P0    42W / 250W |      0MiB / 40960MiB |      0%      Default |
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>+-----------------------------------------------------------------------------------------+
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: nvidia-driver:535</code></strong> — Verify the CUDA repo was added successfully with <code>dnf repolist</code> and check your RHEL 9 architecture matches x86_64.
+<strong><code>modprobe: FATAL: Module nvidia not found in /lib/modules/5.14.0-427.el9.x86_64/kernel/</code></strong> — Rebuild the kernel module with <code>dkms install nvidia/535.104.05</code> or reinstall the driver with <code>dnf reinstall nvidia-driver</code>.
+<strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver</code></strong> — Reboot the system with <code>reboot</code> to fully load the kernel module and reinitialize the GPU.</p>
+</div>
 <h2 id="cuda-toolkit-installation">CUDA Toolkit Installation<a class="headerlink" href="#cuda-toolkit-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install CUDA 12.3 toolkit (Ubuntu 22.04)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>cuda-toolkit-12-3
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add to PATH and LD_LIBRARY_PATH</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/usr/local/cuda/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nvcc<span class="w"> </span>--version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install CUDA 12.3 toolkit (Ubuntu 22.04)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>cuda-toolkit-12-3
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Add to PATH and LD_LIBRARY_PATH</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/usr/local/cuda/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nvcc<span class="w"> </span>--version
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Reading package lists... Done
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Building dependency tree... Done
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Reading state information... Done
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>The following NEW packages will be installed:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  cuda-toolkit-12-3 cuda-runtime-12-3 cuda-libraries-12-3
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Setting up cuda-toolkit-12-3 (12.3.107-1) ...
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>nvcc: NVIDIA (R) Cuda compiler driver
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Copyright (c) 2005-2023 NVIDIA Corporation
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Built on Sep_8_2023
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Cuda compilation tools, release 12.3, V12.3.107
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Build cuda_12.3.r12.3/compiler.33567101_0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Unable to locate package cuda-toolkit-12-3</code></strong> — Ensure the NVIDIA CUDA repository is added with <code>apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC</code> and <code>add-apt-repository ppa:graphics-drivers/ppa</code> before running apt-get.
+<strong><code>nvcc: command not found</code></strong> — Run <code>source ~/.bashrc</code> to reload the environment variables, or verify the CUDA installation path matches your system with <code>ls /usr/local/cuda/bin/nvcc</code>.
+<strong><code>error while loading shared libraries: libcuda.so.1</code></strong> — Install the NVIDIA GPU driver separately with <code>apt-get install -y nvidia-driver-545</code> before or after the toolkit installation.</p>
+</div>
 <h2 id="driver-and-cuda-compatibility-matrix">Driver and CUDA Compatibility Matrix<a class="headerlink" href="#driver-and-cuda-compatibility-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7440,28 +7571,77 @@ Installing and maintaining NVIDIA drivers correctly is critical for GPU workload
 </table>
 <p>PyTorch and TensorFlow have their own CUDA requirements — check framework docs before choosing a driver version.</p>
 <h2 id="updating-drivers">Updating Drivers<a class="headerlink" href="#updating-drivers" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check available driver versions</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>apt-cache<span class="w"> </span>search<span class="w"> </span>nvidia-driver
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Remove old driver before installing new one</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>apt-get<span class="w"> </span>purge<span class="w"> </span>nvidia-driver-535
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-driver-550
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># On RHEL, switch module stream</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>dnf<span class="w"> </span>module<span class="w"> </span>switch-to<span class="w"> </span>nvidia-driver:550
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check available driver versions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>apt-cache<span class="w"> </span>search<span class="w"> </span>nvidia-driver
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remove old driver before installing new one</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>apt-get<span class="w"> </span>purge<span class="w"> </span>nvidia-driver-535
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-driver-550
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># On RHEL, switch module stream</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>dnf<span class="w"> </span>module<span class="w"> </span>switch-to<span class="w"> </span>nvidia-driver:550
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nvidia-driver - NVIDIA driver metapackage
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nvidia-driver-390 - NVIDIA driver metapackage
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>nvidia-driver-418 - NVIDIA driver metapackage
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>nvidia-driver-535 - NVIDIA driver metapackage
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nvidia-driver-550 - NVIDIA driver metapackage
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>nvidia-driver-560 - NVIDIA driver metapackage
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>...
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Reading package lists... Done
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Building dependency tree... Done
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>The following packages will be removed:
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  nvidia-driver-535 nvidia-driver-535-server nvidia-dkms-535
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Processing triggers for initramfs-tools (0.142ubuntu16.04.1) ...
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>update-initramfs: Generating /boot/initrd.img-5.15.0-1234-generic
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Setting up nvidia-driver-550 (550.127.05-1~ubuntu22.04.1) ...
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>nvidia-smi
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>NVIDIA-SMI 550.127.05    Driver Version: 550.127.05
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>GPU Name                 Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>GPU 0: NVIDIA A100 80GB  On   | 00:1E.0     Off |                  0 |
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>GPU 1: NVIDIA A100 80GB  On   | 00:1F.0     Off |                  0 |
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>ERROR: Unable to locate package nvidia-driver-550</code></strong> — Run <code>apt-get update</code> first to refresh the package cache, then retry the installation.
+<strong><code>Error: No matching Modules to switch to</code></strong> — Verify the module stream exists with <code>dnf module list nvidia-driver</code> and use the correct version string (e.g., <code>550-dkms</code> instead of <code>550</code>).</p>
+</div>
 <p>Never update drivers mid-workload. Schedule updates during maintenance windows and test thoroughly — driver updates occasionally require CUDA toolkit and framework updates as well.</p>
 <h2 id="dkms-and-kernel-updates">DKMS and Kernel Updates<a class="headerlink" href="#dkms-and-kernel-updates" title="Permanent link">&para;</a></h2>
 <p>NVIDIA drivers use DKMS to rebuild the kernel module when the kernel is updated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check DKMS status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dkms<span class="w"> </span>status
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Manually rebuild if needed</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>dkms<span class="w"> </span>autoinstall
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Pin kernel to prevent unplanned updates breaking drivers</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>apt-mark<span class="w"> </span>hold<span class="w"> </span>linux-image-generic<span class="w"> </span>linux-headers-generic
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check DKMS status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dkms<span class="w"> </span>status
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Manually rebuild if needed</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>dkms<span class="w"> </span>autoinstall
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Pin kernel to prevent unplanned updates breaking drivers</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>apt-mark<span class="w"> </span>hold<span class="w"> </span>linux-image-generic<span class="w"> </span>linux-headers-generic
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>nvidia-driver-535, 6.1.0-13-generic, x86_64: installed
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>nvidia-driver-535, 6.1.0-14-generic, x86_64: built
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>nvidia-driver-535, 6.1.0-15-generic, x86_64: installed
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>amdgpu-dkms, 6.1.0-15-generic, x86_64: installed
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>amdgpu-dkms, 6.1.0-14-generic, x86_64: installed
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Autoinstalling DKMS modules...
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Building module: nvidia-driver-535
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Kernel preparation unnecessary for this kernel. Skipping...
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Building module for kernel 6.1.0-15-generic
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Module build completed successfully.
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Installing module: nvidia-driver-535
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Kernel preparation unnecessary for this kernel. Skipping...
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Installing module for kernel 6.1.0-15-generic
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Module install completed successfully.
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>linux-image-generic set to manually installed.
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>linux-headers-generic set to manually installed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error! Could not locate dkms.conf file.</code></strong> — Verify the driver package is installed with <code>apt install nvidia-driver-535</code> and contains <code>/usr/src/nvidia-driver-535/dkms.conf</code>.
+<strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the entire block with <code>sudo</code> or as root user.
+<strong><code>WARNING: apt-mark does not have a stable CLI interface. Use with caution in scripts.</code></strong> — This is informational; the hold command still succeeds, but consider using <code>apt-mark hold --quiet</code> in automation.</p>
+</div>
 
 
 
@@ -7484,7 +7664,7 @@ Installing and maintaining NVIDIA drivers correctly is critical for GPU workload
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

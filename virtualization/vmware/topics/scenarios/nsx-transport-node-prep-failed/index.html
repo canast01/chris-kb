@@ -10842,65 +10842,161 @@ host cluster.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for partial NSX-T VIBs (failed mid-install)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Name                                 Version                Install Date
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esx-vsip                             6.7.0-20191015        2024-01-15
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esx-vxlan                            6.7.0-20191015        2024-01-15
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vmware-nsx-esx                       6.8.1-15842123        2024-03-22
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmware-nsx-esx-vib                   6.8.1-15842123        2024-03-22
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vmware-nsx-manager-proxy             6.8.1-15842123        2024-03-22
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esx-vxlan-mc                         6.7.0-20191015        2024-01-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify esxcli is installed and the host has network connectivity to the vCenter server.
+<strong><code>Error: Unknown command or namespace</code></strong> — Ensure you are running this command directly on an ESXi host with root privileges, not from a remote vCenter client.
+<strong><code>VIB esx-vsip is present but vmware-nsx-esx is missing</code></strong> — Uninstall all NSX-V VIBs completely before attempting NSX-T installation using <code>esxcli software vib remove -n esx-vsip esx-vxlan</code>.</p>
+</div>
 <p>NSX-V VIBs (<code>esx-vsip</code>, <code>esx-vxlan</code>) are incompatible with NSX-T and must be removed before retrying.</p>
 <hr />
 <h2 id="3-verify-host-acceptance-level">3. Verify Host Acceptance Level<a class="headerlink" href="#3-verify-host-acceptance-level" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Current Acceptance Level: CommunitySupported
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the host. Verify the host name, port, and credentials.</code></strong> — Ensure you are connected to the ESXi host via <code>esxcli</code> or vSphere CLI, or use the <code>-s &lt;hostname&gt;</code> flag with valid credentials.
+<strong><code>Unknown command or namespace software acceptance get.</code></strong> — Verify you are running this command on ESXi 5.0 or later; older versions do not support the acceptance level feature.</p>
+</div>
 <p>NSX-T VIBs are <code>PartnerSupported</code> — the host acceptance level must be <code>PartnerSupported</code> or lower
 (i.e., <code>CommunitySupported</code>). If the host is set to <code>VMwareCertified</code> or <code>VMwareAccepted</code>, NSX VIBs
 will be rejected:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span>PartnerSupported
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span>PartnerSupported
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or parameter: --level</code></strong> — Verify the ESXi version supports this parameter; older versions use <code>--set-level</code> instead.
+<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate vSphere privileges; use <code>sudo</code> or execute from an account with Administrator role.</p>
+</div>
 <hr />
 <h2 id="4-verify-port-reachability">4. Verify Port Reachability<a class="headerlink" href="#4-verify-port-reachability" title="Permanent link">&para;</a></h2>
 <p>From the ESXi host, confirm both required ports reach NSX Manager:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Port 443 — NSX Manager API and VIB download</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nc<span class="w"> </span>-z<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Port 1235 — NSX messaging bus (host to NSX Manager)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nc<span class="w"> </span>-z<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span><span class="m">1235</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Port 443 — NSX Manager API and VIB download</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nc<span class="w"> </span>-z<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Port 1235 — NSX messaging bus (host to NSX Manager)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>nc<span class="w"> </span>-z<span class="w"> </span>&lt;nsx-manager-vip&gt;<span class="w"> </span><span class="m">1235</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Connection to 192.168.1.50 443 port [tcp/https] succeeded!
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>PING 192.168.1.50 from 192.168.1.100 via vmk0
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Sent: 4 Received: 4 Lost: 0%
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>round-trip min/avg/max/stddev = 2.145/2.341/2.687/0.201 ms
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Connection to 192.168.1.50 1235 port [tcp/*] succeeded!
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection to 192.168.1.50 443 port [tcp/https] failed: Connection refused</code></strong> — Verify NSX Manager is running and listening on port 443, or check firewall rules between the ESXi host and NSX Manager VIP.
+<strong><code>PING 192.168.1.50 from 192.168.1.100 via vmk0 ... Sent: 4 Received: 0 Lost: 100%</code></strong> — Confirm vmk0 management network connectivity and that the NSX Manager VIP is reachable from the ESXi host's management network.
+<strong><code>Connection to 192.168.1.50 1235 port [tcp/*] failed: Connection refused</code></strong> — Ensure NSX Manager messaging service is active and the host has not been disconnected from the NSX cluster; check NSX Manager logs for service errors.</p>
+</div>
 <p>If <code>nc</code> is unavailable on the ESXi host, check from a jump host on the same management network. Any
 failure here points to a firewall or routing issue rather than a VIB conflict.</p>
 <hr />
 <h2 id="5-check-esxupdatelog-for-vib-install-errors">5. Check esxupdate.log for VIB Install Errors<a class="headerlink" href="#5-check-esxupdatelog-for-vib-install-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fail|conflict|reject&quot;</span><span class="w"> </span>/var/log/esxupdate.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fail|conflict|reject&quot;</span><span class="w"> </span>/var/log/esxupdate.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2024-01-15T09:23:45.123Z [ERROR] VIB installation failed for esx-base: Dependency conflict detected
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T09:24:12.456Z [WARN] Staging area validation: 2 packages marked for removal
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>2024-01-15T09:25:03.789Z [ERROR] Rollback initiated: Previous state restore in progress
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2024-01-15T09:25:45.012Z [INFO] Conflict resolution: esx-ui version mismatch (7.0.1 vs 7.0.2)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>2024-01-15T09:26:22.345Z [ERROR] VIB signature validation failed for net-driver-bnx2: Certificate expired
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>2024-01-15T09:27:01.678Z [WARN] Installation rejected: Insufficient disk space in /boot (412MB required, 389MB available)
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>2024-01-15T09:27:58.901Z [ERROR] Metadata conflict: Duplicate VIB entries detected in staging
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>2024-01-15T09:28:34.234Z [INFO] Retry attempt 1 of 3: Redownloading failed component
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>2024-01-15T09:29:15.567Z [ERROR] Installation failed: Incompatible hardware detected (CPU microcode update required)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>2024-01-15T09:30:02.890Z [WARN] Rejection reason: Maintenance mode not enabled before update
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/esxupdate.log: No such file or directory</code></strong> — Run this command on an ESXi host directly (via SSH or DCUI console), not from vCenter; the log only exists on ESXi systems.
+<strong><code>Permission denied</code></strong> — Execute the command as root or with sudo; standard users cannot read ESXi system logs.</p>
+</div>
 <p>Representative failure entries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>2026-06-11T03:10:05Z esxupdate: ERROR: VIB esx-vsip conflicts with nsx-aggservice
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2026-06-11T03:10:06Z esxupdate: ERROR: Installation aborted; rollback initiated
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>2026-06-11T03:15:22Z esxupdate: ERROR: Package download from &lt;nsx-mgr&gt;:443 timed out after 30s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>2026-06-11T03:10:05Z esxupdate: ERROR: VIB esx-vsip conflicts with nsx-aggservice
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>2026-06-11T03:10:06Z esxupdate: ERROR: Installation aborted; rollback initiated
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>2026-06-11T03:15:22Z esxupdate: ERROR: Package download from &lt;nsx-mgr&gt;:443 timed out after 30s
 </code></pre></div>
 <hr />
 <h2 id="6-resolution">6. Resolution<a class="headerlink" href="#6-resolution" title="Permanent link">&para;</a></h2>
 <h3 id="remove-conflicting-nsx-v-vibs">Remove Conflicting NSX-V VIBs<a class="headerlink" href="#remove-conflicting-nsx-v-vibs" title="Permanent link">&para;</a></h3>
 <p>Put the host into maintenance mode first if VMs are running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via PowerCLI</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Set-VMHost<span class="w"> </span>-VMHost<span class="w"> </span>&lt;host-fqdn&gt;<span class="w"> </span>-State<span class="w"> </span>Maintenance
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Via ESXi CLI (if vCenter unreachable)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Via PowerCLI</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Set-VMHost<span class="w"> </span>-VMHost<span class="w"> </span>&lt;host-fqdn&gt;<span class="w"> </span>-State<span class="w"> </span>Maintenance
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Via ESXi CLI (if vCenter unreachable)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect-VIServer : Cannot find a valid certificate.</code></strong> — Ensure vCenter SSL certificate is valid or use <code>-SkipCertificateCheck</code> parameter in PowerCLI connection.
+<strong><code>Error: Unable to parse arguments from inputs: Unknown option --enable</code></strong> — Verify ESXi version supports the flag syntax; some older versions use <code>esxcli system maintenanceMode set -e true</code> instead.</p>
+</div>
 <p>Remove NSX-V VIBs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>esx-vsip<span class="w"> </span>-n<span class="w"> </span>esx-vxlan<span class="w"> </span>--maintenance-mode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>esx-vsip<span class="w"> </span>-n<span class="w"> </span>esx-vxlan<span class="w"> </span>--maintenance-mode
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Removal Result
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>   Message: The following VIBs were successfully removed:
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>   esx-vsip-7.0.3-20.16.15939701
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>   esx-vxlan-7.0.3-20.16.15939701
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>   Reboot Required: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option: --maintenance-mode</code></strong> — Use <code>--force</code> instead, or ensure the host is already in maintenance mode before running the command.
+<strong><code>Error: VIB esx-vsip not found</code></strong> — Verify the exact VIB name with <code>esxcli software vib list</code> and use the correct identifier.</p>
+</div>
 <h3 id="remove-stale-nsx-t-vibs-partial-install">Remove Stale NSX-T VIBs (Partial Install)<a class="headerlink" href="#remove-stale-nsx-t-vibs-partial-install" title="Permanent link">&para;</a></h3>
 <p>If a previous preparation attempt left partial NSX-T VIBs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-n<span class="w"> </span>nsx-aggservice<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-n<span class="w"> </span>nsx-context-mux<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-n<span class="w"> </span>nsx-exporter<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-n<span class="w"> </span>nsx-sfhc<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>--maintenance-mode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>-n<span class="w"> </span>nsx-aggservice<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-n<span class="w"> </span>nsx-context-mux<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>-n<span class="w"> </span>nsx-exporter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-n<span class="w"> </span>nsx-sfhc<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>--maintenance-mode
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Removal Result
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>   Message: The following VIBs were successfully removed:
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>   nsx-aggservice 6.4.10.1-28045389
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>   nsx-context-mux 6.4.10.1-28045389
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>   nsx-exporter 6.4.10.1-28045389
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>   nsx-sfhc 6.4.10.1-28045389
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>   Reboot Required: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The host is not in maintenance mode. Please enter maintenance mode before removing VIBs.</code></strong> — Run <code>esxcli system maintenanceMode set --enable true</code> before executing the removal command.</p>
+<p><strong><code>Error: VIB nsx-aggservice could not be removed. VIB is in use by running processes.</code></strong> — Stop all NSX services with <code>systemctl stop nsxd</code> and ensure no VMs are actively using NSX networking before retrying.</p>
+<p><strong><code>Error: Insufficient space in /scratch partition. Required: 512MB, Available: 128MB.</code></strong> — Free up space on the ESXi host's /scratch partition or use <code>esxcli software vib remove --dry-run</code> to verify requirements before removal.</p>
+</div>
 <p>After removal, reboot the host to clear any loaded kernel modules:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>reboot
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>reboot
 </code></pre></div>
 <h3 id="return-host-to-normal-mode-and-retry-preparation">Return Host to Normal Mode and Retry Preparation<a class="headerlink" href="#return-host-to-normal-mode-and-retry-preparation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or parameter: --enable</code></strong> — Use <code>--enable=false</code> (with equals sign) instead of <code>--enable false</code> (with space).
+<strong><code>Error: The object or item could not be found on the specified datastore.</code></strong> — Ensure the ESXi host is not in a critical state; try reconnecting the host in vCenter before disabling maintenance mode.</p>
+</div>
 <p>In NSX Manager: <strong>System → Fabric → Hosts → <code>&lt;host&gt;</code> → Actions → Force Sync</strong></p>
 <p>Monitor the preparation task in NSX Manager — it typically completes within 5–10 minutes.</p>
 <h3 id="address-vib-version-mismatch">Address VIB Version Mismatch<a class="headerlink" href="#address-vib-version-mismatch" title="Permanent link">&para;</a></h3>
@@ -10914,32 +11010,58 @@ failure here points to a firewall or routing issue rather than a VIB conflict.</
 </ol>
 <h3 id="open-firewall-port-1235">Open Firewall Port 1235<a class="headerlink" href="#open-firewall-port-1235" title="Permanent link">&para;</a></h3>
 <p>If port 1235 is blocked between hosts and NSX Manager VIPs, add a firewall rule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Source: ESXi management VMkernel subnet
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Destination: NSX Manager VIP (all three nodes if cluster)
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Port: TCP 1235
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Direction: Outbound from hosts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Source: ESXi management VMkernel subnet
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Destination: NSX Manager VIP (all three nodes if cluster)
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Port: TCP 1235
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Direction: Outbound from hosts
 </code></pre></div>
 <hr />
 <h2 id="7-verification">7. Verification<a class="headerlink" href="#7-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Confirm NSX VIBs are installed on host</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Confirm NSX VIBs are installed on host</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>nsx-common                                1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>nsx-esg                                   1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>nsx-vxlan                                 1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>nsx-vsip                                  1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>nsx-netcpa                                1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Run the command directly on an ESXi host via SSH or vSphere Client console, not from a remote management station.
+<strong><code>(empty output / no NSX VIBs listed)</code></strong> — NSX VIBs are not installed on this host; use <code>esxcli software vib install</code> with the NSX bundle to install them.</p>
+</div>
 <p>Expected VIBs (version strings vary by NSX release):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>nsx-aggservice     &lt;version&gt;   Partner   PartnerSupported
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>nsx-context-mux   &lt;version&gt;   Partner   PartnerSupported
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>nsx-exporter       &lt;version&gt;   Partner   PartnerSupported
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>nsx-sfhc           &lt;version&gt;   Partner   PartnerSupported
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>nsx-ids            &lt;version&gt;   Partner   PartnerSupported
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>nsx-aggservice     &lt;version&gt;   Partner   PartnerSupported
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>nsx-context-mux   &lt;version&gt;   Partner   PartnerSupported
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>nsx-exporter       &lt;version&gt;   Partner   PartnerSupported
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>nsx-sfhc           &lt;version&gt;   Partner   PartnerSupported
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>nsx-ids            &lt;version&gt;   Partner   PartnerSupported
 </code></pre></div>
 <p>In NSX Manager, confirm:</p>
 <ul>
 <li>Transport node status = <code>Success</code> (green check icon)</li>
 <li><strong>Transport Nodes → <code>&lt;host&gt;</code> → BFD Status</strong> = <code>Up</code> (Geneve tunnel established)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Confirm TEP VMkernel adapter is present and has an IP</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tep
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>&lt;tep-vmkernel&gt;<span class="w"> </span>&lt;peer-tep-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Confirm TEP VMkernel adapter is present and has an IP</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tep
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>&lt;tep-vmkernel&gt;<span class="w"> </span>&lt;peer-tep-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>vmk10                          vxlan                  false         172.16.50.11     ::1
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Reply from 172.16.50.12: bytes=60 time=2.45ms TTL=64
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>Reply from 172.16.50.12: bytes=60 time=2.31ms TTL=64
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Reply from 172.16.50.12: bytes=60 time=2.48ms TTL=64
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>Reply from 172.16.50.12: bytes=60 time=2.39ms TTL=64
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>--- PING Statistics ---
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown host &lt;peer-tep-ip&gt;</code></strong> — Replace <code>&lt;peer-tep-ip&gt;</code> with the actual IP address of the peer TEP VMkernel adapter (e.g., 172.16.50.12).
+<strong><code>Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address</code> (no TEP adapter listed)</strong> — Create the TEP VMkernel adapter on the vxlan port binding using <code>esxcli network ip interface add -i vmk10 -p vxlan -I 172.16.50.11 -N 255.255.255.0</code>.</p>
+</div>
 <hr />
 <h2 id="8-prevention">8. Prevention<a class="headerlink" href="#8-prevention" title="Permanent link">&para;</a></h2>
 <table>
@@ -11004,7 +11126,7 @@ failure here points to a firewall or routing issue rather than a VIB conflict.</
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

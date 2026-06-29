@@ -8323,83 +8323,278 @@ Authentication: OAuth2 Bearer token using a Pure1 API Client (registered in the 
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s2">print(c._get_token())</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s2">&quot;</span><span class="k">)</span>
 </code></pre></div>
-<h3 id="arrays">Arrays<a class="headerlink" href="#arrays" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all arrays in the fleet</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Filter by model</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays?filter=model%3D%27FlashArray%2F//X70R4%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Show array names and Purity versions</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">for a in data.get(&#39;items&#39;, []):</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">    print(f\&quot;{a[&#39;name&#39;]:30s}  model={a.get(&#39;model&#39;,&#39;?&#39;):20s}  version={a.get(&#39;version&#39;,&#39;?&#39;)}\&quot;)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwdXJlMTphcGlrZXk6YWJjMTIzIiwic3ViIjoicHVyZTphcGlrZXk6YWJjMTIzIiwiaWF0IjoxNzA5MzE2ODAwLCJleHAiOjE3MDkzMjA0MDB9.aBcD1eFgHiJkLmNoPqRsTuVwXyZ2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8
 </code></pre></div>
-<h3 id="fleet-management">Fleet Management<a class="headerlink" href="#fleet-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List fleets</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/fleets&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ModuleNotFoundError: No module named 'pypureclient'</code></strong> — Install the required package with <code>pip install py-pure-client</code>.
+<strong><code>FileNotFoundError: [Errno 2] No such file or directory: '/path/to/private.pem'</code></strong> — Verify the private key file path is correct and the file exists at the specified location.
+<strong><code>ValueError: Invalid app_id format</code></strong> — Ensure the app_id follows the format <code>pure1:apikey:&lt;your_api_key&gt;</code> with valid credentials from your Pure1 account.</p>
+</div>
+<h3 id="arrays">Arrays<a class="headerlink" href="#arrays" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all arrays in the fleet</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List fleet assets (arrays in a fleet)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">FLEET_ID</span><span class="o">=</span><span class="s2">&quot;fleet-abc123&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/fleet-assets?filter=fleet.id%3D%27</span><span class="si">${</span><span class="nv">FLEET_ID</span><span class="si">}</span><span class="s2">%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Filter by model</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays?filter=model%3D%27FlashArray%2F//X70R4%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Show array names and Purity versions</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">for a in data.get(&#39;items&#39;, []):</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">    print(f\&quot;{a[&#39;name&#39;]:30s}  model={a.get(&#39;model&#39;,&#39;?&#39;):20s}  version={a.get(&#39;version&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;items&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;id&quot;: &quot;5b4c8e9a-1234-5678-90ab-cdef12345678&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;name&quot;: &quot;prod-array-01&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;model&quot;: &quot;FlashArray//X70R4&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;version&quot;: &quot;6.4.2&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    },
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      &quot;id&quot;: &quot;7f2d1c3b-abcd-ef01-2345-6789abcdef01&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;name&quot;: &quot;dr-array-02&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;model&quot;: &quot;FlashArray//X20R2&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;version&quot;: &quot;6.3.8&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    }
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  ],
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;continuation_token&quot;: null
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>}
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>prod-array-01                 model=FlashArray//X70R4      version=6.4.2
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>dr-array-02                   model=FlashArray//X20R2      version=6.3.8
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>backup-array-03               model=FlashArray//X50R3      version=6.2.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS egress to Pure1 API endpoints.
+<strong><code>{"error_code":"401","message":"Unauthorized"}</code></strong> — Ensure the <code>$TOKEN</code> environment variable is set with a valid Pure1 API token and has not expired.
+<strong><code>jq: parse error: Invalid UTF-8 in string</code></strong> — Verify the API response is valid JSON by testing with <code>curl -s &lt;url&gt; | head -c 500</code> to inspect raw output.</p>
+</div>
+<h3 id="fleet-management">Fleet Management<a class="headerlink" href="#fleet-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List fleets</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/fleets&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># List fleet assets (arrays in a fleet)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">FLEET_ID</span><span class="o">=</span><span class="s2">&quot;fleet-abc123&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/fleet-assets?filter=fleet.id%3D%27</span><span class="si">${</span><span class="nv">FLEET_ID</span><span class="si">}</span><span class="s2">%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;continuation_token&quot;: null,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;items&quot;: [
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    {
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      &quot;id&quot;: &quot;fleet-abc123&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;name&quot;: &quot;production-fleet&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;organization_id&quot;: &quot;org-789xyz&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      &quot;created_at&quot;: &quot;2023-06-15T10:22:44Z&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;updated_at&quot;: &quot;2024-01-20T14:55:12Z&quot;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    },
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    {
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      &quot;id&quot;: &quot;fleet-def456&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      &quot;name&quot;: &quot;staging-fleet&quot;,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;organization_id&quot;: &quot;org-789xyz&quot;,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;created_at&quot;: &quot;2023-08-02T09:11:30Z&quot;,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;updated_at&quot;: &quot;2024-01-19T16:33:45Z&quot;
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    }
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  ]
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>}
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>{
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  &quot;continuation_token&quot;: null,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  &quot;items&quot;: [
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    {
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>      &quot;id&quot;: &quot;array-001&quot;,
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>      &quot;name&quot;: &quot;fa-m70-prod-01&quot;,
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &quot;fleet&quot;: {
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        &quot;id&quot;: &quot;fleet-abc123&quot;
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>      },
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>      &quot;model&quot;: &quot;FlashArray//M70&quot;,
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>      &quot;serial&quot;: &quot;5b8c9e2f1a4d&quot;,
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    },
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    {
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      &quot;id&quot;: &quot;array-002&quot;,
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      &quot;name&quot;: &quot;fa-m70-prod-02&quot;,
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;fleet&quot;: {
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        &quot;id&quot;: &quot;fleet-abc123&quot;
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>      },
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      &quot;model&quot;: &quot;FlashArray//M70&quot;,
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>      &quot;serial&quot;: &quot;7c3f2e9b5a1d&quot;,
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    }
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  ]
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check firewall rules allowing outbound HTTPS to Pure1 API endpoints.
+<strong><code>{"error_code":"INVALID_TOKEN","message":"Invalid or expired authentication token"}</code></strong> — Regenerate the API token in Pure1 console and ensure <code>$TOKEN</code> variable is set correctly with <code>export TOKEN="your-token-here"</code>.
+<strong><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></strong> — Update your CA certificate bundle or use <code>curl -k</code> flag (not recommended for production); verify your system's certificate store is current.</p>
+</div>
 <h3 id="subscriptions">Subscriptions<a class="headerlink" href="#subscriptions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all subscriptions (Evergreen//One, Evergreen//Forever)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Show subscription name, status, start/end dates</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">for s in data.get(&#39;items&#39;, []):</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    print(f\&quot;{s.get(&#39;name&#39;,&#39;?&#39;):30s}  status={s.get(&#39;status&#39;,&#39;?&#39;):12s}  \</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">expires={s.get(&#39;expiration_date&#39;,&#39;?&#39;)}\&quot;)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Check committed vs consumed for a subscription</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">SUB_ID</span><span class="o">=</span><span class="s2">&quot;sub-xyz789&quot;</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions/</span><span class="si">${</span><span class="nv">SUB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all subscriptions (Evergreen//One, Evergreen//Forever)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Show subscription name, status, start/end dates</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">for s in data.get(&#39;items&#39;, []):</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">    print(f\&quot;{s.get(&#39;name&#39;,&#39;?&#39;):30s}  status={s.get(&#39;status&#39;,&#39;?&#39;):12s}  \</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">expires={s.get(&#39;expiration_date&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check committed vs consumed for a subscription</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">SUB_ID</span><span class="o">=</span><span class="s2">&quot;sub-xyz789&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/subscriptions/</span><span class="si">${</span><span class="nv">SUB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;items&quot;: [
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    {
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>      &quot;id&quot;: &quot;sub-abc123def456&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      &quot;name&quot;: &quot;Evergreen//One-FlashArray&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      &quot;expiration_date&quot;: &quot;2025-12-31T23:59:59Z&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      &quot;committed_capacity_gb&quot;: 102400,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>      &quot;consumed_capacity_gb&quot;: 87654
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    },
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    {
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      &quot;id&quot;: &quot;sub-xyz789&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      &quot;name&quot;: &quot;Evergreen//Forever-FlashBlade&quot;,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      &quot;expiration_date&quot;: &quot;2099-12-31T23:59:59Z&quot;,
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>      &quot;committed_capacity_gb&quot;: 51200,
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>      &quot;consumed_capacity_gb&quot;: 12288
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    }
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  ],
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  &quot;pagination&quot;: {
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    &quot;offset&quot;: 0,
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    &quot;limit&quot;: 100,
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    &quot;total&quot;: 2
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  }
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>}
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Evergreen//One-FlashArray      status=active        expires=2025-12-31T23:59:59Z
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>Evergreen//Forever-FlashBlade  status=active        expires=2099-12-31T23:59:59Z
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>{
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>  &quot;id&quot;: &quot;sub-xyz789&quot;,
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  &quot;name&quot;: &quot;Evergreen//Forever-FlashBlade&quot;,
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>  &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>  &quot;expiration_date&quot;: &quot;2099-12-31T23:59:59Z&quot;,
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>  &quot;committed_capacity_gb&quot;: 51200,
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  &quot;consumed_capacity_gb&quot;: 12288,
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>  &quot;renewal_date&quot;: &quot;2024-01-15T00:00:00Z&quot;
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to Pure1 API endpoints.
+<strong><code>{"error_code":"401","message":"Unauthorized"}</code></strong> — Ensure the <code>$TOKEN</code> environment variable is set with a valid Pure1 API token and has not expired.
+<strong><code>jq: command not found</code></strong> — Install <code>python3-json</code> or use <code>python3 -m json.tool</code> as shown in the example (already included in the script).</p>
+</div>
 <h3 id="metrics-historical-performance">Metrics (Historical Performance)<a class="headerlink" href="#metrics-historical-performance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Available metric keys</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics?resource_types=arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">for m in data.get(&#39;items&#39;, []):</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">    print(m.get(&#39;name&#39;,&#39;&#39;))</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Get 24-hour capacity history for an array</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">ARRAY_ID</span><span class="o">=</span><span class="s2">&quot;array-id-here&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nv">START</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">END</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics/history&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;ids=</span><span class="si">${</span><span class="nv">ARRAY_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;names=array_total_capacity,array_used_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;resolution=3600000&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;start_time=</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;end_time=</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Available metric keys</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics?resource_types=arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">for m in data.get(&#39;items&#39;, []):</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">    print(m.get(&#39;name&#39;,&#39;&#39;))</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Get 24-hour capacity history for an array</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">ARRAY_ID</span><span class="o">=</span><span class="s2">&quot;array-id-here&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nv">START</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nv">END</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics/history&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;ids=</span><span class="si">${</span><span class="nv">ARRAY_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;names=array_total_capacity,array_used_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;resolution=3600000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;start_time=</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;end_time=</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>array_bandwidth_in
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>array_bandwidth_out
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>array_data_reduction
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>array_empty_blocks
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>array_iops
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>array_latency
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>array_queue_depth
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>array_replication_bandwidth_in
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>array_replication_bandwidth_out
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>array_total_capacity
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>array_used_capacity
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>...
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>{
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;items&quot;: [
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    {
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      &quot;name&quot;: &quot;array_total_capacity&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      &quot;resource_id&quot;: &quot;array-id-here&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      &quot;time&quot;: 1704067200000,
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      &quot;value&quot;: 109951162777600
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    },
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    {
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      &quot;name&quot;: &quot;array_used_capacity&quot;,
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>      &quot;resource_id&quot;: &quot;array-id-here&quot;,
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>      &quot;time&quot;: 1704067200000,
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>      &quot;value&quot;: 54975581388800
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    },
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    {
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>      &quot;name&quot;: &quot;array_total_capacity&quot;,
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>      &quot;resource_id&quot;: &quot;array-id-here&quot;,
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>      &quot;time&quot;: 1704070800000,
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>      &quot;value&quot;: 109951162777600
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>    },
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>    {
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>      &quot;name&quot;: &quot;array_used_capacity&quot;,
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>      &quot;resource_id&quot;: &quot;array-id-here&quot;,
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>      &quot;time&quot;: 1704070800000,
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>      &quot;value&quot;: 55025581388800
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>    }
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>  ]
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network.
+<strong><code>{"error_code":"INVALID_TOKEN","message":"Invalid or expired bearer token"}</code></strong> — Regenerate a valid API token in Pure1 and export it to <code>$TOKEN</code> before running the command.
+<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package or use <code>python3 -m json.tool</code> as shown in the example to parse JSON output.</p>
+</div>
 <hr />
 <h2 id="flasharray-cli-per-array">FlashArray CLI (per-array)<a class="headerlink" href="#flasharray-cli-per-array" title="Permanent link">&para;</a></h2>
 <p>Connect via SSH to the array management IP. User is typically <code>pureuser</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>pureuser@flasharray01.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh<span class="w"> </span>pureuser@flasharray01.example.com
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>The authenticity of host &#39;flasharray01.example.com (192.0.2.45)&#39; can&#39;t be established.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ECDSA key fingerprint is SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G9h.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Warning: Permanently added &#39;flasharray01.example.com,192.0.2.45&#39; (ECDSA) to the list of known_hosts.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Password:
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Connected to flasharray01.example.com
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>pureuser@flasharray01&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname flasharray01.example.com: Name or service not known</code></strong> — Verify the hostname is correct and resolvable via DNS or add an entry to /etc/hosts.
+<strong><code>Permission denied (publickey,password).</code></strong> — Confirm the pureuser account exists on the array and the password is correct, or configure SSH key authentication.
+<strong><code>ssh: connect to host flasharray01.example.com port 22: Connection timed out</code></strong> — Check network connectivity to the array and verify the SSH service is running on port 22.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8434,43 +8629,136 @@ Authentication: OAuth2 Bearer token using a Pure1 API Client (registered in the 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Array identity and version</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Space summary (TiB)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Unacknowledged errors only</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--severity<span class="w"> </span>error
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check upgrade readiness before NDU</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--check
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Run non-disruptive upgrade (Evergreen NDU)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--exec
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Array identity and version</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Space summary (TiB)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># All active alerts</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Unacknowledged errors only</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--severity<span class="w"> </span>error
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Check upgrade readiness before NDU</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--check
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Run non-disruptive upgrade (Evergreen NDU)</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--exec
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                          Version          Serial
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pure-fa-m70-prod-01           6.4.5.1234       5678ab9cdef01234
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>pure-fa-m70-prod-02           6.4.5.1234       5678ab9cdef01235
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Name                          Capacity(TiB)    Used(TiB)      Free(TiB)
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>pure-fa-m70-prod-01           100.0            67.3           32.7
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>pure-fa-m70-prod-02           100.0            71.2           28.8
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>AlertID                       Severity         Component      Timestamp
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>alert-5f8e2c1a-9d4b-4e2f      warning          controller     2024-01-15T14:32:18Z
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>alert-7g3h9k2m-1p5q-6r7s      critical         disk           2024-01-15T13:45:22Z
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>alert-2b4c8d9e-3f6g-7h8i      warning          network        2024-01-15T12:18:05Z
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>AlertID                       Severity         Message
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>alert-9x2y3z4a-5b6c-7d8e      error            Drive predictive failure on slot 4
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>alert-1m2n3o4p-5q6r-7s8t      error            Controller temperature threshold exceeded
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Upgrade readiness check: PASSED
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>- All controllers healthy
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>- No active alerts blocking upgrade
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>- Sufficient free space available
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>- Estimated downtime: 0 minutes (NDU capable)
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Upgrade execution started
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>Upgrade progress: 100%
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Array pure-fa-m70-prod-01 upgraded to 6.4.6.1245
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>Array pure-fa-m70-prod-02 upgraded to 6.4.6.1245
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>Non-disruptive upgrade completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to array management interface at &lt;ip&gt;:443</code></strong> — Verify array hostname/IP is reachable and management services are running with <code>ping</code> and <code>ssh</code> tests.
+<strong><code>Error: Upgrade check failed - Active alerts prevent upgrade</code></strong> — Acknowledge or resolve all critical and error-level alerts before attempting upgrade with <code>purealert acknowledge &lt;alert-id&gt;</code>.
+<strong><code>Error: Insufficient free space for upgrade (requires 15 TiB, available 8 TiB)</code></strong> — Free up array capacity by deleting snapshots or data, or add additional storage before retrying upgrade.</p>
+</div>
 <h3 id="space-breakdown">Space Breakdown<a class="headerlink" href="#space-breakdown" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Volume-level space (data reduction ratio)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Total shared space (snapshots, system overhead)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || /Total/&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Volume-level space (data reduction ratio)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Total shared space (snapshots, system overhead)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || /Total/&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name                          Volumes  Data Reduction
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vol-prod-db-01                    1        2.5x
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>vol-backup-archive                1        1.8x
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>vol-dev-test-01                   1        3.2x
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vol-analytics-02                  1        2.1x
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>vol-cache-layer                   1        4.7x
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>...
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Name                          Capacity  Data Reduction  Total Reduction
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>purearray-01                   100.0TB        2.3x           2.8x
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Total                          100.0TB        2.3x           2.8x
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purevol: command not found</code></strong> — Ensure the Pure Storage CLI is installed and the <code>purearray</code> package is in your PATH, or source the Pure environment setup script.
+<strong><code>Error: Array not reachable at &lt;ip&gt;</code></strong> — Verify network connectivity to the array and that your <code>PURE_ARRAY</code> environment variable or CLI credentials are correctly configured.</p>
+</div>
 <hr />
 <h2 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pure1 API — active error-severity alerts across all arrays</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/alerts?filter=severity%3D%27error%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Per-array CLI</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Acknowledge an alert (by ID)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purealert<span class="w"> </span>acknowledge<span class="w"> </span>--id<span class="w"> </span><span class="m">123</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Pure1 API — active error-severity alerts across all arrays</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/alerts?filter=severity%3D%27error%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Per-array CLI</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Acknowledge an alert (by ID)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>purealert<span class="w"> </span>acknowledge<span class="w"> </span>--id<span class="w"> </span><span class="m">123</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  &quot;items&quot;: [
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    {
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>      &quot;id&quot;: &quot;alert-7f3c9e2a&quot;,
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>      &quot;array_id&quot;: &quot;7f3c9e2a-1b4d-4e8f-9c2a-5d6e7f8g9h0i&quot;,
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>      &quot;severity&quot;: &quot;error&quot;,
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>      &quot;message&quot;: &quot;NVMe drive failure detected on shelf 2, slot 14&quot;,
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>      &quot;created&quot;: &quot;2024-01-15T09:23:47Z&quot;,
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>      &quot;acknowledged&quot;: false
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    },
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    {
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>      &quot;id&quot;: &quot;alert-8g4d0f3b&quot;,
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>      &quot;array_id&quot;: &quot;8g4d0f3b-2c5e-5f9g-0d3b-6e7f8g9h0i1j&quot;,
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>      &quot;severity&quot;: &quot;error&quot;,
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>      &quot;message&quot;: &quot;Replication lag exceeded threshold on pod-us-west&quot;,
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>      &quot;created&quot;: &quot;2024-01-15T08:15:22Z&quot;,
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>      &quot;acknowledged&quot;: false
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>    }
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  ],
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  &quot;total_items&quot;: 2
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>}
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>Severity: error
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>Array: purearray-prod-01
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>Message: NVMe drive failure detected on shelf 2, slot 14
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>ID: alert-7f3c9e2a
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>Created: 2024-01-15T09:23:47Z
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>Severity: error
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>Array: purearray-prod-02
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>Message: Replication lag exceeded threshold on pod-us-west
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>ID: alert-8g4d0f3b
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>Created: 2024-01-15T08:15:22Z
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>Alert 123 acknowledged successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution, or check if the Pure1 API endpoint is accessible from your network.
+<strong><code>Error: Invalid token or authentication failed</code></strong> — Ensure the <code>$TOKEN</code> environment variable is set to a valid Pure1 API token with appropriate permissions.
+<strong><code>Error: Alert ID 123 not found</code></strong> — Verify the alert ID exists by running <code>purealert list</code> first and use the correct ID from the output.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../">Evergreen — Overview</a></li>
@@ -8497,7 +8785,7 @@ Authentication: OAuth2 Bearer token using a Pure1 API Client (registered in the 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

@@ -8554,45 +8554,131 @@ Azure daily health checks — runnable CLI routine covering service health incid
 <a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Title:shortDescription.solution,Impact:impact,Resource:resourceMetadata.resourceId}&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">  </span>-o<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Title                                          Type              Status    Region
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>─────────────────────────────────────────────  ────────────────  ────────  ──────────────────────
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Azure Storage service degradation in eastus2  Incident          Resolved  /subscriptions/abc123/locations/eastus2
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Planned maintenance - VM host updates         PlannedMaintenance Active   /subscriptions/abc123/locations/westus
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Name              RG              PowerState    ProvisioningState
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>────────────────  ──────────────  ────────────  ──────────────────
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>prod-web-01       prod-rg         VM running    Succeeded
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>prod-web-02       prod-rg         VM running    Succeeded
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>staging-db-01     staging-rg      VM stopped    Succeeded
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dev-test-vm       dev-rg          VM running    Succeeded
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Name              RG              State         PowerState
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>────────────────  ──────────────  ────────────  ──────────────────
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>legacy-app-vm     legacy-rg       Failed        VM deallocated
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Name                    Addresses
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>──────────────────────  ──────────
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>backend-pool-primary    8
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>backend-pool-secondary  0
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>UsedBytes
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>──────────────────
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>847362891776.0
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Name                    Enabled    StorageAccount                                    RetentionDays
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>──────────────────────  ─────────  ──────────────────────────────────────────────────  ───────────────
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>NetworkWatcher_eastus   true       /subscriptions/abc123/resourceGroups/nw-rg/...     90
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>NetworkWatcher_westus   true       /subscriptions/abc123/resourceGroups/nw-rg/...     30
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Name                              AppId                                 Expiry
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>────────────────────────────────  ──────────────────────────────────────  ──────────────────────
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>MyWebApp                          a1b2c3d4-e5f6-7890-abcd-ef1234567890   2025-03-15T10:30:00Z
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>LegacyIntegrationService          f9e8d7c6-b5a4-3210-fedc-ba9876543210   2024-11-22T14:45:00Z
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Title                                                    Impact      Resource
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>─────────────────────────────────────────────────────────  ──────────  ──────────────────────────────────────────────
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>Enable MFA on privileged accounts                        High        /subscriptions/abc123/resourceGroups/prod-rg/...
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>Review and remove unused managed identities              Medium      /subscriptions/abc123/resourceGroups/prod-rg/...
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Encrypt data in transit for Application Gateway          High        /subscriptions/abc123/resourceGroups/prod-rg/...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --resource</code></strong> — Provide the full resource ID for the storage account using <code>--resource /subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Storage/storageAccounts/&lt;name&gt;</code>.
+<strong><code>ERROR: (ResourceNotFound) Resource 'Microsoft.Network/networkWatchers' not found</code></strong> — Ensure Network Watcher is deployed in the target region with `az network watcher configure --resource-group <rg></p>
+</div>
 <hr />
 <h2 id="vm-health">VM Health<a class="headerlink" href="#vm-health" title="Permanent link">&para;</a></h2>
 <p>Verify compute VM status, availability sets, and extension health.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All VMs with detailed state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,OS:storageProfile.osDisk.osType,PowerState:powerState,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># VMs that are deallocated (stopped but still billed for managed disk)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># VM availability set member health</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>vm<span class="w"> </span>availability-set<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,FaultDomains:platformFaultDomainCount,UpdateDomains:platformUpdateDomainCount}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># VM extensions — check for failed provisioning</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>az<span class="w"> </span>vm<span class="w"> </span>extension<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Extension:name,Type:typeHandlerVersion,State:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># VM instance view — detailed health including guest OS-level status</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;instanceView.statuses[].{Code:code,Level:level,Display:displayStatus}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Recent VM operations from activity log (last 24 hours)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;24 hours ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?category.value==`Administrative`].{Time:eventTimestamp,Operation:operationName.localizedValue,Status:status.localizedValue,Caller:caller}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span>-o<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All VMs with detailed state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,OS:storageProfile.osDisk.osType,PowerState:powerState,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># VMs that are deallocated (stopped but still billed for managed disk)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># VM availability set member health</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>vm<span class="w"> </span>availability-set<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,FaultDomains:platformFaultDomainCount,UpdateDomains:platformUpdateDomainCount}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># VM extensions — check for failed provisioning</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>az<span class="w"> </span>vm<span class="w"> </span>extension<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Extension:name,Type:typeHandlerVersion,State:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># VM instance view — detailed health including guest OS-level status</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;instanceView.statuses[].{Code:code,Level:level,Display:displayStatus}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Recent VM operations from activity log (last 24 hours)</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;24 hours ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?category.value==`Administrative`].{Time:eventTimestamp,Operation:operationName.localizedValue,Status:status.localizedValue,Caller:caller}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span>-o<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                          RG              Size           OS      PowerState      Provisioning
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>------------------------------  ---------------  ---------------  ------  ---------------  ---------------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-web-01                    prod-rg          Standard_D2s_v3  Linux   VM running      Succeeded
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prod-web-02                    prod-rg          Standard_D2s_v3  Linux   VM running      Succeeded
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>prod-db-01                     prod-rg          Standard_E4s_v3  Windows VM deallocated  Succeeded
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dev-app-03                     dev-rg           Standard_B2s     Linux   VM stopped       Succeeded
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>staging-api-01                 staging-rg       Standard_D4s_v3  Windows VM running      Succeeded
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Name                          RG              Size
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>------------------------------  ---------------  ---------------
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>prod-db-01                     prod-rg          Standard_E4s_v3
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Name                          RG              FaultDomains  UpdateDomains
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>------------------------------  ---------------  ---------------  ---------------
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>prod-web-avset                 prod-rg          3              5
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>prod-db-avset                  prod-rg          2              5
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Extension                     Type              State
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>------------------------------  ---------------  ---------------
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>CustomScript                  1.10              Succeeded
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>DependencyAgent               9.10              Succeeded
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Code                                      Level    Display
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>---------------------------------------------  -------  -----------------------------------------------
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>ProvisioningState/succeeded                info     Provisioning succeeded
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>PowerState/running                         info     VM running
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>HealthState/healthy                        info     VM is healthy
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Time                              Operation                           Status      Caller
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>------------------------------  --------------------------------  -----------  ----------------------
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>2024-01-15T14:32:18.123456Z     Create Virtual Machine              Succeeded   user@contoso.com
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>2024-01-15T09:47:52.654321Z     Start Virtual Machine               Succeeded   automation@contoso.com
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>2024-01-14T22:15:33.987654Z     Deallocate Virtual Machine          Succeeded   user@contoso.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The resource group '&lt;rg&gt;' could not be found.</code></strong> — Verify the resource group name with <code>az group list</code> and ensure you are querying the correct subscription.
+<strong><code>The virtual machine '&lt;vm-name&gt;' does not exist in the resource group '&lt;rg&gt;'.</code></strong> — Confirm the VM name is correct and exists in the specified resource group using <code>az vm list -d --resource-group &lt;rg&gt;</code>.
+<strong><code>date: invalid date 'TZ=UTC0 24 hours ago'</code></strong> — Use the macOS-compatible date syntax: <code>date -u -v-24H +%Y-%m-%dT%H:%M:%SZ</code> or install GNU coreutils on macOS.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8627,153 +8713,297 @@ Azure daily health checks — runnable CLI routine covering service health incid
 <hr />
 <h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
 <p>Verify load balancers, NSGs, VNet peerings, and VPN gateway status.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All load balancers and provisioning state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,SKU:sku.name,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Application gateway health</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,State:operationalState,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># VNet peering status</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Remote:remoteVirtualNetwork.id,State:peeringState,AllowForwardedTraffic:allowForwardedTraffic}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># VPN gateway connections</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,State:connectionStatus,EgressKbps:egressBytesTransferred,IngressKbps:ingressBytesTransferred}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># ExpressRoute circuit status</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,Provisioning:provisioningState,CircuitProvisioning:circuitProvisioningState,BandwidthMbps:bandwidthInMbps}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># NSG rule list for a specific NSG</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Priority:priority,Dir:direction,Access:access,Protocol:protocol,DestPort:destinationPortRange}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>-o<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All load balancers and provisioning state</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,SKU:sku.name,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Application gateway health</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,State:operationalState,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># VNet peering status</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Remote:remoteVirtualNetwork.id,State:peeringState,AllowForwardedTraffic:allowForwardedTraffic}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># VPN gateway connections</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,State:connectionStatus,EgressKbps:egressBytesTransferred,IngressKbps:ingressBytesTransferred}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># ExpressRoute circuit status</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,Provisioning:provisioningState,CircuitProvisioning:circuitProvisioningState,BandwidthMbps:bandwidthInMbps}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="c1"># NSG rule list for a specific NSG</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">  </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Priority:priority,Dir:direction,Access:access,Protocol:protocol,DestPort:destinationPortRange}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span>-o<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                          RG              SKU      Provisioning
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------------------------------  ---------------  -------  ---------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>prod-lb-eastus-01             prod-network     Standard Succeeded
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>staging-lb-westus-02          staging-network  Basic    Succeeded
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>internal-lb-centralus         prod-network     Standard Succeeded
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Name                          RG              State       Provisioning
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>------------------------------  ---------------  -----------  ---------------
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>api-appgw-prod                prod-network     Running      Succeeded
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>web-appgw-staging             staging-network  Running      Succeeded
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Name                          Remote                                                          State      AllowForwardedTraffic
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>------------------------------  ---------------------------------------------------------------  ---------  ----------------------
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>peer-to-hub-vnet              /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/hub-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet  Connected  True
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>peer-to-spoke-02              /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/spoke-rg/providers/Microsoft.Network/virtualNetworks/spoke-vnet-02  Connected  False
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Name                          State       EgressKbps  IngressKbps
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>------------------------------  -----------  -----------  -----------
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>site-to-site-vpn-01           Connected    2048000      1536000
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>site-to-site-vpn-02           Disconnected 0            0
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Name                          RG              Provisioning  CircuitProvisioning  BandwidthMbps
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>------------------------------  ---------------  ---------------  --------------------  ---------------
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>expressroute-circuit-prod     prod-network     Succeeded        ServiceProvisioned    1000
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>expressroute-circuit-dr       dr-network       Succeeded        ServiceProvisioned    500
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Name                          Priority  Dir        Access  Protocol  DestPort
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>------------------------------  --------  ---------  ------  --------  --------
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>allow-https-inbound           100       Inbound    Allow   Tcp       443
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>allow-http-inbound            110       Inbound    Allow   Tcp       80
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>deny-all-inbound              4096      Inbound    Deny    *         *
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>allow-outbound-dns            200       Outbound   Allow   Udp       53
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The following arguments are required: --resource-group</code></strong> — Provide the resource group name by replacing <code>&lt;rg&gt;</code> with your actual resource group name.
+<strong><code>No NSGs found in resource group '&lt;rg&gt;'</code></strong> — Verify the NSG exists in the specified resource group and that you have read permissions on it.
+<strong><code>The following arguments are required: --vnet-name</code></strong> — Replace <code>&lt;vnet-name&gt;</code> with the actual virtual network name in your resource group.</p>
+</div>
 <hr />
 <h2 id="storage-health">Storage Health<a class="headerlink" href="#storage-health" title="Permanent link">&para;</a></h2>
 <p>Verify storage accounts, managed disk state, and backup job status.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All storage accounts and their replication type</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,SKU:sku.name,Kind:kind,HTTPS:supportsHttpsTrafficOnly,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Managed disks in an error or unattached state</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached` || diskState==`Reserved`].{Name:name,RG:resourceGroup,SizeGB:diskSizeGb,State:diskState,SKU:sku.name}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Disks approaching size limits (&gt; 80% of allocated size is a warning)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,SizeGB:diskSizeGb,State:diskState,SKU:sku.name}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Azure Backup — failed jobs in the last 7 days</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--status<span class="w"> </span>Failed<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{VM:properties.entityFriendlyName,Type:properties.jobType,Start:properties.startTime,Error:properties.errorDetails[0].errorMessage}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># Azure Backup — protection status for all VMs in vault</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{VM:properties.friendlyName,Status:properties.protectionStatus,LastBackup:properties.lastBackupTime,Policy:properties.policyName}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="c1"># File share quotas and usage</span>
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>az<span class="w"> </span>storage<span class="w"> </span>share<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,QuotaGB:properties.quota,Tier:accessTier}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">  </span>-o<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All storage accounts and their replication type</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,RG:resourceGroup,SKU:sku.name,Kind:kind,HTTPS:supportsHttpsTrafficOnly,Provisioning:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Managed disks in an error or unattached state</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached` || diskState==`Reserved`].{Name:name,RG:resourceGroup,SizeGB:diskSizeGb,State:diskState,SKU:sku.name}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Disks approaching size limits (&gt; 80% of allocated size is a warning)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,SizeGB:diskSizeGb,State:diskState,SKU:sku.name}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Azure Backup — failed jobs in the last 7 days</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>--status<span class="w"> </span>Failed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{VM:properties.entityFriendlyName,Type:properties.jobType,Start:properties.startTime,Error:properties.errorDetails[0].errorMessage}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Azure Backup — protection status for all VMs in vault</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{VM:properties.friendlyName,Status:properties.protectionStatus,LastBackup:properties.lastBackupTime,Policy:properties.policyName}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="c1"># File share quotas and usage</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>az<span class="w"> </span>storage<span class="w"> </span>share<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,QuotaGB:properties.quota,Tier:accessTier}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">  </span>-o<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                          RG              SKU              Kind       HTTPS    Provisioning
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>------------------------------  ---------------  ---------------  ---------  -------  ---------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>prodstg001                      prod-rg          Standard_LRS     StorageV2  True     Succeeded
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>prodstg002                      prod-rg          Premium_LRS      BlockBlobStorage  True     Succeeded
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>backupstg01                     backup-rg        Standard_GRS     StorageV2  True     Succeeded
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>devstg001                       dev-rg           Standard_LRS     StorageV2  False    Succeeded
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Name                          RG              SizeGB    State        SKU
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>------------------------------  ---------------  --------  -----------  ---------------
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>disk-orphan-prod-01             prod-rg          256       Unattached   Premium_LRS
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>disk-reserved-backup-02         backup-rg        512       Reserved     Standard_LRS
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Name                          SizeGB    State        SKU
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>------------------------------  --------  -----------  ---------------
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>vm-prod-osdisk                  128       Attached     Premium_LRS
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>vm-dev-datadisk-01              256       Attached     Standard_LRS
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>vm-backup-disk-03               512       Attached     Premium_LRS
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>VM                    Type              Start                          Error
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>---------------------  ----------------  -----------------------------  -----------------------------------------------
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>prod-web-01           AzureIaasVMJob    2024-01-15T02:30:45.123456Z    Snapshot creation failed: insufficient quota
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>prod-db-02            AzureIaasVMJob    2024-01-14T23:15:22.654321Z    Network timeout during backup transfer
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>VM                    Status            LastBackup                     Policy
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>---------------------  ----------------  -----------------------------  -----------------------------------------------
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>prod-web-01           Protected         2024-01-15T03:45:12.123456Z    DailyBackup-7day
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>prod-db-02            Protected         2024-01-14T04:20:33.987654Z    WeeklyBackup-30day
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>dev-app-01            ProtectionStopped  2024-01-10T05:10:00.456789Z    DailyBackup-7day
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Name                          QuotaGB    Tier
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>------------------------------  ---------  -------
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>logs-share                      100        Hot
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>backups-share                   500        Cool
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>config-share                    50         Hot
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --resource-group, --vault-name</code></strong> — Replace <code>&lt;rg&gt;</code> and <code>&lt;vault-name&gt;</code> with actual resource group and Recovery Services vault names.
+<strong><code>ERROR: The following arguments are required: --account-name</code></strong> — Replace <code>&lt;storage-account&gt;</code> with the actual storage account name.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' under resource group '&lt;rg&gt;' was not found</code></strong> — Verify the vault exists in the specified resource group and region using <code>az backup vault list --resource-group &lt;rg&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="identity-and-security">Identity and Security<a class="headerlink" href="#identity-and-security" title="Permanent link">&para;</a></h2>
 <p>Review Entra ID credentials, role assignments, and security centre findings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Entra ID app registrations with expiring credentials (within 60 days)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:displayName,AppId:appId,SecretExpiry:passwordCredentials[0].endDateTime,CertExpiry:keyCredentials[0].endDateTime}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Service principals with expired credentials</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?passwordCredentials[0].endDateTime!=null].{SP:displayName,Expiry:passwordCredentials[0].endDateTime}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-o<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;202[0-6]&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># All role assignments at subscription level</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--scope<span class="w"> </span>/subscriptions/<span class="k">$(</span>az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Principal:principalName,Role:roleDefinitionName,Scope:scope,Type:principalType}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Microsoft Defender for Cloud — active security recommendations</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?status.code!=`Healthy`].{Name:displayName,Status:status.code,Severity:metadata.severity,Resource:resourceDetails.id}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Privileged Identity Management — active role assignments (requires PIM license)</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>--url<span class="w"> </span><span class="s1">&#39;https://management.azure.com/subscriptions/&lt;sub&gt;/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;value[?properties.principalType==`User`].{Principal:properties.principalId,Role:properties.roleDefinitionId,Scope:properties.scope}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Key Vault — certificates nearing expiry</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>az<span class="w"> </span>keyvault<span class="w"> </span>certificate<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span>-o<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Entra ID app registrations with expiring credentials (within 60 days)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:displayName,AppId:appId,SecretExpiry:passwordCredentials[0].endDateTime,CertExpiry:keyCredentials[0].endDateTime}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Service principals with expired credentials</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?passwordCredentials[0].endDateTime!=null].{SP:displayName,Expiry:passwordCredentials[0].endDateTime}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>-o<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;202[0-6]&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># All role assignments at subscription level</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>--scope<span class="w"> </span>/subscriptions/<span class="k">$(</span>az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Principal:principalName,Role:roleDefinitionName,Scope:scope,Type:principalType}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Microsoft Defender for Cloud — active security recommendations</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?status.code!=`Healthy`].{Name:displayName,Status:status.code,Severity:metadata.severity,Resource:resourceDetails.id}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Privileged Identity Management — active role assignments (requires PIM license)</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span>--url<span class="w"> </span><span class="s1">&#39;https://management.azure.com/subscriptions/&lt;sub&gt;/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;value[?properties.principalType==`User`].{Principal:properties.principalId,Role:properties.roleDefinitionId,Scope:properties.scope}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="c1"># Key Vault — certificates nearing expiry</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>az<span class="w"> </span>keyvault<span class="w"> </span>certificate<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">  </span>-o<span class="w"> </span>table
 </code></pre></div>
-<hr />
+<h2 id="expected-outputname-appid-secretexpiry-certexpiry-graphapi-integration-a7f2c891-4d3e-4b2a-9e1f-5c8d2a3b4e5f-2025-03-15t103000z-2025-06-20t144500z-servicebusconnector-b8e3d9a2-5e4f-5c3b-0f2g-6d9e3b4c5f6g-2025-02-28t081500z-none-webappauth-c9f4e0b3-6f5g-6d4c-1g3h-7e0f4c5d6g7h-none-2025-08-10t162000z-sp-expiry-legacy-batch-processor-2024-11-30t120000z-old-automation-account-2024-09-15t093000z-principal-role-scope-type-alicejohnsoncontosocom-owner-subscriptions12345678-1234-1234-1234-123456789012-user-bobsmithcontosocom-contributor-subscriptions12345678-1234-1234-1234-123456789012-user-managed-identity-prod-01-reader-subscriptions12345678-1234-1234-1234-123456789012-serviceprincipal-automation-runbook-svc-virtual-machine-operator-subscriptions12345678-1234-1234-1234-123456789012-serviceprincipal-name-status-severity-resource-mfa-should-be-enabled-on-accounts-with-write-permissions-enabled-high-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rg-unencrypted-data-in-transit-detected-enabled-critical-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rgprovidersmicrosoftcomputevirtualmachinesweb-vm-01-sql-server-auditing-disabled-enabled-medium-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rgprovidersmicrosoftsqlserverssqldb-prod-principal-role-scope-a1b2c3d4-e5f6-7890-abcd-ef1234567890-subscriptions12345678-1234-1234-1234-123456789012providersmicrosoftauthorizationroledefinitions8e3af657-a8ff-443c-a75c-2fe8c4bcb635-f5e6d7c8-b9a0-1234-5678-9abcdef01234-subscriptions12345678-1234-1234-1234-123"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                                    AppId                                SecretExpiry        CertExpiry
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>--------------------------------------  ------------------------------------ -------------------- --------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>GraphAPI-Integration                    a7f2c891-4d3e-4b2a-9e1f-5c8d2a3b4e5f 2025-03-15T10:30:00Z 2025-06-20T14:45:00Z
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>ServiceBusConnector                     b8e3d9a2-5e4f-5c3b-0f2g-6d9e3b4c5f6g 2025-02-28T08:15:00Z None
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>WebAppAuth                              c9f4e0b3-6f5g-6d4c-1g3h-7e0f4c5d6g7h None                 2025-08-10T16:20:00Z
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>SP                                      Expiry
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>--------------------------------------  --------------------
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>legacy-batch-processor                  2024-11-30T12:00:00Z
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>old-automation-account                  2024-09-15T09:30:00Z
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Principal                               Role                      Scope                                                     Type
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>--------------------------------------  ------------------------  --------------------------------------------------------- --------
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>alice.johnson@contoso.com               Owner                     /subscriptions/12345678-1234-1234-1234-123456789012     User
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>bob.smith@contoso.com                   Contributor               /subscriptions/12345678-1234-1234-1234-123456789012     User
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>managed-identity-prod-01                Reader                    /subscriptions/12345678-1234-1234-1234-123456789012     ServicePrincipal
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>automation-runbook-svc                  Virtual Machine Operator  /subscriptions/12345678-1234-1234-1234-123456789012     ServicePrincipal
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Name                                    Status                    Severity      Resource
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>--------------------------------------  ----------------------- -------------- -----------------------------------------------
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>MFA should be enabled on accounts with write permissions
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>Enabled                                 High                      /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>Unencrypted data in transit detected    Enabled                   Critical      /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>SQL Server auditing disabled            Enabled                   Medium        /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Sql/servers/sqldb-prod
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>Principal                               Role                                          Scope
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>--------------------------------------  ------------------------------------------------ -----------------------------------------------
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>a1b2c3d4-e5f6-7890-abcd-ef1234567890   /subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>f5e6d7c8-b9a0-1234-5678-9abcdef01234   /subscriptions/12345678-1234-1234-1234-123
+</code></pre></div><a class="headerlink" href="#expected-outputname-appid-secretexpiry-certexpiry-graphapi-integration-a7f2c891-4d3e-4b2a-9e1f-5c8d2a3b4e5f-2025-03-15t103000z-2025-06-20t144500z-servicebusconnector-b8e3d9a2-5e4f-5c3b-0f2g-6d9e3b4c5f6g-2025-02-28t081500z-none-webappauth-c9f4e0b3-6f5g-6d4c-1g3h-7e0f4c5d6g7h-none-2025-08-10t162000z-sp-expiry-legacy-batch-processor-2024-11-30t120000z-old-automation-account-2024-09-15t093000z-principal-role-scope-type-alicejohnsoncontosocom-owner-subscriptions12345678-1234-1234-1234-123456789012-user-bobsmithcontosocom-contributor-subscriptions12345678-1234-1234-1234-123456789012-user-managed-identity-prod-01-reader-subscriptions12345678-1234-1234-1234-123456789012-serviceprincipal-automation-runbook-svc-virtual-machine-operator-subscriptions12345678-1234-1234-1234-123456789012-serviceprincipal-name-status-severity-resource-mfa-should-be-enabled-on-accounts-with-write-permissions-enabled-high-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rg-unencrypted-data-in-transit-detected-enabled-critical-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rgprovidersmicrosoftcomputevirtualmachinesweb-vm-01-sql-server-auditing-disabled-enabled-medium-subscriptions12345678-1234-1234-1234-123456789012resourcegroupsprod-rgprovidersmicrosoftsqlserverssqldb-prod-principal-role-scope-a1b2c3d4-e5f6-7890-abcd-ef1234567890-subscriptions12345678-1234-1234-1234-123456789012providersmicrosoftauthorizationroledefinitions8e3af657-a8ff-443c-a75c-2fe8c4bcb635-f5e6d7c8-b9a0-1234-5678-9abcdef01234-subscriptions12345678-1234-1234-1234-123" title="Permanent link">&para;</a></h2>
 <h2 id="cost-optimization">Cost Optimization<a class="headerlink" href="#cost-optimization" title="Permanent link">&para;</a></h2>
 <p>Review spend by resource group, identify idle resources, and check budget thresholds.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Current month cost by resource group</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>consumption<span class="w"> </span>usage<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--billing-period-name<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;sort_by([].{RG:instanceName,Cost:pretaxCost,Currency:currency}, &amp;Cost)[-10:]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Azure Advisor cost recommendations</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Title:shortDescription.solution,Impact:impact,Savings:extendedProperties.annualSavingsAmount,Resource:resourceMetadata.resourceId}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Budget status</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>az<span class="w"> </span>consumption<span class="w"> </span>budget<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Limit:amount,TimeGrain:timeGrain,Current:currentSpend.amount,Forecast:forecastSpend.amount}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Deallocated VMs still incurring managed disk costs</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,OSDisk:storageProfile.osDisk.name}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Unattached managed disks (orphaned, accruing cost)</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached`].{Name:name,RG:resourceGroup,SizeGB:diskSizeGb,SKU:sku.name,Created:timeCreated}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="c1"># Unused public IP addresses</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?ipAddress==null || ipAddress==``].{Name:name,RG:resourceGroup,SKU:sku.name,AllocationMethod:publicIPAllocationMethod}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>-o<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Current month cost by resource group</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>consumption<span class="w"> </span>usage<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--billing-period-name<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;sort_by([].{RG:instanceName,Cost:pretaxCost,Currency:currency}, &amp;Cost)[-10:]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Azure Advisor cost recommendations</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Title:shortDescription.solution,Impact:impact,Savings:extendedProperties.annualSavingsAmount,Resource:resourceMetadata.resourceId}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Budget status</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>az<span class="w"> </span>consumption<span class="w"> </span>budget<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[].{Name:name,Limit:amount,TimeGrain:timeGrain,Current:currentSpend.amount,Forecast:forecastSpend.amount}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Deallocated VMs still incurring managed disk costs</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,OSDisk:storageProfile.osDisk.name}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># Unattached managed disks (orphaned, accruing cost)</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached`].{Name:name,RG:resourceGroup,SizeGB:diskSizeGb,SKU:sku.name,Created:timeCreated}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="c1"># Unused public IP addresses</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?ipAddress==null || ipAddress==``].{Name:name,RG:resourceGroup,SKU:sku.name,AllocationMethod:publicIPAllocationMethod}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="w">  </span>-o<span class="w"> </span>table
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name                          Cost        Currency
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>myapp-prod-rg                 4521.89     USD
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>data-analytics-rg             3847.12     USD
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>legacy-services-rg            2156.43     USD
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>dev-test-rg                   891.27      USD
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>backup-vault-rg               654.18      USD
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>monitoring-rg                 423.56      USD
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>network-rg                    287.91      USD
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>storage-archive-rg            156.34      USD
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>...
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Title                                                Impact    Savings              Resource
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Resize underutilized Virtual Machines               Medium    $1,247.00/year       /subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/myapp-prod-rg/providers/Microsoft.Compute/virtualMachines/web-server-01
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Delete unattached managed disks                     Low       $892.50/year         /subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/data-analytics-rg/providers/Microsoft.Compute/disks/orphaned-disk-042
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Release unused public IP addresses                  Low       $456.00/year         /subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/legacy-services-rg/providers/Microsoft.Network/publicIPAddresses/unused-pip-001
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Reduce SQL Database compute capacity                High      $2,134.75/year       /subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/dev-test-rg/providers/Microsoft.Sql/servers/analytics-db/databases/warehouse
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Name              Limit      TimeGrain    Current    Forecast
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Production-Q1     5000.00    Monthly      3847.12    4521.89
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Development       1000.00    Monthly      891.27     945.33
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Backup-Services   2000.00    Monthly      654.18     712.45
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Name                    RG                  Size          OSDisk
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>legacy-app-vm-02        legacy-services-rg  Standard_D4s  legacy-app-vm-02_OsDisk_1
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>test-server-04          dev-test-rg         Standard_B2s  test-server-04_OsDisk_1
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>Name                    RG                  SizeGB    SKU              Created
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>orphaned-disk-042       data-analytics-rg   256       Premium_LRS      2023-11-15T08:22:14.000000+00:00
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>unused-backup-disk-018  backup-vault-rg     512       StandardSSD_LRS  2023-10-02T14:45:33.000000+00:00
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>old-snapshot-disk-007   monitoring-rg       128       Standard_LRS     2023-09-28T11:18:09.000000+00:00
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>Name                    RG              SKU      AllocationMethod
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>unused-pip-001          legacy-services-r
 </code></pre></div>
 <blockquote>
 <p>To set a budget alert: use <code>az consumption budget create</code> or configure in the Azure Portal under <strong>Cost Management + Billing → Budgets</strong>. Set both an actual-spend threshold (e.g., 80%, 100%) and a forecast threshold to catch trends before they breach the limit.</p>
@@ -8785,34 +9015,81 @@ Azure daily health checks — runnable CLI routine covering service health incid
 <p>See also: <a href="../">Operations</a> for the full daily checklist and incident triage procedures.</p>
 <hr />
 <h2 id="quick-commands">Quick Commands<a class="headerlink" href="#quick-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List VMs with power state</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--show-details<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[name,resourceGroup,powerState,provisioningState]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Load balancer status</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--name<span class="w"> </span>&lt;lb-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{name:name,provisioningState:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Activity log — last 50 events</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--max-events<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Failed backup jobs</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>--vault-name<span class="w"> </span><span class="nv">$VAULT</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>-g<span class="w"> </span><span class="nv">$RG</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?properties.status==`Failed`].[properties.jobType,properties.startTime,properties.errorDetails]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Azure Service Health — active incidents</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>get<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ResourceHealth/events?api-version=2022-10-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List VMs with power state</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--show-details<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[name,resourceGroup,powerState,provisioningState]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Load balancer status</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>--name<span class="w"> </span>&lt;lb-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{name:name,provisioningState:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Activity log — last 50 events</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--max-events<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Failed backup jobs</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span>--vault-name<span class="w"> </span><span class="nv">$VAULT</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span>-g<span class="w"> </span><span class="nv">$RG</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?properties.status==`Failed`].[properties.jobType,properties.startTime,properties.errorDetails]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="c1"># Azure Service Health — active incidents</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>get<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ResourceHealth/events?api-version=2022-10-01&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                ResourceGroup      PowerState    ProvisioningState
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>------------------  -----------------  -----------   -----------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>prod-web-01         rg-production      VM running    Succeeded
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>prod-web-02         rg-production      VM running    Succeeded
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>staging-app-01      rg-staging         VM deallocated Succeeded
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>dev-db-01           rg-development     VM running    Succeeded
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Name              ProvisioningState
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>----------------  -----------------
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>lb-prod-eastus    Succeeded
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>EventTimestamp                    Level    OperationName                        Status
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>--------------------------------  -------  ------------------------------------  -----------
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>2024-01-15T14:32:18.456789Z       Info     Create or Update Virtual Machine     Succeeded
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>2024-01-15T13:47:22.123456Z       Info     Start Virtual Machine                Succeeded
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>2024-01-15T12:15:09.789012Z       Warning  Restart Virtual Machine              Succeeded
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>2024-01-15T11:03:44.345678Z       Error    Delete Network Interface             Failed
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>2024-01-15T10:22:15.901234Z       Info     Update Load Balancer                 Succeeded
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>JobType           StartTime                     ErrorDetails
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>----------------  ----------------------------  -----------------------------------------------
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>AzureIaaSVMJob    2024-01-14T22:30:00.000000Z   Snapshot creation failed: timeout after 3600s
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>AzureIaaSVMJob    2024-01-13T20:15:00.000000Z   Agent communication error on target VM
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>{
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  &quot;value&quot;: [
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>    {
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>      &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.ResourceHealth/events/incident-2024-0115-001&quot;,
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>      &quot;name&quot;: &quot;incident-2024-0115-001&quot;,
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>      &quot;type&quot;: &quot;Microsoft.ResourceHealth/events&quot;,
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>      &quot;properties&quot;: {
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>        &quot;eventType&quot;: &quot;ServiceIssue&quot;,
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>        &quot;title&quot;: &quot;Intermittent connectivity in East US region&quot;,
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>        &quot;description&quot;: &quot;Some customers may experience latency&quot;,
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>        &quot;impactStartTime&quot;: &quot;2024-01-15T08:00:00Z&quot;,
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>        &quot;status&quot;: &quot;Active&quot;
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>      }
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>    }
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>  ]
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The following arguments are required: --name, --resource-group</code></strong> — Replace <code>&lt;lb-name&gt;</code> and <code>&lt;rg&gt;</code> with actual load balancer name and resource group name.
+<strong><code>ERROR: argument --vault-name: expected one argument</code></strong> — Ensure the <code>$VAULT</code> and <code>$RG</code> environment variables are set before running the command (e.g., <code>export VAULT=myVault RG=myRG</code>).
+<strong><code>ERROR: Invalid subscription ID in URL</code></strong> — Replace <code>{subscriptionId}</code> with your actual subscription ID using <code>az account show --query id -o tsv</code>.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8849,7 +9126,7 @@ Azure daily health checks — runnable CLI routine covering service health incid
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

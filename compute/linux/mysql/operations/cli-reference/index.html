@@ -8325,47 +8325,231 @@ MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbi
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>SHOW<span class="w"> </span>FULL<span class="w"> </span>PROCESSLIST<span class="p">;</span><span class="w">                    </span><span class="c1"># full query text</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>KILL<span class="w"> </span>&lt;process_id&gt;<span class="p">;</span><span class="w">                        </span><span class="c1"># kill a blocking query</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mysql&gt; SHOW DATABASES;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>+--------------------+
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Database           |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>+--------------------+
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| information_schema |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| mysql              |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| performance_schema |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| sys                |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| production_db      |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| staging_db         |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>+--------------------+
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>6 rows in set (0.02 sec)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>mysql&gt; SET SESSION long_query_time = 0;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Query OK, 0 rows affected (0.00 sec)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mysql&gt; SHOW PROCESSLIST;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>+----+------+-----------+---------------+---------+------+-------+------------------+
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Id | User | Host      | db            | Command | Time | State | Info             |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>+----+------+-----------+---------------+---------+------+-------+------------------+
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|  5 | root | localhost | production_db | Sleep   |  342 | NULL  | NULL             |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|  8 | app  | 10.2.4.19 | production_db | Query   |    2 | init  | SELECT * FROM... |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| 12 | root | localhost | NULL          | Query   |    0 | init  | SHOW PROCESSLIST |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>+----+------+-----------+---------------+---------+------+-------+------------------+
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>3 rows in set (0.00 sec)
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>mysql&gt; KILL 8;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Query OK, 0 rows affected (0.01 sec)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the password is correct and the user has login privileges; check MySQL user grants with <code>SELECT user, host FROM mysql.user;</code>.
+<strong><code>ERROR 2003 (HY000): Can't connect to MySQL server on '&lt;host&gt;' (111)</code></strong> — Confirm the MySQL server is running on the target host with <code>systemctl status mysql</code> and verify network connectivity with <code>ping &lt;host&gt;</code> or <code>nc -zv &lt;host&gt; 3306</code>.
+<strong><code>ERROR 1317 (70100): Query execution was interrupted</code></strong> — This occurs when killing a long-running query; it is expected behavior and the connection will close or return to the prompt.</p>
+</div>
 <h2 id="mysqladmin">mysqladmin<a class="headerlink" href="#mysqladmin" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>status<span class="w">              </span><span class="c1"># uptime, queries/sec, threads</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>extended-status<span class="w">     </span><span class="c1"># all status variables</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>variables<span class="w">           </span><span class="c1"># all config variables</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>flush-logs<span class="w">          </span><span class="c1"># rotate logs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>processlist<span class="w">         </span><span class="c1"># same as SHOW PROCESSLIST</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ping<span class="w">                </span><span class="c1"># quick reachability check</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>status<span class="w">              </span><span class="c1"># uptime, queries/sec, threads</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>extended-status<span class="w">     </span><span class="c1"># all status variables</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>variables<span class="w">           </span><span class="c1"># all config variables</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>flush-logs<span class="w">          </span><span class="c1"># rotate logs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>processlist<span class="w">         </span><span class="c1"># same as SHOW PROCESSLIST</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mysqladmin<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ping<span class="w">                </span><span class="c1"># quick reachability check</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Uptime: 45823  Threads: 12  Questions: 1847392  Slow queries: 3  Opens: 156  Flush tables: 1  Open tables: 89  Queries per second avg: 40.32
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>| Variable_name                    | Value                          |
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| Com_select                       | 892341                         |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| Com_insert                       | 234156                         |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| Com_update                       | 156234                         |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| Com_delete                       | 12345                          |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>| Threads_connected               | 12                             |
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>| Threads_running                 | 3                              |
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| Questions                       | 1847392                        |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| Slow_queries                    | 3                              |
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>...
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>| Variable_name                    | Value                          |
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>| datadir                          | /var/lib/mysql/                |
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>| port                             | 3306                           |
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>| bind_address                     | 127.0.0.1                     |
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>| max_connections                  | 151                            |
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>| innodb_buffer_pool_size          | 1073741824                     |
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>| log_error                        | /var/log/mysql/error.log       |
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>| slow_query_log                   | ON                             |
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>| slow_query_log_file              | /var/log/mysql/slow.log        |
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>...
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>(no output — command completes silently)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>+----+------+-----------+------+---------+-------+-------+------------------+----------+
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>| Id | User | Host      | db   | Command | Time  | State | Info             | Progress |
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>+----+------+-----------+------+---------+-------+-------+------------------+----------+
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>| 42 | root | localhost | NULL | Query   | 0     | init  | SHOW PROCESSLIST | 0.000    |
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>| 43 | app  | 10.0.1.45 | prod | Sleep   | 1234  |       | NULL             | 0.000    |
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>+----+------+-----------+------+---------+-------+-------+------------------+----------+
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>mysqld is alive
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mysqladmin: connect to server at 'localhost' failed</code></strong> — Verify MySQL service is running with <code>systemctl status mysql</code> and check bind_address configuration.
+<strong><code>Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Ensure the password is correct or use <code>mysql_config_editor set --login-path=local --user=root --password</code> to store credentials securely.
+<strong><code>mysqladmin: unknown command 'extended-status'</code></strong> — Use <code>extended-status</code> without the hyphen or upgrade to a supported MySQL version; check <code>mysqladmin --help</code> for available commands.</p>
+</div>
 <h2 id="mysqldump">mysqldump<a class="headerlink" href="#mysqldump" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full DB dump (InnoDB consistent snapshot)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>--routines<span class="w"> </span>--triggers<span class="w"> </span>--all-databases<span class="w"> </span>&gt;<span class="w"> </span>full.sql
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Single database</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>mydb<span class="w"> </span>&gt;<span class="w"> </span>mydb.sql
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Compressed</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>mydb<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span>mydb_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.sql.gz
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Restore</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>mydb<span class="w"> </span>&lt;<span class="w"> </span>mydb.sql
-</code></pre></div>
-<h2 id="mysqlcheck">mysqlcheck<a class="headerlink" href="#mysqlcheck" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--all-databases<span class="w">     </span><span class="c1"># check all tables</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--optimize<span class="w"> </span>mydb<span class="w">     </span><span class="c1"># reclaim fragmented space</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--repair<span class="w"> </span>mydb<span class="w">       </span><span class="c1"># repair MyISAM corruption</span>
-</code></pre></div>
-<h2 id="mysqlbinlog">mysqlbinlog<a class="headerlink" href="#mysqlbinlog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View binlog events</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mysqlbinlog<span class="w"> </span>/var/lib/mysql/mysql-bin.000001<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Full DB dump (InnoDB consistent snapshot)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>--routines<span class="w"> </span>--triggers<span class="w"> </span>--all-databases<span class="w"> </span>&gt;<span class="w"> </span>full.sql
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># PITR: apply binlog from specific time</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mysqlbinlog<span class="w"> </span>--start-datetime<span class="o">=</span><span class="s2">&quot;2026-06-08 10:00:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">            </span>--stop-datetime<span class="o">=</span><span class="s2">&quot;2026-06-08 10:30:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">            </span>/var/lib/mysql/mysql-bin.000001<span class="w"> </span><span class="p">|</span><span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Single database</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>mydb<span class="w"> </span>&gt;<span class="w"> </span>mydb.sql
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Compressed</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>mydb<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span>mydb_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.sql.gz
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Restore</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>mydb<span class="w"> </span>&lt;<span class="w"> </span>mydb.sql
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Enter password: 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Enter password: 
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>(no output — command completes silently)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Enter password: 
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>(no output — command completes silently)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Enter password: 
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>(no output — command completes silently)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>$ ls -lh *.sql*
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-rw-r--r-- 1 root root 2.3G Nov 15 10:42 full.sql
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>-rw-r--r-- 1 root root 847M Nov 15 10:58 mydb.sql
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>-rw-r--r-- 1 root root 156M Nov 15 11:03 mydb_2024-11-15.sql.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mysqldump: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the MySQL service is running with <code>mysql -u root -p -e "SELECT 1;"</code>.
+<strong><code>ERROR 1064 (42000) at line 156: You have an error in your SQL syntax</code></strong> — The dump file may be corrupted or from an incompatible MySQL version; try restoring with <code>--force</code> flag or verify the dump with <code>head -50 mydb.sql</code>.
+<strong><code>ERROR 1273 (HY000): Unknown collation: 'utf8mb4_0900_ai_ci'</code></strong> — The dump was created on MySQL 8.0+ but you're restoring to an older version; add <code>--compatible=mysql57</code> to the mysqldump command.</p>
+</div>
+<h2 id="mysqlcheck">mysqlcheck<a class="headerlink" href="#mysqlcheck" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--all-databases<span class="w">     </span><span class="c1"># check all tables</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--optimize<span class="w"> </span>mydb<span class="w">     </span><span class="c1"># reclaim fragmented space</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--repair<span class="w"> </span>mydb<span class="w">       </span><span class="c1"># repair MyISAM corruption</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Enter password:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mydb.users                                     OK
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mydb.orders                                    OK
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>mydb.products                                  OK
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>mydb.logs                                      OK
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>mydb.sessions                                  OK
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>...
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>mysql.user                                     OK
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>mysql.db                                       OK
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>mydb.users                                     OK
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>mydb.orders                                    Table is already up to date
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>mydb.products                                  Table is already up to date
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>mydb.logs                                      Table is already up to date
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>mydb.sessions                                  Table is already up to date
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>mydb.users                                     OK
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>mydb.orders                                    OK
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>mydb.products                                  OK
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>mydb.logs                                      OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the user has sufficient privileges with <code>SHOW GRANTS FOR 'root'@'localhost';</code>.
+<strong><code>mysqlcheck: Got error: 1017: Can't find file: './mydb/orders.MYI' (errno: 2)</code></strong> — Stop the MySQL service, check file permissions in the data directory with <code>ls -la /var/lib/mysql/mydb/</code>, and restart MySQL.
+<strong><code>Table 'mydb.orders' doesn't exist</code></strong> — Confirm the database and table names are spelled correctly and exist with <code>SHOW TABLES FROM mydb;</code>.</p>
+</div>
+<h2 id="mysqlbinlog">mysqlbinlog<a class="headerlink" href="#mysqlbinlog" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View binlog events</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mysqlbinlog<span class="w"> </span>/var/lib/mysql/mysql-bin.000001<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># PITR: apply binlog from specific time</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>mysqlbinlog<span class="w"> </span>--start-datetime<span class="o">=</span><span class="s2">&quot;2026-06-08 10:00:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">            </span>--stop-datetime<span class="o">=</span><span class="s2">&quot;2026-06-08 10:30:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">            </span>/var/lib/mysql/mysql-bin.000001<span class="w"> </span><span class="p">|</span><span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>DELIMITER /*!*/;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># at 4
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>#260608 09:45:23 server id 1  end_log_pos 123 CRC32 0x8f2a1c4e  Start: binlog v 4, server v 5.7.42-40-log, create_time 1717859123, binlog_do_db=, binlog_ignore_db=
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a># at 123
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>#260608 10:05:17 server id 1  end_log_pos 456 CRC32 0x3d7e9b21  Query thread_id=42  exec_time=0  error_code=0
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>use `production`/*!*/;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>SET TIMESTAMP=1717860317/*!*/;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>INSERT INTO users (id, name, email) VALUES (1001, &#39;john.doe&#39;, &#39;john@example.com&#39;)
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>/*!*/;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a># at 456
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>#260608 10:15:42 server id 1  end_log_pos 789 CRC32 0x5c1a2d8f  Query thread_id=43  exec_time=1  error_code=0
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>UPDATE orders SET status=&#39;shipped&#39; WHERE order_id=5042
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>/*!*/;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>DELIMITER ;
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a># End of log file
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)</code></strong> — Add <code>-p</code> flag or provide password via <code>MYSQL_PWD</code> environment variable before piping to mysql.
+<strong><code>ERROR: Could not find target log file</code></strong> — Verify the binlog file path exists with <code>ls -la /var/lib/mysql/mysql-bin.000001</code> and check file permissions.
+<strong><code>ERROR 1064 (42000): You have an error in your SQL syntax</code></strong> — Ensure datetime format matches exactly <code>'YYYY-MM-DD HH:MM:SS'</code> and falls within the actual binlog event timestamps.</p>
+</div>
 <h2 id="percona-toolkit">Percona Toolkit<a class="headerlink" href="#percona-toolkit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pt-query-digest<span class="w"> </span>/var/log/mysql/slow.log<span class="w">   </span><span class="c1"># analyse slow query log</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pt-table-checksum<span class="w"> </span>--host<span class="o">=</span>primary<span class="w"> </span>--user<span class="o">=</span>root<span class="w">   </span><span class="c1"># verify replica consistency</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pt-online-schema-change<span class="w">                   </span><span class="c1"># non-blocking ALTER TABLE</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pt-kill<span class="w"> </span>--busy-time<span class="w"> </span><span class="m">300</span><span class="w"> </span>--kill<span class="w">            </span><span class="c1"># kill queries running &gt; 5 min</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pt-query-digest<span class="w"> </span>/var/log/mysql/slow.log<span class="w">   </span><span class="c1"># analyse slow query log</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pt-table-checksum<span class="w"> </span>--host<span class="o">=</span>primary<span class="w"> </span>--user<span class="o">=</span>root<span class="w">   </span><span class="c1"># verify replica consistency</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>pt-online-schema-change<span class="w">                   </span><span class="c1"># non-blocking ALTER TABLE</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>pt-kill<span class="w"> </span>--busy-time<span class="w"> </span><span class="m">300</span><span class="w"> </span>--kill<span class="w">            </span><span class="c1"># kill queries running &gt; 5 min</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Parsing slow query log /var/log/mysql/slow.log...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a># 2024-01-15 10:23:45 [INFO] Query_time distribution
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>#   1us
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>#  10us
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a># 100us
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>#   1ms  ################################################################
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>#  10ms  ############################
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a># 100ms  ########
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>#   1s   ##
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>#  10s+  #
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a># Tables in the report: 3
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a># Databases in the report: 2
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a># Most recent slow query timestamp: 2024-01-15 10:22:18
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a># Longest query seen: 12.45 sec
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a># Not all byte counts were known
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>Checking replica consistency...
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Checking h=primary,P=3306,u=root
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  TS ERRORS  DIFFS  ROWS  CHUNKS SKIPPED  TIME TABLE
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>01-15T10:24:33      0      0  4521     18      0  2.341 myapp.users
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>01-15T10:24:35      0      0  8934     22      0  3.127 myapp.orders
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>01-15T10:24:37      0      0  1203      5      0  1.892 myapp.logs
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>Altering table myapp.users...
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>Creating new table...
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>Copying rows...
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>Swapping tables...
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>Dropping old table...
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>Table altered successfully in 45.23 seconds
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>Killing long-running queries (busy-time &gt; 300 seconds)...
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>Killed query 4521 (user: app_user, time: 312 sec, db: myapp)
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>Killed query 4534 (user: app_user, time: 405 sec, db: myapp)
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>2 queries killed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Can't connect to MySQL server on 'primary' (111)</code></strong> — Verify the primary host is reachable and MySQL is running with <code>mysql -h primary -u root -e "SELECT 1"</code>.
+<strong><code>Table 'myapp.users' is locked by FLUSH TABLES WITH READ LOCK</code></strong> — Release the lock on the replica with <code>UNLOCK TABLES</code> before running pt-table-checksum.
+<strong><code>Percona Toolkit not found</code></strong> — Install Percona Toolkit with <code>apt-get install percona-toolkit</code> or <code>yum install percona-toolkit</code>.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8402,7 +8586,7 @@ MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

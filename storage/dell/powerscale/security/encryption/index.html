@@ -9067,23 +9067,70 @@ TLS certificate management and data encryption for Dell PowerScale.
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Confirm SmartEncrypt license is active</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>license<span class="w"> </span>licenses<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Encryption: True
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Encryption Mode: AES-256
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Encryption Key Rotation: Enabled
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Node: 1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Bay 1: SED (Self-Encrypting Drive) - Status: Active
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Bay 2: SED (Self-Encrypting Drive) - Status: Active
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Bay 3: SED (Self-Encrypting Drive) - Status: Active
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Bay 4: SED (Self-Encrypting Drive) - Status: Active
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Drive Details:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Bay: 1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  Model: TOSHIBA MG07ACA14TE
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Serial: Y5K0A01VFKDE
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  Encryption: Enabled
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  FIPS Mode: Compliant
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>License: SmartEncrypt
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  Status: Active
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Expiration: 2026-03-15
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Nodes Licensed: 6/6
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>isi: command not found</code></strong> — Ensure you are running commands on the PowerScale cluster management node or install the OneFS CLI tools.
+<strong><code>Error: Invalid node ID '&lt;node_id&gt;'</code></strong> — Replace <code>&lt;node_id&gt;</code> with an actual node number (e.g., <code>1</code>, <code>2</code>, <code>3</code>) from your cluster.
+<strong><code>Error: License not found or inactive</code></strong> — Contact Dell support to activate the SmartEncrypt license or verify the license key is properly installed via System Settings &gt; Licensing.</p>
+</div>
 <h3 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h3>
 <p>OneFS manages SED keys internally (local key management) by default. For regulatory environments requiring external key management, integrate with a KMIP-compliant external key manager (e.g., Dell Key Management Server, HashiCorp Vault, Thales).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View current key management configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi_kmip<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;KMIP not configured; using local key management&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Configure KMIP server (if applicable)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--hostname<span class="w"> </span>kmip.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">5696</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--certificate<span class="w"> </span>&lt;cert_path&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List KMIP servers</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Test KMIP connectivity</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;server_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current key management configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi_kmip<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;KMIP not configured; using local key management&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Configure KMIP server (if applicable)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--hostname<span class="w"> </span>kmip.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">5696</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--certificate<span class="w"> </span>&lt;cert_path&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List KMIP servers</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span>list
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Test KMIP connectivity</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi_kmip<span class="w"> </span>servers<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;server_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>KMIP not configured; using local key management
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Created KMIP server: kmip.example.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Server Name                Hostname              Port    Status
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>kmip.example.com           kmip.example.com      5696    Active
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>kmip-backup.example.com    kmip-backup.example.com 5696  Active
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Testing KMIP server connectivity...
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Server: kmip.example.com
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Status: Connected
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Response Time: 45ms
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Certificate Valid Until: 2026-03-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at &lt;cert_path&gt;</code></strong> — Verify the certificate path is absolute and readable with <code>ls -la &lt;cert_path&gt;</code>.
+<strong><code>Error: Unable to connect to kmip.example.com:5696 - Connection refused</code></strong> — Confirm the KMIP server is running and firewall rules allow outbound port 5696 from the PowerScale cluster.
+<strong><code>Error: Certificate validation failed - untrusted CA</code></strong> — Import the KMIP server's CA certificate to the PowerScale cluster using <code>isi_kmip ca import</code>.</p>
+</div>
 <h3 id="sed-operational-notes">SED Operational Notes<a class="headerlink" href="#sed-operational-notes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9118,68 +9165,155 @@ TLS certificate management and data encryption for Dell PowerScale.
 <h2 id="synciq-replication-encryption">SyncIQ — Replication Encryption<a class="headerlink" href="#synciq-replication-encryption" title="Permanent link">&para;</a></h2>
 <p>By default, SyncIQ replication traffic crosses the WAN without encryption. Enable TLS encryption on replication policies for any data classified as sensitive or where the WAN link is untrusted.</p>
 <h3 id="enabling-synciq-encryption">Enabling SyncIQ Encryption<a class="headerlink" href="#enabling-synciq-encryption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Require encryption on a specific SyncIQ policy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--encryption-required<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View encryption status of all policies</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Encryption&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Require encryption at a global level (all new policies)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--encryption-required<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># View global SyncIQ settings</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Require encryption on a specific SyncIQ policy</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--encryption-required<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View encryption status of all policies</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Encryption&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Require encryption at a global level (all new policies)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--encryption-required<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># View global SyncIQ settings</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Modify policy &#39;prod-backup-daily&#39;: encryption required set to true
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Name                          Encryption Required
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>prod-backup-daily             true
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>dr-hourly-sync                false
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>archive-weekly                false
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>test-policy-01                false
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Modify global settings: encryption required set to true
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>(no output — command completes silently)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>=== Global SyncIQ Settings ===
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Encryption Required:           true
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Bandwidth Throttling:          disabled
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Connection Pool Size:          4
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Report Email Interval:         weekly
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Max Parallel Transfers:        8
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Bandwidth Limit (Mbps):        unlimited
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy '&lt;policy_name&gt;' not found</code></strong> — Verify the policy name exists with <code>isi sync policies list</code> and use the exact name.
+<strong><code>Error: Access denied. Insufficient privileges for this operation</code></strong> — Run the command with appropriate admin credentials or use <code>sudo isi</code> if configured for passwordless sudo.</p>
+</div>
 <h3 id="synciq-certificate-management">SyncIQ Certificate Management<a class="headerlink" href="#synciq-certificate-management" title="Permanent link">&para;</a></h3>
 <p>SyncIQ uses certificates to authenticate cluster-to-cluster connections. In older OneFS versions, this was based on shared keys; in OneFS 9.x, TLS certificates are used.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List replication peer certificates</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>target<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View the certificate for a specific target policy</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>target<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check SyncIQ service certificate</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>cert
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Import a CA certificate for SyncIQ peer validation</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>import<span class="w"> </span>--certificate-path<span class="w"> </span>/ifs/certs/ca.pem
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># List all CA certificates</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>list
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Delete an expired CA certificate</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>delete<span class="w"> </span>&lt;cert_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List replication peer certificates</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>target<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># View the certificate for a specific target policy</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>target<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check SyncIQ service certificate</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>cert
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Import a CA certificate for SyncIQ peer validation</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>import<span class="w"> </span>--certificate-path<span class="w"> </span>/ifs/certs/ca.pem
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># List all CA certificates</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>list
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Delete an expired CA certificate</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>delete<span class="w"> </span>&lt;cert_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ID                          Policy Name              Target Cluster           Replication State
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1                           prod-to-dr               192.168.1.50             Active
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2                           prod-to-backup           10.20.30.40              Idle
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>3                           archive-sync             172.16.0.100             Active
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Policy Name: prod-to-dr
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Target Cluster: 192.168.1.50
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Certificate Subject: CN=dr-cluster.example.com,O=Example Corp,C=US
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Certificate Expiration: 2025-12-15
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>certificate_path: /ifs/data/synciq/certs/synciq.pem
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>certificate_expiration: 2026-03-20
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>certificate_status: Valid
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Certificate imported successfully.
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Certificate ID: ca-cert-2024-001
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Subject: CN=ca.example.com,O=Example Corp,C=US
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>ID                          Subject                                    Expiration       Status
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>ca-cert-2024-001            CN=ca.example.com,O=Example Corp,C=US     2026-03-20       Valid
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>ca-cert-2023-005            CN=old-ca.example.com,O=Example Corp      2024-11-10       Expired
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>ca-cert-2023-002            CN=intermediate-ca.example.com,C=US       2025-08-30       Valid
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Certificate ca-cert-2023-005 deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>isi: command not found</code></strong> — Ensure the OneFS CLI tools are installed and the PATH includes <code>/usr/local/bin</code> or the appropriate OneFS installation directory.
+<strong><code>Error: Certificate not found or invalid certificate ID</code></strong> — Verify the certificate ID exists by running <code>isi certificate authority list</code> and use the exact ID from the output.
+<strong><code>Error: Certificate is in use by active replication policies</code></strong> — Delete or update all replication policies using the certificate before attempting to remove it.</p>
+</div>
 <hr />
 <h2 id="smb-encryption">SMB Encryption<a class="headerlink" href="#smb-encryption" title="Permanent link">&para;</a></h2>
 <p>SMB3 encryption provides end-to-end encryption of data in transit between Windows clients and the PowerScale cluster. SMB3 encryption requires Windows 8/Server 2012 or later clients.</p>
 <h3 id="enabling-smb-encryption">Enabling SMB Encryption<a class="headerlink" href="#enabling-smb-encryption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable SMB3 encryption on a specific share</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable SMB3 encryption for all shares in an access zone</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Enable SMB3 encryption cluster-wide (all zones)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify encryption setting on a share</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># View SMB global settings including encryption</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|signing&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable SMB3 encryption on a specific share</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Enable SMB3 encryption for all shares in an access zone</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Enable SMB3 encryption cluster-wide (all zones)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify encryption setting on a share</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># View SMB global settings including encryption</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|signing&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Share &lt;share_name&gt; modified successfully.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>(no output — command completes silently)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    encrypt_data: true
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    encrypt_data: true
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    smb_signing: required
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    smb_encryption: required
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    encryption_mode: aes-128-ccm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid share name '&lt;share_name&gt;'</code></strong> — Replace <code>&lt;share_name&gt;</code> with an actual share name from <code>isi smb shares list</code>.
+<strong><code>Error: Access denied. Insufficient privileges to modify SMB settings.</code></strong> — Run the command with root or admin credentials, or use <code>sudo isi</code> if configured.
+<strong><code>Error: Zone '&lt;zone_name&gt;' does not exist</code></strong> — Verify the zone name exists by running <code>isi zone zones list</code> first.</p>
+</div>
 <h3 id="smb-signing">SMB Signing<a class="headerlink" href="#smb-signing" title="Permanent link">&para;</a></h3>
 <p>SMB signing verifies the integrity of SMB packets and prevents man-in-the-middle attacks. Signing is distinct from encryption — it validates data integrity without encrypting the content.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Require SMB signing for all clients (recommended baseline)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify signing configuration</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View per-zone SMB settings</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Require SMB signing for all clients (recommended baseline)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify signing configuration</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># View per-zone SMB settings</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>SMB server signing has been set to required.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Server signing: required
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Require signing: Yes
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Per-zone SMB Settings for zone &#39;System&#39;:
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Zone name: System
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Server signing: required
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  Signing required: true
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  SMB dialects: SMB2, SMB3
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  Encryption: preferred
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid zone name '&lt;zone_name&gt;'</code></strong> — Replace <code>&lt;zone_name&gt;</code> with an actual zone name from your cluster (e.g., <code>System</code> or <code>zone-1</code>).
+<strong><code>Error: Permission denied</code></strong> — Run the command with appropriate admin credentials or use <code>sudo isi</code> if your user lacks SMB configuration privileges.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9209,55 +9343,117 @@ TLS certificate management and data encryption for Dell PowerScale.
 <hr />
 <h2 id="nfs-encryption-kerberos-krb5p">NFS Encryption (Kerberos krb5p)<a class="headerlink" href="#nfs-encryption-kerberos-krb5p" title="Permanent link">&para;</a></h2>
 <p>NFSv4 with the <code>krb5p</code> security flavor provides NFS packet-level encryption. All NFS data in transit is encrypted using the Kerberos session key.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable krb5p on an NFS export (strongest NFS security)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5p
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Enable multiple security flavors (clients negotiate the strongest supported)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5p,krb5i,krb5
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># View security flavors on an export</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;security&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># View all exports and their security settings</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Export|Security&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable krb5p on an NFS export (strongest NFS security)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5p
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Enable multiple security flavors (clients negotiate the strongest supported)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5p,krb5i,krb5
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># View security flavors on an export</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;security&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># View all exports and their security settings</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Export|Security&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Modify operation completed successfully.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Modify operation completed successfully.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Security Flavors: krb5p
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Export ID: /ifs/data/prod
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Security Flavors: krb5p,krb5i,krb5
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Export ID: /ifs/data/archive
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Security Flavors: sys
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Export ID: /ifs/data/public
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Security Flavors: krb5p,krb5i
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Export ID: /ifs/data/backup
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Security Flavors: krb5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid export ID</code></strong> — Verify the export ID exists by running <code>isi nfs exports list</code> and use the correct numeric or path identifier.
+<strong><code>Error: Security flavor 'krb5p' is not supported on this cluster</code></strong> — Ensure Kerberos is configured on the cluster with <code>isi auth krb5 view</code> and that the KDC is reachable.
+<strong><code>Error: Cannot modify export while clients are actively connected</code></strong> — Disconnect all NFS clients from the export or use the <code>--force</code> flag to apply changes immediately.</p>
+</div>
 <p><code>krb5p</code> requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See <a href="authentication/index.md">Authentication</a> for Kerberos setup.</p>
 <hr />
 <h2 id="management-interface-encryption-https-tls">Management Interface Encryption (HTTPS / TLS)<a class="headerlink" href="#management-interface-encryption-https-tls" title="Permanent link">&para;</a></h2>
 <h3 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h3>
 <p>OneFS exposes the management API and web UI over HTTPS. Configure TLS to meet security baselines:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View current SSL/TLS certificate on the management interface</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>view<span class="w"> </span>&lt;cert_id&gt;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Generate a new self-signed certificate for the management interface</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--certificate-path<span class="w"> </span>/ifs/certs/mgmt.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>--private-key-path<span class="w"> </span>/ifs/certs/mgmt.key
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Import a CA-signed certificate</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>--certificate-path<span class="w"> </span>/ifs/certs/mgmt-signed.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>--private-key-path<span class="w"> </span>/ifs/certs/mgmt.key
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># View certificate expiration date</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expire&quot;</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Set the active management certificate</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>modify<span class="w"> </span>&lt;cert_id&gt;<span class="w"> </span>--default-https<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View current SSL/TLS certificate on the management interface</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>view<span class="w"> </span>&lt;cert_id&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Generate a new self-signed certificate for the management interface</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--certificate-path<span class="w"> </span>/ifs/certs/mgmt.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>--private-key-path<span class="w"> </span>/ifs/certs/mgmt.key
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Import a CA-signed certificate</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span>--certificate-path<span class="w"> </span>/ifs/certs/mgmt-signed.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span>--private-key-path<span class="w"> </span>/ifs/certs/mgmt.key
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># View certificate expiration date</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expire&quot;</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Set the active management certificate</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>modify<span class="w"> </span>&lt;cert_id&gt;<span class="w"> </span>--default-https<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ID                                     Name                 Expires              Status
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d   mgmt-default         2025-03-15 14:32:00  Active
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>1f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c   mgmt-signed          2026-09-22 08:15:00  Inactive
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Certificate ID: 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Name: mgmt-default
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Issuer: CN=powerscale-cluster-01.local
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Subject: CN=powerscale-cluster-01.local
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Expires: 2025-03-15 14:32:00
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Fingerprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Created self-signed certificate: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Imported CA-signed certificate: 1f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Name                 Expires
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>mgmt-default         2025-03-15 14:32:00
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>mgmt-signed          2026-09-22 08:15:00
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Certificate 1f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c set as default HTTPS certificate
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at /ifs/certs/mgmt.crt</code></strong> — Verify the certificate file path exists and is readable by the OneFS system user.
+<strong><code>Error: Private key does not match certificate</code></strong> — Ensure the private key and certificate were generated as a pair or import them together from the same CA bundle.
+<strong><code>Error: Certificate ID 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d not found</code></strong> — Run <code>isi certificate server list</code> to confirm the certificate ID exists before modifying it.</p>
+</div>
 <h3 id="tls-protocol-and-cipher-configuration">TLS Protocol and Cipher Configuration<a class="headerlink" href="#tls-protocol-and-cipher-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View current TLS configuration</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Disable TLS 1.0 and TLS 1.1 (requires OneFS 9.4+)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--tls-min-version<span class="w"> </span><span class="m">1</span>.2
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View current minimum TLS version</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;tls\|version&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># View current TLS configuration</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Disable TLS 1.0 and TLS 1.1 (requires OneFS 9.4+)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--tls-min-version<span class="w"> </span><span class="m">1</span>.2
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># View current minimum TLS version</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;tls\|version&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>TLS Minimum Version: 1.0
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>TLS Maximum Version: 1.3
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Cipher Suites: DEFAULT
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>HSTS Enabled: false
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>HSTS Max Age: 31536000
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Certificate Subject: CN=isiloncluster.example.com,O=Dell EMC,C=US
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>(no output — command completes silently)
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>TLS Minimum Version: 1.2
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>TLS Maximum Version: 1.3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: This operation requires OneFS 9.4 or later</code></strong> — Verify your OneFS version with <code>isi status</code> and upgrade if necessary before modifying TLS settings.
+<strong><code>Error: Invalid value '1.2' for --tls-min-version</code></strong> — Use only supported values (1.0, 1.1, 1.2, or 1.3) and ensure your OneFS version supports the requested minimum version.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9292,16 +9488,46 @@ TLS certificate management and data encryption for Dell PowerScale.
 <hr />
 <h2 id="s3-protocol-encryption">S3 Protocol Encryption<a class="headerlink" href="#s3-protocol-encryption" title="Permanent link">&para;</a></h2>
 <p>When the S3 access protocol is enabled in an access zone, configure it to require HTTPS:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View S3 settings for an access zone</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Require HTTPS for S3 access in a zone</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--https-only<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># View S3 buckets in a zone</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>isi<span class="w"> </span>s3<span class="w"> </span>buckets<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># View S3 settings for an access zone</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Require HTTPS for S3 access in a zone</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--https-only<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># View S3 buckets in a zone</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>isi<span class="w"> </span>s3<span class="w"> </span>buckets<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>=== S3 Global Settings ===
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>S3 Service: enabled
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Default Zone: System
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>HTTPS Only: false
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Server Certificate: /etc/isi_objects/certificates/server.crt
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Versioning: disabled
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>=== S3 Zone Settings (zone-1) ===
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Zone Name: zone-1
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>HTTPS Only: false
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Access Key Length: 20
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Secret Key Length: 40
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Bucket Naming: dns-compliant
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>Modify S3 zone settings zone-1...
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>HTTPS Only: true
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>(operation completed successfully)
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>=== S3 Buckets in zone-1 ===
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Name                          Owner              Created
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>backup-prod-01                admin              2024-01-15T09:23:44Z
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>data-archive-2024             svc_s3_user       2024-01-10T14:12:18Z
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>logs-retention-90d            monitoring        2024-01-08T11:45:02Z
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: zone &lt;zone_name&gt; not found</code></strong> — Verify the zone exists with <code>isi zones list</code> and use the correct zone name.
+<strong><code>Error: HTTPS only mode requires a valid server certificate</code></strong> — Ensure a valid SSL certificate is installed via <code>isi certificate server view</code> before enabling HTTPS-only mode.</p>
+</div>
 <hr />
 <h2 id="certificate-lifecycle-management">Certificate Lifecycle Management<a class="headerlink" href="#certificate-lifecycle-management" title="Permanent link">&para;</a></h2>
 <table>
@@ -9330,23 +9556,50 @@ TLS certificate management and data encryption for Dell PowerScale.
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check all server certificate expiration dates</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expiry|Valid&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check CA certificate expiration dates</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expiry|Valid&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Alert command — find certs expiring within 60 days</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># (run from a Linux management host)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">TODAY</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="k">$((</span><span class="nv">TODAY</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">60</span><span class="o">*</span><span class="m">86400</span><span class="k">))</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Expiry&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2, $3}&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Certificate expiring soon — </span><span class="nv">$line</span><span class="s2">&quot;</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="k">fi</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check all server certificate expiration dates</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expiry|Valid&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check CA certificate expiration dates</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>isi<span class="w"> </span>certificate<span class="w"> </span>authority<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Expiry|Valid&quot;</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Alert command — find certs expiring within 60 days</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># (run from a Linux management host)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nv">TODAY</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="k">$((</span><span class="nv">TODAY</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">60</span><span class="o">*</span><span class="m">86400</span><span class="k">))</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>isi<span class="w"> </span>certificate<span class="w"> </span>server<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Expiry&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2, $3}&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Certificate expiring soon — </span><span class="nv">$line</span><span class="s2">&quot;</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="k">done</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Name: powerscale-node1.corp.local
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Expiry: 2025-08-15 14:32:00
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Valid: Yes
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Name: powerscale-node2.corp.local
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Expiry: 2025-09-22 10:15:00
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Valid: Yes
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Name: powerscale-node3.corp.local
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>Expiry: 2025-07-18 09:45:00
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Valid: Yes
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>Name: Root-CA-2022
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Expiry: 2027-03-10 00:00:00
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>Valid: Yes
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>Name: Intermediate-CA-2023
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>Expiry: 2026-11-05 00:00:00
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>Valid: Yes
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>WARNING: Certificate expiring soon — Expiry: 2025-07-18 09:45:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>date: invalid date '2025-07-18 09:45:00'</code></strong> — Adjust the date parsing format in the awk command to match your system's locale (e.g., use <code>date -d "2025-07-18" +%s</code> without the time component).
+<strong><code>isi: command not found</code></strong> — Install the OneFS CLI tools or run this script from a management host with the PowerScale SDK installed and configured.</p>
+</div>
 <hr />
 <h2 id="encryption-compliance-reference">Encryption Compliance Reference<a class="headerlink" href="#encryption-compliance-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9419,7 +9672,7 @@ TLS certificate management and data encryption for Dell PowerScale.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:25:31 UTC"><span class="timeago" datetime="2026-06-29T04:25:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:25:31 UTC">2026-06-29</span>
   </span>
 
     

@@ -7749,58 +7749,167 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List recent restore jobs</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>qlist<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-d<span class="w"> </span><span class="m">1</span><span class="w"> </span>-restore
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Commvault Command Line Interface
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(c) Commvault Systems, Inc.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Job ID: 12847
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Subclient: database_backup_01
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Restore Point: 2024-01-01 12:00:00
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Status: Submitted
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Destination: Original Location
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Job submitted successfully.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Job ID: 12848
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Subclient: database_backup_01
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Restore Path: /restore/destination
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Status: Submitted
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Job submitted successfully.
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Job ID    | Subclient            | Type    | Status      | Start Time          | End Time
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>-----------|----------------------|---------|-------------|---------------------|---------------------
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>12848      | database_backup_01   | Restore | Completed   | 2024-01-15 14:22:10 | 2024-01-15 14:35:45
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>12847      | database_backup_01   | Restore | Running     | 2024-01-15 14:20:00 | -
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>12846      | web_app_backup       | Restore | Completed   | 2024-01-15 13:15:22 | 2024-01-15 13:28:10
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>12845      | database_backup_01   | Restore | Failed      | 2024-01-15 12:45:00 | 2024-01-15 12:47:33
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid subclient name '&lt;name&gt;'</code></strong> — Replace <code>&lt;name&gt;</code> with the actual subclient name from your backup policy (use <code>qlist subclients</code> to list available subclients).
+<strong><code>Error: Restore path '/restore/destination' does not exist or is not writable</code></strong> — Ensure the destination directory exists and the Commvault service account has write permissions to it.
+<strong><code>Error: No restore points available for the specified time '2024-01-01 12:00:00'</code></strong> — Verify the restore point exists within your backup retention period using <code>qlist backupsets -subclient &lt;name&gt;</code> to check available recovery points.</p>
+</div>
 <hr />
 <h2 id="clients-policies">Clients &amp; Policies<a class="headerlink" href="#clients-policies" title="Permanent link">&para;</a></h2>
 <p>Manage client registration, storage policies, and schedules.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all clients</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>qlist<span class="w"> </span>client
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List storage policies</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>qlist<span class="w"> </span>storagepolicy
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List schedules</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>qlist<span class="w"> </span>schedule
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List deduplication databases</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>qlist<span class="w"> </span>ddb
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check client connectivity readiness</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_CheckReadiness
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List backup sets for a client</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>qlist<span class="w"> </span>backupset<span class="w"> </span>-c<span class="w"> </span>&lt;client_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all clients</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qlist<span class="w"> </span>client
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List storage policies</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>qlist<span class="w"> </span>storagepolicy
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List schedules</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>qlist<span class="w"> </span>schedule
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List deduplication databases</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>qlist<span class="w"> </span>ddb
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check client connectivity readiness</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_CheckReadiness
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># List backup sets for a client</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>qlist<span class="w"> </span>backupset<span class="w"> </span>-c<span class="w"> </span>&lt;client_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Client Name                          Client ID    OS Type         Status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>================================================================================
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-db-01.corp.local                2            Windows         Active
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prod-web-02.corp.local               3            Linux           Active
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>backup-vault-01.corp.local           5            Windows         Active
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dev-app-03.corp.local                7            Linux           Inactive
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>nas-storage-01.corp.local            9            Windows         Active
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Storage Policy Name                  Type         Copies
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>================================================================================
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Daily_Incremental                    Backup       2
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Weekly_Full                          Backup       3
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Archive_Policy_90d                   Archive      1
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Dedup_Policy_Fast                    Backup       2
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Schedule Name                        Policy Name              Frequency
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>================================================================================
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Daily_Incremental_0200               Daily_Incremental       Daily
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Weekly_Full_Sunday                   Weekly_Full             Weekly
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Monthly_Archive                      Archive_Policy_90d      Monthly
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Deduplication Database               Size (GB)    Dedup Ratio    Status
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>================================================================================
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>DDB_Pool_Primary                     2847.5       4.2:1          Healthy
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>DDB_Pool_Secondary                   1563.2       3.8:1          Healthy
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Script execution completed successfully.
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Job ID: JID-20250117-004521
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Status: Ready
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Backup Set Name                      Agent Type               Status
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>================================================================================
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>FileSystem_Full                      File System              Active
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>Database_Incremental                 SQL Server               Active
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>Exchange_Mailbox                     Exchange                 Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qlist: command not found</code></strong> — Ensure the CommVault command line tools are installed and the PATH includes the CommVault bin directory (typically <code>/opt/commvault/Base/bin</code> on Linux or <code>C:\Program Files\CommVault\Base\bin</code> on Windows).
+<strong><code>Error: Client '&lt;client_name&gt;' not found</code></strong> — Verify the exact client name using <code>qlist client</code> first, as client names are case-sensitive and must match the registered hostname exactly.
+<strong><code>Error: Access denied - insufficient privileges</code></strong> — Run the command with appropriate CommVault admin credentials or ensure your user account has the necessary CommVault administrator role permissions.</p>
+</div>
 <hr />
 <h2 id="commserve-maintenance">CommServe Maintenance<a class="headerlink" href="#commserve-maintenance" title="Permanent link">&para;</a></h2>
 <p>Database backup and health tasks for CommServe.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger CommServe database backup</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qsystem<span class="w"> </span>dbbackup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Commit pending configuration changes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>qcommit
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check CommServe services status</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>qlist<span class="w"> </span>services
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check license usage</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>qlist<span class="w"> </span>license
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Trigger CommServe database backup</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>qsystem<span class="w"> </span>dbbackup
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Commit pending configuration changes</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>qcommit
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check CommServe services status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>qlist<span class="w"> </span>services
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check license usage</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>qlist<span class="w"> </span>license
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>CommServe database backup initiated successfully.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Backup job ID: 123456
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Backup destination: /commvault/backup/db_backup_20240115_143022.bkp
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Estimated time: 45 minutes
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Configuration changes committed successfully.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Commit ID: cv_commit_20240115_143022
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Changes applied to all MediaAgents.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Service Name                          Status          PID
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>CommServe                             Running         2847
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>EventManager                          Running         3102
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>CVD                                   Running         3156
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>MediaAgent                            Running         3201
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>GxEvMgrC                              Running         3245
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>License Usage Report
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>License Type              Total Seats    Used Seats    Expiry Date
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>CommServe                 100            87            2025-06-30
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>MediaAgent                 50            48            2025-06-30
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Backup Exec               25            12            2025-03-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qsystem: command not found</code></strong> — Ensure the CommVault installation directory is in your PATH or source the environment setup script (typically <code>. /opt/commvault/base/setenv.sh</code>).
+<strong><code>Error: Cannot commit changes - pending validation errors detected</code></strong> — Review pending configuration changes with <code>qlist pendingchanges</code> and resolve validation issues before running <code>qcommit</code>.
+<strong><code>License limit exceeded for MediaAgent</code></strong> — Purchase additional MediaAgent licenses or deactivate unused agents to free up license seats.</p>
+</div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>All operations are also available via REST API for automation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate and get token</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;&quot;}&#39;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List all clients</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Client&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List active jobs</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Job?jobFilter=Active&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;&quot;}&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List all clients</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Client&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List active jobs</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;CommServe&gt;/webconsole/api/Job?jobFilter=Active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJleHAiOjE3MDk4MzIwMDB9&quot;,&quot;userId&quot;:1,&quot;userName&quot;:&quot;admin&quot;}
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>{&quot;clients&quot;:[{&quot;clientId&quot;:2,&quot;clientName&quot;:&quot;fileserver-01.corp.local&quot;,&quot;hostName&quot;:&quot;192.168.1.45&quot;,&quot;osType&quot;:&quot;Windows&quot;,&quot;lastBackupTime&quot;:1709745600},{&quot;clientId&quot;:3,&quot;clientName&quot;:&quot;db-server-prod.corp.local&quot;,&quot;hostName&quot;:&quot;192.168.1.67&quot;,&quot;osType&quot;:&quot;Linux&quot;,&quot;lastBackupTime&quot;:1709829120},{&quot;clientId&quot;:5,&quot;clientName&quot;:&quot;exchange-01.corp.local&quot;,&quot;hostName&quot;:&quot;192.168.1.89&quot;,&quot;osType&quot;:&quot;Windows&quot;,&quot;lastBackupTime&quot;:1709658900}],&quot;totalClients&quot;:3}
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>{&quot;jobs&quot;:[{&quot;jobId&quot;:12847,&quot;jobType&quot;:&quot;Backup&quot;,&quot;clientName&quot;:&quot;fileserver-01.corp.local&quot;,&quot;status&quot;:&quot;Running&quot;,&quot;percentComplete&quot;:67,&quot;startTime&quot;:1709831400},{&quot;jobId&quot;:12851,&quot;jobType&quot;:&quot;Restore&quot;,&quot;clientName&quot;:&quot;db-server-prod.corp.local&quot;,&quot;status&quot;:&quot;Running&quot;,&quot;percentComplete&quot;:34,&quot;startTime&quot;:1709831680}],&quot;totalJobs&quot;:2}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error":{"errorCode":401,"errorMessage":"Invalid credentials"}}</code></strong> — Verify the username, password, and domain are correct in the login request.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip SSL verification, or configure proper CA certificates for the CommServe HTTPS endpoint.
+<strong><code>{"error":{"errorCode":403,"errorMessage":"Invalid or expired token"}}</code></strong> — Re-authenticate to obtain a fresh token, as the previous token has expired or is malformed.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7837,7 +7946,7 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

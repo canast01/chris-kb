@@ -7783,18 +7783,47 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Verify</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>server.crt
 </code></pre></div>
-<h2 id="rhel-rocky-almalinux">RHEL / Rocky / AlmaLinux<a class="headerlink" href="#rhel-rocky-almalinux" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/internal-ca.crt
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>update-ca-trust<span class="w"> </span>extract
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>trust<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;internal-ca&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cp: created directory &#39;/usr/local/share/ca-certificates&#39; (if needed)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Processing triggers for ca-certificates (20230311ubuntu1) ...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Updating certificates in /etc/ssl/certs...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>1 added, 0 removed; done.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Running hooks in /etc/ssl/certs/post-update-hooks.d...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>done.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>OK
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>server.crt: OK
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot create regular file '/usr/local/share/ca-certificates/internal-ca.crt': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root.
+<strong><code>error 18 at 0 depth lookup: self signed certificate</code></strong> — The CA certificate itself is self-signed; use <code>openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted internal-ca.crt server.crt</code> if server.crt is signed by the intermediate CA.</p>
+</div>
+<h2 id="rhel-rocky-almalinux">RHEL / Rocky / AlmaLinux<a class="headerlink" href="#rhel-rocky-almalinux" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/internal-ca.crt
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>update-ca-trust<span class="w"> </span>extract
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>trust<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;internal-ca&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     internal-ca
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       type: certificate
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       class: root-ca
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       sha256: 3f7e2a1b9c4d8e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>       expires: 2034-11-22 14:32:10 UTC
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       sha1: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot stat 'internal-ca.crt': No such file or directory</code></strong> — Verify the certificate file exists in the current directory or provide the full path to the source certificate.
+<strong><code>update-ca-trust: command not found</code></strong> — Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS).
+<strong><code>trust list | grep "internal-ca"</code> returns no results</strong> — Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors.</p>
+</div>
 <h2 id="windows-local-machine-store">Windows — Local Machine Store<a class="headerlink" href="#windows-local-machine-store" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Import CA cert to Trusted Root CA store on a single machine</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">certutil</span> <span class="n">-addstore</span> <span class="s2">&quot;Root&quot;</span> <span class="n">internal-ca</span><span class="p">.</span><span class="n">crt</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Verify</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">Root</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;Corp&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Import CA cert to Trusted Root CA store on a single machine</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">certutil</span> <span class="n">-addstore</span> <span class="s2">&quot;Root&quot;</span> <span class="n">internal-ca</span><span class="p">.</span><span class="n">crt</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Verify</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">Root</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;Corp&quot;</span>
 </code></pre></div>
 <h2 id="windows-gpo-domain-distribution">Windows — GPO (Domain Distribution)<a class="headerlink" href="#windows-gpo-domain-distribution" title="Permanent link">&para;</a></h2>
 <ol>
@@ -7806,62 +7835,144 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </ol>
 <p>This distributes the Root CA certificate to all domain-joined machines automatically at next Group Policy refresh.</p>
 <h2 id="java-keystore">Java Keystore<a class="headerlink" href="#java-keystore" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Import CA cert into JVM trust store</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>keytool<span class="w"> </span>-import<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-alias<span class="w"> </span>internal-ca<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-file<span class="w"> </span>internal-ca.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="nv">$JAVA_HOME</span>/lib/security/cacerts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-noprompt
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>keytool<span class="w"> </span>-list<span class="w"> </span>-keystore<span class="w"> </span><span class="nv">$JAVA_HOME</span>/lib/security/cacerts<span class="w"> </span>-storepass<span class="w"> </span>changeit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>internal-ca
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Import CA cert into JVM trust store</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>keytool<span class="w"> </span>-import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-alias<span class="w"> </span>internal-ca<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-file<span class="w"> </span>internal-ca.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="nv">$JAVA_HOME</span>/lib/security/cacerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-noprompt
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>keytool<span class="w"> </span>-list<span class="w"> </span>-keystore<span class="w"> </span><span class="nv">$JAVA_HOME</span>/lib/security/cacerts<span class="w"> </span>-storepass<span class="w"> </span>changeit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>internal-ca
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Owner: root, Permissions: 644
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Certificate was added to keystore
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>internal-ca, Jan 15, 2025, trustedCertEntry, Certificate fingerprint (SHA-256): 8F:2A:B4:C9:E1:D7:3F:5B:A2:C8:E4:F1:9D:6B:2C:A7:E9:F3:1A:4D:B5:C2:E8:F4:2B:6A:D1:E5:3C:7F:A9
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>keytool error: java.io.FileNotFoundException: /path/to/jdk/lib/security/cacerts (No such file or directory)</code></strong> — Verify <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.
+<strong><code>keytool error: java.lang.Exception: Certificate already exists with alias &lt;internal-ca&gt;</code></strong> — Delete the existing certificate first using <code>keytool -delete -alias internal-ca -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit</code>.
+<strong><code>keytool error: java.lang.Exception: Invalid keystore format</code></strong> — Ensure the cacerts file has not been corrupted; restore from backup or verify file permissions with <code>ls -l $JAVA_HOME/lib/security/cacerts</code>.</p>
+</div>
 <hr />
 <h2 id="verification-commands">Verification Commands<a class="headerlink" href="#verification-commands" title="Permanent link">&para;</a></h2>
 <h3 id="openssl-chain-verification">openssl Chain Verification<a class="headerlink" href="#openssl-chain-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Full chain verification</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>server.crt
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify chain from a specific CA file</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>internal-ca.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.crt<span class="w"> </span>server.crt
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Inspect certificate details</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After|Not Before|DNS:&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check certificate fingerprint (compare with expected)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Test live TLS trust from the OS</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return|Certificate chain&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Full chain verification</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>server.crt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify chain from a specific CA file</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>internal-ca.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.crt<span class="w"> </span>server.crt
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Inspect certificate details</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After|Not Before|DNS:&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Check certificate fingerprint (compare with expected)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Test live TLS trust from the OS</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return|Certificate chain&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>depth=0, verify ok
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Subject: CN=server.example.com, O=Example Corp, C=US
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Issuer: CN=Internal CA, O=Example Corp, C=US
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Not Before: Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Not After: Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>DNS: server.example.com, DNS: *.example.com
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>SHA256 Fingerprint=A1:B2:C3:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E:8F:90:A1:B2:C3:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Verify return code: 0 (ok)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Certificate chain
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a> 0 s:CN=server.example.com
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>   i:CN=Internal CA
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the issuing CA certificate to the trust store or use <code>-untrusted</code> flag with the intermediate certificate path.
+<strong><code>verify error:num=10:certificate has expired</code></strong> — Renew the certificate before its "Not After" date or check system time synchronization with <code>timedatectl</code>.
+<strong><code>error:0A000086:SSL routines::certificate verify failed</code></strong> — Ensure the CA bundle file path is correct and readable, or verify the certificate chain is complete with all intermediate certificates included.</p>
+</div>
 <h3 id="tls-debug">TLS Debug<a class="headerlink" href="#tls-debug" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Full TLS handshake trace</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check what CA signed the certificate</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># curl verbose TLS debug</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-v<span class="w"> </span>--cacert<span class="w"> </span>/path/to/internal-ca.crt<span class="w"> </span>https://&lt;host&gt;/endpoint
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Python — test with custom CA</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nv">REQUESTS_CA_BUNDLE</span><span class="o">=</span>/path/to/internal-ca.crt<span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.get(&#39;https://&lt;host&gt;&#39;).status_code)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Full TLS handshake trace</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check what CA signed the certificate</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># curl verbose TLS debug</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>curl<span class="w"> </span>-v<span class="w"> </span>--cacert<span class="w"> </span>/path/to/internal-ca.crt<span class="w"> </span>https://&lt;host&gt;/endpoint
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Python — test with custom CA</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nv">REQUESTS_CA_BUNDLE</span><span class="o">=</span>/path/to/internal-ca.crt<span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.get(&#39;https://&lt;host&gt;&#39;).status_code)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>CONNECTED(00000000)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>depth=2 C = US, O = Internal Root CA, CN = Internal Root CA v3
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>verify return:1
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>depth=1 C = US, O = Internal Intermediate CA, CN = Internal Intermediate CA
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>verify return:1
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>depth=0 C = US, ST = California, L = San Francisco, O = ACME Corp, CN = api.acme.internal
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>verify return:1
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>---
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Certificate chain
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a> 0 s:C = US, ST = California, L = San Francisco, O = ACME Corp, CN = api.acme.internal
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>   i:C = US, O = Internal Intermediate CA, CN = Internal Intermediate CA
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>-----BEGIN CERTIFICATE-----
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>MIIDXTCCAkWgAwIBAgIUZ7k9nQ2mK8vL5pQ9xR8K3vF7d2swDQYJKoZIhvcNAQEL
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>...
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>-----END CERTIFICATE-----
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>issuer=C = US, O = Internal Intermediate CA, CN = Internal Intermediate CA
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>*   Trying 10.42.8.15:443...
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>* Connected to api.acme.internal (10.42.8.15) port 443 (#0)
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>* TLS 1.3 (OUT), TLS handshake, Client hello (1):
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>* TLS 1.3 (IN), TLS handshake, Server hello (2):
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>* TLS 1.3 (IN), TLS handshake, Certificate (11):
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>* TLS 1.3 (IN), TLS handshake, Finished (20):
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>* TLS 1.3 (OUT), TLS change cipher spec (1):
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>* TLS 1.3 (OUT), TLS handshake, Finished (20):
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>* Server certificate:
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>*  subject: C=US; ST=California; L=San Francisco; O=ACME Corp; CN=api.acme.internal
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>*  issuer: C=US; O=Internal Intermediate CA; CN=Internal Intermediate CA
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>*  SSL certificate verify ok.
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>&gt; GET /endpoint HTTP/1.1
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>&lt; HTTP/1.1 200 OK
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the intermediate and root CA certificates to your system trust store or specify them explicitly with <code>--cacert</code> or <code>REQUESTS_CA_BUNDLE</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate in certificate chain</code></strong> — Provide the full certificate chain (root + intermediate) in a single PEM file, or use <code>curl -k</code> to skip verification for testing only.
+<strong><code>requests.exceptions.SSLError: HTTPSConnectionPool(host='&lt;host&gt;', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationFailed(...)))</code></strong> — Ensure the <code>REQUESTS_CA_BUNDLE</code> path is correct and readable, or set <code>REQUESTS_CA_BUNDLE</code> to the absolute path of your internal CA certificate.</p>
+</div>
 <h3 id="bulk-expiry-check">Bulk Expiry Check<a class="headerlink" href="#bulk-expiry-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check expiry of a file</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check expiry on a live endpoint</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Bulk check for certs expiring within 30 days</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">for</span><span class="w"> </span>cert<span class="w"> </span><span class="k">in</span><span class="w"> </span>/etc/ssl/certs/*.crt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cert</span><span class="s2">&quot;</span><span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cert</span><span class="s2">&quot;</span><span class="w"> </span>-noout<span class="w"> </span>-checkend<span class="w"> </span><span class="m">2592000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>:
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;EXPIRING: </span><span class="nv">$cert</span><span class="s2"> — </span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check expiry of a file</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check expiry on a live endpoint</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Bulk check for certs expiring within 30 days</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">for</span><span class="w"> </span>cert<span class="w"> </span><span class="k">in</span><span class="w"> </span>/etc/ssl/certs/*.crt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cert</span><span class="s2">&quot;</span><span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cert</span><span class="s2">&quot;</span><span class="w"> </span>-noout<span class="w"> </span>-checkend<span class="w"> </span><span class="m">2592000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>:
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;EXPIRING: </span><span class="nv">$cert</span><span class="s2"> — </span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">done</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>notAfter=Jan 15 12:34:56 2025 GMT
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>depth=0 CN = api.example.com
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>verify return:1
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>notAfter=Jan 15 12:34:56 2025 GMT
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>EXPIRING: /etc/ssl/certs/old-api.crt — Jan  8 09:22:15 2025 GMT
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>EXPIRING: /etc/ssl/certs/staging.crt — Jan 12 14:50:33 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the certificate file exists and is readable with <code>ls -la</code> and check the file path is correct.
+<strong><code>unable to connect to &lt;host&gt;:443</code></strong> — Ensure the host is reachable, the port is correct, and no firewall is blocking the connection with <code>nc -zv &lt;host&gt; 443</code>.
+<strong><code>Certificate will expire</code></strong> — Renew the certificate immediately using your CA or certificate management tool before the expiry date passes.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7901,7 +8012,7 @@ Adding CA certificates to OS and application trust stores so that TLS connection
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

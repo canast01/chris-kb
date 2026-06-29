@@ -8190,46 +8190,132 @@ NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Li
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show reference ID and source details</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>chronyc<span class="w"> </span>tracking
 </code></pre></div>
-<h2 id="configuring-sources-chrony">Configuring Sources (chrony)<a class="headerlink" href="#configuring-sources-chrony" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/chrony.conf</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>prefer
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>server<span class="w"> </span>ntp2.example.com<span class="w"> </span>iburst
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>server<span class="w"> </span>ntp3.example.com<span class="w"> </span>iburst
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># iburst — sends 4 packets immediately on startup for faster initial sync</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># prefer — prefer this source over others of similar quality</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># minpoll/maxpoll — override default polling interval (log2 seconds)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>minpoll<span class="w"> </span><span class="m">4</span><span class="w"> </span>maxpoll<span class="w"> </span><span class="m">8</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Reload without restarting</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>chronyc<span class="w"> </span>reload<span class="w"> </span>sources
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>210 Number of sources = 4
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                                      .- Number of sample points in measurement set.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                                     /    .- Number of residual runs.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>                                    |    /    .- Length of measurement set (time).
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                                    |   |    /      .- Estimated skew on measurement.
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>                                    |   |   |      /     .- Estimated frequency offset of source.
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                                    |   |   |     |      /    .- Estimated offset of source.
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>                                    |   |   |     |     |    /  .- Estimate of source standard deviation.
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                                    |   |   |     |     |   |   /
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Name/IP Address            NP  NR  Span Frequency Freq Skew Offset Std Dev
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>===============================================================================
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ntp.ubuntu.com              8   4   127     +0.000ppm  +0.000ppm  0.000us    1.234ms
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>time.google.com             6   3    63     -0.015ppm  +0.005ppm  0.001us    2.456ms
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>pool.ntp.org                7   5    95     +0.008ppm  -0.002ppm  0.002us    1.890ms
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>169.254.169.123             5   2    31     +0.100ppm  +0.050ppm  0.005us    5.678ms
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Reference ID    : C0248F97 (169.254.169.123)
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>Leap status     : Normal
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>RMS offset      : 0.001234 seconds
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>Frequency       : 0.015 ppm fast
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>Residual freq   : +0.000 ppm
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>Skew            : 0.012 ppm
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>Root delay      : 0.015432 seconds
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>Root dispersion : 0.003456 seconds
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>Update interval : 1024.0 seconds
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>Leap second     : 0
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure chronyd is running with <code>sudo systemctl start chronyd</code> and listening on localhost.
+<strong><code>No sources present in sourcestats output</code></strong> — Wait 30+ seconds after chronyd startup for sources to be polled and added to the measurement set.</p>
+</div>
+<h2 id="configuring-sources-chrony">Configuring Sources (chrony)<a class="headerlink" href="#configuring-sources-chrony" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /etc/chrony.conf</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>prefer
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>server<span class="w"> </span>ntp2.example.com<span class="w"> </span>iburst
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>server<span class="w"> </span>ntp3.example.com<span class="w"> </span>iburst
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># iburst — sends 4 packets immediately on startup for faster initial sync</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># prefer — prefer this source over others of similar quality</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># minpoll/maxpoll — override default polling interval (log2 seconds)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>minpoll<span class="w"> </span><span class="m">4</span><span class="w"> </span>maxpoll<span class="w"> </span><span class="m">8</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Reload without restarting</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>chronyc<span class="w"> </span>reload<span class="w"> </span>sources
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>200 OK
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Reloading sources.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  .d/m/y h:m:s     *.ntp1.example.com  8 -1024   377   100   9.123ms[  9.123ms] +/-  12.456ms
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  .d/m/y h:m:s     + ntp2.example.com  8  -512   289    99   4.567ms[  4.567ms] +/-   8.234ms
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  .d/m/y h:m:s     + ntp3.example.com  8  -256   156    98  15.892ms[ 15.892ms] +/-  18.901ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure chronyd is running with <code>systemctl start chronyd</code> and listening on the socket.
+<strong><code>Invalid minpoll/maxpoll value</code></strong> — Use values between 3 and 17 (representing 2³ to 2¹⁷ seconds); minpoll must be less than maxpoll.</p>
+</div>
 <h2 id="windows-w32tm-source-config">Windows — w32tm Source Config<a class="headerlink" href="#windows-w32tm-source-config" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Set NTP sources</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp1.example.com,0x8 ntp2.example.com,0x8&quot;</span> <span class="p">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">update</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Show current peers and their offsets</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Force sync</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Set NTP sources</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp1.example.com,0x8 ntp2.example.com,0x8&quot;</span> <span class="p">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">update</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Show current peers and their offsets</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Force sync</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
 </code></pre></div>
 <h2 id="cisco-arista-sources">Cisco / Arista Sources<a class="headerlink" href="#cisco-arista-sources" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Cisco IOS</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations<span class="w">     </span><span class="c1"># sync status per peer</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status<span class="w">           </span><span class="c1"># current stratum and sync state</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Arista EOS</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Cisco IOS</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations<span class="w">     </span><span class="c1"># sync status per peer</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status<span class="w">           </span><span class="c1"># current stratum and sync state</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Arista EOS</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Cisco IOS output:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ntp1.example.com configured as preferred peer
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ntp2.example.com configured as peer
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>==============================================================================
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>+ntp2.example.com 10.0.0.2     2 u   32 1024  377   15.821   -1.043   2.891
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>==============================================================================
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Clock is synchronized
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Stratum is 3
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Reference ID is 10.0.0.1
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Precision is 2^-24
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Root delay is 28.364 msec
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Root dispersion is 45.291 msec
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>RTC is synchronized
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>System poll interval is 1024 seconds
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a># Arista EOS output:
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Clock is synchronized
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>Stratum: 3
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>Reference ID: 10.0.0.1
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>Precision: 2^-24
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>Root delay: 28.364 ms
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Root dispersion: 45.291 ms
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>Update interval: 1024 seconds
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>Leap indicator: 0
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>==============================================================================
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>+ntp2.example.com 10.0.0.2     2 u   32 1024  377   15.821   -1.043   2.891
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the NTP server hostname is resolvable; if DNS fails, use the IP address directly instead.
+<strong><code>NTP is not enabled</code></strong> — Enable NTP globally with <code>ntp enable</code> (Arista) or ensure <code>ntp enable</code> is configured before adding servers on Cisco.
+<strong><code>reach value is 0 and associations show no asterisk or plus sign</code></strong> — Check network connectivity to the NTP server and verify firewall rules allow UDP port 123 bidirectionally.</p>
+</div>
 <h2 id="common-source-issues">Common Source Issues<a class="headerlink" href="#common-source-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8284,7 +8370,7 @@ NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Li
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

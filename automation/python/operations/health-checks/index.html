@@ -7734,21 +7734,77 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Cron / scheduled script health — verify expected jobs present</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
-<p><strong>Check pyenv version (if using pyenv)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pyenv<span class="w"> </span>version
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>.python-version
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Python 3.11.7
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip 23.3.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>total 48
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>drwxr-xr-x  6 admin admin  4096 Jan 15 10:22 .venv
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>drwxr-xr-x 18 admin admin  4096 Jan 15 09:45 ..
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>-rw-r--r--  1 admin admin   102 Jan 15 10:22 pyvenv.cfg
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>drwxr-xr-x  3 admin admin  4096 Jan 15 10:22 bin
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>drwxr-xr-x  2 admin admin  4096 Jan 15 10:22 include
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>drwxr-xr-x  3 admin admin  4096 Jan 15 10:22 lib
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>requests                      2.31.0
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>boto3                         1.28.45
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>azure-common                  1.1.28
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>vmware-vsphere-automation-sdk 1.82.1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ansible                       2.10.17
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>paramiko                       3.3.1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>No broken requirements found.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>OK
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>0 2 * * * /usr/local/bin/python3 /opt/scripts/health_check.py &gt;&gt; /var/log/health_check.log 2&gt;&amp;1
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>30 * * * * /usr/local/bin/python3 /opt/scripts/sync_inventory.py
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pip3: command not found</code></strong> — Install Python 3 and pip3 using your system package manager (apt install python3-pip on Ubuntu/Debian).
+<strong><code>WARNING: pip is being invoked by an old script wrapper</code></strong> — Upgrade pip with <code>python3 -m pip install --upgrade pip</code>.
+<strong><code>error: externally-managed-environment</code></strong> — Use a virtual environment or add <code>--break-system-packages</code> flag to pip install commands.</p>
+</div>
+<p><strong>Check pyenv version (if using pyenv)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pyenv<span class="w"> </span>version
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>.python-version
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>3.11.7 (set by /home/devops/.pyenv/versions/3.11.7/bin/python)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>3.11.7
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p>**<code>pyenv: version</code>3.11.7' is not installed<code>** — Run</code>pyenv install 3.11.7<code>to install the required Python version.
+**</code>cat: .python-version: No such file or directory<code>** — Create a</code>.python-version<code>file in the project root with</code>echo "3.11.7" &gt; .python-version`.</p>
+</div>
 <p>The <code>.python-version</code> file records the required Python version for the project. <code>pyenv</code> activates it automatically when entering the directory.</p>
 <p><strong>Verify virtual environment is active</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$VIRTUAL_ENV</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(sys.prefix)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$VIRTUAL_ENV</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(sys.prefix)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/opt/venv/myapp
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/opt/venv/myapp
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No such file or directory</code></strong> — Activate the virtual environment first with <code>source /path/to/venv/bin/activate</code>.
+<strong><code>ModuleNotFoundError: No module named 'sys'</code></strong> — This is extremely rare; reinstall Python with <code>python3 -m venv /path/to/venv</code> and reactivate.</p>
+</div>
 <p>If <code>VIRTUAL_ENV</code> is empty, activate the venv before running scripts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /opt/automation/venv/bin/activate: No such file or directory</code></strong> — Create the virtual environment with <code>python3 -m venv /opt/automation/venv</code> or verify the correct path.
+<strong><code>bash: source: command not found</code></strong> — Use <code>. /opt/automation/venv/bin/activate</code> instead, or ensure you're running bash (not sh).</p>
+</div>
 <p><strong>Check for environment variable completeness</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import os; print([k for k in [&#39;API_URL&#39;,&#39;API_TOKEN&#39;,&#39;LOG_DIR&#39;] if k not in os.environ])&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import os; print([k for k in [&#39;API_URL&#39;,&#39;API_TOKEN&#39;,&#39;LOG_DIR&#39;] if k not in os.environ])&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[&#39;API_TOKEN&#39;, &#39;LOG_DIR&#39;]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ModuleNotFoundError: No module named 'os'</code></strong> — This is extremely rare; reinstall Python 3 if it occurs, as <code>os</code> is a built-in module.
+<strong><code>SyntaxError: invalid syntax</code></strong> — Ensure the bash block is copied exactly without line breaks; paste the entire command as a single line or properly escape newlines with backslashes.</p>
+</div>
 <p>Replace the list with the environment variables your scripts require.</p>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -7786,28 +7842,129 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
 <p>Package version drift causes subtle breakage when an upstream library changes its API. Conflicts between installed packages can cause import failures that only surface at runtime.</p>
 <p><strong>List installed packages</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip3<span class="w"> </span>list
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pip3<span class="w"> </span>list<span class="w"> </span>--outdated
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip3<span class="w"> </span>list
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pip3<span class="w"> </span>list<span class="w"> </span>--outdated
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Package                    Version
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>-------------------------- -----------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>pip                        23.2.1
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>setuptools                 68.0.0
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>wheel                      0.41.2
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>requests                   2.31.0
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>paramiko                   3.3.1
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>pyyaml                     6.0.1
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>jinja2                     3.1.2
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>ansible                    2.10.7
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>prometheus-client          0.17.1
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Package                    Version Latest Type
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>-------------------------- ----------- ----------- -----
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>pip                        23.2.1      24.0        wheel
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>setuptools                 68.0.0      69.1.0      wheel
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>requests                   2.31.0      2.32.1      wheel
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>paramiko                   3.3.1       3.4.0       wheel
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>pyyaml                     6.0.1       6.0.2       wheel
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>WARNING: pip is being invoked by an old script wrapper.</code></strong> — Upgrade pip with <code>python3 -m pip install --upgrade pip</code> to use the current wrapper.
+<strong><code>ERROR: Could not find a version that satisfies the requirement</code></strong> — Ensure the package name is spelled correctly and the PyPI repository is accessible.</p>
+</div>
 <p><strong>Check for dependency conflicts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip3<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip3<span class="w"> </span>check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>WARNING: pip is being invoked by an old script wrapper.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>This will fail in a future version of pip.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Please see https://github.com/pip/pip/issues/5599 for advice on fixing the underlying issue.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>To avoid this problem you can invoke Python with &#39;-m pip&#39; instead of trying to call pip directly.
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>(no output — all dependencies are compatible)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with your project in order to compare their dependency versions.</code></strong> — Run <code>pip3 install --upgrade pip</code> to update pip to the latest version that fully resolves dependencies.
+<strong><code>WARNING: Ignoring invalid distribution -ip</code></strong> — Remove corrupted package metadata by running <code>pip3 install --force-reinstall &lt;package_name&gt;</code> or clear pip cache with <code>rm -rf ~/.cache/pip</code>.</p>
+</div>
 <p>Any output from <code>pip3 check</code> indicates a broken dependency graph that must be resolved.</p>
 <p><strong>Audit for known CVEs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>safety
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>safety<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>safety
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>safety<span class="w"> </span>check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Collecting safety
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  Downloading safety-2.3.5-py2.py3-none-any.whl (33.2 MB)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>     |████████████████████████████████| 33.2 MB 2.3 MB/s
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Installing collected packages: safety
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Successfully installed safety-2.3.5
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>╒════════════════════════════════════════════════════════════════════════════╕
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>│                                                                                                       │
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>│                       /$$$$$$            /$$                                                          │
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>│                      /$$__  $$          | $$                                                          │
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>│  /$$$$$$$  /$$$$$$$ | $$  \__//$$$$$$  /$$$$$$   /$$   /$$                                            │
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>│ /$$_____/ /$$_____/ | $$$$   /$$__  $$|_  $$_/  | $$  | $$                                            │
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>│|  $$$$$$ | $$       | $$_/  | $$  \ $$  | $$    | $$  | $$                                            │
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>│ \____  $$| $$       | $$    | $$  | $$  | $$ /$$| $$  | $$                                            │
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>│ /$$$$$$$/|  $$$$$$$| $$    |  $$$$$$/  |  $$$$/|  $$$$$$$                                             │
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>│|_______/  \_______/|__/     \______/    \___/   \____  $$                                             │
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>│                                                  /$$  | $$                                            │
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>│                                                 |  $$$$$$/                                            │
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>│  by SafetyDB.org                                \______/                                              │
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>│                                                                                                       │
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>╒════════════════════════════════════════════════════════════════════════════╕
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a> Safety 2.3.5 is scanning this environment
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a> Timestamp: 2024-01-15T09:42:33Z
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a> Found and scanned 47 packages
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a> No known security vulnerabilities found
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pip3: command not found</code></strong> — Install Python 3 and pip3 using your system package manager (apt-get install python3-pip on Debian/Ubuntu).
+<strong><code>safety: command not found</code></strong> — Ensure the pip3 installation completed successfully and /usr/local/bin is in your PATH, or use python3 -m safety check instead.</p>
+</div>
 <p><strong>Export current dependencies (freeze)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip3<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pip3<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pip3: command not found</code></strong> — Install Python 3 and pip3 with <code>apt-get install python3-pip</code> (Debian/Ubuntu) or <code>brew install python3</code> (macOS).
+<strong><code>Permission denied</code></strong> — Run the command from a directory where you have write permissions, or use <code>sudo</code> if necessary (though this is not recommended for pip operations).</p>
+</div>
 <p><strong>Install from pinned requirements</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Collecting certifi==2023.7.22
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Collecting requests==2.31.0
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Collecting pyyaml==6.0.1
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Collecting psutil==5.9.5
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Installing collected packages: certifi, charset-encoder, idna, urllib3, requests, pyyaml, psutil
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Successfully installed certifi-2023.7.22 requests-2.31.0 pyyaml-6.0.1 psutil-5.9.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'</code></strong> — Verify you are in the correct directory where requirements.txt is located, or provide the full path to the file.
+<strong><code>ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with setuptools==X.X.X</code></strong> — This is typically a warning and safe to ignore; if installation fails, upgrade pip with <code>pip3 install --upgrade pip</code>.
+<strong><code>error: Microsoft Visual C++ 14.0 or greater is required</code></strong> — Install the Microsoft C++ Build Tools or ensure a compatible C++ compiler is available on your system.</p>
+</div>
 <p><strong>Verify a specific critical library is importable</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.__version__)&quot;</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; print(boto3.__version__)&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import paramiko; print(paramiko.__version__)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.__version__)&quot;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; print(boto3.__version__)&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import paramiko; print(paramiko.__version__)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>2.31.0
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>1.26.137
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>3.3.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ModuleNotFoundError: No module named 'requests'</code></strong> — Install the missing package with <code>pip3 install requests</code>.
+<strong><code>ModuleNotFoundError: No module named 'boto3'</code></strong> — Install AWS SDK with <code>pip3 install boto3</code>.
+<strong><code>ModuleNotFoundError: No module named 'paramiko'</code></strong> — Install SSH library with <code>pip3 install paramiko</code>.</p>
+</div>
 <p><strong>Key health indicators</strong></p>
 <table>
 <thead>
@@ -7844,28 +8001,113 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <h2 id="scheduled-scripts">Scheduled Scripts<a class="headerlink" href="#scheduled-scripts" title="Permanent link">&para;</a></h2>
 <p>Python automation scripts commonly run on a schedule via cron or systemd timers. Silent failures in scheduled scripts are a frequent source of undetected automation gaps.</p>
 <p><strong>List all cron jobs running Python scripts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>0 2 * * * /usr/bin/python3 /opt/health-checks/system_monitor.py &gt;&gt; /var/log/health-checks.log 2&gt;&amp;1
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>*/15 * * * * /usr/bin/python3 /opt/health-checks/disk_usage.py --threshold 85
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>0 */6 * * * /usr/bin/python3 /opt/health-checks/service_status.py --notify admin@company.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>no crontab for root</code></strong> — Run <code>sudo crontab -e</code> to create a crontab entry for the current user or specify the user with <code>sudo crontab -u username -l</code>.
+<strong><code>command not found: crontab</code></strong> — Install cron service with <code>sudo apt-get install cron</code> (Debian/Ubuntu) or <code>sudo yum install cronie</code> (RHEL/CentOS).</p>
+</div>
 <p><strong>Check system-wide cron for Python jobs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span>/etc/cron.d/<span class="w"> </span>/etc/cron.daily/<span class="w"> </span>/etc/cron.hourly/<span class="w"> </span>/etc/cron.weekly/<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span>/etc/cron.d/<span class="w"> </span>/etc/cron.daily/<span class="w"> </span>/etc/cron.hourly/<span class="w"> </span>/etc/cron.weekly/<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>/etc/cron.d/python-health-check:*/15 * * * * root /usr/bin/python3 /opt/scripts/health_check.py &gt;&gt; /var/log/health_check.log 2&gt;&amp;1
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>/etc/cron.d/backup-jobs:0 2 * * * root /usr/bin/python3 /opt/automation/backup.py --full
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>/etc/cron.daily/system-audit:#!/bin/bash
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>/usr/bin/python3 /opt/scripts/audit.py --daily
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>/etc/cron.hourly/metrics-collector:#!/bin/bash
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>/usr/bin/python3 /opt/monitoring/collect_metrics.py
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>/etc/cron.weekly/db-maintenance:0 3 * * 0 root /usr/bin/python3 /opt/db/maintenance.py --optimize
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /etc/cron.hourly/: No such file or directory</code></strong> — Create the missing directory with <code>mkdir -p /etc/cron.hourly/</code> or remove it from the grep search path if it's not needed.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> to access protected cron directories: <code>sudo grep -r "python" /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekly/ 2&gt;/dev/null</code></p>
+</div>
 <p><strong>Check cron daemon is running</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>cron
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># or on RHEL/CentOS:</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crond
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>cron
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># or on RHEL/CentOS:</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crond
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>● crond.service - Command Scheduler
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>     Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled; vendor preset: enabled)
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 3 days ago
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>   Main PID: 1247 (crond)
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>      Tasks: 1 (limit: 2048)
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>     Memory: 2.1M
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>        CPU: 15ms
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>     CGroup: /system.slice/crond.service
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>             └─1247 /usr/sbin/crond -n
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>Jan 15 09:23:47 prod-scheduler-01 systemd[1]: Started Command Scheduler.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit cron.service could not be found.</code></strong> — Use <code>systemctl status crond</code> on RHEL/CentOS systems instead of <code>cron</code>.
+<strong><code>System has not been booted with systemd as init system (PID 1). Can't operate.</code></strong> — Use <code>service crond status</code> or <code>ps aux | grep crond</code> on systems without systemd.</p>
+</div>
 <p><strong>Review recent cron execution log</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># or on RHEL/CentOS:</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># or on RHEL/CentOS:</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Jan 15 08:15:01 prod-app-01 CRON[2847]: (root) CMD (cd /opt/backup &amp;&amp; ./daily-backup.sh)
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Jan 15 09:30:02 prod-app-01 CRON[3156]: (postgres) CMD (/usr/local/bin/pg_dump -U postgres maindb &gt; /backups/maindb.sql)
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Jan 15 10:45:03 prod-app-01 CRON[3892]: (www-data) CMD (/usr/bin/php /var/www/html/cron/cleanup.php)
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Jan 15 12:00:01 prod-app-01 CRON[4521]: (root) CMD (/opt/monitoring/health-check.sh &gt;&gt; /var/log/health-check.log 2&gt;&amp;1)
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Jan 15 14:15:02 prod-app-01 CRON[5234]: (root) CMD (find /tmp -type f -mtime +7 -delete)
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>Jan 15 16:30:01 prod-app-01 CRON[6145]: (syslog) CMD (/usr/sbin/logrotate /etc/logrotate.conf)
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>Jan 15 18:45:03 prod-app-01 CRON[7089]: (root) CMD (/opt/scripts/sync-ntp.sh)
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>Jan 15 20:00:02 prod-app-01 CRON[7856]: (backup) CMD (/usr/bin/rsync -av /data /mnt/backup/)
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>Jan 15 22:15:01 prod-app-01 CRON[8734]: (root) CMD (/opt/monitoring/disk-usage-alert.sh)
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Jan 16 00:30:02 prod-app-01 CRON[9521]: (postgres) CMD (VACUUM ANALYZE;)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/syslog: No such file or directory</code></strong> — Use the RHEL/CentOS path <code>/var/log/cron</code> instead, or check your distro's actual syslog location with <code>ls /var/log/</code>.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> since cron logs typically require root privileges to read.</p>
+</div>
 <p><strong>Check systemd timer units (alternative to cron)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>systemctl<span class="w"> </span>list-timers<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>systemctl<span class="w"> </span>list-timers<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>NEXT                         LEFT     LAST                         PASSED   UNIT                          ACTIVATES
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Mon 2024-01-15 14:30:00 UTC  2h 15m   Mon 2024-01-15 12:30:12 UTC  5s       python-health-check.timer    python-health-check.service
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Mon 2024-01-15 15:00:00 UTC  2h 45m   Mon 2024-01-15 11:00:08 UTC  1h 30m   python-app-monitor.timer     python-app-monitor.service
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>Mon 2024-01-15 16:15:00 UTC  3h 59m   Sun 2024-01-14 16:15:22 UTC  22h      python-backup-check.timer    python-backup-check.service
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>3 timers listed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to get properties: Unit python-health-check.timer not found.</code></strong> — Verify the timer unit exists with <code>systemctl list-unit-files | grep python</code> and enable it if needed with <code>systemctl enable python-health-check.timer</code>.
+<strong><code>Failed to list timers: Access denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>systemd-journal</code> group.</p>
+</div>
 <p><strong>Verify script output log (if scripts redirect output)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Example: check last run time and exit status from a log file</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tail<span class="w"> </span>-20<span class="w"> </span>/var/log/automation/&lt;script-name&gt;.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Example: check last run time and exit status from a log file</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>tail<span class="w"> </span>-20<span class="w"> </span>/var/log/automation/&lt;script-name&gt;.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>2024-01-15 14:32:18 [INFO] Health check started for database-sync
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>2024-01-15 14:32:22 [INFO] Connected to primary database (host: db-primary-01.internal)
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>2024-01-15 14:32:25 [INFO] Verified 1,247 records synced successfully
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>2024-01-15 14:32:26 [INFO] Replication lag: 0.3ms
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>2024-01-15 14:32:27 [INFO] Health check completed successfully
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>2024-01-15 14:32:27 [INFO] Exit status: 0
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>2024-01-15 15:02:18 [INFO] Health check started for database-sync
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>2024-01-15 15:02:23 [INFO] Connected to primary database (host: db-primary-01.internal)
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>2024-01-15 15:02:26 [INFO] Verified 1,248 records synced successfully
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>2024-01-15 15:02:27 [INFO] Replication lag: 0.2ms
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>2024-01-15 15:02:28 [INFO] Health check completed successfully
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>2024-01-15 15:02:28 [INFO] Exit status: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/automation/&lt;script-name&gt;.log' for reading: No such file or directory</code></strong> — Replace <code>&lt;script-name&gt;</code> with the actual script name and verify the log directory exists.
+<strong><code>tail: cannot open '/var/log/automation/database-sync.log' for reading: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the log file.</p>
+</div>
 <p><strong>Key health indicators</strong></p>
 <table>
 <thead>
@@ -7909,8 +8151,8 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <p><strong>On alert or issue:</strong>
 1. Identify the failing script and the last successful run time — check cron logs (<code>grep CRON /var/log/syslog</code>) and script log files
 2. Reproduce the failure manually in a test shell to get the full traceback:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
 </code></pre></div>
 3. Check the error type in the traceback to determine the root cause category
 4. Apply the appropriate fix from the triage table below
@@ -7997,7 +8239,7 @@ Health Checks reference covering Environment Health, Package Management, Schedul
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

@@ -7442,25 +7442,144 @@ Top-10 NSX commands for transport nodes, segments, T0/T1 gateways, and DFW via t
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>get<span class="w"> </span>interface<span class="w">                                  </span><span class="c1"># interfaces on Edge/Manager</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>get<span class="w"> </span>certificate<span class="w"> </span>cluster<span class="w">                        </span><span class="c1"># cluster certificate thumbprint</span>
 </code></pre></div>
-<h2 id="rest-api-curl-examples">REST API (curl examples)<a class="headerlink" href="#rest-api-curl-examples" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://nsx-mgr&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u admin:VMware1!&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Transport nodes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/api/v1/transport-nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NSX version: 3.2.1.0 (Build 19480675)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cluster Status: STABLE
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Node nsx-manager-01.lab.local: UP (Leader)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Node nsx-manager-02.lab.local: UP
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Node nsx-manager-03.lab.local: UP
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Segments (Policy API)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/segments<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># T0 gateways</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/tier-0s<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Transport Nodes:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  nsx-edge-01 (192.168.1.45): REALIZED
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  nsx-edge-02 (192.168.1.46): REALIZED
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  nsx-tn-host-01 (192.168.1.50): REALIZED
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  nsx-tn-host-02 (192.168.1.51): REALIZED
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Firewall rules (DFW)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/domains/default/security-policies<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># BGP route table on Edge</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/api/v1/logical-routers/&lt;lr-id&gt;/routing/bgp/neighbors&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Logical Switches:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  ls-prod-web (UUID: 12a4f8c9-3e2b-4d7f-91c2-8f5a6b2c1d9e): 4 ports
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  ls-prod-db (UUID: 5c8d2f1a-9b4e-4a6c-b3f2-7e1d9c4a5b8f): 2 ports
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  ls-mgmt (UUID: 8f2c1b9a-4d5e-6f7a-c8e1-2d3f4a5b6c7d): 3 ports
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>BGP Neighbors:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  nsx-edge-01: 192.168.0.1 (AS 65001) - ESTABLISHED
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  nsx-edge-02: 192.168.0.1 (AS 65001) - ESTABLISHED
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Interfaces:
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  nsx-edge-01 eth0: 192.168.1.45/24 (UP)
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  nsx-edge-01 eth1: 10.0.0.1/24 (UP)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  nsx-manager-01 eth0: 192.168.1.10/24 (UP)
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Cluster Certificate Thumbprint: A1:B2:C3:D4:E5:F6:7G:8H:9I:0J:K1:L2:M3:N4:O5:P6:Q7:R8:S9:T0
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (Connection refused)</code></strong> — Verify NSX Manager is running and accessible on the configured IP/hostname and port (default 443).
+<strong><code>Error: Invalid credentials (Unauthorized)</code></strong> — Ensure your NSX API user account has appropriate role permissions and credentials are correctly configured in your CLI session.
+<strong><code>Error: Certificate verification failed</code></strong> — Add the NSX Manager certificate to your trusted store or disable certificate verification if in a lab environment (use <code>--insecure</code> flag if available).</p>
+</div>
+<h2 id="rest-api-curl-examples">REST API (curl examples)<a class="headerlink" href="#rest-api-curl-examples" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://nsx-mgr&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u admin:VMware1!&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Transport nodes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/api/v1/transport-nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Segments (Policy API)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/segments<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># T0 gateways</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/tier-0s<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Firewall rules (DFW)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="nv">$BASE</span>/policy/api/v1/infra/domains/default/security-policies<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># BGP route table on Edge</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/api/v1/logical-routers/&lt;lr-id&gt;/routing/bgp/neighbors&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;id&quot;: &quot;tn-001&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;display_name&quot;: &quot;EdgeNode-01&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;node_deployment_info&quot;: {
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;deployment_type&quot;: &quot;VIRTUAL_MACHINE&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        &quot;os_type&quot;: &quot;ESXI&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      },
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;transport_zone_endpoints&quot;: [
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        {
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>          &quot;transport_zone_id&quot;: &quot;tz-vlan-001&quot;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        }
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      ]
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    },
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    {
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;id&quot;: &quot;tn-002&quot;,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>      &quot;display_name&quot;: &quot;EdgeNode-02&quot;,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      &quot;node_deployment_info&quot;: {
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        &quot;deployment_type&quot;: &quot;VIRTUAL_MACHINE&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        &quot;os_type&quot;: &quot;ESXI&quot;
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      }
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    }
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  ],
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  &quot;result_count&quot;: 2
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>}
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>{
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;results&quot;: [
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    {
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>      &quot;id&quot;: &quot;segment-prod-web&quot;,
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>      &quot;display_name&quot;: &quot;prod-web-vlan100&quot;,
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>      &quot;subnets&quot;: [
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        {
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>          &quot;gateway_address&quot;: &quot;10.1.100.1/24&quot;
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>        }
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>      ]
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    },
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>    {
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>      &quot;id&quot;: &quot;segment-prod-db&quot;,
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>      &quot;display_name&quot;: &quot;prod-db-vlan101&quot;,
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>      &quot;subnets&quot;: [
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>        {
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>          &quot;gateway_address&quot;: &quot;10.1.101.1/24&quot;
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>        }
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>      ]
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>    }
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>  ],
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>  &quot;result_count&quot;: 2
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>}
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>{
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>  &quot;results&quot;: [
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>    {
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>      &quot;id&quot;: &quot;t0-primary&quot;,
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>      &quot;display_name&quot;: &quot;T0-Primary-GW&quot;,
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>      &quot;ha_mode&quot;: &quot;ACTIVE_ACTIVE&quot;,
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>      &quot;default_rule_logging&quot;: false
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>    }
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>  ],
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>  &quot;result_count&quot;: 1
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>}
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>{
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>  &quot;results&quot;: [
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>    {
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>      &quot;id&quot;: &quot;default-policy&quot;,
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>      &quot;display_name&quot;: &quot;Default Security Policy&quot;,
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>      &quot;rules&quot;: [
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>        {
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>          &quot;id&quot;: &quot;rule-001&quot;,
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>          &quot;display_name&quot;: &quot;Allow-HTTPS&quot;,
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>          &quot;action&quot;: &quot;ALLOW&quot;,
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>          &quot;services&quot;: [&quot;HTTPS&quot;]
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a>        }
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a>      ]
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a>    }
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>  ],
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a>  &quot;result_count&quot;: 1
+<a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a>}
+<a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a>curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known</code></strong> — Replace <code>nsx-mgr</code> with the actual NSX Manager FQDN or IP address (e.g., <code>https://10.0.0.10</code>).
+<strong><code>HTTP/1.1 401 Unauthorized</code></strong> — Verify the admin credentials in the AUTH variable match your NSX Manager user account (reset password in NSX UI if needed).
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag already ignores SSL warnings; if curl still fails, ensure NSX Manager is reachable and not blocked by firewall rules.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../virtualization/vmware/nsx/operations/procedures/">NSX Operations</a></li>
@@ -7489,7 +7608,7 @@ Top-10 NSX commands for transport nodes, segments, T0/T1 gateways, and DFW via t
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

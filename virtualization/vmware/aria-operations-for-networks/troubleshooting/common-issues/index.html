@@ -9267,6 +9267,15 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-u<span class="w"> </span><span class="s1">&#39;svc-aon:PASSWORD&#39;</span><span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Expected: HTTP 200</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HTTP 200
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>HTTP 200
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>HTTP 401</code></strong> — Verify the service account credentials are correct and the password hasn't expired in vCenter or NSX-T.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the data source's CA certificate into the collector VM's trust store.
+<strong><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection timed out</code></strong> — Confirm network connectivity and firewall rules allow the collector VM to reach the data source on port 443.</p>
+</div>
 <p><strong>Common causes and fixes:</strong></p>
 <table>
 <thead>
@@ -9305,32 +9314,71 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 </tbody>
 </table>
 <p><strong>Re-test after fixing:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use AON UI built-in test:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Settings → Data Sources → select source → Test Connection</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Or trigger re-sync via REST:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AON_URL</span><span class="si">}</span><span class="s2">/api/ni/datasources/</span><span class="si">${</span><span class="nv">DS_ID</span><span class="si">}</span><span class="s2">/sync&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">AON_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Use AON UI built-in test:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Settings → Data Sources → select source → Test Connection</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Or trigger re-sync via REST:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AON_URL</span><span class="si">}</span><span class="s2">/api/ni/datasources/</span><span class="si">${</span><span class="nv">DS_ID</span><span class="si">}</span><span class="s2">/sync&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">AON_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;id&quot;: &quot;ds-12847-prod-vcenter&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;name&quot;: &quot;vCenter-Cluster-01&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;type&quot;: &quot;vCenter&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;lastSyncTime&quot;: &quot;2024-01-15T14:32:18Z&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;syncStatus&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;recordsProcessed&quot;: 2847,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;duration&quot;: &quot;45s&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the AON certificate into your system trust store.
+<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the <code>AON_TOKEN</code> is valid and not expired by checking Settings → Administration → API Tokens in the AON UI.
+<strong><code>curl: (7) Failed to connect to aon-prod.example.com port 443: Connection refused</code></strong> — Confirm <code>AON_URL</code> is correct and the AON appliance is running and network-accessible from your client.</p>
+</div>
 <hr />
 <h2 id="no-flows-in-flow-map">No Flows in Flow Map<a class="headerlink" href="#no-flows-in-flow-map" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Flow Map is empty or shows only partial data; specific VMs show no flows.</p>
 <p><strong>Triage order:</strong>
 1. Confirm collector is online (see Collector Offline below)
 2. Check IPFIX is configured to send to the collector IP</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On collector VM — verify UDP 2055 packets are arriving from switches/vDS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># If 0 packets: IPFIX is not reaching this collector</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check proxy.log for flow receipt</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;received|forward|error&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On collector VM — verify UDP 2055 packets are arriving from switches/vDS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If 0 packets: IPFIX is not reaching this collector</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check proxy.log for flow receipt</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;received|forward|error&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tcpdump: verbose output suppressed, use -v or -vv for full packet decode
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>22:14:33.445821 IP 10.45.12.88.54321 &gt; 192.168.1.50.2055: UDP, length 1472
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>22:14:33.512047 IP 10.45.12.89.54322 &gt; 192.168.1.50.2055: UDP, length 1472
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>22:14:34.103456 IP 10.45.13.201.54323 &gt; 192.168.1.50.2055: UDP, length 1456
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>22:14:34.667892 IP 10.45.12.88.54324 &gt; 192.168.1.50.2055: UDP, length 1472
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>22:14:35.234561 IP 10.45.13.202.54325 &gt; 192.168.1.50.2055: UDP, length 1464
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>22:14:35.891234 IP 10.45.12.89.54326 &gt; 192.168.1.50.2055: UDP, length 1472
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>50 packets captured
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>50 packets received by filter
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>0 packets dropped by kernel
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>2024-01-15 22:14:33 [INFO] Flow record received from 10.45.12.88 (vDS-prod-01): 2847 flows
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>2024-01-15 22:14:34 [INFO] Flow record received from 10.45.13.201 (sw-core-01): 1923 flows
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>2024-01-15 22:14:34 [INFO] Forward to analytics engine: batch_id=ae7f2c91-4d22-11ee-b56e-0242ac110002
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>2024-01-15 22:14:35 [INFO] Flow record received from 10.45.12.89 (vDS-prod-02): 3156 flows
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>2024-01-15 22:14:35 [INFO] Forward to analytics engine: batch_id=ae7f2d12-4d22-11ee-b56e-0242ac110002
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tcpdump: Permission denied</code></strong> — Run the command with <code>sudo</code> or add your user to the <code>tcpdump</code> group with <code>sudo usermod -aG tcpdump $USER</code>.
+<strong><code>grep: /var/log/proxy.log: No such file or directory</code></strong> — Verify the collector service is running with <code>sudo systemctl status aria-collector</code> and check the actual log path in <code>/var/log/aria/</code> or <code>/opt/aria/logs/</code>.</p>
+</div>
 <p><strong>IPFIX not configured on vDS:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client → Distributed Switch → Configure → NetFlow
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Collector IP: &lt;AON collector IP&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Collector Port: 2055
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Active flow export timeout: 60s
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Idle flow export timeout: 15s
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Apply to all port groups
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vSphere Client → Distributed Switch → Configure → NetFlow
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Collector IP: &lt;AON collector IP&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Collector Port: 2055
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Active flow export timeout: 60s
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Idle flow export timeout: 15s
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Apply to all port groups
 </code></pre></div></p>
 <p><strong>Firewall blocking UDP 2055:</strong>
 - Physical switches must send IPFIX to the collector IP on UDP 2055
@@ -9338,36 +9386,90 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 <hr />
 <h2 id="collector-offline-in-ui">Collector Offline in UI<a class="headerlink" href="#collector-offline-in-ui" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> AON UI → Settings → Infrastructure and Support → Collectors shows collector as "Offline" or "Disconnected".</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to the offline collector VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector.corp.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check if collector service is running</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ni-collector
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Restart collector service</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ni-collector
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ni-collector<span class="w">   </span><span class="c1"># verify running</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check collector can reach platform VM</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>aon-platform.corp.local<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># If unreachable: firewall or DNS issue — fix connectivity first</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># View collector logs for errors</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>ni-collector<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to the offline collector VM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector.corp.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check if collector service is running</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ni-collector
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Restart collector service</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ni-collector
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ni-collector<span class="w">   </span><span class="c1"># verify running</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Check collector can reach platform VM</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>aon-platform.corp.local<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># If unreachable: firewall or DNS issue — fix connectivity first</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># View collector logs for errors</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>ni-collector<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ubuntu@aon-collector:~$ sudo systemctl status ni-collector
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>● ni-collector.service - Aria Operations for Networks Collector
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>     Loaded: loaded (/etc/systemd/system/ni-collector.service; enabled; vendor preset: enabled)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>     Active: inactive (dead) since Thu 2024-01-18 14:32:15 UTC; 2min 43s ago
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ubuntu@aon-collector:~$ sudo systemctl restart ni-collector
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ubuntu@aon-collector:~$ sudo systemctl status ni-collector
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>● ni-collector.service - Aria Operations for Networks Collector
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>     Loaded: loaded (/etc/systemd/system/ni-collector.service; enabled; vendor preset: enabled)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>     Active: active (running) since Thu 2024-01-18 14:34:52 UTC; 1s ago
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>     Process: 8742 ExecStart=/opt/ni/collector/bin/collector.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ubuntu@aon-collector:~$ nc -zv aon-platform.corp.local 443
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Connection to aon-platform.corp.local 443 port [tcp/https] succeeded!
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>ubuntu@aon-collector:~$ sudo journalctl -u ni-collector -n 100 --no-pager | grep -i &quot;error\|fail\|warn&quot;
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Jan 18 14:34:53 aon-collector ni-collector[8751]: WARN: Retrying connection to platform at 10.42.8.15:443 (attempt 2/5)
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Jan 18 14:35:01 aon-collector ni-collector[8762]: ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: command not found</code></strong> — Verify the user has sudo privileges or log in as root; check <code>/etc/sudoers</code> includes the ubuntu user.
+<strong><code>Connection refused</code></strong> — Ensure the ni-collector service is actually running with <code>systemctl status ni-collector</code> and check firewall rules allow outbound 443 to the platform VM.
+<strong><code>ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem</code></strong> — Regenerate or restore the collector certificate bundle using the platform's certificate management tool or re-register the collector.</p>
+</div>
 <p><strong>If service restart doesn't fix it — re-register in UI:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>AON UI → Settings → Infrastructure and Support → Collectors
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Select offline collector → Re-register
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Copy the pairing key shown
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>AON UI → Settings → Infrastructure and Support → Collectors
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Select offline collector → Re-register
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Copy the pairing key shown
 </code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the collector VM, run the re-pairing script</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Enter platform FQDN and paste the pairing key</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On the collector VM, run the re-pairing script</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Enter platform FQDN and paste the pairing key</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Aria Operations for Networks - Collector Re-pairing Script
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>===========================================================
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Checking collector status... OK
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Current platform: platform.example.com
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Collector UUID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Enter platform FQDN [platform.example.com]: 
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Enter pairing key: 
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Validating pairing key... OK
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Connecting to platform at platform.example.com:443... Connected
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Registering collector... OK
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Collector re-paired successfully
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Restarting services... Done
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Pairing complete. Collector is now active.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: /home/ubuntu/support/pairing.sh: command not found</code></strong> — Verify the script exists at that path and run <code>ls -la /home/ubuntu/support/pairing.sh</code> to confirm permissions and location.
+<strong><code>Validating pairing key... FAILED - Invalid or expired key</code></strong> — Obtain a fresh pairing key from the Aria Operations platform UI under Administration &gt; Collectors and re-run the script.
+<strong><code>Connecting to platform at platform.example.com:443... Connection refused</code></strong> — Verify network connectivity to the platform FQDN with <code>ping platform.example.com</code> and confirm the platform is running and accessible on port 443.</p>
+</div>
 <p><strong>Collector disk full (stops forwarding flows at &gt;85% disk usage):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/<span class="w">   </span><span class="c1"># check root partition</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G<span class="w">   </span><span class="c1"># free journal space</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/<span class="w">   </span><span class="c1"># check root partition</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G<span class="w">   </span><span class="c1"># free journal space</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>/dev/sda1        50G   42G  5.2G  85% /
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Vacuumed journals from /var/log/journal/abc123def456 to 1.0G.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>df: '/': Permission denied</code></strong> — Run the command without <code>sudo</code> as <code>df</code> doesn't require elevated privileges, or check that the mount point exists and is accessible.
+<strong><code>sudo: journalctl: command not found</code></strong> — Install systemd-journal or verify the system uses systemd; on some minimal distributions, journalctl may not be available.</p>
+</div>
 <hr />
 <h2 id="path-analysis-showing-no-path-or-incomplete-path">Path Analysis Showing No Path or Incomplete Path<a class="headerlink" href="#path-analysis-showing-no-path-or-incomplete-path" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Path Analysis tool returns "No path found" or missing hops between two VMs.</p>
@@ -9375,14 +9477,27 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 - One or more network devices in the path are not discovered as data sources
 - NSX-T data source not added (missing logical overlay hops)
 - Physical switches not added via SNMP</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check which data sources are configured</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">AON_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AON_URL</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">    print(f\&quot;{d.get(&#39;datasource_type&#39;,&#39;?&#39;):&lt;25} {d.get(&#39;nickname&#39;,&#39;?&#39;):&lt;30} {d.get(&#39;enabled&#39;,&#39;&#39;)}\&quot;)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check which data sources are configured</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">AON_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AON_URL</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="s2">    print(f\&quot;{d.get(&#39;datasource_type&#39;,&#39;?&#39;):&lt;25} {d.get(&#39;nickname&#39;,&#39;?&#39;):&lt;30} {d.get(&#39;enabled&#39;,&#39;&#39;)}\&quot;)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vCenter                      prod-vcenter-01                  True
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vCenter                      dr-vcenter-02                    True
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>NSX-T                        nsx-t-cluster-primary            True
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>vRealize Operations         vrops-instance-01                False
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Kubernetes                   k8s-prod-cluster                 True
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Intersight                   intersight-connector             True
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the AON server's certificate into your system trust store.
+<strong><code>jq: command not found</code></strong> — Install <code>python3-json</code> or use the provided Python one-liner instead of piping to <code>jq</code>.
+<strong><code>Authorization header missing or invalid</code></strong> — Verify <code>${AON_TOKEN}</code> is set with a valid API token by running <code>echo $AON_TOKEN</code> and regenerate it in the AON UI if expired.</p>
+</div>
 <p><strong>Fix:</strong> In AON UI → Settings → Data Sources → Add Source:
 - Ensure all NSX-T Managers are added
 - Add physical switch SNMP credentials for switches in the path
@@ -9390,16 +9505,58 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 <hr />
 <h2 id="ldap-ad-login-failure">LDAP / AD Login Failure<a class="headerlink" href="#ldap-ad-login-failure" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Users cannot log in to AON UI with AD credentials; local <code>admin@local</code> works.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Test LDAP bind from the platform VM</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc.corp.local:389<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-aon@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;PASSWORD&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># For LDAPS (port 636):</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://dc.corp.local:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-aon@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;PASSWORD&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Test LDAP bind from the platform VM</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc.corp.local:389<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-aon@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;PASSWORD&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># For LDAPS (port 636):</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://dc.corp.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-aon@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;PASSWORD&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># extended LDIF
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>#
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a># LDAPv3
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a># base &lt;DC=corp,DC=local&gt; with scope subtree
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a># filter: (sAMAccountName=testuser)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a># requesting: cn
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>#
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a># testuser, Users, corp.local
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>dn: CN=testuser,CN=Users,DC=corp,DC=local
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>cn: Test User
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a># search result
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>search: 2
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>result: 0 Success
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>matchedDN:
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>text:
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a># extended LDIF
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>#
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a># LDAPv3
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a># base &lt;DC=corp,DC=local&gt; with scope subtree
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a># filter: (sAMAccountName=testuser)
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a># requesting: cn
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>#
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a># testuser, Users, corp.local
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>dn: CN=testuser,CN=Users,DC=corp,DC=local
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>cn: Test User
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a># search result
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>search: 2
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>result: 0 Success
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>matchedDN:
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>text:
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves and port 389/636 is reachable from the platform VM (use <code>nc -zv dc.corp.local 389</code>).
+<strong><code>ldap_bind: Inappropriate authentication (48)</code></strong> — Remove the <code>-x</code> flag if using SASL authentication, or ensure the bind DN format matches your AD schema (try <code>svc-aon@corp.local</code> or <code>corp\svc-aon</code>).</p>
+</div>
 <p><strong>Common causes:</strong></p>
 <table>
 <thead>
@@ -9428,23 +9585,38 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 </tbody>
 </table>
 <p><strong>Re-test:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>AON UI → Settings → Authentication → Test Connection
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Enter a valid AD username and password to verify
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>AON UI → Settings → Authentication → Test Connection
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  Enter a valid AD username and password to verify
 </code></pre></div></p>
 <hr />
 <h2 id="high-disk-usage-data-retention">High Disk Usage / Data Retention<a class="headerlink" href="#high-disk-usage-data-retention" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check disk usage (alert at 80%, collection stops at ~90%)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/cassandra<span class="w">    </span><span class="c1"># flow data</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/elasticsearch<span class="w">   </span><span class="c1"># search index</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Free journal space</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>7d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check disk usage (alert at 80%, collection stops at ~90%)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/cassandra<span class="w">    </span><span class="c1"># flow data</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/elasticsearch<span class="w">   </span><span class="c1"># search index</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Free journal space</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>7d
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>/dev/sda3       500G  412G   88G  83% /var/lib/cassandra
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>/dev/sda4       300G  261G   39G  87% /var/lib/elasticsearch
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>/dev/sda2       100G   78G   22G  78% /var/log
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Vacuumed journals space from 2.3G to 1.0G.
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Vacuumed journals space from 1.0G to 892M.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>df: /var/lib/cassandra: No such file or directory</code></strong> — Verify the Aria Operations for Networks collector node is running and the Cassandra service has initialized its data directory.
+<strong><code>sudo: journalctl: command not found</code></strong> — Remove <code>sudo</code> prefix as journalctl requires root privileges via <code>sudo journalctl</code> without redundant elevation, or run the command directly as root.
+<strong><code>Permission denied</code></strong> — Run the entire script with <code>sudo bash</code> or prefix each command with <code>sudo</code> to ensure proper permissions for system directories.</p>
+</div>
 <p><strong>Adjust retention in UI:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>AON UI → Settings → Infrastructure and Support → Platform Settings
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Data Retention: reduce from default (6 months) to 30 days for lab; 90 days for production
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>AON UI → Settings → Infrastructure and Support → Platform Settings
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  Data Retention: reduce from default (6 months) to 30 days for lab; 90 days for production
 </code></pre></div></p>
 <hr />
 <hr />
@@ -9484,7 +9656,7 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

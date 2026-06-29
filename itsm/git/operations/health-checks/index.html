@@ -7734,170 +7734,348 @@
 <li><strong>Database size</strong> — Run <code>sudo gitlab-psql -c "SELECT pg_size_pretty(pg_database_size('gitlabhq_production'));"</code> and compare against the previous week; rapid database growth (more than 10% week-over-week) should be investigated for runaway audit log or CI artifact storage.</li>
 <li><strong>Background jobs (Sidekiq)</strong> — Navigate to <strong>GitLab Admin → Monitoring → Background Jobs</strong>; review the Sidekiq queue depths — all queues should be draining; a persistently growing queue (especially <code>default</code> or <code>mailers</code>) indicates Sidekiq is unable to keep up and jobs are at risk of being dropped.</li>
 </ol>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set auto-gc thresholds in repo config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set auto-gc thresholds in repo config</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>config<span class="w"> </span>gc.auto<span class="w"> </span><span class="m">6700</span><span class="w">             </span><span class="c1"># loose object threshold (0 = disable auto-gc)</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>git<span class="w"> </span>config<span class="w"> </span>gc.autoPackLimit<span class="w"> </span><span class="m">50</span><span class="w">      </span><span class="c1"># number of packs before repacking</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>git<span class="w"> </span>config<span class="w"> </span>gc.pruneExpire<span class="w"> </span><span class="s2">&quot;14 days&quot;</span><span class="w"> </span><span class="c1"># how old objects must be before pruning</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>config<span class="w"> </span>pack.compression<span class="w"> </span><span class="m">9</span><span class="w">       </span><span class="c1"># max compression</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://gitlab.example.com&quot;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Basic liveness probe (no auth required)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/health&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Readiness — checks all service dependencies</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Full metrics (Prometheus format)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/metrics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(gitlab_|ruby_|rails_)&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Database connectivity check</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness?all=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.db_check&#39;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Gitaly connectivity check</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness?all=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.gitaly_check&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;master_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;db_check&quot;</span><span class="p">:</span><span class="w">     </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;cache_check&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;gitaly_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&quot;queues_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}]</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: key does not contain a section: gc.auto</code></strong> — Ensure you are in a valid git repository directory (run <code>git rev-parse --git-dir</code> to verify).
+<strong><code>error: Permission denied</code></strong> — Run the commands with appropriate permissions or use <code>--global</code> flag if configuring user-level settings instead of repo-level.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://gitlab.example.com&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Basic liveness probe (no auth required)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/health&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Readiness — checks all service dependencies</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Full metrics (Prometheus format)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/metrics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(gitlab_|ruby_|rails_)&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Database connectivity check</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness?all=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.db_check&#39;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Gitaly connectivity check</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/-/readiness?all=1&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.gitaly_check&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># GitLab component status via gitlab-ctl</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check individual service logs</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>puma
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>gitaly
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>sidekiq
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>postgresql
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Gitaly health via gRPC</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>/opt/gitlab/embedded/bin/grpc_health_probe<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-addr<span class="o">=</span>unix:///var/opt/gitlab/gitaly/gitaly.socket
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;master_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;db_check&quot;</span><span class="p">:</span><span class="w">     </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;cache_check&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;gitaly_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}],</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&quot;queues_check&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">}]</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">GHES</span><span class="o">=</span><span class="s2">&quot;github.example.com&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Maintenance status</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$GHES</span><span class="s2">/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># System health check</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-check-disk-usage&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-config-check&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-repl-status&quot;</span><span class="w">     </span><span class="c1"># HA replication status</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># GHES Management Console status</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$GHES</span><span class="s2">:8443/setup/api/check-disk-usage&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;api_key:</span><span class="nv">$MANAGEMENT_CONSOLE_PASSWORD</span><span class="s2">&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Size of a single repository</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data/repositories/group/project.git
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Top 20 largest repositories</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data/repositories/*/*/*.git<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Objects breakdown per repo</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>git<span class="w"> </span>-C<span class="w"> </span>/path/to/repo.git<span class="w"> </span>count-objects<span class="w"> </span>-vH
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Find large objects in git history</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>git<span class="w"> </span>rev-list<span class="w"> </span>--objects<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>git<span class="w"> </span>cat-file<span class="w"> </span>--batch-check<span class="o">=</span><span class="s1">&#39;%(objecttype) %(objectname) %(objectsize) %(rest)&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;/^blob/ {print substr($0,6)}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>numfmt<span class="w"> </span>--field<span class="o">=</span><span class="m">1</span><span class="w"> </span>--to<span class="o">=</span>iec-i<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>head<span class="w"> </span>-20
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># LFS objects disk usage</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>git<span class="w"> </span>lfs<span class="w"> </span>ls-files<span class="w"> </span>--size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># GitLab disk usage summary</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:storage:list_hashed<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Top projects by storage (GitLab API)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects?order_by=last_activity_at&amp;per_page=100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.statistics.repository_size | . / 1048576 | floor)MB \(.path_with_namespace)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Filesystem usage</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/opt/gitlab
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/opt/gitlab/git-data
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Alert thresholds (add to monitoring)</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Warning:  &gt;75% of git-data partition</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Critical: &gt;90% of git-data partition</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the Geo Primary — check replication status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:status
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Name                          | URL                              | Status    | Repositories  | Wikis  | LFS  | Attachments</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Geo-DR-Site                   | https://gitlab-dr.example.com   | Healthy   | 98.7%         | 99.1%  | 100% | 97.3%</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># On the Geo Secondary — detailed status</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:check
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Via API (from Primary)</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/geo_nodes/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name: .name, healthy: .healthy, repositories_synced_count, repositories_failed_count, last_event_timestamp}&#39;</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Check replication lag via PostgreSQL</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>sudo<span class="w"> </span>gitlab-psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s2">SELECT</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s2">  now() - pg_last_xact_replay_timestamp() AS replication_lag,</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s2">  pg_is_in_recovery() AS is_secondary;</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s2">&quot;</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Geo replication lag alert: &gt; 5 minutes is warning, &gt; 15 minutes is critical</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/usr/bin/env bash</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># gitlab-health-check.sh</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">GITLAB_URL</span><span class="o">=</span><span class="s2">&quot;https://gitlab.example.com&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">GITLAB_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GITLAB_TOKEN</span><span class="p">:?Set GITLAB_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops@example.com&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">FAILURES</span><span class="o">=()</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nv">expected</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cmd</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expected</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[OK]   </span><span class="nv">$name</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="k">else</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[FAIL] </span><span class="nv">$name</span><span class="s2"> — got: </span><span class="nv">$result</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;</span><span class="nv">$name</span><span class="s2">&quot;</span><span class="o">)</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="k">fi</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="o">}</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>check<span class="w"> </span><span class="s2">&quot;Readiness&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="s2">&quot;curl -sf &#39;</span><span class="nv">$GITLAB_URL</span><span class="s2">/-/readiness?all=1&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">  </span><span class="s1">&#39;&quot;status&quot;:&quot;ok&quot;&#39;</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>check<span class="w"> </span><span class="s2">&quot;Disk &lt;75%&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">  </span><span class="s2">&quot;df /var/opt/gitlab/git-data | awk &#39;NR==2{print \$5}&#39; | tr -d &#39;%&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">  </span><span class="s2">&quot;^[0-7][0-9]</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>check<span class="w"> </span><span class="s2">&quot;Gitaly socket&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">  </span><span class="s2">&quot;/opt/gitlab/embedded/bin/grpc_health_probe -addr=unix:///var/opt/gitlab/gitaly/gitaly.socket&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">  </span><span class="s2">&quot;SERVING&quot;</span>
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>check<span class="w"> </span><span class="s2">&quot;Backup recent&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">  </span><span class="s2">&quot;find /var/opt/gitlab/backups -name &#39;*.tar&#39; -mtime -1 | wc -l&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="w">  </span><span class="s2">&quot;^[1-9]&quot;</span>
-<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>
-<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${#</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAILURES: </span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[*]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[ALERT] GitLab health check failed&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ALERT_EMAIL</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="k">fi</span>
-<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>
-<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All health checks passed.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># GitLab component status via gitlab-ctl</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check individual service logs</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>puma
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>gitaly
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>sidekiq
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span>postgresql
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Gitaly health via gRPC</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>/opt/gitlab/embedded/bin/grpc_health_probe<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-addr<span class="o">=</span>unix:///var/opt/gitlab/gitaly/gitaly.socket
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>run: alertmanager: (pid 12847) 45s; run
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>run: gitaly: (pid 12934) 38s; run
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>run: gitlab-exporter: (pid 12856) 44s; run
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>run: gitlab-workhorse: (pid 12923) 40s; run
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>run: logrotate: (pid 12891) 2s; run
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>run: nginx: (pid 12912) 41s; run
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>run: node-exporter: (pid 12867) 43s; run
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>run: postgres-exporter: (pid 12878) 42s; run
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>run: postgresql: (pid 12801) 56s; run
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>run: puma: (pid 12945) 32s; run
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>run: redis: (pid 12822) 54s; run
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>run: sidekiq: (pid 12956) 25s; run
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>run: sshd: (pid 12834) 50s; run
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>==&gt; /var/log/gitlab/puma/puma_stdout.log &lt;==
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>2024-01-15T09:23:47.123Z Puma starting in cluster mode...
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>2024-01-15T09:23:48.456Z * Workers: 4
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>2024-01-15T09:23:49.789Z * Threads: 4/4
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>==&gt; /var/log/gitlab/gitaly/current &lt;==
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>time=&quot;2024-01-15T09:23:50.234Z&quot; level=info msg=&quot;starting gitaly&quot; version=16.7.0
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>==&gt; /var/log/gitlab/sidekiq/current &lt;==
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>2024-01-15T09:23:51.567Z INFO: Sidekiq 7.0.8 starting in cluster mode with 5 concurrency
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>==&gt; /var/log/gitlab/postgresql/current &lt;==
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>2024-01-15 09:23:52.890 UTC [12801] LOG: database system is ready to accept connections
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>status: SERVING
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No such file or directory @ rb_sysopen - /var/opt/gitlab/gitaly/gitaly.socket</code></strong> — Ensure Gitaly service is running with <code>sudo gitlab-ctl restart gitaly</code> and verify the socket path exists.
+<strong><code>sudo: gitlab-ctl: command not found</code></strong> — Install GitLab using the official omnibus package or verify <code>/opt/gitlab/bin</code> is in your PATH.
+<strong><code>permission denied while trying to connect to the Docker daemon</code></strong> — Run the command with proper sudo privileges or add your user to the docker group if using containerized GitLab.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">GHES</span><span class="o">=</span><span class="s2">&quot;github.example.com&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Maintenance status</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$GHES</span><span class="s2">/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># System health check</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-check-disk-usage&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-config-check&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@<span class="nv">$GHES</span><span class="w"> </span><span class="s2">&quot;ghe-repl-status&quot;</span><span class="w">     </span><span class="c1"># HA replication status</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># GHES Management Console status</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$GHES</span><span class="s2">:8443/setup/api/check-disk-usage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;api_key:</span><span class="nv">$MANAGEMENT_CONSOLE_PASSWORD</span><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  &quot;status&quot;: &quot;normal&quot;,
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;scheduled_maintenance&quot;: false,
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  &quot;maintenance_scheduled_for&quot;: null
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>}
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Disk usage: 67.3% (402 GB of 598 GB)
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Config check passed
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Replication Status
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  Role: primary
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Enabled: yes
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Primary: github.example.com
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Secondary: github-replica.example.com
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Last sync: 2024-01-15T09:47:22Z
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  Lag: 0.12s
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  Last check: 2024-01-15T09:48:15Z
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>{
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  &quot;status&quot;: &quot;ok&quot;,
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  &quot;disk_usage_percent&quot;: 67.3,
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  &quot;disk_available_gb&quot;: 196
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl commands or import the GHES certificate into your CA bundle.
+<strong><code>Permission denied (publickey).</code></strong> — Verify <code>$GHES_TOKEN</code> and <code>$MANAGEMENT_CONSOLE_PASSWORD</code> are set, and that your SSH key is authorized on the GHES instance.
+<strong><code>ghe-repl-status: command not found</code></strong> — Confirm GHES has HA replication enabled; this command only exists on replicated instances.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Size of a single repository</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data/repositories/group/project.git
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Top 20 largest repositories</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data/repositories/*/*/*.git<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Objects breakdown per repo</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>git<span class="w"> </span>-C<span class="w"> </span>/path/to/repo.git<span class="w"> </span>count-objects<span class="w"> </span>-vH
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Find large objects in git history</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>git<span class="w"> </span>rev-list<span class="w"> </span>--objects<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span>git<span class="w"> </span>cat-file<span class="w"> </span>--batch-check<span class="o">=</span><span class="s1">&#39;%(objecttype) %(objectname) %(objectsize) %(rest)&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;/^blob/ {print substr($0,6)}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span>numfmt<span class="w"> </span>--field<span class="o">=</span><span class="m">1</span><span class="w"> </span>--to<span class="o">=</span>iec-i<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>head<span class="w"> </span>-20
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># LFS objects disk usage</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>git<span class="w"> </span>lfs<span class="w"> </span>ls-files<span class="w"> </span>--size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2.8G    /var/opt/gitlab/git-data/repositories/group/project.git
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>1.2G    /var/opt/gitlab/git-data/repositories/platform/api-service.git
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>980M    /var/opt/gitlab/git-data/repositories/platform/web-ui.git
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>756M    /var/opt/gitlab/git-data/repositories/legacy/monolith.git
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>645M    /var/opt/gitlab/git-data/repositories/infra/terraform.git
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>512M    /var/opt/gitlab/git-data/repositories/data/warehouse.git
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>...
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>count-objects: 15847 objects, 2.3 GiB
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>in-pack: 14923 objects, 2.1 GiB
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>packs: 8
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>size-pack: 2.2 GiB
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>prune-packable: 0
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>garbage: 0
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>size-garbage: 0
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>a7f2c9e1 refs/heads/main:docs/archive.tar.gz 512M
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>b3e4d2f5 refs/heads/feature:models/dataset.pkl 384M
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>c1a9f8b2 refs/tags/v2.1.0:vendor/dependencies.zip 256M
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>d6e5c3a9 refs/heads/develop:build/artifacts.tar 192M
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>e2f1a4c7 refs/heads/main:cache/embeddings.bin 128M
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>...
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>Locking file list...
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>a1b2c3d4e5f6 (512 MB) path/to/model.h5
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>f6e5d4c3b2a1 (384 MB) path/to/dataset.csv
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fatal: not a git repository (or any of the parent directories): .git</code></strong> — Verify the repository path exists and is a valid git directory with <code>ls -la /path/to/repo.git/HEAD</code>.
+<strong><code>du: cannot access '/var/opt/gitlab/git-data/repositories/*/*/*.git': No such file or directory</code></strong> — Confirm GitLab repositories directory structure matches your installation path using <code>ls -la /var/opt/gitlab/git-data/repositories/</code>.
+<strong><code>command not found: numfmt</code></strong> — Install GNU coreutils with <code>apt-get install coreutils</code> (Debian/Ubuntu) or <code>yum install coreutils</code> (RHEL/CentOS).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># GitLab disk usage summary</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:storage:list_hashed<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Top projects by storage (GitLab API)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects?order_by=last_activity_at&amp;per_page=100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.statistics.repository_size | . / 1048576 | floor)MB \(.path_with_namespace)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Filesystem usage</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/opt/gitlab
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/opt/gitlab/git-data
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Alert thresholds (add to monitoring)</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Warning:  &gt;75% of git-data partition</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Critical: &gt;90% of git-data partition</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Hashed storage: 1247 projects migrated
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Hashed storage: 2 projects pending migration
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Hashed storage: 0 projects failed migration
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>5432MB platform/backend
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>4891MB infrastructure/terraform-modules
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>3156MB data-science/ml-pipeline
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>2847MB devops/ansible-playbooks
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>2103MB security/compliance-scanner
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>1876MB platform/api-gateway
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>1654MB infrastructure/kubernetes-config
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>1523MB devops/monitoring-stack
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>1401MB platform/documentation
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>1289MB data-science/datasets
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>...
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>/dev/sda3      500G  387G  113G  78% /var/opt/gitlab
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>/dev/sdb1      2.0T  1.6T  398G  80% /var/opt/gitlab/git-data
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host name</code></strong> — Verify the GitLab hostname is correct and DNS is resolving; check <code>/etc/hosts</code> or network connectivity to <code>gitlab.example.com</code>.
+<strong><code>jq: parse error: Cannot index number with string "statistics"</code></strong> — Ensure the API token has sufficient permissions and the GitLab instance is responding with valid JSON; test with <code>curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.example.com/api/v4/user"</code> first.
+<strong><code>df: '/var/opt/gitlab/git-data': No such file or directory</code></strong> — Confirm the git-data mount point exists and is mounted; run <code>mount | grep git-data</code> to verify the filesystem is attached.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># On the Geo Primary — check replication status</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:status
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Name                          | URL                              | Status    | Repositories  | Wikis  | LFS  | Attachments</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Geo-DR-Site                   | https://gitlab-dr.example.com   | Healthy   | 98.7%         | 99.1%  | 100% | 97.3%</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># On the Geo Secondary — detailed status</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:check
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Via API (from Primary)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/geo_nodes/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name: .name, healthy: .healthy, repositories_synced_count, repositories_failed_count, last_event_timestamp}&#39;</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Check replication lag via PostgreSQL</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>sudo<span class="w"> </span>gitlab-psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="s2">SELECT</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="s2">  now() - pg_last_xact_replay_timestamp() AS replication_lag,</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="s2">  pg_is_in_recovery() AS is_secondary;</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="s2">&quot;</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1"># Geo replication lag alert: &gt; 5 minutes is warning, &gt; 15 minutes is critical</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo gitlab-rake geo:status
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Name                          | URL                              | Status    | Repositories  | Wikis  | LFS  | Attachments
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Geo-DR-Site                   | https://gitlab-dr.example.com   | Healthy   | 98.7%         | 99.1%  | 100% | 97.3%
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>sudo gitlab-rake geo:check
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>GitLab Geo check Finished
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Checking Geo ...
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Geo is available ... yes
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  Database replication lag ... 0 seconds
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  Repositories synced ... 2847/2851
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  Wikis synced ... 2847/2851
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  LFS objects synced ... 1203/1203
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  Attachments synced ... 5421/5421
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>curl -s --header &quot;PRIVATE-TOKEN: $GITLAB_TOKEN&quot; &quot;https://gitlab.example.com/api/v4/geo_nodes/status&quot; | jq &#39;.[] | {name: .name, healthy: .healthy, repositories_synced_count, repositories_failed_count, last_event_timestamp}&#39;
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>{
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  &quot;name&quot;: &quot;Geo-DR-Site&quot;,
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>  &quot;healthy&quot;: true,
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>  &quot;repositories_synced_count&quot;: 2847,
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>  &quot;repositories_failed_count&quot;: 4,
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>  &quot;last_event_timestamp&quot;: &quot;2024-01-15T14:32:18.456Z&quot;
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>}
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>sudo gitlab-psql -c &quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag, pg_is_in_recovery() AS is_secondary;&quot;
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a> replication_lag | is_secondary
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>-----------------+--------------
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a> 00:00:02.341    | t
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>(1 row)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PRIVATE-TOKEN header not provided or invalid</code></strong> — Verify the <code>$GITLAB_TOKEN</code> environment variable is set and contains a valid Personal Access Token with <code>api</code> scope.
+<strong><code>could not translate host name "gitlab-dr.example.com" to address</code></strong> — Confirm the secondary site's hostname is resolvable and network connectivity exists from the primary to the secondary.
+<strong><code>pg_is_in_recovery() returned 'f' on secondary node</code></strong> — Verify the secondary database is in recovery mode and replication is configured correctly in <code>postgresql.conf</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># gitlab-health-check.sh</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nv">GITLAB_URL</span><span class="o">=</span><span class="s2">&quot;https://gitlab.example.com&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nv">GITLAB_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GITLAB_TOKEN</span><span class="p">:?Set GITLAB_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops@example.com&quot;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nv">FAILURES</span><span class="o">=()</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nv">expected</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cmd</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expected</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[OK]   </span><span class="nv">$name</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span><span class="k">else</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[FAIL] </span><span class="nv">$name</span><span class="s2"> — got: </span><span class="nv">$result</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;</span><span class="nv">$name</span><span class="s2">&quot;</span><span class="o">)</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="o">}</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>check<span class="w"> </span><span class="s2">&quot;Readiness&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">  </span><span class="s2">&quot;curl -sf &#39;</span><span class="nv">$GITLAB_URL</span><span class="s2">/-/readiness?all=1&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">  </span><span class="s1">&#39;&quot;status&quot;:&quot;ok&quot;&#39;</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>check<span class="w"> </span><span class="s2">&quot;Disk &lt;75%&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">  </span><span class="s2">&quot;df /var/opt/gitlab/git-data | awk &#39;NR==2{print \$5}&#39; | tr -d &#39;%&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">  </span><span class="s2">&quot;^[0-7][0-9]</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>check<span class="w"> </span><span class="s2">&quot;Gitaly socket&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">  </span><span class="s2">&quot;/opt/gitlab/embedded/bin/grpc_health_probe -addr=unix:///var/opt/gitlab/gitaly/gitaly.socket&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="w">  </span><span class="s2">&quot;SERVING&quot;</span>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>check<span class="w"> </span><span class="s2">&quot;Backup recent&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="w">  </span><span class="s2">&quot;find /var/opt/gitlab/backups -name &#39;*.tar&#39; -mtime -1 | wc -l&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="w">  </span><span class="s2">&quot;^[1-9]&quot;</span>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${#</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAILURES: </span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[*]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[ALERT] GitLab health check failed&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ALERT_EMAIL</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="k">fi</span>
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All health checks passed.&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>[OK]   Readiness
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>[OK]   Disk &lt;75%
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>[OK]   Gitaly socket
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>[OK]   Backup recent
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>All health checks passed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>GITLAB_TOKEN: parameter null or not set</code></strong> — Export the GITLAB_TOKEN environment variable before running the script: <code>export GITLAB_TOKEN="your-token"</code>.
+<strong><code>[FAIL] Readiness — got: curl: (7) Failed to connect to gitlab.example.com port 443</code></strong> — Verify GitLab URL is correct and the host is reachable; check firewall rules and DNS resolution with <code>nslookup gitlab.example.com</code>.
+<strong><code>[FAIL] Gitaly socket — got: Failed to connect to the server</code></strong> — Ensure Gitaly service is running with <code>sudo gitlab-ctl status gitaly</code> and the socket path <code>/var/opt/gitlab/gitaly/gitaly.socket</code> exists.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7934,7 +8112,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

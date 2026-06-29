@@ -9650,26 +9650,34 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the local host. Error: Connection refused</code></strong> — Ensure the ESXi host SSH service is running and you have network connectivity to the management interface.
+<strong><code>Unknown command or namespace maintenanceMode</code></strong> — Verify you are running this command on ESXi 5.0 or later; older versions use different maintenance mode syntax.</p>
+</div>
 <p>Exit maintenance mode:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div></p>
 <hr />
 <h2 id="vmotion-migrating-a-vm">vMotion — Migrating a VM<a class="headerlink" href="#vmotion-migrating-a-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Live vMotion (compute only — same storage)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Storage vMotion (same host, different datastore)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Full migration (compute + storage)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Bulk evacuate all VMs from a host</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">$targetHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="nv">$sourceHost</span> <span class="p">|</span> <span class="nb">Move-VM</span> <span class="n">-Destination</span> <span class="nv">$targetHost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Live vMotion (compute only — same storage)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Storage vMotion (same host, different datastore)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Full migration (compute + storage)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># Bulk evacuate all VMs from a host</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">$targetHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="nv">$sourceHost</span> <span class="p">|</span> <span class="nb">Move-VM</span> <span class="n">-Destination</span> <span class="nv">$targetHost</span>
 </code></pre></div>
 <p>vMotion requirements:
 - Shared storage visible to both hosts (for compute-only vMotion)
@@ -9678,124 +9686,142 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <hr />
 <h2 id="snapshot-management">Snapshot Management<a class="headerlink" href="#snapshot-management" title="Permanent link">&para;</a></h2>
 <p>Snapshots consume datastore space equal to the delta from the base disk. Stale snapshots degrade I/O performance and fill datastores.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Find all snapshots older than 7 days across all VMs</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)}},</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;AgeDays&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span> <span class="n">0</span><span class="p">)}}</span> <span class="p">|</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Sort-Object</span> <span class="n">AgeDays</span> <span class="n">-Descending</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Remove a specific snapshot</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Remove-Snapshot</span> <span class="p">`</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch-2026-04-01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Remove ALL snapshots for a VM (consolidate)</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c"># Find VMs needing disk consolidation (snapshot files remain after removal)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Find all snapshots older than 7 days across all VMs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)}},</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;AgeDays&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span> <span class="n">0</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="nb">Sort-Object</span> <span class="n">AgeDays</span> <span class="n">-Descending</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Remove a specific snapshot</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Remove-Snapshot</span> <span class="p">`</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch-2026-04-01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Remove ALL snapshots for a VM (consolidate)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c"># Find VMs needing disk consolidation (snapshot files remain after removal)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span>
 </code></pre></div>
 <p>Consolidation via UI: right-click VM → <strong>Snapshots → Consolidate</strong>. This removes orphaned delta files without removing a snapshot from the tree.</p>
 <hr />
 <h2 id="inventory-hygiene-tasks">Inventory Hygiene Tasks<a class="headerlink" href="#inventory-hygiene-tasks" title="Permanent link">&para;</a></h2>
 <p>Run these weekly or include in the daily check script.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Find orphaned / unexpectedly powered-off VMs</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LastChange&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ChangeVersion</span><span class="p">}}</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># VMs not assigned to any resource pool (using cluster root directly)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ResourcePool</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">).</span><span class="n">Name</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># VMs with VMware Tools not running</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsRunningStatus</span> <span class="o">-ne</span> <span class="s2">&quot;guestToolsRunning&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ToolsStatus&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsRunningStatus</span><span class="p">}}</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Export full VM inventory</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span><span class="p">,</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VMHost&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Cluster&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Parent</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Datastore&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Datastore</span><span class="p">).</span><span class="n">Name</span> <span class="n">-join</span> <span class="s2">&quot;;&quot;</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vm_inventory</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Find orphaned / unexpectedly powered-off VMs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LastChange&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ChangeVersion</span><span class="p">}}</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># VMs not assigned to any resource pool (using cluster root directly)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ResourcePool</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">).</span><span class="n">Name</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># VMs with VMware Tools not running</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsRunningStatus</span> <span class="o">-ne</span> <span class="s2">&quot;guestToolsRunning&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ToolsStatus&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsRunningStatus</span><span class="p">}}</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c"># Export full VM inventory</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span><span class="p">,</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VMHost&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Cluster&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Parent</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Datastore&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Datastore</span><span class="p">).</span><span class="n">Name</span> <span class="n">-join</span> <span class="s2">&quot;;&quot;</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vm_inventory</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <hr />
 <h2 id="resync-disconnected-host">Resync Disconnected Host<a class="headerlink" href="#resync-disconnected-host" title="Permanent link">&para;</a></h2>
 <p>When a host shows "Not Responding" or "Disconnected":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From VCSA SSH — check vpxd log for host connectivity errors</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;esxi-hostname&gt;&quot;</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From VCSA SSH — check vpxd log for host connectivity errors</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;esxi-hostname&gt;&quot;</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — attempt reconnect</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconnectHost_Task</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — attempt reconnect</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconnectHost_Task</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From ESXi host SSH — restart the vCenter agent (vpxa)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify agent is running</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From ESXi host SSH — restart the vCenter agent (vpxa)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify agent is running</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>/etc/init.d/vpxa<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Stopping vpxa...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Waiting for vpxa to stop...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Starting vpxa...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Waiting for vpxa to start...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>vpxa started successfully.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Stopping hostd...
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Waiting for hostd to stop...
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Starting hostd...
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Waiting for hostd to start...
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>hostd started successfully.
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Running /etc/init.d/vpxa status
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>vpxa is running.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vpxa is not running.</code></strong> — Check <code>/var/log/vpxa.log</code> for startup errors and verify network connectivity to vCenter Server.
+<strong><code>Unable to connect to the local hostd agent</code></strong> — Wait 30-60 seconds for hostd to fully initialize after restart before checking vpxa status.</p>
+</div>
 <p>If the host certificate has drifted from vCenter's expected thumbprint, reconnect via UI and accept the new thumbprint, or re-add the host to vCenter after removing it.</p>
 <hr />
 <h2 id="managing-vsphere-tags">Managing vSphere Tags<a class="headerlink" href="#managing-vsphere-tags" title="Permanent link">&para;</a></h2>
 <p>Tags are used for inventory classification, RBAC scoping, and backup policy targeting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># List all tag categories and tags</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-TagCategory</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nb">Get-Tag</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># Assign a tag to a VM</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">$tag</span> <span class="p">=</span> <span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;prod&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;env&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="nv">$tag</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c"># List all VMs with a specific tag</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">Get-TagAssignment</span> <span class="n">-Tag</span> <span class="p">(</span><span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;prod&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;env&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Entity</span> <span class="p">|</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-is</span> <span class="no">[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c"># Bulk tag assignment</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="nv">$tag</span> <span class="p">=</span> <span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;gold&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;tier&quot;</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    <span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="nv">$tag</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="p">}</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c"># Export tag assignments to CSV</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="nb">Get-TagAssignment</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">`</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Entity&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Entity</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">`</span>
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Category&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Category</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">`</span>
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Tag&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">tag_assignments</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># List all tag categories and tags</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-TagCategory</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Get-Tag</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c"># Assign a tag to a VM</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nv">$tag</span> <span class="p">=</span> <span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;prod&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;env&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="nv">$tag</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c"># List all VMs with a specific tag</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nb">Get-TagAssignment</span> <span class="n">-Tag</span> <span class="p">(</span><span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;prod&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;env&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Entity</span> <span class="p">|</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-is</span> <span class="no">[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c"># Bulk tag assignment</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nv">$tag</span> <span class="p">=</span> <span class="nb">Get-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;gold&quot;</span> <span class="n">-Category</span> <span class="s2">&quot;tier&quot;</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    <span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="nv">$tag</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="p">}</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c"># Export tag assignments to CSV</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="nb">Get-TagAssignment</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">`</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Entity&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Entity</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">`</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Category&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Category</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">`</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Tag&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">tag_assignments</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <hr />
 <h2 id="reconfiguring-vsphere-ha">Reconfiguring vSphere HA<a class="headerlink" href="#reconfiguring-vsphere-ha" title="Permanent link">&para;</a></h2>
 <p>After adding or removing hosts, or after host failures, HA may need reconfiguration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Check HA state on all clusters</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">HAFailoverLevel</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Reconfigure HA on a specific cluster (resolves most config warnings)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">$clusterView</span> <span class="p">=</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ConfigurationEx</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Check HA state on all clusters</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">HAFailoverLevel</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Reconfigure HA on a specific cluster (resolves most config warnings)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nv">$clusterView</span> <span class="p">=</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ConfigurationEx</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
 </code></pre></div>
 <p>Via UI: right-click cluster → <strong>Reconfigure for vSphere HA</strong>. This re-evaluates all hosts and resolves most "HA configuration issues" warnings without disrupting running VMs.</p>
 <hr />
 <h2 id="content-library-management">Content Library Management<a class="headerlink" href="#content-library-management" title="Permanent link">&para;</a></h2>
 <p>Content Libraries store VM templates, OVF/OVA templates, and ISO images centrally.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># List content libraries</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-ContentLibrary</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Get items in a library</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Get-ContentLibrary</span> <span class="n">-Name</span> <span class="s2">&quot;Templates-LON&quot;</span> <span class="p">|</span> <span class="nb">Get-ContentLibraryItem</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Deploy a VM from a template in the content library</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nv">$template</span> <span class="p">=</span> <span class="nb">Get-ContentLibraryItem</span> <span class="n">-Name</span> <span class="s2">&quot;RHEL9-Gold&quot;</span> <span class="n">-ContentLibrary</span> <span class="s2">&quot;Templates-LON&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nb">New-VM</span> <span class="n">-Name</span> <span class="s2">&quot;new-vm-01&quot;</span> <span class="n">-ContentLibraryItem</span> <span class="nv">$template</span> <span class="p">`</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="n">-ResourcePool</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;RP-PROD-STANDARD&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># List content libraries</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Get-ContentLibrary</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Get items in a library</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nb">Get-ContentLibrary</span> <span class="n">-Name</span> <span class="s2">&quot;Templates-LON&quot;</span> <span class="p">|</span> <span class="nb">Get-ContentLibraryItem</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c"># Deploy a VM from a template in the content library</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="nv">$template</span> <span class="p">=</span> <span class="nb">Get-ContentLibraryItem</span> <span class="n">-Name</span> <span class="s2">&quot;RHEL9-Gold&quot;</span> <span class="n">-ContentLibrary</span> <span class="s2">&quot;Templates-LON&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nb">New-VM</span> <span class="n">-Name</span> <span class="s2">&quot;new-vm-01&quot;</span> <span class="n">-ContentLibraryItem</span> <span class="nv">$template</span> <span class="p">`</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="n">-ResourcePool</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;RP-PROD-STANDARD&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Best practices:
 - Publish a single library from a central vCenter; subscribe from spoke vCenters (Linked Mode or subscribed library)
@@ -9803,87 +9829,142 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 - Update templates monthly — patch, update VMware Tools, then convert back to template</p>
 <h2 id="replace-vcenter-certificates-vmca">Replace vCenter Certificates (VMCA)<a class="headerlink" href="#replace-vcenter-certificates-vmca" title="Permanent link">&para;</a></h2>
 <p>vCenter certificate replacement is required when certificates expire, are compromised, or when moving to a custom CA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Method 1: Auto-renew machine SSL cert via VAMI (for VMCA-signed certs)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># https://&lt;vcenter-fqdn&gt;:5480 → Certificate Management → Machine SSL Certificate → Renew</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Method 2: Replace with custom CA cert using certificate-manager</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ssh<span class="w"> </span>root@&lt;vcenter-fqdn&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Option 1: Replace Machine SSL certificate with custom certificate</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Option 6: Replace Solution User certificates with custom certificate</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Provide: root CA cert, signed machine cert, private key</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Method 3: STS certificate renewal (required every 2 years for VMCA-signed)</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># STS certs do not auto-renew — check expiry:</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>python<span class="w"> </span>/usr/lib/vmware-vmafd/bin/lstool.py<span class="w"> </span>list<span class="w"> </span>--url<span class="w"> </span>http://localhost:7080/lookupservice/sdk<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expire
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Renew STS cert (vSphere 7+):</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># Use certificate-manager → Option 8: Reset all certificates</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Method 1: Auto-renew machine SSL cert via VAMI (for VMCA-signed certs)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># https://&lt;vcenter-fqdn&gt;:5480 → Certificate Management → Machine SSL Certificate → Renew</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Method 2: Replace with custom CA cert using certificate-manager</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ssh<span class="w"> </span>root@&lt;vcenter-fqdn&gt;
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Option 1: Replace Machine SSL certificate with custom certificate</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Option 6: Replace Solution User certificates with custom certificate</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Provide: root CA cert, signed machine cert, private key</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># Method 3: STS certificate renewal (required every 2 years for VMCA-signed)</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># STS certs do not auto-renew — check expiry:</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>python<span class="w"> </span>/usr/lib/vmware-vmafd/bin/lstool.py<span class="w"> </span>list<span class="w"> </span>--url<span class="w"> </span>http://localhost:7080/lookupservice/sdk<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expire
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Renew STS cert (vSphere 7+):</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># Use certificate-manager → Option 8: Reset all certificates</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>     *** Welcome to Certificate Manager ***
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Please select an option [1-9]:
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>1. Replace Machine SSL certificate with Custom Certificate
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>2. Replace VMCA-signed Machine SSL certificate with VMCA signed certificate
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>3. Regenerate a new VMCA Root Certificate
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>4. Replace Solution User certificates with custom certificate
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>5. Replace Solution User certificates with VMCA signed certificate
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>6. Regenerate a new Solution User certificate
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>7. Reset all Certificates
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>8. Replace Machine SSL certificate with VMCA signed certificate
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>9. Exit
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>Option [1-9]: 1
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>Please provide a Certificate file [.crt/.cer]: /root/machine-cert.crt
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>Please provide a Private Key file [.key]: /root/machine-key.key
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>Please provide a Root CA Certificate file [.crt/.cer]: /root/root-ca.crt
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>Certificate replaced successfully. Please restart all services.
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>root@vcenter.example.com [ ~ ]# python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2&gt;/dev/null | grep -i expire
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>Expires: 2025-03-15T18:42:31.000Z
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>Expires: 2025-03-15T18:42:31.000Z
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>Entry 0
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>    Alias: __MACHINE_CERT
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>    Type: X.509 Certificate
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>    Expires: 2026-03-14 18:42:31 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found or invalid format</code></strong> — Verify the certificate file path and ensure it is in PEM format (.crt or .cer).
+<strong><code>Error: Private key does not match certificate</code></strong> — Regenerate the certificate signing request and ensure the private key corresponds to the signed certificate.
+<strong><code>Error: Root CA certificate validation failed</code></strong> — Confirm the root CA certificate is valid and in the correct chain order for your custom CA.</p>
+</div>
 <p>Post-replacement validation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify new cert is active</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Confirm NotAfter shows new expiry</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Verify services are healthy after restart</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RUNNING|STOPPED&quot;</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># All critical services should be RUNNING</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Verify vCenter is accessible from vSphere Client</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Verify ESXi hosts still show Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Verify new cert is active</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Confirm NotAfter shows new expiry</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Verify services are healthy after restart</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RUNNING|STOPPED&quot;</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># All critical services should be RUNNING</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># Verify vCenter is accessible from vSphere Client</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Verify ESXi hosts still show Connected</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>notBefore=Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>subject=C = US, ST = California, L = San Francisco, O = Acme Corp, CN = vcenter.acme.local
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>vpxd                                    RUNNING
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vpxd:vpxd                               RUNNING
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>vpxd:vpostgres                          RUNNING
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>vsphere-ui                              RUNNING
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>vsphere-ui:vsphere-ui                   RUNNING
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>sps                                     RUNNING
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>sps:sps                                 RUNNING
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>netdump                                 RUNNING
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect: Connection refused</code></strong> — Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output.
+<strong><code>STOPPED</code></strong> — Restart the stopped service using <code>vmon-cli --restart &lt;service-name&gt;</code> and wait 2–3 minutes for full initialization.
+<strong><code>unable to load certificate</code></strong> — Confirm the certificate file path is correct and readable; verify the certificate was properly imported using <code>certificate-manager</code> utility.</p>
+</div>
 <h2 id="vcenter-file-based-backup">vCenter File-Based Backup<a class="headerlink" href="#vcenter-file-based-backup" title="Permanent link">&para;</a></h2>
 <p>vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Configure backup via VAMI: https://&lt;vcenter-fqdn&gt;:5480</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Backup → Configure → set protocol, location, credentials, schedule, retention</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Trigger manual backup via API</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/schedules?vmw-task=true&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="s1">    &quot;location_type&quot;: &quot;SFTP&quot;,</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="s1">    &quot;location&quot;: &quot;sftp://backup-srv/vcenter-backups&quot;,</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="s1">    &quot;location_user&quot;: &quot;vcbackup&quot;,</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="s1">    &quot;location_password&quot;: &quot;&lt;password&gt;&quot;,</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="s1">    &quot;parts&quot;: [&quot;SEAT&quot;]</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># SEAT = Statistics, Events, Alarms, Tasks (recommended addition to core backup)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Configure backup via VAMI: https://&lt;vcenter-fqdn&gt;:5480</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Backup → Configure → set protocol, location, credentials, schedule, retention</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Trigger manual backup via API</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/schedules?vmw-task=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="s1">    &quot;location_type&quot;: &quot;SFTP&quot;,</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="s1">    &quot;location&quot;: &quot;sftp://backup-srv/vcenter-backups&quot;,</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="s1">    &quot;location_user&quot;: &quot;vcbackup&quot;,</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="s1">    &quot;location_password&quot;: &quot;&lt;password&gt;&quot;,</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="s1">    &quot;parts&quot;: [&quot;SEAT&quot;]</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># SEAT = Statistics, Events, Alarms, Tasks (recommended addition to core backup)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Monitor backup job status</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="s2">&quot;vmware-api-session-id&quot;</span> <span class="p">=</span> <span class="nv">$sessionId</span> <span class="p">}</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nb">Invoke-RestMethod</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/job&quot;</span> <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="p">|</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  <span class="nb">Select-Object</span> <span class="n">id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">messages</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Monitor backup job status</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="s2">&quot;vmware-api-session-id&quot;</span> <span class="p">=</span> <span class="nv">$sessionId</span> <span class="p">}</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nb">Invoke-RestMethod</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/job&quot;</span> <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="p">|</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  <span class="nb">Select-Object</span> <span class="n">id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">messages</span>
 </code></pre></div>
 <p>Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.</p>
 <hr />
 <h2 id="manage-roles-and-permissions">Manage Roles and Permissions<a class="headerlink" href="#manage-roles-and-permissions" title="Permanent link">&para;</a></h2>
 <p>vCenter RBAC uses Roles (permission sets) assigned to Principals (users or groups) at a specific inventory object level.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># List all roles</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Get-VIRole</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># Create a custom role with specific privileges</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="s2">&quot;VirtualMachine.Interact.ConsoleInteract&quot;</span><span class="p">,</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="s2">&quot;VirtualMachine.Interact.Suspend&quot;</span><span class="p">)</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c"># Assign role to an AD group at a folder level</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="nv">$folder</span> <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Name</span> <span class="s2">&quot;Production-VMs&quot;</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="c"># List permissions on an object</span>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="p">!!!</span> <span class="n">warning</span> <span class="s2">&quot;Permission removal is immediate — export before deleting&quot;</span>
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    <span class="n">This</span> <span class="n">command</span> <span class="n">removes</span> <span class="n">the</span> <span class="n">permission</span> <span class="n">immediately</span><span class="p">.</span> <span class="n">Verify</span> <span class="n">the</span> <span class="n">principal</span> <span class="n">and</span> <span class="n">scope</span> <span class="n">before</span> <span class="n">running</span><span class="p">.</span> <span class="n">Export</span> <span class="n">current</span> <span class="n">permissions</span> <span class="n">first</span> <span class="n">so</span> <span class="n">you</span> <span class="n">can</span> <span class="n">restore</span> <span class="k">if</span> <span class="n">needed</span><span class="p">:</span> <span class="p">`</span><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">&lt;</span><span class="n">entity</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">perms-backup</span><span class="p">.</span><span class="n">csv</span><span class="p">`.</span>
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
-<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="c"># Remove a permission</span>
-<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span> <span class="n">-Principal</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span> <span class="p">|</span>
-<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># List all roles</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">Get-VIRole</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c"># Create a custom role with specific privileges</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="s2">&quot;VirtualMachine.Interact.ConsoleInteract&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="s2">&quot;VirtualMachine.Interact.Suspend&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c"># Assign role to an AD group at a folder level</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="nv">$folder</span> <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Name</span> <span class="s2">&quot;Production-VMs&quot;</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="c"># List permissions on an object</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="p">!!!</span> <span class="n">warning</span> <span class="s2">&quot;Permission removal is immediate — export before deleting&quot;</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>    <span class="n">This</span> <span class="n">command</span> <span class="n">removes</span> <span class="n">the</span> <span class="n">permission</span> <span class="n">immediately</span><span class="p">.</span> <span class="n">Verify</span> <span class="n">the</span> <span class="n">principal</span> <span class="n">and</span> <span class="n">scope</span> <span class="n">before</span> <span class="n">running</span><span class="p">.</span> <span class="n">Export</span> <span class="n">current</span> <span class="n">permissions</span> <span class="n">first</span> <span class="n">so</span> <span class="n">you</span> <span class="n">can</span> <span class="n">restore</span> <span class="k">if</span> <span class="n">needed</span><span class="p">:</span> <span class="p">`</span><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">&lt;</span><span class="n">entity</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">perms-backup</span><span class="p">.</span><span class="n">csv</span><span class="p">`.</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="c"># Remove a permission</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span> <span class="n">-Principal</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span> <span class="p">|</span>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p><strong>Best practices:</strong>
 - Assign permissions at the lowest scope that satisfies the use case (folder/cluster, not root)
@@ -9907,10 +9988,39 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <li>Click <strong>Add</strong> → SSO now resolves AD users</li>
 <li>Assign vCenter roles to AD groups: Administration → <strong>Access Control</strong> → <strong>Global Permissions</strong> or per-object permissions</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Verify AD identity source via SSO API</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/identity/providers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Verify AD identity source via SSO API</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/identity/providers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-id&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>[
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  {
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    &quot;name&quot;: &quot;vsphere.local&quot;,
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    &quot;type&quot;: &quot;LOCAL_OS&quot;,
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    &quot;friendly_name&quot;: &quot;Local OS&quot;,
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    &quot;domain_name&quot;: &quot;vsphere.local&quot;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  },
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>  {
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    &quot;name&quot;: &quot;corp.example.com&quot;,
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>    &quot;type&quot;: &quot;LDAP&quot;,
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>    &quot;friendly_name&quot;: &quot;Corporate Active Directory&quot;,
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    &quot;domain_name&quot;: &quot;corp.example.com&quot;,
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    &quot;base_dn&quot;: &quot;dc=corp,dc=example,dc=com&quot;
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>  },
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>  {
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>    &quot;name&quot;: &quot;lab.internal&quot;,
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>    &quot;type&quot;: &quot;LDAP&quot;,
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>    &quot;friendly_name&quot;: &quot;Lab Domain&quot;,
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>    &quot;domain_name&quot;: &quot;lab.internal&quot;,
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>    &quot;base_dn&quot;: &quot;dc=lab,dc=internal&quot;
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>  }
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the vCenter CA certificate into your system trust store with <code>curl -cacert /path/to/ca.crt</code>.
+<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","messages":["Invalid session."]}</code></strong> — Obtain a valid session ID by running <code>curl -sk -X POST "https://&lt;vcenter-fqdn&gt;/api/session" -u "administrator@vsphere.local:password"</code> first.
+<strong><code>curl: (7) Failed to connect to &lt;vcenter-fqdn&gt; port 443: Connection refused</code></strong> — Verify vCenter is running and accessible on the network; check firewall rules and confirm the FQDN resolves correctly with <code>nslookup &lt;vcenter-fqdn&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="configure-a-vsphere-alarm">Configure a vSphere Alarm<a class="headerlink" href="#configure-a-vsphere-alarm" title="Permanent link">&para;</a></h2>
 <p>Alarms alert on object state changes or metric threshold violations.</p>
@@ -9926,41 +10036,41 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <li>Send an SNMP trap</li>
 <li>Click <strong>OK</strong> — the alarm is immediately active for the selected object and (if checked) its children</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># List all defined alarms</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Get-AlarmDefinition</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">Description</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c"># Enable/disable a specific alarm</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nb">Get-AlarmDefinition</span> <span class="n">-Name</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">|</span> <span class="nb">Set-AlarmDefinition</span> <span class="n">-Enabled</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c"># Acknowledge an active alarm</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="nb">Get-AlarmAction</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Alarm</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c"># List all defined alarms</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">Get-AlarmDefinition</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">Description</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c"># Enable/disable a specific alarm</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="nb">Get-AlarmDefinition</span> <span class="n">-Name</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">|</span> <span class="nb">Set-AlarmDefinition</span> <span class="n">-Enabled</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c"># Acknowledge an active alarm</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="nb">Get-AlarmAction</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Alarm</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-a-cluster-drs-and-ha">Configure a Cluster (DRS and HA)<a class="headerlink" href="#configure-a-cluster-drs-and-ha" title="Permanent link">&para;</a></h2>
 <p>When creating or reconfiguring a cluster:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Create a new cluster with DRS and HA</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">New-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">-DrsEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-DrsAutomationLevel</span> <span class="n">FullyAutomated</span> <span class="p">`</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">-HAEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-HAAdmissionControlEnabled</span><span class="p">:</span><span class="nv">$true</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c"># Configure HA admission control (25% = 1-host failover for a 4-node cluster)</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasConfigInfo</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterFailoverResourcesAdmissionControlPolicy</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">CpuFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">MemoryFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="p">(</span><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$spec</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c"># Enable EVC (Enhanced vMotion Compatibility) for mixed CPU generations</span>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="nv">$clusterView</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="nv">$evcSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">EVCMode</span>
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="nv">$evcSpec</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="s2">&quot;intel-broadwell&quot;</span>  <span class="c"># set to the lowest CPU generation in cluster</span>
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ConfigureEvcMode_Task</span><span class="p">(</span><span class="nv">$evcSpec</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c"># Create a new cluster with DRS and HA</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nb">New-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    <span class="n">-DrsEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-DrsAutomationLevel</span> <span class="n">FullyAutomated</span> <span class="p">`</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="n">-HAEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-HAAdmissionControlEnabled</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c"># Configure HA admission control (25% = 1-host failover for a 4-node cluster)</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasConfigInfo</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterFailoverResourcesAdmissionControlPolicy</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">CpuFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">MemoryFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="p">(</span><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$spec</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a><span class="c"># Enable EVC (Enhanced vMotion Compatibility) for mixed CPU generations</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="nv">$clusterView</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="nv">$evcSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">EVCMode</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a><span class="nv">$evcSpec</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="s2">&quot;intel-broadwell&quot;</span>  <span class="c"># set to the lowest CPU generation in cluster</span>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ConfigureEvcMode_Task</span><span class="p">(</span><span class="nv">$evcSpec</span><span class="p">)</span>
 </code></pre></div>
 <p>Verify cluster health after configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Check HA and DRS configuration</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">HAFailoverLevel</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c"># Check HA and DRS configuration</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">HAFailoverLevel</span>
 </code></pre></div>
 <hr />
 <h2 id="upgrade-vcenter-server-vcsa">Upgrade vCenter Server (VCSA)<a class="headerlink" href="#upgrade-vcenter-server-vcsa" title="Permanent link">&para;</a></h2>
@@ -9983,25 +10093,49 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 3. Source VCSA is powered off after successful transfer
 4. Update DNS if using hostname-based access</p>
 <p><strong>Post-upgrade validation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Verify vCenter version from VAMI</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://&lt;new-vcenter-fqdn&gt;:5480/rest/appliance/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:&lt;password&gt;&quot;</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Check all services running</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>ssh<span class="w"> </span>root@&lt;new-vcenter-fqdn&gt;
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1"># Verify ESXi hosts still show Connected in the new vCenter</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Verify vCenter version from VAMI</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://&lt;new-vcenter-fqdn&gt;:5480/rest/appliance/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:&lt;password&gt;&quot;</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Check all services running</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>ssh<span class="w"> </span>root@&lt;new-vcenter-fqdn&gt;
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="c1"># Verify ESXi hosts still show Connected in the new vCenter</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>{
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>  &quot;version&quot;: &quot;7.0.3.00000&quot;,
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>  &quot;product&quot;: &quot;VMware vCenter Server&quot;,
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>  &quot;build&quot;: &quot;19480866&quot;,
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>  &quot;type&quot;: &quot;vcsa&quot;
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>}
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>STOPPED  vmware-vpxd-svcs
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>STOPPED  vmware-mbcs
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>root@vcenter.lab.local [ ~ ]# vmon-cli --status | grep -v RUNNING
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>root@vcenter.lab.local [ ~ ]#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the vCenter CA certificate into your trusted store.
+<strong><code>ssh: Could not resolve hostname &lt;new-vcenter-fqdn&gt;: Name or service not known</code></strong> — Replace <code>&lt;new-vcenter-fqdn&gt;</code> with the actual FQDN or IP address of your vCenter appliance.
+<strong><code>Authentication failed for user 'administrator@vsphere.local'</code></strong> — Verify the password is correct and the user account exists; check vCenter's authentication source if using external identity provider.</p>
+</div>
 <hr />
 <h2 id="deploy-a-vm-from-ovaovf-template">Deploy a VM from OVA/OVF Template<a class="headerlink" href="#deploy-a-vm-from-ovaovf-template" title="Permanent link">&para;</a></h2>
 <p>Used to deploy pre-packaged virtual appliances (management tools, security scanners, monitoring agents) from vendor-provided OVA files.</p>
 <h3 id="step-1-download-and-validate-the-ova">Step 1 — Download and Validate the OVA<a class="headerlink" href="#step-1-download-and-validate-the-ova" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 1 — Download and Validate the OVA" src="../../../../../assets/vcenter-proc-step-1-download-and-validate-the-ova.svg" /></p>
 <p>Before deploying, verify the OVA integrity using the vendor-provided SHA-256 checksum:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>vendor-appliance.ova
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Compare output against the published checksum on the vendor download page</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>vendor-appliance.ova
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1"># Compare output against the published checksum on the vendor download page</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>d4e8f3a9c2b1e7f6a5d9c3b8e1f4a7d2c9e5b8a1f3d6c9e2b5a8f1d4e7a0c3  vendor-appliance.ova
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>shasum: vendor-appliance.ova: No such file or directory</code></strong> — Verify the OVA file exists in the current directory with <code>ls -lh vendor-appliance.ova</code> and correct the filename or path.
+<strong><code>shasum: command not found</code></strong> — Install the sha utilities package with <code>apt-get install coreutils</code> (Debian/Ubuntu) or <code>yum install coreutils</code> (RHEL/CentOS), or use <code>sha256sum</code> instead.</p>
+</div>
 <h3 id="step-2-deploy-via-vcenter-ui">Step 2 — Deploy via vCenter UI<a class="headerlink" href="#step-2-deploy-via-vcenter-ui" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Deploy via vCenter UI" src="../../../../../assets/vcenter-proc-step-2-deploy-via-vcenter-ui.svg" /></p>
 <ol>
@@ -10065,10 +10199,10 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 </ol>
 <h3 id="step-4-verify">Step 4 — Verify<a class="headerlink" href="#step-4-verify" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Verify" src="../../../../../assets/vcenter-proc-step-4-verify.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c"># PowerCLI — confirm VDS is created and hosts are added</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;prod-dvs-01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">NumUplinkPorts</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;prod-dvs-01&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="nb">Get-VDPortgroup</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">VDSwitch</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;prod-dvs-01&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c"># PowerCLI — confirm VDS is created and hosts are added</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;prod-dvs-01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">NumUplinkPorts</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;prod-dvs-01&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="nb">Get-VDPortgroup</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">VDSwitch</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;prod-dvs-01&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-enhanced-linked-mode-elm">Configure Enhanced Linked Mode (ELM)<a class="headerlink" href="#configure-enhanced-linked-mode-elm" title="Permanent link">&para;</a></h2>
@@ -10095,10 +10229,30 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <li>Navigate to <strong>Home → Inventory</strong> — both vCenter instances should appear in the inventory tree</li>
 <li>Click the second vCenter's tree — it should expand without re-authentication (single sign-on)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Confirm SSO replication from vCenter CLI</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>/usr/lib/vmware-vmafd/bin/vdcrepadmin<span class="w"> </span>-f<span class="w"> </span>showservers<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-u<span class="w"> </span>administrator<span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># Output should list both vCenters as replication partners</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Confirm SSO replication from vCenter CLI</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>/usr/lib/vmware-vmafd/bin/vdcrepadmin<span class="w"> </span>-f<span class="w"> </span>showservers<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-u<span class="w"> </span>administrator<span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1"># Output should list both vCenters as replication partners</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Replication Partners:
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>    CN=vcenter-01.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>    CN=vcenter-02.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>Partner: vcenter-01.corp.local
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>    Status: Up
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>    Last Heartbeat: 2024-01-15T14:32:18.456Z
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>Partner: vcenter-02.corp.local
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>    Status: Up
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>    Last Heartbeat: 2024-01-15T14:32:15.123Z
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>Replication Latency: 3ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot connect to localhost:389 (Connection refused)</code></strong> — Verify the vCenter SSO service is running with <code>systemctl status vmware-vmafd</code> and restart if needed.
+<strong><code>Error: Authentication failed for user 'administrator' (Invalid credentials)</code></strong> — Confirm the SSO administrator password is correct and hasn't expired by testing login in the vSphere Client.
+<strong><code>Error: vdcrepadmin: command not found</code></strong> — Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed.</p>
+</div>
 <h3 id="step-3-configure-cross-vcenter-permissions-optional">Step 3 — Configure Cross-vCenter Permissions (Optional)<a class="headerlink" href="#step-3-configure-cross-vcenter-permissions-optional" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Configure Cross-vCenter Permissions (Optional)" src="../../../../../assets/vcenter-proc-step-3-configure-cross-vcenter-permissions-optional.svg" /></p>
 <p>Global permissions set at the SSO domain level apply across all linked vCenters:</p>
@@ -10145,7 +10299,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

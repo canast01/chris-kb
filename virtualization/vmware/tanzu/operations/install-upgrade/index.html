@@ -9425,39 +9425,88 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>tanzu<span class="w"> </span>management-cluster<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>mgmt-cluster-config.yaml<span class="w"> </span>-v<span class="w"> </span><span class="m">6</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Validating configuration...
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Connecting to vCenter: vcenter.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Datacenter found: /DC01
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Resource pool found: /DC01/host/Cluster01/Resources/TKG
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Datastore found: /DC01/datastore/vsan-ds
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Network found: TKG-Management
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>SSH key validated
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Creating management cluster: mgmt-cluster
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Bootstrapping cluster...
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Deploying control plane nodes (3/3)...
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  Node mgmt-cluster-control-plane-7k9m2: 45% complete
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  Node mgmt-cluster-control-plane-5xj8n: 78% complete
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  Node mgmt-cluster-control-plane-2lq4p: 100% complete
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Deploying worker nodes (3/3)...
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  Node mgmt-cluster-worker-9d6k1: 92% complete
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  Node mgmt-cluster-worker-4m2x7: 100% complete
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  Node mgmt-cluster-worker-8p1n3: 100% complete
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Cluster creation completed successfully in 18m42s
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Management cluster &#39;mgmt-cluster&#39; is now active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid credentials for vCenter server vcenter.example.local</code></strong> — Verify VSPHERE_USERNAME and VSPHERE_PASSWORD are correct and the account has Administrator role on the vCenter instance.
+<strong><code>Error: resource pool /DC01/host/Cluster01/Resources/TKG not found</code></strong> — Confirm the VSPHERE_RESOURCE_POOL path exists in vCenter and matches the exact folder hierarchy using the vSphere client.
+<strong><code>Error: SSH public key format invalid</code></strong> — Ensure VSPHERE_SSH_AUTHORIZED_KEY contains a valid public key in OpenSSH format (starting with ssh-rsa, ssh-ed25519, etc.) without line breaks.</p>
+</div>
 <hr />
 <h2 id="deploy-a-tkg-workload-cluster">Deploy a TKG Workload Cluster<a class="headerlink" href="#deploy-a-tkg-workload-cluster" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>workload-cluster.yaml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s">CLUSTER_NAME: prod-workload-01</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">CLUSTER_PLAN: prod</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">NAMESPACE: production</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">VSPHERE_SERVER: vcenter.example.local</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">VSPHERE_USERNAME: administrator@vsphere.local</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">VSPHERE_PASSWORD: &lt;password&gt;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">VSPHERE_DATACENTER: /DC01</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">VSPHERE_RESOURCE_POOL: /DC01/host/Cluster01/Resources/TKG</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">VSPHERE_DATASTORE: /DC01/datastore/vsan-ds</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">VSPHERE_FOLDER: /DC01/vm/TKG</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">VSPHERE_NETWORK: TKG-Workloads</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">VSPHERE_SSH_AUTHORIZED_KEY: &lt;ssh-public-key&gt;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">CONTROL_PLANE_MACHINE_COUNT: 3</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">WORKER_MACHINE_COUNT: 5</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">KUBERNETES_VERSION: v1.26.5+vmware.2</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">EOF</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>workload-cluster.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>workload-cluster.yaml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s">CLUSTER_NAME: prod-workload-01</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s">CLUSTER_PLAN: prod</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">NAMESPACE: production</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s">VSPHERE_SERVER: vcenter.example.local</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">VSPHERE_USERNAME: administrator@vsphere.local</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">VSPHERE_PASSWORD: &lt;password&gt;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">VSPHERE_DATACENTER: /DC01</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">VSPHERE_RESOURCE_POOL: /DC01/host/Cluster01/Resources/TKG</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">VSPHERE_DATASTORE: /DC01/datastore/vsan-ds</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">VSPHERE_FOLDER: /DC01/vm/TKG</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">VSPHERE_NETWORK: TKG-Workloads</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">VSPHERE_SSH_AUTHORIZED_KEY: &lt;ssh-public-key&gt;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">CONTROL_PLANE_MACHINE_COUNT: 3</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">WORKER_MACHINE_COUNT: 5</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">KUBERNETES_VERSION: v1.26.5+vmware.2</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">EOF</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>workload-cluster.yaml
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Validating configuration...
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Creating workload cluster &#39;prod-workload-01&#39; in namespace &#39;production&#39;...
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Connecting to vSphere endpoint vcenter.example.local...
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Creating control plane machines (3 replicas)...
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  prod-workload-01-control-plane-7k9m2 [████████░░] 80%
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  prod-workload-01-control-plane-5x3n1 [██████████] 100%
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  prod-workload-01-control-plane-8q2p4 [██████████] 100%
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Creating worker machines (5 replicas)...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  prod-workload-01-worker-node-1 [██████████] 100%
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  prod-workload-01-worker-node-2 [██████████] 100%
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  prod-workload-01-worker-node-3 [██████████] 100%
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  prod-workload-01-worker-node-4 [██████████] 100%
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  prod-workload-01-worker-node-5 [██████████] 100%
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Waiting for cluster to be ready...
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Cluster &#39;prod-workload-01&#39; created successfully in namespace &#39;production&#39;
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Kubeconfig written to ~/.kube/config
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid credentials for vSphere server vcenter.example.local</code></strong> — Verify VSPHERE_USERNAME, VSPHERE_PASSWORD, and vCenter hostname are correct in the YAML file.
+<strong><code>Error: resource pool /DC01/host/Cluster01/Resources/TKG not found</code></strong> — Confirm the VSPHERE_RESOURCE_POOL path exists in vSphere and matches the exact folder hierarchy.
+<strong><code>Error: namespace 'production' does not exist</code></strong> — Create the namespace first with <code>kubectl create namespace production</code> on the management cluster.</p>
+</div>
 <hr />
 <h2 id="harbor-deployment-ova">Harbor Deployment (OVA)<a class="headerlink" href="#harbor-deployment-ova" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Deploy OVF Template → Harbor-&lt;version&gt;.ova
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Network: Management network
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Storage: shared NFS or vSAN datastore (images stored here)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Post-deploy — configure via HTTPS on port 443:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Admin password → change from Harbor12345 default
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Configure LDAP/OIDC
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Configure S3 or NFS for image storage
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Enable vulnerability scanning (Trivy)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Deploy OVF Template → Harbor-&lt;version&gt;.ova
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Network: Management network
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Storage: shared NFS or vSAN datastore (images stored here)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Post-deploy — configure via HTTPS on port 443:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Admin password → change from Harbor12345 default
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Configure LDAP/OIDC
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Configure S3 or NFS for image storage
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Enable vulnerability scanning (Trivy)
 </code></pre></div>
 <hr />
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
@@ -9466,30 +9515,60 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
 <li><strong>vCenter</strong> (if upgrading vSphere)</li>
 <li><strong>Supervisor</strong> — upgrades automatically after vCenter upgrade (managed by vCenter lifecycle manager)</li>
 <li><strong>TKG management cluster:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tanzu<span class="w"> </span>management-cluster<span class="w"> </span>upgrade
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>tanzu<span class="w"> </span>management-cluster<span class="w"> </span>upgrade
 </code></pre></div></li>
 <li><strong>TKG workload clusters</strong> — one at a time:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list<span class="w">  </span><span class="c1"># check current versions</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>upgrade<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Upgrades control plane first, then workers (rolling)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list<span class="w">  </span><span class="c1"># check current versions</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>upgrade<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Upgrades control plane first, then workers (rolling)</span>
 </code></pre></div></li>
 <li><strong>Harbor</strong> — OVA-based; redeploy from new OVA preserving external DB and storage</li>
 </ol>
 <hr />
 <h2 id="upgrade-a-tkg-workload-cluster">Upgrade a TKG Workload Cluster<a class="headerlink" href="#upgrade-a-tkg-workload-cluster" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check available Kubernetes versions for upgrade</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tanzu<span class="w"> </span>kubernetes-release<span class="w"> </span>get<span class="w">  </span><span class="c1"># or check content library</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Upgrade cluster (rolling — one node at a time)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>upgrade<span class="w"> </span>prod-workload-01<span class="w"> </span>--yes
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Monitor upgrade</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span>prod-workload-01
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w<span class="w">  </span><span class="c1"># watch node status during rolling upgrade</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Verify after upgrade</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w">  </span><span class="c1"># all nodes on new version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check available Kubernetes versions for upgrade</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tanzu<span class="w"> </span>kubernetes-release<span class="w"> </span>get<span class="w">  </span><span class="c1"># or check content library</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Upgrade cluster (rolling — one node at a time)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>upgrade<span class="w"> </span>prod-workload-01<span class="w"> </span>--yes
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Monitor upgrade</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span>prod-workload-01
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w<span class="w">  </span><span class="c1"># watch node status during rolling upgrade</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Verify after upgrade</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w">  </span><span class="c1"># all nodes on new version</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAME                                    VERSION
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>prod-workload-01                        v1.27.5
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>NAME                                    STATUS   ROLES           AGE     VERSION
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>prod-workload-01-control-plane-1        Ready    control-plane   187d    v1.28.2
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>prod-workload-01-worker-1               Ready    &lt;none&gt;          187d    v1.27.5
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>prod-workload-01-worker-2               Ready    &lt;none&gt;          187d    v1.27.5
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>prod-workload-01-worker-3               Ready    &lt;none&gt;          187d    v1.27.5
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Upgrading cluster prod-workload-01 to v1.28.2...
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Control plane upgrade in progress
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>prod-workload-01-control-plane-1: upgrade completed
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Worker node upgrade in progress
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>prod-workload-01-worker-1: cordoned, draining, upgrading...
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>prod-workload-01-worker-2: cordoned, draining, upgrading...
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>prod-workload-01-worker-3: cordoned, draining, upgrading...
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Cluster upgrade completed successfully
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>NAME                                    STATUS   ROLES           AGE     VERSION
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>prod-workload-01-control-plane-1        Ready    control-plane   187d    v1.28.2
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>prod-workload-01-worker-1               Ready    &lt;none&gt;          187d    v1.28.2
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>prod-workload-01-worker-2               Ready    &lt;none&gt;          187d    v1.28.2
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>prod-workload-01-worker-3               Ready    &lt;none&gt;          187d    v1.28.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: cluster prod-workload-01 not found</code></strong> — Verify cluster name with <code>tanzu cluster list</code> and ensure you are targeting the correct management cluster context.
+<strong><code>Error: upgrade already in progress for cluster prod-workload-01</code></strong> — Wait for the current upgrade to complete or check <code>tanzu cluster get prod-workload-01</code> for status before retrying.
+<strong><code>Error: insufficient resources to drain node prod-workload-01-worker-1</code></strong> — Ensure PodDisruptionBudgets are not blocking evictions and that other nodes have capacity for pod migration.</p>
+</div>
 <hr />
 <h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
 <p>Check VMware Tanzu Kubernetes releases compatibility before upgrade:
@@ -9530,7 +9609,7 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7852,6 +7852,31 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aaaconfig<span class="w"> </span>--show
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>authutil<span class="w"> </span>--show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Adding TACACS+ server 192.168.100.50...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>TACACS+ server added successfully.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Authentication order set to: TACACS+;LOCAL
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>AAA Configuration:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  TACACS+ Server: 192.168.100.50
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Port: 49
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Timeout: 5 seconds
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Retries: 3
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Authentication Order: TACACS+;LOCAL
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Accounting: Disabled
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Authorization: Disabled
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Authentication Utility Status:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Local User Database: Enabled
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  TACACS+ Status: Active
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  Last TACACS+ Contact: 2024-01-15 14:32:18
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  Failed Attempts (last 24h): 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>TACACS+ server 192.168.100.50 is unreachable on port 49</code></strong> — Verify network connectivity to the TACACS+ server and confirm the port is open in your firewall rules.
+<strong><code>Invalid shared secret format: secret must be 8-32 characters</code></strong> — Ensure the shared secret meets length requirements and matches the TACACS+ server configuration exactly.
+<strong><code>Authentication order syntax error: use semicolon separator</code></strong> — Correct the command to use <code>--authorder TACACS+;LOCAL</code> with a semicolon between methods, no spaces.</p>
+</div>
 <h3 id="tacacs-vs-radius-choosing-between-them">TACACS+ vs RADIUS — Choosing Between Them<a class="headerlink" href="#tacacs-vs-radius-choosing-between-them" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7899,24 +7924,57 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts are stored on the switch. They bypass RADIUS/TACACS+ and authenticate directly against the switch credential store.</p>
 <h3 id="manage-local-accounts">Manage Local Accounts<a class="headerlink" href="#manage-local-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all local accounts and their roles</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>userconfig<span class="w"> </span>--show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a local account with a specific role</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Modify an existing account&#39;s role</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>userconfig<span class="w"> </span>--change<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete a local account</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Change a password</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>passwd<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List available roles</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>roleconfig<span class="w"> </span>--show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all local accounts and their roles</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>userconfig<span class="w"> </span>--show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create a local account with a specific role</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Modify an existing account&#39;s role</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>userconfig<span class="w"> </span>--change<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete a local account</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Change a password</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>passwd<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># List available roles</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>roleconfig<span class="w"> </span>--show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># userconfig --show
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>User Name          Role              Login Method
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>admin              admin             local
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>monitor            user              local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>backup_svc         admin             local
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># userconfig --add testuser -r user -p MyP@ssw0rd
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>User account &#39;testuser&#39; created successfully with role &#39;user&#39;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># userconfig --change testuser -r admin
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>User &#39;testuser&#39; role changed to &#39;admin&#39;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a># userconfig --delete testuser
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>User account &#39;testuser&#39; deleted successfully
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a># passwd admin
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Changing password for user &#39;admin&#39;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>New password: 
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Retype new password: 
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>passwd: password updated successfully
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a># roleconfig --show
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Available Roles:
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  admin          - Full administrative access
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  user           - Read-only access to fabric information
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  secadmin       - Security and user management only
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'testuser' already exists</code></strong> — Choose a different username or delete the existing account first with <code>userconfig --delete testuser</code>.
+<strong><code>Error: Invalid role 'invalid_role' specified</code></strong> — Run <code>roleconfig --show</code> to list valid roles and use one of the available options.
+<strong><code>Error: Password does not meet complexity requirements</code></strong> — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.</p>
+</div>
 <h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7966,31 +8024,85 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 <hr />
 <h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="ssh-key-management">SSH Key Management<a class="headerlink" href="#ssh-key-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current SSH configuration and enabled services</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sshutil<span class="w"> </span>--show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate RSA host key (2048-bit minimum; 4096-bit recommended)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Generate ECDSA host key (preferred on FOS 9.x)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Import an authorized public key for key-based authentication</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sshutil<span class="w"> </span>--add<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-host<span class="w"> </span>&lt;management-server-ip&gt;<span class="w"> </span>-file<span class="w"> </span>/path/to/id_rsa.pub
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Show imported public keys</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>sshutil<span class="w"> </span>--show<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current SSH configuration and enabled services</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate RSA host key (2048-bit minimum; 4096-bit recommended)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Generate ECDSA host key (preferred on FOS 9.x)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Import an authorized public key for key-based authentication</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sshutil<span class="w"> </span>--add<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-host<span class="w"> </span>&lt;management-server-ip&gt;<span class="w"> </span>-file<span class="w"> </span>/path/to/id_rsa.pub
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Show imported public keys</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>sshutil<span class="w"> </span>--show<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SSH Configuration and Enabled Services:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  SSH Status: Enabled
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  SSH Port: 22
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  SSH Protocol Version: 2
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Host Key Type: rsa
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Host Key Fingerprint: 2048 SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2345678901234567
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Key Exchange Algorithms: diffie-hellman-group14-sha1, ecdh-sha2-nistp256
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Encryption Algorithms: aes128-ctr, aes256-ctr
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  MAC Algorithms: hmac-sha2-256, hmac-sha2-512
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Authentication Methods: password, publickey
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Generating RSA host key (2048-bit)...
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>RSA host key generated successfully.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Host Key Fingerprint: 2048 SHA256:xYz9876543210AbCdEfGhIjKlMnOpQrStUvWxYz12
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Generating ECDSA host key...
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ECDSA host key generated successfully.
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Host Key Fingerprint: 256 SHA256:pQrStUvWxYz1234567890AbCdEfGhIjKlMnOpQrSt
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Importing public key for user &#39;admin&#39; from 192.168.1.50...
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Public key imported successfully.
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Authorized public keys for user &#39;admin&#39;:
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  Key 1: 2048 SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2345678901234567 (imported: 2024-01-15 14:32:18)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshutil: command not found</code></strong> — Verify you are running this command on a Brocade switch with FOS installed, not a Linux management server.
+<strong><code>Error: Invalid file path /path/to/id_rsa.pub</code></strong> — Replace <code>/path/to/id_rsa.pub</code> with the actual absolute path to your public key file and ensure the file is readable.
+<strong><code>Error: User &lt;username&gt; does not exist</code></strong> — Create the user account on the switch first using <code>userconfig --add -name &lt;username&gt;</code> before importing SSH keys.</p>
+</div>
 <h3 id="disabling-telnet">Disabling Telnet<a class="headerlink" href="#disabling-telnet" title="Permanent link">&para;</a></h3>
 <p>Telnet must be disabled on all production switches. Verify after every new switch deployment and firmware upgrade.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disable Telnet via configure</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>configure
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Navigate to: System Services → Telnet → enter 0 (disable)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify Telnet is disabled</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sshutil<span class="w"> </span>--show
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected: &quot;telnetd&quot; = disabled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable Telnet via configure</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>configure
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Navigate to: System Services → Telnet → enter 0 (disable)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify Telnet is disabled</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Expected: &quot;telnetd&quot; = disabled</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>FOS Switch Configuration Utility
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Type &quot;help&quot; for command list.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>switch:admin&gt; configure
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>You are in configuration mode. Type &quot;exit&quot; to return to admin mode.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>switch:admin:config&gt; System Services
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>switch:admin:config:System Services&gt; Telnet
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>switch:admin:config:System Services:Telnet&gt; 0
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Telnet service disabled.
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>switch:admin:config:System Services:Telnet&gt; exit
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>switch:admin:config&gt; exit
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>switch:admin&gt; sshutil --show
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>SSH Status: enabled
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Telnet Status: disabled
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>SSH Port: 22
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Telnet Port: 23
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>switch:admin&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>configure: command not found</code></strong> — Ensure you are logged into the Brocade switch CLI directly (not a Linux shell); type <code>exit</code> if in a nested shell context.
+<strong><code>Telnet Status: enabled</code></strong> — Navigate to the correct menu path (System Services → Telnet) and confirm you entered <code>0</code> to disable, then run <code>configupload</code> to persist changes.
+<strong><code>Permission denied: configure</code></strong> — Verify your user account has admin-level privileges; contact the fabric administrator to grant configuration rights.</p>
+</div>
 <hr />
 <h2 id="ntp-requirement">NTP Requirement<a class="headerlink" href="#ntp-requirement" title="Permanent link">&para;</a></h2>
 <p>NTP synchronisation is mandatory for:</p>
@@ -7999,16 +8111,37 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 <li>Certificate-based authentication — certificates fail validation if the clock is wrong</li>
 <li>RADIUS authentication — some RADIUS servers enforce time-based token validation</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure NTP server (minimum two servers for redundancy)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tsclockserver<span class="w"> </span><span class="s2">&quot;&lt;ntp-server-1&gt; &lt;ntp-server-2&gt;&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify NTP synchronisation</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tsclockserver<span class="w">              </span><span class="c1"># Show configured NTP servers</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>date<span class="w">                       </span><span class="c1"># Check current system time against expected</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check NTP sync status (FOS 9.x)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ntpshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Configure NTP server (minimum two servers for redundancy)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tsclockserver<span class="w"> </span><span class="s2">&quot;&lt;ntp-server-1&gt; &lt;ntp-server-2&gt;&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify NTP synchronisation</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>tsclockserver<span class="w">              </span><span class="c1"># Show configured NTP servers</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>date<span class="w">                       </span><span class="c1"># Check current system time against expected</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check NTP sync status (FOS 9.x)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ntpshow
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NTP Server(s) set to: 192.168.1.50 203.0.113.10
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>NTP Server(s): 192.168.1.50 203.0.113.10
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Fri Mar 15 14:32:47 UTC 2024
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>NTP status: synchronized
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>NTP server: 192.168.1.50
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Stratum: 2
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Offset: 0.002345 seconds
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Delay: 0.015678 seconds
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Jitter: 0.001234 seconds
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Last update: 3 seconds ago
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NTP Server(s) set to: (none)</code></strong> — Verify both NTP servers are reachable and specify them with <code>tsclockserver "server1 server2"</code> using valid hostnames or IPs.
+<strong><code>ntpshow: command not found</code></strong> — Confirm you are running FOS 9.x or later; use <code>firmwareshow</code> to verify the FOS version and upgrade if necessary.
+<strong><code>NTP status: unsynchronized</code></strong> — Check network connectivity to the NTP servers with <code>ping</code>, verify firewall rules allow UDP port 123, and wait 5-10 minutes for initial synchronization.</p>
+</div>
 <p>NTP servers should be on the management network, reachable from the switch management IP. Use internal NTP stratum 2 servers — do not rely on public internet NTP from a SAN switch.</p>
 <hr />
 <h2 id="authentication-troubleshooting">Authentication Troubleshooting<a class="headerlink" href="#authentication-troubleshooting" title="Permanent link">&para;</a></h2>
@@ -8096,7 +8229,7 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

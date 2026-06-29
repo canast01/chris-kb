@@ -7549,31 +7549,59 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Remove after test</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>tc<span class="w"> </span>qdisc<span class="w"> </span>del<span class="w"> </span>dev<span class="w"> </span>eth0<span class="w"> </span>root
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test graceful shutdown</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: requests in flight complete; no connection errors to load balancer</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test reload without downtime</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected: zero downtime; access logs show no 502/503</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test dependency failure (block outbound connection to DB port)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Expected: application returns 503 not 500; retries correctly; alerts fire</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Cleanup:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>iptables<span class="w"> </span>-D<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ kill -9 $(pgrep nginx)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>$ stress-ng --cpu 4 --cpu-load 95 --timeout 60s
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>stress-ng: info: [8742] defaulting to a 60 second run per stressor
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>stress-ng: info: [8742] dispatching hogs: 4 cpu
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>stress-ng: info: [8742] successful run completed in 60.02s
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>stress-ng: info: [8742] for a 60.02s run time:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>stress-ng: info: [8742]    4,287,456 bogo ops
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>stress-ng: info: [8742] CPU: 95.2% user, 2.1% system, 2.7% idle
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>$ stress-ng --vm 2 --vm-bytes 80% --timeout 60s
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>stress-ng: info: [8751] defaulting to a 60 second run per stressor
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>stress-ng: info: [8751] dispatching hogs: 2 vm
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>stress-ng: info: [8751] successful run completed in 60.01s
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>stress-ng: info: [8751] for a 60.01s run time:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>stress-ng: info: [8751]    156,892 bogo ops
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>$ fio --name=fill --ioengine=posixaio --rw=randwrite --size=1G --numjobs=4 --runtime=60 --filename=/tmp/fio-test
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>fill: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, ioengine=posixaio, iodepth=1
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>...
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Run status group 0 (all jobs):
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  WRITE: bw=287MiB/s, iops=73.4k, runt=3584msec
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>$ tc qdisc add dev eth0 root netem loss 20%
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>$ tc qdisc del dev eth0 root
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Test:           Storage path failure — multipath failover
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Date:           2026-05-06
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Environment:    Prod-like (UAT)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Scenario:       Disabled one FC path to array on host web-prod-01
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Expected:       Multipath redirects I/O to surviving path; no I/O errors at application layer
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Actual:         I/O redirected within 2 seconds; application logs show no errors
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>RTO observed:   2 seconds (path failover)
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Alert fired:    Yes — &quot;Storage path degraded&quot; alert at 00:32
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Pass/Fail:      Pass
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Notes:          Alert was 45 seconds delayed — investigate alerting lag
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: pgrep: command not found</code></strong> — Install procps-ng package with <code>apt-get install procps-ng</code> or <code>yum install procps-ng</code>.
+<strong><code>stress-ng: error: cannot allocate 80% of memory (requested 6442450944 bytes)</code></strong> — Reduce the percentage or number of workers; system lacks sufficient free memory for the test.
+<strong><code>RTNETLINK answers: No such device</code></strong> — Verify the network interface name with <code>ip link show</code> and replace eth0 with the correct interface (e.g., ens0, wlan0).</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test graceful shutdown</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: requests in flight complete; no connection errors to load balancer</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Test reload without downtime</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: zero downtime; access logs show no 502/503</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test dependency failure (block outbound connection to DB port)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Expected: application returns 503 not 500; retries correctly; alerts fire</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Cleanup:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>iptables<span class="w"> </span>-D<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Test:           Storage path failure — multipath failover
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Date:           2026-05-06
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Environment:    Prod-like (UAT)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Scenario:       Disabled one FC path to array on host web-prod-01
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Expected:       Multipath redirects I/O to surviving path; no I/O errors at application layer
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Actual:         I/O redirected within 2 seconds; application logs show no errors
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>RTO observed:   2 seconds (path failover)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Alert fired:    Yes — &quot;Storage path degraded&quot; alert at 00:32
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Pass/Fail:      Pass
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Notes:          Alert was 45 seconds delayed — investigate alerting lag
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 
@@ -7598,7 +7626,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

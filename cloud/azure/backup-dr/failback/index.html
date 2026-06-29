@@ -8683,36 +8683,85 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Health:properties.replicationHealth, FailoverState:properties.failoverHealth}&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Succeeded
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Name                                          Health    FailoverState
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>────────────────────────────────────────────  ────────  ─────────────
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vm-prod-app-01                                Normal    Ready
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vm-prod-db-01                                 Normal    Ready
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vm-prod-web-02                                Normal    Ready
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vm-prod-cache-01                              Normal    Ready
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;asr-vault-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name and DR resource group name match your deployment, and confirm the vault exists in the correct subscription.</p>
+<p><strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></strong> — Ensure your Azure account has Reader or Contributor role assigned to the DR resource group or subscription.</p>
+<p><strong><code>InvalidResourceId: The provided URI is not valid.</code></strong> — Replace <code>&lt;sub-id&gt;</code>, <code>&lt;dr-rg&gt;</code>, and <code>&lt;vault-name&gt;</code> placeholders with actual values; do not include angle brackets in the final command.</p>
+</div>
 <hr />
 <h2 id="phase-1-re-protect-reverse-replication">Phase 1 — Re-Protect (Reverse Replication)<a class="headerlink" href="#phase-1-re-protect-reverse-replication" title="Permanent link">&para;</a></h2>
 <p>Re-protection sets up replication from the DR region back to the primary region. This must complete before failback can proceed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Trigger re-protect on a replicated item (DR → Primary)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/reProtect?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;RecoveryToPrimary&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">        &quot;instanceType&quot;: &quot;A2A&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">        &quot;recoveryContainerId&quot;: &quot;&lt;primary-container-id&gt;&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      }</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    }</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Monitor re-protect job</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;ReProtect&#39;].{Name:name, State:properties.state, StartTime:properties.startTime}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger re-protect on a replicated item (DR → Primary)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/reProtect?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;RecoveryToPrimary&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">        &quot;instanceType&quot;: &quot;A2A&quot;,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">        &quot;recoveryContainerId&quot;: &quot;&lt;primary-container-id&gt;&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">      }</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    }</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Monitor re-protect job</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;ReProtect&#39;].{Name:name, State:properties.state, StartTime:properties.startTime}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;id&quot;: &quot;/subscriptions/a7f3c8d2-1e4b-4f9a-8c2d-5e9b1a3c7d4f/resourceGroups/dr-rg-eastus/providers/Microsoft.RecoveryServices/vaults/prod-vault-01/replicationJobs/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;name&quot;: &quot;a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/replicationJobs&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;jobType&quot;: &quot;ReProtect&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    &quot;state&quot;: &quot;InProgress&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    &quot;startTime&quot;: &quot;2024-01-15T14:32:18.5432109Z&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  }
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>}
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Name                                      State        StartTime
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>----------------------------------------  -----------  --------------------------
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d    InProgress   2024-01-15T14:32:18.543Z
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e    Succeeded    2024-01-15T13:47:22.891Z
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f    Failed       2024-01-15T12:15:09.127Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></strong> — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Verify the item name, vault name, and resource group are correct, and that the replicated item exists in the DR fabric.
+<strong><code>BadRequest: The failover direction 'RecoveryToPrimary' is invalid for the current replication state of the protected item</code></strong> — Ensure the VM has completed initial replication and is in a "Protected" state before attempting re-protect.</p>
+</div>
 <hr />
 <h2 id="phase-2-validate-replication-health-before-failback">Phase 2 — Validate Replication Health Before Failback<a class="headerlink" href="#phase-2-validate-replication-health-before-failback" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check RPO and replication health after re-protect</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.{Health:replicationHealth, RPO:rpoInSeconds, LastSync:lastSuccessfulTestFailoverTime}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check RPO and replication health after re-protect</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.{Health:replicationHealth, RPO:rpoInSeconds, LastSync:lastSuccessfulTestFailoverTime}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;Health&quot;: &quot;Normal&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;RPO&quot;: 300,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;LastSync&quot;: &quot;2024-01-15T14:32:18.5847392Z&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;'</code></strong> — Ensure your Azure account has Reader or Site Recovery Contributor role assigned on the Recovery Services vault.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name, resource group name, and protected item name match exactly; check they exist in the correct subscription.
+<strong><code>InvalidApiVersionParameter: The api-version '2022-10-01' is invalid.</code></strong> — Update the api-version parameter to a currently supported version such as '2023-08-01' or later.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8741,36 +8790,100 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </table>
 <hr />
 <h2 id="phase-3-planned-failover-back-to-primary">Phase 3 — Planned Failover (Back to Primary)<a class="headerlink" href="#phase-3-planned-failover-back-to-primary" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger planned failover back to the primary region</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;RecoveryToPrimary&quot;,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    }</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Trigger planned failover back to the primary region</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;RecoveryToPrimary&quot;,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">    }</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;/subscriptions/a7f3e2c1-4b9d-47e8-9f2a-8c5d6e1b3a4f/resourceGroups/dr-rg-eastus/providers/Microsoft.RecoveryServices/vaults/prod-vault-01/replicationFabrics/eastus-fabric/replicationProtectionContainers/dr-container-01/replicationProtectedItems/vm-app-prod-01/plannedFailover&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;name&quot;: &quot;vm-app-prod-01&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    &quot;failoverDirection&quot;: &quot;RecoveryToPrimary&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    &quot;providerSpecificDetails&quot;: {
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      &quot;instanceType&quot;: &quot;A2A&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>      &quot;recoveryPointId&quot;: &quot;2024-01-15T14:32:18.5847392Z&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    },
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    &quot;startTime&quot;: &quot;2024-01-15T14:32:45.123Z&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    &quot;state&quot;: &quot;InProgress&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  }
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action' over scope</code></strong> — Assign the Site Recovery Contributor role to your service principal or user account on the Recovery Services vault.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the specified region.
+<strong><code>BadRequest: The failover operation cannot be performed because the replication state is not 'Protected'</code></strong> — Ensure the protected item has completed initial replication and is in a Protected state before attempting planned failover.</p>
+</div>
 <hr />
 <h2 id="phase-4-commit-failback">Phase 4 — Commit Failback<a class="headerlink" href="#phase-4-commit-failback" title="Permanent link">&para;</a></h2>
 <p>Once the primary VM is running and healthy, commit the failback to clean up the DR replica.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Commit the failback</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/failoverCommit?api-version=2022-10-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Commit the failback</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;/failoverCommit?api-version=2022-10-01&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/dr-rg-prod/providers/Microsoft.RecoveryServices/vaults/vault-dr-01/replicationFabrics/fabric-dr-secondary/replicationProtectionContainers/container-dr-01/replicationProtectedItems/vm-app-prod-01/failoverCommit&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;name&quot;: &quot;vm-app-prod-01&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    &quot;friendlyName&quot;: &quot;vm-app-prod-01&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;protectionStatus&quot;: &quot;Protected&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    &quot;replicationHealth&quot;: &quot;Normal&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    &quot;failoverHealth&quot;: &quot;Normal&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;lastSuccessfulFailoverTime&quot;: &quot;2024-01-15T14:32:18.5432109Z&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    &quot;lastSuccessfulTestFailoverTime&quot;: &quot;2024-01-14T10:15:42.1234567Z&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    &quot;failoverCommitStatus&quot;: &quot;Committed&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  }
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The provided URI is invalid or the resource does not exist.</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and item name are correct and exist in your subscription.
+<strong><code>Authorization failed for request. Caller was not authorized to perform 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' action over scope.</code></strong> — Ensure your Azure account has the Site Recovery Contributor role or equivalent permissions on the Recovery Services vault.
+<strong><code>The failover commit operation cannot be performed because the item is not in a committed failover state.</code></strong> — Run the failover operation first before attempting to commit; verify the item status is in "Failover Committed" state using <code>az rest --method GET</code> on the same URI.</p>
+</div>
 <hr />
 <h2 id="phase-5-re-enable-dr-replication-primary-dr">Phase 5 — Re-Enable DR Replication (Primary → DR)<a class="headerlink" href="#phase-5-re-enable-dr-replication-primary-dr" title="Permanent link">&para;</a></h2>
 <p>After a successful failback, re-enable replication in the forward direction so DR protection is restored.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Re-protect (now from primary to DR) to restore DR posture</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;primary-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;primary-fabric&gt;/replicationProtectionContainers/&lt;primary-container&gt;/replicationProtectedItems/&lt;item-name&gt;/reProtect?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    }</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Re-protect (now from primary to DR) to restore DR posture</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;primary-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;primary-fabric&gt;/replicationProtectionContainers/&lt;primary-container&gt;/replicationProtectedItems/&lt;item-name&gt;/reProtect?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    }</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-primary-rg/providers/Microsoft.RecoveryServices/vaults/dr-vault-001/replicationFabrics/primary-fabric-eastus/replicationProtectionContainers/primary-container-001/replicationProtectedItems/vm-app-server-01/reProtect/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;name&quot;: &quot;a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/reProtect&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    &quot;friendlyName&quot;: &quot;vm-app-server-01&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    &quot;name&quot;: &quot;vm-app-server-01&quot;,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    &quot;currentScenario&quot;: {
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>      &quot;scenarioName&quot;: &quot;A2A&quot;,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>      &quot;jobId&quot;: &quot;a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>      &quot;startTime&quot;: &quot;2024-01-15T10:32:45.1234567Z&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    },
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    &quot;replicationStatus&quot;: &quot;Protected&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  }
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d' does not have permission to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></strong> — Ensure the user or service principal has the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
+<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;primary-fabric&gt;/replicationProtectionContainers/&lt;primary-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;primary-rg&gt;' was not found.</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the target region.</p>
+</div>
 <hr />
 <h2 id="failback-checklist">Failback Checklist<a class="headerlink" href="#failback-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -8851,7 +8964,7 @@ Failback is the process of returning protected workloads from the DR (recovery) 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

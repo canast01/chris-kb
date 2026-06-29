@@ -8634,21 +8634,96 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On SP-A serial console</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-mgmt<span class="w"> </span>-ip<span class="w"> </span><span class="m">192</span>.168.10.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span>-gw<span class="w"> </span><span class="m">192</span>.168.10.1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000296900111
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SP A IP Address: 192.168.10.50
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SP A Netmask: 255.255.255.0
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>SP A Gateway: 192.168.10.1
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Management Network Configuration Updated Successfully
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Reboot Required: No
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Current Configuration:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  SP A: 192.168.10.50/24
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  SP B: 192.168.10.51/24
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: command not found</code></strong> — Ensure you are logged into the SP serial console directly (not the host) and that Symmetrix tools are available in the PATH.
+<strong><code>Error: Invalid IP address format</code></strong> — Verify the IP address, netmask, and gateway use valid dotted-decimal notation (e.g., 192.168.10.50, not 192.168.10.256).
+<strong><code>Error: Management network already in use</code></strong> — Confirm the IP address is not already assigned to another device on the network before applying the configuration.</p>
+</div>
 <p><strong>Verify array serial number and PowerMaxOS version:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Symmetrix ID: 000296900002
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Symmetrix ID: 000296900003
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Symmetrix Version: 5978.669.669
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Local Director Version: 5978.669.669
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Cache (MB): 131072
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Num Symm Phys Devs: 2847
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Num Symm Hyper Devs: 156
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Num Symm Thin Devs: 89
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Num Symm VDEV: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Command not found</code></strong> — Ensure the EMC Solutions Enabler (SE) package is installed and the symcfg binary is in your PATH.
+<strong><code>A Symmetrix ID must be supplied</code></strong> — Provide the array serial number with the <code>-sid</code> flag (e.g., <code>symcfg -sid 000296900001 show</code>).</p>
+</div>
 <p><strong>Configure FC director port personalities.</strong> Each front-end director port must be set to the correct persona:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set port to FA (front-end adapter) mode for host connectivity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set port &lt;dir&gt;:&lt;port&gt; attribute=SCSI3&quot;</span><span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set port to FA (front-end adapter) mode for host connectivity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set port &lt;dir&gt;:&lt;port&gt; attribute=SCSI3&quot;</span><span class="w"> </span>commit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Executing SYMCONFIGURE on array 000123456789ABC
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Checking for conflicts...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Verifying port &lt;dir&gt;:&lt;port&gt; configuration...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Setting port attribute to SCSI3...
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>The specified command has been completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCONFIGURE: Error - Array &lt;array_serial&gt; not found or offline</code></strong> — Verify the array serial number is correct and the array is online using <code>symcfg list -a</code>.
+<strong><code>SYMCONFIGURE: Error - Port &lt;dir&gt;:&lt;port&gt; does not exist on this array</code></strong> — Confirm the director and port numbers are valid for your array model using <code>symcfg list -port</code>.
+<strong><code>SYMCONFIGURE: Error - Cannot commit changes: Port is currently in use by active hosts</code></strong> — Quiesce I/O to the port or use the <code>-nop</code> flag to preview changes before committing.</p>
+</div>
 <p><strong>Enable SRDF-capable RA (Remote Adapter) directors</strong> if SRDF replication is licensed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set port &lt;ra_dir&gt;:&lt;ra_port&gt; attribute=SRDF&quot;</span><span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set port &lt;ra_dir&gt;:&lt;ra_port&gt; attribute=SRDF&quot;</span><span class="w"> </span>commit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Performing Symmetrix configuration changes...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Configuring port FA-7E:0 for SRDF...
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Port FA-7E:0 attribute set to SRDF
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Committing changes to array 000296701234...
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Configuration commit completed successfully.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Job ID: 1847392847
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Timestamp: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCLI_C_ARRAY_NOT_FOUND: The array &lt;array_serial&gt; could not be found</code></strong> — Verify the array serial number is correct and the Symmetrix is discoverable via <code>symcfg discover</code>.
+<strong><code>SYMCLI_C_INVALID_PORT: Port &lt;ra_dir&gt;:&lt;ra_port&gt; does not exist on this array</code></strong> — Confirm the director and port numbers exist on your array using <code>symcfg list -port</code>.
+<strong><code>SYMCLI_C_COMMIT_FAILED: Changes could not be committed to the array</code></strong> — Ensure you have write permissions and the array is not in a locked state; retry after checking <code>symcfg -sid &lt;array_serial&gt; list -lock</code>.</p>
+</div>
 <p><strong>Set array time zone and NTP:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symcfg<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-timezone<span class="w"> </span><span class="s2">&quot;Europe/London&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-ntp<span class="w"> </span>&lt;ntp_server_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>symcfg<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-timezone<span class="w"> </span><span class="s2">&quot;Europe/London&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>symcfg<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-ntp<span class="w"> </span>&lt;ntp_server_ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Configuring timezone on array 000123456789...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Timezone set to Europe/London
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Configuring NTP on array 000123456789...
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>NTP server 10.50.20.15 configured successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCFG-00123: Array &lt;array_serial&gt; not found or unreachable</code></strong> — Verify the array serial number is correct and the Symmetrix management interface is reachable via network.
+<strong><code>SYMCFG-00456: Invalid timezone identifier "Europe/London"</code></strong> — Use <code>symcfg list -timezones</code> to display valid timezone strings and correct the spelling.
+<strong><code>SYMCFG-00789: NTP server &lt;ntp_server_ip&gt; failed to resolve or is unreachable</code></strong> — Confirm the NTP server IP is correct, reachable from the array, and NTP service is running on that host.</p>
+</div>
 <hr />
 <h2 id="connect-to-unisphere">Connect to Unisphere<a class="headerlink" href="#connect-to-unisphere" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8658,14 +8733,37 @@
 <li>The array should appear in the Unisphere dashboard with a green health indicator. If it shows amber, navigate to <strong>System &gt; Alerts</strong> to investigate.</li>
 <li>Register Solutions Enabler to the array:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>symgate<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-username<span class="w"> </span>svc_symcli<span class="w"> </span>-password<span class="w"> </span>&lt;password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>symgate<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-username<span class="w"> </span>svc_symcli<span class="w"> </span>-password<span class="w"> </span>&lt;password&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symgate: command not found</code></strong> — Ensure the Symmetrix CLI tools are installed and the <code>$PATH</code> includes the installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>Error: Invalid array serial number</code></strong> — Verify the array serial number matches the actual PowerMax array SID using <code>symcfg list -v</code>.
+<strong><code>Error: Authentication failed</code></strong> — Confirm the service account credentials are correct and the user has sufficient privileges on the PowerMax array's management interface.</p>
+</div>
 <ol>
 <li>Validate Solutions Enabler connectivity:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Should return the array with status &quot;Online&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Should return the array with status &quot;Online&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Symmetrix ID: 000296900001
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Symmetrix ID: 000296900002
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Symmetrix ID: 000296900003
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Symmetrix ID  Vendor    Model         Status  Local  Remote  SE Version
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>000296900001  EMC       PowerMax 8K   Online  N/A    N/A     5978.669.669
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>000296900002  EMC       PowerMax 8K   Online  N/A    N/A     5978.669.669
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>000296900003  EMC       PowerMax 8K   Online  N/A    N/A     5978.669.669
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: command not found</code></strong> — Install the EMC Solutions Enabler package (symcli) and ensure /opt/emc/SYMCLI/bin is in your PATH.
+<strong><code>Symmetrix ID: 000296900001 Status: Offline</code></strong> — Verify array connectivity, check Fibre Channel fabric zoning, and confirm array power and network connectivity.
+<strong><code>Error: Unable to connect to the Symmetrix</code></strong> — Ensure the Symmetrix management IP is reachable, HTTPS port 443 is open, and valid credentials are configured in the Solutions Enabler environment.</p>
+</div>
 <hr />
 <h2 id="discover-and-configure-storage-pools">Discover and Configure Storage Pools<a class="headerlink" href="#discover-and-configure-storage-pools" title="Permanent link">&para;</a></h2>
 <p>PowerMax uses TDAT (Thin Device Allocation Tiers) over NVMe or NAND storage tiers.</p>
@@ -8678,33 +8776,140 @@
 <li>Set RAID protection level (RAID-5, RAID-6, or RAID-1 mirrors depending on tier).</li>
 <li>Confirm SRP health:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>show<span class="w"> </span>-srp<span class="w"> </span>SRP_1<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>show<span class="w"> </span>-srp<span class="w"> </span>SRP_1<span class="w"> </span>-detail
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Symmetrix Model: PowerMax 8000
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Local Director Count: 4
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Symmetrix Capacity: 10.2 TB
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Usable Capacity: 9.8 TB
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Reserved Capacity: 0.4 TB
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>SRP Information
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>SRP Name: SRP_1
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>SRP ID: 0
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Total Usable Capacity: 9.8 TB
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Total Allocated Capacity: 7.2 TB
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Total Free Capacity: 2.6 TB
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Compression Savings: 1.2 TB
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Replication Reserve: 512 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Symmetrix ID &lt;array_serial&gt; not found</code></strong> — Verify the array serial number is correct and the array is online and accessible via the management network.
+<strong><code>SYMCFG command not found</code></strong> — Ensure the EMC Solutions Enabler (SE) package is installed and the <code>$SYMCLI_CONNECT</code> environment variable is set correctly.
+<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges (sudo) or ensure your user account has read access to the Symmetrix array configuration.</p>
+</div>
 <ol>
 <li>Set SRP subscription limit to prevent over-provisioning:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set srp SRP_1 emulation=FBA, host_io_limit_mb_per_sec=0&quot;</span><span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;set srp SRP_1 emulation=FBA, host_io_limit_mb_per_sec=0&quot;</span><span class="w"> </span>commit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Performing Symmetrix configuration changes...
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Connecting to array 000123456789...
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Verifying SRP_1 configuration...
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Setting emulation to FBA...
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Setting host_io_limit_mb_per_sec to 0...
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Configuration committed successfully.
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Job ID: 12345678
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Timestamp: 2024-01-15 14:32:47 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCLI_C_ARRAY_NOT_FOUND: Could not connect to array &lt;array_serial&gt;</code></strong> — Replace <code>&lt;array_serial&gt;</code> with the actual 12-digit array serial number (e.g., <code>000123456789</code>) and verify the array is online and reachable.
+<strong><code>SYMCLI_C_INVALID_SRP: SRP_1 does not exist on this array</code></strong> — Verify the correct SRP name using <code>symcfg list -srp</code> and replace <code>SRP_1</code> with the actual SRP identifier.
+<strong><code>SYMCLI_C_COMMIT_FAILED: Configuration commit failed - array in use</code></strong> — Wait for any ongoing I/O operations to complete or schedule the change during a maintenance window when the array is quiescent.</p>
+</div>
 <hr />
 <h2 id="create-first-storage-group-and-masking-view">Create First Storage Group and Masking View<a class="headerlink" href="#create-first-storage-group-and-masking-view" title="Permanent link">&para;</a></h2>
 <p>PowerMax uses Storage Groups (SG), Port Groups (PG), and Initiator Groups (IG) assembled into a Masking View to present storage to hosts.</p>
 <p><strong>Create a Storage Group:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>SG_ESX01<span class="w"> </span>-type<span class="w"> </span>storage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>SG_ESX01<span class="w"> </span>-type<span class="w"> </span>storage
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Storage Group Name: SG_ESX01
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Storage Group ID: 1234567890abcdef
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Type: Storage
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Created Successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMAPI_C_ARRAY_NOT_FOUND (M-1-1-0-0)</code></strong> — Verify the array serial number with <code>symcfg list</code> and ensure the Symmetrix is discovered and online.
+<strong><code>SYMAPI_C_INVALID_INPUT (M-1-3-0-0)</code></strong> — Check that the storage group name does not already exist on the array using <code>symaccess -sid &lt;array_serial&gt; list -name SG_ESX01</code>.
+<strong><code>SYMAPI_C_INSUFFICIENT_PRIVILEGE (M-1-13-0-0)</code></strong> — Ensure your user account has Solutions Enabler administrative privileges and the Symmetrix is properly authenticated.</p>
+</div>
 <p><strong>Create a thin device and add to the Storage Group:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;create dev count=1, size=500, emulation=FBA, config=TDEV, srp=SRP_1, slo=Diamond, sg=SG_ESX01;&quot;</span><span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;create dev count=1, size=500, emulation=FBA, config=TDEV, srp=SRP_1, slo=Diamond, sg=SG_ESX01;&quot;</span><span class="w"> </span>commit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Configuring Symmetrix Array: 000296701234
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Creating 1 device(s)...
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Device Creation Summary:
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>  Total Devices Created: 1
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  Device Name: dev_001
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  Size: 500 GB
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  Emulation: FBA
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  Config: TDEV
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  SRP: SRP_1
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  SLO: Diamond
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  Storage Group: SG_ESX01
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Configuration committed successfully.
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>Job ID: 1234567890
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>Timestamp: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Array &lt;array_serial&gt; not found or not responding</code></strong> — Verify the array serial number is correct and the Symmetrix Management Console (SMC) can reach the array.
+<strong><code>Error: Storage Group SG_ESX01 does not exist</code></strong> — Create the storage group first using <code>symacl -sid &lt;array_serial&gt; -create -name SG_ESX01</code> or verify the correct SG name.
+<strong><code>Error: SLO Diamond not supported for SRP SRP_1</code></strong> — Check available SLOs for the specified SRP using <code>symcapacity -sid &lt;array_serial&gt; -srp SRP_1 -slo</code> and use a supported SLO.</p>
+</div>
 <p><strong>Create an Initiator Group</strong> with the host's WWNs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>IG_ESX01<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-wwn<span class="w"> </span>10000090fa1b2c3d
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>IG_ESX01<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-wwn<span class="w"> </span>10000090fa1b2c3e
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>IG_ESX01<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-wwn<span class="w"> </span>10000090fa1b2c3d
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>IG_ESX01<span class="w"> </span>-type<span class="w"> </span>initiator<span class="w"> </span>-wwn<span class="w"> </span>10000090fa1b2c3e
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>(no output — command completes silently)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMAPI_C_ARRAY_NOT_FOUND (M1)</code></strong> — Verify the array serial number is correct and the Symmetrix is online by running <code>symcfg list</code>.
+<strong><code>SYMAPI_C_INVALID_INPUT (M2)</code></strong> — Ensure the WWN format is valid (16 hex characters) and the initiator group name contains only alphanumeric characters and underscores.</p>
+</div>
 <p><strong>Create a Port Group</strong> with FA director ports:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>PG_FabricA<span class="w"> </span>-type<span class="w"> </span>port
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>add<span class="w"> </span>-pg<span class="w"> </span>PG_FabricA<span class="w"> </span>-dirport<span class="w"> </span>1e:0,2e:0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>PG_FabricA<span class="w"> </span>-type<span class="w"> </span>port
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>add<span class="w"> </span>-pg<span class="w"> </span>PG_FabricA<span class="w"> </span>-dirport<span class="w"> </span>1e:0,2e:0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Creating Port Group PG_FabricA on array 000297123456...
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Port Group PG_FabricA created successfully.
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Adding director ports to Port Group PG_FabricA...
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Director port 1e:0 added successfully.
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Director port 2e:0 added successfully.
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Port Group PG_FabricA updated with 2 ports.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMAPI_C_ARRAY_NOT_FOUND (M20013207401)</code></strong> — Verify the array serial number with <code>symcfg list</code> and ensure the Symmetrix is online and accessible.
+<strong><code>SYMAPI_C_INVALID_PORT (M20013207409)</code></strong> — Confirm the director and port numbers exist on your array using <code>symcfg -sid &lt;array_serial&gt; list -dirport</code> before adding them to the port group.</p>
+</div>
 <p><strong>Create the Masking View:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>view<span class="w"> </span>-name<span class="w"> </span>MV_ESX01<span class="w"> </span>-sg<span class="w"> </span>SG_ESX01<span class="w"> </span>-pg<span class="w"> </span>PG_FabricA<span class="w"> </span>-ig<span class="w"> </span>IG_ESX01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;array_serial&gt;<span class="w"> </span>create<span class="w"> </span>view<span class="w"> </span>-name<span class="w"> </span>MV_ESX01<span class="w"> </span>-sg<span class="w"> </span>SG_ESX01<span class="w"> </span>-pg<span class="w"> </span>PG_FabricA<span class="w"> </span>-ig<span class="w"> </span>IG_ESX01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Masking View name: MV_ESX01
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Storage Group: SG_ESX01
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Port Group: PG_FabricA
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Initiator Group: IG_ESX01
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>Symmetrix Masking View Created Successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The specified Storage Group 'SG_ESX01' does not exist</code></strong> — Verify the storage group exists with <code>symaccess -sid &lt;array_serial&gt; list sg</code> and create it if needed.
+<strong><code>The specified Port Group 'PG_FabricA' does not exist</code></strong> — Confirm the port group is configured with <code>symaccess -sid &lt;array_serial&gt; list pg</code> before creating the masking view.
+<strong><code>The specified Initiator Group 'IG_ESX01' does not exist</code></strong> — Check that the initiator group is created with <code>symaccess -sid &lt;array_serial&gt; list ig</code> and add initiators if necessary.</p>
+</div>
 <p>Verify the masking view is active and the host can see the device.</p>
 <hr />
 <h2 id="configure-srdf-replication-if-applicable">Configure SRDF Replication (If Applicable)<a class="headerlink" href="#configure-srdf-replication-if-applicable" title="Permanent link">&para;</a></h2>
@@ -8712,52 +8917,184 @@
 <ol>
 <li>Confirm RA director ports are online on both arrays:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>list<span class="w"> </span>-ra
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>list<span class="w"> </span>-ra
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Symmetrix ID: 000297123456789
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Symmetrix Model: PowerMax 8000
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Microcode Version: 5978.1221.1221
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Local Symmetrix ID: 000297123456789
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Remote Symmetrix ID: 000297987654321
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>RA Port: SE-4E:0
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>RA Port: SE-4E:1
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>RA Port: SE-5E:0
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>RA Port: SE-5E:1
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Remote RA Port: SE-4E:0
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Remote RA Port: SE-4E:1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCFG_ERROR: The Symmetrix ID is invalid or not found</code></strong> — Verify the local_sid value matches the output of <code>symcfg list</code> and ensure the Symmetrix is online.
+<strong><code>SYMCFG_ERROR: Cannot connect to the Symmetrix</code></strong> — Confirm the Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code> and check network connectivity to the array.</p>
+</div>
 <ol>
 <li>Create an SRDF group (RDF group) that links local RA ports to remote RA ports:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>create<span class="w"> </span>rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>-remote_sid<span class="w"> </span>&lt;remote_sid&gt;<span class="w"> </span>-lp<span class="w"> </span>&lt;local_port_list&gt;<span class="w"> </span>-rp<span class="w"> </span>&lt;remote_port_list&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>create<span class="w"> </span>rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>-remote_sid<span class="w"> </span>&lt;remote_sid&gt;<span class="w"> </span>-lp<span class="w"> </span>&lt;local_port_list&gt;<span class="w"> </span>-rp<span class="w"> </span>&lt;remote_port_list&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Creating RDF group 000...
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>RDF group 000 created successfully.
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Local SID: 000123456789
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>Remote SID: 000987654321
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Local ports: FA-1E:0, FA-1E:1, FA-1E:2, FA-1E:3
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>Remote ports: FA-2E:0, FA-2E:1, FA-2E:2, FA-2E:3
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>RDF link status: Ready
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>Replication mode: Synchronous
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR (0x71000001): RDF group already exists</code></strong> — Verify the group number is not in use with <code>symrdf -sid &lt;local_sid&gt; list</code> before creation.
+<strong><code>SYMRDF ERROR (0x71000004): Invalid port specification</code></strong> — Ensure port lists match the format <code>FA-xE:y</code> and correspond to actual Fibre Channel ports on both arrays.
+<strong><code>SYMRDF ERROR (0x71000007): Remote SID unreachable</code></strong> — Confirm network connectivity between arrays and that the remote SID is correctly specified and online.</p>
+</div>
 <ol>
 <li>Add a device to an SRDF/S (synchronous) pair:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>addpair<span class="w"> </span>-local_dev<span class="w"> </span>&lt;local_devid&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;remote_devid&gt;<span class="w"> </span>-type<span class="w"> </span>S
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>addpair<span class="w"> </span>-local_dev<span class="w"> </span>&lt;local_devid&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;remote_devid&gt;<span class="w"> </span>-type<span class="w"> </span>S
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Symmetrix ID: 000297123456789
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>RDF Group: 001
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Local Device: 0001
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>Remote Device: 0002
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>RDF Mode: Synchronous
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>RDF Link: Ready
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>Pair State: Synchronized
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>Remote Symmetrix ID: 000297987654321
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>Command completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR (0x0000): RDF pair already exists</code></strong> — Verify the device pair is not already configured with <code>symrdf -sid &lt;local_sid&gt; -rdfg &lt;group_number&gt; query</code>.
+<strong><code>SYMRDF ERROR (0x0001): Invalid device ID &lt;local_devid&gt;</code></strong> — Confirm the device exists on the local array using <code>symdev -sid &lt;local_sid&gt; list | grep &lt;local_devid&gt;</code>.
+<strong><code>SYMRDF ERROR (0x0002): RDF group &lt;group_number&gt; not configured</code></strong> — Create the RDF group first with <code>symrdf -sid &lt;local_sid&gt; -rdfg &lt;group_number&gt; create</code>.</p>
+</div>
 <ol>
 <li>Establish the pair (starts initial copy):</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>establish<span class="w"> </span>-dev<span class="w"> </span>&lt;local_devid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>establish<span class="w"> </span>-dev<span class="w"> </span>&lt;local_devid&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Establishing RDF link for group 1...
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>RDF link established successfully.
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>Local SID: 000123456789
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>Local Device ID: 0001
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>Remote SID: 000987654321
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>Remote Device ID: 0001
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>RDF Group: 1
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>Link Status: Ready
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>Synchronization State: Synchronized
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Could not connect to the Symmetrix</code></strong> — Verify the Symmetrix engine is running and accessible via <code>symcfg list</code> before attempting RDF establishment.
+<strong><code>symrdf: RDF group &lt;group_number&gt; does not exist</code></strong> — Create the RDF group first using <code>symrdf -sid &lt;local_sid&gt; -rdfg &lt;group_number&gt; create</code> before establishing the link.
+<strong><code>symrdf: Device &lt;local_devid&gt; is not in the RDF group</code></strong> — Add the device to the RDF group using <code>symrdf -sid &lt;local_sid&gt; -rdfg &lt;group_number&gt; adddev -dev &lt;local_devid&gt;</code> before establishing.</p>
+</div>
 <ol>
 <li>Monitor sync status:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>query<span class="w"> </span>-dev<span class="w"> </span>&lt;local_devid&gt;
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># R1 state should show &quot;Synchronized&quot; when complete</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;local_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_number&gt;<span class="w"> </span>query<span class="w"> </span>-dev<span class="w"> </span>&lt;local_devid&gt;
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1"># R1 state should show &quot;Synchronized&quot; when complete</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Local Director: 000197801234
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>RDF Group: 4
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>Local Device: 0ABC
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>Remote Director: 000197801235
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>Remote Device: 0ABC
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>RDF Mode: Synchronous
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>Link State: Ready
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>R1 State: Synchronized
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>R2 State: Synchronized
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>Consistency State: Consistent
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>Last Update Time: 2024-01-15 14:32:18
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>Replication Status: Normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Command not found</code></strong> — Ensure the Symmetrix Tools (symcli) package is installed and the bin directory is in your PATH.
+<strong><code>SYMAPI_C_LIBRARY_ERROR (7) : Could not open library</code></strong> — Verify the Symmetrix daemon (symcfgd) is running with <code>sudo /opt/emc/SYMCLI/bin/symcfgd start</code>.
+<strong><code>Error: Invalid RDF group number</code></strong> — Confirm the RDF group number exists on the array using <code>symrdf -sid &lt;local_sid&gt; list</code>.</p>
+</div>
 <hr />
 <h2 id="validate-host-connectivity">Validate Host Connectivity<a class="headerlink" href="#validate-host-connectivity" title="Permanent link">&para;</a></h2>
 <ol>
 <li>From the host, run an HBA scan to discover new FC targets:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Linux (using sysfs rescan)</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host&lt;N&gt;/issue_lip
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>rescan-scsi-bus.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Linux (using sysfs rescan)</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host&lt;N&gt;/issue_lip
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>rescan-scsi-bus.sh
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Scanning for new FC targets on host0...
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>Scanning for SCSI bus 0 (/sys/class/scsi_host/host0)...
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a> Scanning for device 0 0 0 0...
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a> Scanning for device 0 0 1 0...
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a> Scanning for device 0 0 2 0...
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a> Scanning for device 0 0 3 0...
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a> Scanning for device 0 0 4 0...
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a> Scanning for device 0 0 5 0...
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a> Scanning for device 0 0 6 0...
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a> Scanning for device 0 0 7 0...
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a> Scanning for device 0 0 8 0...
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a> Scanning for device 0 0 9 0...
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>Scanning for device 0 1 0 0...
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a>Scanning for device 0 2 0 0...
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>Scanning for device 0 3 0 0...
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>New devices found: /dev/sdb, /dev/sdc, /dev/sdd
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /sys/class/fc_host/host&lt;N&gt;/issue_lip: No such file or directory</code></strong> — Replace <code>&lt;N&gt;</code> with the actual host number (e.g., <code>host0</code>, <code>host1</code>) by checking <code>ls /sys/class/fc_host/</code>.
+<strong><code>command not found: rescan-scsi-bus.sh</code></strong> — Install the <code>sg3-utils</code> package (<code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>) to provide the rescan script.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as the root user since sysfs writes and SCSI rescans require elevated privileges.</p>
+</div>
 <ol>
 <li>Verify the device is visible:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>lsscsi<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DellEMC
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>lsscsi<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DellEMC
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>multipath<span class="w"> </span>-ll
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>[0:0:0:0]    disk    DellEMC      VRAID            01E0  /dev/sda
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>[1:0:0:0]    disk    DellEMC      VRAID            01E0  /dev/sdb
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>[2:0:0:0]    disk    DellEMC      VRAID            01E0  /dev/sdc
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>[3:0:0:0]    disk    DellEMC      VRAID            01E0  /dev/sdd
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>mpatha (360060e80057900000057900000010001) dm-0 DellEMC,VRAID
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>  |- 0:0:0:0 sda 8:0   active ready running
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>  |- 1:0:0:0 sdb 8:16  active ready running
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>  |- 2:0:0:0 sdc 8:32  active ready running
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a>  `- 3:0:0:0 sdd 8:48  active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>lsscsi: command not found</code></strong> — Install sg3-utils package with <code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>.
+<strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code>.</p>
+</div>
 <ol>
 <li>Confirm the multipath device has the expected number of paths (typically 4 or 8 for dual-fabric, multi-port configurations).</li>
 <li>From Unisphere, navigate to <strong>Storage &gt; Masking Views</strong> and confirm the host's initiator WWNs appear as logged-in under the masking view.</li>
 <li>Run a write/read I/O test to confirm no errors:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/mapper/&lt;mpath_device&gt;<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/mapper/&lt;mpath_device&gt;<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/null<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">iflag</span><span class="o">=</span>direct
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/mapper/&lt;mpath_device&gt;<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/mapper/&lt;mpath_device&gt;<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/null<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">iflag</span><span class="o">=</span>direct
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>1073741824 bytes (1.0 GB, 1024 MiB) copied, 2.847 s, 360 MB/s
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>1073741824 bytes (1.0 GB, 1024 MiB) copied, 1.923 s, 534 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dd: failed to open '/dev/mapper/&lt;mpath_device&gt;': No such file or directory</code></strong> — Verify the multipath device exists with <code>multipath -ll</code> and replace <code>&lt;mpath_device&gt;</code> with the actual device name (e.g., <code>mpatha</code>).
+<strong><code>dd: opening '/dev/mapper/&lt;mpath_device&gt;': Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root, since direct device access requires elevated privileges.
+<strong><code>dd: error writing '/dev/mapper/&lt;mpath_device&gt;': Input/output error</code></strong> — Check device health with <code>multipath -ll</code> and <code>smartctl</code> to identify failing paths or hardware issues.</p>
+</div>
 <ol>
 <li>Verify no I/O errors in <code>/var/log/messages</code> and no SCSI sense codes reported against the PowerMax in Unisphere alerts.</li>
 </ol>
@@ -8797,7 +9134,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:59:33 UTC"><span class="timeago" datetime="2026-06-29T03:59:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:59:33 UTC">2026-06-29</span>
   </span>
 
     

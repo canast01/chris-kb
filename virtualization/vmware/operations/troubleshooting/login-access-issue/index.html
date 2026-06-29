@@ -9224,27 +9224,123 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sso
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sts-idmd
 </code></pre></div>
-<p><strong>Step 3 — Check for a locked account:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check if the SSO admin account is locked</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>account<span class="w"> </span>find-by-name<span class="w"> </span>--account<span class="w"> </span>administrator<span class="w"> </span>--login<span class="w"> </span>administrator@vsphere.local
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vmware-analytics-engine                                 STOPPED
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmware-cis-license                                      RUNNING
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vmware-cm                                               STOPPED
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vmware-eam                                              RUNNING
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmware-envoy                                            RUNNING
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vmware-imagebuilder                                     STOPPED
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vmware-mbcs                                             RUNNING
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmware-netdump                                          STOPPED
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vmware-perfcharts                                       RUNNING
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vmware-postgres                                         RUNNING
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vmware-rhttpproxy                                       RUNNING
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vmware-sso                                              RUNNING
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>vmware-sts-idmd                                         RUNNING
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vmware-vapi-endpoint                                    RUNNING
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vmware-vpxd                                             RUNNING
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>vmware-vpxd-svcs                                        RUNNING
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vmware-vsan-health                                      STOPPED
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>...
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Service vmware-sts-idmd is running.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Service vmware-sso is running.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Restarting vmware-sso...
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Service vmware-sso stopped successfully.
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Service vmware-sso started successfully.
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Restarting vmware-sts-idmd...
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Service vmware-sts-idmd stopped successfully.
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Service vmware-sts-idmd started successfully.
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Service vmware-sso is stopped.</code></strong> — Run <code>service-control --start vmware-sso</code> to bring the service online before attempting restart.
+<strong><code>Error: Unable to restart vmware-sts-idmd: Service dependency vmware-sso is not running.</code></strong> — Ensure vmware-sso is started first, as vmware-sts-idmd depends on it.
+<strong><code>grep: (standard input) is empty</code></strong> — The grep filter is too restrictive; remove the filter or use <code>service-control --status --all</code> without piping to see all services.</p>
+</div>
+<p><strong>Step 3 — Check for a locked account:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if the SSO admin account is locked</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>account<span class="w"> </span>find-by-name<span class="w"> </span>--account<span class="w"> </span>administrator<span class="w"> </span>--login<span class="w"> </span>administrator@vsphere.local
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dn: cn=administrator,cn=users,dc=vsphere,dc=local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>objectClass: user
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>userAccountControl: 512
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cn: administrator
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sAMAccountName: administrator
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>userPrincipalName: administrator@vsphere.local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>pwdLastSet: 133298765432100000
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>accountExpires: 9223372036854775807
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>lockoutTime: 0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>badPwdCount: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot connect to directory service on localhost:389</code></strong> — Verify the vCenter SSO service is running with <code>systemctl status vmware-vmafd</code> and check network connectivity to the SSO endpoint.
+<strong><code>Error: [LDAP_INVALID_CREDENTIALS] Failed to authenticate as administrator@vsphere.local</code></strong> — Ensure you are running the command as root or with appropriate permissions, and verify the SSO service credentials are correct.</p>
+</div>
 <p>In vCenter UI (if another admin can log in): Administration → Single Sign-On → Users and Groups → check account status.</p>
 <hr />
 <h2 id="ad-users-cannot-log-in">AD Users Cannot Log In<a class="headerlink" href="#ad-users-cannot-log-in" title="Permanent link">&para;</a></h2>
 <p><strong>Step 1 — Verify the identity source is still connected:</strong></p>
 <p>vCenter → Administration → Single Sign-On → Configuration → Identity Sources → click the AD source → Test Connection.</p>
 <p>If the test fails:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From VCSA shell — test LDAP connectivity to domain controller</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;:389<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=domain,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>dn<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check if DNS resolves the domain</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nslookup<span class="w"> </span>&lt;ad-domain-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From VCSA shell — test LDAP connectivity to domain controller</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;:389<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=domain,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>dn<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check if DNS resolves the domain</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nslookup<span class="w"> </span>&lt;ad-domain-fqdn&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># LDAP Search Results
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dn: dc=domain,dc=com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>dn: cn=Users,dc=domain,dc=com
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>dn: cn=Computers,dc=domain,dc=com
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>dn: cn=Domain Controllers,dc=domain,dc=com
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>dn: cn=builtin,dc=domain,dc=com
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>dn: cn=Managed Service Accounts,dc=domain,dc=com
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>dn: cn=Program Files,dc=domain,dc=com
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>dn: cn=System,dc=domain,dc=com
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>dn: cn=Lost and Found,dc=domain,dc=com
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>...
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a># DNS Resolution Results
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Server:     192.168.1.10
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Address:    192.168.1.10#53
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Name:   corp.example.com
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Address: 192.168.1.50
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Address: 192.168.1.51
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Can't contact LDAP server (-1)</code></strong> — Verify the DC IP address is correct and port 389 is open in firewall rules between VCSA and domain controller.
+<strong><code>ldapsearch: No such file or directory</code></strong> — Install the ldap-utils package on VCSA using <code>yum install openldap-clients</code>.
+<strong><code>Server can't find &lt;ad-domain-fqdn&gt;: NXDOMAIN</code></strong> — Confirm the VCSA has the correct DNS server configured in <code>/etc/resolv.conf</code> pointing to a working AD-integrated DNS server.</p>
+</div>
 <p><strong>Step 2 — Check for AD password expiry on the service account</strong> used by vCenter for LDAP binding. vCenter uses a bind account to query AD — if its password expires, all AD authentication fails.</p>
 <p><strong>Step 3 — Verify time sync</strong> — Kerberos authentication fails if the vCenter appliance is more than 5 minutes out of sync with the domain controllers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Local time: Thu 2024-01-18 14:32:47 UTC
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>           Universal time: Thu 2024-01-18 14:32:47 UTC
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>                 RTC time: Thu 2024-01-18 14:32:47
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>System clock synchronized: yes
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>              NTP service: active
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>           RTC in local TZ: no
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>==============================================================================
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a> ntp.ubuntu.com  .POOL.          16 p    -   64    0    0.000    0.000   0.000
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>*time.google.com 216.239.35.0     2 u   52   64  377   18.432   -2.104   3.217
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>+ntp.nist.gov    132.163.96.1     1 u   58   64  377   42.108    1.847   2.891
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>-tick.ucla.edu   128.97.55.79     2 u   61   64  377   89.234    8.932   4.156
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>System clock synchronized: no</code></strong> — Run <code>timedatectl set-ntp true</code> to enable NTP synchronization.
+<strong><code>ntpq: read: Connection refused</code></strong> — Ensure ntpd or systemd-timesyncd is running with <code>systemctl start ntp</code> or <code>systemctl start systemd-timesyncd</code>.
+<strong><code>No association ID's returned</code></strong> — Wait 30-60 seconds for NTP to establish peer connections, then rerun <code>ntpq -p</code>.</p>
+</div>
 <p><strong>Step 4 — Check AD group membership</strong> for the user — vCenter grants access by group, not just individual accounts. Confirm the user is still in the correct AD group.</p>
 <hr />
 <h2 id="local-admin-works-ad-users-cannot-log-in">Local Admin Works, AD Users Cannot Log In<a class="headerlink" href="#local-admin-works-ad-users-cannot-log-in" title="Permanent link">&para;</a></h2>
@@ -9290,11 +9386,11 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
 <p>vCenter → Administration → Access Control → Global Permissions, or navigate to the specific object (cluster/host/VM), right-click → Edit Permissions.</p>
 <p><strong>Step 2 — Verify group membership</strong> — vCenter typically assigns roles to AD groups. If the user was moved between groups, they may have lost access.</p>
 <p><strong>Step 3 — Check for a deny-level permission</strong> — a lower-level object can override a parent permission if "Propagate to children" is configured incorrectly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — list all permissions on a specific VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># List all permissions for a specific user across all objects</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-like</span> <span class="s2">&quot;*username*&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — list all permissions on a specific VM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># List all permissions for a specific user across all objects</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-like</span> <span class="s2">&quot;*username*&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span>
 </code></pre></div>
 <hr />
 <h2 id="session-timeout-constant-re-login-prompt">Session Timeout / Constant Re-Login Prompt<a class="headerlink" href="#session-timeout-constant-re-login-prompt" title="Permanent link">&para;</a></h2>
@@ -9303,10 +9399,37 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
 <p>vCenter → Administration → Single Sign-On → Configuration → Token Policy. Default max token lifetime is 300 seconds; max reuse count is 10. These are usually sufficient — do not reduce them.</p>
 <p><strong>Step 2 — Check browser/network proxy</strong> — some proxies strip session cookies or close idle TCP connections. Try a different browser or direct connection.</p>
 <p><strong>Step 3 — Verify clock sync</strong> — SSO tokens include a timestamp; clock skew invalidates tokens:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On VCSA</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>chronyc<span class="w"> </span>tracking
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On VCSA</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>chronyc<span class="w"> </span>tracking
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Local time: Wed 2024-01-17 14:32:45 UTC
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>           Universal time: Wed 2024-01-17 14:32:45 UTC
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>                 RTC time: Wed 2024-01-17 14:32:45
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>System clock synchronized: yes
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>              NTP service: active
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>           RTC in local TZ: no
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Reference ID    : 91.189.89.198 (ntp.ubuntu.com)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Stratum         : 2
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Ref time (UTC)  : Wed Jan 17 14:32:40 2024
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>System time offset : 0.000234567 seconds
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Last update     : 8.2 seconds ago
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>RMS offset      : 0.001234 seconds
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>Frequency       : -12.456 ppm
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Residual freq   : +0.012 ppm
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>Skew            : 0.089 ppm
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>Root delay      : 0.045678 seconds
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Root dispersion : 0.062345 seconds
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>Update interval : 1024.0 seconds
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Leap status     : Normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chronyc: Could not get tracking data</code></strong> — Verify chrony service is running with <code>systemctl status chrony</code> and check network connectivity to NTP servers.
+<strong><code>System clock synchronized: no</code></strong> — Wait 2–3 minutes for NTP synchronization to complete, or manually sync with <code>ntpdate &lt;ntp-server&gt;</code> if available.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9343,7 +9466,7 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

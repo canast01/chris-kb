@@ -7773,107 +7773,292 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>kinit<span class="w"> </span>&lt;user&gt;@&lt;DOMAIN.FQDN&gt;
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>klist
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uid=1205(jsmith@corp.local) gid=1205(corp.local\domain users) groups=1205(corp.local\domain users),1206(corp.local\enterprise admins)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>jsmith@corp.local:*:1205:1205:John Smith:/home/corp.local/jsmith:/bin/bash
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-- Logs begin at Wed 2024-01-10 14:22:33 UTC, end at Wed 2024-01-10 15:47:12 UTC --
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Jan 10 15:45:22 host-prod-01 sssd[1234]: (0x0400): Starting up
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Jan 10 15:45:23 host-prod-01 sssd[1234]: LDAP connection established
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Jan 10 15:46:01 host-prod-01 sssd[1234]: User jsmith@corp.local found in cache
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Jan 10 15:46:15 host-prod-01 sssd[1234]: Kerberos ticket refresh scheduled
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>(no output — command completes silently)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>(no output — command completes silently)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Ticket for jsmith@CORP.LOCAL@CORP.LOCAL stored in cache
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Valid starting       Expires              Service principal
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>01/10/24 15:47:03  01/11/24 01:47:03  krbtgt/CORP.LOCAL@CORP.LOCAL
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>id: 'jsmith@corp.local': no such user</code></strong> — Verify SSSD is running with <code>systemctl status sssd</code> and check domain name matches your AD configuration in <code>/etc/sssd/sssd.conf</code>.
+<strong><code>Error: SSSD must be running to query users</code></strong> — Start SSSD with <code>systemctl start sssd</code> and wait 10–15 seconds for it to establish LDAP connections.
+<strong><code>kinit: krb5_get_init_creds: Client not found in Kerberos database</code></strong> — Ensure the user exists in Active Directory and the Kerberos realm in <code>/etc/krb5.conf</code> matches your AD domain exactly (case-sensitive).</p>
+</div>
 <hr />
 <h2 id="sudo-configuration-for-ad-groups">Sudo Configuration for AD Groups<a class="headerlink" href="#sudo-configuration-for-ad-groups" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/sudoers.d/ad-groups — allow AD group full sudo access</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>%linux<span class="se">\ </span>admins@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Allow passwordless sudo for a specific AD group</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>%linux<span class="se">\ </span>ops@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/ad-groups — allow AD group full sudo access</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>%linux<span class="se">\ </span>admins@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Allow passwordless sudo for a specific AD group</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>%linux<span class="se">\ </span>ops@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Verify the file was edited with <code>visudo</code> instead of a text editor, and check for trailing whitespace or missing spaces around the <code>@</code> symbol.
+<strong><code>sudo: unable to resolve host &lt;hostname&gt;</code></strong> — Ensure the system's hostname is correctly set in <code>/etc/hostname</code> and <code>/etc/hosts</code>, and that DNS or local name resolution can reach the domain controller.
+<strong><code>sudo: user is not in the sudoers file</code></strong> — Confirm the AD group membership with <code>id -G &lt;username&gt;</code> and verify the group name in sudoers matches exactly (including escaping spaces as <code>\</code>).</p>
+</div>
 <p>Note: AD group names with spaces require escaping the space with a backslash.</p>
 <hr />
 <h2 id="backup-agent-integration">Backup Agent Integration<a class="headerlink" href="#backup-agent-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Agent for Linux:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install Veeam Agent (RHEL — requires the Veeam repo added first)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rpm<span class="w"> </span>--import<span class="w"> </span>https://www.veeam.com/downloads/public.key
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/yum.repos.d/veeam.repo<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">[veeam]</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">name=Veeam</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">baseurl=https://repository.veeam.com/backup/linux/agent/rpm/rhel/x86_64/</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">enabled=1</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">gpgcheck=1</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">gpgkey=https://www.veeam.com/downloads/public.key</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">EOF</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>dnf<span class="w"> </span>install<span class="w"> </span>veeam
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Start and enable the Veeam agent service</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>veeamagent
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Check agent status</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>veeam<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install Veeam Agent (RHEL — requires the Veeam repo added first)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rpm<span class="w"> </span>--import<span class="w"> </span>https://www.veeam.com/downloads/public.key
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/yum.repos.d/veeam.repo<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">[veeam]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">name=Veeam</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">baseurl=https://repository.veeam.com/backup/linux/agent/rpm/rhel/x86_64/</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">enabled=1</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">gpgcheck=1</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">gpgkey=https://www.veeam.com/downloads/public.key</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">EOF</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>dnf<span class="w"> </span>install<span class="w"> </span>veeam
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Start and enable the Veeam agent service</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>veeamagent
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Check agent status</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>veeam<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Importing GPG key 0x1234ABCD from https://www.veeam.com/downloads/public.key
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>The key you are importing is not certified with a trusted signature!
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Continuing anyway.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Last metadata expiration check: 0:02:15 ago on Thu 14 Nov 2024 09:47:22 AM UTC.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Dependencies resolved.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Installing:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> veeam-agent                    x86_64    7.2.1-1.el8    veeam    45 M
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Transaction Summary:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Install  1 Package
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Total download size: 45 M
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Installed size: 128 M
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Is this ok? [y/N]: y
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Downloading Packages:
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>veeam-agent-7.2.1-1.el8.x86_64.rpm                    100% |████████████| 45 MB  8.3 MB/s
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Running transaction
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Installing : veeam-agent-7.2.1-1.el8.x86_64                                    [1/1]
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Complete!
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Created symlink /etc/systemd/system/multi-user.target.wants/veeamagent.service → /etc/systemd/system/veeamagent.service.
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Veeam Agent for Linux v7.2.1 (build 4567)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Status: Running
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Service: Active (running)
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Last backup: 2024-11-13 22:15:00 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Failed to download metadata for repo 'veeam': Cannot prepare internal mirrorlist: No URLs in mirrorlist.</code></strong> — Verify the baseurl in <code>/etc/yum.repos.d/veeam.repo</code> matches your RHEL version and check network connectivity to repository.veeam.com.
+<strong><code>error: unpacking of archive failed on file /opt/veeam/agent: cpio: mkdir</code></strong> — Ensure <code>/opt/veeam</code> directory exists with proper permissions or run the installer with <code>sudo</code>.
+<strong><code>veeam: command not found</code></strong> — Add <code>/opt/veeam/bin</code> to your PATH or use the full path <code>/opt/veeam/bin/veeam status</code> after installation completes.</p>
+</div>
 <p>Registration to the Veeam Backup &amp; Replication server is done from the VBR console: Protection Groups → Add Group → select the server by hostname.</p>
 <hr />
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <p><strong>node_exporter (Prometheus metrics):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install node_exporter (RHEL — via binary or package)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>golang-github-prometheus-node-exporter<span class="w">  </span><span class="c1"># EPEL repo required</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or via binary</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/bin/false<span class="w"> </span>node_exporter
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mv<span class="w"> </span>node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Default listen port</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">9100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install node_exporter (RHEL — via binary or package)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>golang-github-prometheus-node-exporter<span class="w">  </span><span class="c1"># EPEL repo required</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or via binary</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/bin/false<span class="w"> </span>node_exporter
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>mv<span class="w"> </span>node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Default listen port</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">9100</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Dependencies resolved.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>================================================================================
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> Package                                    Arch     Version      Repository
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>================================================================================
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Installing:
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a> golang-github-prometheus-node-exporter     x86_64   1.6.1-1.el9  epel
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Transaction Summary:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>================================================================================
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Install  1 Package
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Total download size: 12 M
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Installed size: 38 M
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Is this ok? [y/N]: y
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Downloading Packages:
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>[100%] node_exporter-1.6.1-1.el9.x86_64.rpm
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Running transaction
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Preparing        :                                                        1/1
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Installing       : golang-github-prometheus-node-exporter-1.6.1-1.el9    1/1
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  Verifying        : golang-github-prometheus-node-exporter-1.6.1-1.el9    1/1
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Created symlink /etc/systemd/system/multi-user.target.wants/node_exporter.service → /etc/systemd/system/node_exporter.service.
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>LISTEN     0      128                 0.0.0.0:9100              0.0.0.0:*      users:((&quot;node_exporter&quot;,pid=2847,fd=3))
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: golang-github-prometheus-node-exporter</code></strong> — Enable the EPEL repository first with <code>dnf install epel-release</code> before running the install command.
+<strong><code>curl: (22) The requested URL returned error: 404</code></strong> — The release URL pattern may have changed; verify the correct download link at https://github.com/prometheus/node_exporter/releases and update the curl command accordingly.
+<strong><code>Job for node_exporter.service failed because the control process exited with error code.</code></strong> — Check service logs with <code>journalctl -u node_exporter -n 20</code> to identify permission or configuration issues, then restart with <code>systemctl restart node_exporter</code>.</p>
+</div>
 <p><strong>Verify Prometheus can scrape the node:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>http://&lt;server-ip&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>http://&lt;server-ip&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># HELP node_boot_time_seconds Node boot time in seconds
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a># TYPE node_boot_time_seconds gauge
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>node_boot_time_seconds 1.702841e+09
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># HELP node_context_switches_total Total number of context switches
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a># TYPE node_context_switches_total counter
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>node_context_switches_total 8.847291e+07
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a># HELP node_cpu_seconds_total Seconds the cpus spent in each mode
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a># TYPE node_cpu_seconds_total counter
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;idle&quot;} 4.28794e+06
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;system&quot;} 1.84291e+05
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;user&quot;} 3.92847e+05
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>node_cpu_seconds_total{cpu=&quot;1&quot;,mode=&quot;idle&quot;} 4.29104e+06
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>node_cpu_seconds_total{cpu=&quot;1&quot;,mode=&quot;system&quot;} 1.76284e+05
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>node_cpu_seconds_total{cpu=&quot;1&quot;,mode=&quot;user&quot;} 3.84756e+05
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a># HELP node_disk_io_now The number of I/Os currently in progress
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a># TYPE node_disk_io_now gauge
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>node_disk_io_now 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to &lt;server-ip&gt; port 9100: Connection refused</code></strong> — Verify the Prometheus Node Exporter is running on the target host with <code>systemctl status node_exporter</code> and confirm port 9100 is listening.
+<strong><code>curl: (6) Could not resolve host: &lt;server-ip&gt;</code></strong> — Replace <code>&lt;server-ip&gt;</code> with the actual IP address or hostname of the target server.
+<strong><code>curl: (28) Operation timeout. The timeout was reached</code></strong> — Increase the timeout with <code>curl --max-time 10</code> or check network connectivity and firewall rules blocking port 9100.</p>
+</div>
 <hr />
 <h2 id="iscsi-storage-connectivity">iSCSI Storage Connectivity<a class="headerlink" href="#iscsi-storage-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Install iSCSI initiator (RHEL)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>iscsi-initiator-utils
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Set initiator IQN (unique per server — set before first login)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Format: InitiatorName=iqn.YYYY-MM.reverse-domain:unique-name</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Discover targets on a storage portal</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>discovery<span class="w"> </span>--type<span class="w"> </span>sendtargets<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Login to a specific target</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;<span class="w"> </span>--login
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check active sessions</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Rescan for new LUNs</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>--rescan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Install iSCSI initiator (RHEL)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>iscsi-initiator-utils
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Set initiator IQN (unique per server — set before first login)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Format: InitiatorName=iqn.YYYY-MM.reverse-domain:unique-name</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Discover targets on a storage portal</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>discovery<span class="w"> </span>--type<span class="w"> </span>sendtargets<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Login to a specific target</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;<span class="w"> </span>--login
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Check active sessions</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Rescan for new LUNs</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>--rescan
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Last metadata expiration check: 0:12:34 ago on Wed Dec 18 10:45:22 2024.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Dependencies resolved.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>================================================================================
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> Package                    Arch      Version           Repository       Size
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>================================================================================
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Installing:
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a> iscsi-initiator-utils      x86_64    6.2.1.4-15.el9    rhel-9-baseos   552 k
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Transaction Summary
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>================================================================================
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Install  1 Package
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Total download size: 552 k
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Installed size: 1.2 M
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Is this ok? [y/N]: y
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Downloading Packages:
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>iscsi-initiator-utils-6.2.1.4-15.el9.x86_64.rpm          100% |###########| 552 kB  00:02
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Running transaction
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Preparing        :                                                        1/1
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>  Installing       : iscsi-initiator-utils-6.2.1.4-15.el9.x86_64           1/1
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  Verifying        : iscsi-initiator-utils-6.2.1.4-15.el9.x86_64           1/1
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Created symlink /etc/systemd/system/multi-user.target.wants/iscsid.service → /usr/lib/systemd/system/iscsid.service.
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>InitiatorName=iqn.2024-12.com.example:host-prod-db01
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>Discovery:
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    192.168.100.50:3260,1 iqn.2024-01.com.storage:target.lun0
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>    192.168.100.50:3260,1 iqn.2024-01.com.storage:target.lun1
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    192.168.100.50:3260,1 iqn.2024-01.com.storage:target.lun2
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>Logging in to [iface: default, target: iqn.2024-01.com.storage:target.lun0, portal: 192.168.100.50,3260] (multiple)
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>Login is successful.
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>iSCSI Transport: tcp
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>Initiator Name: iqn.2024-12.com.example:host-prod-db01
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>Initiator Alias: prod-db01
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>Target Name: iqn.2024-01.com.storage:target.lun0
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>Current Portal: 192.168.100.50:3260,1
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>Persistent Portal: 192.168.100.50:3260,1
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>Rescan of session [sid: 1, target: iqn.2024-01.com.storage:target.lun0, portal: 192.168.100.50,3260] complete
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No portals found</code></strong> — Verify the storage portal IP is reachable and the iSCSI target service is running on the storage array.
+<strong><code>iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)</code></strong> — Confirm the target IQN is correct and the initiator has network connectivity to the storage portal on port 3260.</p>
+</div>
 <hr />
 <h2 id="san-multipath-data-path">SAN Multipath Data Path<a class="headerlink" href="#san-multipath-data-path" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kL9qwzAQh3c_xeGpS3CtMUPAaTFZXAxZOmQ5S1dbENtCVv5A6HNlz5P1JDslAWeSTvf90HentCXpdN8tweq6cVGExiwhzozZa4m-s-uS3riE32O4DA0aYpZD2NV7-o1Uy_gnHbUkKBgiywFFx6QNRdIadM33bNR3Uk6XfEI6xQZVwdtmnb3PRn6w8on8A3KsrJaQzWID8kDxNvuCrest1rTryv5EtsAz3K5QHiy9NBJ3I_FvJINR-spIPBmtZzG_V1isQLW8MX8Jw48r8KUfLEznC9Z_oMSoNVEi_Hin_gA4hJMw?" /></p>
 <h2 id="multipath-configuration">Multipath Configuration<a class="headerlink" href="#multipath-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install and enable multipathd (RHEL)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Generate a default config (do not use defaults for production — review vendor recommendations)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check multipath device map</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>multipath<span class="w"> </span>-l
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>multipath<span class="w"> </span>-ll<span class="w">  </span><span class="c1"># verbose</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check path states</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;checker|faulty|active&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Flush and reload multipath map</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>multipath<span class="w"> </span>-F
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>multipath<span class="w"> </span>-r
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Install and enable multipathd (RHEL)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Generate a default config (do not use defaults for production — review vendor recommendations)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check multipath device map</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>multipath<span class="w"> </span>-l
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>multipath<span class="w"> </span>-ll<span class="w">  </span><span class="c1"># verbose</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Check path states</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;checker|faulty|active&quot;</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Flush and reload multipath map</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>multipath<span class="w"> </span>-F
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>multipath<span class="w"> </span>-r
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Complete!
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>(no output — command completes silently)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>mpatha (36001405abcd1234ef567890abcd1234) dm-0 NETAPP,LUN C-Mode
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>| `- 2:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  `- 3:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>mpathb (36001405zyxw9876fe543210zyxw9876) dm-1 NETAPP,LUN C-Mode
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>size=1T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>| `- 4:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>  `- 5:0:0:0 sdd 8:48 active ready running
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>checker: readsector0 [active]
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>active ready running
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>active ready running
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>(no output — command completes silently)
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>multipathd.service does not have install section in [Install] block. Refusing.</code></strong> — Add <code>WantedBy=multi-user.target</code> to the multipathd unit file or use <code>systemctl enable multipathd</code> before <code>--now</code>.
+<strong><code>multipath: command not found</code></strong> — Install the device-mapper-multipath package with <code>dnf install device-mapper-multipath</code> before running multipath commands.
+<strong><code>sysfs: cannot open /etc/multipath.conf: Permission denied</code></strong> — Run mpathconf and multipath commands with <code>sudo</code> or as root user.</p>
+</div>
 <p>Key <code>/etc/multipath.conf</code> settings for Dell/EMC and Pure Storage:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>defaults {
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    polling_interval     5
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    path_selector        &quot;round-robin 0&quot;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    path_grouping_policy multibus
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    failback             immediate
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    no_path_retry        fail
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>defaults {
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    polling_interval     5
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    path_selector        &quot;round-robin 0&quot;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    path_grouping_policy multibus
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    failback             immediate
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    no_path_retry        fail
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>}
 </code></pre></div>
 <p>Consult the vendor's Linux Multipath Guide (Dell PowerMax, Pure Storage) for device-specific settings.</p>
 <hr />
@@ -7903,7 +8088,7 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

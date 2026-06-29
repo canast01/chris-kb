@@ -8752,68 +8752,233 @@
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Show only thin/EFD disks with capacity summary</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-disk<span class="w"> </span>-thin
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">UNISPHERE</span><span class="o">=</span><span class="s2">&quot;https://&lt;unisphere_host&gt;:8443&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">SID</span><span class="o">=</span><span class="s2">&quot;&lt;sid&gt;&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">USER</span><span class="o">=</span><span class="s2">&quot;smc&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">PASS</span><span class="o">=</span><span class="s2">&quot;&lt;password&gt;&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># --- Get array system capacity (licensed, configured, COD available) ---</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/system_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Key response fields:</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">#   system_capacity.usable_total_tb         – Total usable (licensed) TB</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">#   system_capacity.usable_used_tb          – Currently used TB</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#   system_capacity.subscribed_total_tb     – Thin-provisioned (subscribed) TB</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1">#   system_capacity.subscribed_allocated_tb – Allocated to host devices TB</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># --- Get array system info (includes license model and COD tier) ---</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># --- Get SRP details (capacity broken down by service level) ---</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/sloprovisioning/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/srp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># Get a specific SRP</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="nv">SRP_ID</span><span class="o">=</span><span class="s2">&quot;SRP_1&quot;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/sloprovisioning/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/srp/</span><span class="si">${</span><span class="nv">SRP_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># Key SRP fields:</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   srp_capacity.usable_total_tb</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   srp_capacity.usable_used_tb</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   srp_capacity.subscribed_total_tb</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1">#   emulation                     – disk type (FBA, EFD)</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1">#   diskGroupId[]                 – disk group list (add from COD activation shows here)</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="c1"># --- List all disk groups (confirm COD groups are formatted) ---</span>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/disk_group&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000296900111
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000296900222
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Symmetrix ID: 000296900333
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Symmetrix ID          Microcode     Cache  Model
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>000296900111          5978.669.669  384GB  VMAX250F
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>000296900222          5978.669.669  768GB  VMAX450F
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>000296900333          5978.669.669  1.5TB  VMAX850F
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Symmetrix ID: 000296900111
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Model: VMAX250F
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Microcode: 5978.669.669
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Cache: 384 GB
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Licensed Capacity: 100.0 TB
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Pools: 4
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Directors: 8
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Front-End Ports: 32
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>SRP_1 (Performance):        45.2 TB allocated, 12.8 TB free
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>SRP_2 (Capacity):           78.5 TB allocated, 8.3 TB free
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>SRP_3 (Archive):            22.1 TB allocated, 3.2 TB free
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>SRP_4 (Thin):               15.6 TB allocated, 5.9 TB free
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Pool Name          Type        Capacity    Allocated   Free
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>SRP_1_Thin         Thin        50.0 TB     42.3 TB     7.7 TB
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>SRP_2_Thin         Thin        85.0 TB     71.2 TB     13.8 TB
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>SRP_3_EFD          EFD         25.0 TB     18.5 TB     6.5 TB
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Disk Group 0       Type: SAS    Capacity: 120 TB    Status: Unlocked
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Disk Group 1       Type: SAS    Capacity: 120 TB    Status: Locked
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Disk Group 2       Type: EFD    Capacity: 50 TB     Status: Unlocked
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Disk Group 3       Type: EFD    Capacity: 50 TB     Status: Locked
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>...
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all licenses with status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-license
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show license for a specific feature</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-license<span class="w"> </span>-feature<span class="w"> </span><span class="s2">&quot;TimeFinder/SnapVX&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Import a new license key file</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>import<span class="w"> </span>-file<span class="w"> </span>/tmp/license_file.dat
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Export current license information to a file</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>report<span class="w"> </span>-out<span class="w"> </span>/tmp/current_licenses.txt
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check Solutions Enabler version (license compatibility)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>symcfg<span class="w"> </span>-version
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Verify Solutions Enabler can communicate with the array</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Symmetrix ID &lt;sid&gt; does not exist</code></strong> — Verify the SID with <code>symcfg discover</code> and ensure the array is reachable on the network.
+<strong><code>SYMAPI Server connection failed</code></strong> — Restart the Symmetrix management daemon with <code>sudo /opt/emc/SYMAPI/bin/symapi_control restart</code> and verify network connectivity to the array.
+<strong><code>Insufficient privileges to execute command</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>symapi</code> group with <code>sudo usermod -a -G symapi $USER</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">UNISPHERE</span><span class="o">=</span><span class="s2">&quot;https://&lt;unisphere_host&gt;:8443&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">SID</span><span class="o">=</span><span class="s2">&quot;&lt;sid&gt;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">USER</span><span class="o">=</span><span class="s2">&quot;smc&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">PASS</span><span class="o">=</span><span class="s2">&quot;&lt;password&gt;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># --- Get array system capacity (licensed, configured, COD available) ---</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/system_capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Key response fields:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">#   system_capacity.usable_total_tb         – Total usable (licensed) TB</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   system_capacity.usable_used_tb          – Currently used TB</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#   system_capacity.subscribed_total_tb     – Thin-provisioned (subscribed) TB</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1">#   system_capacity.subscribed_allocated_tb – Allocated to host devices TB</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># --- Get array system info (includes license model and COD tier) ---</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># --- Get SRP details (capacity broken down by service level) ---</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/sloprovisioning/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/srp&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Get a specific SRP</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="nv">SRP_ID</span><span class="o">=</span><span class="s2">&quot;SRP_1&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/sloprovisioning/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/srp/</span><span class="si">${</span><span class="nv">SRP_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Key SRP fields:</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="c1">#   srp_capacity.usable_total_tb</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1">#   srp_capacity.usable_used_tb</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="c1">#   srp_capacity.subscribed_total_tb</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="c1">#   emulation                     – disk type (FBA, EFD)</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="c1">#   diskGroupId[]                 – disk group list (add from COD activation shows here)</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="c1"># --- List all disk groups (confirm COD groups are formatted) ---</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">UNISPHERE</span><span class="si">}</span><span class="s2">/univmax/restapi/100/system/symmetrix/</span><span class="si">${</span><span class="nv">SID</span><span class="si">}</span><span class="s2">/disk_group&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;system_capacity&quot;: {
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    &quot;usable_total_tb&quot;: 450.5,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;usable_used_tb&quot;: 287.3,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;subscribed_total_tb&quot;: 612.8,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;subscribed_allocated_tb&quot;: 298.1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  }
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>}
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>{
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;symmetrix&quot;: [
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    {
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;symmetrixId&quot;: &quot;000296802151&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;model&quot;: &quot;PowerMax 8000&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;ucode&quot;: &quot;5978.1221.1221&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;local_user_name&quot;: &quot;smc&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;license_model&quot;: &quot;CAPACITY_ON_DEMAND&quot;,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;cod_tier&quot;: &quot;TIER_2&quot;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    }
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  ]
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>}
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>{
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;srp&quot;: [
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    {
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;srpId&quot;: &quot;SRP_1&quot;,
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;srp_capacity&quot;: {
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        &quot;usable_total_tb&quot;: 450.5,
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        &quot;usable_used_tb&quot;: 287.3,
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        &quot;subscribed_total_tb&quot;: 612.8
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>      },
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>      &quot;emulation&quot;: &quot;FBA&quot;,
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>      &quot;diskGroupId&quot;: [&quot;DG_001&quot;, &quot;DG_002&quot;, &quot;DG_003&quot;]
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    },
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    {
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      &quot;srpId&quot;: &quot;SRP_2&quot;,
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>      &quot;srp_capacity&quot;: {
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>        &quot;usable_total_tb&quot;: 200.0,
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        &quot;usable_used_tb&quot;: 145.6,
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>        &quot;subscribed_total_tb&quot;: 280.0
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>      },
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>      &quot;emulation&quot;: &quot;EFD&quot;,
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>      &quot;diskGroupId&quot;: [&quot;DG_004&quot;]
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>    }
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>  ]
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>}
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>{
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>  &quot;srp&quot;: [
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>    {
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>      &quot;srpId&quot;: &quot;SRP_1&quot;,
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>      &quot;srp_capacity&quot;: {
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>        &quot;usable_total_tb&quot;: 450.5,
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>        &quot;usable_used_tb&quot;: 287.3,
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>        &quot;subscribed_total_tb&quot;: 612.8,
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>        &quot;subscribed_allocated_tb&quot;: 298.1
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>      },
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>      &quot;emulation&quot;: &quot;FBA&quot;,
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>      &quot;diskGroupId&quot;: [&quot;DG_001&quot;, &quot;DG_002&quot;, &quot;DG_003&quot;]
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>    }
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>  ]
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>}
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>{
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>  &quot;disk_group&quot;: [
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>    {
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>      &quot;diskGroupId&quot;: &quot;DG_001&quot;,
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>      &quot;disk_count&quot;: 14,
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>      &quot;disk_type&quot;: &quot;SSD&quot;,
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>      &quot;capacity_gb&quot;: 153600
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>    },
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>    {
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>      &quot;diskGroupId&quot;: &quot;DG_002&quot;,
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>      &quot;disk_count&quot;: 14,
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>      &quot;disk_type&quot;: &quot;SSD&quot;,
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a>      &quot;capacity_gb&quot;: 153600
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a>    },
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a>    {
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>      &quot;diskGroupId&quot;: &quot;DG_003&quot;,
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a>      &quot;disk_count&quot;: 14,
+<a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a>      &quot;disk_type&quot;: &quot;SSD&quot;,
+<a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a>      &quot;capacity_gb&quot;: 153600
+<a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a>    },
+<a id="__codelineno-3-80" name="__codelineno-3-80" href="#__codelineno-3-80"></a>    {
+<a id="__codelineno-3-81" name="__codelineno-3-81" href="#__codelineno-3-81"></a>      &quot;diskGroupId&quot;: &quot;DG_004&quot;,
+<a id="__codelineno-3-82" name="__codelineno-3-82" href="#__codelineno-3-82"></a>      &quot;disk_count&quot;: 10,
+<a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a>      &quot;disk_type&quot;: &quot;NL-SAS&quot;,
+<a id="__codelineno-3-84" name="__codelineno-3-84" href="#__codelineno-3-84"></a>      &quot;capacity_gb&quot;: 102400
+<a id="__codelineno-3-85" name="__codelineno-3-85" href="#__codelineno-3-85"></a>    }
+<a id="__codelineno-3-86" name="__codelineno-3-86" href="#__codelineno-3-86"></a>  ]
+<a id="__codelineno-3-87" name="__codelineno-3-87" href="#__codelineno-3-87"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification (already present in the example, but</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all licenses with status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-license
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show license for a specific feature</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-license<span class="w"> </span>-feature<span class="w"> </span><span class="s2">&quot;TimeFinder/SnapVX&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Import a new license key file</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>import<span class="w"> </span>-file<span class="w"> </span>/tmp/license_file.dat
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Export current license information to a file</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>report<span class="w"> </span>-out<span class="w"> </span>/tmp/current_licenses.txt
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check Solutions Enabler version (license compatibility)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>symcfg<span class="w"> </span>-version
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Verify Solutions Enabler can communicate with the array</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>License Information:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Feature Name              Status    Expiration Date    Capacity
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  TimeFinder/SnapVX         Licensed  2025-12-31         Unlimited
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  SRDF/Metro                Licensed  2025-12-31         Unlimited
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  RecoverPoint              Not Lic.  N/A                N/A
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Unisphere Management      Licensed  2026-06-15         Unlimited
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Feature: TimeFinder/SnapVX
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Status: Licensed
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Expiration: 2025-12-31
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Capacity: Unlimited
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  License Key: ABC123XYZ789DEF456
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>License file /tmp/license_file.dat imported successfully.
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Symmetrix ID 000123456789012 updated.
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Report written to /tmp/current_licenses.txt
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Total licenses exported: 4
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Solutions Enabler Version: 9.2.1.0 (Build 123.456)
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Symmetrix Model: PowerMax 8000
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Director Count: 4
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Capacity: 50 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: error: Invalid SID format</code></strong> — Verify the SID is 12 digits and set correctly with <code>-sid</code> parameter or <code>SYMCFG_CONNECT</code> environment variable.
+<strong><code>symlmf: error: License file not found: /tmp/license_file.dat</code></strong> — Confirm the license file path exists and is readable with <code>ls -la /tmp/license_file.dat</code>.
+<strong><code>symcfg: error: Cannot connect to array</code></strong> — Ensure the Symmetrix array is reachable and Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code>.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8858,7 +9023,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:34:19 UTC"><span class="timeago" datetime="2026-06-29T03:34:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:34:19 UTC">2026-06-29</span>
   </span>
 
     

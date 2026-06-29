@@ -6972,43 +6972,107 @@ Security platform troubleshooting — certificate validation failures, CyberArk 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check if CA in trust store</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>cert.crt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>verify ok
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>subject=CN = host.example.com, O = Example Corp, C = US
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 CA
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Cipher : ECDHE-RSA-AES128-GCM-SHA256
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Protocol : TLSv1.3
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>notBefore=Jan 15 08:22:14 2023 GMT
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>notAfter=Jan 15 08:22:13 2025 GMT
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cert.crt: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the intermediate CA certificate to your trust store or use the <code>-CApath</code> flag pointing to the directory containing CA bundles.
+<strong><code>error in x509 lookup</code></strong> — Ensure the certificate file path is correct and readable; verify with <code>ls -la /etc/ssl/certs/cert.crt</code>.
+<strong><code>Verify return code: 1 (self signed certificate)</code></strong> — For self-signed certificates in testing, use <code>openssl verify -CAfile cert.crt cert.crt</code> or add the cert to your trust store.</p>
+</div>
 <p><strong>Expected output:</strong> Chain check shows <code>verify return:1</code> for each cert in the chain and <code>Verification: OK</code> at the end. <code>openssl verify</code> returns <code>cert.crt: OK</code>. Absence of <code>OK</code> or presence of <code>verify error:num=</code> indicates a chain or trust store problem.</p>
 <p>See <a href="../../protocols/tls/troubleshooting/">TLS Troubleshooting</a> for detailed steps.</p>
 <h2 id="cyberark-vault-connectivity">CyberArk Vault Connectivity<a class="headerlink" href="#cyberark-vault-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test vault reachability (port 1858)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vault.corp.local<span class="w"> </span><span class="m">1858</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test CPM → target account</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Review: PrivateArk → Monitoring → Last PM Action log</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify CPM service running</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sc<span class="w"> </span>query<span class="w"> </span>CyberArk_CPM<span class="w">   </span><span class="c1"># Windows</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test vault reachability (port 1858)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vault.corp.local<span class="w"> </span><span class="m">1858</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test CPM → target account</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Review: PrivateArk → Monitoring → Last PM Action log</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify CPM service running</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sc<span class="w"> </span>query<span class="w"> </span>CyberArk_CPM<span class="w">   </span><span class="c1"># Windows</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connection to vault.corp.local 1858 port [tcp/*] succeeded!
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SERVICE_NAME: CyberArk_CPM
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        TYPE               : 10  INTERACTIVE
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        STATE              : 4  RUNNING
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                                (STOPPABLE, PAUSABLE, ACCEPTS_SHUTDOWN)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        WIN32_EXIT_CODE    : 0  (0x0)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        SERVICE_EXIT_CODE  : 0  (0x0)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        CHECKPOINT         : 0x0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        WAIT_HINT          : 0x0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: getaddrinfo for name=vault.corp.local port=1858: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup vault.corp.local</code> and confirm the hostname is correct in your network.
+<strong><code>SERVICE_NAME: CyberArk_CPM STATE              : 1  STOPPED</code></strong> — Start the CyberArk CPM service using <code>sc start CyberArk_CPM</code> or the Windows Services GUI.</p>
+</div>
 <p><strong>Expected output:</strong> <code>nc</code> returns <code>Connection to vault.corp.local port 1858 [tcp] succeeded</code>. <code>sc query CyberArk_CPM</code> shows <code>STATE: 4 RUNNING</code>. If connection refused, check firewall rule for TCP 1858 between the CPM server and the Vault.</p>
 <h2 id="mfa-duo-troubleshooting">MFA / Duo Troubleshooting<a class="headerlink" href="#mfa-duo-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Symptom: User not receiving push
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Check:
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>1. Mobile app connectivity (iOS/Android not blocked by corporate MDM)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2. Duo Authentication Proxy: tail /var/log/duo/authproxy.log
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>3. User enrolled: Duo Admin Panel → Users → search user
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>4. Failopen vs failclosed: check duoproxy.cfg fail_mode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Symptom: User not receiving push
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Check:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>1. Mobile app connectivity (iOS/Android not blocked by corporate MDM)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>2. Duo Authentication Proxy: tail /var/log/duo/authproxy.log
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>3. User enrolled: Duo Admin Panel → Users → search user
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>4. Failopen vs failclosed: check duoproxy.cfg fail_mode
 </code></pre></div>
 <h2 id="kerberos-authentication-failures">Kerberos Authentication Failures<a class="headerlink" href="#kerberos-authentication-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check time sync (&lt; 5 min drift required)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>date<span class="p">;</span><span class="w"> </span>ntpq<span class="w"> </span>-pn
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List current Kerberos tickets</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>klist<span class="w"> </span>-e
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Test kinit</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>kinit<span class="w"> </span>username@CORP.LOCAL
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>klist
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check SPN</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>setspn<span class="w"> </span>-L<span class="w"> </span>hostname<span class="w">   </span><span class="c1"># Windows</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;CORP\admin&quot;</span><span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(servicePrincipalName=HTTP/host.corp.local)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check time sync (&lt; 5 min drift required)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>date<span class="p">;</span><span class="w"> </span>ntpq<span class="w"> </span>-pn
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List current Kerberos tickets</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>klist<span class="w"> </span>-e
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Test kinit</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>kinit<span class="w"> </span>username@CORP.LOCAL
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>klist
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check SPN</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>setspn<span class="w"> </span>-L<span class="w"> </span>hostname<span class="w">   </span><span class="c1"># Windows</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;CORP\admin&quot;</span><span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(servicePrincipalName=HTTP/host.corp.local)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Wed Jan 15 14:32:47 UTC 2025
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>==============================================================================
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ntp.ubuntu.com      .POOL.          16 p    -   64    0    0.000    0.000   0.000
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>0.ubuntu.pool.ntp.o 216.239.35.0     2 u   28   64  377   45.231   -2.145   3.821
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>1.ubuntu.pool.ntp.o 129.6.15.28      2 u   26   64  377   52.104    1.832   2.456
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>2.ubuntu.pool.ntp.o 132.163.96.1     2 u   31   64  377   48.567   -0.923   1.204
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>               Local time: Wed 2025-01-15 14:32:47 UTC
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>           Universal time: Wed 2025-01-15 14:32:47 UTC
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                 RTC time: Wed 2025-01-15 14:32:47
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>System clock synchronized: yes
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>              NTP service: active
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>RTC in local TZ: no
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Ticket cache: FILE:/tmp/krb5cc_0
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>Default principal: username@CORP.LOCAL
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>Valid starting     Expires            Service principal
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>01/15/25 14:32:47  01/16/25 00:32:47  krbtgt/CORP.LOCAL@CORP.LOCAL
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>01/15/25 14:32:47  01/16/25 00:32:47  HTTP/host.corp.local@CORP.LOCAL
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>servicePrincipalName: HTTP/host.corp.local
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>servicePrincipalName: HTTP/host.corp.local:80
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>objectClass: computer
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>cn: hostname
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>kinit: Clients credentials have been revoked while getting initial credentials</code></strong> — Verify the user account is active in Active Directory and hasn't exceeded password expiration or failed login attempts.
+<strong><code>ldapsearch: Invalid credentials (49)</code></strong> — Ensure the admin account credentials are correct and the LDAP bind DN format matches your domain structure (e.g., "CN=admin,CN=Users,DC=corp,DC=local").</p>
+</div>
 
 
 
@@ -7031,7 +7095,7 @@ Security platform troubleshooting — certificate validation failures, CyberArk 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

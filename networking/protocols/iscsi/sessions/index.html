@@ -8231,51 +8231,129 @@
 <td></td>
 <td></td>
 </tr>
-<tr>
-<td><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Login to all discovered targets (persistent)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--login
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">## Login to a specific target</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--login
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">## Make login persistent across reboots</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>-o<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>node.startup<span class="w"> </span>-v<span class="w"> </span>automatic
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">## Logout from a target</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--logout
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">## Logout all sessions</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--logoutall<span class="o">=</span>all
-</code></pre></div></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## /etc/iscsi/iscsid.conf</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>node.session.nr_sessions<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">## Or per-node override</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-o<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>node.session.nr_sessions<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>
-</code></pre></div></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## Check session state during recovery</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>state
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">## Force session re-establishment</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--logout
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--login
-</code></pre></div></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tcp: [1] 192.168.1.50:3260,1 iqn.2020-04.com.example:storage.target1 (non-flash)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tcp: [2] 192.168.1.51:3260,1 iqn.2020-04.com.example:storage.target2 (non-flash)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Current Portal: 192.168.1.50:3260
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>PersistentPortal: 192.168.1.50:3260
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    Iface Name: default
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    Initiator Name: iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    Initiator Alias: debian-host-01
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    Target Name: iqn.2020-04.com.example:storage.target1
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    Target Alias: LUN-PROD-01
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    Session State: logged_in
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    Physical Link State: up
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    Conn State: logged_in
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    Kfree_obj_state: free
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    Hostno: 2
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    SID: 1
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    iSCSI Connection State: logged_in
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    iSCSI Session State: logged_in
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    Recovery Timeout: 120
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    Queue Depth: 32
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    ...
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>Target: iqn.2020-04.com.example:storage.target1
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    State: logged_in
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    Recovery Timeout: 120
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    Queue Depth: 32
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>Target: iqn.2020-04.com.example:storage.target2
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    State: logged_in
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    Recovery Timeout: 120
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    Queue Depth: 64
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>iSCSI Statistics for session [sid: 1, target: iqn.2020-04.com.example:storage.target1, portal: 192.168.1.50,3260]
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>    Rx/Tx PDU Count: 4521/3847
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>    Rx/Tx iSCSI bytes: 1847362048/524288000
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>    iSCSI Login/Logout PDUs: 1/0
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>    iSCSI Errors: 0
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>    Transport Errors: 0
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>    iSCSI Timeouts: 0
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>    SCSI Commands: 2156
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    SCSI Task Management PDUs: 0
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>    SCSI Device Resets: 0
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>    SCSI Session Resets: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No active sessions.</code></strong> — Verify iSCSI initiator service is running with <code>systemctl status iscsid</code> and sessions are logged in with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> followed by login.
+<strong><code>iscsiadm: Cannot find record for sid 1</code></strong> — Ensure the session exists before querying; use <code>iscsiadm -m session</code> first to list valid session IDs.
+<strong><code>iscsiadm: command requires root privileges</code></strong> — Run the command with <code>sudo</code> or as the root user.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## Login to all discovered targets (persistent)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--login
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">## Login to a specific target</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--login
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">## Make login persistent across reboots</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>-o<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>node.startup<span class="w"> </span>-v<span class="w"> </span>automatic
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">## Logout from a target</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--logout
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">## Logout all sessions</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--logoutall<span class="o">=</span>all
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Logging in to all discovered targets...
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Logging in to [iface default, target iqn.2019-05.com.example:storage.disk1, portal 192.168.1.50,3260] successful.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Logging in to [iface default, target iqn.2019-05.com.example:storage.disk2, portal 192.168.1.51,3260] successful.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Logging in to specific target iqn.2019-05.com.example:storage.disk1...
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Logging in to [iface default, target iqn.2019-05.com.example:storage.disk1, portal 192.168.1.50,3260] successful.
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Updating node startup mode to automatic...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>(no output — command completes silently)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Logging out from target iqn.2019-05.com.example:storage.disk1...
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Logging out of [iface default, target iqn.2019-05.com.example:storage.disk1, portal 192.168.1.50,3260] successful.
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Logging out all sessions...
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Logging out of session [sid: 1, target: iqn.2019-05.com.example:storage.disk1, portal: 192.168.1.50,3260]
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Logging out of session [sid: 2, target: iqn.2019-05.com.example:storage.disk2, portal: 192.168.1.51,3260]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Run <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;:3260</code> to discover targets before attempting login.
+<strong><code>iscsiadm: cannot login to target</code></strong> — Verify the target IP is reachable with <code>ping</code>, the iSCSI daemon is running with <code>systemctl status iscsid</code>, and credentials are correct if CHAP is enabled.
+<strong><code>iscsiadm: No active session found</code></strong> — Confirm the target is currently logged in using <code>iscsiadm -m session</code> before attempting logout.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">## /etc/iscsi/iscsid.conf</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>node.session.nr_sessions<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">## Or per-node override</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-o<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>node.session.nr_sessions<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Ensure the target IQN and portal IP are already discovered; run <code>iscsiadm -m discovery -t st -p &lt;ip&gt;</code> first to populate the node database.
+<strong><code>iscsiadm: cannot open /etc/iscsi/iscsid.conf: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root, since iSCSI configuration requires elevated privileges.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">## Check session state during recovery</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>state
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">## Force session re-establishment</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--logout
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260<span class="w"> </span>--login
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>state: LOGGED_IN
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>state: LOGGED_IN
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>state: LOGGED_IN
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Logging out of session [sid: 2, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260]
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Logout of [sid: 2, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] successful.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Logging in to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260, name: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260]
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] successful.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Verify the target IQN and portal IP are correct and exist in the node database with <code>iscsiadm -m node -o show</code>.
+<strong><code>iscsiadm: cannot connect to iSCSI daemon</code></strong> — Ensure the iscsid service is running with <code>systemctl start iscsid</code> and <code>systemctl start iscsi</code>.
+<strong><code>Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] failed</code></strong> — Check network connectivity to the target portal and verify the target is accepting connections with <code>iscsiadm -m discovery -t st -p &lt;ip&gt;:3260</code>.</p>
+</div>
 
 
 
@@ -8298,7 +8376,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

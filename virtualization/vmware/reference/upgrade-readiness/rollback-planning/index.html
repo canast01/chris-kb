@@ -9760,28 +9760,87 @@ Rollback options differ significantly by component. Establish the rollback path 
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">nextbootdir</span><span class="o">=</span>/altbootbank
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or via Host Client: Manage → System → Boot Options → select previous</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Product: VMware ESXi
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Version: 7.0.3
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Build: 19482537
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Update: 3
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Patch: ESXi700-202301001
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>/bootbank:
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>total 2847356
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>-rw-r--r--  1 root root 1073741824 Jan 15 10:23 esx-base.z
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>-rw-r--r--  1 root root  536870912 Jan 15 10:24 esx-update.z
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>-rw-r--r--  1 root root    4194304 Jan 15 10:25 boot.cfg
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>drwxr-xr-x  3 root root       4096 Jan 15 10:20 .
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>/altbootbank:
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>total 2847356
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>-rw-r--r--  1 root root 1073741824 Dec 20 14:12 esx-base.z
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>-rw-r--r--  1 root root  536870912 Dec 20 14:13 esx-update.z
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>-rw-r--r--  1 root root    4194304 Dec 20 14:14 boot.cfg
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>drwxr-xr-x  3 root root       4096 Dec 20 14:10 .
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: nextbootdir=/altbootbank: command not found</code></strong> — Remove the leading <code>#</code> comment character; this is a shell variable assignment, not a comment.
+<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or have root privileges via sudo; bootbank modifications require elevated access.
+<strong><code>/altbootbank: No such file or directory</code></strong> — Verify the ESXi host supports dual bootbanks (ESXi 6.5+); older versions may only have /bootbank.</p>
+</div>
 <p>This works immediately post-upgrade before any configuration changes are made. After hosts are rejoined to vCenter and NSX re-prepared, bootbank rollback becomes impractical.</p>
 <h2 id="nsx-backup-before-upgrade">NSX Backup Before Upgrade<a class="headerlink" href="#nsx-backup-before-upgrade" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger NSX Manager backup via API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>POST<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups?action<span class="o">=</span>start
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify backup completed</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>GET<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups/history
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Backup stored to external SFTP target (configured in NSX → Backup &amp; Restore)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger NSX Manager backup via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>POST<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups?action<span class="o">=</span>start
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify backup completed</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>GET<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups/history
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Backup stored to external SFTP target (configured in NSX → Backup &amp; Restore)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;backup_id&quot;: &quot;backup-20240115-143022&quot;,
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;status&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;start_time&quot;: &quot;2024-01-15T14:30:22.451Z&quot;,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;end_time&quot;: &quot;2024-01-15T14:35:18.923Z&quot;,
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  &quot;size_bytes&quot;: 2147483648,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  &quot;node_id&quot;: &quot;node-1&quot;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>}
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>{
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  &quot;backups&quot;: [
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    {
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      &quot;backup_id&quot;: &quot;backup-20240115-143022&quot;,
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>      &quot;status&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:35:18.923Z&quot;,
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      &quot;size_bytes&quot;: 2147483648
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    },
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    {
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>      &quot;backup_id&quot;: &quot;backup-20240115-120015&quot;,
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      &quot;status&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>      &quot;timestamp&quot;: &quot;2024-01-15T12:00:15.441Z&quot;,
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>      &quot;size_bytes&quot;: 2147483648
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    }
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  ]
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>}
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>Backup successfully transferred to sftp://backup.corp.local/nsx-backups/backup-20240115-143022.tar.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error_code": 6001, "error_message": "NSX Manager cluster is not stable"}</code></strong> — Wait for cluster health to reach 100% via <code>GET /api/v1/cluster/status</code> before triggering backup.
+<strong><code>{"error_code": 5003, "error_message": "External backup target unreachable"}</code></strong> — Verify SFTP credentials and network connectivity to the backup server in NSX Manager UI under Backup &amp; Restore settings.</p>
+</div>
 <h2 id="aria-product-rollback-snapshots">Aria Product Rollback (Snapshots)<a class="headerlink" href="#aria-product-rollback-snapshots" title="Permanent link">&para;</a></h2>
 <p>Snapshot all Aria appliances before upgrade via LCM or directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Snapshot all Aria appliances before upgrade</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$ariaVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;aria-ops-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-auto-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-li-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-lcm-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span> <span class="n">-Quiesce</span> <span class="nv">$false</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># After upgrade validation — delete snapshots (performance impact)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Get-VM</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;pre-upgrade&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Snapshot all Aria appliances before upgrade</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$ariaVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;aria-ops-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-auto-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-li-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-lcm-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span> <span class="n">-Quiesce</span> <span class="nv">$false</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># After upgrade validation — delete snapshots (performance impact)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="nb">Get-VM</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;pre-upgrade&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="go-no-go-decision-framework">Go / No-Go Decision Framework<a class="headerlink" href="#go-no-go-decision-framework" title="Permanent link">&para;</a></h2>
 <p>Define a decision point at the end of the upgrade window:</p>
@@ -9841,7 +9900,7 @@ Rollback options differ significantly by component. Establish the rollback path 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 03:02:12 UTC"><span class="timeago" datetime="2026-06-28T03:02:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 03:02:12 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

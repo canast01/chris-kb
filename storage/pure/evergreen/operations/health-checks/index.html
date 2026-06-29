@@ -8845,95 +8845,287 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>puresupport<span class="w"> </span>list
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Check: phonehome_enabled = true, last_contact &lt; 24h</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pureuser@flasharray-ip&gt; purehw list | grep -v Healthy
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureuser@flasharray-ip&gt; purealert list --flagged
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureuser@flasharray-ip&gt; purehw list --type ct
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Name    Status    Model              Serial
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>CT0     Healthy   FA-405R3           PUREARRAY123456A
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>CT1     Healthy   FA-405R3           PUREARRAY123456B
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pureuser@flasharray-ip&gt; purearray list --space
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Name           Capacity  Data_Reduction  Space_Used  Capacity_Utilization
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>flasharray-01  100.0T    3.2x            68.5T       0.685
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureuser@flasharray-ip&gt; puresupport list
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Name           Phonehome_Enabled  Last_Contact
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>flasharray-01  true               2h ago
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>pureuser@flasharray-ip&gt; exit
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname &lt;flasharray-ip&gt;: Name or service not known</code></strong> — Replace <code>&lt;flasharray-ip&gt;</code> with the actual management IP address of your Pure Storage array.
+<strong><code>ERROR: Invalid credentials</code></strong> — Verify the pureuser account exists and password is correct, or use SSH key authentication if configured.
+<strong><code>ERROR: Command not found: purehw</code></strong> — Ensure you are connected to the Pure Storage array's management interface (SSH to the correct IP) and not a local shell.</p>
+</div>
 <h2 id="full-health-check-20-minutes">Full Health Check (20 minutes)<a class="headerlink" href="#full-health-check-20-minutes" title="Permanent link">&para;</a></h2>
 <p><img alt="Full Health Check (20 minutes)" src="../../../../../assets/storage-pure-evergreen-hc-full-health-check-20-minutes.svg" /></p>
 <p>Run monthly and before/after Purity upgrades or hardware changes.</p>
 <h3 id="1-hardware-inventory">1. Hardware Inventory<a class="headerlink" href="#1-hardware-inventory" title="Permanent link">&para;</a></h3>
 <p><img alt="1. Hardware Inventory" src="../../../../../assets/storage-pure-evergreen-hc-1-hardware-inventory.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All hardware components with status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehw<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Non-healthy components only</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iv<span class="w"> </span><span class="s2">&quot;^Name\|healthy\|^---\|^</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Pass: no output</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Drive-specific detail</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&lt;=1 || $3 != &quot;Healthy&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All hardware components with status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purehw<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Non-healthy components only</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iv<span class="w"> </span><span class="s2">&quot;^Name\|healthy\|^---\|^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Pass: no output</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Drive-specific detail</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&lt;=1 || $3 != &quot;Healthy&quot;&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Name                          Status      Capacity  Serial
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>SSD.BAY.1                      Healthy     1.92TB    PFE21000123456
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>SSD.BAY.2                      Healthy     1.92TB    PFE21000123457
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>SSD.BAY.3                      Healthy     1.92TB    PFE21000123458
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>NVMe.BAY.1                     Healthy     3.84TB    PFN31000098765
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Controller.A                   Healthy     —         CTL-A-2024-001
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Controller.B                   Healthy     —         CTL-B-2024-002
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>PSU.1                          Healthy     —         PSU-001-XYZ
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>PSU.2                          Healthy     —         PSU-002-XYZ
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Name                          Status      Capacity  Serial
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>SSD.BAY.4                      Degraded    1.92TB    PFE21000123459
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>NVMe.BAY.2                     Failed      3.84TB    PFN31000098766
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Name                          Status      Capacity  Serial
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>SSD.BAY.1                      Healthy     1.92TB    PFE21000123456
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>SSD.BAY.2                      Healthy     1.92TB    PFE21000123457
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>SSD.BAY.4                      Degraded    1.92TB    PFE21000123459
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehw: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the <code>pureuser</code> environment is sourced with <code>source /opt/pureuser/bashrc</code>.
+<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with appropriate credentials or use <code>pureadmin</code> account that has hardware inspection privileges.</p>
+</div>
 <h3 id="2-capacity-deep-dive">2. Capacity Deep-Dive<a class="headerlink" href="#2-capacity-deep-dive" title="Permanent link">&para;</a></h3>
 <p><img alt="2. Capacity Deep-Dive" src="../../../../../assets/storage-pure-evergreen-hc-2-capacity-deep-dive.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Array-level space breakdown</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Top 10 volumes by space consumption</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Snapshot space — top consumers</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check data reduction ratio (should be &gt; 2:1 for most workloads)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {print &quot;Data reduction ratio: &quot; $7}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Array-level space breakdown</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Top 10 volumes by space consumption</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Snapshot space — top consumers</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check data reduction ratio (should be &gt; 2:1 for most workloads)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {print &quot;Data reduction ratio: &quot; $7}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name                          Capacity    Used      Snapshots  Data Reduction
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pure-array-01                 100.0T      67.3T     12.4T      3.2x
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Name                          Capacity    Used      Snapshots  Data Reduction
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>prod-db-vol-001               15.0T       14.2T     2.1T       2.8x
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>prod-db-vol-002               12.0T       11.7T     1.9T       2.9x
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>analytics-warehouse-01        8.5T        7.3T      1.2T       2.1x
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>backup-archive-vol            6.0T        5.8T      0.9T       1.8x
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>dev-test-vol-pool             4.2T        2.1T      0.6T       2.4x
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>media-storage-01              3.8T        3.6T      0.5T       1.5x
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>...
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Name                          Capacity    Used      Snapshots  Data Reduction
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>prod-db-vol-001.snap.20240115 2.1T        2.1T      —          2.8x
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>prod-db-vol-002.snap.20240114 1.9T        1.9T      —          2.9x
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>analytics-warehouse.snap.old  1.2T        1.2T      —          2.1x
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>backup-archive.snap.20240110  0.9T        0.9T      —          1.8x
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>dev-test.snap.20240112        0.6T        0.6T      —          2.4x
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>...
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>Data reduction ratio: 3.2x
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the <code>purearray</code> binary is in your PATH.
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the array management IP and that your credentials are valid with <code>purearray login</code>.
+<strong><code>awk: syntax error: unexpected newline or end of file</code></strong> — Ensure the purearray output contains at least 2 rows; if the array has no data, the awk command will fail on an empty result set.</p>
+</div>
 <h3 id="3-performance-baseline">3. Performance Baseline<a class="headerlink" href="#3-performance-baseline" title="Permanent link">&para;</a></h3>
 <p><img alt="3. Performance Baseline" src="../../../../../assets/storage-pure-evergreen-hc-3-performance-baseline.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Current array IOPS, bandwidth, latency</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--performance
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Per-volume performance — identify any outliers</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">   </span><span class="c1"># by read IOPS</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>purevol<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k6<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">   </span><span class="c1"># by read latency (µs)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Port utilisation</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Flag: any port at &gt; 70% bandwidth sustained</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Current array IOPS, bandwidth, latency</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--performance
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Per-volume performance — identify any outliers</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">   </span><span class="c1"># by read IOPS</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purevol<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k6<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">   </span><span class="c1"># by read latency (µs)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Port utilisation</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Flag: any port at &gt; 70% bandwidth sustained</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name                          IOPS      Bandwidth(MB/s)  Latency(µs)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>array-prod-01                 45230     1240             285
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>array-prod-02                 38940     1105             312
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Name                          Read-IOPS  Write-IOPS  Read-Latency  Write-Latency
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>vol-db-primary-001            12450      8320        145            210
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>vol-analytics-etl-02          9870       6540        285            425
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vol-backup-staging-03         7620       4210        195            380
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vol-cache-layer-01            6540       5890        125            165
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>vol-archive-cold-04           3210       1240        890            1250
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vol-temp-scratch-05           2890       2145        420            680
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>vol-logs-aggregate-06          2340       1890        310            520
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>vol-media-store-07             1950       890         560            745
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>vol-db-replica-08              1840       1560        275            395
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>vol-test-sandbox-09            1210       680         1120           1890
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Name                Port  Speed    IOPS      Bandwidth(MB/s)  Utilization(%)
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>array-prod-01      eth0  10Gbps   22615     620               48
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>array-prod-01      eth1  10Gbps   22615     620               49
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>array-prod-02      eth0  10Gbps   19470     552               42
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>array-prod-02      eth1  10Gbps   19470     553               43
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused — check that the Pure array management IP is reachable and SSH/REST API port is open</code></strong> — Verify network connectivity to the array with <code>ping</code> and confirm firewall rules allow access to port 443 (REST API) or 22 (SSH).
+<strong><code>Error: Authentication failed for user 'admin' — check credentials</code></strong> — Ensure the Pure API token or password is valid and has not expired; regenerate the API token in the Pure management console if needed.
+<strong><code>purearray: command not found</code></strong> — Install the Pure Storage Python SDK and CLI tools with <code>pip install purestorage</code> or verify the PATH includes the Pure CLI installation directory.</p>
+</div>
 <h3 id="4-replication-health">4. Replication Health<a class="headerlink" href="#4-replication-health" title="Permanent link">&para;</a></h3>
 <p><img alt="4. Replication Health" src="../../../../../assets/storage-pure-evergreen-hc-4-replication-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># ActiveCluster / async replication status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check replication lag</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print $1, $5, $6}&#39;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Column 5/6 = bytes pending / time lag</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Protection group snapshots</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># ActiveCluster / async replication status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check replication lag</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--transfer<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print $1, $5, $6}&#39;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Column 5/6 = bytes pending / time lag</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Protection group snapshots</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Name                          Schedule
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pg-prod-db01                  every 1 hour
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>pg-prod-db02                  every 6 hours
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>pg-backup-tier2               every 12 hours
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>pg-archive-monthly            every 30 days
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Name                          Status    Bytes Pending    Time Lag (sec)
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pg-prod-db01                  synced    0                0
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>pg-prod-db02                  syncing   2147483648       45
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>pg-backup-tier2               synced    0                0
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>pg-archive-monthly            idle      0                N/A
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>pg-prod-db01 0 0
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>pg-prod-db02 2147483648 45
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>pg-backup-tier2 0 0
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>pg-archive-monthly 0 N/A
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>Name                          Created                    Size
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>pg-prod-db01.1704067200       2024-01-01T12:00:00Z       536870912
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>pg-prod-db02.1704153600       2024-01-02T12:00:00Z       1073741824
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>pg-backup-tier2.1704240000    2024-01-03T12:00:00Z       268435456
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>pg-archive-monthly.1704326400 2024-01-04T12:00:00Z       2147483648
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>pg-prod-db01.1704412800       2024-01-05T12:00:00Z       536870912
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purepgroup: command not found</code></strong> — Install the Pure Storage CLI tools or source the environment setup script that adds them to your PATH.
+<strong><code>Error: Invalid credentials or API token expired</code></strong> — Re-authenticate using <code>pureadmin login</code> or refresh your API token in the management console.</p>
+</div>
 <h3 id="5-network-and-connectivity">5. Network and Connectivity<a class="headerlink" href="#5-network-and-connectivity" title="Permanent link">&para;</a></h3>
 <p><img alt="5. Network and Connectivity" src="../../../../../assets/storage-pure-evergreen-hc-5-network-and-connectivity.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Port errors — check for any non-zero error counters</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF != &quot;0&quot;&#39;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># FC path status (if applicable)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purehost<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Phone Home and log forwarding</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>puresupport<span class="w"> </span>list
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>puresupport<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--list<span class="w">   </span><span class="c1"># show current support configuration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Port errors — check for any non-zero error counters</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF != &quot;0&quot;&#39;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># FC path status (if applicable)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purehost<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Phone Home and log forwarding</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>puresupport<span class="w"> </span>list
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>puresupport<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--list<span class="w">   </span><span class="c1"># show current support configuration</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name              Errors  Warnings  Dropped  Discarded
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>eth0              0       0         0        0
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>eth1              0       0         0        0
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>fc.0              0       0         0        0
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>fc.1              2       0         0        0
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>sas.0             0       0         0        0
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Name              IQN                                    Bandwidth  Latency  IOps
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>host-prod-01     iqn.1991-05.com.example:storage.prod   8.2GB/s    1.2ms    45821
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>host-prod-02     iqn.1991-05.com.example:storage.prod   7.9GB/s    1.3ms    43156
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>host-dev-01      iqn.1991-05.com.example:storage.dev    2.1GB/s    2.8ms    12043
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>host-backup-01   iqn.1991-05.com.example:storage.bak    1.4GB/s    3.1ms    8234
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>...
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Support ID: 12345-ABCDE-FG789
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Phone Home: enabled
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Log Forwarding: enabled
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>Last Contact: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>Support Level: Premium
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>Current Support Configuration:
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>  Automatic Case Creation: enabled
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>  Remote Diagnostics: enabled
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>  Proxy Server: 10.50.1.254:3128
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>  Syslog Target: 10.60.2.100:514
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pureport: command not found</code></strong> — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically <code>/opt/pureport/bin</code>).
+<strong><code>Error: Array not responding or credentials invalid</code></strong> — Confirm array connectivity with <code>ping &lt;array-mgmt-ip&gt;</code> and verify credentials are set via <code>pureauth login</code>.
+<strong><code>Error: No such option '--performance'</code></strong> — Check the Pure Storage CLI version with <code>pureport --version</code> as older versions may not support the <code>--performance</code> flag; use <code>pureport list</code> without flags as fallback.</p>
+</div>
 <h3 id="6-purity-version-check">6. Purity Version Check<a class="headerlink" href="#6-purity-version-check" title="Permanent link">&para;</a></h3>
 <p><img alt="6. Purity Version Check" src="../../../../../assets/storage-pure-evergreen-hc-6-purity-version-check.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Current Purity version</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check for available upgrade (via Pure1 UI)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Pure1 → Arrays → select array → Settings → Software</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Current Purity version</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purearray<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>version
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check for available upgrade (via Pure1 UI)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Pure1 → Arrays → select array → Settings → Software</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Name                          Version
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purearray-prod-01             6.4.2.1234
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>purearray-prod-02             6.4.2.1234
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>purearray-dr-01               6.3.8.5678
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>purearray-test-01             6.4.2.1234
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the <code>purearray</code> binary is in your PATH.
+<strong><code>grep: (standard input) is empty</code></strong> — Verify the array is reachable and you have valid credentials configured in your Pure1 environment.</p>
+</div>
 <p>Compare against <a href="https://support.purestorage.com">Pure Storage EOL/support matrix</a> to confirm the installed version is within support window.</p>
 <h3 id="7-host-connectivity">7. Host Connectivity<a class="headerlink" href="#7-host-connectivity" title="Permanent link">&para;</a></h3>
 <p><img alt="7. Host Connectivity" src="../../../../../assets/storage-pure-evergreen-hc-7-host-connectivity.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All registered hosts and their volumes</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--host
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify each production host has expected number of paths</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purehostgroup<span class="w"> </span>list<span class="w"> </span>--connect
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Expect: each host group connected to expected volume groups</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Check for hosts with only 1 path (multipath misconfiguration risk)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>purehost<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $2 &lt; 2 {print $1, &quot;WARNING: only &quot; $2 &quot; paths&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># All registered hosts and their volumes</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purehost<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--host
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Verify each production host has expected number of paths</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>purehostgroup<span class="w"> </span>list<span class="w"> </span>--connect
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Expect: each host group connected to expected volume groups</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Check for hosts with only 1 path (multipath misconfiguration risk)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>purehost<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $2 &lt; 2 {print $1, &quot;WARNING: only &quot; $2 &quot; paths&quot;}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name                          Serial                State
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>host-prod-01.dc1.local       5c8f2e9a-b4c1-11ed  online
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>host-prod-02.dc1.local       7a1d4f2b-c9e2-12ee  online
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>host-prod-03.dc1.local       9b3e5c1d-a7f3-13ff  online
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>host-dev-01.dc1.local        2c6a9f4e-d2b1-14gg  online
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Name                          Size      Volumes  Hosts
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>prod-vol-001                  500GB     3        host-prod-01, host-prod-02, host-prod-03
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>prod-vol-002                  1TB       2        host-prod-01, host-prod-02
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>dev-vol-001                   250GB     1        host-dev-01
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>Name                          Volumes   Hosts    Connected
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>production-vg                 5         3        yes
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>development-vg                2         1        yes
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>host-dev-01.dc1.local WARNING: only 1 paths
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehost: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically <code>/opt/purehost/bin</code>).
+<strong><code>Error: Unable to connect to array management IP</code></strong> — Verify network connectivity to the Pure Storage array and that credentials are configured via <code>pureauth login</code> or environment variables.
+<strong><code>Error: Permission denied</code></strong> — Confirm your user account has sufficient role-based access control (RBAC) permissions to query host and volume inventory on the array.</p>
+</div>
 <h2 id="health-check-checklist-template">Health Check Checklist Template<a class="headerlink" href="#health-check-checklist-template" title="Permanent link">&para;</a></h2>
 <p><img alt="Health Check Checklist Template" src="../../../../../assets/storage-pure-evergreen-hc-health-check-checklist-template.svg" /></p>
 <table>
@@ -9005,17 +9197,27 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
 <h2 id="evergreen-subscription-checks">Evergreen Subscription Checks<a class="headerlink" href="#evergreen-subscription-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Evergreen Subscription Checks" src="../../../../../assets/storage-pure-evergreen-hc-evergreen-subscription-checks.svg" /></p>
 <p>Validate annually and before a contract renewal:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm Phone Home is enabled and connected</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>phone_home
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check entitlement and support expiry via Pure1</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Pure1 → Administration → Subscriptions</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Verify:</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">#   - Subscription tier (Forever / Flex)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1">#   - Contract end date</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1">#   - Capacity entitlement matches deployed capacity</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1">#   - Controller refresh date (Ever Modern — typically year 3 of subscription)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Confirm Phone Home is enabled and connected</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>phone_home
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check entitlement and support expiry via Pure1</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Pure1 → Administration → Subscriptions</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Verify:</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1">#   - Subscription tier (Forever / Flex)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1">#   - Contract end date</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1">#   - Capacity entitlement matches deployed capacity</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1">#   - Controller refresh date (Ever Modern — typically year 3 of subscription)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>name,phone_home
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pure-fa-m20-prod,True
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>pure-fa-m70-dr,True
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>pure-fa-x90-backup,True
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: purearray</code></strong> — Ensure the Pure Storage CLI tools are installed and the <code>purearray</code> binary is in your PATH, or use the full path to the executable.
+<strong><code>Error: Array unreachable or authentication failed</code></strong> — Verify network connectivity to the array management interface and confirm your Pure1 API credentials are correctly configured in <code>~/.purerc</code> or environment variables.</p>
+</div>
 <h2 id="common-issues-during-health-checks">Common Issues During Health Checks<a class="headerlink" href="#common-issues-during-health-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Common Issues During Health Checks" src="../../../../../assets/storage-pure-evergreen-hc-common-issues-during-health-checks.svg" /></p>
 <table>
@@ -9087,7 +9289,7 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

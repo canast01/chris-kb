@@ -8630,6 +8630,13 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Or via CLI:</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>puresetting<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--proxy<span class="w"> </span>http://proxy.example.local:8080
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid proxy URL format</code></strong> — Ensure the proxy URL follows the format <code>http://hostname:port</code> or <code>https://hostname:port</code> without trailing slashes.
+<strong><code>Error: Connection refused to proxy server</code></strong> — Verify the proxy server is reachable from the FlashArray management network by testing connectivity to the proxy host and port first.</p>
+</div>
 <h3 id="host-data-network-iscsi-nvme-tcp">Host Data Network (iSCSI / NVMe-TCP)<a class="headerlink" href="#host-data-network-iscsi-nvme-tcp" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8661,15 +8668,37 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify MTU on ESXi storage VMkernel</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>iscsi
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>--interface-name<span class="w"> </span>vmk1
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test MTU end-to-end (from ESXi to FlashArray iSCSI port)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.10
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -d = don&#39;t fragment; -s 8972 = 8972 bytes payload (9000 MTU - 28 byte header)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Should succeed without fragmentation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify MTU on ESXi storage VMkernel</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>iscsi
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>--interface-name<span class="w"> </span>vmk1
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test MTU end-to-end (from ESXi to FlashArray iSCSI port)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.10
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># -d = don&#39;t fragment; -s 8972 = 8972 bytes payload (9000 MTU - 28 byte header)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Should succeed without fragmentation</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Name  Port  Portset      Active  MAC Address        IPv4 Address      IPv6 Address  MTU  TSO MSS  Enabled
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vmk0  0     Management   true    00:50:56:a9:12:34  192.168.1.100     ::1           1500 65535   true
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vmk1  0     iSCSI        true    00:50:56:a9:56:78  192.168.100.50    ::1           9000 65535   true
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>vmk2  0     vMotion      true    00:50:56:a9:9a:bc  192.168.2.100     ::1           1500 65535   true
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>IPv4 Address: 192.168.100.50
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Netmask: 255.255.255.0
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Broadcast: 192.168.100.255
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Gateway: 192.168.100.1
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>DHCP: false
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>PING 192.168.100.10 (192.168.100.10): 8972 data bytes
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>8980 bytes from 192.168.100.10: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>8980 bytes from 192.168.100.10: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>8980 bytes from 192.168.100.10: icmp_seq=2 ttl=64 time=2.298 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect: Network is unreachable</code></strong> — Verify vmk1 is on the correct VLAN and has a route to 192.168.100.10 using <code>esxcli network ip route ipv4 list</code>.
+<strong><code>PING 192.168.100.10 (192.168.100.10): sendto: Message too long</code></strong> — Confirm MTU is set to 9000 on vmk1 with <code>esxcli network ip interface ipv4 set --interface-name vmk1 --mtu=9000</code> and verify the switch port supports jumbo frames.
+<strong><code>100% packet loss</code></strong> — Check that the FlashArray iSCSI port 192.168.100.10 is online and reachable by testing connectivity from a different ESXi host or pinging the array management IP first.</p>
+</div>
 <h3 id="host-data-network-fc">Host Data Network (FC)<a class="headerlink" href="#host-data-network-fc" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8780,22 +8809,22 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 <hr />
 <h2 id="naming-standards">Naming Standards<a class="headerlink" href="#naming-standards" title="Permanent link">&para;</a></h2>
 <h3 id="array-names">Array Names<a class="headerlink" href="#array-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&lt;site&gt;-fa-&lt;number&gt;       # FlashArray
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>&lt;site&gt;-fb-&lt;number&gt;       # FlashBlade
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&lt;site&gt;-fa-&lt;number&gt;       # FlashArray
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>&lt;site&gt;-fb-&lt;number&gt;       # FlashBlade
 </code></pre></div>
 <p>Examples: <code>lon-fa-01</code>, <code>ams-fb-01</code></p>
 <h3 id="volume-names">Volume Names<a class="headerlink" href="#volume-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;host&gt;-&lt;purpose&gt;-&lt;number&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;host&gt;-&lt;purpose&gt;-&lt;number&gt;
 </code></pre></div>
 <p>Examples: <code>esxi-01-boot-01</code>, <code>sql-prod-data-01</code>, <code>oracle-asm-01</code></p>
 <h3 id="host-and-host-group-names">Host and Host Group Names<a class="headerlink" href="#host-and-host-group-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&lt;hostname&gt;               # Host: match the actual server hostname
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>&lt;cluster&gt;-hg             # Host Group: cluster name + -hg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;hostname&gt;               # Host: match the actual server hostname
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>&lt;cluster&gt;-hg             # Host Group: cluster name + -hg
 </code></pre></div>
 <p>Examples: <code>esxi-01</code>, <code>vsan-cluster-hg</code>, <code>sql-prod-hg</code></p>
 <h3 id="protection-group-names">Protection Group Names<a class="headerlink" href="#protection-group-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;workload&gt;-pg            # Protection group
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>&lt;source-site&gt;-to-&lt;dest-site&gt;-pg   # Replication protection group
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&lt;workload&gt;-pg            # Protection group
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&lt;source-site&gt;-to-&lt;dest-site&gt;-pg   # Replication protection group
 </code></pre></div>
 <p>Examples: <code>sql-prod-pg</code>, <code>lon-to-ams-pg</code></p>
 <hr />
@@ -8871,7 +8900,7 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

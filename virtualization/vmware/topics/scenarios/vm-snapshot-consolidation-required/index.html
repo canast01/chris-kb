@@ -10781,107 +10781,177 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check available space on the datastore</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>df<span class="w"> </span>-h<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000001-delta.vmdk
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000002-delta.vmdk
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/vm-prod-web-01.vmsd
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-rw-------  1 root root 12.4G Nov 15 14:32 /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000001-delta.vmdk
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>-rw-------  1 root root 8.7G Nov 15 14:28 /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000002-delta.vmdk
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Filesystem                                      Size  Used Avail Use% Mounted on
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e 2.0T 1.8T 187G  91% /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: No such file or directory</code></strong> — Verify the datastore UUID and VM folder name are correct by running <code>ls /vmfs/volumes/</code> to list available datastores.
+<strong><code>Permission denied</code></strong> — Run the commands as root or via an SSH session with elevated privileges on the ESXi host.
+<strong><code>Filesystem /vmfs/volumes/&lt;datastore-uuid&gt; not found</code></strong> — Confirm the datastore is mounted and accessible by checking <code>esxcli storage filesystem list</code>.</p>
+</div>
 <p>Look for: delta files larger than the base VMDK indicate the snapshot has been accumulating changes for a long time — consolidation I/O will be heavy and may take hours. Ensure at least 20% free space on the datastore before starting.</p>
 <hr />
 <h2 id="3-attempt-vcenter-consolidation">3. Attempt vCenter Consolidation<a class="headerlink" href="#3-attempt-vcenter-consolidation" title="Permanent link">&para;</a></h2>
 <p>The vCenter consolidation action is the correct first step — it is safe to run on a powered-on VM and handles file locking through the ESXi VMFS SCSI reservation mechanism.</p>
 <p>Right-click VM → <strong>Snapshots → Consolidate</strong>.</p>
 <p>Monitor progress in <strong>vCenter → Tasks and Events</strong> — consolidation appears as a "Consolidate virtual machine disk files" task.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Consolidation states:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  In Progress → delta files being merged into parent disk; I/O is slightly elevated
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Success     → warning cleared; disk chain is flat; delta files removed
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Failed      → see task error message for specific failure reason
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Consolidation states:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  In Progress → delta files being merged into parent disk; I/O is slightly elevated
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Success     → warning cleared; disk chain is flat; delta files removed
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Failed      → see task error message for specific failure reason
 </code></pre></div>
 <p>Look for: consolidation on large delta files (&gt;100 GB) can take 30–60 minutes and will generate elevated disk I/O on the datastore. Monitor datastore latency via <strong>vCenter → Monitor → Performance</strong> during the operation.</p>
 <hr />
 <h2 id="4-diagnose-consolidation-failures">4. Diagnose Consolidation Failures<a class="headerlink" href="#4-diagnose-consolidation-failures" title="Permanent link">&para;</a></h2>
 <p>If vCenter consolidation fails, the task error message points to one of four common causes.</p>
 <p><strong>Cause 1: File locked by another process</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Error: Failed to lock the file
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Error: Unable to access file since it is locked
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Error: Failed to lock the file
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Error: Unable to access file since it is locked
 </code></pre></div>
 <p>Check which host holds the lock:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From any ESXi host in the cluster — find which host has the file open</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmkfstools<span class="w"> </span>-D<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm-flat.vmdk&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Output includes the MAC address of the host holding the lock</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Cross-reference MAC to identify which host to check</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From any ESXi host in the cluster — find which host has the file open</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vmkfstools<span class="w"> </span>-D<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm-flat.vmdk&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Output includes the MAC address of the host holding the lock</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Cross-reference MAC to identify which host to check</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Lock [type 10001c1 offset 4294967295 v 34 gen 14 mode 1 owner 00051a6b-d8f7e2c4-3f9a-001a6b8d flags 0x0 epoch 0]
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>RO Owner[0] HB offset 4294967295
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>RW Owner[0] HB offset 4294967295
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Addr&lt;4, 0, 32&gt;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Gen 14 Len 0 Owners []
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Lock [type 10001c1 offset 4294967295 v 34 gen 14 mode 1 owner 00051a6b-d8f7e2c4-3f9a-001a6b8d flags 0x0 epoch 0]
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>RO Owner[0] HB offset 4294967295
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>RW Owner[0] HB offset 4294967295
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Addr&lt;4, 0, 32&gt;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Gen 14 Len 0 Owners []
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to open the disk '/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm-flat.vmdk&gt;': No such file or directory</code></strong> — Verify the datastore UUID and VM folder path are correct using <code>ls -la /vmfs/volumes/</code> and <code>find /vmfs/volumes -name "*.vmdk"</code>.
+<strong><code>Failed to open the disk '/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm-flat.vmdk&gt;': Permission denied</code></strong> — Ensure you are running the command as root or with sufficient privileges on the ESXi host.</p>
+</div>
 <p>A backup agent (VADP proxy) or a stale ESXi process may hold the lock. Check active backup jobs in your backup console and terminate any that are stuck on this VM.</p>
 <p><strong>Cause 2: Insufficient disk space</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Error: There is no more space for virtual disk &lt;vm&gt;.vmdk
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Error: There is no more space for virtual disk &lt;vm&gt;.vmdk
 </code></pre></div>
 <p>Free space on the datastore before retrying — Storage vMotion the VM to a datastore with more headroom, then consolidate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Move VM to a larger datastore first</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;larger-datastore&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Move VM to a larger datastore first</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;larger-datastore&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Cause 3: Stale or corrupt snapshot descriptor</strong></p>
 <p>The <code>.vmsd</code> file (snapshot descriptor) contains references to snapshot states. If it is corrupt or references deleted files, consolidation fails.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Inspect the snapshot descriptor</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm&gt;.vmsd
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># A clean (no snapshots) .vmsd looks like this:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># .encoding = &quot;UTF-8&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># snapshot.lastUID = &quot;0&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># snapshot.current = &quot;0&quot;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># (no snapshot.XXX.uid entries)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># If delta files exist but .vmsd shows no snapshots, this is the orphan condition</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Inspect the snapshot descriptor</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cat<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm&gt;.vmsd
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># A clean (no snapshots) .vmsd looks like this:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># .encoding = &quot;UTF-8&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># snapshot.lastUID = &quot;0&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># snapshot.current = &quot;0&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># (no snapshot.XXX.uid entries)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># If delta files exist but .vmsd shows no snapshots, this is the orphan condition</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>.encoding = &quot;UTF-8&quot;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snapshot.lastUID = &quot;3&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>snapshot.current = &quot;2&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>snapshot.0.uid = &quot;1&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>snapshot.0.filename = &quot;vm-000001.vmdk&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>snapshot.0.displayName = &quot;Before patch Tuesday&quot;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>snapshot.0.createTime = &quot;2024-01-16T14:32:45.123456Z&quot;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>snapshot.1.uid = &quot;2&quot;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>snapshot.1.filename = &quot;vm-000002.vmdk&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>snapshot.1.displayName = &quot;Post-migration backup&quot;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>snapshot.1.createTime = &quot;2024-01-18T09:15:22.654321Z&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>snapshot.2.uid = &quot;3&quot;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>snapshot.2.filename = &quot;vm-000003.vmdk&quot;
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>snapshot.2.displayName = &quot;Current working state&quot;
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>snapshot.2.createTime = &quot;2024-01-20T11:47:08.987654Z&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm&gt;.vmsd: No such file or directory</code></strong> — Verify the datastore UUID and VM folder path are correct by running <code>ls -la /vmfs/volumes/</code> and navigating to the correct VM directory.
+<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot read VMFS metadata files.</p>
+</div>
 <p><strong>Cause 4: VM has active write I/O that cannot be quiesced</strong></p>
 <p>Temporarily stun (quiesce) the VM by migrating it off the host with vMotion or briefly suspending it during off-hours before consolidating — this is a last resort and should be planned as a maintenance window.</p>
 <hr />
 <h2 id="5-manual-vmkfstools-consolidation-advanced">5. Manual vmkfstools Consolidation (Advanced)<a class="headerlink" href="#5-manual-vmkfstools-consolidation-advanced" title="Permanent link">&para;</a></h2>
 <p>If vCenter consolidation fails and the backup agent is not involved, vmkfstools can merge delta files directly. This procedure requires the VM to be powered off or suspended.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Power off the VM (plan a maintenance window)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># 2. SSH to the ESXi host owning the VM</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Identify the full disk chain</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vmkfstools<span class="w"> </span>-v<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-000001.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-merged.vmdk
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># -i = inflate / clone: this creates a new flat VMDK merging all delta layers</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># The -000001 suffix is the most recent snapshot delta; adjust number as needed</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 3. Rename original base disk to a backup name</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-original.vmdk
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-original.vmdk
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># 4. Rename merged disk to the original name</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-merged.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat.vmdk
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># 5. Update the .vmdk descriptor to point to the flat file (open in vi and verify)</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># 6. Remove old delta files only after confirming VM boots successfully</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># 7. Power on VM and verify — do NOT remove originals until validation passes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Power off the VM (plan a maintenance window)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># 2. SSH to the ESXi host owning the VM</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Identify the full disk chain</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vmkfstools<span class="w"> </span>-v<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-000001.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-merged.vmdk
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># -i = inflate / clone: this creates a new flat VMDK merging all delta layers</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># The -000001 suffix is the most recent snapshot delta; adjust number as needed</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 3. Rename original base disk to a backup name</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-original.vmdk
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-original.vmdk
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 4. Rename merged disk to the original name</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>mv<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat-merged.vmdk<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;-flat.vmdk
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># 5. Update the .vmdk descriptor to point to the flat file (open in vi and verify)</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># 6. Remove old delta files only after confirming VM boots successfully</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># 7. Power on VM and verify — do NOT remove originals until validation passes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>2024-01-15T09:47:32Z: Inflating snapshot chain for vm-prod-db01
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Source: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Destination: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-flat-merged.vmdk
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Cloning virtual disk &#39;/vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk&#39;...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Clone: 100% done.
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Virtual disk cloned successfully. Size: 524288 MB (512 GB allocated, 287 GB used)
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Merging delta layers into flat disk...
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Merge completed in 847 seconds.
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>(no output — command completes silently)
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>(no output — command completes silently)
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>(no output — command completes silently)
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkfstools: Invalid virtual disk specification</code></strong> — Verify the snapshot delta number (-000001, -000002, etc.) matches the actual file in the directory by running <code>ls -la /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/</code> first.
+<strong><code>No such file or directory</code></strong> — Ensure you are SSH'd directly to the ESXi host (not vCenter) and the datastore path is mounted; check with <code>ls /vmfs/volumes/&lt;ds&gt;/</code> to confirm access.
+<strong><code>Device or resource busy</code></strong> — Power off the VM completely and confirm no snapshots are actively consolidating; check with <code>vim-cmd vmsvc/snapshot.get &lt;vmid&gt;</code> before proceeding.</p>
+</div>
 <p>Look for: this procedure should only be used when vCenter consolidation is unavailable and the VM cannot be restored from backup. Always retain original files until the VM is confirmed healthy.</p>
 <hr />
 <h2 id="6-powercli-bulk-consolidation">6. PowerCLI — Bulk Consolidation<a class="headerlink" href="#6-powercli-bulk-consolidation" title="Permanent link">&para;</a></h2>
 <p>For environments with multiple VMs needing consolidation, PowerCLI can trigger consolidation across all affected VMs sequentially.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Find and consolidate all VMs with consolidation needed</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$vmsToConsolidate</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vmsToConsolidate</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Consolidating: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConsolidateVMDisks_Task</span><span class="p">()</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c"># Wait and check results</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">30</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">$vmsToConsolidate</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: ConsolidationNeeded = $status&quot;</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Find and consolidate all VMs with consolidation needed</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$vmsToConsolidate</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vmsToConsolidate</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Consolidating: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConsolidateVMDisks_Task</span><span class="p">()</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">}</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c"># Wait and check results</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">30</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="nv">$vmsToConsolidate</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: ConsolidationNeeded = $status&quot;</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="7-prevention-snapshot-policy-and-backup-integration">7. Prevention — Snapshot Policy and Backup Integration<a class="headerlink" href="#7-prevention-snapshot-policy-and-backup-integration" title="Permanent link">&para;</a></h2>
 <p>Consolidation-needed warnings are almost always caused by backup agent failures leaving orphaned snapshots.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prevention checklist:
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  [ ] Configure Aria Operations alert on ConsolidationNeeded = true
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  [ ] Set snapshot retention policy: maximum age 72 hours, maximum 3 snapshots per VM
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  [ ] Configure backup solution to alert on failed quiesce / snapshot delete operations
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  [ ] Review backup job failure reports weekly — failed jobs silently leave delta files
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  [ ] For VADP backups: verify &quot;Remove Snapshot after backup&quot; is always enabled
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  [ ] Monitor vSAN or datastore space: delta files can fill a datastore if undetected for weeks
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Prevention checklist:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  [ ] Configure Aria Operations alert on ConsolidationNeeded = true
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  [ ] Set snapshot retention policy: maximum age 72 hours, maximum 3 snapshots per VM
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  [ ] Configure backup solution to alert on failed quiesce / snapshot delete operations
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  [ ] Review backup job failure reports weekly — failed jobs silently leave delta files
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  [ ] For VADP backups: verify &quot;Remove Snapshot after backup&quot; is always enabled
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  [ ] Monitor vSAN or datastore space: delta files can fill a datastore if undetected for weeks
 </code></pre></div>
 <p>In vCenter, create an alarm:
 - <strong>vCenter → Cluster → Configure → Alarm Definitions → New Alarm</strong>
@@ -10981,7 +11051,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

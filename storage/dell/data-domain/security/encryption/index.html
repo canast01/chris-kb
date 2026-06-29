@@ -8990,6 +8990,25 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm it is active</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>encryption<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Encryption is being enabled on system dd-backup-01.corp.local...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Initializing encryption subsystem...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Generating master encryption key (this may take 2-3 minutes)...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Master key fingerprint: a7f3:2e91:b4c8:5d62
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Encryption enabled successfully.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Encryption Status:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  State: ACTIVE
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Algorithm: AES-256-GCM
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Master Key ID: MK-2024-001
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Encrypted Capacity: 0 TB / 50 TB
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Last Status Check: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>encryption: command not found</code></strong> — Verify you are logged into the Data Domain CLI (not the host shell) by running <code>sysconfig show</code> first.
+<strong><code>Error: Encryption cannot be enabled while replication is active</code></strong> — Disable active replication jobs with <code>replication disable-all</code> before enabling encryption.
+<strong><code>Error: Encryption already enabled on this system</code></strong> — Run <code>encryption status</code> to confirm the current state; re-enabling is not necessary.</p>
+</div>
 <p><strong>Critical:</strong> Enabling encryption on a Data Domain that already contains data requires a full filesystem rebuild (<code>filesys destroy</code> followed by <code>filesys create</code>), which deletes all existing backup data. Always enable D@RE during initial setup before any data is written.</p>
 <h3 id="encryption-algorithm">Encryption Algorithm<a class="headerlink" href="#encryption-algorithm" title="Permanent link">&para;</a></h3>
 <table>
@@ -9053,49 +9072,151 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 </tbody>
 </table>
 <h3 id="configure-internal-key-manager">Configure Internal Key Manager<a class="headerlink" href="#configure-internal-key-manager" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use internal key manager (default for new systems)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>internal
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
-</code></pre></div>
-<h3 id="configure-kmip-external-key-manager">Configure KMIP External Key Manager<a class="headerlink" href="#configure-kmip-external-key-manager" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set the KMIP server address and port</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>kmip<span class="w"> </span>server<span class="w"> </span>&lt;kmip-server-ip&gt;<span class="w"> </span>port<span class="w"> </span><span class="m">5696</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Use internal key manager (default for new systems)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>internal
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set the KMIP username and certificate (certificate-based authentication)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>username<span class="w"> </span>&lt;kmip-username&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client-cert<span class="w"> </span>&lt;certificate-path&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Test connectivity to the KMIP server</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify configuration</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Changing key manager to internal...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Key manager change initiated. This operation may take several minutes.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Key manager successfully changed to internal.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Encryption Configuration:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Key Manager: internal
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Status: enabled
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Algorithm: AES-256
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Key Rotation: enabled
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Last Rotation: 2024-01-15 09:32:15 UTC
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Next Rotation: 2024-04-15 09:32:15 UTC
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  FIPS Mode: enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot change key manager while replication is in progress</code></strong> — Wait for active replication jobs to complete using <code>replication show</code> before retrying the command.
+<strong><code>Error: Key manager change requires system to be in maintenance mode</code></strong> — Enter maintenance mode with <code>system enter-maintenance-mode</code> before attempting the key manager change.</p>
+</div>
+<h3 id="configure-kmip-external-key-manager">Configure KMIP External Key Manager<a class="headerlink" href="#configure-kmip-external-key-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set the KMIP server address and port</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>kmip<span class="w"> </span>server<span class="w"> </span>&lt;kmip-server-ip&gt;<span class="w"> </span>port<span class="w"> </span><span class="m">5696</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set the KMIP username and certificate (certificate-based authentication)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>username<span class="w"> </span>&lt;kmip-username&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client-cert<span class="w"> </span>&lt;certificate-path&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Test connectivity to the KMIP server</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>encryption<span class="w"> </span>kmip<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify configuration</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Setting KMIP server to 192.168.45.12:5696...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>KMIP server configuration updated successfully.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Setting KMIP username to kmip_admin...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Username configured.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Loading client certificate from /etc/ssl/certs/kmip-client.pem...
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Certificate installed successfully.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Testing KMIP connectivity...
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Connection to KMIP server 192.168.45.12:5696 established successfully.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Authentication: PASSED
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Certificate validation: PASSED
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>KMIP Configuration:
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Server Address: 192.168.45.12
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Server Port: 5696
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  Username: kmip_admin
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Client Certificate: /etc/ssl/certs/kmip-client.pem
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  Connection Status: Active
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Last Test: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>KMIP server configuration failed: Connection refused</code></strong> — Verify the KMIP server IP address and port 5696 are correct and the server is running and accessible from the Data Domain appliance.
+<strong><code>Certificate validation failed: certificate verify failed</code></strong> — Ensure the certificate file path is correct, the certificate is valid and not expired, and matches the KMIP server's expected client certificate.
+<strong><code>KMIP username not set or invalid</code></strong> — Confirm the username matches an account configured on the KMIP server with appropriate key management permissions.</p>
+</div>
 <h3 id="configure-rsa-dpm">Configure RSA DPM<a class="headerlink" href="#configure-rsa-dpm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Set RSA DPM server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>rsa-dpm<span class="w"> </span>server<span class="w"> </span>&lt;dpm-server-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Register with the DPM server</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>encryption<span class="w"> </span>rsa-dpm<span class="w"> </span>register
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set RSA DPM server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>rsa-dpm<span class="w"> </span>server<span class="w"> </span>&lt;dpm-server-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Register with the DPM server</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>encryption<span class="w"> </span>rsa-dpm<span class="w"> </span>register
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>DD/OS 7.15.0.0 (Build 4.655.0)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Data Domain Appliance
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Hostname: dd-backup-01.corp.local
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>RSA DPM Server Configuration:
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Server IP: 192.168.45.22
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Port: 8443
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Status: Connected
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Last Sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Registration Status: Registered
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Registration ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Certificate Thumbprint: A1:B2:C3:D4:E5:F6:7G:8H:9I:0J:K1:L2:M3:N4:O5:P6
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Registered Date: 2024-01-15 13:45:22 UTC
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Encryption Configuration:
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Algorithm: AES-256-GCM
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Key Manager: RSA DPM
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  Key Rotation: Enabled (90 days)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  Last Key Rotation: 2024-01-10 09:15:00 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to DPM server at 192.168.45.22:8443</code></strong> — Verify the DPM server IP address is correct and reachable from the Data Domain appliance using <code>ping</code> or <code>telnet</code>.
+<strong><code>Error: Registration failed - Certificate validation error</code></strong> — Ensure the DPM server's SSL certificate is valid and trusted; import the CA certificate to the Data Domain appliance if using a self-signed cert.
+<strong><code>Error: Key manager already configured with different server</code></strong> — Run <code>encryption change-key-manager none</code> first to clear the existing configuration before registering with a new DPM server.</p>
+</div>
 <hr />
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
 <p>DDOS supports periodic encryption key rotation to limit the blast radius of a potential key compromise. Rotation generates a new active key and re-wraps existing data encryption keys without decrypting and re-encrypting all data.</p>
 <h3 id="check-last-key-rotation-date">Check Last Key Rotation Date<a class="headerlink" href="#check-last-key-rotation-date" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Last Key Rotation&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Last Key Rotation&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Last Key Rotation: 2024-01-15 03:22:47 UTC
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Last Key Rotation Status: SUCCESS
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Last Key Rotation Duration: 2m 34s
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Last Key Rotation Algorithm: AES-256-GCM
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: encryption</code></strong> — Ensure you are logged into the Data Domain management interface or use the full path <code>/opt/dell/encryption status</code>.
+<strong><code>grep: (standard input) is empty</code></strong> — The encryption status command produced no output; verify encryption is enabled on the system with <code>encryption config show</code>.</p>
+</div>
 <h3 id="perform-a-manual-key-rotation">Perform a Manual Key Rotation<a class="headerlink" href="#perform-a-manual-key-rotation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Trigger key rotation</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>encryption<span class="w"> </span>rotate-keys
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm new key is active</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>encryption<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Trigger key rotation</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>encryption<span class="w"> </span>rotate-keys
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirm new key is active</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>encryption<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Initiating key rotation for Data Domain system...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Key rotation started at 2024-01-15T14:32:18Z
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Current encryption key ID: 7f3a9c2e-b1d4-4f8a-9e2c-5d6b1a4c8f3e
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Previous key ID: 2c4d8f1a-3b5e-7a9c-1d2f-6e8a4b3c5d7f
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Rotation status: IN_PROGRESS
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Estimated completion: 2024-01-15T16:45:00Z
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Encryption Status Report
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>========================
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>System Status: ACTIVE
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Current Key ID: 7f3a9c2e-b1d4-4f8a-9e2c-5d6b1a4c8f3e
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Key Algorithm: AES-256-GCM
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Key State: ACTIVE
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Last Rotation: 2024-01-15T14:32:18Z
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Next Scheduled Rotation: 2024-04-15T14:32:18Z
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Rekey Progress: 87%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Key rotation already in progress</code></strong> — Wait for the current rotation to complete or check <code>encryption status</code> to verify the previous operation finished.
+<strong><code>Error: Insufficient permissions to rotate keys</code></strong> — Ensure your user account has the <code>encryption-admin</code> role assigned via the Data Domain administrative console.</p>
+</div>
 <p>Key rotation does not impact backup or restore operations — it can be performed online. Schedule annual or bi-annual key rotation per your security policy.</p>
 <h3 id="key-rotation-schedule-recommendation">Key Rotation Schedule Recommendation<a class="headerlink" href="#key-rotation-schedule-recommendation" title="Permanent link">&para;</a></h3>
 <table>
@@ -9127,57 +9248,140 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 - Approved key derivation and wrapping algorithms
 - TLS 1.2+ for management and replication traffic when FIPS mode is active</p>
 <h3 id="verify-fips-mode">Verify FIPS Mode<a class="headerlink" href="#verify-fips-mode" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check if FIPS mode is active</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># System version for cross-referencing with NIST CMVP</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>system<span class="w"> </span>show<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check if FIPS mode is active</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># System version for cross-referencing with NIST CMVP</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>system<span class="w"> </span>show<span class="w"> </span>version
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>FIPS Mode: Enabled
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>FIPS 140-2 Level: 2
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>FIPS Certification ID: 3019
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>System Version: Data Domain OS 7.15.1.20
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Build: 7.15.1.20-620847
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Release Date: 2024-01-15
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Serial Number: DD9500-0123456789
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>encryption status: command not found</code></strong> — Use the correct Data Domain CLI command <code>show encryption-status</code> or access via SSH to the management interface.
+<strong><code>grep: (standard input) is empty</code></strong> — FIPS mode may not be supported on this Data Domain model or firmware version; verify with <code>show system-info</code> and consult Dell EMC compatibility matrix.</p>
+</div>
 <p>FIPS 140-2 validation certificates for DDOS are listed on the <a href="https://csrc.nist.gov/projects/cryptographic-module-validation-program">NIST CMVP website</a>. Cross-reference the DDOS version against the active certificate when producing compliance evidence.</p>
 <hr />
 <h2 id="encryption-in-transit-tls">Encryption in Transit (TLS)<a class="headerlink" href="#encryption-in-transit-tls" title="Permanent link">&para;</a></h2>
 <p>All management traffic (HTTPS, REST API, System Manager GUI) and DD Boost communication use TLS. Replication between Data Domain appliances can also be encrypted at the transport layer.</p>
 <h3 id="management-tls">Management TLS<a class="headerlink" href="#management-tls" title="Permanent link">&para;</a></h3>
 <p>The DD System Manager runs on HTTPS (TCP 443 / 3009). The default certificate is self-signed. For enterprise deployments, replace the self-signed certificate with one signed by your internal CA or a public CA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check current certificate details</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Generate a CSR (Certificate Signing Request) to submit to your CA</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span>common-name<span class="w"> </span>&lt;dd-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>org<span class="w"> </span><span class="s2">&quot;Your Organisation&quot;</span><span class="w"> </span>country<span class="w"> </span>&lt;two-letter-code&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Install the CA-signed certificate after signing</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>pem<span class="w"> </span>&lt;certificate-pem-path&gt;
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Verify the installed certificate</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check current certificate details</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Generate a CSR (Certificate Signing Request) to submit to your CA</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span>common-name<span class="w"> </span>&lt;dd-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>org<span class="w"> </span><span class="s2">&quot;Your Organisation&quot;</span><span class="w"> </span>country<span class="w"> </span>&lt;two-letter-code&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Install the CA-signed certificate after signing</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>pem<span class="w"> </span>&lt;certificate-pem-path&gt;
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Verify the installed certificate</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Certificate Information
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>======================
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Subject: CN=dd-prod-01.example.com, O=Acme Corp, C=US
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Issuer: CN=DigiCert Global Root CA, O=DigiCert Inc, C=US
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Valid From: 2024-01-15 10:30:00 UTC
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Valid Until: 2025-01-15 10:30:00 UTC
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Fingerprint (SHA256): a7:b2:c3:d4:e5:f6:7a:8b:9c:0d:1e:2f:3a:4b:5c:6d:7e:8f:9a:0b
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Serial Number: 0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Certificate Signing Request generated successfully
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>CSR saved to: /var/tmp/dd-prod-01.example.com.csr
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>CSR fingerprint: 5f:4e:3d:2c:1b:0a:f9:e8:d7:c6:b5:a4:93:82:71:60
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Certificate installed successfully
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Installation timestamp: 2024-02-20 14:22:15 UTC
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Certificate chain verified: 3 certificates in chain
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Certificate Information
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>======================
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Subject: CN=dd-prod-01.example.com, O=Acme Corp, C=US
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Issuer: CN=DigiCert Global Root CA, O=DigiCert Inc, C=US
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Valid From: 2024-02-20 14:22:15 UTC
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>Valid Until: 2025-02-20 14:22:15 UTC
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Fingerprint (SHA256): b8:c3:d4:e5:f6:7a:8b:9c:0d:1e:2f:3a:4b:5c:6d:7e:8f:9a:0b:1c
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>Serial Number: 0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at &lt;certificate-pem-path&gt;</code></strong> — Verify the PEM file path is correct and the file exists with <code>ls -la &lt;certificate-pem-path&gt;</code>.
+<strong><code>Error: Certificate chain validation failed - missing intermediate certificate</code></strong> — Include the full certificate chain (root + intermediates) in the PEM file or install intermediate certificates separately before installing the leaf certificate.
+<strong><code>Error: Certificate CN does not match system FQDN</code></strong> — Ensure the Common Name in the certificate matches the Data Domain's FQDN exactly, or regenerate the CSR with the correct FQDN.</p>
+</div>
 <h3 id="replication-encryption">Replication Encryption<a class="headerlink" href="#replication-encryption" title="Permanent link">&para;</a></h3>
 <p>By default, DDOS uses its own certificate exchange for replication authentication. Transport encryption for replication (SSL/TLS over the replication stream) can be explicitly enabled:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add an encrypted replication context</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>mtree://&lt;src-dd&gt;/data/col1/&lt;mtree-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>destination<span class="w"> </span>mtree://&lt;dst-dd&gt;/data/col1/&lt;mtree-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>encryption<span class="w"> </span>aes128
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Verify replication encryption setting</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Add an encrypted replication context</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>mtree://&lt;src-dd&gt;/data/col1/&lt;mtree-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>destination<span class="w"> </span>mtree://&lt;dst-dd&gt;/data/col1/&lt;mtree-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span>encryption<span class="w"> </span>aes128
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Verify replication encryption setting</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Replication context added successfully.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Source: mtree://dd-prod-01.corp.local/data/col1/finance_backup
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Destination: mtree://dd-prod-02.corp.local/data/col1/finance_backup
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Encryption: aes128
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Context ID: rep-ctx-4f8a2c91
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Replication context: finance_backup
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  Encryption: aes128
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Encryption cipher: AES-128-CBC
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Encryption key status: Active
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Replication status: Idle
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid mtree path format</code></strong> — Ensure the mtree path follows the format <code>mtree://&lt;hostname&gt;/data/col1/&lt;mtree-name&gt;</code> with valid hostname and mtree name.
+<strong><code>Error: Encryption not supported on this replication context</code></strong> — Verify both source and destination Data Domain systems support encryption (requires DDOS 6.0+) and have encryption licenses enabled.
+<strong><code>Error: Replication context already exists</code></strong> — Use <code>replication modify</code> instead of <code>replication add</code> if updating an existing replication context.</p>
+</div>
 <p>Replication encryption adds CPU overhead. For high-throughput environments (&gt;10 TB/hr), evaluate the CPU impact on the source DD before enabling on all contexts.</p>
 <h3 id="dd-boost-transport-encryption">DD Boost Transport Encryption<a class="headerlink" href="#dd-boost-transport-encryption" title="Permanent link">&para;</a></h3>
 <p>DD Boost connections can optionally be encrypted when the backup client and DD support it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable DD Boost transport encryption</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ddboost<span class="w"> </span>option<span class="w"> </span><span class="nb">set</span><span class="w"> </span>transport-encryption<span class="w"> </span>enabled
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>transport-enc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Enable DD Boost transport encryption</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ddboost<span class="w"> </span>option<span class="w"> </span><span class="nb">set</span><span class="w"> </span>transport-encryption<span class="w"> </span>enabled
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>transport-enc
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Transport-encryption: enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ddboost: command not found</code></strong> — Install the DDBoost client package or ensure the Data Domain management tools are in your PATH.
+<strong><code>Error: Authentication failed</code></strong> — Authenticate to the Data Domain system first using <code>ddboost user add</code> or verify your credentials are configured in the DDBoost configuration file.</p>
+</div>
 <p>Supported by Veeam (DD Boost for Veeam plug-in), NetBackup (OST plug-in), and CommVault when using DD Boost.</p>
 <hr />
 <h2 id="encryption-considerations-for-cloud-tier">Encryption Considerations for Cloud Tier<a class="headerlink" href="#encryption-considerations-for-cloud-tier" title="Permanent link">&para;</a></h2>
 <p>When data is aged to Cloud Tier (S3 or Azure Blob), the data is encrypted with D@RE before being written to the cloud object store. The cloud provider does not hold the encryption keys — the DD key manager retains full control.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify cloud tier encryption status</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tier<span class="w"> </span>show<span class="w"> </span>detail<span class="w"> </span>cloud<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Verify cloud tier encryption status</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>tier<span class="w"> </span>show<span class="w"> </span>detail<span class="w"> </span>cloud<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Encryption Status: Enabled
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Encryption Algorithm: AES-256
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Encryption Key Management: KMIP
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Encryption Status: Active
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Key Rotation: Every 90 days
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Last Key Rotation: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tier show detail cloud | grep -i encrypt: command not found</code></strong> — Ensure you are logged into the Data Domain management interface (SSH or web console) and have appropriate admin privileges.
+<strong><code>No such file or directory</code></strong> — Verify the cloud tier is configured and initialized; run <code>tier show</code> first to confirm cloud tiers exist.</p>
+</div>
 <p>Additionally, configure server-side encryption on the cloud bucket as a defence-in-depth measure:
 - <strong>AWS S3:</strong> Enable SSE-S3 or SSE-KMS on the target bucket
 - <strong>Azure Blob:</strong> Enable Storage Service Encryption (enabled by default on Azure)</p>
@@ -9188,12 +9392,30 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 <li><strong>D@RE-encrypted disks:</strong> Data is cryptographically inaccessible without the encryption keys. Destroying or migrating the keys effectively sanitises all encrypted data on the disk. This satisfies NIST SP 800-88 "cryptographic erase" requirements.</li>
 <li><strong>Non-encrypted disks:</strong> Require physical destruction or NIST-compliant degaussing before disposal.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Confirm encryption is active before disk disposal</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>encryption<span class="w"> </span>status
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># On decommission — confirm key manager is inaccessible or keys are destroyed</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># (coordinate with your key management policy and security team)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Confirm encryption is active before disk disposal</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># On decommission — confirm key manager is inaccessible or keys are destroyed</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># (coordinate with your key management policy and security team)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Encryption Status Report
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>========================
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>System Encryption: ENABLED
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Encryption Algorithm: AES-256-GCM
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Key Manager Status: CONNECTED
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Active Keys: 3
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Last Key Rotation: 2024-01-15 09:32:17 UTC
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Encrypted Data Blocks: 847,293,441
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Encryption Performance Impact: 2.3%
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>FIPS 140-2 Mode: ENABLED
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Key Escrow Status: CONFIGURED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>encryption status: command not found</code></strong> — Verify you are logged into the Data Domain system with appropriate admin credentials and that the encryption module is installed.
+<strong><code>Error: Key Manager unreachable - cannot verify encryption state</code></strong> — Confirm network connectivity to the key management server and that the KM service is running before proceeding with decommissioning.
+<strong><code>Permission denied: insufficient privileges to query encryption status</code></strong> — Execute the command with root or sysadmin role privileges, or contact your Data Domain administrator.</p>
+</div>
 <p>Dell ProSupport manages physical disk returns. Confirm with Dell support that returned disks under ProSupport Plus are destroyed or sanitised per their data handling policy.</p>
 <hr />
 <h2 id="encryption-checklist">Encryption Checklist<a class="headerlink" href="#encryption-checklist" title="Permanent link">&para;</a></h2>
@@ -9277,7 +9499,7 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:51:28 UTC"><span class="timeago" datetime="2026-06-29T03:51:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:51:28 UTC">2026-06-29</span>
   </span>
 
     

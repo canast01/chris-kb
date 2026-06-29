@@ -8994,65 +8994,178 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">export</span><span class="w"> </span><span class="nv">FA_API_TOKEN</span><span class="o">=</span>&lt;token&gt;
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>python<span class="w"> </span>fa_upgrade_readiness.py
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                          Version           Model
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>flasharray01.example.com      6.4.2             FA-405
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>flasharray02.example.com      6.4.2             FA-405
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Upgrade readiness check results:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>✓ All nodes healthy
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>✓ No active snapshots blocking upgrade
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>✓ Sufficient free space (78% available)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>✓ No ongoing replication jobs
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>✓ All controllers synchronized
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>✓ No pending firmware updates
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Pre-check passed. System is ready for upgrade to 6.4.3.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>FA Upgrade Readiness Check v2.1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Connected to: flasharray01.example.com
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Array Serial: 5b8c4a2e-91f3-4d8a-b2c1-7e9f3a5d8c2b
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Current Version: 6.4.2
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Target Version: 6.4.3
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Status: READY
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
+<strong><code>Error: Authentication failed. Invalid API token.</code></strong> — Verify the FA_API_TOKEN environment variable is set correctly and the token has not expired.
+<strong><code>Error: Connection refused on flasharray01.example.com:443</code></strong> — Confirm FA_HOST is reachable and the management IP is correct; check network connectivity and firewall rules.</p>
+</div>
 <p>Confirm the target version with Pure Support. Pure will specify the upgrade path — never skip more than two minor versions without Pure's guidance. Verify the target version is compatible with the current controller generation using the <a href="https://support.purestorage.com/">Pure compatibility matrix</a>.</p>
 <h3 id="step-2-pre-upgrade-actions">Step 2 — Pre-Upgrade Actions<a class="headerlink" href="#step-2-pre-upgrade-actions" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Pre-Upgrade Actions" src="../../../../../assets/evergreen-proc-step-2-pre-upgrade-actions.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Clean up destroyed volumes and snapshots to reduce upgrade duration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Record baseline capacity and data reduction before the upgrade</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-upgrade-space-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Record volume inventory</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>purevol<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-upgrade-volumes-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Notify application teams and storage consumers of the upgrade window</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># FlashBlade upgrades are non-disruptive but protocol sessions may briefly re-establish</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Clean up destroyed volumes and snapshots to reduce upgrade duration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Record baseline capacity and data reduction before the upgrade</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-upgrade-space-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Record volume inventory</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purevol<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-upgrade-volumes-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Notify application teams and storage consumers of the upgrade window</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># FlashBlade upgrades are non-disruptive but protocol sessions may briefly re-establish</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Eradicated 47 destroyed volumes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Eradicated 312 destroyed snapshots
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Capacity (GB)    Data Reduction    Snapshots (GB)    System (GB)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>1048576          4.2x              102400            51200
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Volume Name      Size (GB)    Provisioned (GB)    Snapshots
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>prod-db-01       500         500                  12
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>prod-db-02       750         750                  8
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>prod-web-cache   200         200                  3
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>prod-backup-01   1024        1024                 156
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>dev-test-vol     100         100                  2
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purevol: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically <code>/opt/pureapp/bin</code>).
+<strong><code>Permission denied</code></strong> — Run the commands with appropriate credentials or use <code>sudo</code> if the user lacks Pure Storage administrative privileges.
+<strong><code>Connection refused</code></strong> — Verify the management IP of the Pure array is reachable and the CLI is configured with <code>purearray connect &lt;mgmt-ip&gt;</code>.</p>
+</div>
 <h3 id="step-3-execute-the-upgrade">Step 3 — Execute the Upgrade<a class="headerlink" href="#step-3-execute-the-upgrade" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Execute the Upgrade" src="../../../../../assets/evergreen-proc-step-3-execute-the-upgrade.svg" /></p>
 <p>Pure Support leads the upgrade execution. During the upgrade window:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor progress from the CLI (upgrade performs a rolling controller restart)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># The version field updates after both controllers complete the upgrade</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Monitor host I/O latency during the upgrade window</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Pure1 &gt; Arrays &gt; select array &gt; Performance</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expect a brief latency spike (seconds) during each controller restart</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Monitor progress from the CLI (upgrade performs a rolling controller restart)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># The version field updates after both controllers complete the upgrade</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Monitor host I/O latency during the upgrade window</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Pure1 &gt; Arrays &gt; select array &gt; Performance</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expect a brief latency spike (seconds) during each controller restart</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name             Address         Version          Model
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pure-array-01    192.168.1.100   6.4.3.0          FlashArray//X20
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pure-array-02    192.168.1.101   6.4.2.0          FlashArray//X20
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pure-array-03    192.168.1.102   6.4.3.0          FlashArray//X20
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pure-array-04    192.168.1.103   6.4.2.0          FlashArray//X20
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(Monitoring note: Version field will update to 6.4.3.0 for remaining arrays after controller restart completes)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>(I/O latency spike expected: 2-8 seconds per controller failover during upgrade window)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the <code>purearray</code> binary is in your PATH.
+<strong><code>Connection refused on 192.168.1.100:443</code></strong> — Verify the management IP is reachable and the array is powered on and responsive.</p>
+</div>
 <p><strong>Host-side monitoring during upgrade:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Linux — watch multipath path states during the upgrade</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span>multipath<span class="w"> </span>-ll
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># VMware — watch storage adapter path states</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa|State&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux — watch multipath path states during the upgrade</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span>multipath<span class="w"> </span>-ll
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># VMware — watch storage adapter path states</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa|State&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Every 5.0s: multipath -ll                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ters-prod-lun01 (360060e80057900000057900000010001) dm-2 PURE,FlashArray-X20
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>size=2.0T features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>| |- 3:0:0:1 sdc 8:32 active ready running
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>| `- 4:0:0:1 sdd 8:48 active ready running
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  |- 5:0:0:1 sde 8:64 active ready running
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  `- 6:0:0:1 sdf 8:80 active ready running
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>storage-prod-lun02 (360060e80057900000057900000010002) dm-3 PURE,FlashArray-X20
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>size=5.0T features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>| |- 3:0:0:2 sdg 8:96 active ready running
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>| `- 4:0:0:2 sdh 8:112 active ready running
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  |- 5:0:0:2 sdi 8:128 active ready running
 </code></pre></div>
 <h3 id="step-4-post-upgrade-validation">Step 4 — Post-Upgrade Validation<a class="headerlink" href="#step-4-post-upgrade-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Post-Upgrade Validation" src="../../../../../assets/evergreen-proc-step-4-post-upgrade-validation.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm the new Purity version is running</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify &#39;version&#39; field matches the target version</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm no new alerts appeared during the upgrade</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Confirm both controllers are online and running the new version</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Confirm all drives are healthy</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Confirm all pods are online and replicating</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Confirm all host paths are restored</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Confirm capacity figures are unchanged (compare to pre-upgrade baseline)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>diff<span class="w"> </span>/tmp/pre-upgrade-space-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span>&lt;<span class="o">(</span>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="o">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm the new Purity version is running</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Verify &#39;version&#39; field matches the target version</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Confirm no new alerts appeared during the upgrade</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Confirm both controllers are online and running the new version</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Confirm all drives are healthy</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Confirm all pods are online and replicating</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Confirm all host paths are restored</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Confirm capacity figures are unchanged (compare to pre-upgrade baseline)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>diff<span class="w"> </span>/tmp/pre-upgrade-space-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span>&lt;<span class="o">(</span>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="o">)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                          Version           Status
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pure-array-01.lab.local       6.4.2.0           Optimal
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>pure-array-02.lab.local       6.4.2.0           Optimal
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Severity    Code    Title                              Created
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>warning     CRIT-1  Controller 2 temperature elevated  2024-01-15T09:23:45Z
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>info        INFO-5  Upgrade completed successfully    2024-01-15T09:15:12Z
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Controller    Status    Version       Model
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>controller-1  Online    6.4.2.0       FA-405
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>controller-2  Online    6.4.2.0       FA-405
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Drive    Status    Capacity    Used      Controller
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>SSD-001  Healthy   3.84TB      2.1TB     controller-1
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>SSD-002  Healthy   3.84TB      2.3TB     controller-1
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>SSD-003  Healthy   3.84TB      1.9TB     controller-2
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>SSD-004  Healthy   3.84TB      2.2TB     controller-2
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>...
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Pod          Status      Replication    Lag
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>pod-prod-01  Online      In-Sync        0ms
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>pod-prod-02  Online      In-Sync        0ms
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>pod-dr-01    Online      In-Sync        12ms
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>Host         Connection    Status    Paths
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>host-db-01   iSCSI         Online    4/4
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>host-app-02  FC            Online    8/8
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Total Capacity    Used          Available       Reduction
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>50.0TB            32.4TB        17.6TB          18%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically <code>/opt/purearray/bin</code>).
+<strong><code>Error: Unable to connect to array at 192.168.1.100</code></strong> — Verify network connectivity and that the management IP is reachable; check firewall rules and DNS resolution.
+<strong><code>diff: /tmp/pre-upgrade-space-20240115.txt: No such file or directory</code></strong> — Create the baseline file before the upgrade by running <code>purearray list --space &gt; /tmp/pre-upgrade-space-$(date +%Y%m%d).txt</code> beforehand.</p>
+</div>
 <hr />
 <h2 id="controller-refresh-procedure-ever-modern">Controller Refresh Procedure (Ever Modern)<a class="headerlink" href="#controller-refresh-procedure-ever-modern" title="Permanent link">&para;</a></h2>
 <p>The Ever Modern controller refresh replaces the physical FlashArray controller modules while all I/O continues on the surviving controller. Pure Storage engineers perform the physical swap. The customer's role is readiness validation, maintenance window coordination, and post-upgrade verification.</p>
@@ -9067,21 +9180,60 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 </ul>
 <h3 id="7-days-before-the-refresh">7 Days Before the Refresh<a class="headerlink" href="#7-days-before-the-refresh" title="Permanent link">&para;</a></h3>
 <p><img alt="7 Days Before the Refresh" src="../../../../../assets/evergreen-proc-7-days-before-the-refresh.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Full pre-upgrade readiness check</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--check
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm all hosts have redundant paths</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Any host with fewer than 2 paths must be remediated before the refresh</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Confirm ActiveCluster mediator is reachable (if configured)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;mediator-ip&gt;/mediator/version
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Review and clean up excess snapshots</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Eradicate snapshots beyond the retention window to reduce refresh duration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Full pre-upgrade readiness check</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--check
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirm all hosts have redundant paths</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Any host with fewer than 2 paths must be remediated before the refresh</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Confirm ActiveCluster mediator is reachable (if configured)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;mediator-ip&gt;/mediator/version
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Review and clean up excess snapshots</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Eradicate snapshots beyond the retention window to reduce refresh duration</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>=== Upgrade Readiness Check ===
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Array: purearray-01.lab.local
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Current Version: 6.4.2
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Target Version: 6.4.3
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Status: READY
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  ✓ All controllers healthy
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  ✓ Sufficient free space (847 GB available)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  ✓ No active snapshots in progress
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  ✓ Replication links stable
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>=== Host Connection Paths ===
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Host                    Paths  Status
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>host-esx01.lab.local    2      Connected
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>host-esx02.lab.local    2      Connected
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>host-esx03.lab.local    2      Connected
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>host-esx04.lab.local    1      WARNING
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>host-esx05.lab.local    2      Connected
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>=== ActiveCluster Mediator Status ===
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Pod: pod-us-east
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Mediator IP: 10.20.50.15
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Mediator Status: REACHABLE
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>{&quot;version&quot;: &quot;2.1.4&quot;, &quot;status&quot;: &quot;active&quot;, &quot;uptime_seconds&quot;: 2592000}
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>=== Snapshot Space Usage (Top 20) ===
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>Snapshot Name                          Size (GB)  Created
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>db-prod-hourly.2024-01-15.0800        125.4      2024-01-15 08:00:00
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>db-prod-hourly.2024-01-15.0700        125.2      2024-01-15 07:00:00
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>db-prod-hourly.2024-01-15.0600        124.9      2024-01-15 06:00:00
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>backup-weekly.2024-01-08              287.6      2024-01-08 22:30:00
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>backup-weekly.2024-01-01              289.1      2024-01-01 22:30:00
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host host-esx04.lab.local has only 1 path — upgrade cannot proceed</code></strong> — Add a second iSCSI or FC path to the host before running the upgrade.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl or import the mediator's certificate into your system trust store.
+<strong><code>Error: Insufficient space for upgrade — 200 GB required, 89 GB available</code></strong> — Eradicate old snapshots using <code>puresnap eradicate &lt;snapshot-name&gt;</code> to free space before retrying the upgrade check.</p>
+</div>
 <h3 id="during-the-refresh-window">During the Refresh Window<a class="headerlink" href="#during-the-refresh-window" title="Permanent link">&para;</a></h3>
 <p><img alt="During the Refresh Window" src="../../../../../assets/evergreen-proc-during-the-refresh-window.svg" /></p>
 <p>Pure Storage engineers manage the physical replacement. The refresh sequence:</p>
@@ -9094,111 +9246,253 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 <li>Controller 1 rejoins the cluster; normal active-active operation resumes</li>
 </ol>
 <p><strong>Customer action during the refresh:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Monitor host I/O on the array from a monitoring tool or watch CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Expect latency spikes during each controller drain/rejoin event (&lt; 30 seconds each)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Watch multipath from a representative Linux host</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;policy|status|active|failed&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Monitor host I/O on the array from a monitoring tool or watch CLI</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Expect latency spikes during each controller drain/rejoin event (&lt; 30 seconds each)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Watch multipath from a representative Linux host</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;policy|status|active|failed&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Every 2.0s: multipath -ll | grep -E &quot;policy|status|active|failed&quot;                                    Mon Jan 15 14:32:18 2024
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>mpatha (360001405a1b2c3d4e5f6g7h8i9j0k1l) dm-0 PURE,FlashArray//X
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>size=10T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>| |- 2:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>| `- 3:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  |- 4:0:0:0 sdd 8:48 active ready running
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  `- 5:0:0:0 sde 8:64 failed faulty offline
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>mpathb (360001405a1b2c3d4e5f6g7h8i9j0k1m) dm-1 PURE,FlashArray//X
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>size=5T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>| |- 2:0:1:0 sdf 8:80 active ready running
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>| `- 3:0:1:0 sdg 8:96 active ready running
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  |- 4:0:1:0 sdh 8:112 active ready running
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>  `- 5:0:1:0 sdi 8:128 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>device-mapper: multipath: ioctl error for add_wwid</code></strong> — Ensure multipathd daemon is running with <code>systemctl start multipathd</code> and multipath.conf is properly configured.
+<strong><code>grep: (standard input): No such device or address</code></strong> — The multipath command failed; verify array connectivity and that the host has active Fibre Channel or iSCSI sessions with <code>iscsiadm -m session</code> or <code>fcstat</code>.</p>
+</div>
 <h3 id="post-refresh-validation">Post-Refresh Validation<a class="headerlink" href="#post-refresh-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Post-Refresh Validation" src="../../../../../assets/evergreen-proc-post-refresh-validation.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm both controllers are online and running the new hardware generation</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># The &#39;model&#39; or &#39;type&#39; field should reflect the new controller generation</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Confirm no new alerts</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Confirm all drives are healthy</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Confirm all host paths are restored</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Confirm all pods are online</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Confirm capacity figures are unchanged</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Confirm both controllers are online and running the new hardware generation</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># The &#39;model&#39; or &#39;type&#39; field should reflect the new controller generation</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Confirm no new alerts</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Confirm all drives are healthy</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Confirm all host paths are restored</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Confirm all pods are online</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Confirm capacity figures are unchanged</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name             Status   Model              Version
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>controller-0     Online   FA-405R3           6.4.2.1
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>controller-1     Online   FA-405R3           6.4.2.1
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>AlertID  Severity  Code              Message                          Time
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>(no alerts)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Name     Status   Capacity   Used    Available
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>SSD-001  Healthy  3.84TB     1.2TB   2.64TB
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>SSD-002  Healthy  3.84TB     1.1TB   2.74TB
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>SSD-003  Healthy  3.84TB     1.3TB   2.54TB
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>SSD-004  Healthy  3.84TB     1.0TB   2.84TB
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>...
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>HostName         Status   Paths   Connected
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>host-prod-01     Online   4       4
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>host-prod-02     Online   4       4
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>host-dev-03      Online   2       2
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>...
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Name             Status   Replication
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>pod-primary      Online   Enabled
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>pod-secondary    Online   Enabled
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>Name             Total        Used         Available    Provisioned
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>array-01         50.0TB       18.5TB       31.5TB       45.2TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Verify the Pure Storage CLI tools are installed and the PATH includes the installation directory.
+<strong><code>Error: Array unreachable at 192.168.1.100</code></strong> — Confirm network connectivity to the array management IP and that credentials are valid with <code>pureadmin login</code>.
+<strong><code>AlertID 12345: Controller-1 temperature warning</code></strong> — Check controller-1 cooling system and verify fan operation before proceeding with production traffic.</p>
+</div>
 <p><strong>Update CMDB records:</strong> Document the new controller generation, the refresh date, and the next scheduled refresh window. Update subscription renewal date tracking if the refresh resets the lifecycle clock.</p>
 <hr />
 <h2 id="capacity-management-procedures">Capacity Management Procedures<a class="headerlink" href="#capacity-management-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="provisioning-a-new-volume">Provisioning a New Volume<a class="headerlink" href="#provisioning-a-new-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Provisioning a New Volume" src="../../../../../assets/evergreen-proc-provisioning-a-new-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a volume (thin-provisioned; actual space consumed as data is written)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10T<span class="w"> </span>prod-oracle-vol03
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Connect the volume to a host group</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>prod-oracle-cluster<span class="w"> </span>prod-oracle-vol03
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify the volume is connected</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>--connection<span class="w"> </span>prod-oracle-vol03
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># On the host — rescan to discover the new LUN</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Linux:</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$host</span>/scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>multipathd<span class="w"> </span>reconfigure
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;new_lun_naa&gt;
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># VMware:</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;new_lun_naa&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Create a volume (thin-provisioned; actual space consumed as data is written)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10T<span class="w"> </span>prod-oracle-vol03
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Connect the volume to a host group</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>prod-oracle-cluster<span class="w"> </span>prod-oracle-vol03
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Verify the volume is connected</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>--connection<span class="w"> </span>prod-oracle-vol03
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># On the host — rescan to discover the new LUN</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># Linux:</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$host</span>/scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;new_lun_naa&gt;
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># VMware:</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;new_lun_naa&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Volume prod-oracle-vol03 created
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Volume prod-oracle-vol03 connected to prod-oracle-cluster
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Name                  Size    Provisioned  Connected-to
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>prod-oracle-vol03     10T     128GB        prod-oracle-cluster
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>- - -
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>- - -
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>- - -
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>mpatha (36001405a1b2c3d4e5f6g7h8i9j0k1l2m) dm-5 PURE,FlashArray//X
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>size=10T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  `- 4:0:0:3 sdd 8:48 active ready running
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>HBA 0 (vmhba0): Rescan started...
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>HBA 1 (vmhba1): Rescan started...
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2m: PURE FlashArray//X (naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2m)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Host group 'prod-oracle-cluster' not found</code></strong> — Verify the host group exists with <code>purevol list --hgroup</code> and create it if needed using <code>purevol hgroup create</code>.
+<strong><code>multipathd: command not found</code></strong> — Install device-mapper-multipath package with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code> depending on your Linux distribution.
+<strong><code>Error: LUN not visible after rescan</code></strong> — Ensure the volume connection was successful and check Pure array connectivity by running <code>purevol list --connection</code> to confirm the host group binding.</p>
+</div>
 <h3 id="expanding-an-existing-volume">Expanding an Existing Volume<a class="headerlink" href="#expanding-an-existing-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Expanding an Existing Volume" src="../../../../../assets/evergreen-proc-expanding-an-existing-volume.svg" /></p>
 <p>Volume expansion is non-disruptive and online. The host OS must rescan to see the new size after expansion.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Expand the volume to 20 TiB</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>20T<span class="w"> </span>prod-oracle-vol03
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify the new size</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-vol03
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># On Linux — rescan the device to pick up the new size</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># First, identify the device by its NAA ID from the multipath output</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/block/sdb/device/rescan
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Or trigger a multipath resize:</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>multipathd<span class="w"> </span>resize<span class="w"> </span>map<span class="w"> </span>&lt;device_name&gt;
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># On VMware — rescan storage</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>storage<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba0<span class="w"> </span>--type<span class="w"> </span>lun
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Then extend the VMFS datastore if required</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Expand the volume to 20 TiB</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>20T<span class="w"> </span>prod-oracle-vol03
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Verify the new size</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>prod-oracle-vol03
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># On Linux — rescan the device to pick up the new size</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># First, identify the device by its NAA ID from the multipath output</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/block/sdb/device/rescan
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Or trigger a multipath resize:</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>multipathd<span class="w"> </span>resize<span class="w"> </span>map<span class="w"> </span>&lt;device_name&gt;
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># On VMware — rescan storage</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>storage<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba0<span class="w"> </span>--type<span class="w"> </span>lun
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="c1"># Then extend the VMFS datastore if required</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Volume prod-oracle-vol03 size set to 20T
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Name                    Size      Provisioned   Used Available
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>prod-oracle-vol03       20T       20T           18.2T 1.8T
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>(no output — command completes silently)
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>mpatha (360001405d1a2b8c9e4f5g6h7i8j9k0l) dm-0 PURE,FlashArray//X
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>size=20T features=&#39;0&#39; hwhandler=&#39;1:alua&#39; wp=rw
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  |- 2:0:0:1 sdb 8:16 active ready running
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  |- 3:0:0:1 sdc 8:32 active ready running
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /sys/block/sdb/device/rescan: Permission denied</code></strong> — Run the rescan command with <code>sudo</code> or as root user.
+<strong><code>multipathd: can't find device &lt;device_name&gt; in multipath table</code></strong> — Verify the device name matches multipath output exactly (e.g., <code>mpatha</code>) and ensure multipath daemon is running with <code>sudo systemctl status multipathd</code>.</p>
+</div>
 <h3 id="protection-group-management">Protection Group Management<a class="headerlink" href="#protection-group-management" title="Permanent link">&para;</a></h3>
 <p><img alt="Protection Group Management" src="../../../../../assets/evergreen-proc-protection-group-management.svg" /></p>
 <p>All production volumes should be members of a protection group with replication to the DR site.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a protection group for Oracle</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Add volumes to the protection group</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purepgroup<span class="w"> </span>setattr<span class="w"> </span>--vollist<span class="w"> </span>prod-oracle-vol01,prod-oracle-vol02,prod-oracle-vol03<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Create a snapshot schedule — every 4 hours, retain 72 hours (18 snapshots)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">14400</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>--snap-retention<span class="w"> </span><span class="m">259200</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>prod-oracle-pg
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Connect the protection group to the remote replication target</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>remote-lon02<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Verify replication is active</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication<span class="w"> </span>prod-oracle-pg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create a protection group for Oracle</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Add volumes to the protection group</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>purepgroup<span class="w"> </span>setattr<span class="w"> </span>--vollist<span class="w"> </span>prod-oracle-vol01,prod-oracle-vol02,prod-oracle-vol03<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Create a snapshot schedule — every 4 hours, retain 72 hours (18 snapshots)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">14400</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">    </span>--snap-retention<span class="w"> </span><span class="m">259200</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">    </span>prod-oracle-pg
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Connect the protection group to the remote replication target</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>remote-lon02<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1"># Verify replication is active</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication<span class="w"> </span>prod-oracle-pg
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Name                          Enabled  Source          Targets
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>prod-oracle-pg                true     prod-oracle-pg  remote-lon02
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Volumes added to prod-oracle-pg:
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  prod-oracle-vol01 (500.0G)
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>  prod-oracle-vol02 (500.0G)
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  prod-oracle-vol03 (500.0G)
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Snapshot schedule configured:
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  Frequency: 14400 seconds (4 hours)
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  Retention: 259200 seconds (72 hours)
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  Max snapshots: 18
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Protection group connected to remote target: remote-lon02
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>Replication Status: Active
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>Last replicated snapshot: prod-oracle-pg.18 (2024-01-15T09:32:14Z)
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Replication lag: 127 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Protection group 'prod-oracle-pg' already exists</code></strong> — Use <code>purepgroup list</code> to verify existing groups, or delete with <code>purepgroup destroy prod-oracle-pg</code> before recreating.
+<strong><code>Error: Volume 'prod-oracle-vol02' not found or not available</code></strong> — Verify volume names with <code>purevol list</code> and ensure all volumes are provisioned before adding to the protection group.
+<strong><code>Error: Remote target 'remote-lon02' is unreachable or not configured</code></strong> — Confirm the remote array is online and replication link is established with <code>purepgroup list --replication</code>.</p>
+</div>
 <hr />
 <h2 id="subscription-lifecycle-procedures">Subscription Lifecycle Procedures<a class="headerlink" href="#subscription-lifecycle-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="annual-true-forward-review">Annual True Forward Review<a class="headerlink" href="#annual-true-forward-review" title="Permanent link">&para;</a></h3>
 <p><img alt="Annual True Forward Review" src="../../../../../assets/evergreen-proc-annual-true-forward-review.svg" /></p>
 <p>Conduct this review 60 days before the annual True Forward review date.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Pull current capacity data for the review</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Identify the largest capacity consumers</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">2</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Snapshot space consumption</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Pull current capacity data for the review</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Identify the largest capacity consumers</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">2</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Snapshot space consumption</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/true-forward-capacity-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Array Name                          Capacity(GB)    Used(GB)    Available(GB)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>pure-sfo-01                         102400          87654       14746
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>pure-sfo-02                         51200           45123       6077
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>pure-lax-01                         204800          198765      6035
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Volume Name                         Used(GB)        Provisioned(GB)
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>prod-db-primary-01                  45678           50000
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>prod-db-replica-02                  34521           40000
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>backup-archive-tier-03              28945           30000
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>dev-analytics-vol-04                12456           15000
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>test-sandbox-ephemeral-05           8234            10000
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>...
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Snapshot Name                       Used(GB)        Created
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>prod-db-primary-01.snap.20250115    8765            2025-01-15T09:23:14Z
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>backup-archive-tier-03.snap.20250114  6543         2025-01-14T22:15:08Z
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>prod-db-replica-02.snap.20250115    4321           2025-01-15T03:45:22Z
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>dev-analytics-vol-04.snap.20250113   2156           2025-01-13T18:30:45Z
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Verify the Pure Storage CLI is installed and the PATH includes the Pure bin directory, or source the Pure environment setup script.
+<strong><code>Error: Array connection failed - unable to authenticate</code></strong> — Ensure PURE_APITOKEN environment variable is set and the array hostname is reachable via network.
+<strong><code>Permission denied: ~/true-forward-capacity-*.txt</code></strong> — Check that your user has write permissions to the home directory or specify an alternative writable path.</p>
+</div>
 <p>Prepare the following for the True Forward meeting with the Pure account team:</p>
 <table>
 <thead>
@@ -9249,27 +9543,74 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 <hr />
 <h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
 <p>Run after any configuration change, upgrade, or maintenance window:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Health summary</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Alert check — confirm no new alerts</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Drive health</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Replication</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Host paths</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>purehostconnection<span class="w"> </span>list
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Capacity — compare to pre-change baseline</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Health summary</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Alert check — confirm no new alerts</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># Drive health</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="c1"># Replication</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="c1"># Host paths</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="c1"># Capacity — compare to pre-change baseline</span>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Name                          Version           Status
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>pure-array-prod-01            6.4.2.1           Healthy
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>pure-array-prod-02            6.4.2.1           Healthy
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Controller                    Status            Model
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>CT0.FAStT-prod-01             Online            FA-m70
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>CT1.FAStT-prod-01             Online            FA-m70
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>Hardware                      Status            Temperature
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>PSU-0                         OK                Normal
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>PSU-1                         OK                Normal
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>Fan-0                         OK                Normal
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>Fan-1                         OK                Normal
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>...
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>AlertId    Severity    Message                              Created
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>(no alerts)
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>Name                          Status            Capacity(GB)
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>SSD-0-0                       Healthy           3814.7
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>SSD-0-1                       Healthy           3814.7
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>SSD-1-0                       Healthy           3814.7
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>...
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>Name                          Status            Arrays
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>prod-pod-01                   Synced            2
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>prod-pod-02                   Synced            2
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>Name                          Direction         Status
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>prod-pod-01→prod-pod-02       Outbound          Active
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>prod-pod-02→prod-pod-01       Inbound           Active
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>Host                          Connection        Status
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>host-db-01                    iSCSI             Connected
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>host-db-02                    iSCSI             Connected
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>host-app-03                   FC                Connected
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a>
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>Name                          Used(GB)          Available(GB)    Capacity(GB)
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>pure-array-prod-01            4821.3            8156.2           12977.5
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>pure-array-prod-02            4756.1            8201.4           12977.5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (e.g., <code>export PATH=$PATH:/opt/purearray/bin</code>).
+<strong><code>Authentication failed: Invalid credentials</code></strong> — Verify your Pure array credentials are set via environment variables or config file (e.g., <code>export PURE_API_TOKEN=&lt;token&gt;</code>).
+<strong><code>Connection refused: Unable to reach array at &lt;ip&gt;</code></strong> — Confirm network connectivity to the array management IP and that the array is online with <code>ping &lt;array-mgmt-ip&gt;</code>.</p>
+</div>
 <p>Application-layer validation:</p>
 <ul>
 <li>[ ] Confirm production workload I/O is normal — check application response times and error logs</li>
@@ -9288,10 +9629,19 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 <li>During the upgrade window, Pure engineers perform the non-disruptive controller swap following the rolling replacement sequence</li>
 <li>After the upgrade, verify the new controller generation is active:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Confirm both controllers are online with the new hardware generation</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controllers
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># The &#39;type&#39; or &#39;model&#39; field should reflect the updated controller generation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Confirm both controllers are online with the new hardware generation</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controllers
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1"># The &#39;type&#39; or &#39;model&#39; field should reflect the updated controller generation</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Name              Status    Model              Version           Mode
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>controller0       Online    FA-m70             6.4.2.1234        Active
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>controller1       Online    FA-m70             6.4.2.1234        Passive
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Array connection failed</code></strong> — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
+<strong><code>Error: Invalid credentials</code></strong> — Re-authenticate using <code>purearray login</code> with valid administrative credentials before running list commands.</p>
+</div>
 <p>Confirm no new alerts appeared after the refresh and that all host paths are fully restored before closing the change record.</p>
 <h2 id="track-hardware-refresh-timeline">Track Hardware Refresh Timeline<a class="headerlink" href="#track-hardware-refresh-timeline" title="Permanent link">&para;</a></h2>
 <p>Evergreen//Forever entitlement includes scheduled hardware refreshes. Use Pure1 to track the refresh window and plan accordingly.</p>
@@ -9312,10 +9662,29 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 <li>Review all Upgrade Advisor findings and resolve any blockers before scheduling</li>
 <li>Schedule the upgrade via Pure1 or initiate via CLI with Pure Support engaged:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Initiate Purity upgrade to a specific target version</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--version<span class="w"> </span>&lt;target&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Pure Support must be engaged before running this command in production</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Initiate Purity upgrade to a specific target version</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>--version<span class="w"> </span>&lt;target&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="c1"># Pure Support must be engaged before running this command in production</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Upgrade initiated for array: purearray-prod-01.dc1.internal
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Current version: 6.2.4
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Target version: 6.3.1
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Estimated upgrade time: 45 minutes
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Pre-flight checks: PASSED
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>  - Sufficient free space: 127 GB available
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>  - No active snapshots blocking upgrade: OK
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>  - Replication links healthy: OK
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>  - All controllers online: 2/2
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Upgrade job ID: upgrade-20240115-4a7f9c2e
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Status: PENDING
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>Next step: Review upgrade window and confirm to proceed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Target version 6.3.1 not available for this array model</code></strong> — Verify the target version is compatible with your Pure array model using <code>purearray list-versions</code>.
+<strong><code>Error: Upgrade cannot proceed - active snapshots detected on 3 volumes</code></strong> — Delete or complete all active snapshots before upgrade using <code>purearray snapshot list</code> and <code>purearray snapshot delete</code>.
+<strong><code>Error: Replication link to secondary array is unhealthy</code></strong> — Verify network connectivity and replication status with <code>purearray replication status</code> before retrying the upgrade.</p>
+</div>
 <p>Confirm the upgrade readiness check passes without blockers before setting the maintenance window: <code>purearray upgrade --check</code>.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9353,7 +9722,7 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

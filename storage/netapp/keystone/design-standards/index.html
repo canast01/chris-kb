@@ -8356,46 +8356,80 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List volumes with their comments to verify tagging</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,comment<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>keystone
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set a volume-level space threshold alert at 80% utilisation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># (Keystone billing is based on logical used, but physical capacity matters for planning)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>event<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-threshold-alerts-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Configure a volume nearly-full threshold event for Keystone volumes</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># ONTAP generates wafl.vol.full.threshold events when volumes reach configured thresholds</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">set</span><span class="w"> </span>advanced
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-space-nearly-full-threshold-percent<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>-space-full-threshold-percent<span class="w"> </span><span class="m">95</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">set</span><span class="w"> </span>admin
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Verify threshold settings</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>-fields<span class="w"> </span>space-nearly-full-threshold-percent,space-full-threshold-percent
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vserver     volume              comment
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-------     ------              -------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svm_prod    vol_oradb01_data    app=oradb01 owner=finance tier=extreme keystone=true
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svm_prod    vol_oradb02_data    app=oradb02 owner=finance tier=premium keystone=true
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>svm_prod    vol_mysqldb_logs    app=mysqldb owner=ops tier=standard keystone=true
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Confirm the volume is no longer in use (no active client mounts)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vol_oldapp
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Verify no NFS exports; check CIFS share list</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Step 2: Delete all snapshots to release capacity immediately</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Step 3: Unmount and offline the volume</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Step 4: Delete the volume</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-force
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Step 5: Verify the volume no longer appears</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Expected: no matching volumes</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Step 6: Confirm the capacity is reflected in the next BlueXP reporting cycle</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># (capacity reduction visible in BlueXP within the next Collector collection interval)</span>
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: cannot modify volume vol_oradb01_data: volume is offline</code></strong> — Bring the volume online with <code>volume online -vserver svm_prod -volume vol_oradb01_data</code> before modifying it.
+<strong><code>Error: command failed: cannot modify volume vol_oradb01_data: insufficient privileges for user "admin"</code></strong> — Ensure your user role has "volume_modify" capability or use an account with cluster admin privileges.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set a volume-level space threshold alert at 80% utilisation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (Keystone billing is based on logical used, but physical capacity matters for planning)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>event<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-threshold-alerts-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Configure a volume nearly-full threshold event for Keystone volumes</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># ONTAP generates wafl.vol.full.threshold events when volumes reach configured thresholds</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">set</span><span class="w"> </span>advanced
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-space-nearly-full-threshold-percent<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-space-full-threshold-percent<span class="w"> </span><span class="m">95</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">set</span><span class="w"> </span>admin
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify threshold settings</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>-fields<span class="w"> </span>space-nearly-full-threshold-percent,space-full-threshold-percent
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>event config modify -threshold-alerts-enabled true
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>set advanced
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>(no output — command completes silently)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>volume modify -vserver svm_prod -volume vol_oradb01_data -space-nearly-full-threshold-percent 80 -space-full-threshold-percent 95
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>(no output — command completes silently)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>set admin
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>(no output — command completes silently)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Vserver         Volume                Space Nearly Full   Space Full
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                                      Threshold Percent   Threshold Percent
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>--------------- --------------------- ------------------- -------------------
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>svm_prod        vol_oradb01_data      80                  95
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: There is no entry in the event config table.</code></strong> — Run <code>event config create -threshold-alerts-enabled true</code> instead of modify if the event config does not yet exist.
+<strong><code>Error: volume modify: invalid field "space-nearly-full-threshold-percent"</code></strong> — Verify the exact field name with <code>volume modify -help</code> as the parameter name may differ by ONTAP version (e.g., use <code>nearly-full-threshold-percent</code> without "space-" prefix).
+<strong><code>Error: This command can only be run in the advanced privilege level.</code></strong> — Ensure you have executed <code>set advanced</code> before running the volume modify command, or use the full path <code>set -privilege advanced</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Confirm the volume is no longer in use (no active client mounts)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vol_oldapp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify no NFS exports; check CIFS share list</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Step 2: Delete all snapshots to release capacity immediately</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Step 3: Unmount and offline the volume</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 4: Delete the volume</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-force
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Step 5: Verify the volume no longer appears</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Expected: no matching volumes</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Step 6: Confirm the capacity is reflected in the next BlueXP reporting cycle</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># (capacity reduction visible in BlueXP within the next Collector collection interval)</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj0EOgjAQRfc9xYSFOy_AwoS4caMuOEDTtA1MrDOkLSHEeHepgIbQXfvmv8wfg97qiEwlGB5ICLJxYP-Qmil6dqGE4jYjOC-ogFdoVWdLSK6ixtm34CBb5Y0lpGZy7jVc1m82r7rOoVZptQxW9x7jOHnVH0O94LzfG4zyyYSR_byzSggOcP3BrLk7EY4n2Nafn2FzVErlS6_p3PRr7aquxgeoUY2z?" /></p>
 
 
@@ -8419,7 +8453,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

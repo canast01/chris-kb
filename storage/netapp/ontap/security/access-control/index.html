@@ -8264,46 +8264,158 @@ Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Log
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Create a service account using the custom role</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authmethod<span class="w"> </span>publickey<span class="w"> </span>-role<span class="w"> </span>monitor-role
 </code></pre></div>
-<h2 id="user-login-management">User Login Management<a class="headerlink" href="#user-login-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all login accounts</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create a user (SSH + password auth)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Delete a user</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Change password</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Lock / unlock an account</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>(no output — command completes silently)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>(no output — command completes silently)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no output — command completes silently)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "monitor-role" already exists.</code></strong> — Delete the existing role first with <code>security login role delete -role monitor-role</code> or use a different role name.
+<strong><code>Error: Command directory "snapmirror show" not found.</code></strong> — Verify the exact command directory name using <code>security login role show -role admin</code> and use the correct command path (e.g., <code>snapmirror</code> instead of <code>snapmirror show</code>).
+<strong><code>Error: User "svc-monitor" already exists.</code></strong> — Remove the existing user with <code>security login delete -username svc-monitor -application ssh</code> before recreating it.</p>
+</div>
+<h2 id="user-login-management">User Login Management<a class="headerlink" href="#user-login-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all login accounts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a user (SSH + password auth)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Delete a user</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Change password</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Lock / unlock an account</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster1::&gt; security login show
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Vserver: cluster1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                                 Authentication
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>User/Group                 Application Method    Role Name
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>------------------------   -----------  --------  ----------
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>admin                      console      password  admin
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>admin                      http         password  admin
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>admin                      ontapi       password  admin
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>admin                      ssh          password  admin
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>diag                       console      password  diag
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>diag                       http         password  diag
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>diag                       ontapi       password  diag
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>diag                       ssh          password  diag
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>...
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>cluster1::&gt; security login show -vserver svm_prod
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Vserver: svm_prod
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>                                                 Authentication
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>User/Group                 Application Method    Role Name
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>------------------------   -----------  --------  ----------
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>vsadmin                    ssh          password  vsadmin
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>backup_user                ssh          password  backup
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>...
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>cluster1::&gt; security login create -username netops_user -application ssh -authentication-method password -role admin -vserver svm_prod
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Please enter a password for user &#39;netops_user&#39;:
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Please confirm the password:
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>(no output — command completes silently)
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>cluster1::&gt; security login password -username netops_user -vserver svm_prod
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Please enter a password for user &#39;netops_user&#39;:
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>Please confirm the password:
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>(no output — command completes silently)
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>cluster1::&gt; security login lock -username netops_user -vserver svm_prod
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>(no output — command completes silently)
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>cluster1::&gt; security login unlock -username netops_user -vserver svm_prod
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "netops_user" does not exist.</code></strong> — Verify the username exists with <code>security login show</code> before attempting to modify or delete it.
+<strong><code>Error: Role "admin" does not exist for Vserver "svm_prod".</code></strong> — Use <code>security login role show -vserver svm_prod</code> to list valid roles and specify an existing role name.
+<strong><code>Error: This operation is not permitted: User "admin" cannot be locked.</code></strong> — Built-in system accounts cannot be locked; only custom user accounts can be locked for security purposes.</p>
+</div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p><strong>Admin action auditing</strong>: All CLI, API, and System Manager operations by authenticated users are captured in the ONTAP audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View recent administrative audit events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin<span class="w"> </span>-time-range<span class="w"> </span>24h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View recent administrative audit events</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin<span class="w"> </span>-time-range<span class="w"> </span>24h
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Vserver     User      Ip Address      Event                           Result
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>----------- --------- --------------- ------------------------------- -------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cluster1    admin     192.168.1.50    login                           success
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cluster1    admin     192.168.1.50    set advanced-privilege          success
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cluster1    admin     192.168.1.50    storage aggregate show           success
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cluster1    admin     192.168.1.50    volume create                    success
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>cluster1    admin     192.168.1.50    security audit log show          success
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>cluster1    admin     192.168.1.50    logout                           success
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Vserver     User      Ip Address      Event                           Result Time
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>----------- --------- --------------- ------------------------------- ------- -------------------------
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>cluster1    admin     192.168.1.50    login                           success 2024-01-15 14:32:18 -05:00
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>cluster1    admin     192.168.1.50    volume snapshot create          success 2024-01-15 13:47:22 -05:00
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>cluster1    admin     192.168.1.50    security ssl modify              success 2024-01-15 12:15:09 -05:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: security audit log show</code></strong> — Verify you are connected to a NetApp ONTAP cluster (not a different storage system) using <code>system node show</code>.
+<strong><code>Error: Access denied. Insufficient privileges to view audit logs</code></strong> — Ensure your user account has admin or audit-admin role by running <code>security login show -user &lt;username&gt;</code>.</p>
+</div>
 <p><strong>File access auditing via ONTAP Audit Framework</strong>: Captures NFS and SMB file access events to an EVTX audit log on a designated NAS volume:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure SVM-level file access auditing</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SVM-level file access auditing</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "audit" is not a recognized command.</code></strong> — Ensure you are connected to the ONTAP cluster management interface and have sufficient privileges; use <code>security audit</code> instead of <code>vserver audit</code> depending on your ONTAP version.
+<strong><code>Error: destination "/audit_logs" does not exist</code></strong> — Create the audit log destination directory first using <code>volume create -vserver &lt;svm&gt; -volume audit_logs -aggregate &lt;aggr&gt; -size 10GB</code> or specify an existing path.
+<strong><code>Error: vserver &lt;svm&gt; does not exist or access is denied</code></strong> — Verify the SVM name is correct and you have cluster administrator or SVM administrator credentials with audit permissions.</p>
+</div>
 <p><strong>FPolicy for file access control and monitoring</strong>: FPolicy intercepts file operations and can send them to an external FPolicy server (DLP, ransomware detection, archiving):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show FPolicy configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fpolicy<span class="w"> </span>show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>scope<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show FPolicy configuration</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fpolicy<span class="w"> </span>show
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>show
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>scope<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver         Policy Name                    Event
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>-----------     -------------------------------- --------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>svm-prod        ransomware-protection          file-create
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>svm-prod        ransomware-protection          file-write
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>svm-prod        data-audit                     file-access
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>svm-dev         basic-monitoring               file-create
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>svm-dev         basic-monitoring               file-delete
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Vserver         Policy Name          Status    Scope Name
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>-----------     -------------------- --------- --------------------
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>svm-prod        ransomware-protection enabled  prod-shares
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>svm-prod        data-audit           enabled   audit-scope
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>svm-dev         basic-monitoring     disabled  dev-scope
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Vserver         Policy Name          Scope Name       Volumes
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>-----------     -------------------- --------------- ----------------
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>svm-prod        ransomware-protection prod-shares     vol_data_01, vol_data_02
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>svm-prod        data-audit           audit-scope     vol_audit
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>svm-dev         basic-monitoring     dev-scope       vol_dev_01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: fpolicy</code></strong> — Ensure you are connected to a NetApp ONTAP cluster with admin privileges and run the command from the ONTAP CLI, not the local shell.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Verify your user account has the "security" or "admin" role assigned in ONTAP.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8333,7 +8445,7 @@ Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Log
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:24:31 UTC"><span class="timeago" datetime="2026-06-29T05:24:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:24:31 UTC">2026-06-29</span>
   </span>
 
     

@@ -7560,28 +7560,93 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># View job phase detail (useful for jobs that failed mid-stream)</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>qlist<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-jobid<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>-phase
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Job ID: 1247856
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Status: Failed
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Error Code: 19:107
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Phase: Archive Index
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Client: prod-db-01.corp.local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Subclient: Daily_Full_Backup
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Start Time: 2024-01-15 02:30:15
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>End Time: 2024-01-15 04:45:22
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Duration: 2h 15m 7s
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Job ID: 1247821
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Status: Failed
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Error Code: 56:64
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Phase: Transfer
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Client: web-app-02.corp.local
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Subclient: Incremental_Policy
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Start Time: 2024-01-15 01:15:00
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>End Time: 2024-01-15 02:08:33
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Job ID: 1247798
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Status: Running
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Phase: Scan
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Client: file-server-05.corp.local
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Subclient: Weekly_Archive
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Progress: 34%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qlist: command not found</code></strong> — Ensure you are running the command from the CommVault bin directory (typically <code>C:\Program Files\Commvault\ContentStore\Base\</code>) or add it to your PATH environment variable.
+<strong><code>Error Code: 19:107 - Archive Index failed</code></strong> — Check CommServe disk space and database connectivity; restart the CommVault services if the index is corrupted.
+<strong><code>Job ID &lt;job-id&gt; not found</code></strong> — Verify the job ID is correct and the job has not been purged from the job history (default retention is 90 days).</p>
+</div>
 <hr />
 <h2 id="step-2-test-connectivity-to-affected-clients">Step 2 — Test connectivity to affected clients<a class="headerlink" href="#step-2-test-connectivity-to-affected-clients" title="Permanent link">&para;</a></h2>
 <p>Commvault uses TCP port 8400 (by default) for CommServe-to-client communication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test CV connectivity from CommServe to a specific client</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run from CommServe host</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cvping<span class="w"> </span>-clientName<span class="w"> </span>&lt;client-hostname&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Expected: &quot;Ping status successful&quot; with round-trip time in milliseconds</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># If fails: &quot;Ping failed&quot; — check network firewall and CV services on the client</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Test in reverse (from client to CommServe)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Run on the client host</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cvping<span class="w"> </span>-clientName<span class="w"> </span>&lt;commserve-hostname&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># List all registered clients and their connectivity state</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>qlist<span class="w"> </span>client
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Output columns: Client Name, Host Name, Type, OS, Status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Status: Ready = healthy; Offline = unreachable</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show details for a specific client</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>&lt;client-hostname&gt;<span class="w"> </span>-verbose
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Shows: IP address, last heartbeat time, installed packages, proxy settings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test CV connectivity from CommServe to a specific client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Run from CommServe host</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cvping<span class="w"> </span>-clientName<span class="w"> </span>&lt;client-hostname&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected: &quot;Ping status successful&quot; with round-trip time in milliseconds</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If fails: &quot;Ping failed&quot; — check network firewall and CV services on the client</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test in reverse (from client to CommServe)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Run on the client host</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cvping<span class="w"> </span>-clientName<span class="w"> </span>&lt;commserve-hostname&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># List all registered clients and their connectivity state</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>qlist<span class="w"> </span>client
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Output columns: Client Name, Host Name, Type, OS, Status</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Status: Ready = healthy; Offline = unreachable</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Show details for a specific client</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>&lt;client-hostname&gt;<span class="w"> </span>-verbose
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Shows: IP address, last heartbeat time, installed packages, proxy settings</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CommServe to Client Ping Test:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Ping status successful
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Round trip time: 42 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Client: prod-db-01.corp.local (192.168.45.23)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Client to CommServe Ping Test:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Ping status successful
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Round trip time: 38 ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>CommServe: commserve-01.corp.local (192.168.45.10)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Registered Clients List:
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Client Name                    Host Name              Type        OS           Status
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>prod-db-01.corp.local         prod-db-01            PostgreSQL  Linux        Ready
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>web-app-02.corp.local         web-app-02            FileServer  Windows      Ready
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>backup-vault-03.corp.local    backup-vault-03       MediaAgent  Linux        Ready
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>legacy-app-04.corp.local      legacy-app-04         Exchange    Windows      Offline
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>...
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Client Details (prod-db-01.corp.local):
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Client Name: prod-db-01.corp.local
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Host Name: prod-db-01
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>IP Address: 192.168.45.23
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Last Heartbeat: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Installed Packages: PostgreSQL Agent v11.28, File System Agent v11.28
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Proxy Settings: Direct connection (no proxy)
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>CommCell ID: 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Ping failed</code></strong> — Verify network connectivity between CommServe and client, check firewall rules allow port 8400, and confirm CV services are running on both hosts with <code>service cvd status</code>.
+<strong><code>Client not found in CommCell</code></strong> — Ensure the client hostname is registered in CommCell by running <code>qlist client</code> to verify it exists, or re-register the client if missing.
+<strong><code>Connection timeout after 30 seconds</code></strong> — Check if the client's CV daemon is running with <code>service cvd status</code> and restart it with <code>service cvd restart</code> if stopped.</p>
+</div>
 <p><strong>If cvping fails:</strong>
 1. Confirm TCP 8400 is open between CommServe and client (use telnet or Test-NetConnection)
 2. On the client: verify <code>GxFWD</code> (CvFwd) service is running
@@ -7590,29 +7655,60 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 3. Check the client firewall (Windows Firewall or iptables) for port 8400</p>
 <hr />
 <h2 id="step-3-check-mediaagent-and-ddb-health">Step 3 — Check MediaAgent and DDB health<a class="headerlink" href="#step-3-check-mediaagent-and-ddb-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all MediaAgents and disk libraries</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qlist<span class="w"> </span>mediaagent
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Output: Name, Status, Index Cache Path, DDB Path</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List deduplication databases</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>qlist<span class="w"> </span>ddb
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Output columns: DDB ID, MA Host, DDB Path, Space Used, Space Free, Status</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Expected status: Online</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Alert: if DDB status = Offline or Resync Required</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># List disk libraries with usage</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>qlist<span class="w"> </span>storage<span class="w"> </span>-type<span class="w"> </span>disk<span class="w"> </span>-verbose
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Shows: library name, mount path, space used, space available, MA host</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check disk space on MediaAgent (run on the MA host)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Windows:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Get-PSDrive<span class="w"> </span>-PSProvider<span class="w"> </span>FileSystem<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">n</span><span class="o">=</span><span class="s1">&#39;UsedGB&#39;</span><span class="p">;</span><span class="nv">e</span><span class="o">={[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,1<span class="o">)}}</span>,
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">n</span><span class="o">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="nv">e</span><span class="o">={[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,1<span class="o">)}}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Linux MediaAgent:</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/cv-disk-library/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all MediaAgents and disk libraries</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>qlist<span class="w"> </span>mediaagent
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Output: Name, Status, Index Cache Path, DDB Path</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># List deduplication databases</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>qlist<span class="w"> </span>ddb
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Output columns: DDB ID, MA Host, DDB Path, Space Used, Space Free, Status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Expected status: Online</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Alert: if DDB status = Offline or Resync Required</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># List disk libraries with usage</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>qlist<span class="w"> </span>storage<span class="w"> </span>-type<span class="w"> </span>disk<span class="w"> </span>-verbose
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Shows: library name, mount path, space used, space available, MA host</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Check disk space on MediaAgent (run on the MA host)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Windows:</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Get-PSDrive<span class="w"> </span>-PSProvider<span class="w"> </span>FileSystem<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">n</span><span class="o">=</span><span class="s1">&#39;UsedGB&#39;</span><span class="p">;</span><span class="nv">e</span><span class="o">={[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,1<span class="o">)}}</span>,
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>@<span class="o">{</span><span class="nv">n</span><span class="o">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="nv">e</span><span class="o">={[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,1<span class="o">)}}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Linux MediaAgent:</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/cv-disk-library/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>MediaAgent List:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Name                    Status          Index Cache Path              DDB Path
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>MA-PROD-01              Online          /opt/cv/indexcache            /mnt/ddb01
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>MA-PROD-02              Online          /opt/cv/indexcache            /mnt/ddb02
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>MA-DR-01                Online          /opt/cv/indexcache            /mnt/ddb03
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Deduplication Databases:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>DDB ID    MA Host         DDB Path              Space Used    Space Free    Status
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>1         MA-PROD-01      /mnt/ddb01            2.3TB         5.7TB         Online
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2         MA-PROD-02      /mnt/ddb02            1.8TB         6.2TB         Online
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>3         MA-DR-01        /mnt/ddb03            890GB         7.1TB         Online
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Disk Libraries:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Library Name            Mount Path                    Used       Available    MA Host
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>DiskLib-Primary         /mnt/cv-disk-library         18.5TB     31.5TB       MA-PROD-01
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>DiskLib-Secondary       /mnt/cv-secondary            12.2TB     37.8TB       MA-PROD-02
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Name     UsedGB    FreeGB
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>C:       256.3     43.7
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>D:       512.8     987.2
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>E:       1024.0    2048.5
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>/dev/sda1      50G   42G  8.0G  84% /mnt/cv-disk-library
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>qlist: command not found</code></strong> — Ensure the Commvault installation directory is in your PATH or run the command from the Commvault bin directory (e.g., <code>/opt/commvault/Base/bin/qlist</code>).
+<strong><code>DDB status = Resync Required</code></strong> — Run a DDB rebuild from the CommCell console or contact Commvault support if the resync does not complete within the expected timeframe.
+<strong><code>Filesystem /mnt/cv-disk-library: No such file or directory</code></strong> — Verify the mount path exists and the disk library is properly mounted on the MediaAgent host.</p>
+</div>
 <p><strong>If DDB status is "Resync Required" or "Offline":</strong>
 1. Do not delete or move DDB files — this can cause data loss for all dedup-enabled backups on that MA
 2. Run the DDB verification script: <code>qoperation execscript -sn QS_DDBVerify</code>
@@ -7620,49 +7716,77 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 4. Contact Commvault support before attempting DDB repair if uncertain</p>
 <hr />
 <h2 id="step-4-read-log-files">Step 4 — Read log files<a class="headerlink" href="#step-4-read-log-files" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># CommServe main log (Windows path)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$logDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\CV\Log Files&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Get-ChildItem<span class="w"> </span><span class="nv">$logDir</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>LastWriteTime<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Search CommServe log for errors</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\CommServe.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail|exception&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Job Manager service log (shows job dispatch errors)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\GxJobMgrService.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># MediaAgent log (run on the MA host)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\MediaAgent.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Client-side backup log (run on the client host)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Windows client:</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;C:\CV\Log Files\clBackup.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Linux client:</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/clBackup.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># CommServe main log (Windows path)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$logDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\CV\Log Files&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Get-ChildItem<span class="w"> </span><span class="nv">$logDir</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>LastWriteTime<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Search CommServe log for errors</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\CommServe.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail|exception&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Job Manager service log (shows job dispatch errors)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\GxJobMgrService.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># MediaAgent log (run on the MA host)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$logDir</span><span class="s2">\MediaAgent.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Client-side backup log (run on the client host)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Windows client:</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;C:\CV\Log Files\clBackup.log&quot;</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span>-CaseSensitive:<span class="nv">$false</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Linux client:</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/clBackup.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
-<hr />
+<h2 id="expected-outputdirectory-ccvlog-files-mode-lastwritetime-length-name-a-1152025-24733-pm-8524672-commservelog-a-1152025-23115-pm-5242880-gxjobmgrservicelog-a-1152025-15822-pm-3145728-mediaagentlog-a-1152025-12244-pm-2097152-clbackuplog-a-1152025-121508-pm-1048576-auditloglog-a-1152025-114733-am-524288-eventmanagerlog-a-1152025-103322-am-262144-evmgrclog-a-1152025-91511-am-131072-gxmmmlog-a-1152025-84455-am-65536-gxevmgrlog-a-1152025-72218-am-32768-gxcvdlog-commservelog128472025-01-15-143218-error-0x00000a4c-failed-to-connect-to-database-connection-timeout-after-30s-commservelog128912025-01-15-143345-error-0x00000b2d-job-45821-dispatch-failed-mediaagent-ma-prod-02-unavailable-commservelog129342025-01-15-143512-exception-0x00000c1f-backup-validation-failed-for-client-win-client-07-insufficient-disk-space-on-destination-commservelog129782025-01-15-143633-error-0x00000d8a-authentication-failure-for-user-admindomaincom-invalid-credentials-commservelog130212025-01-15-143755-error-0x00000e4b-replication-job-45823-failed-network-unreachable-to-secondary-commserve-gxjobmgrservicelog82342025-01-15-143122-error-job-45821-failed-to-dispatch-no-available-mediaagent-with-required-storage-pool-gxjobmgrservicelog82672025-01-15-143308-error-job-45822-scheduling-conflict-detected-with-job-45815-gxjobmgrservicelog83012025-01-15-143444-fail-job-45824-resource-allocation-timeout-mediaagentlog56122025-01-15-142933-error-ma-prod-02-failed-to-mount-tape-library-device-not-ready-mediaagentlog56452025-01-15-143055-error-ma-prod-02-deduplication-store-corruption-detected-on-pool-ddb-prod-01-mediaagentlog56782025-01-15-14"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Directory: C:\CV\Log Files
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Mode                 LastWriteTime         Length Name
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>----                 -------------         ------ ----
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>-a----         1/15/2025 2:47:33 PM       8524672 CommServe.log
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>-a----         1/15/2025 2:31:15 PM       5242880 GxJobMgrService.log
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-a----         1/15/2025 1:58:22 PM       3145728 MediaAgent.log
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>-a----         1/15/2025 1:22:44 PM       2097152 clBackup.log
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>-a----         1/15/2025 12:15:08 PM      1048576 AuditLog.log
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>-a----         1/15/2025 11:47:33 AM       524288 EventManager.log
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>-a----         1/15/2025 10:33:22 AM       262144 EvMgrC.log
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>-a----         1/15/2025 9:15:11 AM        131072 GxMMM.log
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>-a----         1/15/2025 8:44:55 AM         65536 GxEvMgr.log
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>-a----         1/15/2025 7:22:18 AM         32768 GxCVD.log
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>CommServe.log:12847:2025-01-15 14:32:18 ERROR [0x00000A4C] Failed to connect to database: Connection timeout after 30s
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>CommServe.log:12891:2025-01-15 14:33:45 ERROR [0x00000B2D] Job 45821 dispatch failed: MediaAgent MA-PROD-02 unavailable
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>CommServe.log:12934:2025-01-15 14:35:12 EXCEPTION [0x00000C1F] Backup validation failed for client WIN-CLIENT-07: Insufficient disk space on destination
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>CommServe.log:12978:2025-01-15 14:36:33 ERROR [0x00000D8A] Authentication failure for user admin@domain.com: Invalid credentials
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>CommServe.log:13021:2025-01-15 14:37:55 ERROR [0x00000E4B] Replication job 45823 failed: Network unreachable to secondary CommServe
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>GxJobMgrService.log:8234:2025-01-15 14:31:22 ERROR Job 45821 failed to dispatch: No available MediaAgent with required storage pool
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>GxJobMgrService.log:8267:2025-01-15 14:33:08 ERROR Job 45822 scheduling conflict detected with job 45815
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>GxJobMgrService.log:8301:2025-01-15 14:34:44 FAIL Job 45824 resource allocation timeout
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>MediaAgent.log:5612:2025-01-15 14:29:33 ERROR [MA-PROD-02] Failed to mount tape library: Device not ready
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>MediaAgent.log:5645:2025-01-15 14:30:55 ERROR [MA-PROD-02] Deduplication store corruption detected on pool DDB-PROD-01
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>MediaAgent.log:5678:2025-01-15 14:
+</code></pre></div><a class="headerlink" href="#expected-outputdirectory-ccvlog-files-mode-lastwritetime-length-name-a-1152025-24733-pm-8524672-commservelog-a-1152025-23115-pm-5242880-gxjobmgrservicelog-a-1152025-15822-pm-3145728-mediaagentlog-a-1152025-12244-pm-2097152-clbackuplog-a-1152025-121508-pm-1048576-auditloglog-a-1152025-114733-am-524288-eventmanagerlog-a-1152025-103322-am-262144-evmgrclog-a-1152025-91511-am-131072-gxmmmlog-a-1152025-84455-am-65536-gxevmgrlog-a-1152025-72218-am-32768-gxcvdlog-commservelog128472025-01-15-143218-error-0x00000a4c-failed-to-connect-to-database-connection-timeout-after-30s-commservelog128912025-01-15-143345-error-0x00000b2d-job-45821-dispatch-failed-mediaagent-ma-prod-02-unavailable-commservelog129342025-01-15-143512-exception-0x00000c1f-backup-validation-failed-for-client-win-client-07-insufficient-disk-space-on-destination-commservelog129782025-01-15-143633-error-0x00000d8a-authentication-failure-for-user-admindomaincom-invalid-credentials-commservelog130212025-01-15-143755-error-0x00000e4b-replication-job-45823-failed-network-unreachable-to-secondary-commserve-gxjobmgrservicelog82342025-01-15-143122-error-job-45821-failed-to-dispatch-no-available-mediaagent-with-required-storage-pool-gxjobmgrservicelog82672025-01-15-143308-error-job-45822-scheduling-conflict-detected-with-job-45815-gxjobmgrservicelog83012025-01-15-143444-fail-job-45824-resource-allocation-timeout-mediaagentlog56122025-01-15-142933-error-ma-prod-02-failed-to-mount-tape-library-device-not-ready-mediaagentlog56452025-01-15-143055-error-ma-prod-02-deduplication-store-corruption-detected-on-pool-ddb-prod-01-mediaagentlog56782025-01-15-14" title="Permanent link">&para;</a></h2>
 <h2 id="step-5-collect-cv_diag-support-bundle">Step 5 — Collect CV_DIAG support bundle<a class="headerlink" href="#step-5-collect-cv_diag-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Method 1: CommVault Diagnostics Tool (Windows — on CommServe)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  1. Open Command Prompt as Administrator
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  2. Navigate to CommVault install dir: cd &quot;C:\Program Files\Commvault\ContentStore\Base&quot;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  3. Run: CommVaultDiagnostics.exe -collect all
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  4. Output path is shown after collection; typically: C:\CV_DIAG\&lt;timestamp&gt;\
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  5. The bundle includes: all component logs, config (credentials sanitised), system info
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Method 2: Command Center (for CommVault Cloud / newer versions)
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  1. Navigate to: Command Center → Manage → Diagnostics
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  2. Click &quot;Download Diagnostics&quot; and select the affected components
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  3. Download the resulting ZIP file
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Always include:
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Job ID(s) of the failing jobs
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - Error code from qlist jobs output
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  - Log files from the time window of the failure
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  - DDB status from qlist ddb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Method 1: CommVault Diagnostics Tool (Windows — on CommServe)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Open Command Prompt as Administrator
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  2. Navigate to CommVault install dir: cd &quot;C:\Program Files\Commvault\ContentStore\Base&quot;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  3. Run: CommVaultDiagnostics.exe -collect all
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  4. Output path is shown after collection; typically: C:\CV_DIAG\&lt;timestamp&gt;\
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  5. The bundle includes: all component logs, config (credentials sanitised), system info
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Method 2: Command Center (for CommVault Cloud / newer versions)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  1. Navigate to: Command Center → Manage → Diagnostics
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  2. Click &quot;Download Diagnostics&quot; and select the affected components
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  3. Download the resulting ZIP file
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Always include:
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  - Job ID(s) of the failing jobs
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  - Error code from qlist jobs output
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  - Log files from the time window of the failure
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  - DDB status from qlist ddb
 </code></pre></div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -7739,7 +7863,7 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -7443,47 +7443,134 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>ollama
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>serve
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>-- Logs begin at Mon 2024-01-15 09:23:14 UTC, end at Mon 2024-01-15 14:47:22 UTC. --
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Jan 15 14:47:18 ai-server-01 ollama[2847]: time=2024-01-15T14:47:18.923Z level=INFO msg=&quot;Listening on 127.0.0.1:11434&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Jan 15 14:47:15 ai-server-01 ollama[2847]: time=2024-01-15T14:47:15.456Z level=INFO msg=&quot;Loaded model mistral:latest (4.1GB)&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Jan 15 14:47:12 ai-server-01 ollama[2847]: time=2024-01-15T14:47:12.234Z level=INFO msg=&quot;GPU acceleration enabled: CUDA 12.2&quot;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Jan 15 14:47:08 ai-server-01 ollama[2847]: time=2024-01-15T14:47:08.891Z level=INFO msg=&quot;Starting Ollama server&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Jan 15 14:46:55 ai-server-01 systemd[1]: Started Ollama.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Jan 15 14:46:54 ai-server-01 systemd[1]: Starting Ollama...
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Jan 15 14:45:22 ai-server-01 ollama[2847]: time=2024-01-15T14:45:22.567Z level=WARN msg=&quot;Model cache directory not writable, using /tmp/ollama&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Jan 15 14:45:18 ai-server-01 ollama[2847]: time=2024-01-15T14:45:18.123Z level=INFO msg=&quot;Ollama v0.1.28 starting&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Jan 15 14:43:01 ai-server-01 kernel: nvidia-smi: nvidia 550.54.15 loaded
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Jan 15 14:42:58 ai-server-01 systemd[1]: Stopped Ollama.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>-- following logs --
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Jan 15 14:47:22 ai-server-01 ollama[2847]: time=2024-01-15T14:47:22.891Z level=DEBUG msg=&quot;Request received&quot; model=mistral tokens=42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit ollama.service not found.</code></strong> — Verify the service is installed with <code>systemctl list-unit-files | grep ollama</code> and reinstall if missing.
+<strong><code>Failed to start ollama.service: Unit ollama.service is masked.</code></strong> — Unmask the service with <code>systemctl unmask ollama</code> before attempting to stop it.
+<strong><code>error: listen tcp 127.0.0.1:11434: bind: address already in use</code></strong> — Kill the existing Ollama process with <code>pkill -f "ollama serve"</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</p>
+</div>
 <h2 id="gpu-not-detected">GPU Not Detected<a class="headerlink" href="#gpu-not-detected" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm driver is installed</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nvidia-smi
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check if Ollama detects GPU</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;gpu|cuda|device&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected output contains something like:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># msg=&quot;detected NVIDIA GPU&quot; id=GPU-xxxx name=&quot;NVIDIA GeForce RTX 3080&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># If GPU is missing, check CUDA visibility</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$CUDA_VISIBLE_DEVICES</span><span class="w">    </span><span class="c1"># Should be unset or set to valid GPU indices</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">unset</span><span class="w"> </span>CUDA_VISIBLE_DEVICES
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm driver is installed</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nvidia-smi
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check if Ollama detects GPU</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;gpu|cuda|device&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected output contains something like:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># msg=&quot;detected NVIDIA GPU&quot; id=GPU-xxxx name=&quot;NVIDIA GeForce RTX 3080&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If GPU is missing, check CUDA visibility</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$CUDA_VISIBLE_DEVICES</span><span class="w">    </span><span class="c1"># Should be unset or set to valid GPU indices</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">unset</span><span class="w"> </span>CUDA_VISIBLE_DEVICES
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Fri Jan 17 10:45:32 2025
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07         CUDA Version: 12.4 |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|-----------------------------------------+------------------------+----------------------+
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|===========================================================================================|
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|   0  NVIDIA GeForce RTX 3080        Off | 00:1F.0        Off   |                  N/A |
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| 30%   42C    P2             145W / 320W |   8192MiB / 10240MiB |     65%      Default |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>+-----------------------------------------------------------------------------------------+
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>msg=&quot;detected NVIDIA GPU&quot; id=GPU-a1b2c3d4 name=&quot;NVIDIA GeForce RTX 3080&quot; vram=10240
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>msg=&quot;CUDA compute capability&quot; major=8 minor=6
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>(no output — CUDA_VISIBLE_DEVICES is unset)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver</code></strong> — Reinstall the NVIDIA driver with <code>sudo apt install --reinstall nvidia-driver-550</code> and reboot.
+<strong><code>msg="no NVIDIA GPUs detected"</code></strong> — Verify the GPU is visible with <code>lspci | grep NVIDIA</code> and check that CUDA_VISIBLE_DEVICES is not restricting access with <code>echo $CUDA_VISIBLE_DEVICES</code>.</p>
+</div>
 <p>For Docker deployments, ensure <code>--gpus all</code> is passed and the NVIDIA Container Toolkit is installed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install NVIDIA Container Toolkit</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">distribution</span><span class="o">=</span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$ID$VERSION_ID</span><span class="k">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://nvidia.github.io/libnvidia-container/gpgkey<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/libnvidia-container/<span class="nv">$distribution</span>/libnvidia-container.list<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nvidia-container-toolkit.list
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>docker
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install NVIDIA Container Toolkit</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">distribution</span><span class="o">=</span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$ID$VERSION_ID</span><span class="k">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://nvidia.github.io/libnvidia-container/gpgkey<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/libnvidia-container/<span class="nv">$distribution</span>/libnvidia-container.list<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nvidia-container-toolkit.list
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>docker
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ubuntu2204
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpg: directory &#39;/root/.gnupg&#39; created
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>gpg: keybox &#39;/root/.gnupg/pubring.kdb&#39; created
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://nvidia.github.io/libnvidia-container/ubuntu22.04 / 
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Get:2 https://nvidia.github.io/libnvidia-container/ubuntu22.04 InRelease [1247 B]
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Get:3 https://nvidia.github.io/libnvidia-container/ubuntu22.04 Packages [3821 B]
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Reading package lists... Done
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Reading state information... Done
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Setting up nvidia-container-toolkit (1.14.3-1) ...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>INFO: Wrote updated config to /etc/docker/daemon.json
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>INFO: Docker runtime configured successfully
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>docker.service is not active, activating it
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>docker.service started successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out</code></strong> — Verify network connectivity and check if the NVIDIA repository is accessible; try again after confirming DNS resolution with <code>nslookup nvidia.github.io</code>.
+<strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the entire script with <code>sudo</code> or as the root user.
+<strong><code>Error response from daemon: could not select device driver "" with capabilities: [[gpu]]</code></strong> — Verify NVIDIA GPU is present with <code>lspci | grep -i nvidia</code> and ensure the NVIDIA driver is installed with <code>nvidia-smi</code>.</p>
+</div>
 <h2 id="model-load-failures">Model Load Failures<a class="headerlink" href="#model-load-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Symptom: &quot;error loading model&quot; or model hangs at 0%</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Check available VRAM</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nvidia-smi<span class="w"> </span>--query-gpu<span class="o">=</span>memory.free<span class="w"> </span>--format<span class="o">=</span>csv,noheader
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Try a smaller quantisation</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.1:8b-instruct-q4_0<span class="w">   </span><span class="c1"># smaller than q4_K_M</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Force CPU-only to rule out GPU issue</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">OLLAMA_NUM_GPU</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check model file integrity</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ls<span class="w"> </span>-lh<span class="w"> </span>~/.ollama/models/blobs/
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Re-pull if a blob is unexpectedly small</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.1:8b
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Symptom: &quot;error loading model&quot; or model hangs at 0%</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Check available VRAM</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>nvidia-smi<span class="w"> </span>--query-gpu<span class="o">=</span>memory.free<span class="w"> </span>--format<span class="o">=</span>csv,noheader
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Try a smaller quantisation</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.1:8b-instruct-q4_0<span class="w">   </span><span class="c1"># smaller than q4_K_M</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Force CPU-only to rule out GPU issue</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nv">OLLAMA_NUM_GPU</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check model file integrity</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ls<span class="w"> </span>-lh<span class="w"> </span>~/.ollama/models/blobs/
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Re-pull if a blob is unexpectedly small</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.1:8b
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>free                                                 
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>15360 MiB
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pulling manifest
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pulling 6a0746a1ec1a... 100% ▕████████████████▏ 4.7 GB
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pulling 8f178fafcf1d... 100% ▕████████████████▏ 8.6 MB
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pulling 56bb8bd7c55c... 100% ▕████████████████▏ 59 B
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pulling 3f8eb801554c... 100% ▕████████████████▏ 483 B
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>verifying sha256 digest
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>writing manifest
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>removing any unused layers
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>success
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>&gt;&gt;&gt; test
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Loading model...
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>(no output — model loads and waits for input)
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>total 18G
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>-rw-r--r-- 1 user user 4.7G Jan 15 10:23 6a0746a1ec1a2b3c4d5e6f7g8h9i0j1k
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>-rw-r--r-- 1 user user 8.6M Jan 15 10:24 8f178fafcf1d9e8f7g6h5i4j3k2l1m0n
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>-rw-r--r-- 1 user user  483B Jan 15 10:24 3f8eb801554c2a1b0c9d8e7f6g5h4i3j
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: pull model manifest: not found</code></strong> — Verify the model name is correct (e.g., <code>ollama list</code> to see available models) and check your internet connection.
+<strong><code>CUDA out of memory: tried to allocate X.XXGiB</code></strong> — Reduce model size further with a lower quantization (e.g., <code>q3_K_S</code>) or increase available VRAM by closing other GPU applications.
+<strong><code>connection refused</code></strong> — Ensure the Ollama daemon is running with <code>ollama serve</code> in another terminal before executing <code>ollama run</code> commands.</p>
+</div>
 <p>Common load error causes:</p>
 <table>
 <thead>
@@ -7517,56 +7604,153 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </tbody>
 </table>
 <h2 id="slow-inference">Slow Inference<a class="headerlink" href="#slow-inference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if model is actually on GPU</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:11434/api/ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.models[].size_vram&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If size_vram is 0 or very low, model is running on CPU</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check for CPU throttling (thermal)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cat<span class="w"> </span>/proc/cpuinfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;cpu MHz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-4
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check context length — very long contexts slow inference significantly</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Reduce OLLAMA_CONTEXT if not needed</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">OLLAMA_CONTEXT</span><span class="o">=</span><span class="m">2048</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;short prompt&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check if model is actually on GPU</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:11434/api/ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.models[].size_vram&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># If size_vram is 0 or very low, model is running on CPU</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check for CPU throttling (thermal)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>cat<span class="w"> </span>/proc/cpuinfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;cpu MHz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-4
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check context length — very long contexts slow inference significantly</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Reduce OLLAMA_CONTEXT if not needed</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nv">OLLAMA_CONTEXT</span><span class="o">=</span><span class="m">2048</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;short prompt&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>0
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>0
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>0
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>0
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cpu MHz     : 2400.000
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>cpu MHz     : 2400.000
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>cpu MHz     : 2400.000
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>cpu MHz     : 2400.000
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>pulling manifest
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>pulling 7c4a3c51a89c
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>pulling 36298d858f47
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>pulling e0d308ca4a27
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>pulling 2e0493f5393b
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>pulling 5f0343b0d42c
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>verifying sha256 digest
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>writing manifest
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>removing any unused layers
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to port 11434: Connection refused</code></strong> — Ensure Ollama service is running with <code>systemctl start ollama</code> or <code>ollama serve</code> in another terminal.
+<strong><code>jq: parse error: Cannot index number with string "models"</code></strong> — The API endpoint returned an empty response; verify the model is loaded with <code>ollama list</code> and restart with <code>ollama run &lt;model-name&gt;</code>.
+<strong><code>Error: model not found</code></strong> — Pull the model first using <code>ollama pull llama3.1:8b</code> before attempting to run it.</p>
+</div>
 <h2 id="port-conflicts">Port Conflicts<a class="headerlink" href="#port-conflicts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check if port 11434 is already in use</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:11434
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Change Ollama&#39;s port</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>systemctl<span class="w"> </span>edit<span class="w"> </span>ollama<span class="w">   </span><span class="c1"># or edit the override file directly</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Add: Environment=&quot;OLLAMA_HOST=0.0.0.0:11435&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ollama
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check if port 11434 is already in use</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:11434
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Change Ollama&#39;s port</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>systemctl<span class="w"> </span>edit<span class="w"> </span>ollama<span class="w">   </span><span class="c1"># or edit the override file directly</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Add: Environment=&quot;OLLAMA_HOST=0.0.0.0:11435&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ollama
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>LISTEN    0      4096       127.0.0.1:11434      0.0.0.0:*    users:((&quot;ollama&quot;,pid=3847,fd=3))
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>COMMAND     PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ollama    3847 root    3u  IPv4  45821      0t0  TCP 127.0.0.1:11434 (LISTEN)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>(no output — command completes silently)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>(no output — command completes silently)
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>● ollama.service - Ollama
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>   Loaded: loaded (/etc/systemd/system/ollama.service; enabled; vendor preset: enabled)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  Drop-in: /etc/systemd/system/ollama.service.d/override.conf
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>   Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2s ago
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>     Docs: https://github.com/ollama/ollama
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  Process: 3901 ExecStart=/usr/bin/ollama serve (code=exited, status=0/SUCCESS)
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a> Main PID: 3902 (ollama)
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    Tasks: 12 (limit: 4915)
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>   Memory: 284.3M
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ss: command not found</code></strong> — Install iproute2 with <code>apt install iproute2</code> or <code>yum install iproute2</code>.
+<strong><code>Failed to open /etc/systemd/system/ollama.service.d/override.conf: Permission denied</code></strong> — Run <code>systemctl edit ollama</code> with sudo or as root user.
+<strong><code>Job for ollama.service failed because the control process exited with error code</code></strong> — Verify the OLLAMA_HOST syntax is correct (e.g., <code>0.0.0.0:11435</code> without quotes in the Environment line) and check logs with <code>journalctl -u ollama -n 20</code>.</p>
+</div>
 <h2 id="service-wont-start">Service Won't Start<a class="headerlink" href="#service-wont-start" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for permission issues on model directory</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/usr/share/ollama/.ollama/
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chown<span class="w"> </span>-R<span class="w"> </span>ollama:ollama<span class="w"> </span>/usr/share/ollama/.ollama/
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check SELinux/AppArmor</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>getenforce<span class="w">   </span><span class="c1"># SELinux — if Enforcing, may need policy update</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>aa-status<span class="w">    </span><span class="c1"># AppArmor</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify binary is executable</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ls<span class="w"> </span>-la<span class="w"> </span>/usr/local/bin/ollama
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/ollama
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check for conflicting processes</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ollama
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;<span class="w">   </span><span class="c1"># Kill stale process, then restart service</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check for permission issues on model directory</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/usr/share/ollama/.ollama/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>chown<span class="w"> </span>-R<span class="w"> </span>ollama:ollama<span class="w"> </span>/usr/share/ollama/.ollama/
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check SELinux/AppArmor</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>getenforce<span class="w">   </span><span class="c1"># SELinux — if Enforcing, may need policy update</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>aa-status<span class="w">    </span><span class="c1"># AppArmor</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Verify binary is executable</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>ls<span class="w"> </span>-la<span class="w"> </span>/usr/local/bin/ollama
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/ollama
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Check for conflicting processes</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ollama
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;<span class="w">   </span><span class="c1"># Kill stale process, then restart service</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>total 48
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>drwxr-xr-x  5 ollama ollama 4096 Jan 15 10:23 .
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>drwxr-xr-x  3 root   root   4096 Jan 10 08:45 ..
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>drwxr-xr-x  2 ollama ollama 4096 Jan 15 10:23 models
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>-rw-r--r--  1 ollama ollama 2048 Jan 15 10:20 config.json
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>-rw-r--r--  1 ollama ollama 1024 Jan 15 10:19 cache.db
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Enforcing
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>apparmor module is loaded.
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a> 0 profiles loaded.
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a> 0 profiles in enforce mode.
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a> 0 profiles in complain mode.
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a> 0 processes are unconfined but have a profile defined.
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>-rwxr-xr-x 1 root root 156284928 Jan 10 08:12 /usr/local/bin/ollama
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>ollama     1247  0.8  2.3 2847392 189456 ?  Ssl  10:15   0:42 /usr/local/bin/ollama serve
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>root       3421  0.0  0.0   6408   2304 pts/0 S+   10:31   0:00 grep --color=auto ollama
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chown: changing ownership of '/usr/share/ollama/.ollama/': No such file or directory</code></strong> — Create the directory first with <code>mkdir -p /usr/share/ollama/.ollama/</code> before running chown.
+<strong><code>getenforce: command not found</code></strong> — Install SELinux tools with <code>apt install selinux-utils</code> on Debian/Ubuntu or <code>yum install policycoreutils</code> on RHEL/CentOS.
+<strong><code>Permission denied</code></strong> when starting ollama service after chmod — Ensure the ollama user exists with <code>useradd -r -s /bin/false ollama</code> and owns the binary's parent directory.</p>
+</div>
 <h2 id="connectivity-from-remote-hosts">Connectivity from Remote Hosts<a class="headerlink" href="#connectivity-from-remote-hosts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test from a remote host</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>http://&lt;ollama-host-ip&gt;:11434/api/tags
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># If unreachable, check firewall</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">11434</span>/tcp<span class="w">   </span><span class="c1"># Ubuntu</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>firewall-cmd<span class="w"> </span>--add-port<span class="o">=</span><span class="m">11434</span>/tcp<span class="w"> </span>--permanent<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w">  </span><span class="c1"># RHEL</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Confirm Ollama is listening on 0.0.0.0</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Should show 0.0.0.0:11434, not 127.0.0.1:11434</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test from a remote host</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>http://&lt;ollama-host-ip&gt;:11434/api/tags
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># If unreachable, check firewall</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">11434</span>/tcp<span class="w">   </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>firewall-cmd<span class="w"> </span>--add-port<span class="o">=</span><span class="m">11434</span>/tcp<span class="w"> </span>--permanent<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w">  </span><span class="c1"># RHEL</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Confirm Ollama is listening on 0.0.0.0</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">11434</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Should show 0.0.0.0:11434, not 127.0.0.1:11434</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;models&quot;: [
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    {
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>      &quot;name&quot;: &quot;llama2:latest&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      &quot;modified_at&quot;: &quot;2024-01-15T09:32:44.123456789Z&quot;,
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>      &quot;size&quot;: 3826087936,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>      &quot;digest&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    },
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    {
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>      &quot;name&quot;: &quot;mistral:latest&quot;,
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>      &quot;modified_at&quot;: &quot;2024-01-14T16:18:22.987654321Z&quot;,
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>      &quot;size&quot;: 4109639680,
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>      &quot;digest&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f&quot;
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    }
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  ]
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>}
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>LISTEN     0      4096      0.0.0.0:11434            0.0.0.0:*        users:((&quot;ollama&quot;,pid=2847,fd=3))
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to 192.168.1.50 port 11434: Connection refused</code></strong> — Verify Ollama is running with <code>systemctl status ollama</code> and restart if needed.
+<strong><code>Error: INVALID_ARGUMENT: 'ufw' not found</code></strong> — Check your firewall tool with <code>sudo firewall-cmd --version</code> or <code>sudo ufw version</code> and use the appropriate command for your distribution.
+<strong><code>LISTEN     0      4096      127.0.0.1:11434            0.0.0.0:*</code></strong> — Set <code>OLLAMA_HOST=0.0.0.0:11434</code> in <code>/etc/systemd/system/ollama.service</code> environment and run <code>systemctl daemon-reload &amp;&amp; systemctl restart ollama</code>.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7605,7 +7789,7 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

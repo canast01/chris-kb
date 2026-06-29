@@ -8092,7 +8092,7 @@
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>When a drive reaches end-of-life or fails and is replaced, Pure Storage performs a cryptographic erase (Instant Secure Erase, ISE) — the drive&#39;s internal DEK is overwritten, rendering all data permanently unrecoverable without needing to zero-fill the drive. This is compliant with NIST SP 800-88 media sanitisation requirements.
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify encryption is active on the array</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify encryption is active on the array</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show hardware drive details including drive type (SED)</span>
@@ -8101,35 +8101,113 @@
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show hardware component detail for encryption-related components</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure KMIP server (Purity//FA 6.x)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purekms<span class="w"> </span>create<span class="w"> </span>--address<span class="w"> </span>&lt;kmip_server_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">5696</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--certificate<span class="w"> </span>&lt;client_cert_path&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--ca-certificate<span class="w"> </span>&lt;ca_cert_path&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>kmip-primary
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># List configured KMS servers</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purekms<span class="w"> </span>list
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Test KMS connectivity</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>purekms<span class="w"> </span><span class="nb">test</span><span class="w"> </span>kmip-primary
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Name                          Encryption
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pure-array-01                 Enabled
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pure-array-02                 Enabled
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Name            Capacity  Type      RPM    SED
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>SSD-1           1.92TB    SSD       N/A    Yes
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>SSD-2           1.92TB    SSD       N/A    Yes
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>SSD-3           1.92TB    SSD       N/A    Yes
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>SSD-4           1.92TB    SSD       N/A    Yes
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>...
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Name            Status    Slot      Capacity  Part Number
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>NVRAM-1         OK        1A        8GB       78-063456-01
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>NVRAM-2         OK        1B        8GB       78-063456-01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View the current TLS certificate details</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Install a new certificate (PEM format, certificate + private key)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--tls-certificate<span class="w"> </span>&lt;path_to_cert_pem&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># If the private key is in a separate file, combine them first:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># cat cert.pem key.pem &gt; combined.pem</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># purearray setattr --tls-certificate combined.pem</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid command 'purearray'</code></strong> — Verify the Pure Storage CLI tools are installed and in your PATH by running <code>which purearray</code>.
+<strong><code>Error: Connection refused to array management interface</code></strong> — Confirm the array hostname/IP is reachable and you have valid credentials configured in your Pure Storage CLI profile.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure KMIP server (Purity//FA 6.x)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purekms<span class="w"> </span>create<span class="w"> </span>--address<span class="w"> </span>&lt;kmip_server_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">5696</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--certificate<span class="w"> </span>&lt;client_cert_path&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--ca-certificate<span class="w"> </span>&lt;ca_cert_path&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>kmip-primary
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># List configured KMS servers</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>purekms<span class="w"> </span>list
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Test KMS connectivity</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>purekms<span class="w"> </span><span class="nb">test</span><span class="w"> </span>kmip-primary
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List connected remote arrays</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Created KMS server &#39;kmip-primary&#39; with address 10.45.120.88:5696
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Fingerprint: a7:2f:e4:9b:c1:56:3d:8a:b2:44:f9:7e:2c:61:d5:3b
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show protection group replication targets and their connection status</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
-</code></pre></div></p>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Name              Address          Port  Status    Last Connected
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>kmip-primary      10.45.120.88     5696  connected 2024-01-15T09:32:14Z
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>kmip-backup       10.46.120.89     5696  connected 2024-01-15T09:31:52Z
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Testing connection to kmip-primary...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>✓ Connection successful
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>✓ Certificate validation passed
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>✓ Key operations available
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Test completed in 1.2s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found: /etc/purity/kmip-client.crt</code></strong> — Verify the certificate path is correct and readable by the purity service user.
+<strong><code>Error: Failed to connect to KMIP server at 10.45.120.88:5696 (Connection refused)</code></strong> — Confirm the KMIP server is running and accessible on the specified IP and port from the array's management network.
+<strong><code>Error: Certificate validation failed: untrusted certificate authority</code></strong> — Ensure the CA certificate file is valid and matches the certificate chain used by the KMIP server.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View the current TLS certificate details</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Install a new certificate (PEM format, certificate + private key)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--tls-certificate<span class="w"> </span>&lt;path_to_cert_pem&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># If the private key is in a separate file, combine them first:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># cat cert.pem key.pem &gt; combined.pem</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># purearray setattr --tls-certificate combined.pem</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Certificate Details:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Subject: CN=flasharray.example.com,O=Example Corp,C=US
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Issuer: CN=Example Corp CA,O=Example Corp,C=US
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Valid From: 2024-01-15T08:30:00Z
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Valid Until: 2025-01-15T08:30:00Z
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Fingerprint (SHA256): a7:b2:c4:d9:e1:f3:2a:5b:7c:8d:9e:0f:1a:2b:3c:4d:5e:6f:7a:8b
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Serial Number: 0x1A2B3C4D5E6F7A8B
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Certificate installation successful.
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>New certificate will be active after array restart.
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Restart required: yes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found at &lt;path_to_cert_pem&gt;</code></strong> — Verify the file path is correct and readable with <code>ls -la &lt;path_to_cert_pem&gt;</code>.
+<strong><code>Error: Invalid PEM format - certificate and/or private key malformed</code></strong> — Ensure the PEM file contains both the certificate block (-----BEGIN CERTIFICATE-----) and private key block (-----BEGIN PRIVATE KEY-----) with no extra whitespace.
+<strong><code>Error: Private key does not match certificate</code></strong> — Regenerate the combined.pem file ensuring the certificate and its corresponding private key are concatenated in the correct order.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List connected remote arrays</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show protection group replication targets and their connection status</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name                          Address           Connection
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>================================ ================= ==========
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>prod-array-01.dc1.local      192.168.1.50      connected
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>prod-array-02.dc1.local      192.168.1.51      connected
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>dr-array-west.dc2.local      10.20.30.40       connected
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>backup-array-vault.dc3.local 172.16.50.100     disconnected
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Name                          Targets                    Status
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>================================ ========================== ===========
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>pg-database-prod              dr-array-west              synced
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>pg-database-prod              backup-array-vault         lagged
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>pg-vmware-cluster             prod-array-02              synced
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>pg-vmware-cluster             dr-array-west              synced
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>pg-file-services             backup-array-vault         disconnected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused — check array IP/hostname and network connectivity</code></strong> — Verify the array address is reachable with <code>ping</code> and confirm firewall rules allow port 443.
+<strong><code>Error: Authentication failed — invalid credentials</code></strong> — Re-authenticate using <code>purearray login</code> with correct management credentials.
+<strong><code>Error: No replication targets configured</code></strong> — Ensure protection groups have replication policies defined via the Pure management console or API.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8159,7 +8237,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:58:32 UTC"><span class="timeago" datetime="2026-06-29T05:58:32+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:58:32 UTC">2026-06-29</span>
   </span>
 
     

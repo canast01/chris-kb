@@ -7542,102 +7542,338 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>node<span class="w"> </span>show
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Each node should show Status: online</span>
 </code></pre></div>
-<p><strong>Create a cluster-wide service policy for management traffic (if using separated management VLANs):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>cluster_mgmt<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0M<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster UUID: 4a3f8c2b-9e1d-47f6-b2a9-5c7d1e9f3a2b
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Health: true
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Eligibility: true
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Node              Status  Health  Eligibility
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>netapp-node-01    online  true    true
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>netapp-node-02    online  true    true
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>netapp-node-03    online  true    true
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>netapp-node-04    online  true    true
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster show</code></strong> — Ensure you are logged into the NetApp cluster management interface (SSH to the cluster management IP) rather than a node management IP.
+<strong><code>Health: false</code></strong> — Check cluster event logs with <code>event log show</code> and resolve any failed disk or network issues before proceeding.</p>
+</div>
+<p><strong>Create a cluster-wide service policy for management traffic (if using separated management VLANs):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>cluster_mgmt<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0M<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(no output — command completes silently)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: EINVALIDARGUMENT: Invalid value specified for "address" : &lt;ip&gt;</code></strong> — Verify the IP address format is valid (e.g., 192.168.1.100) and not already in use on the network.
+<strong><code>Error: command failed: EOBJECTNOTFOUND: Vserver "&lt;cluster_name&gt;" does not exist.</code></strong> — Ensure the vserver name matches an existing cluster and is spelled correctly.
+<strong><code>Error: command failed: EOBJECTNOTFOUND: Node "&lt;node_name&gt;" does not exist.</code></strong> — Confirm the node name is valid and part of the cluster using <code>cluster show</code>.</p>
+</div>
 <hr />
 <h2 id="svm-creation">SVM Creation<a class="headerlink" href="#svm-creation" title="Permanent link">&para;</a></h2>
 <p>A Storage Virtual Machine (SVM) is the logical container for volumes, LIFs, and protocol access. Each workload (NFS, iSCSI, SMB) typically has its own SVM.</p>
 <p><strong>Create an NFS SVM:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-rootvolume<span class="w"> </span>root_nfs01<span class="w"> </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span>-language<span class="w"> </span>C.UTF-8<span class="w"> </span>-snapshot-policy<span class="w"> </span>default
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Add NFS protocol</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Create a data LIF for NFS access</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-lif<span class="w"> </span>nfs_lif01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0d<span class="w"> </span>-address<span class="w"> </span><span class="m">192</span>.168.10.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Create a default route for the SVM</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span><span class="m">192</span>.168.10.1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-rootvolume<span class="w"> </span>root_nfs01<span class="w"> </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span>-language<span class="w"> </span>C.UTF-8<span class="w"> </span>-snapshot-policy<span class="w"> </span>default
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Add NFS protocol</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Create a data LIF for NFS access</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-lif<span class="w"> </span>nfs_lif01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0d<span class="w"> </span>-address<span class="w"> </span><span class="m">192</span>.168.10.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Create a default route for the SVM</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span><span class="m">192</span>.168.10.1
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vserver create: Command completed successfully.
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver nfs create: NFS enabled on SVM &quot;svm_nfs01&quot;.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>network interface create: Logical interface &quot;nfs_lif01&quot; created successfully.
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Vserver Name: svm_nfs01
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Logical Interface Name: nfs_lif01
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Role: data
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Data Protocol: nfs
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Address: 192.168.10.50
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  Netmask: 255.255.255.0
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  Home Node: node-01
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  Home Port: e0d
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  Status Admin: up
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  Status Oper: up
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>network route create: Route created successfully.
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  Vserver: svm_nfs01
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  Destination: 0.0.0.0/0
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  Gateway: 192.168.10.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver "svm_nfs01" already exists.</code></strong> — Delete the existing SVM with <code>vserver delete -vserver svm_nfs01</code> or use a different SVM name.
+<strong><code>Error: command failed: Port "e0d" does not exist on node "&lt;node_name&gt;".</code></strong> — Verify the correct port name using <code>network port show -node &lt;node_name&gt;</code> and update the <code>-home-port</code> parameter.
+<strong><code>Error: command failed: IP address 192.168.10.50 is already in use.</code></strong> — Check for address conflicts with <code>network interface show -address 192.168.10.50</code> and assign an unused IP address.</p>
+</div>
 <p><strong>Create an iSCSI SVM:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-rootvolume<span class="w"> </span>root_iscsi01<span class="w"> </span>-rootvolume-security-style<span class="w"> </span>unix
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Enable iSCSI</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Note the iSCSI IQN for this SVM</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Create iSCSI data LIFs (one per node, per fabric)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-lif<span class="w"> </span>iscsi_lif01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi<span class="w"> </span>-home-node<span class="w"> </span>&lt;node1&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0e<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.10.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-lif<span class="w"> </span>iscsi_lif02<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi<span class="w"> </span>-home-node<span class="w"> </span>&lt;node2&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0e<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.10.51<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-rootvolume<span class="w"> </span>root_iscsi01<span class="w"> </span>-rootvolume-security-style<span class="w"> </span>unix
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Enable iSCSI</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Note the iSCSI IQN for this SVM</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Create iSCSI data LIFs (one per node, per fabric)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-lif<span class="w"> </span>iscsi_lif01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi<span class="w"> </span>-home-node<span class="w"> </span>&lt;node1&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0e<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.10.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-lif<span class="w"> </span>iscsi_lif02<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi<span class="w"> </span>-home-node<span class="w"> </span>&lt;node2&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0e<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.10.51<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cluster1::&gt; vserver create -vserver svm_iscsi01 -rootvolume root_iscsi01 -rootvolume-security-style unix
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>[Job 245] Job succeeded: Vserver creation completed.
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>cluster1::&gt; vserver iscsi create -vserver svm_iscsi01
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>(no output — command completes silently)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>cluster1::&gt; vserver iscsi show -vserver svm_iscsi01
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Vserver    Status
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>--------   ------
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>svm_iscsi01 up
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>Alias: svm_iscsi01
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>IQN: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:vs.1
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>cluster1::&gt; network interface create -vserver svm_iscsi01 -lif iscsi_lif01 -role data -data-protocol iscsi -home-node node1 -home-port e0e -address 10.0.10.50 -netmask 255.255.255.0
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>(no output — command completes silently)
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>cluster1::&gt; network interface create -vserver svm_iscsi01 -lif iscsi_lif02 -role data -data-protocol iscsi -home-node node2 -home-port e0e -address 10.0.10.51 -netmask 255.255.255.0
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>(no output — command completes silently)
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>cluster1::&gt; network interface show -vserver svm_iscsi01
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>            Logical    Status     Network            Current       Current Is
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>----------- ---------- ---------- ------------------ ------------- ------- ----
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>svm_iscsi01 iscsi_lif01 up/up    10.0.10.50/24      node1         e0e     true
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>svm_iscsi01 iscsi_lif02 up/up    10.0.10.51/24      node2         e0e     true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver "svm_iscsi01" already exists.</code></strong> — Verify the SVM name is unique or delete the existing SVM with <code>vserver delete -vserver svm_iscsi01</code> before retrying.
+<strong><code>Error: command failed: Port "e0e" does not exist on node "node1".</code></strong> — Confirm the correct iSCSI port names with <code>network port show -node &lt;node&gt;</code> and update the <code>-home-port</code> parameter accordingly.
+<strong><code>Error: command failed: Address 10.0.10.50 is already in use.</code></strong> — Verify the IP address is not assigned to another interface using <code>network interface show -address 10.0.10.50</code> and choose an unused address.</p>
+</div>
 <hr />
 <h2 id="volume-provisioning">Volume Provisioning<a class="headerlink" href="#volume-provisioning" title="Permanent link">&para;</a></h2>
 <p>ONTAP volumes are thin-provisioned by default and reside inside aggregates (physical disk groups managed by ONTAP).</p>
 <p><strong>Verify aggregate availability:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>aggr<span class="w"> </span>show
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Aggrs on each node should show Available space &gt; 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>aggr<span class="w"> </span>show
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Aggrs on each node should show Available space &gt; 0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Aggregate                Size Available Used% State   #Vols  Nodes            RAID Status
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>--------- ----------- --------- --------- ----- ------- ------ --------------- -----------
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>aggr0_node1
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                      744.6GB   156.2GB   79%  online       3 node1            raid_dp, normal
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>aggr1_node1
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>                      2.0TB     487.3GB   76%  online      12 node1            raid_dp, normal
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>aggr0_node2
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>                      744.6GB   201.5GB   73%  online       2 node2            raid_dp, normal
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>aggr2_node2
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>                      3.0TB     892.1GB   70%  online      18 node2            raid_dp, normal
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>aggr3_node2
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>                      1.5TB     45.8GB    97%  online       8 node2            raid_dp, degraded
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: aggr</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell.
+<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Log in with an admin-level account or request cluster administrator credentials.</p>
+</div>
 <p><strong>Create an NFS volume:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_data01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node1<span class="w"> </span>-size<span class="w"> </span>1TB<span class="w"> </span>-junction-path<span class="w"> </span>/nfs_data01<span class="w"> </span>-security-style<span class="w"> </span>unix<span class="w"> </span>-snapshot-policy<span class="w"> </span>default
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Export the volume via NFS policy</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-policyname<span class="w"> </span>default<span class="w"> </span>-clientmatch<span class="w"> </span><span class="m">192</span>.168.10.0/24<span class="w"> </span>-rorule<span class="w"> </span>sys<span class="w"> </span>-rwrule<span class="w"> </span>sys<span class="w"> </span>-superuser<span class="w"> </span>sys
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_data01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node1<span class="w"> </span>-size<span class="w"> </span>1TB<span class="w"> </span>-junction-path<span class="w"> </span>/nfs_data01<span class="w"> </span>-security-style<span class="w"> </span>unix<span class="w"> </span>-snapshot-policy<span class="w"> </span>default
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Export the volume via NFS policy</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-policyname<span class="w"> </span>default<span class="w"> </span>-clientmatch<span class="w"> </span><span class="m">192</span>.168.10.0/24<span class="w"> </span>-rorule<span class="w"> </span>sys<span class="w"> </span>-rwrule<span class="w"> </span>sys<span class="w"> </span>-superuser<span class="w"> </span>sys
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Volume created successfully
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Volume &quot;vol_nfs_data01&quot; has been created.
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No matching aggregates found for given criteria</code></strong> — Verify the aggregate name exists with <code>storage aggregate show</code> and ensure it belongs to the correct node.
+<strong><code>Error: command failed: Vserver "svm_nfs01" does not exist</code></strong> — Create the SVM first using <code>vserver create -vserver svm_nfs01</code> or confirm the SVM name matches your environment.
+<strong><code>Error: command failed: Export policy "default" does not exist</code></strong> — Create the export policy with <code>export-policy create -vserver svm_nfs01 -policyname default</code> before adding rules.</p>
+</div>
 <p><strong>Create an iSCSI LUN:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create the containing volume</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-volume<span class="w"> </span>vol_lun_sql01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node1<span class="w"> </span>-size<span class="w"> </span>500GB
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Create the LUN within the volume</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>lun<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-path<span class="w"> </span>/vol/vol_lun_sql01/lun_sql01_data<span class="w"> </span>-size<span class="w"> </span>400GB<span class="w"> </span>-ostype<span class="w"> </span>linux
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create the containing volume</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-volume<span class="w"> </span>vol_lun_sql01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node1<span class="w"> </span>-size<span class="w"> </span>500GB
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Create the LUN within the volume</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>lun<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-path<span class="w"> </span>/vol/vol_lun_sql01/lun_sql01_data<span class="w"> </span>-size<span class="w"> </span>400GB<span class="w"> </span>-ostype<span class="w"> </span>linux
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Volume created successfully.
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Created a LUN of size 400GB (429496729600B): path /vol/vol_lun_sql01/lun_sql01_data,
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a> lunid 0, type linux, size 400GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No space left on device</code></strong> — Verify aggregate aggr1_node1 has sufficient free space with <code>storage aggregate show -aggregate aggr1_node1</code>.
+<strong><code>Error: command failed: Vserver "svm_iscsi01" does not exist</code></strong> — Create the SVM first using <code>vserver create -vserver svm_iscsi01 -rootvolume root_svm_iscsi01 -aggregate aggr1_node1</code>.
+<strong><code>Error: command failed: LUN path /vol/vol_lun_sql01/lun_sql01_data already exists</code></strong> — Use a unique LUN name or delete the existing LUN with <code>lun delete -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code>.</p>
+</div>
 <p><strong>Verify volumes:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Vserver          Volume       Aggregate    State      Type       Size  Available Used%
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>--------         ------       ---------    -----      ----       ----  --------- -----
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>svm_nfs01        vol_nfs_data aggr_01      online     RW       500GB    425.2GB   15%
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>svm_nfs01        vol_nfs_logs aggr_01      online     RW       100GB     89.5GB   10%
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>svm_nfs01        vol_nfs_snap aggr_02      online     RW       250GB    198.3GB   20%
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Vserver          Volume       Aggregate    State      Type       Size  Available Used%
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>--------         ------       ---------    -----      ----       ----  --------- -----
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>svm_iscsi01      vol_iscsi_01 aggr_03      online     RW         1TB    856.4GB   14%
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>svm_iscsi01      vol_iscsi_02 aggr_03      online     RW       500GB    425.1GB   15%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the NetApp cluster CLI (use <code>ssh admin@&lt;cluster-ip&gt;</code>) and not a local shell.
+<strong><code>Error: "svm_nfs01" does not exist</code></strong> — Verify the SVM name is correct by running <code>vserver show</code> to list all available SVMs.</p>
+</div>
 <hr />
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
 <p><strong>NFS mount from Linux host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">vers</span><span class="o">=</span><span class="m">3</span>,rw<span class="w"> </span><span class="m">192</span>.168.10.50:/nfs_data01<span class="w"> </span>/mnt/ontap_nfs
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/ontap_nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">vers</span><span class="o">=</span><span class="m">3</span>,rw<span class="w"> </span><span class="m">192</span>.168.10.50:/nfs_data01<span class="w"> </span>/mnt/ontap_nfs
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/ontap_nfs
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>192.168.10.50:/nfs_data01  2.0T  1.2T  800G  60% /mnt/ontap_nfs
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: access denied by server while mounting 192.168.10.50:/nfs_data01</code></strong> — Verify the NFS export policy on the NetApp filer permits the client IP and check firewall rules allow port 2049/111.
+<strong><code>mount.nfs: No such file or directory</code></strong> — Confirm the export path <code>/nfs_data01</code> exists on the NetApp filer and the mount point <code>/mnt/ontap_nfs</code> exists locally (create with <code>mkdir -p /mnt/ontap_nfs</code> if needed).
+<strong><code>mount: wrong fs type, bad option, bad superblock on 192.168.10.50:/nfs_data01</code></strong> — Verify NFSv3 is enabled on the NetApp filer and the client has nfs-utils installed (<code>yum install nfs-utils</code> on RHEL/CentOS).</p>
+</div>
 <p><strong>iSCSI initiator setup (Linux):</strong></p>
 <ol>
 <li>Install and start the iSCSI initiator:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>iscsi-initiator-utils
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>iscsi-initiator-utils
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Loaded plugins: fastestmirror
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Loading mirror speeds from cached hostfile
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Resolving Dependencies
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>--&gt; Running transaction check
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>---&gt; Package iscsi-initiator-utils.x86_64 0:6.2.0.874-17.el7 will be installed
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>--&gt; Processing Dependency: iscsi-initiator-utils-iscsiuio = 0:6.2.0.874-17.el7 for package: iscsi-initiator-utils-6.2.0.874-17.el7.x86_64
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>--&gt; Running transaction check
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>---&gt; Package iscsi-initiator-utils-iscsiuio.x86_64 0:6.2.0.874-17.el7 will be installed
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>--&gt; Finished Dependency Resolution
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>Installed:
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  iscsi-initiator-utils.x86_64 0:6.2.0.874-17.el7
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>Dependency Installed:
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>  iscsi-initiator-utils-iscsiuio.x86_64 0:6.2.0.874-17.el7
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>Complete!
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>Created symlink from /etc/systemd/system/multi-user.target.wants/iscsid.service to /usr/lib/systemd/system/iscsid.service.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No package iscsi-initiator-utils available.</code></strong> — Ensure the RHEL/CentOS base repository is enabled with <code>yum repolist</code> and update the package cache with <code>yum clean all &amp;&amp; yum makecache</code>.
+<strong><code>Failed to enable unit: Unit file /usr/lib/systemd/system/iscsid.service not found.</code></strong> — Verify the iscsi-initiator-utils package installed successfully and check <code>/usr/lib/systemd/system/</code> for the iscsid.service file.</p>
+</div>
 <ol>
 <li>Discover ONTAP iSCSI targets:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>st<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.0.10.50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>st<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.0.10.50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>10.0.10.50:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6g7h8:discovery:7mode.filer01
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>10.0.10.50:3260,2 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6g7h8:discovery:7mode.filer02
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Verify the iSCSI target IP address is correct and reachable with <code>ping 10.0.10.50</code>.
+<strong><code>iscsiadm: cannot connect to discovery address 10.0.10.50 port 3260</code></strong> — Ensure the iSCSI target service is running on the NetApp array and firewall rules allow port 3260 from the initiator host.</p>
+</div>
 <ol>
 <li>Log in to all discovered targets:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-L<span class="w"> </span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-L<span class="w"> </span>all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260] (multiple)
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.51,3260] (multiple)
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.x9y8z7w6v5u4, portal: 192.168.1.52,3260] (multiple)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>Login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260] successful.
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>Login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.51,3260] successful.
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>Login to [iface: default, target: iqn.1992-08.com.netapp:sn.x9y8z7w6v5u4, portal: 192.168.1.52,3260] successful.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Ensure iSCSI discovery has been performed first with <code>iscsiadm -m discovery -t sendtargets -p &lt;portal_ip&gt;</code>.
+<strong><code>iscsiadm: Could not login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260]</code></strong> — Verify network connectivity to the iSCSI portal and check that the target is accessible with <code>ping 192.168.1.50</code>.</p>
+</div>
 <ol>
 <li>Install and configure multipath:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>device-mapper-multipath
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>device-mapper-multipath
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>multipath<span class="w"> </span>-ll
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Loaded plugins: fastestmirror, security
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Loading mirror speeds from cached hostfile
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Resolving Dependencies
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>--&gt; Running transaction check
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>---&gt; Package device-mapper-multipath.x86_64 0:0.4.9-127.el6 will be installed
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>--&gt; Processing Dependency: device-mapper = 0.4.9-127.el6 for package: device-mapper-multipath-0.4.9-127.el6.x86_64
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>--&gt; Finished Dependency Resolution
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>Installing : device-mapper-multipath-0.4.9-127.el6.x86_64                 1/1
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>Verifying  : device-mapper-multipath-0.4.9-127.el6.x86_64                 1/1
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>Installed:
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>  device-mapper-multipath.x86_64 0:0.4.9-127.el6
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>(no output — command completes silently)
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>mpatha (360a98000534e45623334486b324d7a41) dm-2 NETAPP,LUN
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>| `- 2:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>  `- 3:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>mpathb (360a98000534e45623334486b324d7a42) dm-3 NETAPP,LUN
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>size=1T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>  `- 4:0:0:0 sdc 8:32 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mpathconf: command not found</code></strong> — Install device-mapper-multipath first or ensure the package installation completed successfully.
+<strong><code>multipath: command not found</code></strong> — Verify device-mapper-multipath is installed with <code>rpm -q device-mapper-multipath</code> and check your PATH environment variable.</p>
+</div>
 <p><strong>Map the LUN to the host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create an igroup (initiator group) with the host&#39;s IQN</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-igroup<span class="w"> </span>igrp_linux01<span class="w"> </span>-protocol<span class="w"> </span>iscsi<span class="w"> </span>-ostype<span class="w"> </span>linux<span class="w"> </span>-initiator<span class="w"> </span>iqn.1994-05.com.redhat:host01
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Map the LUN to the igroup</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>lun<span class="w"> </span>map<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-path<span class="w"> </span>/vol/vol_lun_sql01/lun_sql01_data<span class="w"> </span>-igroup<span class="w"> </span>igrp_linux01<span class="w"> </span>-lun-id<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Rescan on the host</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>rescan-scsi-bus.sh
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Create an igroup (initiator group) with the host&#39;s IQN</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-igroup<span class="w"> </span>igrp_linux01<span class="w"> </span>-protocol<span class="w"> </span>iscsi<span class="w"> </span>-ostype<span class="w"> </span>linux<span class="w"> </span>-initiator<span class="w"> </span>iqn.1994-05.com.redhat:host01
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Map the LUN to the igroup</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>lun<span class="w"> </span>map<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-path<span class="w"> </span>/vol/vol_lun_sql01/lun_sql01_data<span class="w"> </span>-igroup<span class="w"> </span>igrp_linux01<span class="w"> </span>-lun-id<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Rescan on the host</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>rescan-scsi-bus.sh
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>multipath<span class="w"> </span>-ll
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Created igroup &quot;igrp_linux01&quot; of protocol type &quot;iscsi&quot; for Vserver &quot;svm_iscsi01&quot;.
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>LUN /vol/vol_lun_sql01/lun_sql01_data mapped to igroup igrp_linux01 with LUN ID 0.
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>Scanning for device changes...
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>Scanning host 0...
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>Scanning host 1...
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>Scanning host 2...
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>mpatha (360a98000534d49386b6d41496b4f6f44) dm-0 NETAPP,LUN C-Mode
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>  |- 2:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>  `- 3:0:0:0 sdc 8:32 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>igroup create: entry already exists</code></strong> — Use a unique igroup name or verify the igroup doesn't already exist with <code>igroup show -vserver svm_iscsi01</code>.
+<strong><code>lun map: LUN is already mapped to igroup</code></strong> — Check existing mappings with <code>lun mapping show -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code> and use a different LUN ID or igroup.
+<strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install the sg3-utils package with <code>apt-get install sg3-utils</code> (Debian/Ubuntu) or <code>yum install sg3-utils</code> (RHEL/CentOS).</p>
+</div>
 <hr />
 <h2 id="snapmirror">SnapMirror<a class="headerlink" href="#snapmirror" title="Permanent link">&para;</a></h2>
 <p>SnapMirror replicates volumes to a remote ONTAP cluster for DR or backup. This section covers the initial configuration; for a full setup guide see the SnapMirror deployment page.</p>
@@ -7648,40 +7884,138 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 <li>SVM peering established</li>
 </ul>
 <p><strong>Configure intercluster LIFs:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>ic_lif01<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-home-node<span class="w"> </span>&lt;node1&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>ic_lif02<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-home-node<span class="w"> </span>&lt;node2&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.51<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>ic_lif01<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-home-node<span class="w"> </span>&lt;node1&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.50<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>ic_lif02<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-home-node<span class="w"> </span>&lt;node2&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0f<span class="w"> </span>-address<span class="w"> </span><span class="m">10</span>.0.20.51<span class="w"> </span>-netmask<span class="w"> </span><span class="m">255</span>.255.255.0
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>(no output — command completes silently)
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: EINVALIDARGUMENT: Invalid home port e0f on node &lt;node1&gt;</code></strong> — Verify the physical port name exists on the node using <code>network port show -node &lt;node1&gt;</code> and correct the home-port parameter.
+<strong><code>Error: command failed: EOBJECTNOTFOUND: Vserver &lt;cluster_name&gt; does not exist</code></strong> — Replace <code>&lt;cluster_name&gt;</code> with the actual cluster name obtained from <code>cluster show</code> or use the correct vserver name from <code>vserver show</code>.
+<strong><code>Error: command failed: EADDRINUSE: IP address 10.0.20.50 is already in use</code></strong> — Verify the IP addresses are not already assigned to another interface using <code>network interface show -address 10.0.20.50</code> and select unused addresses.</p>
+</div>
 <p><strong>Peer the clusters (run from source):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.60,10.0.20.61
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Enter the passphrase set on the destination cluster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.60,10.0.20.61
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># Enter the passphrase set on the destination cluster</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Cluster Peering Initiated
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Passphrase (minimum 8 characters):
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Passphrase (minimum 8 characters):
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Info: Command is running in the background. Use the &quot;cluster peer show&quot; command to view the status of cluster peering.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: cluster peer create: command not found</code></strong> — Ensure you are connected to the NetApp cluster CLI (ssh to cluster management IP) rather than running from a local shell.
+<strong><code>Error: Failed to authenticate with peer cluster at 10.0.20.60</code></strong> — Verify the peer cluster IP addresses are reachable and the passphrase matches exactly what was configured on the destination cluster.
+<strong><code>Error: Cluster peering already exists with peer address 10.0.20.60</code></strong> — Check existing peer relationships with <code>cluster peer show</code> and remove the duplicate before retrying.</p>
+</div>
 <p><strong>Create a SnapMirror relationship:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_nfs01:vol_nfs_data01<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-schedule<span class="w"> </span>hourly
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_nfs01:vol_nfs_data01<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-schedule<span class="w"> </span>hourly
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Operation succeeded: SnapMirror relationship created.
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>Source: svm_nfs01:vol_nfs_data01
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>Destination: svm_dr01:vol_nfs_dr01
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>Type: DP
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>Schedule: hourly
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>Transfer started.
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>Transferring data...
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>Transfer completed successfully.
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>Total transferred: 847.3 GB
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>Elapsed time: 12m 34s
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>Status: Snapmirrored
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the destination volume doesn't already have an existing SnapMirror relationship using <code>snapmirror show -destination-path svm_dr01:vol_nfs_dr01</code>.
+<strong><code>Error: command failed: Destination volume is not empty.</code></strong> — Ensure the destination volume is initialized as an empty DP volume; if needed, destroy and recreate it with <code>volume destroy -vserver svm_dr01 -volume vol_nfs_dr01</code> then <code>volume create -vserver svm_dr01 -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP</code>.
+<strong><code>Error: command failed: Source path does not exist.</code></strong> — Confirm the source volume exists and the SVM name is correct by running <code>volume show -vserver svm_nfs01</code>.</p>
+</div>
 <p>Monitor the initial baseline transfer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Source Destination Mirror State Relationship Status Last Transfer
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>svm_prod:vol_nfs_prod svm_dr01:vol_nfs_dr01 SnapMirror Snapmirrored Idle Success 09/15/2024 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (via SSH or console) and not a local shell; snapmirror commands are only available in ONTAP.
+<strong><code>Error: Invalid destination path format</code></strong> — Use the correct SVM and volume name format (svm_name:volume_name) and verify both exist with <code>volume show</code> and <code>svm show</code>.
+<strong><code>Error: Access denied for snapmirror command</code></strong> — Confirm your user role has SnapMirror permissions; contact your cluster administrator to grant the appropriate RBAC role.</p>
+</div>
 <hr />
 <h2 id="monitoring-setup">Monitoring Setup<a class="headerlink" href="#monitoring-setup" title="Permanent link">&para;</a></h2>
 <p><strong>Configure SNMP for monitoring integration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>snmp<span class="w"> </span>init<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>add<span class="w"> </span>-community-name<span class="w"> </span>public<span class="w"> </span>-type<span class="w"> </span>ro
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-peer-address<span class="w"> </span>&lt;snmp_manager_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>snmp<span class="w"> </span>init<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>add<span class="w"> </span>-community-name<span class="w"> </span>public<span class="w"> </span>-type<span class="w"> </span>ro
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-peer-address<span class="w"> </span>&lt;snmp_manager_ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>SNMP initialized successfully.
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>Community &#39;public&#39; added with read-only access.
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Trap host 192.168.1.50 added successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: SNMP is already initialized</code></strong> — Run <code>snmp status</code> to verify current state; if already initialized, skip the <code>snmp init 1</code> command.
+<strong><code>Error: Community 'public' already exists</code></strong> — Use <code>system snmp community modify</code> instead, or choose a different community name.
+<strong><code>Error: Invalid peer address &lt;snmp_manager_ip&gt;</code></strong> — Replace <code>&lt;snmp_manager_ip&gt;</code> with a valid IPv4 address (e.g., 192.168.1.50) and verify network connectivity to that host.</p>
+</div>
 <p><strong>Configure SMTP alerts:</strong></p>
 <ol>
 <li>In System Manager, navigate to <strong>Cluster &gt; Settings &gt; Notifications</strong>.</li>
 <li>Set the SMTP server address and destination email.</li>
 <li>Test the email notification by triggering a test event:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>important-events<span class="w"> </span>-destinations<span class="w"> </span>snmp-traphost
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>important-events<span class="w"> </span>-destinations<span class="w"> </span>snmp-traphost
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>Event notification rule created successfully.
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>Rule name: important-events
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>Destinations: snmp-traphost
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>Status: enabled
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>                                    Node: cluster1-01
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>                                Alertname: DiskShelfPowerSupplyFailed
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>                             Alertstate: active
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>                            Severity: critical
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a>                          Description: Disk shelf power supply unit 1 in slot 3 failed
+<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>                         Corrective Action: Replace the failed power supply unit
+<a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a>                              Occurred: 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a>
+<a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a>                                    Node: cluster1-02
+<a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a>                                Alertname: HighCPUUtilization
+<a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a>                             Alertstate: active
+<a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a>                            Severity: warning
+<a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a>                          Description: CPU utilization on node cluster1-02 is above 85%
+<a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a>                         Corrective Action: Review running processes and redistribute workloads
+<a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a>                              Occurred: 2024-01-15 13:45:02 +00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: destination snmp-traphost does not exist</code></strong> — Create the SNMP trap destination first using <code>event notification destination create -name snmp-traphost -type snmp</code>.
+<strong><code>Error: filter-name important-events already exists</code></strong> — Use a unique filter name or delete the existing rule with <code>event notification delete -filter-name important-events</code> before recreating it.</p>
+</div>
 <p><strong>Enable Active IQ integration (Call Home):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-transport<span class="w"> </span>https<span class="w"> </span>-support<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-to<span class="w"> </span>admin@example.com
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-transport<span class="w"> </span>https<span class="w"> </span>-support<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-to<span class="w"> </span>admin@example.com
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>node-01: AutoSupport modify successful
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>node-02: AutoSupport modify successful
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>node-03: AutoSupport modify successful
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>node-04: AutoSupport modify successful
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>node-01: AutoSupport invocation sent successfully (ID: 12345678-1234-1234-1234-123456789abc)
+<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a>node-02: AutoSupport invocation sent successfully (ID: 87654321-4321-4321-4321-abcdef123456)
+<a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a>node-03: AutoSupport invocation sent successfully (ID: 11111111-2222-3333-4444-555555555555)
+<a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a>node-04: AutoSupport invocation sent successfully (ID: 99999999-8888-7777-6666-444444444444)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid email address "admin@example.com"</code></strong> — Verify the email address format and ensure it is a valid recipient configured in your support contract.
+<strong><code>Error: AutoSupport transport https is not supported on this cluster</code></strong> — Check cluster ONTAP version compatibility; use <code>system node autosupport show</code> to verify current transport settings and upgrade if necessary.</p>
+</div>
 <p>Verify the test AutoSupport was received by NetApp Active IQ (check the Active IQ portal for the array).</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -7723,7 +8057,7 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:07:24 UTC"><span class="timeago" datetime="2026-06-29T05:07:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:07:24 UTC">2026-06-29</span>
   </span>
 
     

@@ -8236,62 +8236,119 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
 </code></pre></div>
-<h2 id="certificate-errors">Certificate Errors<a class="headerlink" href="#certificate-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check certificate presented by the LDAPS server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;subject=|issuer=|Verify return code&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check certificate expiry date</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test with certificate verification disabled (confirms cert is the problem)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">LDAPTLS_REQCERT</span><span class="o">=</span>never<span class="w"> </span>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Add DC CA cert to trusted store (Linux)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>cp<span class="w"> </span>corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>update-ca-certificates
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># dn
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>DC=corp,DC=example,DC=com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># dn
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>DC=corp,DC=example,DC=com
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># dn
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>DC=corp,DC=example,DC=com
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked; check with <code>net ads info</code> or Active Directory Users and Computers.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm dc01.corp.example.com resolves and port 389 is reachable using <code>nslookup dc01.corp.example.com</code> and <code>telnet dc01.corp.example.com 389</code>.
+<strong><code>ldap_bind: Inappropriate authentication (48)</code></strong> — The LDAP server requires TLS/SSL; change <code>ldap://</code> to <code>ldaps://</code> and use port 636, or add <code>-ZZ</code> flag for STARTTLS on port 389.</p>
+</div>
+<h2 id="certificate-errors">Certificate Errors<a class="headerlink" href="#certificate-errors" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check certificate presented by the LDAPS server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;subject=|issuer=|Verify return code&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check certificate expiry date</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test with certificate verification disabled (confirms cert is the problem)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">LDAPTLS_REQCERT</span><span class="o">=</span>never<span class="w"> </span>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Add DC CA cert to trusted store (Linux)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>cp<span class="w"> </span>corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>update-ca-certificates
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>subject=CN=dc01.corp.example.com,OU=Domain Controllers,DC=corp,DC=example,DC=com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>issuer=CN=corp-root-ca,OU=Certification Authority,DC=corp,DC=example,DC=com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Verify return code: 21 (unable to verify the first certificate)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>notBefore=Jan 15 10:23:45 2023 GMT
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># SASL supported control OIDs:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>dn:
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>supportedSASLMechanisms: GSSAPI
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>supportedSASLMechanisms: GSS-SPNEGO
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>supportedSASLMechanisms: EXTERNAL
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>supportedSASLMechanisms: DIGEST-MD5
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Updating certificates in /etc/ssl/certs...
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Processing triggers for ca-certificates (20230101) ...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Verify return code: 20 (unable to get local issuer certificate)</code></strong> — Add the DC's root CA certificate to <code>/usr/local/share/ca-certificates/</code> and run <code>update-ca-certificates</code>.
+<strong><code>ldapsearch: error code 1 - 000004DC: LdapErr: DSID-0C090A4C, comment: In order to perform this operation a successful bind must be completed before, data 0, v4563</code></strong> — Verify the service account credentials and ensure the LDAP bind DN format matches your directory schema (e.g., <code>cn=svc-ldap,cn=users,dc=corp,dc=example,dc=com</code>).
+<strong><code>cp: cannot stat 'corp-root-ca.crt': No such file or directory</code></strong> — Verify the CA certificate file path is correct and the file exists in the current working directory or provide an absolute path.</p>
+</div>
 <h2 id="using-ldpexe-windows-gui-tool">Using ldp.exe (Windows GUI Tool)<a class="headerlink" href="#using-ldpexe-windows-gui-tool" title="Permanent link">&para;</a></h2>
 <p><code>ldp.exe</code> is built into Windows and provides a graphical interface for LDAP testing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Launch ldp.exe</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">ldp</span><span class="p">.</span><span class="n">exe</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Steps in ldp.exe:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># 1. Connection &gt; Connect: enter DC hostname and port (389 or 636)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># 2. Connection &gt; Bind: enter credentials</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># 3. View &gt; Tree: set base DN to browse directory</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># 4. Browse &gt; Search: enter custom LDAP filters</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Launch ldp.exe</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">ldp</span><span class="p">.</span><span class="n">exe</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Steps in ldp.exe:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># 1. Connection &gt; Connect: enter DC hostname and port (389 or 636)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># 2. Connection &gt; Bind: enter credentials</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># 3. View &gt; Tree: set base DN to browse directory</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># 4. Browse &gt; Search: enter custom LDAP filters</span>
 </code></pre></div>
 <h2 id="ldap-referrals">LDAP Referrals<a class="headerlink" href="#ldap-referrals" title="Permanent link">&para;</a></h2>
 <p>Referrals occur when a DC redirects a query to another directory server (typically another domain). Use the Global Catalog to avoid cross-domain referrals.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># If ldapsearch returns referrals, add -r to follow them automatically</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">           </span>-r<span class="w"> </span><span class="s2">&quot;(objectClass=user)&quot;</span><span class="w"> </span>cn
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Alternatively, query the GC to span the entire forest without referrals</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:3268<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">           </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># If ldapsearch returns referrals, add -r to follow them automatically</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">           </span>-r<span class="w"> </span><span class="s2">&quot;(objectClass=user)&quot;</span><span class="w"> </span>cn
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Alternatively, query the GC to span the entire forest without referrals</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:3268<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">           </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># LDAP 3.13.11 (protocol 3.29)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cn: John Smith
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>dn: CN=Jane Doe,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>cn: Jane Doe
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>dn: CN=Admin Service,OU=Service Accounts,DC=corp,DC=example,DC=com
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>cn: Admin Service
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a># referral ldap://dc02.corp.example.com/DC=corp,DC=example,DC=com??sub
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>dn: CN=jsmith,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>cn: jsmith
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>mail: jsmith@corp.example.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked; check with <code>net ads info</code> or Active Directory Users and Computers.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves and port 389 (or 3268 for GC) is accessible; test with <code>nc -zv dc01.corp.example.com 389</code>.
+<strong><code>Referral limit exceeded (11)</code></strong> — Add the <code>-r</code> flag to follow referrals automatically, or query the Global Catalog on port 3268 instead of the standard LDAP port.</p>
+</div>
 <h2 id="event-log-and-debug-logging">Event Log and Debug Logging<a class="headerlink" href="#event-log-and-debug-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable LDAP interface event logging on the DC (level 2 = verbose)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                 <span class="n">-Name</span> <span class="s2">&quot;16 LDAP Interface Events&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># View LDAP events in Directory Service log</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*LDAP*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Return logging to default (1 = errors only)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                 <span class="n">-Name</span> <span class="s2">&quot;16 LDAP Interface Events&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Enable LDAP interface event logging on the DC (level 2 = verbose)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>                 <span class="n">-Name</span> <span class="s2">&quot;16 LDAP Interface Events&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># View LDAP events in Directory Service log</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*LDAP*&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Return logging to default (1 = errors only)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>                 <span class="n">-Name</span> <span class="s2">&quot;16 LDAP Interface Events&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
 </code></pre></div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -8330,7 +8387,7 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -8430,22 +8430,42 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># SnapMirror relationship state (if replication is involved)</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,lag-time,healthy,relationship-status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Time                Node             Severity Event
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------------------ ---------------- -------- ----------------------------------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>11/15/2024 14:32:15 cluster-01-01    ERROR    WAFL.vol.autoGrow.aborted
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>11/15/2024 13:18:42 cluster-01-02    ERROR    SHELF.fcal.loop.down
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>11/15/2024 12:05:09 cluster-01-01    ERROR    SNAPMIRROR.transferAborted
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>11/15/2024 09:47:33 cluster-01-02    ERROR    CIFS.vserver.auth.failure
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>11/15/2024 08:22:18 cluster-01-01    ERROR    RAID.disk.lifeExpectancy.warning
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Source Destination                   State    Lag-Time Healthy Relationship-Status
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>------ -------------------------------- -------- -------- ------- --------------------
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>svm1:vol_prod svm2:vol_prod_mirror    Snapmirrored 00:15:32 true    Idle
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>svm1:vol_data svm3:vol_data_dr        SnapMirrored 02:47:18 false   Transferring
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>svm1:vol_logs svm2:vol_logs_backup    Uninitialized 00:00:00 false   Broken-off
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Verify you are connected to the ONTAP cluster CLI (ssh admin@<cluster-mgmt-ip>) and not the local shell.
+<strong><code>Error: Access denied for command "event log show"</code></strong> — Ensure your ONTAP user role has "admin" or equivalent privileges; check with <code>security login show -user-or-group-name &lt;username&gt;</code>.
+<strong><code>Error: No SnapMirror relationships found</code></strong> — This is expected if no replication is configured; verify relationships exist with <code>snapmirror list-destinations</code> before troubleshooting lag-time issues.</p>
+</div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SnapCenter version: 5.0.1
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Plugin version (SQL host): 5.0.1 on sql-prod-01.corp.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ONTAP version: 9.13.1P5 (cluster: ontap-prod-01)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Issue first observed: 2026-06-14 02:15 UTC (nightly backup run)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Last known good backup: 2026-06-13 02:30 UTC
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - 2026-06-13 20:00: SnapCenter 5.0.0 → 5.0.1 upgrade applied
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - 2026-06-14 02:15: All SQL resource group backup jobs failed
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - Error: &quot;Failed to create snapshot on storage system — error code 13001&quot;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - Job IDs failing: 14521, 14522, 14523 (all SQL backup resource groups)
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Steps already taken:
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  - ONTAP: volume show — all volumes online and accessible
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - Checked ONTAP EMS: no snapshot errors in the event log
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - Did NOT restart SnapCenter service or delete failed jobs
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Blast radius: All 20 SQL Server databases unprotected for 24h; RPO gap open
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>SnapCenter version: 5.0.1
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Plugin version (SQL host): 5.0.1 on sql-prod-01.corp.local
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ONTAP version: 9.13.1P5 (cluster: ontap-prod-01)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Issue first observed: 2026-06-14 02:15 UTC (nightly backup run)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Last known good backup: 2026-06-13 02:30 UTC
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - 2026-06-13 20:00: SnapCenter 5.0.0 → 5.0.1 upgrade applied
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - 2026-06-14 02:15: All SQL resource group backup jobs failed
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - Error: &quot;Failed to create snapshot on storage system — error code 13001&quot;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  - Job IDs failing: 14521, 14522, 14523 (all SQL backup resource groups)
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Steps already taken:
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  - ONTAP: volume show — all volumes online and accessible
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  - Checked ONTAP EMS: no snapshot errors in the event log
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  - Did NOT restart SnapCenter service or delete failed jobs
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>Blast radius: All 20 SQL Server databases unprotected for 24h; RPO gap open
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-mysupportnetappcom">How to Open the SR on mysupport.netapp.com<a class="headerlink" href="#how-to-open-the-sr-on-mysupportnetappcom" title="Permanent link">&para;</a></h2>
@@ -8549,21 +8569,21 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># SnapCenter state summary — paste into every case update</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">HostName</span><span class="p">,</span> <span class="n">HostType</span><span class="p">,</span> <span class="n">PlugInVersion</span><span class="p">,</span> <span class="n">SnapCenterVersion</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Get-SmJob</span> <span class="n">-JobState</span> <span class="n">Failed</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobId</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Storage connection health</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-SmStorageConnection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">StorageName</span><span class="p">,</span> <span class="n">ControllerName</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Recent failed job details</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Get-SmJobDetails</span> <span class="n">-JobId</span> <span class="p">&lt;</span><span class="n">job-id</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># SnapCenter service status on SC Server (PowerShell)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Get-Service</span> <span class="s2">&quot;SnapCenter*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># ONTAP connectivity test</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">ontap-mgmt-ip</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># SnapCenter state summary — paste into every case update</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">HostName</span><span class="p">,</span> <span class="n">HostType</span><span class="p">,</span> <span class="n">PlugInVersion</span><span class="p">,</span> <span class="n">SnapCenterVersion</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Get-SmJob</span> <span class="n">-JobState</span> <span class="n">Failed</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobId</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Storage connection health</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Get-SmStorageConnection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">StorageName</span><span class="p">,</span> <span class="n">ControllerName</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Recent failed job details</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nb">Get-SmJobDetails</span> <span class="n">-JobId</span> <span class="p">&lt;</span><span class="n">job-id</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># SnapCenter service status on SC Server (PowerShell)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">Get-Service</span> <span class="s2">&quot;SnapCenter*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c"># ONTAP connectivity test</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">ontap-mgmt-ip</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
 </code></pre></div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
@@ -8636,7 +8656,7 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:32:23 UTC"><span class="timeago" datetime="2026-06-29T05:32:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:32:23 UTC">2026-06-29</span>
   </span>
 
     

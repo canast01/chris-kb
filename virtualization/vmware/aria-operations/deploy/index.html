@@ -9010,6 +9010,39 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># NTP — drift &gt; 1s causes cluster communication failures</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ntpdate<span class="w"> </span>-q<span class="w"> </span>ntp.example.local
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.0.1.53
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   vrops-master.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 192.168.100.45
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Server:     10.0.1.53
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Name:   192.168.100.45
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Address:    vrops-master.example.local
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Server:     10.0.1.53
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Name:   vrops-replica.example.local
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Address: 192.168.100.46
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Server:     10.0.1.53
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Name:   vrops-rc-site2.example.local
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Address: 192.168.100.47
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>polling server 10.0.1.100
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>server 10.0.1.100, stratum 2, offset 0.012345, delay 0.04567
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** nslookup: can't resolve 'vrops-master.example.local': Non-existent domain</code></strong> — Verify DNS zone contains the FQDN record and confirm the correct DNS server IP is configured on the management workstation.
+<strong><code>** nslookup: can't resolve '&lt;planned-master-ip&gt;': Non-existent domain</code></strong> — Ensure a PTR (reverse DNS) record exists for the IP address in the DNS server's reverse zone.
+<strong><code>** ntpdate[12345]: the NTP socket is in use, exiting</code></strong> — Stop the ntpd or chronyd service with <code>systemctl stop ntpd</code> before running ntpdate, or use <code>chronyc waitsync</code> instead if using chrony.</p>
+</div>
 <p>vCenter service account minimum permissions:</p>
 <table>
 <thead>
@@ -9071,12 +9104,12 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
 <hr />
 <h2 id="phase-2-master-node-deployment">Phase 2 — Master Node Deployment<a class="headerlink" href="#phase-2-master-node-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Master node is in Running state; the initial setup wizard is complete and services are active.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vSphere Client → Deploy OVF Template → select Aria Operations OVA
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>→ Target: cluster → SSD-backed datastore
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>→ Customise:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    Hostname: vrops-master.example.local  ·  IP: 10.0.1.20/24
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    Gateway: 10.0.1.1  ·  DNS: 10.0.1.5  ·  NTP: ntp.example.local
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>→ Power on (first-boot takes 5–10 min)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vSphere Client → Deploy OVF Template → select Aria Operations OVA
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>→ Target: cluster → SSD-backed datastore
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>→ Customise:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    Hostname: vrops-master.example.local  ·  IP: 10.0.1.20/24
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    Gateway: 10.0.1.1  ·  DNS: 10.0.1.5  ·  NTP: ntp.example.local
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>→ Power on (first-boot takes 5–10 min)
 </code></pre></div>
 <p>Setup wizard at <code>https://vrops-master.example.local</code>:</p>
 <ol>
@@ -9084,86 +9117,205 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
 <li>Deployment type: <strong>New Installation</strong> → Cluster role: <strong>Master</strong> (Primary).</li>
 <li>Set admin password → cluster initialises → master enters <strong>Running</strong> state.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vrops-master.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>service<span class="w"> </span>vmware-vcops-collector<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>service<span class="w"> </span>vmware-casa<span class="w"> </span>status<span class="w">              </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@vrops-master.example.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>service<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>service<span class="w"> </span>vmware-vcops-collector<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>service<span class="w"> </span>vmware-casa<span class="w"> </span>status<span class="w">              </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>root@vrops-master:~# service vmware-vcops-analytics status
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>● vmware-vcops-analytics.service - VMware vRealize Operations Analytics Service
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-analytics.service; enabled; vendor preset: disabled)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>     Active: active (running) since Mon 2024-01-15 09:42:18 UTC; 2 days ago
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>   Main PID: 4521 (java)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      Tasks: 47 (limit: 4096)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>     Memory: 2.8G
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>root@vrops-master:~# service vmware-vcops-collector status
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>● vmware-vcops-collector.service - VMware vRealize Operations Collector Service
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-collector.service; enabled; vendor preset: disabled)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>     Active: active (running) since Mon 2024-01-15 09:43:52 UTC; 2 days ago
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>   Main PID: 5847 (java)
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      Tasks: 52 (limit: 4096)
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>     Memory: 3.1G
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>root@vrops-master:~# service vmware-casa status
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>● vmware-casa.service - VMware CASA Service
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>     Loaded: loaded (/etc/systemd/system/vmware-casa.service; enabled; vendor preset: disabled)
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>     Active: active (running) since Mon 2024-01-15 09:44:31 UTC; 2 days ago
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>   Main PID: 6123 (java)
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      Tasks: 38 (limit: 4096)
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>     Memory: 1.9G
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>root@vrops-master:~# /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh cluster-status
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>Cluster Status Report
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>=====================
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>Master Node: vrops-master.example.local (192.168.1.45)
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>Status: HEALTHY
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>Cluster Mode: Active-Active
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>Nodes in Cluster: 3
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>  - vrops-master.example.local (192.168.1.45) - ONLINE
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>  - vrops-replica1.example.local (192.168.1.46) - ONLINE
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>  - vrops-replica2.example.local (192.168.1.47) - ONLINE
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>Database Replication: SYNCHRONIZED
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>Last Sync: 2024-01-17 14:32:15 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify SSH connectivity and that the vROps master node is reachable on port 22.
+<strong><code>vcops-cli.sh: command not found</code></strong> — Confirm the vRealize Operations suite is installed in <code>/usr/lib/vmware-vcopssuite/</code> and the utilities package is present.
+<strong><code>● vmware-vcops-analytics.service - VMware vRealize Operations Analytics Service ... Active: inactive (dead)</code></strong> — Start the service with <code>systemctl start vmware-vcops-analytics</code> and check logs with <code>journalctl -u vmware-vcops-analytics -n 50</code> for startup errors.</p>
+</div>
 <hr />
 <h2 id="phase-3-cluster-expansion">Phase 3 — Cluster Expansion<a class="headerlink" href="#phase-3-cluster-expansion" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All cluster nodes are Online in the Cluster Management UI. Remote collectors are registered and assigned to collector groups.</p>
 <p>Deploy replica and data node OVAs using the same process as Phase 2, but select <strong>Existing Installation → Join Cluster</strong> in the setup wizard. Provide the master IP and admin credentials.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm all nodes Online from master</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># All nodes: Online</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm all nodes Online from master</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># All nodes: Online</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Cluster Status Report
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>=====================
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Node Name                    Status      Role            Version
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>master-aria-ops-01          Online      Master          8.10.2.0-21567890
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>worker-aria-ops-02          Online      Worker          8.10.2.0-21567890
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>worker-aria-ops-03          Online      Worker          8.10.2.0-21567890
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>analytics-aria-ops-04       Online      Analytics       8.10.2.0-21567890
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Cluster Health: HEALTHY
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Last Updated: 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Command not found: /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh</code></strong> — Verify Aria Operations is installed on this node and the installation path is correct.
+<strong><code>Error: Unable to connect to cluster database</code></strong> — Ensure the master node is running and network connectivity exists between all cluster nodes.</p>
+</div>
 <p>Remote collectors for branch sites or DMZs — deploy a lightweight collector OVA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Setup wizard → Existing Installation → Join Cluster (Remote Collector)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>→ Master FQDN: vrops-master.example.local  ·  Admin credentials
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Setup wizard → Existing Installation → Join Cluster (Remote Collector)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ Master FQDN: vrops-master.example.local  ·  Admin credentials
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Administration → Collector Groups → New Group
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ Name: CG-Site2-DC → assign collector: vrops-rc-site2.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(adapters assigned to this group run on the remote collector)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Administration → Collector Groups → New Group
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Name: CG-Site2-DC → assign collector: vrops-rc-site2.example.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>(adapters assigned to this group run on the remote collector)
 </code></pre></div>
 <hr />
 <h2 id="phase-4-vcenter-adapter-and-data-sources">Phase 4 — vCenter Adapter and Data Sources<a class="headerlink" href="#phase-4-vcenter-adapter-and-data-sources" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> vCenter adapter shows Collecting; hosts, clusters, and VMs are visible in Environment → Object Browser.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Data Sources → Cloud Accounts → Add Cloud Account → vCenter
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ Display Name: vCenter-Prod
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>→ FQDN: vcenter.example.local
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>→ Credentials: svc-vrops@example.local / &lt;password&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>→ Accept thumbprint  ·  Collection interval: 5 min
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>→ Enable continuous discovery: Yes
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>→ Save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Data Sources → Cloud Accounts → Add Cloud Account → vCenter
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ Display Name: vCenter-Prod
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>→ FQDN: vcenter.example.local
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>→ Credentials: svc-vrops@example.local / &lt;password&gt;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>→ Accept thumbprint  ·  Collection interval: 5 min
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>→ Enable continuous discovery: Yes
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>→ Save
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm adapter collecting (run after first 5-minute cycle)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>adapter-status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># vCenter-Prod: Collecting</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm adapter collecting (run after first 5-minute cycle)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>adapter-status
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># vCenter-Prod: Collecting</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Environment → Object Browser → vCenter-Prod
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Hosts, clusters, VMs, datastores visible
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>→ Any VM → Metrics tab: CPU and memory data present
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Environment → Object Browser → vCenter-Prod
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Hosts, clusters, VMs, datastores visible
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Any VM → Metrics tab: CPU and memory data present
 </code></pre></div>
 <hr />
 <h2 id="phase-5-management-packs-and-alert-notifications">Phase 5 — Management Packs and Alert Notifications<a class="headerlink" href="#phase-5-management-packs-and-alert-notifications" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> NSX and vSAN adapters are collecting. Alert notification plugins are configured and tested.</p>
 <p>Add the NSX adapter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Data Sources → Cloud Accounts → Add Cloud Account → NSX-T Manager
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ FQDN: nsx-mgr.example.local  ·  Credentials: svc-vrops-nsx@example.local
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>→ Collection interval: 5 min  ·  Collector group: Default
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Data Sources → Cloud Accounts → Add Cloud Account → NSX-T Manager
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>→ FQDN: nsx-mgr.example.local  ·  Credentials: svc-vrops-nsx@example.local
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>→ Collection interval: 5 min  ·  Collector group: Default
 </code></pre></div>
 <p>The vSAN adapter activates automatically from the vSphere management pack once vSAN clusters are discovered via vCenter — no separate configuration needed.</p>
 <p>OS in-guest agents (for application-layer metrics):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Download agent: Administration → Agents → Download Agent</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>vrops-agent-install.bin
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>./vrops-agent-install.bin<span class="w"> </span>--<span class="w"> </span>--server<span class="w"> </span>vrops-master.example.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--serverPort<span class="w"> </span><span class="m">443</span><span class="w"> </span>--agentGroup<span class="w"> </span>Linux-Prod
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/opt/vmware/epops-agent/bin/epops-agent<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Download agent: Administration → Agents → Download Agent</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>vrops-agent-install.bin
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>./vrops-agent-install.bin<span class="w"> </span>--<span class="w"> </span>--server<span class="w"> </span>vrops-master.example.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--serverPort<span class="w"> </span><span class="m">443</span><span class="w"> </span>--agentGroup<span class="w"> </span>Linux-Prod
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>/opt/vmware/epops-agent/bin/epops-agent<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Extracting installer...
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Verifying digital signature...
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Installing VMware Aria Operations Agent v8.12.1...
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Creating user &#39;epops&#39;...
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Configuring agent group: Linux-Prod
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Installation completed successfully.
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Agent registered with server: vrops-master.example.local:443
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Waiting for agent startup...
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Agent Status:
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  Process ID: 4782
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  Status: RUNNING
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  Version: 8.12.1.21847392
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>  Server: vrops-master.example.local
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  Last Heartbeat: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>  Memory Usage: 287 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>./vrops-agent-install.bin: Permission denied</code></strong> — Run <code>chmod +x vrops-agent-install.bin</code> before executing the installer.
+<strong><code>Error: Unable to connect to server vrops-master.example.local:443</code></strong> — Verify network connectivity and that the Aria Operations master server hostname/IP is correct and reachable on port 443.
+<strong><code>Agent Status: NOT_RUNNING - Failed to start epops-agent service</code></strong> — Check <code>/opt/vmware/epops-agent/log/wrapper.log</code> for startup errors and ensure the system has sufficient memory and disk space.</p>
+</div>
 <p>Configure notification plugins:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Administration → Notifications → Outbound Plugins
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Email: SMTP host smtp.example.local:25 · From: vrops-alerts@example.local
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Webhook: https://hooks.slack.com/services/&lt;token&gt;  (POST, application/json)
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>→ ServiceNow REST: https://company.service-now.com/api/now/table/incident
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Administration → Notifications → Outbound Plugins
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>→ Email: SMTP host smtp.example.local:25 · From: vrops-alerts@example.local
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>→ Webhook: https://hooks.slack.com/services/&lt;token&gt;  (POST, application/json)
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>→ ServiceNow REST: https://company.service-now.com/api/now/table/incident
 </code></pre></div>
 <hr />
 <h2 id="phase-6-end-to-end-validation">Phase 6 — End-to-End Validation<a class="headerlink" href="#phase-6-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks pass. CaSA backup completed. Runbook updated. Hand off to operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>root@vrops-master.example.local
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># All nodes: Online</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>service<span class="w"> </span>vmware-vcops-cassandra<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>service<span class="w"> </span>vmware-vcops-gemfire<span class="w"> </span>status<span class="w">     </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>service<span class="w"> </span>vmware-vcops-postgres<span class="w"> </span>status<span class="w">    </span><span class="c1"># Active (running)</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>adapter-status
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># All adapters: Collecting</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ssh<span class="w"> </span>root@vrops-master.example.local
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>cluster-status
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># All nodes: Online</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>service<span class="w"> </span>vmware-vcops-cassandra<span class="w"> </span>status<span class="w">   </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>service<span class="w"> </span>vmware-vcops-gemfire<span class="w"> </span>status<span class="w">     </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>service<span class="w"> </span>vmware-vcops-postgres<span class="w"> </span>status<span class="w">    </span><span class="c1"># Active (running)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>/usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh<span class="w"> </span>adapter-status
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># All adapters: Collecting</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>root@vrops-master:~# /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh cluster-status
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Cluster Status Report
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>=====================
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Node: vrops-master.example.local     Status: Online
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Node: vrops-replica-1.example.local  Status: Online
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Node: vrops-replica-2.example.local  Status: Online
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>All nodes: Online
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>root@vrops-master:~# service vmware-vcops-cassandra status
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>● vmware-vcops-cassandra.service - VMware vRealize Operations Cassandra
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>   Loaded: loaded (/etc/systemd/system/vmware-vcops-cassandra.service; enabled; vendor preset: disabled)
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>   Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>root@vrops-master:~# service vmware-vcops-gemfire status
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>● vmware-vcops-gemfire.service - VMware vRealize Operations GemFire
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>   Loaded: loaded (/etc/systemd/system/vmware-vcops-gemfire.service; enabled; vendor preset: disabled)
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>   Active: active (running) since Wed 2024-01-17 14:33:05 UTC; 2 days ago
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>root@vrops-master:~# service vmware-vcops-postgres status
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>● vmware-vcops-postgres.service - VMware vRealize Operations PostgreSQL
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>   Loaded: loaded (/etc/systemd/system/vmware-vcops-postgres.service; enabled; vendor preset: disabled)
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>   Active: active (running) since Wed 2024-01-17 14:33:42 UTC; 2 days ago
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>root@vrops-master:~# /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh adapter-status
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>Adapter Status Report
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>=====================
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>vSphere Adapter Instance 1:     Status: Collecting
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>vSphere Adapter Instance 2:     Status: Collecting
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>NSX-T Adapter Instance 1:       Status: Collecting
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>Kubernetes Adapter Instance 1:  Status: Collecting
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>All adapters: Collecting
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify SSH connectivity and that the vrops-master hostname resolves correctly with <code>nslookup vrops-master.example.local</code>.
+<strong><code>vcops-cli.sh: command not found</code></strong> — Confirm the vRealize Operations Suite is installed and the utilities path exists with <code>ls -la /usr/lib/vmware-vcopssuite/utilities/bin/</code>.
+<strong><code>Job for vmware-vcops-cassandra.service failed because the control process exited with error code</code></strong> — Restart the failed service with <code>service vmware-vcops-cassandra restart</code> and check logs via <code>journalctl -u vmware-vcops-cassandra -n 50</code>.</p>
+</div>
 <p>Take CaSA backup before handing to operations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Administration → Backup and Restore → Backup Now
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>→ Destination: NFS share or SFTP  ·  Confirm completes without error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Administration → Backup and Restore → Backup Now
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>→ Destination: NFS share or SFTP  ·  Confirm completes without error
 </code></pre></div>
 <table>
 <thead>
@@ -9266,7 +9418,7 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

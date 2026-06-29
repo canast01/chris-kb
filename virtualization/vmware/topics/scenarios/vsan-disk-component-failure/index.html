@@ -10780,6 +10780,36 @@ on HCI deployments.
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Identify which disk group is affected</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DiskGroupUUID|SSD|Capacity|State&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>UUID: 52e3f4a1-8c2d-4f9e-b1a2-7d6c9e3f2a1b
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Health: Healthy
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Host: esx-prod-01.lab.local
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2a
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>UUID: 62f4g5b2-9d3e-5g0f-c2b3-8e7d0f4g3b2c
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Health: Degraded
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Host: esx-prod-01.lab.local
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2b
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>UUID: 73g5h6c3-0e4f-6h1g-d3c4-9f8e1g5h4c3d
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Health: Healthy
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Host: esx-prod-01.lab.local
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2c
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>DiskGroupUUID: 84h6i7d4-1f5g-7i2h-e4d5-0g9f2h6i5d4e
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>SSD: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2d
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Capacity: 1.7 TB
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>State: Healthy
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>DiskGroupUUID: 95i7j8e5-2g6h-8j3i-f5e6-1h0g3i7j6e5f
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>SSD: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2e
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>Capacity: 1.7 TB
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>State: Degraded
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: Unknown command or namespace vsan</code></strong> — Verify vSAN is licensed and enabled on the host by running <code>esxcli vsan cluster get</code>.
+<strong><code>grep: (standard input) is empty</code></strong> — Confirm the host is part of a vSAN cluster and has vSAN enabled with <code>esxcli vsan cluster get</code>.</p>
+</div>
 <p>Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is <code>Absent</code> (disk gone) or <code>Degraded</code> (disk present but component needs rebuild).</p>
 <hr />
 <h2 id="3-assess-the-risk-window">3. Assess the Risk Window<a class="headerlink" href="#3-assess-the-risk-window" title="Permanent link">&para;</a></h2>
@@ -10825,59 +10855,124 @@ on HCI deployments.
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Risk window = time between first failure and rebuild completion.
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>During this window, a second disk or host failure may cause data loss.
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Do NOT put other hosts into maintenance mode during an active risk window.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Risk window = time between first failure and rebuild completion.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>During this window, a second disk or host failure may cause data loss.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Do NOT put other hosts into maintenance mode during an active risk window.
 </code></pre></div>
 <hr />
 <h2 id="4-check-physical-disk-health">4. Check Physical Disk Health<a class="headerlink" href="#4-check-physical-disk-health" title="Permanent link">&para;</a></h2>
 <p>SSH to the affected ESXi host to confirm whether the disk has truly failed or is merely disconnected before ordering a replacement.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage devices visible to ESXi</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Display|State|Device&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check SMART health data for the specific device</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Replace naa.&lt;device-id&gt; with the actual NAA identifier from the list above</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>smart<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>naa.&lt;device-id&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Key SMART attributes to check:</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Reallocated Sector Count &gt; 0    — sectors remapped; disk degrading</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Uncorrectable Sector Count &gt; 0  — data loss risk</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># SSD Wear Indicator &lt; 5%         — flash near end of life</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Drive Temperature &gt; 55°C        — thermal issue</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all storage devices visible to ESXi</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Display|State|Device&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check SMART health data for the specific device</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Replace naa.&lt;device-id&gt; with the actual NAA identifier from the list above</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>smart<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>naa.&lt;device-id&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Key SMART attributes to check:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Reallocated Sector Count &gt; 0    — sectors remapped; disk degrading</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Uncorrectable Sector Count &gt; 0  — data loss risk</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># SSD Wear Indicator &lt; 5%         — flash near end of life</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Drive Temperature &gt; 55°C        — thermal issue</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Display Name: Local ATA Disk mpx.vmhba0:C0:T0:L0
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>State: Online
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Device: naa.5001b1a9b3c4d5e6
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Display Name: SAS Disk mpx.vmhba1:C0:T1:L0
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>State: Online
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Device: naa.6002ac0000a1b2c3d4e5f6g7
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Display Name: NVMe Device mpx.vmhba2:C0:T2:L0
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>State: Online
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Device: naa.55cd2e404bd2e11e
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>SMART Health Data for Device naa.5001b1a9b3c4d5e6:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Parameter: Reallocated Sector Count
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Value: 8
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Threshold: 36
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Status: OK
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Parameter: Uncorrectable Sector Count
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Value: 0
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Threshold: 0
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Status: OK
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Parameter: SSD Wear Indicator
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Value: 78
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Threshold: 10
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Status: OK
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>Parameter: Drive Temperature
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Value: 42
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>Threshold: 60
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>Status: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not retrieve SMART data for device naa.&lt;device-id&gt;</code></strong> — Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries.
+<strong><code>Error: Unknown option or syntax error in esxcli command</code></strong> — Check your ESXi version supports the <code>esxcli storage core device smart</code> command (requires ESXi 6.5+); use <code>esxcli storage core device list</code> alone if unavailable.</p>
+</div>
 <p>For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to iDRAC (or use web UI at https://&lt;idrac-ip&gt;)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|disk\|drive&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to iDRAC (or use web UI at https://&lt;idrac-ip&gt;)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|disk\|drive&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SEL Records:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>   1 | 01/15/2024 | 14:32:45 | Storage | Physical Disk 0 in Slot 1 | Predictive Failure
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>   2 | 01/15/2024 | 14:35:12 | Storage | RAID Controller 0 | Battery Learn Cycle Started
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>   3 | 01/16/2024 | 09:18:33 | Disk | Physical Disk 2 in Slot 3 | Drive Online
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   4 | 01/16/2024 | 11:45:22 | Storage | Virtual Disk 1 | Rebuild in Progress
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   5 | 01/17/2024 | 16:22:10 | Drive | Hot Spare Activated | Slot 4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>racadm: command not found</code></strong> — Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead.
+<strong><code>DRAC001: Authentication failed</code></strong> — Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs.</p>
+</div>
 <p>Look for: cross-reference <strong>vCenter → Alarms → Triggered Alarms</strong> for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.</p>
 <hr />
 <h2 id="5-initiate-or-monitor-rebuild">5. Initiate or Monitor Rebuild<a class="headerlink" href="#5-initiate-or-monitor-rebuild" title="Permanent link">&para;</a></h2>
 <p>Replace the failed disk — vSAN automatically detects the new disk and begins rebuilding absent components; do not manually re-add it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Monitor resync progress from ESXi CLI</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Output fields:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">#   BytesToResync     — remaining data to rebuild</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">#   ResyncType        — REPAIR (failed component) / REBALANCE / POLICY_CHANGE</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">#   ObjectsToResync   — number of VM disk objects still rebuilding</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1">#   ActiveResyncETA   — estimated completion time</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Monitor resync progress from ESXi CLI</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Output fields:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1">#   BytesToResync     — remaining data to rebuild</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">#   ResyncType        — REPAIR (failed component) / REBALANCE / POLICY_CHANGE</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">#   ObjectsToResync   — number of VM disk objects still rebuilding</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#   ActiveResyncETA   — estimated completion time</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>BytesToResync: 2147483648
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ResyncType: REPAIR
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ObjectsToResync: 42
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>ActiveResyncETA: 2h 15m
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ResyncStartTime: 2024-01-15T09:32:14Z
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ResyncEndTime: 2024-01-15T11:47:14Z
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>CurrentResyncRate: 16.8 MB/s
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>PendingResyncObjects: 12
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>CompletedResyncObjects: 30
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace path vsan/debug/resync/summary.</code></strong> — Verify VSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster get</code> to confirm VSAN status first.
+<strong><code>Error: Permission denied.</code></strong> — Ensure you are logged in with root or an account with VSAN administration privileges; use <code>esxcli system permission list</code> to verify your role.</p>
+</div>
 <p>Look for: <code>ResyncType = REPAIR</code> with decreasing <code>BytesToResync</code> confirms rebuild is in progress. For VxRail, use <strong>VxRail Manager → Maintenance → Disk Replacement</strong> wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.</p>
 <hr />
 <h2 id="6-powercli-disk-group-and-health-queries">6. PowerCLI — Disk Group and Health Queries<a class="headerlink" href="#6-powercli-disk-group-and-health-queries" title="Permanent link">&para;</a></h2>
 <p>Pull disk group and cluster health state programmatically for post-replacement validation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Get all disk groups for a specific ESXi host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># List all disks in each disk group with health status</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="p">|</span> <span class="nb">Get-VsanDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Vendor</span><span class="p">,</span> <span class="n">IsSsd</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Query cluster-level vSAN health summary via API</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">$vsanHealth</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vimautomation</span><span class="p">.</span><span class="n">Storage</span><span class="p">.</span><span class="n">Impl</span><span class="p">.</span><span class="n">V1</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummarySpec</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">$vsanHealth</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Get all disk groups for a specific ESXi host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># List all disks in each disk group with health status</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  <span class="p">|</span> <span class="nb">Get-VsanDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Vendor</span><span class="p">,</span> <span class="n">IsSsd</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c"># Query cluster-level vSAN health summary via API</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nv">$vsanHealth</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vimautomation</span><span class="p">.</span><span class="n">Storage</span><span class="p">.</span><span class="n">Impl</span><span class="p">.</span><span class="n">V1</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummarySpec</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">$vsanHealth</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
@@ -10980,7 +11075,7 @@ on HCI deployments.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

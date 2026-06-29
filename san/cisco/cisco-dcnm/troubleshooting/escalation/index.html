@@ -7976,66 +7976,179 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># DCNM deployment mode</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>appmgr<span class="w"> </span>show-deployment-mode
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>DCNM Version: 12.1.2.0 (Build 12.1.2.0.20231015)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Primary Node: dcnm-node-01.example.com (192.168.1.100)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Secondary Node: dcnm-node-02.example.com (192.168.1.101)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>HA Status: HEALTHY
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Sync Status: IN_SYNC
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Last Sync Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Deployment Mode: Native HA
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Active Controller: dcnm-node-01
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Standby Controller: dcnm-node-02
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /var/dcnm/version: No such file or directory</code></strong> — Verify DCNM is installed by checking <code>/opt/dcnm/version</code> or running <code>dcnm --version</code> instead.
+<strong><code>appmgr: command not found</code></strong> — SSH directly to the DCNM VM and ensure you are logged in as root; appmgr is only available on the DCNM appliance itself, not remotely.
+<strong><code>HA Status: UNHEALTHY - Node dcnm-node-02 unreachable</code></strong> — Check network connectivity between nodes and verify both DCNM services are running with <code>systemctl status dcnm-*</code>.</p>
+</div>
 <h3 id="2-collect-the-dcnm-support-bundle">2. Collect the DCNM support bundle<a class="headerlink" href="#2-collect-the-dcnm-support-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># This is the primary artifact for Cisco TAC — collect BEFORE any restart</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run as root; the bundle takes 5–10 minutes to generate</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>/tmp/dcnm-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.tar.gz
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify the bundle was created</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/dcnm-support-*.tar.gz
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Transfer to your workstation for upload to the TAC case</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>scp<span class="w"> </span>root@&lt;dcnm-vm&gt;:/tmp/dcnm-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.tar.gz<span class="w"> </span>./
-</code></pre></div>
-<h3 id="3-capture-dcnm-service-state-and-resource-snapshot">3. Capture DCNM service state and resource snapshot<a class="headerlink" href="#3-capture-dcnm-service-state-and-resource-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All DCNM service states</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>appmgr<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># This is the primary artifact for Cisco TAC — collect BEFORE any restart</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Run as root; the bundle takes 5–10 minutes to generate</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Database health</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>appmgr<span class="w"> </span>database-status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>/tmp/dcnm-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.tar.gz
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># OS resources (disk, memory, CPU)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>uptime<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Java heap utilization for the DCNM server process</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">DCNM_PID</span><span class="o">=</span><span class="k">$(</span>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;[d]cnm-server&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DCNM_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_PID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>1s<span class="w"> </span><span class="m">10</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">fi</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># DCNM application log tail (most recent errors)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;4 hours ago&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify the bundle was created</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/dcnm-support-*.tar.gz
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Transfer to your workstation for upload to the TAC case</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>scp<span class="w"> </span>root@&lt;dcnm-vm&gt;:/tmp/dcnm-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.tar.gz<span class="w"> </span>./
 </code></pre></div>
-<h3 id="4-capture-database-diagnostics">4. Capture database diagnostics<a class="headerlink" href="#4-capture-database-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect to DCNM PostgreSQL and capture key table sizes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>sane<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">FROM pg_catalog.pg_statio_user_tables</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">ORDER BY pg_relation_size(relid) DESC</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">LIMIT 20;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Total database sizes</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">SELECT datname, pg_size_pretty(pg_database_size(datname))</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">FROM pg_database</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">ORDER BY pg_database_size(datname) DESC;&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Collecting DCNM support bundle...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Gathering system logs... [████████████████████] 100%
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Gathering database diagnostics... [████████████████████] 100%
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Gathering fabric inventory... [████████████████████] 100%
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Gathering configuration snapshots... [████████████████████] 100%
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Bundle creation completed successfully.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Support bundle saved to: /tmp/dcnm-support-202501151430.tar.gz
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>-rw-r--r-- 1 root root 847M Jan 15 14:30 /tmp/dcnm-support-202501151430.tar.gz
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>root@dcnm-vm:/tmp/dcnm-support-202501151430.tar.gz                100% 847MB   12.4MB/s   01:08
 </code></pre></div>
-<h3 id="5-collect-show-tech-support-from-affected-mds-switches">5. Collect show tech-support from affected MDS switches<a class="headerlink" href="#5-collect-show-tech-support-from-affected-mds-switches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to each affected MDS switch and run show tech-support</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># This is required in addition to the DCNM support bundle</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: Permission denied</code></strong> — Run the command with <code>sudo</code> or as the root user directly.
+<strong><code>tar: Error is not recoverable: exiting now</code></strong> — Ensure <code>/tmp</code> has at least 2GB of free space using <code>df -h /tmp</code> and clear old bundles if needed.
+<strong><code>scp: command not found</code></strong> — Install OpenSSH client on your workstation with <code>apt-get install openssh-client</code> (Ubuntu/Debian) or <code>brew install openssh</code> (macOS).</p>
+</div>
+<h3 id="3-capture-dcnm-service-state-and-resource-snapshot">3. Capture DCNM service state and resource snapshot<a class="headerlink" href="#3-capture-dcnm-service-state-and-resource-snapshot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All DCNM service states</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>appmgr<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ssh<span class="w"> </span>admin@&lt;mds-switch-ip&gt;
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mds-tech-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">exit</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Transfer the tech-support file</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>scp<span class="w"> </span>admin@&lt;mds-switch-ip&gt;:/tmp/mds-tech-*.txt<span class="w"> </span>./
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Database health</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>appmgr<span class="w"> </span>database-status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># OS resources (disk, memory, CPU)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>uptime<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Java heap utilization for the DCNM server process</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">DCNM_PID</span><span class="o">=</span><span class="k">$(</span>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;[d]cnm-server&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DCNM_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_PID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>1s<span class="w"> </span><span class="m">10</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">fi</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># DCNM application log tail (most recent errors)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;4 hours ago&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>S.No  Service Name                    Admin State    Oper State
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1     dcnm-server                     UP             UP
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2     dcnm-scheduler                  UP             UP
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>3     dcnm-maapi                      UP             UP
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>4     dcnm-ha-peer                    UP             DOWN
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>5     postgres                        UP             UP
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Database Status: HEALTHY
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Replication Lag: 0 ms
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Last Backup: 2024-01-15 03:45:22 UTC
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>/dev/sda1      500G  287G  213G  58% /
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>/dev/sdb1      2.0T  1.8T  200G  90% /var/log
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Mem:           64Gi        48Gi        8.2Gi      512Mi        7.8Gi        15Gi
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Swap:          16Gi       2.1Gi        13Gi
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a> 10:42:23 up 127 days, 14:33,  2 users,  load average: 2.14, 1.87, 1.92
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a> S0     S1     E     O      M1     M2   CCS    CCSU    EU     TT   PTGU   GCT
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a> 0.00  15.23  42.18  8.92  58.34  22.11  0.00   0.00  12.45  145.2  0.0   2.341
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a> 0.00  16.01  41.95  9.15  59.12  21.88  0.00   0.00  12.67  148.9  0.0   2.356
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a> 0.00  15.87  42.34  8.78  58.67  22.33  0.00   0.00  12.51  146.5  0.0   2.348
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>2024-01-15T10:38:45.123Z INFO  [dcnm-server] Fabric sync completed for fabric-prod-01
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>2024-01-15T10:39:12.456Z WARN  [dcnm-scheduler] Task queue depth: 234 pending jobs
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>2024-01-15T10:40:01.789Z INFO  [dcnm-maapi] Device 10.48.1.5 reachability confirmed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>jstat: command not found</code></strong> — Install the Java Development Kit (JDK) on the DCNM appliance or verify the JAVA_HOME environment variable is set correctly.
+<strong><code>/var/log/dcnm/dcnm.log: No such file or directory</code></strong> — Confirm the DCNM service is running and the log directory exists; if using systemd-journald exclusively, the fallback to journalctl will capture logs automatically.
+<strong><code>Permission denied</code></strong> — Run the script with sudo or ensure the user has read access to /var/log/dcnm/ and /proc/[pid]/stat for the DCNM process.</p>
+</div>
+<h3 id="4-capture-database-diagnostics">4. Capture database diagnostics<a class="headerlink" href="#4-capture-database-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Connect to DCNM PostgreSQL and capture key table sizes</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>sane<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">FROM pg_catalog.pg_statio_user_tables</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">ORDER BY pg_relation_size(relid) DESC</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">LIMIT 20;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Total database sizes</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">SELECT datname, pg_size_pretty(pg_database_size(datname))</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">FROM pg_database</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">ORDER BY pg_database_size(datname) DESC;&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>relname                     |    size
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-------------------------------------------------+----------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a> fabric_device_inventory                        | 2847 MB
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> switch_config_history                          | 1923 MB
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a> interface_statistics                           | 1456 MB
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a> policy_deployment_log                          | 892 MB
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a> device_event_log                               | 756 MB
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a> fabric_topology_cache                          | 634 MB
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> vlan_mapping_table                             | 512 MB
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a> route_table_snapshot                           | 389 MB
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a> ...
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>(20 rows)
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> datname  |  pg_database_size
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>----------+-------------------
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> sane     | 14 GB
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> postgres | 45 MB
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> template1| 8 MB
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>(3 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist</code></strong> — Verify the PostgreSQL superuser exists or use the correct role name with <code>-U dcnm_user</code> instead.
+<strong><code>psql: error: database "sane" does not exist</code></strong> — Confirm the DCNM database name is correct; check with <code>psql -U postgres -l</code> to list available databases.
+<strong><code>Permission denied</code></strong> — Ensure the user running the script has write permissions to <code>/tmp</code> or redirect output to a writable directory like <code>/var/log/dcnm/</code>.</p>
+</div>
+<h3 id="5-collect-show-tech-support-from-affected-mds-switches">5. Collect show tech-support from affected MDS switches<a class="headerlink" href="#5-collect-show-tech-support-from-affected-mds-switches" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to each affected MDS switch and run show tech-support</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># This is required in addition to the DCNM support bundle</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ssh<span class="w"> </span>admin@&lt;mds-switch-ip&gt;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mds-tech-<span class="k">$(</span>hostname<span class="k">)</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">exit</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Transfer the tech-support file</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>scp<span class="w"> </span>admin@&lt;mds-switch-ip&gt;:/tmp/mds-tech-*.txt<span class="w"> </span>./
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>The authenticity of host &#39;192.168.100.45&#39; can&#39;t be established.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0=.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Warning: Permanently added &#39;192.168.100.45&#39; (ECDSA) to /etc/ssh/known_hosts.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Password: 
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>mds-switch-01# show tech-support &gt; /tmp/mds-tech-mds-switch-01-20240115.txt
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>mds-switch-01# exit
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Connection to 192.168.100.45 closed.
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>mds-tech-mds-switch-01-20240115.txt                    100% |*****| 45678 KB  00:12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the admin account credentials and ensure SSH is enabled on the MDS switch with <code>show ssh server status</code>.
+<strong><code>No such file or directory</code></strong> — Confirm the tech-support file was successfully created on the switch by SSH'ing back and running <code>ls -la /tmp/mds-tech-*.txt</code> before attempting the scp transfer.</p>
+</div>
 <h3 id="6-export-the-dcnm-audit-log">6. Export the DCNM audit log<a class="headerlink" href="#6-export-the-dcnm-audit-log" title="Permanent link">&para;</a></h3>
 <p>In the DCNM UI:
 1. Navigate to <strong>Administration</strong> → <strong>Credentials</strong> → <strong>Audit Log</strong>.
@@ -8043,25 +8156,25 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 3. Click <strong>Export</strong> → <strong>CSV</strong>.
 4. Save the file and include it in the TAC case attachment.</p>
 <h3 id="7-write-the-timeline">7. Write the timeline<a class="headerlink" href="#7-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DCNM version: 11.5.4.0
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Deployment: Standalone VM (VMware ESXi 7.0 U3)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>VM resources: 16 vCPU, 32 GB RAM, 500 GB disk
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Managed fabrics: SAN Fabric A (MDS 9710 x2, MDS 9396T x4), SAN Fabric B (MDS 9396T x2)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Managed switch NX-OS: 8.4(2a) on all MDS switches
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Issue first observed: 2026-06-15 14:00 UTC
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Last confirmed healthy: 2026-06-15 12:00 UTC
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Changes in 24h before the issue:
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - 11:30: DCNM upgraded from 11.5.2 to 11.5.4.0 (upgrade completed successfully per UI)
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - 12:00: DCNM appeared healthy post-upgrade
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - 14:00: All managed switches moved to &quot;Unreachable&quot; state in DCNM; fabric discovery stopped
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  - 14:05: appmgr status: sne-service is in &quot;Stopped&quot; state; attempting restart fails
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - 14:10: Disk utilization on /var/lib/pgsql: 95% — database may have run out of space
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Steps already taken:
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  - Did NOT restart the entire DCNM VM
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  - Did NOT make any zone changes
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  - Verified MDS switches are reachable via SSH independently — switches operational, only DCNM is down
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  - Checked /var/dcnm/version: confirms upgrade applied (11.5.4.0)
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Blast radius: All DCNM fabric management unavailable; no zone changes can be pushed; monitoring stopped
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>DCNM version: 11.5.4.0
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Deployment: Standalone VM (VMware ESXi 7.0 U3)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>VM resources: 16 vCPU, 32 GB RAM, 500 GB disk
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Managed fabrics: SAN Fabric A (MDS 9710 x2, MDS 9396T x4), SAN Fabric B (MDS 9396T x2)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Managed switch NX-OS: 8.4(2a) on all MDS switches
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Issue first observed: 2026-06-15 14:00 UTC
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Last confirmed healthy: 2026-06-15 12:00 UTC
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Changes in 24h before the issue:
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  - 11:30: DCNM upgraded from 11.5.2 to 11.5.4.0 (upgrade completed successfully per UI)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 12:00: DCNM appeared healthy post-upgrade
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 14:00: All managed switches moved to &quot;Unreachable&quot; state in DCNM; fabric discovery stopped
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  - 14:05: appmgr status: sne-service is in &quot;Stopped&quot; state; attempting restart fails
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  - 14:10: Disk utilization on /var/lib/pgsql: 95% — database may have run out of space
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Steps already taken:
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  - Did NOT restart the entire DCNM VM
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>  - Did NOT make any zone changes
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>  - Verified MDS switches are reachable via SSH independently — switches operational, only DCNM is down
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  - Checked /var/dcnm/version: confirms upgrade applied (11.5.4.0)
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Blast radius: All DCNM fabric management unavailable; no zone changes can be pushed; monitoring stopped
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-caseciscocom">How to Open the SR on case.cisco.com<a class="headerlink" href="#how-to-open-the-sr-on-caseciscocom" title="Permanent link">&para;</a></h2>
@@ -8168,20 +8281,54 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to DCNM VM — paste into every case update</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># DCNM service states</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>appmgr<span class="w"> </span>status
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Disk utilization (watch for /var/lib/pgsql filling up)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>df<span class="w"> </span>-h
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># DCNM service log tail (last 100 lines)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;30 min ago&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Database running check</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>appmgr<span class="w"> </span>database-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># SSH to DCNM VM — paste into every case update</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># DCNM service states</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>appmgr<span class="w"> </span>status
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Disk utilization (watch for /var/lib/pgsql filling up)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>df<span class="w"> </span>-h
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># DCNM service log tail (last 100 lines)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;30 min ago&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Database running check</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>appmgr<span class="w"> </span>database-status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>[dcnm@dcnm-prod-01 ~]$ appmgr status
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>dcnm-web: running
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>dcnm-backend: running
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>dcnm-database: running
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>dcnm-scheduler: running
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>dcnm-messaging: running
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>[dcnm@dcnm-prod-01 ~]$ df -h
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>/dev/sda1        50G   32G   15G  68% /
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>/dev/sda2       100G   87G   10G  89% /var/lib/pgsql
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>/dev/sda3       200G  145G   48G  74% /opt/dcnm
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>tmpfs            16G     0   16G   0% /dev/shm
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>[dcnm@dcnm-prod-01 ~]$ tail -100 /var/log/dcnm/dcnm.log 2&gt;/dev/null || journalctl -u dcnm --since &quot;30 min ago&quot;
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>2024-01-15 14:32:18 [INFO] DCNM backend initialized successfully
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>2024-01-15 14:32:45 [INFO] Database connection pool established: 25 connections
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>2024-01-15 14:33:02 [INFO] Scheduler started: 12 jobs queued
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>2024-01-15 14:35:17 [WARN] Fabric sync delayed for fabric-prod-dc1 (retry 2/5)
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>2024-01-15 14:36:01 [INFO] Fabric sync completed for fabric-prod-dc1 in 2847ms
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>[dcnm@dcnm-prod-01 ~]$ appmgr database-status
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>Database Status: HEALTHY
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>PostgreSQL Version: 12.8
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>Active Connections: 18/25
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>Replication Status: STREAMING
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>Last Backup: 2024-01-15 02:00:15 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>appmgr: command not found</code></strong> — Ensure you are logged into the DCNM VM directly (not a remote host) and that /opt/dcnm/bin is in your PATH.
+<strong><code>/var/log/dcnm/dcnm.log: No such file or directory</code></strong> — The log file may not exist yet; use <code>journalctl -u dcnm --since "30 min ago"</code> instead, or verify the DCNM service started with <code>systemctl status dcnm</code>.
+<strong><code>Database Status: UNHEALTHY</code></strong> — Check PostgreSQL process with <code>systemctl status postgresql</code> and verify /var/lib/pgsql has at least 5GB free space using <code>df -h</code>.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8264,7 +8411,7 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

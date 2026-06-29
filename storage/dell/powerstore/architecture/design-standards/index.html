@@ -9250,6 +9250,37 @@ Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Pro
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="s1">    &quot;description&quot;: &quot;vSphere cluster lon01-vcl01 host group&quot;</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;host_5f8c2a1b9e4d7c3a&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;name&quot;: &quot;lon01-esxi-001.corp.example.com&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;os_type&quot;: &quot;ESXi&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;description&quot;: &quot;ESXi host lon01-esxi-001&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;initiator_count&quot;: 0,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;host_group_id&quot;: null,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;mapped_volumes&quot;: 0
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>}
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;id&quot;: &quot;initiator_8b2f4e9c1a5d6k7m&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;host_id&quot;: &quot;host_5f8c2a1b9e4d7c3a&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;port_name&quot;: &quot;21:00:00:11:0d:ab:cd:ef&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;port_type&quot;: &quot;FC&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;is_logged_in&quot;: false,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;chap_mutual_username&quot;: null
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>}
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>{
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;id&quot;: &quot;hg_3c7f9a2e1b4d8k5m&quot;,
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;name&quot;: &quot;lon01-vcl01-hg&quot;,
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;description&quot;: &quot;vSphere cluster lon01-vcl01 host group&quot;,
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;host_count&quot;: 0,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;volume_count&quot;: 0
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store.
+<strong><code>{"error_code":"INVALID_HOST_ID","message":"Host ID not found"}</code></strong> — Replace <code>&lt;host-id&gt;</code> placeholder with the actual host ID returned from the first curl command (e.g., <code>host_5f8c2a1b9e4d7c3a</code>).
+<strong><code>{"error_code":"INVALID_TOKEN","message":"Token expired or invalid"}</code></strong> — Regenerate the authentication token using PowerStore REST API login endpoint and update the <code>DELL-EMC-TOKEN</code> header value.</p>
+</div>
 <h3 id="esxi-host-connectivity-standards">ESXi Host Connectivity Standards<a class="headerlink" href="#esxi-host-connectivity-standards" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9293,33 +9324,40 @@ Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Pro
 </tbody>
 </table>
 <h3 id="linux-host-iscsi-standards">Linux Host iSCSI Standards<a class="headerlink" href="#linux-host-iscsi-standards" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/iscsi/iscsid.conf — key parameters for PowerStore iSCSI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>node.session.timeo.replacement_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">120</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>node.conn<span class="o">[</span><span class="m">0</span><span class="o">]</span>.timeo.login_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>node.conn<span class="o">[</span><span class="m">0</span><span class="o">]</span>.timeo.logout_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>node.session.queue_depth<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">32</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>node.session.iscsi.FastAbort<span class="w"> </span><span class="o">=</span><span class="w"> </span>No
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>node.session.err_timeo.abort_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Multipath configuration for PowerStore iSCSI (multipath.conf)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>defaults<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>user_friendly_names<span class="w"> </span>yes
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>find_multipaths<span class="w"> </span>yes
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">}</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>devices<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>device<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span>vendor<span class="w">               </span><span class="s2">&quot;DELL&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">        </span>product<span class="w">              </span><span class="s2">&quot;PowerStore&quot;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span>path_grouping_policy<span class="w"> </span>group_by_prio
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span>prio<span class="w">                 </span>alua
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span>path_checker<span class="w">         </span>tur
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span>failback<span class="w">             </span>immediate
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span>no_path_retry<span class="w">        </span>fail
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span>rr_min_io<span class="w">            </span><span class="m">1</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="o">}</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/iscsi/iscsid.conf — key parameters for PowerStore iSCSI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>node.session.timeo.replacement_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">120</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>node.conn<span class="o">[</span><span class="m">0</span><span class="o">]</span>.timeo.login_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>node.conn<span class="o">[</span><span class="m">0</span><span class="o">]</span>.timeo.logout_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>node.session.queue_depth<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">32</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>node.session.iscsi.FastAbort<span class="w"> </span><span class="o">=</span><span class="w"> </span>No
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>node.session.err_timeo.abort_timeout<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Multipath configuration for PowerStore iSCSI (multipath.conf)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>defaults<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>user_friendly_names<span class="w"> </span>yes
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>find_multipaths<span class="w"> </span>yes
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="o">}</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>devices<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>device<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span>vendor<span class="w">               </span><span class="s2">&quot;DELL&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span>product<span class="w">              </span><span class="s2">&quot;PowerStore&quot;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span>path_grouping_policy<span class="w"> </span>group_by_prio
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">        </span>prio<span class="w">                 </span>alua
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span>path_checker<span class="w">         </span>tur
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span>failback<span class="w">             </span>immediate
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span>no_path_retry<span class="w">        </span>fail
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span>rr_min_io<span class="w">            </span><span class="m">1</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="o">}</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="o">}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied</code></strong> — Run the configuration edit with <code>sudo</code> or as root user.
+<strong><code>multipathd: error parsing /etc/multipath.conf line 8: unknown keyword 'prio'</code></strong> — Verify the multipath daemon version supports ALUA with <code>multipathd -v3</code> and update syntax if using older versions.</p>
+</div>
 <h2 id="software-version-matrix">Software Version Matrix<a class="headerlink" href="#software-version-matrix" title="Permanent link">&para;</a></h2>
 <h3 id="powerstoreos-release-cadence">PowerStoreOS Release Cadence<a class="headerlink" href="#powerstoreos-release-cadence" title="Permanent link">&para;</a></h3>
 <p>Dell releases PowerStoreOS updates approximately quarterly. Major version increments introduce new capabilities; minor versions are primarily bug fixes and security patches.</p>
@@ -9519,7 +9557,7 @@ Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Pro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:25:31 UTC"><span class="timeago" datetime="2026-06-29T04:25:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:25:31 UTC">2026-06-29</span>
   </span>
 
     

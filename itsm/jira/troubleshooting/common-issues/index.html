@@ -7531,111 +7531,287 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">JIRA_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s1">&#39;atlassian-jira&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>jcmd<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_PID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>GC.heap_info
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-XX:+UseG1GC
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>-XX:MaxGCPauseMillis<span class="o">=</span><span class="m">200</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-XX:+ExplicitGCInvokesConcurrent
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-XX:G1HeapRegionSize<span class="o">=</span>16m
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>-XX:G1ReservePercent<span class="o">=</span><span class="m">20</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2024-01-15 14:32:18.567 [http-nio-8080-exec-42] ERROR o.a.j.util.JiraUtils - OutOfMemoryError: Java heap space
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15 14:32:19.234 [GC-Thread-1] WARN c.a.j.startup.LaunchingContext - GC overhead limit exceeded
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-01-15 14:33:02.891 [catalina-exec-18] ERROR - Exception in thread &quot;http-nio-8080-exec-51&quot;: java.lang.OutOfMemoryError: Java heap space
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-01-15 14:35:44.156 [GC-Thread-2] INFO - Heap dump initiated by OutOfMemoryError hook
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-01-15 15:12:33.445 [http-nio-8080-exec-7] ERROR - OutOfMemoryError: Java heap space at java.util.Arrays.copyOf
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-01-15 14:32:18.891: [Pause Full (G1 Evacuation Pause) 2847M-&gt;1923M(4096M), 3.247 secs]
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15 14:33:02.156: [Pause Full (G1 Evacuation Pause) 3156M-&gt;2104M(4096M), 2.891 secs]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15 14:35:44.723: [Pause Full (G1 Evacuation Pause) 3892M-&gt;2567M(4096M), 4.112 secs]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-15 14:38:19.445: [Pause Full (G1 Evacuation Pause) 4012M-&gt;2891M(4096M), 3.556 secs]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> garbage-first heap   total 4096M, used 3247M [0x0000000080000000, 0x0000000180000000)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  region size 2M, 1247 young (2494M), 89 survivors (178M)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a> Metaspace       used 287M, committed 294M, reserved 1024M
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  class space    used 31M, committed 33M, reserved 256M
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check DB slow queries during board load (enable slow query log first)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">SELECT query, calls, total_exec_time, mean_exec_time</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">FROM pg_stat_statements</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">WHERE query ILIKE &#39;%jiraissue%&#39; OR query ILIKE &#39;%customfieldvalue%&#39;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">ORDER BY mean_exec_time DESC</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">LIMIT 20;&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check board filter JQL (get board ID from URL)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/agile/1.0/board/42/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pgrep: command not found</code></strong> — Install procps-ng package with <code>apt-get install procps-ng</code> or <code>yum install procps-ng</code>.
+<strong><code>jcmd: command not found</code></strong> — Ensure JAVA_HOME is set correctly and jcmd is in PATH; typically found in <code>$JAVA_HOME/bin/jcmd</code>.
+<strong><code>Permission denied</code></strong> — Run the commands as the jira user or with sudo: <code>sudo -u jira jcmd &lt;PID&gt; GC.heap_info</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-XX:+UseG1GC
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>-XX:MaxGCPauseMillis<span class="o">=</span><span class="m">200</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>-XX:+ExplicitGCInvokesConcurrent
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>-XX:G1HeapRegionSize<span class="o">=</span>16m
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>-XX:G1ReservePercent<span class="o">=</span><span class="m">20</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>-- Before (returns ALL issues including resolved)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>project = PROJ
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-- After (only active work)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>project = PROJ AND (
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  sprint in openSprints()
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  OR (status != Done AND updated &gt;= -14d)
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>)
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test LDAP connectivity from app server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ad.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-jira,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LDAP_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>displayName<span class="w"> </span>mail
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check Jira logs for LDAP errors</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ldap\|cwd\|crowd\|directory&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>setenv.sh: No such file or directory</code></strong> — Verify the JIRA installation path and ensure you're editing the correct setenv.sh file in <code>$JIRA_HOME/bin/</code> or <code>$CATALINA_HOME/bin/</code>.
+<strong><code>Permission denied</code></strong> — Run the editor with appropriate permissions (sudo or as the jira service user) to modify setenv.sh.
+<strong><code>JVM_SUPPORT_RECOMMENDED_ARGS: command not found</code></strong> — Ensure you're appending these values to the existing variable using <code>JVM_SUPPORT_RECOMMENDED_ARGS="$JVM_SUPPORT_RECOMMENDED_ARGS -XX:+UseG1GC ..."</code> rather than treating it as a shell command.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DB slow queries during board load (enable slow query log first)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">SELECT query, calls, total_exec_time, mean_exec_time</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">FROM pg_stat_statements</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">WHERE query ILIKE &#39;%jiraissue%&#39; OR query ILIKE &#39;%customfieldvalue%&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">ORDER BY mean_exec_time DESC</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">LIMIT 20;&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check board filter JQL (get board ID from URL)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/agile/1.0/board/42/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-alias<span class="w"> </span>ldap-server<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/ldap-server.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span><span class="s2">/lib/security/cacerts&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>-- Before (returns ALL issues including resolved)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>project = PROJ
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>-- After (only active work)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>project = PROJ AND (
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  sprint in openSprints()
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  OR (status != Done AND updated &gt;= -14d)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check workflow for issue type</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check Jira log for validator errors during transition</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;WorkflowException\|transition.*fail\|validator&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check outgoing mail configuration</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Test SMTP from server</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check Jira mail log</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;mail\|smtp\|notification\|email&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check index errors in log</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;IndexException\|CorruptIndexException\|LockObtainFailedException&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check index directory size and permissions</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ls<span class="w"> </span>-la<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Stop Jira</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. Delete index (safe — regenerated from DB)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. Start Jira</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Trigger full reindex (foreground for safety)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=FOREGROUND&quot;</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>watch<span class="w"> </span>-n30<span class="w"> </span><span class="s2">&quot;curl -s -u </span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2"> \</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s2">  </span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex | python3 -m json.tool&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check plugin-related errors</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|app\|addon\|atlassian&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disabled&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># List disabled/errored plugins</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s2">for p in json.load(sys.stdin):</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s2">    if not p.get(&#39;enabled&#39;, True):</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">        print(f\&quot;{p.get(&#39;key&#39;)} — {p.get(&#39;name&#39;)} — {p.get(&#39;version&#39;)}\&quot;)</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test LDAP connectivity from app server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ad.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-jira,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LDAP_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>displayName<span class="w"> </span>mail
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check Jira logs for LDAP errors</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ldap\|cwd\|crowd\|directory&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># LDAP Search Results
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dn: CN=testuser,OU=Users,DC=example,DC=com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>displayName: Test User
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>mail: testuser@example.com
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a># Jira Log Errors
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2024-01-15 09:42:33,521 WARN [http-nio-8080-exec-12] [com.atlassian.crowd.directory.ldap.LDAPDirectory] LDAP connection pool exhausted, retrying...
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2024-01-15 09:43:15,847 ERROR [scheduler_Worker-3] [com.atlassian.crowd.directory.ldap.LDAPDirectory] Failed to sync LDAP directory: javax.naming.CommunicationException: ad.example.com:636
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-01-15 09:44:02,123 WARN [http-nio-8080-exec-5] [com.atlassian.jira.user.util.UserUtil] User directory synchronization failed for directory ID 10001
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-01-15 09:45:33,456 ERROR [scheduler_Worker-7] [com.atlassian.crowd.directory.ldap.LDAPDirectory] LDAP bind failed: Invalid credentials for CN=svc-jira,OU=ServiceAccounts,DC=example,DC=com
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>2024-01-15 09:46:10,789 WARN [http-nio-8080-exec-8] [com.atlassian.crowd.directory.cwd.CrowdDirectory] Directory sync timeout after 30000ms
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15 09:47:22,234 ERROR [scheduler_Worker-2] [com.atlassian.jira.user.util.UserUtil] CWD operation failed: Connection refused to LDAP server
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldapsearch: No such file or directory</code></strong> — Install ldap-utils package with <code>apt-get install ldap-utils</code> (Debian/Ubuntu) or <code>yum install openldap-clients</code> (RHEL/CentOS).
+<strong><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 ref</code></strong> — Verify the service account password in <code>${LDAP_PASSWORD}</code> is correct and the account is not locked in Active Directory.
+<strong><code>javax.naming.CommunicationException: ad.example.com:636</code></strong> — Check network connectivity to the LDAP server with <code>telnet ad.example.com 636</code> and verify firewall rules allow port 636 from the Jira app server.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-alias<span class="w"> </span>ldap-server<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/ldap-server.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span><span class="s2">/lib/security/cacerts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>keytool error: java.lang.Exception: Input not an X.509 certificate</code></strong> — Verify the certificate file is in PEM or DER format and not corrupted by running <code>openssl x509 -in /tmp/ldap-server.crt -text -noout</code>.
+<strong><code>keytool error: java.io.FileNotFoundException: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts (No such file or directory)</code></strong> — Confirm <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.
+<strong><code>Certificate already exists with alias &lt;ldap-server&gt;</code></strong> — Remove the existing certificate first with <code>keytool -delete -alias ldap-server -keystore "${JAVA_HOME}/lib/security/cacerts" -storepass changeit</code>, or use a different alias name.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check workflow for issue type</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check Jira log for validator errors during transition</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;WorkflowException\|transition.*fail\|validator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;expand&quot;: &quot;transitions&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;transitions&quot;: [
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    {
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>      &quot;id&quot;: &quot;11&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>      &quot;name&quot;: &quot;In Progress&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>      &quot;to&quot;: {
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        &quot;self&quot;: &quot;https://jira.example.com/rest/api/2/status/3&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        &quot;description&quot;: &quot;This issue is being actively worked on.&quot;,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        &quot;iconUrl&quot;: &quot;https://jira.example.com/images/icons/statuses/inprogress.png&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        &quot;name&quot;: &quot;In Progress&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        &quot;id&quot;: &quot;3&quot;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>      }
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    },
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    {
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>      &quot;id&quot;: &quot;21&quot;,
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>      &quot;name&quot;: &quot;Done&quot;,
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>      &quot;to&quot;: {
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>        &quot;self&quot;: &quot;https://jira.example.com/rest/api/2/status/10000&quot;,
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        &quot;description&quot;: &quot;Work has finished on this issue.&quot;,
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>        &quot;iconUrl&quot;: &quot;https://jira.example.com/images/icons/statuses/done.png&quot;,
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>        &quot;name&quot;: &quot;Done&quot;,
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>        &quot;id&quot;: &quot;10000&quot;
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>      }
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    }
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>  ]
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>}
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>2024-01-15 09:42:17,234 ERROR [jira.workflow.WorkflowException] Transition validation failed for issue PROJ-123
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>2024-01-15 09:42:17,245 ERROR [jira.workflow.validator] Required field &#39;Resolution&#39; is missing
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>2024-01-15 09:42:17,256 WARN [jira.workflow.transition] User admin attempted transition to Done but validator rejected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the Jira server is running and accessible from this host.
+<strong><code>jq: command not found</code></strong> — Install jq (<code>apt-get install jq</code> or <code>yum install jq</code>) or use <code>python3 -m json.tool</code> as shown in the example.
+<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm the Jira installation path and check the actual log location with <code>find /opt/atlassian -name "atlassian-jira.log"</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check outgoing mail configuration</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Test SMTP from server</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check Jira mail log</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;mail\|smtp\|notification\|email&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;baseUrl&quot;: &quot;https://jira.company.internal&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;title&quot;: &quot;Company JIRA Instance&quot;,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;mailServers&quot;: [
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    {
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>      &quot;name&quot;: &quot;Default SMTP&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>      &quot;host&quot;: &quot;smtp.example.com&quot;,
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      &quot;port&quot;: 587,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>      &quot;username&quot;: &quot;jira-notifications@company.com&quot;,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>      &quot;protocol&quot;: &quot;smtp&quot;
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    }
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  ],
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  &quot;notificationScheme&quot;: &quot;Default Notification Scheme&quot;
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>}
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Trying 192.0.2.45...
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Connected to smtp.example.com.
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Escape character is &#39;^]&#39;.
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>220 smtp.example.com ESMTP ready
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>^]
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>quit
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>221 2.0.0 closing connection
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>2024-01-15 14:32:18,456 WARN [mail.outgoing.MailQueue] Failed to send notification to user admin: Connection timeout to smtp.example.com:587
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>2024-01-15 14:33:02,123 ERROR [mail.outgoing.MailQueue] SMTP authentication failed for jira-notifications@company.com: Invalid credentials
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>2024-01-15 14:35:45,789 WARN [notification.DefaultNotificationService] Email notification skipped: Mail server not configured
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify <code>${JIRA_URL}</code> is correct and Jira service is running with <code>systemctl status jira</code>.
+<strong><code>telnet: Unable to connect to remote host: Connection timed out</code></strong> — Check firewall rules allow outbound traffic on port 587 and SMTP server hostname is resolvable with <code>nslookup smtp.example.com</code>.
+<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm Jira installation path and check actual log location with <code>find /opt/atlassian -name "atlassian-jira.log" 2&gt;/dev/null</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check index errors in log</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;IndexException\|CorruptIndexException\|LockObtainFailedException&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Check index directory size and permissions</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>ls<span class="w"> </span>-la<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2024-01-15 14:32:18,445 ERROR [http-nio-8080-exec-12] [com.atlassian.jira.index.DefaultIndexManager] CorruptIndexException: _0.cfs (No such file or directory)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2024-01-15 14:32:19,102 ERROR [http-nio-8080-exec-15] [org.apache.lucene.index.IndexWriter] LockObtainFailedException: Lock held by another process: /var/atlassian/application-data/jira/caches/indexes/write.lock
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2024-01-15 14:32:45,667 WARN [scheduler_Worker-11] [com.atlassian.jira.index.DefaultIndexManager] IndexException: Error occurred while indexing issue PROJ-1234
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>total 48
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>drwxr-xr-x  8 jira jira  4096 Jan 15 14:28 .
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>drwxr-xr-x 12 jira jira  4096 Jan 15 14:15 ..
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>drwxr-xr-x  2 jira jira  4096 Jan 15 14:28 issue
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>drwxr-xr-x  2 jira jira  4096 Jan 15 14:28 comment
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>drwxr-xr-x  2 jira jira  4096 Jan 15 14:28 change_history
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>-rw-r--r--  1 jira jira    128 Jan 15 14:28 write.lock
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>2.3G    /var/atlassian/application-data/jira/caches/indexes/issue
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>1.8G    /var/atlassian/application-data/jira/caches/indexes/comment
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>456M    /var/atlassian/application-data/jira/caches/indexes/change_history
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>LockObtainFailedException: Lock held by another process</code></strong> — Stop the JIRA service, remove <code>/var/atlassian/application-data/jira/caches/indexes/write.lock</code>, then restart the service.
+<strong><code>CorruptIndexException: _0.cfs (No such file or directory)</code></strong> — Delete the corrupted index directory and trigger a full re-index via JIRA Administration &gt; System &gt; Indexing &gt; Re-Index All Issues.
+<strong><code>Permission denied</code> when listing indexes directory</strong> — Ensure the jira user owns the indexes directory with <code>sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Stop Jira</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 2. Delete index (safe — regenerated from DB)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># 3. Start Jira</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># 4. Trigger full reindex (foreground for safety)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=FOREGROUND&quot;</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>watch<span class="w"> </span>-n30<span class="w"> </span><span class="s2">&quot;curl -s -u </span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2"> \</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="s2">  </span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex | python3 -m json.tool&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>$ systemctl stop jira
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>$ rm -rf /var/atlassian/application-data/jira/caches/indexes/*
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>$ systemctl start jira
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>$ curl -u &quot;${JIRA_USER}:${JIRA_TOKEN}&quot; -X POST \
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>&gt;   &quot;${JIRA_URL}/rest/api/2/reindex?type=FOREGROUND&quot;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>{
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  &quot;currentIndex&quot;: 12847,
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  &quot;currentIndexPercentage&quot;: 0,
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  &quot;description&quot;: &quot;Reindexing Jira&quot;,
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  &quot;entityCount&quot;: 12847,
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  &quot;progressUrl&quot;: &quot;/secure/admin/IndexProgress.jspa&quot;
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>}
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>$ watch -n30 &quot;curl -s -u ${JIRA_USER}:${JIRA_TOKEN} \
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>&gt;   ${JIRA_URL}/rest/api/2/reindex | python3 -m json.tool&quot;
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Every 30.0s: curl -s -u admin:****** http://jira.internal:8080/rest/api/2/reindex | python3 -m json.tool
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>{
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  &quot;currentIndex&quot;: 3421,
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  &quot;currentIndexPercentage&quot;: 26,
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  &quot;description&quot;: &quot;Reindexing Jira&quot;,
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  &quot;entityCount&quot;: 12847,
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>  &quot;progressUrl&quot;: &quot;/secure/admin/IndexProgress.jspa&quot;
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to jira.internal port 8080: Connection refused</code></strong> — Wait 30–60 seconds for Jira to fully start before triggering reindex; check <code>systemctl status jira</code> to confirm the service is running.
+<strong><code>error: JIRA_USER or JIRA_TOKEN not set</code></strong> — Export the environment variables before running the curl commands: <code>export JIRA_USER="admin" JIRA_TOKEN="your-api-token"</code>.
+<strong><code>"errorMessages": ["You do not have permission to administer Jira"]</code></strong> — Ensure the JIRA_USER account has Jira System Administrator permissions in the user directory.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check plugin-related errors</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|app\|addon\|atlassian&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disabled&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># List disabled/errored plugins</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="s2">for p in json.load(sys.stdin):</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="s2">    if not p.get(&#39;enabled&#39;, True):</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s2">        print(f\&quot;{p.get(&#39;key&#39;)} — {p.get(&#39;name&#39;)} — {p.get(&#39;version&#39;)}\&quot;)</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="s2">&quot;</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VMlu20AMvfsriNwD1Lac7dDCAyWogy6pHaCXAsVEQ0lTz6LM4totCvQj-oX9knCkqL2Mc6NJ6j3yPY6FdFgFac0VONm0YTIpp1dwUk5P4KdveYeUpwZuGoW_JutU-2zdtlb2O_gQq-0X8_f3H6harLZQWSNkAvMgDdw5-40-hbHf5yFnRyBruae-x0gDCvqBSniwDoT0_EEh7LiSggfrsqhlQi1necY51cbhOnRaek8zD6xcCIgeHQQL3XOPs8RHC3kMQZrmyB7FC6iDPP-z4CmjEWpaiPfy57dIk5bzPN-CahvkrmpJNa5wYArkYkPj11EpapdG4B5qZzUshaYdVilBS-Qxzwjz9tM7eIzoDgPgDp2sD5Cy_mAC3wM3z36A4RrzapRJjbLIs5xTbRkCr1qNJngoXhUDl0Ntownw4WYDt6v18uvbj--v8xgXxzAGqfm_Enj5A0FJLUPykE60lvntWVKULfJ8l8ldFRuCIAsj-oFtvEYffdcbP7TsJIf19eYelnerLN4mHX3LaSQPoaXvD7oLVr_JD5ZeHcu_SJYOneUPnaXzYfnzYckgljeI_gLg9DWsp2Mwo_fUB_MxKOg2-2AxBmfkeR-cj8EFKdoHl5MnJIZ_SQ==?" /></p>
@@ -7685,7 +7861,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

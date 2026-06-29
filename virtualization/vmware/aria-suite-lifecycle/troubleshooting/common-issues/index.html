@@ -9268,32 +9268,82 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check for NFS errors in syslog</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nfs\|mount&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/dev/mapper/vg0-lv_data on /data type ext4 (rw,relatime,errors=remount-ro)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/data          500G  245G  255G  49% /data
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>OK
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nfs-server.corp.local:/lcm-repo on /data type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.1.42,local_lock=none,addr=192.168.1.10)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Dec 12 14:23:01 aria-lcm-01 kernel: NFS: Server 192.168.1.10 not responding, still trying
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Dec 12 14:24:15 aria-lcm-01 kernel: NFS: Server 192.168.1.10 OK
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Dec 12 14:25:42 aria-lcm-01 kernel: nfs4: state manager: lease expired
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Dec 12 14:26:08 aria-lcm-01 systemd: Mounted /data.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Dec 12 14:27:33 aria-lcm-01 kernel: NFS: Server 192.168.1.10 not responding, still trying
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Dec 12 14:28:01 aria-lcm-01 kernel: NFS: Server 192.168.1.10 OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount: mount point /data does not exist</code></strong> — Create the mount point with <code>mkdir -p /data</code> before attempting to mount.
+<strong><code>mount.nfs: access denied by server while mounting nfs-server:/lcm-repo</code></strong> — Verify NFS export permissions on the server and ensure the client IP is listed in <code>/etc/exports</code> with appropriate read-write flags.
+<strong><code>touch: cannot touch '/data/.write-test': Read-only file system</code></strong> — Remount with write permissions using <code>mount -o remount,rw /data</code> or check NFS server export settings for <code>ro</code> restrictions.</p>
+</div>
 <p>After restoring the NFS mount, any in-progress upgrade will need to be resumed or retried via LCM. If the upgrade failed due to missing binaries, re-map the product binaries in <strong>Lifecycle Operations → Settings → Binary Mapping</strong> before retrying.</p>
 <hr />
 <h2 id="locker-certificate-import-fails">Locker Certificate Import Fails<a class="headerlink" href="#locker-certificate-import-fails" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify certificate chain validity before importing</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>leaf.pem
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: leaf.pem: OK</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check that the private key matches the certificate</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Both MD5 hashes must match</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify SANs in the certificate</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Subject Alternative Name&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Confirm no passphrase on the private key (LCM requires unencrypted key)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span>-check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Must output: RSA key ok (not: Enter pass phrase)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify certificate chain validity before importing</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>leaf.pem
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: leaf.pem: OK</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check that the private key matches the certificate</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Both MD5 hashes must match</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify SANs in the certificate</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Subject Alternative Name&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Confirm no passphrase on the private key (LCM requires unencrypted key)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span>-check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Must output: RSA key ok (not: Enter pass phrase)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>leaf.pem: OK
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  -
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  -
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        X509v3 Subject Alternative Name: 
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            DNS:aria-lcm.internal.corp, DNS:*.internal.corp, IP Address:10.42.18.55
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>RSA key ok
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last).
+<strong><code>8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)</code> does not match private key hash</strong> — Regenerate the certificate and private key pair together, or verify you are using the correct matching files.
+<strong><code>Enter PEM pass phrase:</code></strong> — Remove the passphrase from the private key using <code>openssl rsa -in private.key -out private.key.nopass</code> before importing into LCM.</p>
+</div>
 <hr />
 <h2 id="vidm-authentication-failure-after-password-change">VIDM Authentication Failure After Password Change<a class="headerlink" href="#vidm-authentication-failure-after-password-change" title="Permanent link">&para;</a></h2>
 <p>If the VIDM admin password is changed externally, LCM loses its registration credentials.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify VIDM health from LCM appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># If health is UP but login fails, re-register VIDM:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify VIDM health from LCM appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If health is UP but login fails, re-register VIDM:</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;timestamp&quot;: &quot;2024-01-15T09:42:33.847Z&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;components&quot;: {
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    &quot;database&quot;: &quot;UP&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;cache&quot;: &quot;UP&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    &quot;messaging&quot;: &quot;UP&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    &quot;ldap&quot;: &quot;UP&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  },
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;version&quot;: &quot;8.10.2.1234&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  &quot;build&quot;: &quot;20240110-143022&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's lowercase <code>-sk</code> not <code>-Sk</code>).
+<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify VIDM appliance is running and network connectivity exists; check firewall rules and DNS resolution with <code>nslookup vidm.example.local</code>.
+<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Ensure the LCM appliance service account has valid credentials and VIDM trust relationship is intact; re-register VIDM in LCM as indicated in the documentation.</p>
+</div>
 <p>Re-register VIDM: <strong>LCM → Settings → Identity Manager → Edit → update credentials → Save</strong>.</p>
 <p>After re-registration, verify that all AD-backed users can still log into LCM via the VIDM login button.</p>
 <hr />
@@ -9302,11 +9352,44 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <li>Click the red product card — LCM shows the specific component or service that is unhealthy</li>
 <li>SSH to the product appliance and check service status:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>admin@&lt;product-fqdn&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;failing-service&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;failing-service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@&lt;product-fqdn&gt;
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;failing-service&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;failing-service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>admin@aria-lcm-prod-01.corp.local&#39;s password: 
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Welcome to VMware Aria Suite Lifecycle 8.14.2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.45
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vracli status
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Service Status Report - aria-lcm-prod-01.corp.local
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>================================================
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vra-server                    RUNNING (PID: 2847)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>vra-config-server             RUNNING (PID: 2851)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>vra-iaas-service              RUNNING (PID: 2856)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vra-orchestrator              RUNNING (PID: 2862)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>vra-dsc-service               STOPPED
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>vra-gateway                   RUNNING (PID: 2871)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>systemctl status vra-dsc-service
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>● vra-dsc-service.service - VMware Aria DSC Service
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>     Loaded: loaded (/etc/systemd/system/vra-dsc-service.service; enabled; vendor preset: disabled)
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>     Active: inactive (dead) since Wed 2025-01-15 13:47:22 UTC; 47min ago
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>     Process: 2156 ExecStart=/opt/vmware/vra/bin/dsc-service.sh (code=exited, status=1)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>     Main PID: 2156 (code=exited, status=1)
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>journalctl -u vra-dsc-service --since &quot;1 hour ago&quot; | tail -100
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Jan 15 13:47:18 aria-lcm-prod-01 vra-dsc-service[2156]: ERROR: Failed to connect to database host db-cluster-01.corp.local:5432
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Jan 15 13:47:19 aria-lcm-prod-01 vra-dsc-service[2156]: Connection timeout after 30 seconds
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Jan 15 13:47:22 aria-lcm-prod-01 systemd[1]: vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Jan 15 13:47:22 aria-lcm-prod-01 systemd[1]: vra-dsc-service.service: Unit entered failed state.
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>Jan 15 13:47:23 aria-lcm-prod-01 systemd[1]: vra-dsc-service.service: Failed with result &#39;exit-code&#39;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection timeout after 30 seconds</code></strong> — Verify database connectivity from the Aria appliance with <code>telnet db-cluster-01.corp.local 5432</code> and confirm the PostgreSQL service is running on the database host.
+<strong><code>vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE</code></strong> — Check the service configuration file at <code>/etc/systemd/system/vra-dsc-service.service</code> for correct environment variables and restart with <code>systemctl restart vra-dsc-service</code>.</p>
+</div>
 <ol>
 <li>Common causes: disk full on the product appliance, internal service crash, or expired certificate</li>
 <li>If the product health does not self-recover after the root cause is resolved: <strong>LCM → Environments → product card → Run Health Check</strong> to force a re-evaluation</li>
@@ -9314,20 +9397,50 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <hr />
 <h2 id="checking-request-history">Checking Request History<a class="headerlink" href="#checking-request-history" title="Permanent link">&para;</a></h2>
 <p>All LCM operations are tracked as requests with full audit logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># List last 20 requests</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.state)\t\(.requestType)\t\(.requestId)\t\(.startTime)&quot;&#39;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Get detail of a failed request</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.tasks[] | {name: .taskName, state: .taskState, message: .message}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># List last 20 requests</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.state)\t\(.requestType)\t\(.requestId)\t\(.startTime)&quot;&#39;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Get detail of a failed request</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.tasks[] | {name: .taskName, state: .taskState, message: .message}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SUCCEEDED   ClusterUpgrade  req-2024-01-15-001  2024-01-15T09:23:45.123Z
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>SUCCEEDED   ProductPatch    req-2024-01-14-042  2024-01-14T14:52:12.456Z
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>FAILED  ClusterUpgrade  req-2024-01-14-038  2024-01-14T11:18:33.789Z
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>IN_PROGRESS ProductPatch    req-2024-01-15-003  2024-01-15T10:05:22.234Z
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>SUCCEEDED   EnvironmentRefresh  req-2024-01-13-091  2024-01-13T16:41:09.567Z
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>SUCCEEDED   ClusterUpgrade  req-2024-01-13-087  2024-01-13T15:33:44.890Z
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>FAILED  ProductPatch    req-2024-01-12-065  2024-01-12T08:19:51.012Z
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>...
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>{
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;name&quot;: &quot;ValidateClusterHealth&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;state&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;message&quot;: &quot;Health check failed: Node lcm-prod-02.example.local unreachable (timeout after 30s)&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>}
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>{
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;name&quot;: &quot;PreUpgradeBackup&quot;,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;state&quot;: &quot;SUCCEEDED&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;message&quot;: null
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>}
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>{
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  &quot;name&quot;: &quot;ApplyPatches&quot;,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  &quot;state&quot;: &quot;FAILED&quot;,
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;message&quot;: &quot;Insufficient disk space on /var/lib/lcm: 2.1GB available, 5GB required&quot;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
+<strong><code>jq: parse error: Cannot index string with string "token"</code></strong> — Verify the login credentials are correct and the LCM service is responding with valid JSON; check the password doesn't contain special characters that need escaping.
+<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></strong> — Confirm the LCM appliance hostname/IP is correct and the service is running with <code>systemctl status lcm</code> on the LCM host.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9364,7 +9477,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

@@ -7688,46 +7688,135 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Step 4: If traps arrive but are discarded, check community/credential mismatch</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Ensure SNMPv3 credentials on switch match what SANnav has configured</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test LDAP connectivity from SANnav appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>ldap.corp.example.com:636<span class="w"> </span>-brief
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: CONNECTED with no certificate errors</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Trap Destinations:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  1.1.1.1 (SANnav-Primary) - UDP 162
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  1.1.1.2 (SANnav-Secondary) - UDP 162
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test bind with the service account</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-w<span class="w"> </span>&lt;bind-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>sAMAccountName<span class="w"> </span>mail
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Expected: returns the test user&#39;s attributes</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>14:32:45.123456 IP 10.50.20.15.snmp &gt; 1.1.1.1.snmptrap: Trap(enterprise=.1.3.6.1.4.1.1588.2.1.1.1; genericTrap=6; specificTrap=1; timestamp=45821234)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>14:32:46.234567 IP 10.50.20.15.snmp &gt; 1.1.1.1.snmptrap: Trap(enterprise=.1.3.6.1.4.1.1588.2.1.1.1; genericTrap=6; specificTrap=1; timestamp=45821235)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15 14:32:45,821 [event-engine] INFO: Processing SNMP trap from 10.50.20.15
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-15 14:32:45,822 [event-engine] INFO: Trap OID: 1.3.6.1.4.1.1588.2.1.1.1 - Link Up event
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2024-01-15 14:32:45,823 [event-engine] INFO: Event stored in database - ID: evt_20240115_0847362
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>2024-01-15 14:32:46,234 [event-engine] INFO: Processing SNMP trap from 10.50.20.15
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>2024-01-15 14:32:46,235 [event-engine] INFO: Trap OID: 1.3.6.1.4.1.1588.2.1.1.1 - Link Up event
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>2024-01-15 14:32:46,236 [event-engine] INFO: Event stored in database - ID: evt_20240115_0847363
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the switch (FOS CLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>firmwareshow
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Shows current and backup partition firmware</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>snmpconfig: command not found</code></strong> — Ensure you are running this command on the Brocade switch (via SSH to the switch IP), not from a remote host.
+<strong><code>tcpdump: Permission denied</code></strong> — Run tcpdump with <code>sudo</code> or as root to capture packets on the SANnav management network interface.
+<strong><code>No such file or directory: /opt/sannav/logs/event-engine.log</code></strong> — Verify SANnav is installed and the event engine service is running with <code>systemctl status sannav-event-engine</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP connectivity from SANnav appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>ldap.corp.example.com:636<span class="w"> </span>-brief
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: CONNECTED with no certificate errors</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If the switch is in firmware download state, check progress:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>firmwaredownload<span class="w"> </span>--status
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># If upgrade is stuck, check system logs on the switch</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>errdump
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Test bind with the service account</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-w<span class="w"> </span>&lt;bind-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>sAMAccountName<span class="w"> </span>mail
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Expected: returns the test user&#39;s attributes</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify switch firmware from SANnav after reconnect</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Inventory &gt; Switches &gt; [Switch] &gt; Details</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># If firmware matches target, mark the upgrade as complete in SANnav</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CONNECTED
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>depth=0 OU = corp, O = example, C = US
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>verify return:1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># LDAP Search Results
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dn: CN=testuser,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sAMAccountName: testuser
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>mail: testuser@corp.example.com
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>search result
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>result: 0 Success
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>numResponses: 2
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>numEntries: 1
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test SCP connectivity from SANnav to backup server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>scp<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>sannav-bkp@backup-server.corp.example.com:/backups/sannav/
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If this fails, investigate:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># - SSH key or password authentication to backup server</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># - Firewall between SANnav and backup server (TCP 22)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># - Write permissions on the remote backup directory</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check SANnav backup logs</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;backup\|transfer\|ERROR&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839</code></strong> — Verify the bind password is correct and the service account is not locked or expired in Active Directory.
+<strong><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></strong> — Add the LDAP server's CA certificate to the SANnav appliance's trusted CA store or use <code>openssl s_client -connect ldap.corp.example.com:636 -CAfile /path/to/ca.pem</code> to validate the certificate chain.
+<strong><code>ldapsearch: error code 1 - 000004DC: LdapErr: DSID-0C0906E8, comment: In order to perform this operation a successful bind must be completed before the request is processed, data 0, v3839</code></strong> — Ensure the LDAP server hostname, port (636 for LDAPS), and bind DN are correct and that network connectivity exists on port 636.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the switch (FOS CLI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>firmwareshow
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Shows current and backup partition firmware</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If the switch is in firmware download state, check progress:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>firmwaredownload<span class="w"> </span>--status
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># If upgrade is stuck, check system logs on the switch</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>errdump
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>backup
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># If not mounted: sudo mount -a</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Firmware Version: 9.1.0
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Firmware Build: 0x4f6b2a15
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Installed: 2024-01-15 14:32:18
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Current Partition: Primary
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Backup Partition: 9.0.1b
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Build: 0x4e8c1f42
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Installed: 2023-11-22 09:18:45
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Firmware Download Status:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Download State: Not in progress
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Last Download: 2024-01-15 14:25:33
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Progress: N/A
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>System Error Log (Last 10 entries):
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>2024-01-15 14:35:22 WARNING Port 0/12: Link failure detected
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>2024-01-15 14:28:15 INFO Fabric reconfiguration completed
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>2024-01-15 14:15:44 ERROR Temperature sensor 2: Reading 68°C (threshold: 70°C)
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>2024-01-15 13:52:09 WARNING Memory utilization: 78%
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>2024-01-15 13:45:33 INFO Configuration backup completed
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>firmwareshow: command not found</code></strong> — Ensure you are logged into the switch FOS CLI directly (not the management interface); use <code>sshfos</code> or telnet to the switch IP.
+<strong><code>errdump: Access denied</code></strong> — Verify your user account has administrative privileges on the switch; request elevated permissions from your fabric administrator.
+<strong><code>firmwaredownload --status: Download in progress (98%) - Do not power off</code></strong> — Wait for the download to complete or contact Brocade support if it stalls beyond 30 minutes; do not interrupt the process.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify switch firmware from SANnav after reconnect</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Inventory &gt; Switches &gt; [Switch] &gt; Details</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># If firmware matches target, mark the upgrade as complete in SANnav</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test SCP connectivity from SANnav to backup server</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>scp<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>sannav-bkp@backup-server.corp.example.com:/backups/sannav/
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># If this fails, investigate:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># - SSH key or password authentication to backup server</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># - Firewall between SANnav and backup server (TCP 22)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># - Write permissions on the remote backup directory</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check SANnav backup logs</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;backup\|transfer\|ERROR&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>admin@sannav-dc1.corp.example.com&#39;s password: 
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sannav-bkp@backup-server.corp.example.com&#39;s password: 
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>testfile.txt                                          100%  1024     512.3KB/s   00:00
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>2024-01-15 14:32:18 [INFO] Backup transfer initiated for fabric-01
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>2024-01-15 14:32:45 [INFO] Transfer completed: 2.3GB in 27 seconds
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>2024-01-15 14:33:02 [INFO] Backup validation passed
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>2024-01-15 14:35:18 [INFO] Backup transfer initiated for fabric-02
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>2024-01-15 14:36:01 [INFO] Transfer completed: 1.8GB in 43 seconds
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>2024-01-15 14:36:15 [INFO] Backup validation passed
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>2024-01-15 14:38:22 [ERROR] Connection timeout to backup-server.corp.example.com
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>2024-01-15 14:38:23 [ERROR] Backup transfer failed for fabric-03: SSH connection lost
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>2024-01-15 14:40:01 [INFO] Retry attempt 1 for fabric-03
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>2024-01-15 14:40:45 [INFO] Transfer completed: 2.1GB in 44 seconds
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials for sannav-bkp user on backup-server and ensure the private key is loaded in ssh-agent or explicitly specified with <code>-i</code> flag.
+<strong><code>Connection refused</code></strong> — Confirm TCP port 22 is open on backup-server.corp.example.com by running <code>telnet backup-server.corp.example.com 22</code> from the SANnav host.
+<strong><code>No such file or directory: /opt/sannav/logs/server.log</code></strong> — Check the correct log path with <code>find /opt/sannav -name "*.log" -type f</code> or verify SANnav is installed and running.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>backup
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># If not mounted: sudo mount -a</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVk0trGzEQgO_7K4bct2XXwQcfWta7LgRcY2qSXgxBlcaWanm0SFo7pvS_d7RO0hZEIKcZNA9981LGo4zG0Qy82etYFE01g5umuoFfQYse-Z0dBO0t_i6amm1fzBMQxrPzB_gIO05wFtZu6QG92V3gKEjs8YgU4WHZrPJ5Jpyn1SgPsFl9XcNpAtKjClv6hqVQCsLZRKnBEGyaFYlTPsstZ9lcPVtHlAo5mXiBuxAGDNmYOYfM85bqf6beWQtBalSDxdfqkumZlis0wgYumAG2dA3FEz-XSHtD-MG6ff6r-v3gbaLLW_6CC4s-JnIjL-CZG6L2GLSzqbf_lADRix4UhmhIpPFvKcpeDcce7rs1VNM6_1UCX6PfOc9jlgiCFNzfvcXdcUSXtyTun27wJKyMFsoBgiAe9ksvlQmHGagdlDotRoiCi7vuAwT0JyMxn_j9lAuOWOQtidIq0QcUnuf1w3CyyDBbcj1SCLwkj9KatO_LrllvYDqZvvb6GROElG5gD3IR8Knnm1H53xJ6M0Q9Mi8dr9Fb2Bv2_q5FBBN40gjhcuyjO37On0tKnbXwzUP5CZr6RZnwhY7KbTFPcl7xeYxKXbRJthWv3ajURZdkV_E8R6UuFkkuKm7dqNTFH2rGdPg=?" /></p>
@@ -7777,7 +7866,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

@@ -7039,24 +7039,75 @@ Security Monitoring reference covering Daily Review Checklist, Key Windows Secur
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check auditd rules</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>auditctl<span class="w"> </span>-l
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>5 192.168.1.45
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>      3 203.0.113.22
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>      2 10.0.2.18
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>      2 198.51.100.9
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>      1 172.16.0.55
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>      1 203.0.113.88
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>      1 192.168.50.12
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Nov 15 14:32:18 prod-db01 sshd[8924]: session opened for user root by (uid=0)
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Nov 15 13:47:02 prod-db01 sshd[7651]: session opened for user root by (uid=0)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Nov 15 12:15:44 prod-db01 sshd[6289]: session opened for user root by (uid=0)
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Nov 15 09:22:15 prod-db01 useradd[4521]: new user: name=appuser, UID=1001, GID=1001, home=/home/appuser, shell=/bin/bash
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Nov 15 08:45:33 prod-db01 useradd[4398]: new user: name=svcacct, UID=1002, GID=1002, home=/home/svcacct, shell=/bin/false
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Nov 15 14:28:09 prod-db01 sudo: admin on pts/2 ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Nov 15 14:15:44 prod-db01 sudo: deploy on pts/5 ; USER=root ; COMMAND=/bin/bash
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Nov 15 13:52:17 prod-db01 sudo: admin on pts/2 ; USER=root ; COMMAND=/usr/bin/apt update
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>No rules
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/auth.log: No such file or directory</code></strong> — Check the correct log path with <code>ls -la /var/log/</code> and adjust for your system (may be <code>/var/log/secure</code> on RHEL or in journalctl on systemd systems).
+<strong><code>No rules</code></strong> — Install and enable auditd with <code>sudo systemctl enable auditd &amp;&amp; sudo systemctl start auditd</code>, then load rules from <code>/etc/audit/rules.d/</code>.</p>
+</div>
 <h2 id="correlation-rules-siem-examples">Correlation Rules (SIEM Examples)<a class="headerlink" href="#correlation-rules-siem-examples" title="Permanent link">&para;</a></h2>
 <p><strong>Brute force detection:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># &gt;10 failed logons from same source in 5 minutes</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4625</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">|</span><span class="w"> </span>stats<span class="w"> </span>count<span class="w"> </span>by<span class="w"> </span>src_ip,<span class="w"> </span>user
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>count<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># &gt;10 failed logons from same source in 5 minutes</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4625</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span>stats<span class="w"> </span>count<span class="w"> </span>by<span class="w"> </span>src_ip,<span class="w"> </span>user
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>count<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>src_ip          user              count
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>192.168.1.45    administrator     14
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>10.0.2.89       jsmith            12
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>172.16.50.201   guest             11
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>203.0.113.78    root              15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error in 'where' command: Unknown field 'count'</code></strong> — Ensure the stats command completes successfully and verify field names match exactly in the where clause.
+<strong><code>index=security: Unknown index 'security'</code></strong> — Confirm the index name exists in your Splunk instance; use <code>| rest /services/data/indexes</code> to list available indexes.</p>
+</div>
 <p><strong>Lateral movement — new admin account:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Account created then added to privileged group within 60 minutes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="o">(</span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4720</span><span class="w"> </span>OR<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4728</span><span class="o">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span>transaction<span class="w"> </span>user<span class="w"> </span><span class="nv">maxspan</span><span class="o">=</span>60m
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>eventcount<span class="w"> </span>&gt;<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Account created then added to privileged group within 60 minutes</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="o">(</span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4720</span><span class="w"> </span>OR<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4728</span><span class="o">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">|</span><span class="w"> </span>transaction<span class="w"> </span>user<span class="w"> </span><span class="nv">maxspan</span><span class="o">=</span>60m
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>eventcount<span class="w"> </span>&gt;<span class="w"> </span><span class="m">1</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>index=security (EventCode=4720 OR EventCode=4728)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>| transaction user maxspan=60m
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>| where eventcount &gt; 1
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>user=Administrator eventcount=2 duration=45m earliest=2024-01-15T09:23:14 latest=2024-01-15T10:08:47
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>user=svc_deploy eventcount=2 duration=18m earliest=2024-01-15T11:42:31 latest=2024-01-15T12:00:49
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>user=jsmith eventcount=2 duration=52m earliest=2024-01-15T14:15:22 latest=2024-01-15T15:07:14
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>user=automation_acct eventcount=2 duration=31m earliest=2024-01-15T16:33:05 latest=2024-01-15T17:04:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error in 'where' command: The expression is malformed. An unexpected character has occurred.</code></strong> — Verify the Splunk version supports the <code>where</code> command syntax; use <code>stats count as eventcount</code> with <code>by user</code> instead if on older versions.
+<strong><code>No results found</code></strong> — Confirm the index name is correct and contains Windows Security event logs (EventCode 4720 and 4728); check index permissions with <code>| rest /services/data/indexes</code>.</p>
+</div>
 <p><strong>Off-hours privileged access:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>index=security EventCode=4648
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| eval hour=strftime(_time,&quot;%H&quot;)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| where hour &lt; 6 OR hour &gt; 20
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| table _time, user, src_ip, dest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>index=security EventCode=4648
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>| eval hour=strftime(_time,&quot;%H&quot;)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>| where hour &lt; 6 OR hour &gt; 20
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>| table _time, user, src_ip, dest
 </code></pre></div></p>
 <h2 id="threat-detection-sources">Threat Detection Sources<a class="headerlink" href="#threat-detection-sources" title="Permanent link">&para;</a></h2>
 <table>
@@ -7156,7 +7207,7 @@ Security Monitoring reference covering Daily Review Checklist, Key Windows Secur
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

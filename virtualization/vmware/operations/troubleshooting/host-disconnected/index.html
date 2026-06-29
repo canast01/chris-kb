@@ -9254,6 +9254,33 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check DNS resolution for the host FQDN</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nslookup<span class="w"> </span>&lt;esxi-fqdn&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 192.168.1.42 (192.168.1.42) 56(84) bytes of data.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>^C
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>--- 192.168.1.42 statistics ---
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>rtt min/avg/max/stddev = 1.89/2.11/2.34/0.19 ms
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Connected to 192.168.1.42.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Escape character is &#39;^]&#39;.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ESXi 7.0.3 (Releasebuild-19482429)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>root@esxi-prod-01:~]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Server:     192.168.1.10
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Address:    192.168.1.10#53
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Name:   esxi-prod-01.corp.local
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Address:    192.168.1.42
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;esxi-mgmt-ip&gt;</code></strong> — Verify the IP address is correct and the host is reachable on the network; check firewall rules blocking ICMP.
+<strong><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></strong> — Confirm SSH is enabled on the ESXi host (Configuration &gt; Security Profile &gt; Services &gt; SSH) and the management network is properly configured.
+<strong><code>** server can't find &lt;esxi-fqdn&gt;: NXDOMAIN</code></strong> — Add the ESXi host FQDN to your DNS server or /etc/hosts file on the jump host.</p>
+</div>
 <p>If ping works but vCenter shows "Not Responding", skip to <a href="#management-agent-reset">Management Agent Reset</a>.</p>
 <p>If ping fails entirely, skip to <a href="#management-network-down">Management Network Down</a>.</p>
 <hr />
@@ -9261,43 +9288,100 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 <p>The host is reachable but vCenter has lost its agent connection (vpxa). Common causes: vpxa crash, certificate mismatch, or a vCenter restart while the host was isolated.</p>
 <p><strong>Step 1 — Right-click the host in vCenter → Connect.</strong> If this resolves it immediately, the connection was dropped by a transient event.</p>
 <p><strong>Step 2 — If reconnect fails</strong>, SSH to the host and check services:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check vpxa and hostd status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart vpxa (the vCenter agent — safe to restart, no VM impact)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># If vpxa alone does not fix it, restart hostd too</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check for errors in logs</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check vpxa and hostd status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Restart vpxa (the vCenter agent — safe to restart, no VM impact)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># If vpxa alone does not fix it, restart hostd too</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check for errors in logs</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vpxa (pid 2847) is running
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>hostd (pid 1923) is running
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Stopping vpxa...                                           [  OK  ]
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Starting vpxa...                                           [  OK  ]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Stopping hostd...                                          [  OK  ]
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Starting hostd...                                          [  OK  ]
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2024-01-15T09:42:31.847Z [7F2A1C] [vpxa] [info] vpxa started (build-19193900)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15T09:42:32.104Z [7F2A1C] [vpxa] [info] Connecting to hostd on localhost:902
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15T09:42:33.221Z [7F2A1C] [vpxa] [info] Connected to hostd successfully
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>2024-01-15T09:42:45.556Z [7F2A1C] [vpxa] [info] vCenter registration complete: esx-prod-01.lab.local
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15T09:42:46.112Z [7F2A1C] [hostd] [info] hostd started (build-19193900)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15T09:42:47.334Z [7F2A1C] [hostd] [info] Listening on port 902
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vpxa (pid XXXX) is not running</code></strong> — Run <code>/etc/init.d/vpxa start</code> to restart the service, then check <code>/var/log/vpxa.log</code> for startup errors.
+<strong><code>hostd (pid XXXX) is not running</code></strong> — Run <code>/etc/init.d/hostd start</code> and verify the service started with <code>/etc/init.d/hostd status</code>.
+<strong><code>tail: cannot open '/var/log/vpxa.log' for reading: Permission denied</code></strong> — Run the tail commands with <code>sudo</code> or as root user to access ESXi system logs.</p>
+</div>
 <p><strong>Step 3 — Re-add the host in vCenter</strong> if the agent restart does not help. In vCenter, right-click the host → Disconnect → Remove from Inventory → Re-add with Add Host wizard.</p>
 <hr />
 <h2 id="management-agent-reset">Management Agent Reset<a class="headerlink" href="#management-agent-reset" title="Permanent link">&para;</a></h2>
 <p>Use this when the host is reachable over the network but management services are unresponsive or looping.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full management agent restart (safe — does not affect running VMs)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>services.sh<span class="w"> </span>restart
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or restart individual services</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>/etc/init.d/ntpd<span class="w"> </span>restart
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Verify services are running</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>services.sh<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;hostd|vpxa|ntpd&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check for stuck or looping processes</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ps<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hostd
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ps<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxa
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Full management agent restart (safe — does not affect running VMs)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>services.sh<span class="w"> </span>restart
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or restart individual services</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/etc/init.d/ntpd<span class="w"> </span>restart
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify services are running</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>services.sh<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;hostd|vpxa|ntpd&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check for stuck or looping processes</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ps<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hostd
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ps<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxa
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Restarting services...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>hostd stopped
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>hostd started
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vpxa stopped
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vpxa started
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ntpd stopped
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ntpd started
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>hostd                running
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vpxa                 running
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ntpd                 running
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>PID   COMMAND
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>2847  hostd
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>2891  hostd
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>PID   COMMAND
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>3124  vpxa
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>3156  vpxa
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>hostd stopped (timeout)</code></strong> — Increase the timeout or check for hung processes with <code>lsof -p &lt;PID&gt;</code> before forcing a kill.
+<strong><code>vpxa: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file</code></strong> — Install the missing OpenSSL library with <code>esxcli software vib install -d /path/to/openssl-vib.zip</code>.</p>
+</div>
 <p>If hostd is repeatedly crashing, check disk space — a full <code>/</code> or <code>/scratch</code> partition prevents hostd from writing its state file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>df<span class="w"> </span>-h
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vdf<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vdf<span class="w"> </span>-h
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/dev/sda1       100G   45G   55G  45% /
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/dev/sda2       200G  120G   80G  60% /home
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>tmpfs           16G      0   16G   0% /dev/shm
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/dev/sdb1       500G  380G  120G  76% /vmfs/volumes/datastore1
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>/dev/sdc1       1.0T  850G  150G  85% /vmfs/volumes/datastore2
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vdf: command not found
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vdf: command not found</code></strong> — Replace <code>vdf</code> with <code>df</code> (the correct command for disk free space); if you need VMware-specific storage info, use <code>esxcli storage filesystem list</code> on ESXi hosts instead.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo df -h</code> if you lack read permissions on mounted filesystems.</p>
+</div>
 <hr />
 <h2 id="management-network-down">Management Network Down<a class="headerlink" href="#management-network-down" title="Permanent link">&para;</a></h2>
 <p>The host is not reachable at all. Check in this order:</p>
@@ -9306,16 +9390,47 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 <li><strong>VLAN configuration</strong> — Was a switch or port-group change recently made?</li>
 <li><strong>IP configuration</strong> — Verify via iDRAC/iLO console or direct keyboard/monitor:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From ESXi direct console (DCUI) — check VMkernel adapter</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>-i<span class="w"> </span>vmk0
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check default gateway</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>list
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify basic network reachability</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span>&lt;vcenter-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From ESXi direct console (DCUI) — check VMkernel adapter</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>-i<span class="w"> </span>vmk0
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check default gateway</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>list
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify basic network reachability</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>diag<span class="w"> </span>ping<span class="w"> </span>-H<span class="w"> </span>&lt;vcenter-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name  MAC Address        MTU  Enabled  Netstack
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>----  -----------------  ----  -------  --------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vmk0  00:50:56:c0:00:01  1500  true     defaultTcpipStack
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vmk1  00:50:56:c0:00:02  1500  false    defaultTcpipStack
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Interface  IPv4 Address      Netmask         Broadcast       Address Type
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>---------  ----------------  ---------------  ---------------  ----------------
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vmk0       192.168.1.42      255.255.255.0    192.168.1.255    STATIC
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Route                 Destination       Netmask           Gateway          MTU  TSO MSS  iface
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>-----                 ---------------   ---------------   ---------------  ---  -------  -----
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>0                     0.0.0.0           0.0.0.0           192.168.1.1      1500  65535   vmk0
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>1                     192.168.1.0       255.255.255.0     0.0.0.0          1500  65535   vmk0
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>2                     192.168.1.42      255.255.255.255   0.0.0.0          1500  65535   vmk0
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>PING 192.168.100.15 (192.168.100.15): 56 data bytes
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>64 bytes from 192.168.100.15: icmp_seq=0 time=2.341 ms
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>64 bytes from 192.168.100.15: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>64 bytes from 192.168.100.15: icmp_seq=2 time=2.289 ms
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>64 bytes from 192.168.100.15: icmp_seq=3 time=2.401 ms
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>--- 192.168.100.15 statistics ---
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>round-trip min/avg/max = 2.156/2.297/2.401 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Network error: Unable to resolve host &lt;vcenter-ip&gt;</code></strong> — Verify vCenter IP is correct and DNS resolution is working with <code>esxcli network ip dns server list</code>.
+<strong><code>PING: sendto: No route to host</code></strong> — Confirm the default gateway in the route table matches your network configuration and vmk0 is on the correct VLAN.
+<strong><code>Interface vmk0 is not enabled</code></strong> — Enable vmk0 with <code>esxcli network ip interface set -i vmk0 -e true</code> if it shows <code>Enabled: false</code>.</p>
+</div>
 <ol>
 <li><strong>Firewall</strong> — Confirm the management VLAN firewall rules allow TCP 443, 902, and 8080 from vCenter to the host.</li>
 </ol>
@@ -9328,10 +9443,23 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 <li>If the PSOD does not auto-reboot: trigger a hard reset via iDRAC/iLO.</li>
 <li>After reboot, collect the <strong>vm-support bundle</strong> before further investigation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate support bundle from host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># SCP the bundle off before it is potentially overwritten by another crash</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Generate support bundle from host</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># SCP the bundle off before it is potentially overwritten by another crash</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Generating support bundle, this may take a few minutes...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Gathering system logs...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Gathering performance data...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Gathering configuration files...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Creating bundle archive...
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Support bundle created successfully: /tmp/esx-bundle-2024-01-15-14-32-18.tgz
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Bundle size: 487 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vm-support: error writing to /tmp: No space left on device</code></strong> — Free up disk space on the host or specify an alternate writable directory with sufficient capacity (e.g., <code>/var/log</code> or a mounted datastore).
+<strong><code>vm-support: Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or ensure your user account has write permissions to the target directory.</p>
+</div>
 <ol>
 <li>Review <code>/var/log/vmkernel.log</code> and <code>/var/log/vobd.log</code> for hardware errors preceding the crash.</li>
 </ol>
@@ -9374,26 +9502,57 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check which VMs are on the host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host-fqdn&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Force maintenance mode without vMotion (only if VMs are confirmed powered off)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Set-VMHost</span> <span class="s2">&quot;esxi-host-fqdn&quot;</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-Evacuate</span> <span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Check which VMs are on the host</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host-fqdn&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Force maintenance mode without vMotion (only if VMs are confirmed powered off)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Set-VMHost</span> <span class="s2">&quot;esxi-host-fqdn&quot;</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-Evacuate</span> <span class="nv">$false</span>
 </code></pre></div>
 <hr />
 <h2 id="host-hardware-warning">Host Hardware Warning<a class="headerlink" href="#host-hardware-warning" title="Permanent link">&para;</a></h2>
 <p>Hardware alerts surface as vCenter alarms (yellow/red) on the host object. Correlate with the physical hardware management console.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check hardware health from ESXi CLI</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check physical disk health</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>hba<span class="w"> </span>list
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Review system event log for hardware errors</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>vim-cmd<span class="w"> </span>hostsvc/firmware/sync_config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check hardware health from ESXi CLI</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Check physical disk health</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>hba<span class="w"> </span>list
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Review system event log for hardware errors</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>vim-cmd<span class="w"> </span>hostsvc/firmware/sync_config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>System UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>System Product Name: ProLiant DL380 Gen10
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Vendor: HPE
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>BIOS Version: U30 11/15/2023
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Memory Size: 786432 MB
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Memory Type: DDR4
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Memory Speed: 2933 MHz
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Processor: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Core Count: 20
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Thread Count: 40
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>Processor 0: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Processor 1: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>HBA Name: vmhba0
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Driver: lpfc
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>Status: online
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>Model: Emulex OneConnect OCe14402-NX-L
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>HBA Name: vmhba1
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>Driver: lpfc
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>Status: online
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>Model: Emulex OneConnect OCe14402-NX-L
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>Syncing firmware configuration...
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>Sync completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vim-cmd: Unknown command 'hostsvc/firmware/sync_config'</code></strong> — Verify the correct vim-cmd syntax with <code>vim-cmd hostsvc/firmware/sync_config</code> or use <code>esxcli system firmware get</code> instead for firmware information.
+<strong><code>esxcli: Unknown command or namespace 'hardware platform'</code></strong> — Use <code>esxcli hardware platform get</code> only on ESXi 6.5+; for older versions, use <code>esxcli system hardware get</code> instead.</p>
+</div>
 <p>From iDRAC/iLO, review:
 - PSU status
 - Memory DIMM errors
@@ -9403,20 +9562,48 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 <hr />
 <h2 id="host-ntp-drift">Host NTP Drift<a class="headerlink" href="#host-ntp-drift" title="Permanent link">&para;</a></h2>
 <p>Certificate validation, HA heartbeats, and vSAN all depend on time sync. A drifting host can cause cascading issues.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NTP status on ESXi</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If NTP is not configured, set it</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>&lt;ntp-server-ip&gt;
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Force time sync immediately</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>/etc/init.d/ntpd<span class="w"> </span>restart
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Verify sync — look for * or + prefix next to a time source</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check NTP status on ESXi</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># If NTP is not configured, set it</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>&lt;ntp-server-ip&gt;
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Force time sync immediately</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>/etc/init.d/ntpd<span class="w"> </span>restart
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Verify sync — look for * or + prefix next to a time source</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>enabled: true
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>server: 0.pool.ntp.org
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>server: 1.pool.ntp.org
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>==============================================================================
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a> ntp.ubuntu.com  .POOL.          16 p    -   64    0    0.000    0.000   0.000
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a> time.google.com 216.239.35.0     2 u   52   64  377   18.234   -2.145   3.821
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>*ntp.ubuntu.com  132.163.96.1     2 u   48   64  377   22.156    1.032   2.456
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>NTP configuration updated.
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>NTP enabled.
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>Stopping ntpd: [  OK  ]
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>Starting ntpd: [  OK  ]
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>==============================================================================
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>*time.google.com 216.239.35.0     2 u   12   64  377   19.845    0.234   1.923
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>+ntp.ubuntu.com  132.163.96.1     2 u   18   64  377   21.567   -0.891   2.134
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a> 0.pool.ntp.org  .POOL.          16 p    -   64    0    0.000    0.000   0.000
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the NTP server IP is reachable from the ESXi host using <code>ping &lt;ntp-server-ip&gt;</code> and check firewall rules allowing UDP port 123.
+<strong><code>ntpq: read: Connection refused</code></strong> — Restart the NTP daemon with <code>/etc/init.d/ntpd restart</code> and wait 10-15 seconds before running <code>ntpq -p</code> again.
+<strong><code>Error: Unable to set NTP server</code></strong> — Ensure you have root privileges and the NTP server parameter uses valid IP format without extra spaces.</p>
+</div>
 <p>Hosts more than 5 minutes out of sync with vCenter will trigger authentication errors and HA isolation warnings.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9454,7 +9641,7 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -7561,81 +7561,246 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify key fingerprint before uploading</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh-keygen<span class="w"> </span>-lf<span class="w"> </span>~/.ssh/id_ed25519_git.pub
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Display public key for upload to GitHub/GitLab/Bitbucket</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test connection</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@gitlab.corp.example.com
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Generating public/private ed25519 key pair.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Enter passphrase (empty for no passphrase): 
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Enter same passphrase again: 
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Your identification has been saved in /home/user/.ssh/id_ed25519_git
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Your public key has been saved in /home/user/.ssh/id_ed25519_git.pub
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>The key fingerprint is:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G9h user@corp.example.com
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>The key&#39;s randomart image is:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>+--[ED25519 256]--+
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|        .o.      |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|       o.o .     |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|      . + o .    |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|       o + o     |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|      . S . .    |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>+----[SHA256]-----+
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Generating public/private rsa key pair.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Enter passphrase (empty for no passphrase): 
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Enter same passphrase again: 
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Your identification has been saved in /home/user/.ssh/id_rsa_git
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Your public key has been saved in /home/user/.ssh/id_rsa_git.pub
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>The key fingerprint is:
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>SHA256:xYz9AbCdEfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G user@corp.example.com
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>256 SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G9h user@corp.example.com (ED25519)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate a deploy key (no passphrase — stored securely in CI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;deploy-key-repo-name&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/deploy_key_reponame<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permissions 0644 for '/home/user/.ssh/id_ed25519_git' are too open.</code></strong> — Run <code>chmod 600 ~/.ssh/id_ed25519_git</code> to restrict key file permissions to owner-read/write only.
+<strong><code>ssh-keygen: No such file or directory</code></strong> — Ensure the <code>~/.ssh</code> directory exists by running <code>mkdir -p ~/.ssh</code> before generating keys.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Display public key for upload to GitHub/GitLab/Bitbucket</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test connection</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@gitlab.corp.example.com
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Store a PAT securely using Git credential helper</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain<span class="w">          </span><span class="c1"># macOS</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager<span class="w">              </span><span class="c1"># Windows (Git Credential Manager)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>libsecret<span class="w">            </span><span class="c1"># Linux GNOME keyring</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify stored credential</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>git<span class="w"> </span>credential<span class="w"> </span>fill<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">protocol=https</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">host=github.com</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">EOF</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKp7vN2qR8xL9mK3jP5wQ6sT7uV8wX9yZ0aB1cD2eF3gH4 user@workstation-042
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Hi username! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>The authenticity of git@gitlab.corp.example.com can&#39;t be established.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ED25519 key fingerprint is SHA256:aBcD1eFgHiJkLmNoPqRsTuVwXyZ2a3bC4dE5fG6hI7j.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Warning: Permanently added &#39;git@gitlab.corp.example.com&#39; (ED25519) to the list of known_hosts.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Welcome to GitLab, @username!
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Token expiry: 90 days maximum (enforce via org policy)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Repository access: Selected repositories only
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Permissions: Contents: Read and write, Metadata: Read
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Verify the key exists at <code>~/.ssh/id_ed25519_git</code> and the public key is registered in your Git platform's SSH settings.
+<strong><code>Could not resolve hostname git@gitlab.corp.example.com</code></strong> — Check the GitLab hostname is correct and your DNS/network can reach it; use <code>nslookup gitlab.corp.example.com</code> to verify.
+<strong><code>No such file or directory</code></strong> — Generate the SSH key first with <code>ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git -C "your-email@example.com"</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate a deploy key (no passphrase — stored securely in CI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;deploy-key-repo-name&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/deploy_key_reponame<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a GPG key (RSA 4096 or Ed25519)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpg<span class="w"> </span>--full-generate-key
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Choose: (1) RSA and RSA, 4096 bits, 2y expiry</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List keys and get key ID</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>gpg<span class="w"> </span>--list-secret-keys<span class="w"> </span>--keyid-format<span class="o">=</span>long
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Configure Git to use the key</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>&lt;KEY_ID&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>tag.gpgsign<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Export public key for upload to GitHub/GitLab</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Generating public/private ed25519 key pair.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Your identification has been saved in /home/ci-user/.ssh/deploy_key_reponame
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Your public key has been saved in /home/ci-user/.ssh/deploy_key_reponame.pub
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>The key fingerprint is:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>SHA256:kJ9xL2mN4pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUv deploy-key-repo-name
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>The key&#39;s randomart image is:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>+--[ED25519 256]--+
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>|        .o.      |
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>|       o.o .     |
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>|      . + o .    |
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>|       o B o     |
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>|      . S * .    |
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>+----[SHA256]-----+
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify a specific commit</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Show signature status in log</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>log<span class="w"> </span>--show-signature<span class="w"> </span>-5
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify a signed tag</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>verify-tag<span class="w"> </span>v1.2.3
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Ensure the generated public key is added to the repository's deploy keys in your Git hosting platform (GitHub/GitLab/Bitbucket).
+<strong><code>ssh-keygen: No such file or directory</code></strong> — Create the ~/.ssh directory first with <code>mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh</code>.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Store a PAT securely using Git credential helper</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain<span class="w">          </span><span class="c1"># macOS</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager<span class="w">              </span><span class="c1"># Windows (Git Credential Manager)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>libsecret<span class="w">            </span><span class="c1"># Linux GNOME keyring</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Verify stored credential</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>git<span class="w"> </span>credential<span class="w"> </span>fill<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s">protocol=https</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">host=github.com</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s">EOF</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Sign a user key with an SSH CA (on the CA host)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>/etc/ssh/ca_key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-I<span class="w"> </span><span class="s2">&quot;user@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-n<span class="w"> </span>git<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-V<span class="w"> </span>+8h<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>~/.ssh/id_ed25519_git.pub
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># The resulting certificate is id_ed25519_git-cert.pub</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Configure SSH to present it automatically</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># ~/.ssh/config</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Host<span class="w"> </span>gitlab.corp.example.com
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>CertificateFile<span class="w"> </span>~/.ssh/id_ed25519_git-cert.pub
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_ed25519_git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Token expiry: 90 days maximum (enforce via org policy)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Repository access: Selected repositories only
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Permissions: Contents: Read and write, Metadata: Read
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all SSH keys registered on GitHub via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/keys<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List all PATs (GitHub)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/tokens<span class="w"> </span>--paginate
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Revoke a PAT by ID</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/user/tokens/&lt;token_id&gt;
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Find hardcoded credentials in repo history (use truffleHog)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>https://github.com/org/repo.git<span class="w"> </span>--only-verified
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate a GPG key (RSA 4096 or Ed25519)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gpg<span class="w"> </span>--full-generate-key
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Choose: (1) RSA and RSA, 4096 bits, 2y expiry</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># List keys and get key ID</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>gpg<span class="w"> </span>--list-secret-keys<span class="w"> </span>--keyid-format<span class="o">=</span>long
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Configure Git to use the key</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>&lt;KEY_ID&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>tag.gpgsign<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Export public key for upload to GitHub/GitLab</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
 </code></pre></div></p>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpg (GnuPG) 2.2.19; Copyright (C) 2019 Free Software Foundation, Inc.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>This is free software: you are free to change and redistribute it.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>There is NO WARRANTY, to the extent permitted by law.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Please select what kind of key you want:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>   (1) RSA and RSA (default)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>   (2) DSA and Elgamal
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>   (3) DSA (sign only)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>   (4) RSA (sign only)
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  (14) Existing key from card
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Your selection? 1
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>RSA keys may be between 1024 and 4096 bits long.
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>What keysize do you want? (3072) 4096
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Requested keysize is 4096 bits
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Please specify how long the key should be valid.
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>         0 = key does not expire
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      &lt;n&gt;  = key expires in n days
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      &lt;n&gt;w = key expires in n weeks
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      &lt;n&gt;m = key expires in n months
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      &lt;n&gt;y = key expires in n years
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Key is valid for? (0) 2y
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>Key expires at Thu 15 Jan 2027 14:32:18 UTC
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>Is this correct? (y/N) y
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>GnuPG needs to construct a user ID to identify your key.
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>Real name: Alice Chen
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>Email address: achen@example.com
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>Comment: Work signing key
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>You selected this user ID:
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    &quot;Alice Chen (Work signing key) &lt;achen@example.com&gt;&quot;
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>We need to generate a lot of random bytes. It is a good idea to perform
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>some other action (type, move the mouse) during the prime generation;
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>this gives the random number generator a better chance to gain enough entropy.
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>gpg: key 7A3F8B2C1D9E4F6A marked as ultimately trusted
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>gpg: revocation certificate stored as &#39;/home/achen/.gnupg/revocation-certs.d/7A3F8B2C1D9E4F6A.rev&#39;
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>public and secret key created and signed.
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>/home/achen/.gnupg/pubring.kbx
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>--------------------------------
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>sec   rsa4096/7A3F8B2C1D9E4F6A 2025-01-15 [SC] [expires: 2027-01-15]
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>      Key fingerprint = 9F2E 1A7C 4B8D 3E5F 6A9C 2B1D 7A3F 8B2C 1D9E 4F6A
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>uid                   [ultimate] Alice Chen (Work signing key) &lt;achen@example.com&gt;
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>ssb   rsa4096/5E7D2A9C4F1B8E3A 2025-01-15 [E] [expires: 2027-01-15]
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>
+<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a>(no output — command completes silently)
+<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a>(no output — command completes silently)
+<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a>(no output — command completes silently)
+<a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a>
+<a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a>-----BEGIN PGP PUBLIC KEY BLOCK-----
+<a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>
+<a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a>mI0EZaKp8BEEAPxJ2k7nF3vQ9mK2cL8pR4tY6sX3wZ1aB5cD9eF
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify a specific commit</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show signature status in log</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>git<span class="w"> </span>log<span class="w"> </span>--show-signature<span class="w"> </span>-5
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify a signed tag</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>git<span class="w"> </span>verify-tag<span class="w"> </span>v1.2.3
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpg: Signature made Wed 15 Jan 2025 14:32:17 UTC using RSA key ID 4A7B9C2E
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpg: Good signature from &quot;DevOps Team &lt;devops@company.internal&gt;&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>commit 8f3a9c2d1e4b5f6a7c8d9e0f1a2b3c4d5e6f7a8b
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Author: Sarah Chen &lt;sarah.chen@company.internal&gt;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Date:   Wed Jan 15 14:32:17 2025 +0000
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    Fix: Update TLS certificate validation logic
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>commit 8f3a9c2d1e4b5f6a7c8d9e0f1a2b3c4d5e6f7a8b
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>gpg: Signature made Wed 15 Jan 2025 14:32:17 UTC using RSA key ID 4A7B9C2E
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>gpg: Good signature from &quot;DevOps Team &lt;devops@company.internal&gt;&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    Fix: Update TLS certificate validation logic
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>commit 7e2a8b1c0f9d8e7c6b5a4f3e2d1c0b9a8f7e6d5c
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    Merge branch &#39;feature/auth-hardening&#39; into main
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>commit 6d1a7b0c9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>gpg: Signature made Tue 14 Jan 2025 09:15:42 UTC using RSA key ID 8F2E4C9A
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>gpg: Good signature from &quot;Infrastructure Team &lt;infra@company.internal&gt;&quot;
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    docs: Add GPG key rotation procedures
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>object 8f3a9c2d1e4b5f6a7c8d9e0f1a2b3c4d5e6f7a8b
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>type commit
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>tag v1.2.3
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>tagger Release Bot &lt;release@company.internal&gt; Wed Jan 15 13:45:00 2025 +0000
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>gpg: Signature made Wed 15 Jan 2025 13:45:00 UTC using RSA key ID 4A7B9C2E
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>gpg: Good signature from &quot;DevOps Team &lt;devops@company.internal&gt;&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: gpg failed to sign the data</code></strong> — Ensure GPG agent is running with <code>gpg-agent --daemon</code> and your GPG key is properly configured.
+<strong><code>error: no signature found</code></strong> — The commit or tag was not signed; use <code>git commit -S</code> or <code>git tag -s</code> to create signed commits/tags going forward.
+<strong><code>gpg: Can't check signature: No public key</code></strong> — Import the signer's public key using <code>gpg --import &lt;keyfile&gt;</code> or retrieve it from your organization's key server.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Sign a user key with an SSH CA (on the CA host)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>/etc/ssh/ca_key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-I<span class="w"> </span><span class="s2">&quot;user@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-n<span class="w"> </span>git<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-V<span class="w"> </span>+8h<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>~/.ssh/id_ed25519_git.pub
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># The resulting certificate is id_ed25519_git-cert.pub</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Configure SSH to present it automatically</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># ~/.ssh/config</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Host<span class="w"> </span>gitlab.corp.example.com
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span>CertificateFile<span class="w"> </span>~/.ssh/id_ed25519_git-cert.pub
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_ed25519_git
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Signed user key with serial 0
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Key ID: &quot;user@corp.example.com&quot;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Type: user-ed25519-cert-v01@openssh.com
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Public key: /home/gitadmin/.ssh/id_ed25519_git.pub
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Signing CA: /etc/ssh/ca_key.pub
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Valid: 2024-01-15T14:32:00 to 2024-01-15T22:32:00
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Certificate: /home/gitadmin/.ssh/id_ed25519_git-cert.pub
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sign_and_send_pubkey: signing failed for "git@gitlab.corp.example.com" from agent: agent refused operation</code></strong> — Ensure the CA private key has correct permissions (600) and the signing user has read access to <code>/etc/ssh/ca_key</code>.
+<strong><code>Could not open a connection to your authentication agent</code></strong> — Start ssh-agent with <code>eval $(ssh-agent -s)</code> before attempting to sign keys or authenticate.
+<strong><code>Permission denied (publickey,gssapi-keyex,gssapi-with-mic)</code></strong> — Verify the certificate validity period hasn't expired by checking <code>ssh-keygen -L -f ~/.ssh/id_ed25519_git-cert.pub</code> and confirm the CA public key is in the GitLab server's <code>/etc/ssh/ssh_known_hosts</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all SSH keys registered on GitHub via API</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/keys<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># List all PATs (GitHub)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/tokens<span class="w"> </span>--paginate
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Revoke a PAT by ID</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/user/tokens/&lt;token_id&gt;
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Find hardcoded credentials in repo history (use truffleHog)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>https://github.com/org/repo.git<span class="w"> </span>--only-verified
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpVkTFPwzAQhXf_ilMmGApi6NIBNWoYIhCNSNqJxbIPaiWxy53Tin_POVGATNbpvXv33XnLUVMc-k5x6_xZk-6B8WtAbzAnCtfm5EzrkRke7tb_TBQGb00gjwRrpbSJgSA7sJT3UCNdnMEMNMOhflPSEp1xZ-0jZPkQT-il1tEFP3rq427pKW1yxG-oKFycRXr3Ny9FXkn2vix28uTF7dhaFtWytQkt-pGBWfKhFrCJpNk_P70qJUCwekwzN7BkAUqbc1SiJYtkb-CoO2d1RDCEI5XuWIkCqznkF9YE_-GoRzsHjBPFwDygnHUCiglQjdJfxkT9SbLC3C6SoAqjMen8uuvCVTS1RW_Th_0AePmR_A==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7674,7 +7839,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

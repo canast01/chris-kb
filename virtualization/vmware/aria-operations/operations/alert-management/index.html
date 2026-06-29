@@ -9658,18 +9658,88 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 75&#39;</span><span class="w">       </span><span class="c1"># filesystems over 75%</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/dev/sda1        50G   39G  8.5G  80% /
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/dev/sdb1       100G   82G   15G  83% /var
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>tmpfs            16G   13G  3.2G  82% /dev/shm
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4.2G    /var/log
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2.8G    /var/lib
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1.9G    /var/cache
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1.2G    /var/spool
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>680M    /var/tmp
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>420M    /var/crash
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>310M    /var/lock
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>180M    /var/run
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>95M /var/mail
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>42M /var/opt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>awk: syntax error in pattern near line 1</code></strong> — Ensure the awk syntax is correct; use <code>awk '$5+0 &gt; 75 {print}'</code> if the pattern alone doesn't work on your awk version.
+<strong><code>cannot access '/var/*': Permission denied</code></strong> — Run the <code>du</code> command with <code>sudo</code> to access all directories under /var with restricted permissions.</p>
+</div>
 <h3 id="storage-latency-ontap">Storage Latency (ONTAP)<a class="headerlink" href="#storage-latency-ontap" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency<span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency<span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Volume Read Latency (ms)  Write Latency (ms)  Timestamp
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/vol/data01               2.34                1.87                2024-01-15 14:23:45
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/vol/data02               3.12                2.56                2024-01-15 14:23:50
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/vol/logs                 1.89                1.45                2024-01-15 14:23:55
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/vol/backup               4.67                3.92                2024-01-15 14:24:00
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/vol/archive              2.11                1.73                2024-01-15 14:24:05
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Workload Latency Statistics:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Workload Name             P50 (ms)  P95 (ms)  P99 (ms)  Max (ms)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>production-db             1.2       3.4       5.1       12.3
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>analytics-batch           2.8       6.7       9.2       18.5
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>backup-job                3.5       7.1       10.2      22.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>statistics: command not found</code></strong> — Verify you are connected to the Aria Operations cluster and have the correct CLI context loaded.
+<strong><code>Error: Invalid counter name 'read_latency'</code></strong> — Use <code>statistics show -object volume -help</code> to list valid counter names for your environment.</p>
+</div>
 <h3 id="network-interface-errors">Network Interface Errors<a class="headerlink" href="#network-interface-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Cisco NX-OS</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w"> </span>errors
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Cisco NX-OS</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w"> </span>errors
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Linux output for ip -s link show eth0
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    link/ether 00:50:56:c0:00:08 brd ff:ff:ff:ff:ff:ff
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    RX: bytes  packets  errors  dropped overrun mcast
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        2847361024 1924156 12 0 0 18432
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    TX: bytes  packets  errors  dropped carrier collsns
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        1563847291 1847392 0 0 0 0
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># Linux output for ethtool -S eth0 | grep -i error
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>     rx_errors: 12
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>     rx_crc_errors: 8
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>     rx_frame_errors: 4
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>     tx_errors: 0
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>     tx_carrier_errors: 0
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a># Cisco NX-OS output for show interface Ethernet1/1 counters errors
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Ethernet1/1
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Errors:
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    Input Errors:  0
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    CRC errors:    0
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    Runts:         0
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    Giants:        0
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    Output Errors: 0
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    Collisions:    0
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    Late Collisions: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device "eth0" does not exist.</code></strong> — Verify the interface name with <code>ip link show</code> and use the correct interface identifier.
+<strong><code>Cannot get device settings: No such device</code></strong> — Ensure the interface is present and not disabled; check with <code>ethtool &lt;interface&gt;</code> to confirm device exists.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9753,7 +9823,7 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

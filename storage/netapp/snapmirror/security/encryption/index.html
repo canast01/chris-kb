@@ -8290,66 +8290,149 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:*<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>-encryption-algorithm<span class="w"> </span>aes-256
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Operation succeeded: SnapMirror relationship modified.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Destination Path       Encryption Algorithm  Is Healthy
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svm_dst:vol_dst       aes-256               true
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Operation succeeded: SnapMirror relationship modified.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship does not exist.</code></strong> — Verify the destination path exists with <code>snapmirror show</code> and confirm the SVM and volume names are correct.
+<strong><code>Error: command failed: Encryption cannot be enabled on unhealthy relationship.</code></strong> — Resynchronize the SnapMirror relationship with <code>snapmirror resync -destination-path svm_dst:vol_dst</code> before modifying encryption settings.</p>
+</div>
 <h3 id="enable-encryption-at-relationship-creation">Enable Encryption at Relationship Creation<a class="headerlink" href="#enable-encryption-at-relationship-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new XDP relationship with encryption enabled from the start</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-source-path<span class="w"> </span>svm_prod:vol_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-schedule<span class="w"> </span>hourly<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-encryption-algorithm<span class="w"> </span>aes-256
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Confirm the relationship was created with encryption</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span>-instance<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encryption
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a new XDP relationship with encryption enabled from the start</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-source-path<span class="w"> </span>svm_prod:vol_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-schedule<span class="w"> </span>hourly<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-encryption-algorithm<span class="w"> </span>aes-256
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm the relationship was created with encryption</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span>-instance<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encryption
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Operation succeeded: SnapMirror relationship created.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Destination:       svm_dr:vol_data
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Source:            svm_prod:vol_data
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Status:            Idle
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Policy Type:       async-mirror
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Lag Time:          0:00:00
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Mirror State:      Uninitialized
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Encryption:        true
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Encryption Algorithm: aes-256
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Transfer Checkpoint: 0 B
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Last Transfer Size: 0 B
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Last Transfer Duration: 0:00:00
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Identity Preserve:  false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the destination volume doesn't already have an active SnapMirror relationship using <code>snapmirror show -destination-path svm_dr:vol_data</code>.
+<strong><code>Error: command failed: Source volume svm_prod:vol_data does not exist.</code></strong> — Confirm the source SVM and volume names are correct and the source cluster is reachable with <code>volume show -vserver svm_prod</code>.
+<strong><code>Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.</code></strong> — Use a policy that supports encryption such as <code>MirrorAndVault</code> or create a custom policy with encryption enabled.</p>
+</div>
 <h3 id="verify-encryption-across-all-relationships">Verify Encryption Across All Relationships<a class="headerlink" href="#verify-encryption-across-all-relationships" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all relationships and their encryption state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,encryption-algorithm
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Flag any relationships without encryption</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,encryption-algorithm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;aes-256&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all relationships and their encryption state</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,encryption-algorithm
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Flag any relationships without encryption</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,encryption-algorithm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;aes-256&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Source Path                    Destination Path               Encryption Algorithm
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>================================ ================================ ====================
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>svm1:vol_prod_data             svm2:vol_prod_data_mirror      aes-256-gcm
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>svm1:vol_logs                  svm2:vol_logs_mirror           aes-256-gcm
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>svm1:vol_archive               svm2:vol_archive_mirror        none
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>svm3:vol_temp                  svm4:vol_temp_mirror           aes-256-gcm
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>svm1:vol_archive               svm2:vol_archive_mirror        none
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>svm5:vol_config                svm6:vol_config_mirror         aes-256-gcm
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell.
+<strong><code>Error: invalid field name "encryption-algorithm"</code></strong> — Verify your ONTAP version supports the encryption-algorithm field (9.7+); use <code>snapmirror show</code> without fields to confirm available columns.</p>
+</div>
 <hr />
 <h2 id="encryption-at-rest">Encryption at Rest<a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h2>
 <p>SnapMirror replicates data blocks from source to destination. The encryption-at-rest state of the destination volume is independent of the source — a destination volume can be encrypted even if the source is not, and vice versa. Both NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE) are supported on destination (DP type) volumes.</p>
 <h3 id="creating-an-encrypted-destination-volume">Creating an Encrypted Destination Volume<a class="headerlink" href="#creating-an-encrypted-destination-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an encrypted DP volume as the replication target</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-aggregate<span class="w"> </span>aggr_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-size<span class="w"> </span>2TB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>-type<span class="w"> </span>DP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>-encrypt<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm encryption is enabled on the destination volume</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span>-fields<span class="w"> </span>encrypt
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: encrypt: true</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># View the encryption state (requires key manager configured)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span>-fields<span class="w"> </span>encryption-state
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Expected: encryption-state: encrypted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create an encrypted DP volume as the replication target</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-aggregate<span class="w"> </span>aggr_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-size<span class="w"> </span>2TB<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-type<span class="w"> </span>DP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-encrypt<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Confirm encryption is enabled on the destination volume</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span>-fields<span class="w"> </span>encrypt
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expected: encrypt: true</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># View the encryption state (requires key manager configured)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span>-fields<span class="w"> </span>encryption-state
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Expected: encryption-state: encrypted</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Volume create command initiated.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Volume &quot;vol_data_dr&quot; created successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vserver   volume        encrypt
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>--------- ------------- -------
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>svm_dr    vol_data_dr   true
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vserver   volume        encryption-state
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>--------- ------------- -----------------
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>svm_dr    vol_data_dr   encrypted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"</code></strong> — Verify the aggregate name exists on the destination cluster using <code>storage aggregate show</code>.
+<strong><code>Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"</code></strong> — Create the destination SVM first using <code>vserver create -vserver svm_dr</code> or confirm the SVM name matches your DR environment.
+<strong><code>encryption-state: unencrypted</code></strong> — Configure the onboard key manager or external key server using <code>security key-manager setup</code> before creating encrypted volumes.</p>
+</div>
 <h3 id="enabling-nve-on-an-existing-destination-volume">Enabling NVE on an Existing Destination Volume<a class="headerlink" href="#enabling-nve-on-an-existing-destination-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable NVE on an existing unencrypted DP volume</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Note: volume must be quiesced (SnapMirror paused) before enabling NVE</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data_dr
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Monitor conversion progress</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Resume replication after conversion completes</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data_dr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable NVE on an existing unencrypted DP volume</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Note: volume must be quiesced (SnapMirror paused) before enabling NVE</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data_dr
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Monitor conversion progress</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>volume<span class="w"> </span>encryption<span class="w"> </span>conversion<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>-volume<span class="w"> </span>vol_data_dr
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Resume replication after conversion completes</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>snapmirror<span class="w"> </span>resume<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_data_dr
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Operation succeeded: SnapMirror destination quiesced.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Volume encryption conversion started for volume vol_data_dr on Vserver svm_dr.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Vserver     Volume         Conversion Progress State
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>----------- -------------- ------------------- ----------
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>svm_dr      vol_data_dr    87%                 in_progress
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Vserver     Volume         Conversion Progress State
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>----------- -------------- ------------------- ----------
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>svm_dr      vol_data_dr    100%                completed
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Operation succeeded: SnapMirror destination resumed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced</code></strong> — Run <code>snapmirror quiesce -destination-path svm_dr:vol_data_dr</code> before attempting encryption conversion.
+<strong><code>Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr</code></strong> — Verify the SnapMirror relationship exists and use the correct destination path format <code>vserver:volume</code>.
+<strong><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted</code></strong> — Check if NVE is already enabled on the volume using <code>volume encryption show -vserver svm_dr -volume vol_data_dr</code>.</p>
+</div>
 <hr />
 <h2 id="key-management-for-encrypted-destination-volumes">Key Management for Encrypted Destination Volumes<a class="headerlink" href="#key-management-for-encrypted-destination-volumes" title="Permanent link">&para;</a></h2>
 <p>Destination volumes encrypted with NVE or NAE require a key manager to be configured on the destination cluster. The key manager can be either:</p>
@@ -8357,30 +8440,63 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 <li><strong>ONTAP Key Manager (OKM)</strong> — built-in key manager suitable for non-regulated environments; keys stored on the cluster itself</li>
 <li><strong>External KMIP key manager</strong> — external key management (Thales, Entrust, IBM, HashiCorp Vault) for regulated environments; required for FIPS and most compliance frameworks</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify key manager is configured on the destination cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># For external KMIP key manager — show configured servers</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check that keys are available for the destination volume</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>volume<span class="w"> </span>encryption<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>-fields<span class="w"> </span>key-id,encryption-state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify key manager is configured on the destination cluster</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># For external KMIP key manager — show configured servers</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check that keys are available for the destination volume</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>volume<span class="w"> </span>encryption<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_data_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>-fields<span class="w"> </span>key-id,encryption-state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Key Manager Configured: yes
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Key Manager Type: external
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Server Address                Port  Timeout (secs)  Username
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>-----------                  ----  ---------------  --------
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>kmip-server-01.corp.local    5696  60               admin
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>kmip-server-02.corp.local    5696  60               admin
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Vserver     Volume        Key ID                               Encryption State
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>-------     ------        -------                              -----------------
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>svm_dr      vol_data_dr   550e8400-e29b-41d4-a716-446655440000 enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: security key-manager show</code></strong> — Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run <code>cluster show</code> first to confirm connection).
+<strong><code>Error: No matching entries were found for the specified query</code></strong> — Ensure the destination SVM name and volume name are correct by running <code>volume show -vserver svm_dr</code> to list available volumes.</p>
+</div>
 <p>The source and destination clusters can use different key managers independently — encryption at the destination is entirely managed by the destination cluster's key manager configuration.</p>
 <hr />
 <h2 id="snapmirror-synchronous-and-smbc-encryption">SnapMirror Synchronous and SMBC Encryption<a class="headerlink" href="#snapmirror-synchronous-and-smbc-encryption" title="Permanent link">&para;</a></h2>
 <p>For SnapMirror Synchronous and SMBC (AutomatedFailOver) relationships, the same encryption controls apply. Because synchronous replication is latency-sensitive, verify that the AES-256 overhead is accounted for in the inter-site latency budget.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable encryption on a SnapMirror Synchronous relationship</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-encryption-algorithm<span class="w"> </span>aes-256<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-type<span class="w"> </span>sync
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check SMBC consistency group relationship encryption</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>automatedfailover<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-fields<span class="w"> </span>encryption-algorithm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable encryption on a SnapMirror Synchronous relationship</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_dr:vol_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-encryption-algorithm<span class="w"> </span>aes-256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>-type<span class="w"> </span>sync
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check SMBC consistency group relationship encryption</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>automatedfailover<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span>-fields<span class="w"> </span>encryption-algorithm
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Operation succeeded: SnapMirror relationship modified.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Encryption algorithm set to aes-256 for svm_dr:vol_data
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Source Destination                Encryption Algorithm
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>------ -------------------------- --------------------
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>svm_src svm_dr:vol_data            aes-256
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>svm_src svm_dr:vol_data_2          aes-256
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>svm_src svm_dr:vol_data_3          none
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>svm_src svm_dr:vol_data_4          aes-256
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: This operation is not supported on relationships of type "sync"</code></strong> — Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead.
+<strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges.</p>
+</div>
 <hr />
 <h2 id="compliance-mapping">Compliance Mapping<a class="headerlink" href="#compliance-mapping" title="Permanent link">&para;</a></h2>
 <table>
@@ -8448,7 +8564,7 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

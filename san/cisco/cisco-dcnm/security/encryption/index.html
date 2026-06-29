@@ -7756,40 +7756,109 @@
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>-servername<span class="w"> </span>dcnm-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-enddate
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Encrypt backup with GPG</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pg_dumpall<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>gpg<span class="w"> </span>--batch<span class="w"> </span>--yes<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--symmetric<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-o<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Transfer encrypted backup</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>scp<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>bkp@backup-server.corp.example.com:/backups/dcnm/
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Decrypt (on restore)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>gpg<span class="w"> </span>--batch<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--decrypt<span class="w"> </span>dcnm-db-20260506.sql.gz.gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span>gunzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@dcnm-dc1:~# openssl req -new -newkey rsa:4096 -nodes \
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&gt;   -keyout /tmp/dcnm.key \
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&gt;   -out /tmp/dcnm.csr \
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&gt;   -subj &quot;/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU&quot; \
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&gt;   -addext &quot;subjectAltName=DNS:dcnm-dc1.corp.example.com&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Generating a RSA private key
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>.....................................................................++++
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>.....................................................................++++
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>writing new private key to &#39;/tmp/dcnm.key&#39;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-----
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>root@dcnm-dc1:~# openssl pkcs12 -export \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>&gt;   -in dcnm.crt \
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>&gt;   -inkey /tmp/dcnm.key \
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>&gt;   -certfile intermediate-ca.crt \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>&gt;   -name &quot;dcnm&quot; \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>&gt;   -out /tmp/dcnm.p12 -passout pass:keystorepass
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>(no output — command completes silently)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>root@dcnm-dc1:~# keytool -importkeystore \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>&gt;   -srckeystore /tmp/dcnm.p12 -srcstoretype pkcs12 -srcstorepass keystorepass \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>&gt;   -destkeystore &quot;/usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore&quot; -deststoretype jks \
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>&gt;   -deststorepass &lt;keystore-password&gt; -alias dcnm -noprompt
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Importing keystore /tmp/dcnm.p12 to /usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore...
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>The srcKeystore /tmp/dcnm.p12 is imported successfully.
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>root@dcnm-dc1:~# /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Stopping DCNM...
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>DCNM stopped successfully
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Starting DCNM...
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>DCNM started successfully
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>root@dcnm-dc1:~# openssl s_client -connect dcnm-dc1.corp.example.com:443 \
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>&gt;   -servername dcnm-dc1.corp.example.com &lt;/dev/null 2&gt;/dev/null \
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>&gt;   | openssl x509 -noout -subject -issuer -enddate
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>subject=CN = dcnm-dc1.corp.example.com, O = Corp, C = AU
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>issuer=C = AU, O = Corp, CN = Corp Intermediate CA
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>notAfter=Dec 15 09:47:32 2026 GMT
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check DCNM certificate expiry</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-servername<span class="w"> </span>dcnm-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Days until expiry</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">from datetime import datetime</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">import subprocess</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">out = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">  &#39;dcnm-dc1.corp.example.com:443&#39;,&#39;-servername&#39;,&#39;dcnm-dc1.corp.example.com&#39;],</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">  capture_output=True, input=b&#39;&#39;)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">cert = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">  input=out.stdout, capture_output=True).stdout.decode()</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">import re</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, cert).group(1).strip()</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">print(f&#39;Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}&#39;)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">&quot;</span>
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the dcnm.crt file path is correct and the certificate was successfully returned from the CA before running the pkcs12 command.
+<strong><code>Keystore was tampered with, or password was incorrect</code></strong> — Ensure the deststorepass value matches the actual DCNM keystore password and that the keystore file has not been corrupted.
+<strong><code>Connection refused</code></strong> — Wait 30-60 seconds after the restart command completes for DCNM to fully initialize before running the verification command.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Encrypt backup with GPG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_dumpall<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>gpg<span class="w"> </span>--batch<span class="w"> </span>--yes<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--symmetric<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-o<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Transfer encrypted backup</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>scp<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>bkp@backup-server.corp.example.com:/backups/dcnm/
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Decrypt (on restore)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>gpg<span class="w"> </span>--batch<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--decrypt<span class="w"> </span>dcnm-db-20260506.sql.gz.gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span>gunzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pg_dumpall: connecting to database &quot;postgres&quot; on &quot;localhost&quot; via the default socket
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pg_dumpall: dumping database &quot;postgres&quot;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pg_dumpall: dumping database &quot;dcnm&quot;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pg_dumpall: dumping database &quot;template1&quot;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dcnm-db-20260506.sql.gz.gpg                                    100%  2847MB   45.2MB/s   01:03
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dcnm-db-20260506.sql.gz.gpg                                    100%  2847MB   45.2MB/s   01:03
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>gpg: AES256 encrypted data
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>gpg: encrypted with 1 passphrase
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>psql: connecting to database &quot;postgres&quot; on &quot;localhost&quot; via the default socket
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>gpg: error reading passphrase from file '/root/.dcnm-backup-pass': No such file or directory</code></strong> — Create the passphrase file with <code>echo "your-passphrase" &gt; /root/.dcnm-backup-pass &amp;&amp; chmod 600 /root/.dcnm-backup-pass</code>.
+<strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH key authentication is configured for the bkp user or add password authentication with <code>ssh-keyscan backup-server.corp.example.com &gt;&gt; ~/.ssh/known_hosts</code>.
+<strong><code>psql: error: FATAL: Ident authentication failed for user "postgres"</code></strong> — Ensure the postgres user can authenticate locally by checking <code>/var/lib/pgsql/data/pg_hba.conf</code> allows local connections with md5 or trust authentication.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DCNM certificate expiry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-servername<span class="w"> </span>dcnm-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Days until expiry</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">from datetime import datetime</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">import subprocess</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">out = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">  &#39;dcnm-dc1.corp.example.com:443&#39;,&#39;-servername&#39;,&#39;dcnm-dc1.corp.example.com&#39;],</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">  capture_output=True, input=b&#39;&#39;)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">cert = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">  input=out.stdout, capture_output=True).stdout.decode()</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">import re</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, cert).group(1).strip()</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">print(f&#39;Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}&#39;)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>notAfter=Dec 15 23:59:59 2025 GMT
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Expires in 287 days: 2025-12-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to get local issuer certificate</code></strong> — Add the DCNM root CA to your system's trusted certificate store or use <code>openssl s_client -connect dcnm-dc1.corp.example.com:443 -CAfile /path/to/ca-bundle.crt</code>.
+<strong><code>Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup dcnm-dc1.corp.example.com</code> and confirm the DCNM hostname is correct and reachable from your network.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7827,7 +7896,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

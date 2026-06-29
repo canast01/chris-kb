@@ -8351,75 +8351,262 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>packet-capture<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span>--vm<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>my-capture<span class="w"> </span>--storage-account<span class="w"> </span>&lt;sa&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;name&quot;: &quot;DenyAllOutbound&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;description&quot;: &quot;Deny all outbound traffic&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;protocol&quot;: &quot;*&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;sourcePortRange&quot;: &quot;*&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;destinationPortRange&quot;: &quot;*&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;sourceAddressPrefix&quot;: &quot;*&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;destinationAddressPrefix&quot;: &quot;*&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;access&quot;: &quot;Deny&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;priority&quot;: 100,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;direction&quot;: &quot;Outbound&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>}
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>{
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;name&quot;: &quot;DenyHTTPS&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;protocol&quot;: &quot;Tcp&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;destinationPortRange&quot;: &quot;443&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;access&quot;: &quot;Deny&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;priority&quot;: 200
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>}
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Name                 State      AddressPrefix    NextHopType      NextHopIpAddress
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>-------------------  ---------  ---------------  ---------------  ------------------
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>default              Active     0.0.0.0/0        VirtualNetworkGateway  10.0.0.1
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>RouteToOnPrem        Active     192.168.0.0/16   VirtualNetworkGateway  10.0.0.1
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>InternetRoute        Active     0.0.0.0/0        Internet         
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>UDR-AppSubnet        Active     10.1.0.0/24      VirtualAppliance 10.0.1.4
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Connectivity Status: Unreachable
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Avg Latency (ms): N/A
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Hops: [{&quot;type&quot;: &quot;Source&quot;, &quot;id&quot;: &quot;/subscriptions/.../vm-prod-01&quot;, &quot;resourceId&quot;: &quot;/subscriptions/.../vm-prod-01&quot;, &quot;previousHopType&quot;: &quot;VirtualMachine&quot;, &quot;issues&quot;: []}]
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Hops: [{&quot;type&quot;: &quot;Destination&quot;, &quot;address&quot;: &quot;203.0.113.45&quot;, &quot;resourceId&quot;: &quot;Unknown&quot;, &quot;issues&quot;: [{&quot;origin&quot;: &quot;Outbound&quot;, &quot;severity&quot;: &quot;Error&quot;, &quot;type&quot;: &quot;NetworkSecurityRule&quot;, &quot;context&quot;: [&quot;DenyAllOutbound&quot;]}]}]
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Packet capture created successfully.
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Name: my-capture
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Status: NotStarted
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>CaptureStartTime: 2024-01-15T10:32:45.123456+00:00
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>StorageLocation: {
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  &quot;storageId&quot;: &quot;/subscriptions/abc123/resourceGroups/rg-prod/providers/Microsoft.Storage/storageAccounts/saprodlogs&quot;,
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  &quot;storagePath&quot;: &quot;https://saprodlogs.blob.core.windows.net/network-captures/my-capture.cap&quot;
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The resource with name '&lt;nic-name&gt;' does not exist in the resource group '&lt;rg&gt;'</code></strong> — Verify the NIC name and resource group name match exactly using <code>az network nic list -g &lt;rg&gt;</code>.
+<strong><code>(ResourceNotFound) Resource not found</code></strong> — Ensure the Network Watcher extension is enabled in the region and the source VM exists with <code>az network watcher list -g &lt;rg&gt;</code>.
+<strong><code>The storage account '&lt;sa&gt;' does not exist or you do not have access to it</code></strong> — Confirm the storage account name is correct and your account has Contributor role on it using <code>az storage account show -n &lt;sa&gt; -g &lt;rg&gt;</code>.</p>
+</div>
 <p>Common causes:
 - NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
 - User-defined route sending traffic to wrong next hop
 - Azure Firewall blocking traffic between hub and spoke
 - Service endpoint not configured on subnet (for PaaS services)</p>
 <h2 id="nsg-troubleshooting">NSG Troubleshooting<a class="headerlink" href="#nsg-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check if traffic is allowed by NSG</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>check-nsg-flow<span class="w"> </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--protocol<span class="w"> </span>TCP<span class="w"> </span>--local<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--local-port<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--remote<span class="w"> </span><span class="m">10</span>.1.0.10<span class="w"> </span>--remote-port<span class="w"> </span><span class="m">52000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--nsg<span class="w"> </span>&lt;nsg-id&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Output: access = Allow or Deny, with matching rule name</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># View NSG flow logs (query Log Analytics)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Workspace → Logs:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>AzureNetworkAnalytics_CL
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">SubType_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;FlowLog&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">FlowStatus_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;D&quot;</span><span class="w">   </span>//<span class="w"> </span>Denied<span class="w"> </span>flows
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">DestIP_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;&lt;target-ip&gt;&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">|</span><span class="w"> </span>project<span class="w"> </span>TimeGenerated,<span class="w"> </span>SrcIP_s,<span class="w"> </span>DestIP_s,<span class="w"> </span>DestPort_d,<span class="w"> </span>NSGName_s,<span class="w"> </span>NSGRule_s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if traffic is allowed by NSG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>check-nsg-flow<span class="w"> </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--protocol<span class="w"> </span>TCP<span class="w"> </span>--local<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--local-port<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--remote<span class="w"> </span><span class="m">10</span>.1.0.10<span class="w"> </span>--remote-port<span class="w"> </span><span class="m">52000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--nsg<span class="w"> </span>&lt;nsg-id&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Output: access = Allow or Deny, with matching rule name</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># View NSG flow logs (query Log Analytics)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Workspace → Logs:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>AzureNetworkAnalytics_CL
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">SubType_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;FlowLog&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">FlowStatus_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;D&quot;</span><span class="w">   </span>//<span class="w"> </span>Denied<span class="w"> </span>flows
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">DestIP_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;&lt;target-ip&gt;&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">|</span><span class="w"> </span>project<span class="w"> </span>TimeGenerated,<span class="w"> </span>SrcIP_s,<span class="w"> </span>DestIP_s,<span class="w"> </span>DestPort_d,<span class="w"> </span>NSGName_s,<span class="w"> </span>NSGRule_s
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;access&quot;: &quot;Deny&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;evaluatedRules&quot;: [
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    {
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;name&quot;: &quot;DenyAllInbound&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;direction&quot;: &quot;Inbound&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;access&quot;: &quot;Deny&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;priority&quot;: 100,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;sourceAddressPrefix&quot;: &quot;*&quot;,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;destinationAddressPrefix&quot;: &quot;*&quot;,
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      &quot;destinationPortRange&quot;: &quot;*&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    }
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  ]
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>}
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>TimeGenerated                 SrcIP_s      DestIP_s     DestPort_d  NSGName_s           NSGRule_s
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>2024-01-15T14:32:18.456Z     10.1.0.10    10.0.0.4     443         prod-nsg-eastus     DenyAllInbound
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>2024-01-15T14:32:19.123Z     10.1.0.10    10.0.0.4     443         prod-nsg-eastus     DenyAllInbound
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2024-01-15T14:32:20.789Z     10.1.0.10    10.0.0.4     443         prod-nsg-eastus     DenyAllInbound
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/&lt;nsg-id&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the NSG ID is correct and exists in the target resource group with <code>az network nsg list -g &lt;resource-group&gt;</code>.
+<strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Network/networkWatchers/checkIPFlow/action'.</code></strong> — Ensure your Azure account has Network Contributor or higher role assigned to the subscription or resource group.</p>
+</div>
 <h2 id="azure-ad-authentication-errors">Azure AD Authentication Errors<a class="headerlink" href="#azure-ad-authentication-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--correlation-id<span class="w"> </span>&lt;correlation-id&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Via Entra ID portal: Monitor → Sign-in logs → filter by app/user</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Look for: failure reason, conditional access policy that blocked sign-in</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check service principal credential expiry</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;sp-object-id&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If federated credential issue (OIDC):</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>federated-credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--correlation-id<span class="w"> </span>&lt;correlation-id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Via Entra ID portal: Monitor → Sign-in logs → filter by app/user</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Look for: failure reason, conditional access policy that blocked sign-in</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check service principal credential expiry</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;sp-object-id&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># If federated credential issue (OIDC):</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>federated-credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  {
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    &quot;correlationId&quot;: &quot;a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    &quot;eventName&quot;: {
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      &quot;value&quot;: &quot;Sign-in activity&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;localizedValue&quot;: &quot;Sign-in activity&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    },
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    &quot;eventTimestamp&quot;: &quot;2024-01-15T14:32:18.456789Z&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    &quot;status&quot;: {
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;value&quot;: &quot;Failure&quot;,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;localizedValue&quot;: &quot;Failure&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    },
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    &quot;subStatus&quot;: {
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;value&quot;: &quot;50058&quot;,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;localizedValue&quot;: &quot;Silent sign-out requested&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    },
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    &quot;resourceId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg&quot;
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  }
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>]
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>[
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  {
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    &quot;customKeyIdentifier&quot;: &quot;MjAxOS0wNy0xNQ==&quot;,
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    &quot;displayName&quot;: &quot;sp-prod-cert&quot;,
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    &quot;endDateTime&quot;: &quot;2024-02-10T09:15:00Z&quot;,
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    &quot;keyId&quot;: &quot;a7f8b9c0-d1e2-4f3g-5h6i-7j8k9l0m1n2o&quot;,
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    &quot;startDateTime&quot;: &quot;2023-02-10T09:15:00Z&quot;,
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    &quot;type&quot;: &quot;AsymmetricX509Cert&quot;,
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    &quot;usage&quot;: &quot;Sign&quot;
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>  }
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>]
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>[
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>  {
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>    &quot;audiences&quot;: [
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;api://prod-app-id&quot;
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    ],
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    &quot;description&quot;: &quot;GitHub Actions OIDC&quot;,
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    &quot;id&quot;: &quot;c5d6e7f8-9a0b-1c2d-3e4f-5g6h7i8j9k0l&quot;,
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    &quot;issuer&quot;: &quot;https://token.actions.githubusercontent.com&quot;,
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    &quot;name&quot;: &quot;github-actions-prod&quot;,
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    &quot;subject&quot;: &quot;repo:myorg/myrepo:ref:refs/heads/main&quot;
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  }
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The provided object id '&lt;sp-object-id&gt;' does not refer to a valid service principal object.</code></strong> — Verify the service principal object ID with <code>az ad sp list --filter "displayName eq 'your-sp-name'"</code> and use the correct <code>id</code> field.
+<strong><code>Federated credential not found for the given application.</code></strong> — Confirm the app ID is correct and that federated credentials have been configured; if none exist, create one with <code>az ad app federated-credential create</code>.
+<strong><code>Authorization_RequestDenied: Insufficient privileges to complete the operation.</code></strong> — Ensure your Azure CLI session has the <code>Application.ReadWrite.All</code> or <code>Directory.ReadWrite.All</code> permission in Entra ID.</p>
+</div>
 <p>Common causes:
 - Conditional Access policy blocking (no MFA, non-compliant device, suspicious location)
 - Service principal client secret expired
 - Missing API permission or admin consent not granted</p>
 <h2 id="azure-storage-access-denied">Azure Storage Access Denied<a class="headerlink" href="#azure-storage-access-denied" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check storage firewall rules</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check role assignments on storage account</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span>&lt;storage-account-resource-id&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Test access via SAS token</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">&quot;&lt;sas&gt;&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check if data plane access uses Entra ID or key-based auth</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Key-based access can be disabled in Shared Key authorization:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;allowSharedKeyAccess&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check storage firewall rules</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check role assignments on storage account</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span>&lt;storage-account-resource-id&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Test access via SAS token</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">&quot;&lt;sas&gt;&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check if data plane access uses Entra ID or key-based auth</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Key-based access can be disabled in Shared Key authorization:</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;allowSharedKeyAccess&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;bypass&quot;: &quot;AzureServices&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;defaultAction&quot;: &quot;Deny&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;virtualNetworkRules&quot;: [
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    {
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodsa/virtualNetworkRules/vnet-rule-1&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      &quot;action&quot;: &quot;Allow&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    }
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  ],
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;ipRules&quot;: [
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    {
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      &quot;value&quot;: &quot;203.0.113.45&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      &quot;action&quot;: &quot;Allow&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    }
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  ]
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>}
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>[
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  {
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/roleAssignments/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    &quot;roleDefinitionName&quot;: &quot;Storage Blob Data Contributor&quot;,
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    &quot;principalName&quot;: &quot;user@contoso.com&quot;,
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    &quot;scope&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodsa&quot;
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  }
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>]
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Finished[#############################################] 100.0000%
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Downloaded blob to /tmp/test
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the storage account name and resource group are correct, and that you are querying the correct subscription.
+<strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '&lt;scope&gt;'.</code></strong> — Ensure your user or service principal has at least Reader role on the storage account or its resource group.
+<strong><code>InvalidAuthenticationTokenTenant: The access token is from the wrong tenant.</code></strong> — Run <code>az account set --subscription &lt;subscription-id&gt;</code> to switch to the correct subscription context.</p>
+</div>
 <h2 id="aks-pod-not-starting">AKS Pod Not Starting<a class="headerlink" href="#aks-pod-not-starting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get pod description and events</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check node resource pressure</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Image pull error</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed to pull&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check Azure Container Registry firewall if using private ACR:</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># DNS resolution in pod (network policy blocking?)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Get pod description and events</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check node resource pressure</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Image pull error</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed to pull&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Check Azure Container Registry firewall if using private ACR:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># DNS resolution in pod (network policy blocking?)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name:         app-deployment-5d8f7c9b2-kx4m9
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Namespace:    production
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Priority:    0
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Node:        aks-nodepool-12345678-vmss000001/10.224.0.5
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Start Time:   Thu, 14 Nov 2024 09:32:15 +0000
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Labels:       app=myapp,version=v1.2.3
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Status:       Running
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Events:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Type     Reason                 Age    From               Message
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  ----     ------                 ----   ----               -------
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Normal   Scheduled              5m12s  default-scheduler  Successfully assigned production/app-deployment-5d8f7c9b2-kx4m9 to aks-nodepool-12345678-vmss000001
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Normal   Pulling                5m10s  kubelet            Pulling image &quot;myacr.azurecr.io/myapp:v1.2.3&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Normal   Pulled                 4m58s  kubelet            Successfully pulled image &quot;myacr.azurecr.io/myapp:v1.2.3&quot;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Normal   Created                4m57s  kubelet            Created container app
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Normal   Started                4m56s  kubelet            Started container app
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>LAST SEEN   TYPE     REASON                    OBJECT                                MESSAGE
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>4m12s       Normal   Scheduled                 pod/app-deployment-5d8f7c9b2-kx4m9   Successfully assigned production/app-deployment-5d8f7c9b2-kx4m9 to aks-nodepool-12345678-vmss000001
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>3m58s       Normal   Pulled                    pod/app-deployment-5d8f7c9b2-kx4m9   Successfully pulled image &quot;myacr.azurecr.io/myapp:v1.2.3&quot; in 12.234s
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>3m57s       Normal   Created                   pod/app-deployment-5d8f7c9b2-kx4m9   Created container app
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>3m56s       Normal   Started                   pod/app-deployment-5d8f7c9b2-kx4m9   Started container app
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>2m30s       Warning  BackOff                   pod/test-pod-xyz123                   Back-off restarting failed container
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Conditions:
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>  Type                 Status  LastHeartbeatTime         LastTransitionTime        Reason                       Message
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>  ----                 ------  -----------------         ------------------        ------                       -------
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  Ready                True    Thu, 14 Nov 2024 10:15:22 +0000  Thu, 14 Nov 2024 09:28:01 +0000  KubeletReady            kubelet is posting ready status
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  MemoryPressure       False   Thu, 14 Nov 2024 10:15:22 +0000  Thu, 14 Nov 2024 09:28:01 +0000  KubeletHasSufficientMemory  kubelet has sufficient memory available
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>  DiskPressure         False   Thu, 14 Nov 2024 10:15:22 +0000  Thu, 14 Nov 2024 09:28:01 +0000  KubeletH
 </code></pre></div>
 <h2 id="app-service-502503">App Service 502/503<a class="headerlink" href="#app-service-502503" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8428,13 +8615,21 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 <li>Review application logs: App Service → App Service Logs → enable File System logging</li>
 <li>Check health probe configuration: App Service → Health Check — confirm probe returning 200</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check App Service Plan scale out status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;properties.numberOfWorkers&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Manual scale up (if throttled)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--sku<span class="w"> </span>P2V3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check App Service Plan scale out status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;properties.numberOfWorkers&#39;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Manual scale up (if throttled)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--sku<span class="w"> </span>P2V3
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>2
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/&lt;plan-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the App Service Plan name and resource group name are correct with <code>az appservice plan list -g &lt;rg&gt;</code>.
+<strong><code>AuthorizationFailed : The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Web/serverfarms/&lt;plan-name&gt;'.</code></strong> — Ensure your Azure account has Contributor or App Service Plan Contributor role on the resource group.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8471,7 +8666,7 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

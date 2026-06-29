@@ -8319,6 +8319,25 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># List AD/LDAP group-to-role mappings</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                Role              Source
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>svc-backup          storage_admin     local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svc-monitoring      readonly          local
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>s.jones             org_admin         local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>admin               system_admin      local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Created user &#39;svc-veeam&#39; with role &#39;storage_admin&#39;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Created user &#39;svc-monitoring&#39; with role &#39;readonly&#39;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Updated user &#39;s.jones&#39; role to &#39;storage_admin&#39;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Name                  Role              DN
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>backup-admins        storage_admin     cn=backup-admins,ou=groups,dc=corp,dc=local
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>monitoring-ro        readonly          cn=monitoring-ro,ou=groups,dc=corp,dc=local
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>security-team        org_admin         cn=security-team,ou=groups,dc=corp,dc=local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'svc-veeam' already exists</code></strong> — Check existing users with <code>purefb admin list</code> and use a unique name or delete the existing user first.
+<strong><code>Error: Invalid role 'storage_adm'. Valid roles are: system_admin, org_admin, storage_admin, readonly</code></strong> — Correct the role name spelling in the <code>--role</code> parameter.
+<strong><code>Error: LDAP/AD not configured</code></strong> — Configure directory services with <code>purefb directoryservice create</code> before attempting to list group mappings.</p>
+</div>
 <hr />
 <h2 id="nfs-export-policy-access-control">NFS Export Policy Access Control<a class="headerlink" href="#nfs-export-policy-access-control" title="Permanent link">&para;</a></h2>
 <p>NFS export policies on FlashBlade control which clients can mount a filesystem and what operations they are permitted to perform. Export policies are applied per-filesystem and support multiple rules — each rule matches a client source (IP or CIDR) and defines the permissions for that source.</p>
@@ -8355,24 +8374,42 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
 </tbody>
 </table>
 <h3 id="configure-nfs-export-rules">Configure NFS Export Rules<a class="headerlink" href="#configure-nfs-export-rules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restrict to a specific subnet with root squash (production standard)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,root_squash)&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Multiple rules — GPU cluster gets RW, monitoring subnet gets RO</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,root_squash):10.0.5.0/24(ro)&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Backup server gets its own rule with no_root_squash (Veeam requirement)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--name<span class="w"> </span>prod-veeam-daily<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.50/32(rw,no_root_squash)&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify the current export rules on a filesystem</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-ml-training-data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict to a specific subnet with root squash (production standard)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,root_squash)&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Multiple rules — GPU cluster gets RW, monitoring subnet gets RO</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,root_squash):10.0.5.0/24(ro)&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Backup server gets its own rule with no_root_squash (Veeam requirement)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--name<span class="w"> </span>prod-veeam-daily<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.10.50/32(rw,no_root_squash)&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Verify the current export rules on a filesystem</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-ml-training-data
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Filesystem prod-ml-training-data updated successfully.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>NFS rules applied: 10.0.1.0/24(rw,root_squash)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Filesystem prod-ml-training-data updated successfully.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>NFS rules applied: 10.0.1.0/24(rw,root_squash):10.0.5.0/24(ro)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Filesystem prod-veeam-daily updated successfully.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>NFS rules applied: 10.0.10.50/32(rw,no_root_squash)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name                      Size      Nfs-Rules                                    Protocol  Snapshot-Dir
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>prod-ml-training-data     2.5TB     10.0.1.0/24(rw,root_squash):10.0.5.0/24(ro)  nfsv3     enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Filesystem 'prod-ml-training-data' not found</code></strong> — Verify the filesystem name matches exactly with <code>purefb filesystem list</code> and check for typos.
+<strong><code>Error: Invalid NFS rule syntax 'rw,root_squash'</code></strong> — Ensure NFS rules follow the format <code>subnet/mask(option1,option2)</code> with parentheses and no spaces inside the rule definition.
+<strong><code>Error: CIDR block 10.0.10.50/32 overlaps with existing rule</code></strong> — Use a non-overlapping subnet or remove the conflicting rule before applying the new one.</p>
+</div>
 <h3 id="export-policy-best-practices">Export Policy Best Practices<a class="headerlink" href="#export-policy-best-practices" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8410,74 +8447,148 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
 <h3 id="object-store-account-model">Object Store Account Model<a class="headerlink" href="#object-store-account-model" title="Permanent link">&para;</a></h3>
 <p><img alt="FlashBlade — Access Control — Diagram" src="../../../../../assets/storage-pure-flashblade-security-access-control-diagram.svg" /></p>
 <h3 id="create-accounts-users-and-access-keys">Create Accounts, Users, and Access Keys<a class="headerlink" href="#create-accounts-users-and-access-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an object store account (tenant namespace)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>ml-platform
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create a user under the account</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--name<span class="w"> </span>svc-training-pipeline<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--account<span class="w"> </span>ml-platform
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create an access key for the user</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--user<span class="w"> </span>svc-training-pipeline/ml-platform
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Output includes access_key_id and secret_access_key — save the secret immediately</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># List all object store accounts</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>list
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># List all users and their accounts</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>list
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># List all access keys (secrets are not shown after creation)</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create an object store account (tenant namespace)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>ml-platform
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a user under the account</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--name<span class="w"> </span>svc-training-pipeline<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--account<span class="w"> </span>ml-platform
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Create an access key for the user</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>--user<span class="w"> </span>svc-training-pipeline/ml-platform
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Output includes access_key_id and secret_access_key — save the secret immediately</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List all object store accounts</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>list
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># List all users and their accounts</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>list
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># List all access keys (secrets are not shown after creation)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Object store account created: ml-platform
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Object store user created: svc-training-pipeline
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Access key created for svc-training-pipeline/ml-platform
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  access_key_id: 00a1b2c3d4e5f6g7h8i9
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  secret_access_key: wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Name                 Account         Created
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ml-platform          ml-platform     2024-01-15T09:23:44Z
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>default              default         2023-11-02T14:12:10Z
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Name                          Account         Created
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>svc-training-pipeline         ml-platform     2024-01-15T09:24:12Z
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>admin                         default         2023-11-02T14:15:33Z
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Access Key ID                 User                              Account         Created
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>00a1b2c3d4e5f6g7h8i9         svc-training-pipeline            ml-platform     2024-01-15T09:24:58Z
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>a9b8c7d6e5f4g3h2i1j0         admin                             default         2023-11-02T14:16:05Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: object store account 'ml-platform' already exists</code></strong> — Use <code>purefb object-store-account list</code> to verify the account name is unique, or delete the existing account first with <code>purefb object-store-account delete --name ml-platform</code>.
+<strong><code>Error: user 'svc-training-pipeline' already exists in account 'ml-platform'</code></strong> — Verify the username with <code>purefb object-store-user list --account ml-platform</code> and use a different name or delete the existing user.
+<strong><code>Error: failed to connect to FlashBlade management interface</code></strong> — Ensure the FlashBlade array is reachable and you are authenticated with <code>purefb login</code> or check your <code>PUREFB_HOST</code> and <code>PUREFB_API_TOKEN</code> environment variables.</p>
+</div>
 <h3 id="rotate-an-s3-access-key">Rotate an S3 Access Key<a class="headerlink" href="#rotate-an-s3-access-key" title="Permanent link">&para;</a></h3>
 <p>S3 access keys do not expire automatically. Rotate them on a defined schedule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Create a new access key for the user</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span>--user<span class="w"> </span>svc-training-pipeline/ml-platform
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Note the new key ID and secret</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Step 2 — Update the new key in the consuming application/service</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># (update AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the application config)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Step 3 — Verify the new key works</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://prod-ml-training-data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="c1"># (using new key credentials)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Step 4 — Delete the old access key</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span>--name<span class="w"> </span>&lt;old_access_key_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1 — Create a new access key for the user</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span>--user<span class="w"> </span>svc-training-pipeline/ml-platform
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Note the new key ID and secret</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 2 — Update the new key in the consuming application/service</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># (update AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the application config)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Step 3 — Verify the new key works</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://prod-ml-training-data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;fb-s3-vip&gt;/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="c1"># (using new key credentials)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Step 4 — Delete the old access key</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>--name<span class="w"> </span>&lt;old_access_key_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Created access key for user svc-training-pipeline/ml-platform
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Access Key ID: 0a1b2c3d4e5f6g7h8i9j
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Secret Access Key: wX+yZ/aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(no output — command completes silently)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15T14:32:18Z    s3://prod-ml-training-data
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>                           PRE training-datasets/
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>                           PRE model-checkpoints/
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>                           PRE validation-splits/
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-01-15T14:32:19Z    s3://prod-ml-training-data/training-datasets/imagenet-v2.tar.gz
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-01-15T14:32:19Z    s3://prod-ml-training-data/training-datasets/cifar-100.tar.gz
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Deleted access key: 0a1b2c3d4e5f6g7h
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: access key not found for user svc-training-pipeline/ml-platform</code></strong> — Verify the user exists in Pure FlashBlade with <code>purefb user list</code> and confirm the user path is correct.
+<strong><code>An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: The Access Key Id you provided does not exist in our records.</code></strong> — Ensure the new access key credentials were correctly copied to the application config and the old key was not deleted before the new one was fully propagated (wait 30 seconds).
+<strong><code>Error: access key &lt;old_access_key_id&gt; not found</code></strong> — Confirm the exact access key ID with <code>purefb object-store-access-key list --user svc-training-pipeline/ml-platform</code> before deletion.</p>
+</div>
 <h3 id="bucket-policies">Bucket Policies<a class="headerlink" href="#bucket-policies" title="Permanent link">&para;</a></h3>
 <p>Bucket policies provide IAM-style access control rules on a per-bucket basis. Use bucket policies when multiple accounts or users need different levels of access to the same bucket.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Apply an S3 bucket policy (JSON policy document)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>access-policy<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s1">      &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">      &quot;Statement&quot;: [</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">        {</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">          &quot;Effect&quot;: &quot;Allow&quot;,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">          &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-training-pipeline/ml-platform&quot;]},</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">          &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:PutObject&quot;,&quot;s3:DeleteObject&quot;,&quot;s3:ListBucket&quot;],</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">          &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">                       &quot;arn:aws:s3:::prod-ml-training-data&quot;]</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">        },</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">        {</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">          &quot;Effect&quot;: &quot;Allow&quot;,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">          &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-analytics-reader/ml-platform&quot;]},</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">          &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:ListBucket&quot;],</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">          &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">                       &quot;arn:aws:s3:::prod-ml-training-data&quot;]</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">        }</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">      ]</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s1">    }&#39;</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># View the current bucket policy</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>access-policy<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-ml-training-data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Apply an S3 bucket policy (JSON policy document)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>access-policy<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-ml-training-data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">      &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">      &quot;Statement&quot;: [</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">        {</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">          &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">          &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-training-pipeline/ml-platform&quot;]},</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">          &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:PutObject&quot;,&quot;s3:DeleteObject&quot;,&quot;s3:ListBucket&quot;],</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">          &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s1">                       &quot;arn:aws:s3:::prod-ml-training-data&quot;]</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s1">        },</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s1">        {</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s1">          &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s1">          &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-analytics-reader/ml-platform&quot;]},</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s1">          &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:ListBucket&quot;],</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">          &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">                       &quot;arn:aws:s3:::prod-ml-training-data&quot;]</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s1">        }</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s1">      ]</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="s1">    }&#39;</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># View the current bucket policy</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>access-policy<span class="w"> </span>list<span class="w"> </span>--name<span class="w"> </span>prod-ml-training-data
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Bucket policy updated successfully.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Name: prod-ml-training-data
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Policy Version: 2012-10-17
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Statements: 2
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Last Modified: 2024-01-15T14:32:47Z
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Name: prod-ml-training-data
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Policy:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>{
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;Version&quot;: &quot;2012-10-17&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;Statement&quot;: [
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    {
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      &quot;Effect&quot;: &quot;Allow&quot;,
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>      &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-training-pipeline/ml-platform&quot;]},
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>      &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:PutObject&quot;,&quot;s3:DeleteObject&quot;,&quot;s3:ListBucket&quot;],
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,&quot;arn:aws:s3:::prod-ml-training-data&quot;]
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    },
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    {
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      &quot;Effect&quot;: &quot;Allow&quot;,
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      &quot;Principal&quot;: {&quot;AWS&quot;: [&quot;arn:aws:iam:::user/svc-analytics-reader/ml-platform&quot;]},
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>      &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:ListBucket&quot;],
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      &quot;Resource&quot;: [&quot;arn:aws:s3:::prod-ml-training-data/*&quot;,&quot;arn:aws:s3:::prod-ml-training-data&quot;]
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    }
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>  ]
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid JSON in policy document</code></strong> — Validate the JSON syntax using <code>jq . &lt;&lt;&lt; '&lt;policy&gt;'</code> before applying, or escape quotes properly with backslashes.
+<strong><code>Error: Bucket 'prod-ml-training-data' not found</code></strong> — Verify the bucket exists with <code>purefb bucket list</code> and confirm the name matches exactly.
+<strong><code>Error: Principal ARN format invalid</code></strong> — Ensure IAM user ARNs follow the correct format <code>arn:aws:iam::ACCOUNT-ID:user/USERNAME</code> with a valid account ID in the third field.</p>
+</div>
 <p><strong>S3 access control best practices:</strong></p>
 <table>
 <thead>
@@ -8509,75 +8620,142 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
 <h2 id="smb-share-permissions">SMB Share Permissions<a class="headerlink" href="#smb-share-permissions" title="Permanent link">&para;</a></h2>
 <p>FlashBlade SMB shares use a combination of filesystem-level NFS/POSIX permissions and Windows-style share-level permissions backed by Active Directory. AD join is required for SMB access.</p>
 <h3 id="create-an-smb-share">Create an SMB Share<a class="headerlink" href="#create-an-smb-share" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable SMB on a filesystem and create a share</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-share<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--smb-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--name<span class="w"> </span>PROD-ANALYTICS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-analytics-share
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Verify the share is created</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable SMB on a filesystem and create a share</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="w"> </span>prod-analytics-share<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--smb-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>--name<span class="w"> </span>PROD-ANALYTICS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--filesystem<span class="w"> </span>prod-analytics-share
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Verify the share is created</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Filesystem prod-analytics-share updated.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SMB share PROD-ANALYTICS created successfully.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Name                  Filesystem              Protocol  Path
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>PROD-ANALYTICS        prod-analytics-share    SMB       /prod-analytics-share
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>SHARED-REPORTS        financial-data          SMB       /financial-data
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>BACKUP-ARCHIVE        archive-vol-01          SMB       /archive-vol-01
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>TEMP-WORKSPACE        temp-storage            SMB       /temp-storage
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Filesystem 'prod-analytics-share' not found</code></strong> — Verify the filesystem name exists with <code>purefb filesystem list</code> and correct any typos.
+<strong><code>Error: SMB is not enabled on filesystem 'prod-analytics-share'</code></strong> — Ensure the filesystem update command completes successfully before attempting to create the SMB share.
+<strong><code>Error: SMB share 'PROD-ANALYTICS' already exists</code></strong> — Use a different share name or delete the existing share with <code>purefb smb-share delete --name PROD-ANALYTICS</code> first.</p>
+</div>
 <h3 id="share-level-access-control">Share-Level Access Control<a class="headerlink" href="#share-level-access-control" title="Permanent link">&para;</a></h3>
 <p>SMB share-level permissions are configured in the Windows environment using the share's security descriptor. From a Windows host with appropriate AD credentials:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Grant an AD group Full Control on the share</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$sharePath</span> <span class="p">=</span> <span class="s2">&quot;\\fb-smb-vip\PROD-ANALYTICS&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">&quot;EXAMPLE\Storage-Admins&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">&quot;FullControl&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="s2">&quot;None&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="s2">&quot;Allow&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># Grant read-only access to a broader group</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">$readRule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="s2">&quot;EXAMPLE\Analytics-Users&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="s2">&quot;Read&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="s2">&quot;None&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="s2">&quot;Allow&quot;</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">)</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRule</span><span class="p">(</span><span class="nv">$readRule</span><span class="p">)</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Grant an AD group Full Control on the share</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">$sharePath</span> <span class="p">=</span> <span class="s2">&quot;\\fb-smb-vip\PROD-ANALYTICS&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="s2">&quot;EXAMPLE\Storage-Admins&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="s2">&quot;FullControl&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="s2">&quot;None&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="s2">&quot;Allow&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c"># Grant read-only access to a broader group</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nv">$readRule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="s2">&quot;EXAMPLE\Analytics-Users&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    <span class="s2">&quot;Read&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    <span class="s2">&quot;None&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="s2">&quot;Allow&quot;</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="p">)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRule</span><span class="p">(</span><span class="nv">$readRule</span><span class="p">)</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="nv">$sharePath</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
 </code></pre></div>
 <p><strong>SMB encryption:</strong> Enable SMB 3.0 in-transit encryption per share to protect data in transit between Windows clients and FlashBlade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>--name<span class="w"> </span>PROD-ANALYTICS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--smb-encryption-mode<span class="w"> </span>required
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span>--name<span class="w"> </span>PROD-ANALYTICS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>--smb-encryption-mode<span class="w"> </span>required
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>SMB share &#39;PROD-ANALYTICS&#39; updated successfully.
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Encryption mode: required
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Applied to: 2 connected clients
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Clients will reconnect within 30 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: SMB share 'PROD-ANALYTICS' not found</code></strong> — Verify the share name matches exactly (case-sensitive) using <code>purefb smb-share list</code>.
+<strong><code>Error: Invalid encryption mode 'required'. Valid modes: disabled, preferred, required</code></strong> — Use one of the three valid encryption modes; note that 'required' may disconnect clients using older SMB versions.</p>
+</div>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All administrative actions performed via the Purity//FB GUI, CLI, or REST API are recorded in the audit log with the username, source IP address, timestamp, and the specific operation performed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View recent audit entries</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Filter by user</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;user=&#39;s.jones&#39;&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Filter by action type (e.g., filesystem operations)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;operation_name=&#39;filesystem&#39;&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Export audit log (full history)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>purefb<span class="w"> </span>audit<span class="w"> </span><span class="nb">export</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View recent audit entries</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Filter by user</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;user=&#39;s.jones&#39;&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Filter by action type (e.g., filesystem operations)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;operation_name=&#39;filesystem&#39;&quot;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Export audit log (full history)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>purefb<span class="w"> </span>audit<span class="w"> </span><span class="nb">export</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Timestamp                    User      Action                 Resource              Status
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>2024-01-15T14:32:18Z        admin     login                  system                success
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>2024-01-15T14:35:42Z        s.jones   filesystem_write       /data/projects        success
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>2024-01-15T14:36:01Z        s.jones   filesystem_read        /data/projects/file1  success
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>2024-01-15T14:37:15Z        m.patel   policy_modify          replication_policy    success
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>2024-01-15T14:38:22Z        s.jones   filesystem_delete      /data/archive/old     success
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>Timestamp                    User      Action                 Resource              Status
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>2024-01-15T14:35:42Z        s.jones   filesystem_write       /data/projects        success
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>2024-01-15T14:36:01Z        s.jones   filesystem_read        /data/projects/file1  success
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>2024-01-15T14:38:22Z        s.jones   filesystem_delete      /data/archive/old     success
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>Timestamp                    User      Action                 Resource              Status
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>2024-01-15T14:35:42Z        s.jones   filesystem_write       /data/projects        success
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>2024-01-15T14:36:01Z        s.jones   filesystem_read        /data/projects/file1  success
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>2024-01-15T14:38:22Z        s.jones   filesystem_delete      /data/archive/old     success
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>Export started. Output file: audit_export_20240115_143900.csv
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>Exporting 47293 audit entries...
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>Export completed successfully.
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>File location: /var/log/purity/audit_export_20240115_143900.csv
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>File size: 12.4 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Authentication failed. Invalid credentials or session expired.</code></strong> — Re-authenticate using <code>purefb login</code> with valid admin credentials.
+<strong><code>Error: Invalid filter syntax. Expected format: --filter "field='value'"</code></strong> — Verify filter field names match audit schema (e.g., <code>user</code>, <code>operation_name</code>, <code>resource</code>) and use single quotes around values.
+<strong><code>Error: Insufficient permissions. User role does not have audit read access.</code></strong> — Grant the user the Audit Reader or Admin role via the FlashBlade management interface.</p>
+</div>
 <p><strong>Forward audit logs off-array</strong> to prevent tampering and to maintain a persistent audit trail:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Configure TLS syslog (preferred for integrity)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://siem.example.com:6514<span class="w"> </span>siem-tls
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># UDP syslog (fallback)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://siem.example.com:514<span class="w"> </span>siem-udp
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Verify syslog destinations</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Configure TLS syslog (preferred for integrity)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://siem.example.com:6514<span class="w"> </span>siem-tls
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># UDP syslog (fallback)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://siem.example.com:514<span class="w"> </span>siem-udp
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Verify syslog destinations</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>purefb<span class="w"> </span>syslog<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Creating syslog destination siem-tls...
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Syslog destination siem-tls created successfully.
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Creating syslog destination siem-udp...
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Syslog destination siem-udp created successfully.
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Name          URI                              Severity  Facility
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>siem-tls      tls://siem.example.com:6514      all       local0
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>siem-udp      udp://siem.example.com:514       all       local0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused to siem.example.com:6514</code></strong> — Verify the SIEM server hostname/IP is reachable and the syslog service is listening on the specified port.
+<strong><code>Error: Syslog destination 'siem-tls' already exists</code></strong> — Remove the existing destination with <code>purefb syslog delete siem-tls</code> before recreating it.
+<strong><code>Error: Invalid URI scheme 'tls'. Valid schemes are: udp, tcp</code></strong> — Confirm your FlashBlade firmware supports TLS syslog (requires Purity 3.0+); use <code>tcp://</code> as an alternative if TLS is unavailable.</p>
+</div>
 <p>Configure SIEM alerts for the following audit events:
 - Multiple failed login attempts from the same source IP (brute force indicator)
 - API token creation or deletion — especially outside business hours
@@ -8587,28 +8765,60 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
 <hr />
 <h2 id="access-control-review-checklist">Access Control Review Checklist<a class="headerlink" href="#access-control-review-checklist" title="Permanent link">&para;</a></h2>
 <p>Run this review quarterly and before any security audit:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all admin accounts and roles — look for unexpected accounts or over-provisioned roles</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># List all API tokens — confirm each has a documented owner</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># List AD/LDAP group-to-role mappings — verify group membership in AD separately</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># List all object store accounts and users</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>list
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>list
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># List all access keys — follow up on keys with old creation dates</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>list
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># List SMB shares and confirm share-level permissions are current</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>list
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># List filesystems with NFS export rules — check for wildcard (*) source entries</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># List all admin accounts and roles — look for unexpected accounts or over-provisioned roles</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># List all API tokens — confirm each has a documented owner</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># List AD/LDAP group-to-role mappings — verify group membership in AD separately</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># List all object store accounts and users</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>list
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>list
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="c1"># List all access keys — follow up on keys with old creation dates</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>list
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="c1"># List SMB shares and confirm share-level permissions are current</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>list
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="c1"># List filesystems with NFS export rules — check for wildcard (*) source entries</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Name                    Role            Created                 
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>admin                   System Admin     2024-01-15T08:22:14Z    
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>svc-backup              System Admin     2023-11-02T14:51:33Z    
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>audit-user              Read Only        2024-02-20T09:15:47Z    
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Name                    Created                 Expires                 
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>token_a7f2c9e1          2024-02-15T10:33:22Z    2025-02-15T10:33:22Z   
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>token_b4d8f6k2          2024-01-08T16:45:11Z    2025-01-08T16:45:11Z   
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Group Name              Role            
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>storage-admins         System Admin     
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>backup-operators       Operator        
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>Name                    Account ID                          
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>prod-s3-account         a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>dev-s3-account          f7g8h9i0-j1k2-43l3-m4n5-o6p7q8r9s0t1
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>Name                    Account                 Created                 
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>obj-user-prod           prod-s3-account         2024-01-22T11:08:55Z    
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>obj-user-dev            dev-s3-account          2024-02-10T13:42:19Z    
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>Name                    Account                 Created                 
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>AKIA7M9N2P4Q5R6S7T8U    prod-s3-account         2023-09-14T07:19:33Z    
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>AKIA2K3L4M5N6O7P8Q9R    dev-s3-account          2024-02-18T15:27:44Z    
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>Name                    Exported                Protocol            
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>share-finance           true                    SMB                 
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>share-engineering       true                    SMB                 
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>Name                    Size            Exported            
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>fs-prod-data            2.5TB           true                
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>fs-archive              8.2TB           true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purefb: command not found</code></strong> — Install the Pure Storage FlashBlade CLI tools or ensure the purefb binary is in your PATH.
+<strong><code>Error: Authentication failed</code></strong> — Verify your FlashBlade credentials are configured via <code>purefb login</code> or environment variables.
+<strong><code>Error: Permission denied</code></strong> — Confirm your admin account has sufficient role privileges to list the requested resource type.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8674,7 +8884,7 @@ FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `o
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

@@ -8118,101 +8118,359 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 <p><strong>Enable Management Groups in the tenant:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Tenant Root&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;name&quot;: &quot;root-mg&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;displayName&quot;: &quot;Tenant Root&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;tenantId&quot;: &quot;72f988bf-86f1-41af-91ab-2d7cd011db47&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;childrenCount&quot;: 0,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;children&quot;: []
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The user 'user@contoso.com' does not have authorization to perform action 'Microsoft.Management/managementGroups/write' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Assign the user the "Management Group Contributor" role at the tenant root scope.
+<strong><code>Management group with name 'root-mg' already exists.</code></strong> — Use a different name or delete the existing management group with <code>az account management-group delete --name "root-mg"</code>.</p>
+</div>
 <p><strong>Create the standard hierarchy:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Platform group — subscriptions for shared services</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Platform&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Landing Zones group — workload subscriptions</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Landing Zones&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Environment sub-groups</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;lz-production&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Production&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;lz-dev&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Development&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Sandbox group — unrestricted for experimentation</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;sandbox&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Sandbox&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Platform group — subscriptions for shared services</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Platform&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Landing Zones group — workload subscriptions</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Landing Zones&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Environment sub-groups</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;lz-production&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Production&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;lz-dev&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Development&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;landing-zones&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Sandbox group — unrestricted for experimentation</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;sandbox&quot;</span><span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Sandbox&quot;</span><span class="w"> </span>--parent<span class="w"> </span><span class="s2">&quot;root-mg&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/platform&quot;,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;name&quot;: &quot;platform&quot;,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;displayName&quot;: &quot;Platform&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;tenantId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;parentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>}
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>{
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/landing-zones&quot;,
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  &quot;name&quot;: &quot;landing-zones&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  &quot;displayName&quot;: &quot;Landing Zones&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  &quot;tenantId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  &quot;parentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>}
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>{
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/lz-production&quot;,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;name&quot;: &quot;lz-production&quot;,
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  &quot;displayName&quot;: &quot;Production&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;tenantId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;parentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/landing-zones&quot;
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>}
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>{
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/lz-dev&quot;,
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  &quot;name&quot;: &quot;lz-dev&quot;,
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;displayName&quot;: &quot;Development&quot;,
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;tenantId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  &quot;parentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/landing-zones&quot;
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>}
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>{
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/sandbox&quot;,
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>  &quot;name&quot;: &quot;sandbox&quot;,
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  &quot;displayName&quot;: &quot;Sandbox&quot;,
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>  &quot;tenantId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>  &quot;type&quot;: &quot;/providers/Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>  &quot;parentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Management group 'root-mg' not found</code></strong> — Ensure the root management group exists or use your tenant root group ID (typically your tenant name) as the parent.
+<strong><code>Insufficient privileges to create management groups</code></strong> — Verify your account has the Management Group Contributor role assigned at the tenant root scope.
+<strong><code>Management group 'platform' already exists</code></strong> — Use <code>az account management-group show --name platform</code> to verify existing groups, then skip or delete duplicates before recreating.</p>
+</div>
 <p><strong>Move subscriptions under the correct MG:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>subscription<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>subscription<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The subscription '&lt;subscription-id&gt;' could not be found.</code></strong> — Verify the subscription ID is correct and exists in your Azure tenant by running <code>az account subscription list</code>.
+<strong><code>You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/subscriptions/&lt;subscription-id&gt;'.</code></strong> — Ensure your Azure account has Owner or Management Group Contributor role on the "platform" management group.</p>
+</div>
 <hr />
 <h2 id="configure-azure-policy-at-management-group-level">Configure Azure Policy at Management Group Level<a class="headerlink" href="#configure-azure-policy-at-management-group-level" title="Permanent link">&para;</a></h2>
 <p>Assign security initiatives at the Management Group level so all current and future subscriptions inherit them.</p>
 <p><strong>Assign the Azure Security Benchmark initiative:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;asb-baseline&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Azure Security Benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--policy-set-definition<span class="w"> </span><span class="s2">&quot;1f3afdf9-d0c9-4c3d-847f-89da613e70a8&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--enforcement-mode<span class="w"> </span>DoNotEnforce
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;asb-baseline&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;Azure Security Benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--policy-set-definition<span class="w"> </span><span class="s2">&quot;1f3afdf9-d0c9-4c3d-847f-89da613e70a8&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--enforcement-mode<span class="w"> </span>DoNotEnforce
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;description&quot;: null,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;displayName&quot;: &quot;Azure Security Benchmark&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;enforcementMode&quot;: &quot;DoNotEnforce&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/asb-baseline&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;identity&quot;: null,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;location&quot;: null,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;metadata&quot;: {
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    &quot;createdBy&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    &quot;createdOn&quot;: &quot;2024-01-15T09:42:33.847291+00:00&quot;,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    &quot;updatedBy&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    &quot;updatedOn&quot;: &quot;2024-01-15T09:42:33.847291+00:00&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  },
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;name&quot;: &quot;asb-baseline&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;notScopes&quot;: null,
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  &quot;parameters&quot;: null,
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;policyDefinitionId&quot;: &quot;/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8&quot;,
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  &quot;scope&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;,
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  &quot;type&quot;: &quot;Microsoft.Authorization/policyAssignments&quot;
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The policy set definition '1f3afdf9-d0c9-4c3d-847f-89da613e70a8' could not be found.</code></strong> — Verify the policy definition ID exists in your tenant using <code>az policy set-definition list</code> and copy the correct ID.
+<strong><code>The scope '/providers/Microsoft.Management/managementGroups/root-mg' is invalid or does not exist.</code></strong> — Confirm the management group exists and use the correct scope format from <code>az account management-group list</code>.</p>
+</div>
 <p>Use <code>DoNotEnforce</code> (Audit only) initially. Switch to <code>Default</code> (Deny) after remediating existing findings.</p>
 <p><strong>Assign the CIS Microsoft Azure Foundations initiative:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;cis-azure-foundations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;CIS Microsoft Azure Foundations Benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--policy-set-definition<span class="w"> </span><span class="s2">&quot;612b5213-9160-4969-8578-1518bd2a000c&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--enforcement-mode<span class="w"> </span>DoNotEnforce
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;cis-azure-foundations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--display-name<span class="w"> </span><span class="s2">&quot;CIS Microsoft Azure Foundations Benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--policy-set-definition<span class="w"> </span><span class="s2">&quot;612b5213-9160-4969-8578-1518bd2a000c&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--enforcement-mode<span class="w"> </span>DoNotEnforce
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;description&quot;: null,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;displayName&quot;: &quot;CIS Microsoft Azure Foundations Benchmark&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;enforcementMode&quot;: &quot;DoNotEnforce&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/cis-azure-foundations&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  &quot;identity&quot;: null,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;location&quot;: null,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;metadata&quot;: {
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    &quot;createdBy&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;createdOn&quot;: &quot;2024-01-15T14:32:18.123456Z&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    &quot;updatedBy&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    &quot;updatedOn&quot;: &quot;2024-01-15T14:32:18.123456Z&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  },
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;name&quot;: &quot;cis-azure-foundations&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;notScopes&quot;: null,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;policyDefinitionId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/policySetDefinitions/612b5213-9160-4969-8578-1518bd2a000c&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;scope&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;type&quot;: &quot;Microsoft.Authorization/policyAssignments&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The policy set definition '612b5213-9160-4969-8578-1518bd2a000c' could not be found.</code></strong> — Verify the policy definition ID exists in your subscription or use <code>az policy set-definition list</code> to find the correct ID.
+<strong><code>The user does not have permission to perform action 'Microsoft.Authorization/policyAssignments/write' on scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Ensure your account has Owner or Policy Contributor role on the management group.
+<strong><code>Invalid scope '/providers/Microsoft.Management/managementGroups/root-mg': management group 'root-mg' does not exist.</code></strong> — Replace the scope with a valid management group ID from <code>az account management-group list</code>.</p>
+</div>
 <p>Review compliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>--management-group<span class="w"> </span>root-mg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[].{Policy:policyAssignmentName, Compliant:results.compliantResources, NonCompliant:results.nonCompliantResources}&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>--management-group<span class="w"> </span>root-mg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[].{Policy:policyAssignmentName, Compliant:results.compliantResources, NonCompliant:results.nonCompliantResources}&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  {
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    &quot;Policy&quot;: &quot;Enforce-HTTPS-Only&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    &quot;Compliant&quot;: 47,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    &quot;NonCompliant&quot;: 3
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  },
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  {
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    &quot;Policy&quot;: &quot;Require-Tags-Environment&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    &quot;Compliant&quot;: 89,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    &quot;NonCompliant&quot;: 12
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  },
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  {
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    &quot;Policy&quot;: &quot;Deny-Unencrypted-Storage&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    &quot;Compliant&quot;: 156,
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    &quot;NonCompliant&quot;: 8
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  },
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  {
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    &quot;Policy&quot;: &quot;Audit-Public-IPs&quot;,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    &quot;Compliant&quot;: 203,
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    &quot;NonCompliant&quot;: 19
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  }
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Authorization/policyStates/queryResults/action'</code></strong> — Assign the "Policy Insights Data Writer" or "Reader" role to your user on the management group.
+<strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group ID with <code>az account management-group list</code> and use the correct name.
+<strong><code>ERROR: No policy state data available for the specified scope.</code></strong> — Ensure policies are assigned to the management group and resources have been evaluated; wait 15–30 minutes after assignment for initial compliance data.</p>
+</div>
 <hr />
 <h2 id="configure-microsoft-defender-for-cloud">Configure Microsoft Defender for Cloud<a class="headerlink" href="#configure-microsoft-defender-for-cloud" title="Permanent link">&para;</a></h2>
 <p>Enable Defender plans across all subscriptions in the Landing Zones MG.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable Defender for Servers (Plan 2)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--name<span class="w"> </span>VirtualMachines<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--tier<span class="w"> </span>Standard<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Enable Defender for Storage</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>StorageAccounts<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Enable Defender for SQL</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>SqlServers<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Enable Defender for App Service</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>AppServices<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable Defender for Servers (Plan 2)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--name<span class="w"> </span>VirtualMachines<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--tier<span class="w"> </span>Standard<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Enable Defender for Storage</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>StorageAccounts<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Enable Defender for SQL</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>SqlServers<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Enable Defender for App Service</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>AppServices<span class="w"> </span>--tier<span class="w"> </span>Standard<span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;name&quot;: &quot;VirtualMachines&quot;,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;pricingTier&quot;: &quot;Standard&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;freeTrialRemainingDays&quot;: 0,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;type&quot;: &quot;Microsoft.Security/pricings&quot;
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>}
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>{
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/StorageAccounts&quot;,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  &quot;name&quot;: &quot;StorageAccounts&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;pricingTier&quot;: &quot;Standard&quot;,
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  &quot;freeTrialRemainingDays&quot;: 0,
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  &quot;type&quot;: &quot;Microsoft.Security/pricings&quot;
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>}
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>{
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/SqlServers&quot;,
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  &quot;name&quot;: &quot;SqlServers&quot;,
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  &quot;pricingTier&quot;: &quot;Standard&quot;,
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>  &quot;freeTrialRemainingDays&quot;: 0,
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>  &quot;type&quot;: &quot;Microsoft.Security/pricings&quot;
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>}
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>{
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/AppServices&quot;,
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>  &quot;name&quot;: &quot;AppServices&quot;,
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  &quot;pricingTier&quot;: &quot;Standard&quot;,
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  &quot;freeTrialRemainingDays&quot;: 0,
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>  &quot;type&quot;: &quot;Microsoft.Security/pricings&quot;
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>(AuthorizationFailed) The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines'.</code></strong> — Assign the Security Admin or Owner role to the user on the target subscription.
+<strong><code>(InvalidRequest) Pricing tier 'Standard' is not valid for resource type 'VirtualMachines'. Valid values are: 'Free', 'Standard'.</code></strong> — Verify the pricing tier name matches the exact case and valid options for the resource type.
+<strong><code>(ResourceNotFound) The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.</code></strong> — Replace <code>&lt;subscription-id&gt;</code> with a valid subscription ID from <code>az account list</code>.</p>
+</div>
 <p>Configure security contacts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>az<span class="w"> </span>security<span class="w"> </span>contact<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>--name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--email<span class="w"> </span>security@corp.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--phone<span class="w"> </span><span class="s2">&quot;+1-555-000-0000&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--alert-notifications<span class="w"> </span>On<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--alerts-to-admins<span class="w"> </span>On
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>az<span class="w"> </span>security<span class="w"> </span>contact<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>--name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--email<span class="w"> </span>security@corp.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--phone<span class="w"> </span><span class="s2">&quot;+1-555-000-0000&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--alert-notifications<span class="w"> </span>On<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--alerts-to-admins<span class="w"> </span>On
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Security/securityContacts/default&quot;,
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;name&quot;: &quot;default&quot;,
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  &quot;type&quot;: &quot;Microsoft.Security/securityContacts&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    &quot;email&quot;: &quot;security@corp.com&quot;,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    &quot;phone&quot;: &quot;+1-555-000-0000&quot;,
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    &quot;alertNotifications&quot;: &quot;On&quot;,
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    &quot;alertsToAdmins&quot;: &quot;On&quot;
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  }
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: (ResourceNotFound) The resource of type 'securityContacts' with name 'default' could not be found.</code></strong> — Ensure you are authenticated with <code>az login</code> and have the correct subscription selected via <code>az account set --subscription &lt;subscription-id&gt;</code>.
+<strong><code>ERROR: Invalid email address format: security@corp.com</code></strong> — Use a valid email format; verify the domain exists and the email parameter is not malformed.
+<strong><code>ERROR: (AuthorizationFailed) The client 'user@corp.com' with object id '...' does not have authorization to perform action 'Microsoft.Security/securityContacts/write' over scope '/subscriptions/...'</code></strong> — Grant the user the Security Admin or Owner role on the subscription using <code>az role assignment create</code>.</p>
+</div>
 <hr />
 <h2 id="set-up-log-analytics-workspace-and-sentinel">Set Up Log Analytics Workspace and Sentinel<a class="headerlink" href="#set-up-log-analytics-workspace-and-sentinel" title="Permanent link">&para;</a></h2>
 <p>All platform and workload logs should flow into a centralised Log Analytics workspace before Sentinel is enabled.</p>
 <p><strong>Create the Log Analytics workspace:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-monitoring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--workspace-name<span class="w"> </span>law-platform-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--location<span class="w"> </span>eastus<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>--sku<span class="w"> </span>PerGB2018<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--retention-time<span class="w"> </span><span class="m">90</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>--workspace-name<span class="w"> </span>law-platform-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span>--location<span class="w"> </span>eastus<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span>--sku<span class="w"> </span>PerGB2018<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span>--retention-time<span class="w"> </span><span class="m">90</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  &quot;createdDate&quot;: &quot;2024-01-15T14:32:47.123456+00:00&quot;,
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  &quot;customerId&quot;: &quot;d4f8c9e2-7a1b-4d6f-9e3c-2b5a8f1d4c7e&quot;,
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  &quot;eTag&quot;: &quot;\&quot;0x8DBE8F2C4A5B6C7D\&quot;&quot;,
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  &quot;features&quot;: {
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    &quot;clusterResourceId&quot;: null,
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    &quot;disableLocalAuth&quot;: false,
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    &quot;enableLogAccessUsingOnlyResourcePermissions&quot;: false
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  },
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/rg-platform-monitoring/providers/microsoft.operationalinsights/workspaces/law-platform-prod&quot;,
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  &quot;name&quot;: &quot;law-platform-prod&quot;,
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  &quot;publicNetworkAccessForIngestion&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  &quot;publicNetworkAccessForQuery&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-monitoring&quot;,
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  &quot;retentionInDays&quot;: 90,
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  &quot;sku&quot;: {
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    &quot;capacityReservationLevel&quot;: null,
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>    &quot;lastSkuUpdate&quot;: &quot;2024-01-15T14:32:47.123456+00:00&quot;,
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    &quot;maxCapacityReservationLevel&quot;: 3000,
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    &quot;name&quot;: &quot;PerGB2018&quot;
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  },
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  &quot;tags&quot;: {},
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>  &quot;type&quot;: &quot;Microsoft.OperationalInsights/workspaces&quot;
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceGroupNotFound: Resource group 'rg-platform-monitoring' could not be found.</code></strong> — Create the resource group first using <code>az group create --name rg-platform-monitoring --location eastus</code>.
+<strong><code>InvalidSkuName: The provided SKU 'PerGB2018' is not valid for this subscription.</code></strong> — Verify available SKUs with <code>az monitor log-analytics workspace list-skus</code> or use a valid SKU like <code>PerGB2018</code> or <code>CapacityReservation</code>.</p>
+</div>
 <p><strong>Enable Microsoft Sentinel on the workspace:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>az<span class="w"> </span>sentinel<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-monitoring<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>--workspace-name<span class="w"> </span>law-platform-prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>az<span class="w"> </span>sentinel<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>--workspace-name<span class="w"> </span>law-platform-prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;etag&quot;: &quot;W/\&quot;1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p\&quot;&quot;,
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-platform-monitoring/providers/Microsoft.OperationalInsights/workspaces/law-platform-prod&quot;,
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  &quot;name&quot;: &quot;law-platform-prod&quot;,
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>  &quot;publicNetworkAccessForIngestion&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  &quot;publicNetworkAccessForQuery&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-monitoring&quot;,
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  &quot;retentionInDays&quot;: 30,
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  &quot;sku&quot;: {
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    &quot;name&quot;: &quot;PerGB2018&quot;
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  },
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  &quot;tags&quot;: {},
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  &quot;type&quot;: &quot;Microsoft.OperationalInsights/workspaces&quot;
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceGroupNotFound : The resource group 'rg-platform-monitoring' could not be found.</code></strong> — Verify the resource group exists in your subscription using <code>az group list</code> and correct the <code>--resource-group</code> parameter.
+<strong><code>InvalidResourceName : The value of the parameter workspaceName is invalid.</code></strong> — Ensure the workspace name contains only alphanumeric characters and hyphens, is 4-63 characters long, and doesn't start with a hyphen.
+<strong><code>AuthorizationFailed : The client 'user@example.com' with object id '...' does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/write'.</code></strong> — Assign the "Log Analytics Contributor" role to your user account on the resource group using <code>az role assignment create</code>.</p>
+</div>
 <p><strong>Connect core data connectors via the Sentinel portal:</strong></p>
 <p>Navigate to Sentinel → Data Connectors and enable:</p>
 <table>
@@ -8245,18 +8503,25 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 <hr />
 <h2 id="configure-entra-id-azure-ad-baseline">Configure Entra ID (Azure AD) Baseline<a class="headerlink" href="#configure-entra-id-azure-ad-baseline" title="Permanent link">&para;</a></h2>
 <p><strong>Enable MFA for all users:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Portal → Entra ID → Security → Conditional Access → New Policy
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Name: Require MFA for All Users
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Assignments → Users: All Users
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Access Controls → Grant: Require multi-factor authentication
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Enable policy: Report-only first, then On
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Portal → Entra ID → Security → Conditional Access → New Policy
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Name: Require MFA for All Users
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Assignments → Users: All Users
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Access Controls → Grant: Require multi-factor authentication
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Enable policy: Report-only first, then On
 </code></pre></div>
 <p><strong>Enable Identity Protection:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>az<span class="w"> </span>ad<span class="w"> </span>identity-protection<span class="w"> </span>user-risk-policy<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>--operator<span class="w"> </span><span class="s2">&quot;greaterThan&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>--risk-level<span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>--mfa-required<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>az<span class="w"> </span>ad<span class="w"> </span>identity-protection<span class="w"> </span>user-risk-policy<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">    </span>--operator<span class="w"> </span><span class="s2">&quot;greaterThan&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span>--risk-level<span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span>--mfa-required<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: unrecognized arguments: --operator</code></strong> — Use <code>--risk-level</code> and <code>--mfa-required</code> only; <code>--operator</code> is not a valid parameter for this command.
+<strong><code>ERROR: argument --risk-level: invalid choice: 'medium' (choose from 'low', 'medium', 'high')</code></strong> — Ensure the risk level value matches one of the accepted enum values exactly.</p>
+</div>
 <p><strong>Configure PIM for privileged roles:</strong></p>
 <ol>
 <li>Portal → Entra ID → Privileged Identity Management → Azure AD Roles.</li>
@@ -8265,106 +8530,309 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 <li>Enable alerts for permanent role assignments.</li>
 </ol>
 <p><strong>Create Conditional Access policy — block legacy authentication:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name: Block Legacy Authentication
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Assignments → Users: All Users
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Conditions → Client Apps: Exchange ActiveSync and Other clients (checked)
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Access Controls → Block
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Name: Block Legacy Authentication
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Assignments → Users: All Users
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Conditions → Client Apps: Exchange ActiveSync and Other clients (checked)
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Access Controls → Block
 </code></pre></div>
 <hr />
 <h2 id="set-up-hub-vnet-and-peering">Set Up Hub VNet and Peering<a class="headerlink" href="#set-up-hub-vnet-and-peering" title="Permanent link">&para;</a></h2>
 <p>The Hub-and-Spoke network topology centralises security and routing through the Hub VNet.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create Hub VNet</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span>--name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Hub subnets</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span>--name<span class="w"> </span>AzureFirewallSubnet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.1.0/26
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span>--name<span class="w"> </span>AzureBastionSubnet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.2.0/27
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># Create a Spoke VNet</span>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">    </span>--name<span class="w"> </span>vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.1.0.0/16<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">    </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="c1"># Peer Hub to Spoke</span>
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="w">    </span>--name<span class="w"> </span>hub-to-spoke-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a><span class="w">    </span>--remote-vnet<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-workload-prod/providers/Microsoft.Network/virtualNetworks/vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="w">    </span>--allow-forwarded-traffic<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a><span class="w">    </span>--allow-gateway-transit<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>
-<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a><span class="c1"># Peer Spoke to Hub</span>
-<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="w">    </span>--name<span class="w"> </span>spoke-to-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="w">    </span>--remote-vnet<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a><span class="w">    </span>--use-remote-gateways<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Create Hub VNet</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span>--name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span>--location<span class="w"> </span>eastus
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Hub subnets</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">    </span>--name<span class="w"> </span>AzureFirewallSubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.1.0/26
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="w">    </span>--name<span class="w"> </span>AzureBastionSubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.2.0/27
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="c1"># Create a Spoke VNet</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">    </span>--name<span class="w"> </span>vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">    </span>--address-prefix<span class="w"> </span><span class="m">10</span>.1.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a><span class="w">    </span>--location<span class="w"> </span>eastus
+<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>
+<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a><span class="c1"># Peer Hub to Spoke</span>
+<a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a><span class="w">    </span>--name<span class="w"> </span>hub-to-spoke-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="w">    </span>--remote-vnet<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-workload-prod/providers/Microsoft.Network/virtualNetworks/vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a><span class="w">    </span>--allow-forwarded-traffic<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a><span class="w">    </span>--allow-gateway-transit<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a>
+<a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a><span class="c1"># Peer Spoke to Hub</span>
+<a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>peering<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a><span class="w">    </span>--name<span class="w"> </span>spoke-to-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-spoke-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-42" name="__codelineno-24-42" href="#__codelineno-24-42"></a><span class="w">    </span>--remote-vnet<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-43" name="__codelineno-24-43" href="#__codelineno-24-43"></a><span class="w">    </span>--use-remote-gateways<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
-<p>Deploy Azure Bastion for secure VM access:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>az<span class="w"> </span>network<span class="w"> </span>bastion<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--name<span class="w"> </span>bastion-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--location<span class="w"> </span>eastus
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>{
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  &quot;addressSpace&quot;: {
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    &quot;addressPrefixes&quot;: [
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>      &quot;10.0.0.0/16&quot;
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    ]
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>  },
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod&quot;,
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>  &quot;name&quot;: &quot;vnet-hub-prod&quot;,
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-network&quot;
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>}
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>{
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>  &quot;addressPrefix&quot;: &quot;10.0.1.0/26&quot;,
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod/subnets/AzureFirewallSubnet&quot;,
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>  &quot;name&quot;: &quot;AzureFirewallSubnet&quot;,
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>}
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>{
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>  &quot;addressPrefix&quot;: &quot;10.0.2.0/27&quot;,
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod/subnets/AzureBastionSubnet&quot;,
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>  &quot;name&quot;: &quot;AzureBastionSubnet&quot;,
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>}
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>{
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>  &quot;addressSpace&quot;: {
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>    &quot;addressPrefixes&quot;: [
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>      &quot;10.1.0.0/16&quot;
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>    ]
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>  },
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-workload-prod/providers/Microsoft.Network/virtualNetworks/vnet-spoke-prod&quot;,
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>  &quot;name&quot;: &quot;vnet-spoke-prod&quot;,
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>  &quot;resourceGroup&quot;: &quot;rg-workload-prod&quot;
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>}
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a>{
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>  &quot;allowForwardedTraffic&quot;: true,
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>  &quot;allowGatewayTransit&quot;: true,
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>  &quot;allowVirtualNetworkAccess&quot;: true,
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod/peerings/hub-to-spoke-prod&quot;,
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a>  &quot;name&quot;: &quot;hub-to-spoke-prod&quot;,
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a>  &quot;peeringState&quot;: &quot;Initiated&quot;,
+<a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;
+<a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a>}
+<a id="__codelineno-25-46" name="__codelineno-25-46" href="#__codelineno-25-46"></a>{
+<a id="__codelineno-25-47" name="__codelineno-25-47" href="#__codelineno-25-47"></a>  &quot;allowForwardedTraffic&quot;: false,
+<a id="__codelineno-25-48" name="__codelineno-25-48" href="#__codelineno-25-48"></a>  &quot;allowGatewayTransit&quot;: false,
+<a id="__codelineno-25-49" name="__codelineno-25-49" href="#__codelineno-25-49"></a>  &quot;allowVirtualNetworkAccess&quot;: true,
+<a id="__codelineno-25-50" name="__codelineno-25-50" href="#__codelineno-25-50"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/rg-workload-prod/providers/Microsoft.
 </code></pre></div>
+Deploy Azure Bastion for secure VM access:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>az<span class="w"> </span>network<span class="w"> </span>bastion<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-network<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">    </span>--name<span class="w"> </span>bastion-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span>--vnet-name<span class="w"> </span>vnet-hub-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span>--location<span class="w"> </span>eastus
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>{
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>  &quot;dnsSettings&quot;: null,
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>  &quot;etag&quot;: &quot;W/\&quot;a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p\&quot;&quot;,
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-platform-network/providers/Microsoft.Network/bastionHosts/bastion-hub-prod&quot;,
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>  &quot;ipConfigurations&quot;: [
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>    {
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>      &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-platform-network/providers/Microsoft.Network/bastionHosts/bastion-hub-prod/bastionHostIpConfigurations/IpConf&quot;,
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>      &quot;name&quot;: &quot;IpConf&quot;,
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>      &quot;privateIpAddress&quot;: &quot;10.0.1.4&quot;,
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>      &quot;privateIpAllocationMethod&quot;: &quot;Dynamic&quot;,
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>      &quot;publicIpAddress&quot;: {
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>        &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-platform-network/providers/Microsoft.Network/publicIPAddresses/pip-bastion-hub-prod&quot;,
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>        &quot;resourceGroup&quot;: &quot;rg-platform-network&quot;
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>      },
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>      &quot;subnet&quot;: {
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>        &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-platform-network/providers/Microsoft.Network/virtualNetworks/vnet-hub-prod/subnets/AzureBastionSubnet&quot;,
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>        &quot;resourceGroup&quot;: &quot;rg-platform-network&quot;
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>      }
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>    }
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>  ],
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>  &quot;name&quot;: &quot;bastion-hub-prod&quot;,
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-network&quot;,
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>  &quot;sku&quot;: {
+<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>    &quot;name&quot;: &quot;Basic&quot;
+<a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a>  },
+<a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>  &quot;type&quot;: &quot;Microsoft.Network/bastionHosts&quot;
+<a id="__codelineno-27-29" name="__codelineno-27-29" href="#__codelineno-27-29"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>(ResourceNotFound) Resource 'Microsoft.Network/virtualNetworks/vnet-hub-prod' under resource group 'rg-platform-network' was not found.</code></strong> — Verify the virtual network name and resource group exist using <code>az network vnet list --resource-group rg-platform-network</code>.
+<strong><code>(InvalidResourceReference) The subnet 'AzureBastionSubnet' does not exist in virtual network 'vnet-hub-prod'.</code></strong> — Create the required AzureBastionSubnet with address prefix /26 or larger using <code>az network vnet subnet create --resource-group rg-platform-network --vnet-name vnet-hub-prod --name AzureBastionSubnet --address-prefix 10.0.1.0/26</code>.
+**`(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p' does not have permission to perform action 'Microsoft.Network/bastionHosts/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789</p>
+</div>
 <hr />
 <h2 id="enable-azure-backup-vault">Enable Azure Backup Vault<a class="headerlink" href="#enable-azure-backup-vault" title="Permanent link">&para;</a></h2>
 <p>Create a Recovery Services vault for centralised backup management.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-backup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>--name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Create a backup policy (daily, 30-day retention)</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-backup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span>--vault-name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span>--name<span class="w"> </span>DailyVMPolicy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="s1">      &quot;schedulePolicy&quot;: {&quot;schedulePolicyType&quot;: &quot;SimpleSchedulePolicy&quot;, &quot;scheduleRunFrequency&quot;: &quot;Daily&quot;, &quot;scheduleRunTimes&quot;: [&quot;2023-01-01T02:00:00Z&quot;]},</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="s1">      &quot;retentionPolicy&quot;: {&quot;retentionPolicyType&quot;: &quot;LongTermRetentionPolicy&quot;, &quot;dailySchedule&quot;: {&quot;retentionTimes&quot;: [&quot;2023-01-01T02:00:00Z&quot;], &quot;retentionDuration&quot;: {&quot;count&quot;: 30, &quot;durationType&quot;: &quot;Days&quot;}}}</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="s1">    }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>--name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>--location<span class="w"> </span>eastus
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1"># Create a backup policy (daily, 30-day retention)</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-platform-backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">    </span>--vault-name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">    </span>--name<span class="w"> </span>DailyVMPolicy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="s1">      &quot;schedulePolicy&quot;: {&quot;schedulePolicyType&quot;: &quot;SimpleSchedulePolicy&quot;, &quot;scheduleRunFrequency&quot;: &quot;Daily&quot;, &quot;scheduleRunTimes&quot;: [&quot;2023-01-01T02:00:00Z&quot;]},</span>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="s1">      &quot;retentionPolicy&quot;: {&quot;retentionPolicyType&quot;: &quot;LongTermRetentionPolicy&quot;, &quot;dailySchedule&quot;: {&quot;retentionTimes&quot;: [&quot;2023-01-01T02:00:00Z&quot;], &quot;retentionDuration&quot;: {&quot;count&quot;: 30, &quot;durationType&quot;: &quot;Days&quot;}}}</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="s1">    }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>{
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/rg-platform-backup/providers/Microsoft.RecoveryServices/vaults/rsv-platform-prod&quot;,
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  &quot;location&quot;: &quot;eastus&quot;,
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  &quot;name&quot;: &quot;rsv-platform-prod&quot;,
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  &quot;properties&quot;: {
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>    &quot;encryption&quot;: {
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>      &quot;keyVaultProperties&quot;: null,
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>      &quot;kmsKeyVaultProperties&quot;: null
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>    },
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>    &quot;publicNetworkAccess&quot;: &quot;Enabled&quot;
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>  },
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-backup&quot;,
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults&quot;
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>}
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>{
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/rg-platform-backup/providers/Microsoft.RecoveryServices/vaults/rsv-platform-prod/backupPolicies/DailyVMPolicy&quot;,
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>  &quot;name&quot;: &quot;DailyVMPolicy&quot;,
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>  &quot;properties&quot;: {
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>    &quot;backupManagementType&quot;: &quot;AzureIaaSVM&quot;,
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>    &quot;retentionPolicy&quot;: {
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>      &quot;dailySchedule&quot;: {
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>        &quot;retentionDuration&quot;: {
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>          &quot;count&quot;: 30,
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>          &quot;durationType&quot;: &quot;Days&quot;
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>        },
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a>        &quot;retentionTimes&quot;: [
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>          &quot;2023-01-01T02:00:00Z&quot;
+<a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>        ]
+<a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a>      },
+<a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a>      &quot;retentionPolicyType&quot;: &quot;LongTermRetentionPolicy&quot;
+<a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>    },
+<a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a>    &quot;schedulePolicy&quot;: {
+<a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a>      &quot;scheduleRunFrequency&quot;: &quot;Daily&quot;,
+<a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a>      &quot;scheduleRunTimes&quot;: [
+<a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a>        &quot;2023-01-01T02:00:00Z&quot;
+<a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a>      ],
+<a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a>      &quot;schedulePolicyType&quot;: &quot;SimpleSchedulePolicy&quot;
+<a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a>    }
+<a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a>  },
+<a id="__codelineno-29-40" name="__codelineno-29-40" href="#__codelineno-29-40"></a>  &quot;resourceGroup&quot;: &quot;rg-platform-backup&quot;,
+<a id="__codelineno-29-41" name="__codelineno-29-41" href="#__codelineno-29-41"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/backupPolicies&quot;
+<a id="__codelineno-29-42" name="__codelineno-29-42" href="#__codelineno-29-42"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group exists with <code>az group list</code> and create it if needed using <code>az group create --name rg-platform-backup --location eastus</code>.
+<strong><code>InvalidJsonInput</code></strong> — Escape the JSON policy string properly by using single quotes around the entire JSON block or save the policy to a file and reference it with <code>@policy.json</code>.</p>
+</div>
 <p>Enable backup for a VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>az<span class="w"> </span>backup<span class="w"> </span>protection<span class="w"> </span>enable-for-vm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>--vault-name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span>--vm<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span>--policy-name<span class="w"> </span>DailyVMPolicy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>az<span class="w"> </span>backup<span class="w"> </span>protection<span class="w"> </span>enable-for-vm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">    </span>--resource-group<span class="w"> </span>rg-workload-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span>--vault-name<span class="w"> </span>rsv-platform-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">    </span>--vm<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="w">    </span>--policy-name<span class="w"> </span>DailyVMPolicy
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Command group &#39;backup protection&#39; is deprecated and will be removed in a future release. Use &#39;backup protection enable-for-vm&#39; instead.
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Request sent to enable backup protection for VM &#39;vm-web-prod-01&#39;.
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>{
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-workload-prod/providers/Microsoft.RecoveryServices/vaults/rsv-platform-prod/backupFabrics/Azure/protectionContainers/IaasVMContainer;iaasvmcontainerv2;rg-workload-prod;vm-web-prod-01/protectedItems/VM;iaasvmcontainerv2;rg-workload-prod;vm-web-prod-01&quot;,
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>  &quot;name&quot;: &quot;vm-web-prod-01&quot;,
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>  &quot;properties&quot;: {
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    &quot;protectionStatus&quot;: &quot;Protected&quot;,
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    &quot;protectionState&quot;: &quot;IRPending&quot;,
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>    &quot;policyId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-workload-prod/providers/Microsoft.RecoveryServices/vaults/rsv-platform-prod/backupPolicies/DailyVMPolicy&quot;,
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>    &quot;lastBackupStatus&quot;: &quot;Pending&quot;,
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>    &quot;lastBackupTime&quot;: null
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>  },
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>  &quot;type&quot;: &quot;Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems&quot;
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ResourceNotFound: The resource 'Microsoft.Compute/virtualMachines/vm-web-prod-01' under resource group 'rg-workload-prod' was not found.</code></strong> — Verify the VM name and resource group name are correct using <code>az vm list --resource-group rg-workload-prod</code>.
+<strong><code>InvalidPolicyId: The policy 'DailyVMPolicy' was not found in vault 'rsv-platform-prod'.</code></strong> — List available policies with <code>az backup policy list --resource-group rg-workload-prod --vault-name rsv-platform-prod</code> and use an existing policy name.
+<strong><code>VaultNotFound: The Recovery Services vault 'rsv-platform-prod' was not found in resource group 'rg-workload-prod'.</code></strong> — Confirm the vault exists and the resource group name is spelled correctly using <code>az backup vault list --resource-group rg-workload-prod</code>.</p>
+</div>
 <hr />
 <h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Defender for Cloud Secure Score:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>az<span class="w"> </span>security<span class="w"> </span>secure-score<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>ascScore
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>az<span class="w"> </span>security<span class="w"> </span>secure-score<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>ascScore
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>{
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>  &quot;displayName&quot;: &quot;Secure Score&quot;,
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Security/secureScores/ascScore&quot;,
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>  &quot;name&quot;: &quot;ascScore&quot;,
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>  &quot;percentage&quot;: 42.5,
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>  &quot;resourceGroup&quot;: null,
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>  &quot;subscriptionId&quot;: &quot;12345678-1234-1234-1234-123456789012&quot;,
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>  &quot;type&quot;: &quot;Microsoft.Security/secureScores&quot;,
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>  &quot;weight&quot;: 0
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: (ResourceNotFound) The resource 'Microsoft.Security/secureScores/ascScore' under resource group '&lt;subscription&gt;' was not found.</code></strong> — Ensure Azure Security Center is enabled on your subscription and the secure score has been calculated at least once.
+<strong><code>ERROR: (AuthorizationFailed) The client '&lt;user&gt;' with object id '&lt;id&gt;' does not have authorization to perform action 'Microsoft.Security/secureScores/read' over scope '/subscriptions/&lt;id&gt;'.</code></strong> — Grant the user or service principal the "Security Reader" or "Owner" role on the subscription using <code>az role assignment create</code>.</p>
+</div>
 <p>Target is 70% or higher before onboarding workloads.</p>
 <p><strong>Policy compliance report:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span>--management-group<span class="w"> </span>root-mg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span>--management-group<span class="w"> </span>root-mg
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>{
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>  &quot;results&quot;: {
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>    &quot;nonCompliantResources&quot;: 1247,
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>    &quot;compliantResources&quot;: 8934,
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>    &quot;resourceDetails&quot;: [
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>      {
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>        &quot;resourceId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01&quot;,
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>        &quot;complianceState&quot;: &quot;NonCompliant&quot;,
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>        &quot;policyAssignmentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/enforce-encryption&quot;,
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>        &quot;policyDefinitionId&quot;: &quot;/providers/Microsoft.Authorization/policyDefinitions/require-disk-encryption&quot;
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>      },
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>      {
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>        &quot;resourceId&quot;: &quot;/subscriptions/b2c3d4e5-f6a7-5b6c-9d0e-1f2a3b4c5d6e/resourceGroups/dev-rg/providers/Microsoft.Storage/storageAccounts/devstg2024&quot;,
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>        &quot;complianceState&quot;: &quot;NonCompliant&quot;,
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>        &quot;policyAssignmentId&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/enforce-https&quot;,
+<a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>        &quot;policyDefinitionId&quot;: &quot;/providers/Microsoft.Authorization/policyDefinitions/require-https-storage&quot;
+<a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>      }
+<a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>    ],
+<a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a>    &quot;summary&quot;: {
+<a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>      &quot;queryResultsUnitCount&quot;: 10181,
+<a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a>      &quot;nonCompliantResourcesCount&quot;: 1247,
+<a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>      &quot;compliantResourcesCount&quot;: 8934
+<a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>    }
+<a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>  }
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: The user does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/summarize/action' over the requested scope.</code></strong> — Ensure your Azure account has Reader or Policy Insights Data Writer role assigned at the management group scope.
+<strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group ID exists and use the correct name with <code>az account management-group list</code>.</p>
+</div>
 <p><strong>Verify Sentinel is receiving logs:</strong></p>
 <p>Run a KQL query in the Sentinel Logs blade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">AzureActivity</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">OperationNameValue</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">count_</span><span class="w"> </span><span class="n">desc</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">|</span><span class="w"> </span><span class="k">take</span><span class="w"> </span><span class="mi">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="n">AzureActivity</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">OperationNameValue</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">count_</span><span class="w"> </span><span class="n">desc</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="p">|</span><span class="w"> </span><span class="k">take</span><span class="w"> </span><span class="mi">20</span>
 </code></pre></div>
 <p>Results confirm Azure Activity logs are flowing.</p>
 <p><strong>Test Bastion access:</strong></p>
@@ -8373,9 +8841,51 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 <li>Enter credentials and confirm the browser-based RDP or SSH session opens.</li>
 </ol>
 <p><strong>Verify MG hierarchy and policy assignments:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>root-mg<span class="w"> </span>--expand<span class="w"> </span>--recurse
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>root-mg<span class="w"> </span>--expand<span class="w"> </span>--recurse
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>{
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>  &quot;displayName&quot;: &quot;root-mg&quot;,
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>  &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg&quot;,
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>  &quot;name&quot;: &quot;root-mg&quot;,
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>  &quot;tenantId&quot;: &quot;72f988bf-86f1-41af-91ab-2d7cd011db47&quot;,
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>  &quot;type&quot;: &quot;Microsoft.Management/managementGroups&quot;,
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>  &quot;children&quot;: [
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>    {
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>      &quot;displayName&quot;: &quot;Production&quot;,
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>      &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/prod-mg&quot;,
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>      &quot;name&quot;: &quot;prod-mg&quot;,
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a>      &quot;type&quot;: &quot;Microsoft.Management/managementGroups&quot;
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>    },
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>    {
+<a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>      &quot;displayName&quot;: &quot;Staging&quot;,
+<a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a>      &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/staging-mg&quot;,
+<a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a>      &quot;name&quot;: &quot;staging-mg&quot;,
+<a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a>      &quot;type&quot;: &quot;Microsoft.Management/managementGroups&quot;
+<a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a>    }
+<a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a>  ]
+<a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a>}
+<a id="__codelineno-38-22" name="__codelineno-38-22" href="#__codelineno-38-22"></a>[
+<a id="__codelineno-38-23" name="__codelineno-38-23" href="#__codelineno-38-23"></a>  {
+<a id="__codelineno-38-24" name="__codelineno-38-24" href="#__codelineno-38-24"></a>    &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/audit-storage-https&quot;,
+<a id="__codelineno-38-25" name="__codelineno-38-25" href="#__codelineno-38-25"></a>    &quot;name&quot;: &quot;audit-storage-https&quot;,
+<a id="__codelineno-38-26" name="__codelineno-38-26" href="#__codelineno-38-26"></a>    &quot;type&quot;: &quot;Microsoft.Authorization/policyAssignments&quot;,
+<a id="__codelineno-38-27" name="__codelineno-38-27" href="#__codelineno-38-27"></a>    &quot;displayName&quot;: &quot;Audit Storage HTTPS Only&quot;,
+<a id="__codelineno-38-28" name="__codelineno-38-28" href="#__codelineno-38-28"></a>    &quot;policyDefinitionId&quot;: &quot;/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9&quot;
+<a id="__codelineno-38-29" name="__codelineno-38-29" href="#__codelineno-38-29"></a>  },
+<a id="__codelineno-38-30" name="__codelineno-38-30" href="#__codelineno-38-30"></a>  {
+<a id="__codelineno-38-31" name="__codelineno-38-31" href="#__codelineno-38-31"></a>    &quot;id&quot;: &quot;/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/policyAssignments/enforce-tags&quot;,
+<a id="__codelineno-38-32" name="__codelineno-38-32" href="#__codelineno-38-32"></a>    &quot;name&quot;: &quot;enforce-tags&quot;,
+<a id="__codelineno-38-33" name="__codelineno-38-33" href="#__codelineno-38-33"></a>    &quot;type&quot;: &quot;Microsoft.Authorization/policyAssignments&quot;,
+<a id="__codelineno-38-34" name="__codelineno-38-34" href="#__codelineno-38-34"></a>    &quot;displayName&quot;: &quot;Enforce Required Tags&quot;
+<a id="__codelineno-38-35" name="__codelineno-38-35" href="#__codelineno-38-35"></a>  }
+<a id="__codelineno-38-36" name="__codelineno-38-36" href="#__codelineno-38-36"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group name with <code>az account management-group list</code> and use the correct name.
+<strong><code>ERROR: The user does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/read' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Ensure your Azure account has Reader or higher role assigned at the management group scope.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8412,7 +8922,7 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

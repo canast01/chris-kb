@@ -9486,6 +9486,18 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>date
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Enabled: true
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Server 0: 0.vmware.pool.ntp.org
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Server 1: 1.vmware.pool.ntp.org
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Server 2: 2.vmware.pool.ntp.org
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Server 3: 3.vmware.pool.ntp.org
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Fri Nov 15 14:32:47 UTC 2024
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the host. The host may not be running, or the login credentials may not be correct.</code></strong> — Verify SSH access to the ESXi host and ensure your credentials are correct with <code>ssh root@&lt;esxi-host&gt;</code>.
+<strong><code>Unknown command or namespace ntp under system.</code></strong> — Confirm you are running ESXi 5.0 or later; older versions may use different NTP configuration commands.</p>
+</div>
 <ol>
 <li>
 <p><strong>Check for certificate mismatch</strong> — if the host was recently reinstalled or had its cert replaced, vCenter may not trust the new cert. Reconnect via vCenter: <strong>Right-click host → Reconnect</strong></p>
@@ -9494,14 +9506,51 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <p><strong>Check management network connectivity</strong> — confirm vmk0 IP is reachable from vCenter:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;vmk0-ip&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>&lt;vmk0-ip&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PING 192.168.1.42 (192.168.1.42) 56(84) bytes of data.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=0.891 ms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=0.756 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=0.823 ms
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>^C
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>--- 192.168.1.42 statistics ---
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>rtt min/avg/max/stddev = 0.756/0.823/0.891/0.055 ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name  IPv4 Address      IPv4 Netmask      IPv4 Gateway      IPv6 Address  IPv6 Netmask  IPv6 Gateway  MTU  DHCP  Address Type
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>----  ----------------  ----------------  ----------------  -----------  -----------  -----------  ---  ----  ---------------
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>vmk0  192.168.1.42      255.255.255.0     192.168.1.1       ::1           128          ::           1500  false  STATIC
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vmk1  10.0.0.15        255.255.255.0     10.0.0.1          -             -            -            1500  false  STATIC
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vmk2  172.16.50.8      255.255.255.0     172.16.50.1       -             -            -            1500  false  STATIC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING: sendto: No route to host</code></strong> — Verify vmk0 IP is configured and the management network is properly connected; check <code>esxcli network ip interface ipv4 get</code> to confirm the interface has an IP address.
+<strong><code>Unknown command or namespace</code></strong> — Ensure you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter; the esxcli command is not available remotely without configuring vSphere CLI.</p>
+</div>
 <ol>
 <li><strong>Full services restart</strong> (higher risk — verify no active vMotion or provisioning):</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>services.sh<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>services.sh<span class="w"> </span>restart
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VMware ESXi services are being restarted...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Stopping ESXi services...
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Stopping hostd...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Stopping vpxa...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Stopping vsan...
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Starting ESXi services...
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Starting hostd...
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Starting vpxa...
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Starting vsan...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ESXi services restart completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>services.sh: command not found</code></strong> — Run the command from the correct directory (<code>/sbin/services.sh restart</code>) or ensure <code>/sbin</code> is in your PATH.
+<strong><code>Permission denied</code></strong> — Execute the command as root or with sudo (<code>sudo /sbin/services.sh restart</code>).
+<strong><code>Error: Failed to restart hostd service</code></strong> — Check for resource constraints or corrupted service configuration; try restarting individual services with <code>/sbin/services.sh restart hostd</code> to isolate the issue.</p>
+</div>
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU0tOwzAQ3ecUo67aBRfoAqkQKrqoiBpga7mxk1hyPJbtpopQJQ7BCTkJdguhConZOfM-zryXMGF44QSqJTA8qiSxXaMdNkvYMK6cKDvILxN4szXV3PMEbVCxU-IPlULrREFKicclzNJ-Ams_mfWacAlVleSnhEpJNHW1JeFCQjUj1qGhlafNVlJCFkBIPQjzVZYu4PP9A_ILZdSxFlVNCn0ghlPWESeaYPXop3CfvcAuTOHZT6fVDW_QdGTvXw5RCVURNMQeqdb-_GO2PZPgricBGsi_SaPe2iIj-mC05MQWhnNFsCSM-w29aZY_pTDPzjDkZxiwhDTAi1G_til9bNTRkBgnQtGi4NaKvQwbv27XOaQ_KGyu0FE3wy3Kw6X8XTi3PGz0YAsqqeO9BFsqT_2XATe38Kd5oVruHysvu-bFup6QjJYZ4_5T3YQ02syEJpr-tWYQT9D-Zh35AQbEkSjGGNEABoLI2gNmZNkB8wuVRphw?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
@@ -9519,13 +9568,29 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <h2 id="all-paths-down-apd-storage">All Paths Down (APD) — Storage<a class="headerlink" href="#all-paths-down-apd-storage" title="Permanent link">&para;</a></h2>
 <p>APD (All Paths Down) occurs when all storage paths to a LUN become unavailable. VMs using that LUN pause with I/O timeout errors.</p>
 <h3 id="diagnosis">Diagnosis<a class="headerlink" href="#diagnosis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check for dead paths</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check for APD state</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|all path\|PDL&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for dead paths</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check for APD state</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|all path\|PDL&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>State: dead
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>State: dead
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>State: dead
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-10-15T08:23:45.123Z cpu2:2048)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev &quot;naa.60060e8012345678901234567890abcd&quot; failed H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-10-15T08:24:12.456Z cpu5:2101)WARNING: NMP: nmp_ThrottleLogForDevice:3456 - Cmd 0x2a (0x564d000012345678) to dev &quot;naa.60060e8012345678901234567890abcd&quot; on path vmhba2:C0:T2:L0 failed. H:0x0 D:0x2 P:0x0
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2024-10-15T08:25:03.789Z cpu1:1876)WARNING: ScsiDeviceIO: 4624: APD condition detected on device naa.60060e8012345678901234567890abcd
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2024-10-15T08:26:45.234Z cpu3:2045)WARNING: NMP: nmp_PathFailureCount:2156 - Reached PDL condition on device naa.60060e8012345678901234567890abcd
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-10-15T08:27:18.567Z cpu4:1998)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev &quot;naa.60060e8012345678901234567890abcd&quot; failed H:0x0 D:0x2 P:0x0
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-10-15T08:28:22.891Z cpu2:2067)WARNING: NMP: nmp_ThrottleLogForDevice:3456 - All paths down for device naa.60060e8012345678901234567890abcd
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify the ESXi host is accessible via SSH and check the correct log path with <code>ls -la /var/log/vmk*</code>.
+<strong><code>esxcli: command not found</code></strong> — Ensure you are running commands directly on the ESXi host (not a vCenter server) and that the esxcli binary is in your PATH.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9548,16 +9613,41 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </tbody>
 </table>
 <h3 id="resolution-apd">Resolution — APD<a class="headerlink" href="#resolution-apd" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check HBA status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Rescan storage after fixing the underlying issue</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify paths are active again</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: active&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check HBA status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Rescan storage after fixing the underlying issue</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify paths are active again</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: active&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>HBA Name  Driver     Queue Full  Cmds Failed  Resets
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vmhba0    lpfc       0           0            0
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vmhba1    qla2xxx    0           0            0
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Node Name: 50:00:09:73:00:1a:2b:4c
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Port Name: 50:00:09:73:00:1a:2b:4d
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Speed: 16Gb
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Supported Speeds: 4Gb, 8Gb, 16Gb
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Link State: Up
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Commands: 45821  Bytes Sent: 2147483648  Bytes Received: 1073741824
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Link Failures: 0  Loss of Signals: 0  Invalid CRCs: 2
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Rescan of adapter vmhba0 started.
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Rescan of adapter vmhba1 started.
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Rescan of adapter vmhba2 started.
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace storage san fc list</code></strong> — Verify you are running this command on ESXi 5.5+ and that the FC HBA driver is installed and loaded.
+<strong><code>Error: Could not get path information</code></strong> — Ensure storage paths are properly zoned in the SAN fabric and the HBA firmware is up to date.
+<strong><code>Rescan of adapter vmhbaX started but timed out after 60 seconds</code></strong> — Check for SAN connectivity issues and verify the storage array is responding to SCSI commands.</p>
+</div>
 <p>Investigate the root cause: SAN fabric zoning, HBA driver, storage array port failure, or cable issue.</p>
 <h3 id="resolution-pdl">Resolution — PDL<a class="headerlink" href="#resolution-pdl" title="Permanent link">&para;</a></h3>
 <p>If the LUN is permanently lost (confirmed with the storage team), power off affected VMs and unregister them. Do not attempt to start VMs that have I/O to a PDL device — the disk writes will be lost.</p>
@@ -9565,10 +9655,26 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <h2 id="high-cpu-ready-time">High CPU Ready Time<a class="headerlink" href="#high-cpu-ready-time" title="Permanent link">&para;</a></h2>
 <p>CPU Ready (<code>%RDY</code> in esxtop) indicates VM vCPUs waiting for a physical CPU to become available. Values above 10% per vCPU cause perceptible VM performance degradation.</p>
 <h3 id="diagnosis-with-esxtop">Diagnosis with esxtop<a class="headerlink" href="#diagnosis-with-esxtop" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxtop
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Press &#39;c&#39; for CPU view</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Key columns: %RDY (ready), %CSTP (co-stop), %WAIT (waiting), %USED (actual CPU usage)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>esxtop
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Key columns: %RDY (ready), %CSTP (co-stop), %WAIT (waiting), %USED (actual CPU usage)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ESXTOP - Virtual Machine CPU Usage Monitor
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Press &#39;c&#39; to switch to CPU view, &#39;v&#39; for VM view, &#39;m&#39; for memory view
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>GID  NAME                                   NWCPU %USED  %RDY %CSTP %WAIT %OVRLP %SYS
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  1  vcenter-prod-01                            4  45.2  12.1   0.0   8.3   0.0  2.1
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  2  esx-mgmt-cluster-01                        2  28.7   5.4   0.0   3.2   0.0  1.8
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  3  database-vm-prod                           8  72.1   18.5   2.3  15.2   0.0  4.1
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  4  web-app-server-02                          4  31.5   8.9   0.0   6.1   0.0  1.2
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  5  backup-proxy-01                            2  15.3   2.1   0.0   1.8   0.0  0.9
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  6  dev-test-vm-03                             1   8.2   1.5   0.0   0.3   0.0  0.4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxtop: command not found</code></strong> — Verify you are connected to an ESXi host via SSH or console; esxtop is not available on vCenter servers.
+<strong><code>ESXTOP: Unable to open /proc/uptime</code></strong> — Restart the hostd service with <code>services.sh restart</code> or reboot the ESXi host if the monitoring subsystem is corrupted.
+<strong><code>Error: Cannot connect to performance statistics collector</code></strong> — Wait 2-3 minutes after ESXi boot for the performance database to initialize, or check that vpxa/hostd services are running with <code>service-control --status</code>.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9626,21 +9732,37 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Find VMs with CPU ready &gt; 10% via PowerCLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-Instance</span> <span class="s2">&quot;&quot;</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span> <span class="p">|</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="o">-gt</span> <span class="n">1000</span> <span class="p">}</span> <span class="p">|</span>    <span class="c"># 1000ms per 20s = ~5% ready</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Find VMs with CPU ready &gt; 10% via PowerCLI</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-Instance</span> <span class="s2">&quot;&quot;</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span> <span class="p">|</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="o">-gt</span> <span class="n">1000</span> <span class="p">}</span> <span class="p">|</span>    <span class="c"># 1000ms per 20s = ~5% ready</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span>
 </code></pre></div>
 <hr />
 <h2 id="high-memory-ballooning-or-swapping">High Memory Ballooning or Swapping<a class="headerlink" href="#high-memory-ballooning-or-swapping" title="Permanent link">&para;</a></h2>
 <p>Memory balloon (<code>MCTLSZ</code> in esxtop) and swap (<code>SWR/s</code>, <code>SWW/s</code>) indicate memory overcommitment on the host.</p>
 <h3 id="diagnosis_1">Diagnosis<a class="headerlink" href="#diagnosis_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxtop
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Press &#39;m&#39; for Memory view</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Key columns: MCTLSZ (balloon driver active), SWR/s, SWW/s (swap activity)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># SWCUR (current swap used by VM), SWTGT (swap target)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxtop
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Press &#39;m&#39; for Memory view</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Key columns: MCTLSZ (balloon driver active), SWR/s, SWW/s (swap activity)</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># SWCUR (current swap used by VM), SWTGT (swap target)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ESXTOP - Virtual Machine Monitor Performance Monitor
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Press &#39;q&#39; to quit, &#39;h&#39; for help
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>GID NAME NWLD %LCPU %CSTP %MEMP SWR/s SWW/s MCTLSZ SWCUR SWTGT
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  1 vmware-hostd 1 0.12 0.00 8.2 0.0 0.0 0 0 0
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  2 vmotion 1 0.08 0.00 2.1 0.0 0.0 0 0 0
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  3 prod-db-vm-01 4 18.45 2.31 64.5 12.3 8.7 256 512 768
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  4 web-app-vm-02 2 5.67 0.15 48.2 0.0 0.0 0 0 0
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  5 backup-vm-03 1 2.34 0.08 32.1 45.2 38.9 1024 2048 2560
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  6 dev-test-vm-04 2 1.23 0.00 16.8 0.0 0.0 0 0 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxtop: command not found</code></strong> — Ensure you are logged into an ESXi host directly via SSH; esxtop is not available on vCenter or Windows systems.
+<strong><code>Error: Unable to initialize display</code></strong> — Verify SSH session has proper terminal settings by reconnecting with <code>ssh -t root@&lt;esxi-host&gt;</code> to allocate a pseudo-terminal.
+<strong><code>Memory view not displaying after pressing 'm'</code></strong> — Press Shift+M (capital M) instead, as esxtop is case-sensitive for view selection.</p>
+</div>
 <h3 id="memory-reclamation-hierarchy">Memory Reclamation Hierarchy<a class="headerlink" href="#memory-reclamation-hierarchy" title="Permanent link">&para;</a></h3>
 <p>ESXi uses memory reclamation in this order (least impactful to most impactful):</p>
 <ol>
@@ -9651,12 +9773,30 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </ol>
 <p>Ballooning is expected and acceptable. Active host swapping (non-zero SWR/s, SWW/s) is a performance problem requiring immediate attention.</p>
 <h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check memory reservation on the host</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>memory<span class="w"> </span>get
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Identify which VMs are ballooning most</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># In esxtop: sort by MCTLSZ descending (key: shift+S → column name)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check memory reservation on the host</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Identify which VMs are ballooning most</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># In esxtop: sort by MCTLSZ descending (key: shift+S → column name)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>MemTotal:                 65536 MB
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>MemFree:                  12288 MB
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>MemReserved:              8192 MB
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>MemShared:                4096 MB
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>MemSwapped:               2048 MB
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>MemBalloon:               15360 MB
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>MemHeap:                  512 MB
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>MemHardwareMem:           65536 MB
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>MemPhysicalMem:           65536 MB
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>MemEffective:             49152 MB
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>MemConsumed:              53248 MB
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>MemOverhead:              1024 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Could not connect to the local system</code></strong> — Ensure you are running this command directly on the ESXi host via SSH or local console, not from vCenter.
+<strong><code>Unknown command or namespace</code></strong> — Verify the esxcli command is available by running <code>esxcli system</code> first; if unavailable, restart the hostd service with <code>services.sh restart</code>.</p>
+</div>
 <p>Options:
 - Migrate VMs off the host with DRS
 - Add memory to host (requires maintenance mode)
@@ -9671,18 +9811,54 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <li>Reboot the host (physical power cycle or IPMI reboot)</li>
 <li>After reboot, collect the core dump:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Core dumps are stored here</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/vmfs/volumes/&lt;scratch-datastore&gt;/vmkdump/
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Identify the most recent vmkernel dump</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>find<span class="w"> </span>/vmfs/volumes/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.dumpFile&quot;</span><span class="w"> </span>-newer<span class="w"> </span>/etc<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Core dumps are stored here</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/vmfs/volumes/&lt;scratch-datastore&gt;/vmkdump/
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Identify the most recent vmkernel dump</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>find<span class="w"> </span>/vmfs/volumes/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.dumpFile&quot;</span><span class="w"> </span>-newer<span class="w"> </span>/etc<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>total 0
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>drwxr-xr-x    3 root     root          4.0K Nov 15 10:23 .
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>drwxr-xr-x   19 root     root          4.0K Nov 15 10:23 ..
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>total 2.1G
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>drwxr-xr-x    2 root     root          4.0K Nov 15 09:47 .
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>drwxr-xr-x    5 root     root          4.0K Nov 15 09:47 ..
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>-rw-------    1 root     root        512.0M Nov 15 09:45 vmkernel-zdump.0
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>-rw-------    1 root     root        512.0M Nov 15 09:44 vmkernel-zdump.1
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>-rw-------    1 root     root        256.0M Nov 15 09:42 vmkernel-zdump.2
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  1234567   2097152   -rw-------   1 root     root       512000000 Nov 15 09:45 /vmfs/volumes/datastore1/vmkdump/vmkernel-zdump.0
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  1234568   2097152   -rw-------   1 root     root       512000000 Nov 15 09:44 /vmfs/volumes/datastore1/vmkdump/vmkernel-zdump.1
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  1234569   1048576   -rw-------   1 root     root       256000000 Nov 15 09:42 /vmfs/volumes/datastore1/vmkdump/vmkernel-zdump.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ls: cannot access '/vmfs/volumes/&lt;scratch-datastore&gt;/vmkdump/': No such file or directory</code></strong> — Replace <code>&lt;scratch-datastore&gt;</code> with the actual datastore name (e.g., <code>datastore1</code>) or verify the scratch partition is configured via <code>esxcli system coredump partition list</code>.
+<strong><code>find: '/vmfs/volumes/': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user to access VMFS volumes.</p>
+</div>
 <ol>
 <li>Generate a support bundle before further investigation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Generating support bundle for host esx-prod-01.datacenter.local...
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Collecting system logs...
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Collecting configuration files...
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Collecting performance data...
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Collecting hardware information...
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Creating compressed archive...
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Support bundle created: /tmp/esx-prod-01-2024-01-15-14-32-45.tar.gz
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Bundle size: 847 MB
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cannot write to /tmp/ - Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or ensure the <code>/tmp/</code> directory has write permissions for the current user.
+<strong><code>Error: Insufficient disk space on /tmp/ - need 1.2 GB, have 256 MB available</code></strong> — Specify an alternate destination with more free space, such as a mounted datastore: <code>vm-support -w /vmfs/volumes/datastore1/</code>.
+<strong><code>Error: vm-support: command not found</code></strong> — Verify you are running this command on an ESXi host directly (via SSH or DCUI console), not on a vCenter Server or external machine.</p>
+</div>
 <ol>
 <li>Open a P1 case with Broadcom Support, providing:</li>
 <li>PSOD screenshot (exact panic string, offset, and module)</li>
@@ -9757,56 +9933,133 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </tbody>
 </table>
 <h3 id="rescan-and-remount">Rescan and Remount<a class="headerlink" href="#rescan-and-remount" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Rescan all adapters</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List VMFS filesystems and mount state</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Name&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Mount a VMFS volume that appears unmounted</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-v<span class="w"> </span>&lt;volume-uuid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Rescan all adapters</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># List VMFS filesystems and mount state</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Name&quot;</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Mount a VMFS volume that appears unmounted</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-v<span class="w"> </span>&lt;volume-uuid&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Adapter rescan initiated for all adapters.
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Adapter rescan completed successfully.
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>VMFS-6                                    /vmfs/volumes/datastore1-uuid-abc123   262144  204800  77%  MOUNTED
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>VMFS-6                                    /vmfs/volumes/datastore2-uuid-def456   131072  98304   75%  MOUNTED
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>VMFS-6                                    /vmfs/volumes/datastore3-uuid-ghi789   524288  156000 30%  UNMOUNTED
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>vfat                                      /boot                                   4096    2048    50%  MOUNTED
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>Volume mount initiated for volume: 5a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>Volume mounted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not find a matching volume for UUID &lt;volume-uuid&gt;</code></strong> — Verify the UUID is correct by running <code>esxcli storage filesystem list</code> and copy the exact UUID from the output.
+<strong><code>Error: Volume is already mounted at /vmfs/volumes/&lt;datastore-name&gt;</code></strong> — The volume is already mounted; use <code>esxcli storage filesystem unmount -v &lt;volume-uuid&gt;</code> first if you need to remount it.</p>
+</div>
 <h3 id="recover-from-snapshot-consolidation-failure">Recover from Snapshot Consolidation Failure<a class="headerlink" href="#recover-from-snapshot-consolidation-failure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check snapshot chain</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.get<span class="w"> </span>&lt;vmid&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Remove all snapshots (destructive — only if the snapshot content is no longer needed)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.removeall<span class="w"> </span>&lt;vmid&gt;
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># If snapshots cannot be removed via API, check for orphaned delta files</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-0000*.vmdk&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Consolidate via PowerCLI</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Get-VM<span class="w"> </span><span class="s2">&quot;&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Invoke-VMConsolidation
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Check snapshot chain</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.get<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Remove all snapshots (destructive — only if the snapshot content is no longer needed)</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.removeall<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># If snapshots cannot be removed via API, check for orphaned delta files</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-0000*.vmdk&quot;</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Consolidate via PowerCLI</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Get-VM<span class="w"> </span><span class="s2">&quot;&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Invoke-VMConsolidation
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Snapshot Tree:
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a> Snapshot Name        : Current State
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>  Snapshot ID         : snapshot-123
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>  Snapshot Timestamp  : 2024-01-15 14:32:18
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  Snapshot State File : /vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-Snapshot1.vmsn
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>  Snapshot Memory     : 2048 MB
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>  Snapshot Disk       : /vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000002-delta.vmdk
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>Removing all snapshots for VM ID 42...
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>Snapshot removal task initiated. Task ID: task-1847
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>Snapshot removal completed successfully.
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000002-delta.vmdk
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000003-delta.vmdk
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>Get-VM &quot;vm-prod-01&quot; | Invoke-VMConsolidation
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>Name                 State   Snapshots
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>----                 -----   ---------
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>vm-prod-01           Running 0
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>Consolidation task completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Snapshot removal failed: The task was cancelled.</code></strong> — Ensure the VM is not actively writing to snapshots and retry after stopping any backup jobs.
+<strong><code>find: '/vmfs/volumes/datastore1': No such file or directory</code></strong> — Verify the datastore name with <code>ls /vmfs/volumes/</code> and correct the path in the find command.
+<strong><code>Invoke-VMConsolidation : The object 'vm-prod-01' could not be found.</code></strong> — Confirm the exact VM name with <code>Get-VM</code> and ensure you have vSphere PowerCLI module loaded with <code>Import-Module VMware.PowerCLI</code>.</p>
+</div>
 <hr />
 <h2 id="ntp-drift-causing-authentication-failures">NTP Drift Causing Authentication Failures<a class="headerlink" href="#ntp-drift-causing-authentication-failures" title="Permanent link">&para;</a></h2>
 <p>Clock skew causes certificate validation failures, SSO authentication errors, and AD join failures.</p>
 <h3 id="check-ntp-status">Check NTP Status<a class="headerlink" href="#check-ntp-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># NTP service state</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Current NTP peer status (ntpq)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Look for &#39;*&#39; (synced peer) or &#39;+&#39; (candidate)</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># offset column: drift in milliseconds — should be &lt; 500ms</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Host clock</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>date
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># NTP service state</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Current NTP peer status (ntpq)</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Look for &#39;*&#39; (synced peer) or &#39;+&#39; (candidate)</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># offset column: drift in milliseconds — should be &lt; 500ms</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># Host clock</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>date
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>enabled: true
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>server: 0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org,3.pool.ntp.org
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>running: true
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>==============================================================================
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>*ntp1.corp.local  10.0.1.50       2 u   64  128  377   12.456   -8.234   5.123
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>+ntp2.corp.local  10.0.1.50       2 u   32  128  377   14.892   12.567   6.891
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>-ntp3.corp.local  .POOL.           16 p    -   64    0    0.000    0.000   0.000
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a> LOCAL(0)        .LOCL.          10 l  998   64    1    0.000    0.000   0.000
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>Fri Nov 15 14:23:47 UTC 2024
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ntpq: read: Connection refused</code></strong> — Restart the NTP service with <code>esxcli system ntp set --enabled=true &amp;&amp; /etc/init.d/ntpd restart</code>.
+<strong><code>offset column shows &gt; 500ms drift (e.g., offset 1234.567)</code></strong> — Check network connectivity to NTP servers and increase <code>poll</code> interval; if persistent, manually sync with <code>ntpdate -s &lt;ntp-server&gt;</code> then restart ntpd.</p>
+</div>
 <h3 id="fix-ntp-configuration">Fix NTP Configuration<a class="headerlink" href="#fix-ntp-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Set NTP servers (replace with your NTP infrastructure)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp1.example.local<span class="w"> </span>--server<span class="o">=</span>ntp2.example.local<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Restart NTP daemon</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>/etc/init.d/ntpd<span class="w"> </span>restart
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Force time synchronisation immediately</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ntpdate<span class="w"> </span>ntp1.example.local
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Verify</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Set NTP servers (replace with your NTP infrastructure)</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp1.example.local<span class="w"> </span>--server<span class="o">=</span>ntp2.example.local<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Restart NTP daemon</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>/etc/init.d/ntpd<span class="w"> </span>restart
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Force time synchronisation immediately</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>ntpdate<span class="w"> </span>ntp1.example.local
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="c1"># Verify</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>(no output — command completes silently)
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>NTP daemon stopped
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>NTP daemon started
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a> 4 Jan 12:34:56 ntpdate[2048]: adjust time server 10.42.1.15 offset 0.002341 sec
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>==============================================================================
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a> ntp1.example.lo 10.100.0.1       2 u   64   64  377   12.345   -0.234   0.891
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a> ntp2.example.lo 10.100.0.2       2 u   62   64  377   14.127    0.156   1.203
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a> LOCAL(0)        .LOCL.          10 l  998 1024    1    0.000    0.000   0.001
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ntpdate[2048]: no servers can be used, exiting</code></strong> — Verify NTP server hostnames resolve correctly with <code>nslookup ntp1.example.local</code> and confirm network connectivity to the NTP servers.
+<strong><code>command not found: ntpq</code></strong> — Install the NTP client tools package using <code>esxcli software vib install -n ntpclient</code> or use <code>esxcli system ntp status</code> as an alternative verification method.
+<strong><code>ntpd: unrecognized service</code></strong> — Use the correct ESXi service restart command: <code>esxcli system service restart --service-name=ntpd</code> instead of <code>/etc/init.d/ntpd restart</code>.</p>
+</div>
 <p>If the ESXi host is a VM guest (rare in production), disable host-time synchronisation in the VM settings and use NTP independently.</p>
 <hr />
 <h2 id="certificate-thumbprint-mismatch">Certificate Thumbprint Mismatch<a class="headerlink" href="#certificate-thumbprint-mismatch" title="Permanent link">&para;</a></h2>
@@ -9817,10 +10070,10 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <li>When prompted about the new thumbprint, review and accept</li>
 <li>Or remove and re-add the host: <strong>Right-click host → Remove</strong> → <strong>Add Host</strong> (preserves VMs if in the same datacenter)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># PowerCLI — force reconnect all disconnected hosts</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-eq</span> <span class="s2">&quot;Disconnected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="nb">Connect-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c"># PowerCLI — force reconnect all disconnected hosts</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-eq</span> <span class="s2">&quot;Disconnected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="nb">Connect-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>For bulk certificate replacement across all hosts, use vCenter Certificate Manager or vSphere Lifecycle Manager certificate remediation.</p>
 <hr />
@@ -9860,7 +10113,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

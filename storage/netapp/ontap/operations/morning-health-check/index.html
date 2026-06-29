@@ -8275,56 +8275,240 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 <p><strong>Step 1 — Verify all nodes are healthy</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cluster<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster                     Health  Eligibility
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-----------                 ------  -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cluster-prod-01             true    true
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cluster-dr-02               true    true
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cluster-test-03             true    false
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>3 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell.
+<strong><code>Error: Access denied for command "cluster show"</code></strong> — Verify your ONTAP user account has the appropriate RBAC role assigned (e.g., admin or read-only).</p>
+</div>
 <p>Expected output: every node shows <code>true</code> in the Health column and <code>false</code> in the Epsilon column (one node may hold Epsilon — that is normal). Any node showing <code>false</code> for Health blocks the rest of the routine.</p>
 <hr />
 <p><strong>Step 2 — Overall health subsystem status</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ok
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Component Details:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  System State: normal
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  System Health: normal
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Subsystem Health:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    storage: normal
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    cpu: normal
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    memory: normal
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    nvram: normal
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    fan: normal
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    power-supply: normal
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    temperature: normal
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    disk: normal
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    network: normal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are logged into the ONTAP cluster CLI (via SSH or console) and not a Linux shell.
+<strong><code>Error: Access denied for command: system health status show</code></strong> — Verify your user role has sufficient privileges; request admin or operator role access from your cluster administrator.</p>
+</div>
 <p>Expected output: <code>Status: ok</code>. Any other status (<code>degraded</code>, <code>warning</code>) means a subsystem has an active alert — proceed to step 3 immediately.</p>
 <hr />
 <p><strong>Step 3 — Active health alerts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Alert ID: 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Severity:       critical
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Probable Cause: Disk shelf temperature sensor failure on shelf 1.2
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Description:    Temperature sensor on disk shelf 1.2 has failed
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Corrective Action: Replace the temperature sensor module
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Triggered On:   2024-01-15 14:32:18 +00:00
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Alert ID: 2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Severity:       warning
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Probable Cause: Aggregate aggr_ssd_01 is 89% full
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Description:    Aggregate capacity utilization is above threshold
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Corrective Action: Add capacity or delete unused snapshots
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Triggered On:   2024-01-15 10:15:42 +00:00
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Alert ID: 3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Severity:       informational
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  Probable Cause: Scheduled backup completed successfully
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Description:    Backup job backup_daily_01 finished
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  Corrective Action: No action required
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  Triggered On:   2024-01-15 02:00:05 +00:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: This command is not available in the current cluster setup</code></strong> — Verify the cluster is running ONTAP 9.1 or later and that the health monitoring subsystem is enabled with <code>system health status show</code>.
+<strong><code>Error: Access denied for user 'admin' on this command</code></strong> — Ensure your user account has the 'admin' or 'readonly' role assigned via <code>security login show</code>.</p>
+</div>
 <p>Expected output: no rows. Any alert row must be acknowledged or resolved. Note the <code>Probable Cause</code> and <code>Corrective Action</code> columns — these are actionable.</p>
 <hr />
 <p><strong>Step 4 — Aggregate health and usage</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,used-percent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,used-percent
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Aggregate                 State    Used%
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aggr0                     online   65
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aggr1                     online   78
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>svm_root                  online   42
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>data_aggregate            online   89
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>backup_aggregate          online   51
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>5 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a local shell.
+<strong><code>Error: Invalid field "used-percent"</code></strong> — Use the correct field name <code>used-percent</code> or check available fields with <code>storage aggregate show -fields ?</code>.</p>
+</div>
 <p>Expected output: all aggregates in <code>online</code> state. Flag any aggregate with <code>used-percent</code> exceeding 80%. At 85% or above treat as critical — see threshold table below.</p>
 <hr />
 <p><strong>Step 5 — Offline volumes</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>online
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>online
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver   Volume       State      Percent Used
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>--------- ------------ ---------- ------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>cluster1  vol_backup   offline    45%
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>cluster1  vol_temp     restricted 78%
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cluster2  vol_archive  offline    12%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
+<strong><code>Error: No such field "percent-used"</code></strong> — Verify your ONTAP version supports the percent-used field; use <code>volume show -fields ?</code> to list available fields for your release.</p>
+</div>
 <p>Expected output: no rows (or only the header line). Any volume not in <code>online</code> state requires investigation before starting operational work.</p>
 <hr />
 <p><strong>Step 6 — Volumes approaching capacity</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF+0 &gt; 80&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF+0 &gt; 80&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Vserver   Volume       Percent Used
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>--------- ------------ ------------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>cluster1  vol_data_01  85
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>cluster1  vol_backup   92
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>cluster1  vol_logs     88
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>svm_prod  vol_archive  81
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>svm_prod  vol_temp     95
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
+<strong><code>Error: invalid field name "percent-used"</code></strong> — Verify the field name matches your ONTAP version; use <code>volume show -fields ?</code> to list available fields.</p>
+</div>
 <p>Expected output: header line only. Any volume above 80% must be noted. Above 90% is critical — expand the volume or move data before proceeding with other work.</p>
 <hr />
 <p><strong>Step 7 — SnapMirror replication lag</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Source Destination Mirror State Lag Time Health
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>======== =========== ============ ========== ======
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>svm1:vol_prod svm2:vol_prod_mirror SnapMirror Snapmirrored 00:15:32 Healthy
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>svm1:vol_data svm2:vol_data_mirror SnapMirror Snapmirrored 00:08:47 Healthy
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>svm3:vol_archive svm4:vol_archive_dr SnapMirror Snapmirrored 02:34:15 Healthy
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>svm2:vol_logs svm3:vol_logs_copy SnapMirror Snapmirrored 00:22:10 Unhealthy
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>svm1:vol_backup svm2:vol_backup_mirror SnapMirror Idle 23:45:00 Healthy
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the ONTAP cluster CLI (ssh admin@cluster-mgmt-ip) rather than the local shell.
+<strong><code>Error: No SnapMirror relationships found</code></strong> — Verify that SnapMirror relationships exist on this cluster using <code>snapmirror show</code> without filters first.
+<strong><code>Error: Invalid field name "lag-time"</code></strong> — Use the correct field name <code>lag_time</code> (underscore instead of hyphen) in the -fields parameter.</p>
+</div>
 <p>Expected output: all relationships show <code>true</code> for Health. For <code>lag-time</code>, compare against each relationship's schedule — lag exceeding 2× the schedule interval indicates a transfer problem. Any <code>false</code> Health value requires immediate investigation.</p>
 <hr />
 <p><strong>Step 8 — LIF status</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>status-oper
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>status-oper
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Vserver         Interface       Address         Netmask         Status Admin Status Oper
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-------         ---------       -------         -------         ------ ----- ----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>cluster1        e0a             192.168.1.10    255.255.255.0   up     up    up
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>cluster1        e0b             192.168.1.11    255.255.255.0   up     up    up
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>node1           mgmt1           10.0.0.50       255.255.255.0   up     up    up
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>node2           mgmt1           10.0.0.51       255.255.255.0   up     up    down
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>node1           data1           172.16.0.100    255.255.255.0   up     up    up
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>node2           data1           172.16.0.101    255.255.255.0   down   up    down
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>6 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: network</code></strong> — Ensure you are connected to the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell.
+<strong><code>Error: invalid field name "status-oper"</code></strong> — Use the correct field name <code>status-admin</code> or <code>status-oper</code> separately, or omit <code>-fields</code> to see all interface details.</p>
+</div>
 <p>Expected output: all LIFs show <code>up</code> for <code>status-oper</code>. Any <code>down</code> LIF blocks storage access for the associated protocol — resolve before starting other work.</p>
 <hr />
 <p><strong>Step 9 — Broken or failed disks</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Disk                 Container                     Type    RPM  Usable Size State
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>----------           ----------                     ----    ---  ----------- --------
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>1.0.0                FAILED                         SSD     N/A  372.6GB     broken
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>1.0.1                FAILED                         SSD     N/A  372.6GB     broken
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>1.0.8                FAILED                         HDD     7200 558.3GB     broken
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2.1.5                FAILED                         SSD     N/A  372.6GB     broken
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>3.0.12               FAILED                         HDD     7200 1.0TB       broken
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>5 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are running this command in the ONTAP CLI (SSH to the cluster management IP), not in the Linux shell.
+<strong><code>Error: access denied for command "storage disk show"</code></strong> — Verify your user role has the "storage" privilege by running <code>security login show -user-or-group-name &lt;username&gt;</code>.</p>
+</div>
 <p>Expected output: no rows. Any broken disk must be replaced immediately. Open a case with NetApp if the disk is under support contract. Do not start any workload migrations until broken disks are replaced.</p>
 <hr />
 <p><strong>Step 10 — Recent error events (last hour)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Time                 Severity Event
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>-------------------- -------- -----------------------------------------------
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2024-01-15 14:32:18  ERROR    Aggregate aggr_ssd_01: RAID status degraded
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>2024-01-15 14:28:45  ERROR    Volume vol_data_prod: Snapshot copy failed
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>2024-01-15 14:15:22  ERROR    Node cluster-02: Network interface e0a down
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>2024-01-15 14:02:10  ERROR    LUN lun_db_backup: Space threshold exceeded
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>2024-01-15 13:58:33  ERROR    SnapMirror job SM_hourly_sync: Transfer aborted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid time-range format</code></strong> — Use ISO 8601 format or relative time like "-1h", "-24h", or specify absolute timestamps with "-start-time" and "-end-time" parameters.
+<strong><code>Error: This command requires cluster admin privileges</code></strong> — Run the command with an account that has cluster-admin role, or use <code>security login show</code> to verify your permissions.</p>
+</div>
 <p>Expected output: no rows, or only informational entries. Review any <code>error</code>-severity events. Cross-reference with steps 3–9 to determine if they are already captured by an alert. Events not tied to an existing alert need investigation.</p>
 <hr />
 <p><strong>Step 11 — AutoSupport delivery</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Node: cluster1-01
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Sequence Number: 1847
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Subject: AUTOSUPPORT [cluster1-01] 192.168.1.45
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Sent Time: 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Destination: support.netapp.com
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Status: Sent
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Size: 8.2 MB
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Node: cluster1-02
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>Sequence Number: 1846
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Subject: AUTOSUPPORT [cluster1-02] 192.168.1.46
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>Sent Time: 2024-01-15 14:31:45 +00:00
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>Destination: support.netapp.com
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Status: Sent
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>Size: 7.9 MB
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>Node: cluster1-01
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>Sequence Number: 1845
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>Subject: AUTOSUPPORT [cluster1-01] 192.168.1.45
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>Sent Time: 2024-01-14 02:15:33 +00:00
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>Destination: support.netapp.com
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>Status: Sent
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>Size: 8.1 MB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Verify you are connected to the ONTAP cluster CLI and have appropriate admin privileges.
+<strong><code>Error: This command is not supported on this release</code></strong> — Check your ONTAP version with <code>version</code> command; autosupport history show requires ONTAP 9.6 or later.</p>
+</div>
 <p>Expected output: the most recent entry shows <code>sent-successful</code> or <code>ignore</code>. A <code>failed</code> status means AutoSupport is not reaching NetApp — check proxy configuration and network connectivity. This does not block operations but must be resolved today.</p>
 <hr />
 <h2 id="health-thresholds">Health Thresholds<a class="headerlink" href="#health-thresholds" title="Permanent link">&para;</a></h2>
@@ -8407,7 +8591,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

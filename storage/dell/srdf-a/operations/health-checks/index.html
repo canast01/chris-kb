@@ -8875,6 +8875,26 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">LAG</span><span class="o">=</span><span class="k">$(</span>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Lag&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="k">)</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Current lag: </span><span class="si">${</span><span class="nv">LAG</span><span class="si">}</span><span class="s2"> seconds&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Group Number: 20
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SRDF/A Pair Information
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>===============================================
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Dev  Sym ID         State           Lag(ms)  Cycle Age(s)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>---  -------        -----           -------  -----------
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>000  000123456789   Consistent      45       120
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>001  000123456789   Consistent      42       120
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>002  000123456789   Consistent      48       120
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>003  000123456789   Consistent      46       120
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>...
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Current lag: 48 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Command not found</code></strong> — Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>SRDF group 20 not found</code></strong> — Verify the group number exists with <code>symrdf list</code> and confirm the local Symmetrix is the source array for that group.
+<strong><code>Lag: N/A</code></strong> — The SRDF pair may be in a non-replicating state (Paused, Failed, or Idle); check full state with <code>symrdf -g 20 -type A query -detail</code> and resume replication if needed.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8896,17 +8916,17 @@
 <li><strong>Consistency protection:</strong> <code>symrdf -g &lt;group&gt; query | grep -i protect</code> — verify consistency protection active</li>
 <li><strong>Open replication tracks:</strong> <code>symrdf -g &lt;group&gt; query | grep -i tracks</code> — should approach 0 for healthy async</li>
 </ol>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Full health check — save output with timestamp</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_a_health_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for any non-Consistent devices</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iv<span class="w"> </span><span class="s2">&quot;consistent\|transmitting\|await&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check cycle completion statistics across all type-A groups</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">for</span><span class="w"> </span>rdfg<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">21</span><span class="w"> </span><span class="m">22</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== RDFG </span><span class="si">${</span><span class="nv">rdfg</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="w"> </span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="si">${</span><span class="nv">rdfg</span><span class="si">}</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">done</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full health check — save output with timestamp</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_a_health_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>.txt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check for any non-Consistent devices</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iv<span class="w"> </span><span class="s2">&quot;consistent\|transmitting\|await&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check cycle completion statistics across all type-A groups</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">for</span><span class="w"> </span>rdfg<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">21</span><span class="w"> </span><span class="m">22</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== RDFG </span><span class="si">${</span><span class="nv">rdfg</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="w"> </span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="si">${</span><span class="nv">rdfg</span><span class="si">}</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">done</span>
 </code></pre></div>
 <img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU0tPGzEQvudXjHJfUXHkgIQIpZUQIGh7ysVdT7xWHDvYXqKl7X_vjL3sKxu47Npjex7fQ2qPZdTOXoDXqoqLRYjCx-sKy-0FLFdCmwa-oTCxghSEZz5fwp9QiT3SK3ourDL4b1Hy-aPQnq5EOlrmBxyBFAprG5qdlxsoFJx_gSI2e4QreKnRN7MphTHXzgYdItpIGUf7003cCdWVpzX8EqbGj4pDITHSrPAXlMc9P5rNru0rhqgVDcNjUZHvfWQw6drm4hvnwWi7PbMYD85vQYdQY5jNjaEUJgN30y4hOsrnvFAIZ3Df5viBYjebwQj1wKyl_2l0Vs83HTq0hp9RG_0mWAUJI1JAhKJHqsWErn6GScZ9CAmjf-vdIVbvkBy8prjnQ2FlQgfqvoPZEjJgGiz9P6CdcnWTPa2-AgfSSOVGUaWQx8r0Z8I_myhjNZyIIkN28zi_a0_JaVtbiT7oN5QJWomvusR5sqi3B0tfJrzfnLJB9mBDd6-MyVYMJLgQUK7typX1jhwB2oJx89IdGBuKSxibdeJdvjCy2tiI3Xti9_hk4pGpZ_jKu9Q7t3IwqTZruCtAGPaRsdAmujtOy_hTMGkmK6jvm-DuQ2O6J-zPtMuK5X47zgZctsi1bE0Oujz_AXYQ7KU=?" /></p>
 <hr />
@@ -8945,7 +8965,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:42:48 UTC"><span class="timeago" datetime="2026-06-29T04:42:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:42:48 UTC">2026-06-29</span>
   </span>
 
     

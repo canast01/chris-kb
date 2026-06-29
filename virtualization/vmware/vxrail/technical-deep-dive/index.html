@@ -9902,6 +9902,33 @@ VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Comp
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>journalctl<span class="w"> </span>-xe
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://localhost/rest/vxm/internal/system
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/dev/sda1       100G   45G   55G  45% /
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/dev/sda2       500G  320G  180G  64% /var
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/dev/sda3       200G   85G  115G  42% /opt
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tmpfs           32G  1.2G   31G   4% /dev/shm
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>● vmware-marvin.service - VMware Marvin Service
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>     Loaded: loaded (/etc/systemd/system/vmware-marvin.service; enabled; vendor preset: enabled)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   Main PID: 8742 (marvin)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      Tasks: 24 (limit: 4915)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>     Memory: 512.3M
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        CPU: 2h 14m 23s
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>{
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;id&quot;: &quot;vxrail-cluster-prod-01&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;version&quot;: &quot;8.0.210.45821&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;health_status&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;cluster_mode&quot;: &quot;Stretched&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;nodes&quot;: 4,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;last_update&quot;: &quot;2024-01-19T08:42:15Z&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the VxRail certificate into your system trust store.
+<strong><code>Unit vmware-marvin.service not found.</code></strong> — Verify the VxRail management VM is running and the vmware-marvin service is installed with <code>systemctl list-units | grep marvin</code>.
+<strong><code>Failed to get D-Bus connection: Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root, as systemctl requires elevated privileges to query service status.</p>
+</div>
 <h2 id="common-failure-points">Common Failure Points<a class="headerlink" href="#common-failure-points" title="Permanent link">&para;</a></h2>
 <ul>
 <li>LCM pre-check failure</li>
@@ -9992,7 +10019,7 @@ VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Comp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

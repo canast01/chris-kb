@@ -9059,73 +9059,141 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 0% loss = MTU 9000 path confirmed</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Any loss = fix switch port MTU before proceeding</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PING 10.20.30.1 (10.20.30.1): 8972 data bytes
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>8980 bytes from 10.20.30.1: icmp_seq=0 time=2.341 ms
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>8980 bytes from 10.20.30.1: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>8980 bytes from 10.20.30.1: icmp_seq=2 time=2.289 ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>8980 bytes from 10.20.30.1: icmp_seq=3 time=2.401 ms
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>8980 bytes from 10.20.30.1: icmp_seq=4 time=2.178 ms
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>--- 10.20.30.1 statistics ---
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>round-trip min/avg/max = 2.156/2.273/2.401 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface</code></strong> — Verify the ESXi vmk0 interface MTU is set to 9000 with <code>esxcli network ip interface list</code>.
+<strong><code>100% packet loss</code></strong> — Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state.
+<strong><code>Unknown host 10.20.30.1</code></strong> — Replace <code>&lt;tor-switch-ip&gt;</code> with the actual IP address of your ToR switch management interface.</p>
+</div>
 <hr />
 <h2 id="phase-2-nsx-manager-cluster">Phase 2 — NSX Manager Cluster<a class="headerlink" href="#phase-2-nsx-manager-cluster" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Three NSX Manager nodes deployed, clustered, VIP configured, and vCenter registered as compute manager.</p>
 <h3 id="deploy-nsx-manager-node-1">Deploy NSX Manager Node 1<a class="headerlink" href="#deploy-nsx-manager-node-1" title="Permanent link">&para;</a></h3>
 <p>In vCenter: <strong>Actions → Deploy OVF Template</strong>, select the NSX Manager OVA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Deployment size: Medium (production) — 4 vCPU / 16 GB RAM / 200 GB disk
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Thick Eager-Zeroed provisioning for production
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Network: Management portgroup
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Customise template:
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Hostname:       nsx-mgr01.example.local
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  IPv4 address:   10.10.0.11
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Netmask:        255.255.255.0
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  Gateway:        10.10.0.1
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  DNS:            10.10.0.5, 10.10.0.6
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  NTP:            ntp1.example.local, ntp2.example.local
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  Admin password: &lt;20+ char, upper+lower+special+digit&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  Audit password: &lt;separate audit account password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Deployment size: Medium (production) — 4 vCPU / 16 GB RAM / 200 GB disk
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Thick Eager-Zeroed provisioning for production
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Network: Management portgroup
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Customise template:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Hostname:       nsx-mgr01.example.local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  IPv4 address:   10.10.0.11
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Netmask:        255.255.255.0
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Gateway:        10.10.0.1
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  DNS:            10.10.0.5, 10.10.0.6
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  NTP:            ntp1.example.local, ntp2.example.local
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Admin password: &lt;20+ char, upper+lower+special+digit&gt;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Audit password: &lt;separate audit account password&gt;
 </code></pre></div>
 <p>Repeat for nodes 2 and 3 (10.10.0.12, 10.10.0.13).</p>
 <h3 id="form-the-cluster">Form the Cluster<a class="headerlink" href="#form-the-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to node 2, join to node 1</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxcli
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Get node 1&#39;s API certificate thumbprint from node 1 first</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Copy the thumbprint string</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># On node 2</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>join<span class="w"> </span>management-plane<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Repeat on node 3</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>join<span class="w"> </span>management-plane<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Verify cluster health from any node</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Expected: &quot;STABLE&quot; with 3 members</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to node 2, join to node 1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsxcli
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Get node 1&#39;s API certificate thumbprint from node 1 first</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Copy the thumbprint string</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># On node 2</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>join<span class="w"> </span>management-plane<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Repeat on node 3</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>join<span class="w"> </span>management-plane<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Verify cluster health from any node</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Expected: &quot;STABLE&quot; with 3 members</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NSX CLI (Build 21.0.1.0.0.17483745)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Type &quot;help&quot; for command reference.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>nsx&gt; get certificate api thumbprint
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>-----BEGIN CERTIFICATE-----
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>MIIDXTCCAkWgAwIBAgIJAKp8Z7x9mK2jMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>-----END CERTIFICATE-----
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Thumbprint: 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>nsx&gt; join management-plane 10.10.0.11 username admin thumbprint 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Joining management cluster... 
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Node joined successfully. Cluster formation in progress.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>nsx&gt; join management-plane 10.10.0.11 username admin thumbprint 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Joining management cluster...
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Node joined successfully. Cluster formation in progress.
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>nsx&gt; get cluster status
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Cluster Status: STABLE
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Node Count: 3
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Node 1 (10.10.0.10): UP - Role: PRIMARY
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Node 2 (10.10.0.11): UP - Role: SECONDARY
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Node 3 (10.10.0.12): UP - Role: SECONDARY
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Last Heartbeat: 2 seconds ago
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>join management-plane: Certificate thumbprint mismatch</code></strong> — Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case.
+<strong><code>join management-plane: Connection refused to 10.10.0.11:443</code></strong> — Ensure node 1 is reachable and the NSX management service is running with <code>get service nsxd status</code>.
+<strong><code>get cluster status: Cluster not yet formed</code></strong> — Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command.</p>
+</div>
 <h3 id="configure-the-cluster-vip">Configure the Cluster VIP<a class="headerlink" href="#configure-the-cluster-vip" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From NSX Manager UI: System → Appliances → Set Virtual IP</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Or via API:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="s2">&quot;https://10.10.0.11/api/v1/cluster/api-virtual-ip?action=set_virtual_ip&amp;ip_address=10.10.0.10&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify VIP is reachable</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ping<span class="w"> </span><span class="m">10</span>.10.0.10
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># UI accessible at https://nsx-manager.example.local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From NSX Manager UI: System → Appliances → Set Virtual IP</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Or via API:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;https://10.10.0.11/api/v1/cluster/api-virtual-ip?action=set_virtual_ip&amp;ip_address=10.10.0.10&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Verify VIP is reachable</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ping<span class="w"> </span><span class="m">10</span>.10.0.10
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># UI accessible at https://nsx-manager.example.local</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>% Total    % Received % Xferd  Average Speed   Time    Current
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                                 Dload  Upload   Speed
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>100   156  100   156    0     0    892      0 --:--:-- --:-- --:--:--   0
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>{&quot;resource_type&quot;:&quot;ClusterVirtualIp&quot;,&quot;ip_address&quot;:&quot;10.10.0.10&quot;,&quot;status&quot;:&quot;success&quot;}
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>PING 10.10.0.10 (10.10.0.10) 56(84) bytes of data.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>64 bytes from 10.10.0.10: icmp_seq=1 ttl=64 time=2.14 ms
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>64 bytes from 10.10.0.10: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>64 bytes from 10.10.0.10: icmp_seq=3 ttl=64 time=2.03 ms
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>--- 10.10.0.10 statistics ---
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>rtt min/avg/max/mdev = 1.89/2.02/2.14/0.10 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's included if removed).
+<strong><code>{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}</code></strong> — Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster.
+<strong><code>No route to host</code></strong> — Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address.</p>
+</div>
 <h3 id="register-vcenter-as-compute-manager">Register vCenter as Compute Manager<a class="headerlink" href="#register-vcenter-as-compute-manager" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Compute Managers → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Display name:  vCenter-Prod
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>FQDN:          vcenter.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Username:      administrator@vsphere.local
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Password:      &lt;password&gt;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Accept SSL thumbprint when prompted
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Display name:  vCenter-Prod
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>FQDN:          vcenter.example.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Username:      administrator@vsphere.local
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Password:      &lt;password&gt;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Accept SSL thumbprint when prompted
 </code></pre></div>
 <p>Status must reach <code>Registered</code> before proceeding.</p>
 <h3 id="configure-sftp-backup">Configure SFTP Backup<a class="headerlink" href="#configure-sftp-backup" title="Permanent link">&para;</a></h3>
 <p><strong>System → Backup &amp; Restore → Configure</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Protocol:    SFTP
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Host:        backup-server.example.local
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Port:        22
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Directory:   /backups/nsx/
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Username:    nsx-backup
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Passphrase:  &lt;encrypt passphrase — store in vault&gt;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Schedule:    Daily 02:00
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Retain:      14 copies
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Protocol:    SFTP
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Host:        backup-server.example.local
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Port:        22
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Directory:   /backups/nsx/
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Username:    nsx-backup
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Passphrase:  &lt;encrypt passphrase — store in vault&gt;
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Schedule:    Daily 02:00
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Retain:      14 copies
 </code></pre></div>
 <p>Test the connection before saving.</p>
 <hr />
@@ -9156,198 +9224,388 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </table>
 <h3 id="create-tep-ip-pools">Create TEP IP Pools<a class="headerlink" href="#create-tep-ip-pools" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → IP Management → IP Address Pools → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Compute TEP pool</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">Name</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-compute</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.0/24</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.1</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nt">Ranges</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.10–192.168.100.254</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Edge TEP pool</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nt">Name</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-edge</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.0/24</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.1</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nt">Ranges</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.10–192.168.101.30</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Compute TEP pool</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nt">Name</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-compute</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.0/24</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.1</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nt">Ranges</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.10–192.168.100.254</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Edge TEP pool</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nt">Name</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-edge</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.0/24</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.1</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nt">Ranges</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">192.168.101.10–192.168.101.30</span>
 </code></pre></div>
 <h3 id="create-uplink-profile">Create Uplink Profile<a class="headerlink" href="#create-uplink-profile" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Profiles → Uplink Profiles → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Name:             uplink-profile-compute
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Active uplinks:   uplink-1, uplink-2
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Standby uplinks:  (empty — use active/active teaming or LACP)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Transport VLAN:   &lt;TEP VLAN ID — e.g. 100&gt;
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>MTU:              9000
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name:             uplink-profile-compute
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Active uplinks:   uplink-1, uplink-2
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Standby uplinks:  (empty — use active/active teaming or LACP)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Transport VLAN:   &lt;TEP VLAN ID — e.g. 100&gt;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>MTU:              9000
 </code></pre></div>
 <h3 id="create-host-transport-node-profile">Create Host Transport Node Profile<a class="headerlink" href="#create-host-transport-node-profile" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Profiles → Host Transport Node Profiles → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name:             tn-profile-compute
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vDS:              select production vDS
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Transport zones:  tz-overlay-compute
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Uplink profile:   uplink-profile-compute
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>IP pool:          pool-tep-compute
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Uplink mapping:   uplink-1 → vmnic2, uplink-2 → vmnic3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Name:             tn-profile-compute
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vDS:              select production vDS
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Transport zones:  tz-overlay-compute
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Uplink profile:   uplink-profile-compute
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>IP pool:          pool-tep-compute
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Uplink mapping:   uplink-1 → vmnic2, uplink-2 → vmnic3
 </code></pre></div>
 <hr />
 <h2 id="phase-4-host-transport-node-preparation">Phase 4 — Host Transport Node Preparation<a class="headerlink" href="#phase-4-host-transport-node-preparation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All ESXi hosts in the cluster show <code>Success</code> in the transport node config state; TEP-to-TEP pings pass between all hosts.</p>
 <h3 id="apply-transport-node-profile-to-cluster">Apply Transport Node Profile to Cluster<a class="headerlink" href="#apply-transport-node-profile-to-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Hosts → [cluster] → Configure NSX</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Select: tn-profile-compute
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Apply to entire cluster
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Monitor: Configuration column — each host progresses from &quot;In Progress&quot; → &quot;Success&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Select: tn-profile-compute
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Apply to entire cluster
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Monitor: Configuration column — each host progresses from &quot;In Progress&quot; → &quot;Success&quot;
 </code></pre></div>
 <h3 id="verify-transport-nodes">Verify Transport Nodes<a class="headerlink" href="#verify-transport-nodes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># From NSX Manager CLI</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>nsxcli
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>get<span class="w"> </span>transport-nodes
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>get<span class="w"> </span>transport-node-status
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># All hosts: state = UP</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Verify TEP IP assignment</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>port
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># From NSX Manager CLI</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>nsxcli
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>get<span class="w"> </span>transport-nodes
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># All hosts: state = UP</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Verify TEP IP assignment</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>port
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NSX CLI (build 17.0.1.0.0.17964471)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Connected to NSX Manager 192.168.1.10
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>nsxcli&gt; get transport-nodes
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Transport Node ID                          Host Name              IP Address       State
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>tn-esx01-uuid-a1b2c3d4                     esx01.lab.local        10.0.1.51        UP
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>tn-esx02-uuid-e5f6g7h8                     esx02.lab.local        10.0.1.52        UP
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>tn-esx03-uuid-i9j0k1l2                     esx03.lab.local        10.0.1.53        UP
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>nsxcli&gt; get transport-node-status
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Transport Node ID                          State    TEP IP           Tunnel Status
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>tn-esx01-uuid-a1b2c3d4                     UP       172.16.10.101    UP
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>tn-esx02-uuid-e5f6g7h8                     UP       172.16.10.102    UP
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>tn-esx03-uuid-i9j0k1l2                     UP       172.16.10.103    UP
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>nsxcli&gt; get logical-switch port
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Logical Switch                             Port ID              MAC Address          TEP IP
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>ls-prod-web                                lsp-uuid-001         00:50:56:a1:2b:3c    172.16.10.101
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>ls-prod-web                                lsp-uuid-002         00:50:56:a1:4d:5e    172.16.10.102
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>ls-prod-db                                 lsp-uuid-003         00:50:56:a1:6f:7g    172.16.10.103
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>ls-mgmt                                    lsp-uuid-004         00:50:56:a1:8h:9i    172.16.10.101
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to NSX Manager</code></strong> — Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via <code>set api-server</code> command.
+<strong><code>Transport Node State: DOWN</code></strong> — Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with <code>vmkload_mod -l | grep vxlan</code>, and confirm TEP network is routable.
+<strong><code>No logical-switch port entries returned</code></strong> — Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.</p>
+</div>
 <h3 id="tep-to-tep-connectivity-test">TEP-to-TEP Connectivity Test<a class="headerlink" href="#tep-to-tep-connectivity-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># SSH to each ESXi host — ping all other TEP IPs</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># TEP vmkernel is typically vmk10 after NSX preparation</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.11
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.12
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.13
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># 0% loss required on all tests</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># If loss: check TEP VLAN tagging on uplink profile and switch trunk config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># SSH to each ESXi host — ping all other TEP IPs</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># TEP vmkernel is typically vmk10 after NSX preparation</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.11
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.12
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span><span class="m">192</span>.168.100.13
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># 0% loss required on all tests</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># If loss: check TEP VLAN tagging on uplink profile and switch trunk config</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>PING 192.168.100.11 (192.168.100.11): 56 data bytes
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>64 bytes from 192.168.100.11: icmp_seq=0. time=2.341 ms
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>64 bytes from 192.168.100.11: icmp_seq=1. time=2.156 ms
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>64 bytes from 192.168.100.11: icmp_seq=2. time=2.289 ms
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>64 bytes from 192.168.100.11: icmp_seq=3. time=2.401 ms
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>64 bytes from 192.168.100.11: icmp_seq=4. time=2.178 ms
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>--- 192.168.100.11 statistics ---
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>round-trip min/avg/max/stddev = 2.156/2.273/2.401/0.099 ms
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>PING 192.168.100.12 (192.168.100.12): 56 data bytes
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>64 bytes from 192.168.100.12: icmp_seq=0. time=1.987 ms
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>64 bytes from 192.168.100.12: icmp_seq=1. time=2.045 ms
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>64 bytes from 192.168.100.12: icmp_seq=2. time=2.134 ms
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>64 bytes from 192.168.100.12: icmp_seq=3. time=2.089 ms
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>64 bytes from 192.168.100.12: icmp_seq=4. time=2.156 ms
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>--- 192.168.100.12 statistics ---
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>round-trip min/avg/max/stddev = 1.987/2.082/2.156/0.061 ms
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>PING 192.168.100.13 (192.168.100.13): 56 data bytes
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>64 bytes from 192.168.100.13: icmp_seq=0. time=2.412 ms
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>64 bytes from 192.168.100.13: icmp_seq=1. time=2.267 ms
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>64 bytes from 192.168.100.13: icmp_seq=2. time=2.501 ms
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>64 bytes from 192.168.100.13: icmp_seq=3. time=2.334 ms
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>64 bytes from 192.168.100.13: icmp_seq=4. time=2.289 ms
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>--- 192.168.100.13 statistics ---
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>round-trip min/avg/max/stddev = 2.267/2.361/2.501/0.089 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host</code></strong> — Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile.
+<strong><code>Unable to locate vmkernel interface vmk10</code></strong> — Confirm NSX Host Preparation has completed successfully on the ESXi host by</p>
+</div>
 <hr />
 <h2 id="phase-5-edge-cluster-and-t0-gateway">Phase 5 — Edge Cluster and T0 Gateway<a class="headerlink" href="#phase-5-edge-cluster-and-t0-gateway" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Edge cluster deployed, T0 BGP sessions established with ToR switches, routes advertised.</p>
 <h3 id="deploy-edge-transport-nodes">Deploy Edge Transport Nodes<a class="headerlink" href="#deploy-edge-transport-nodes" title="Permanent link">&para;</a></h3>
 <p>Deploy Edge VMs via <strong>System → Fabric → Edge Transport Nodes → Add</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name:           edge-node-01
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Form factor:    Large (8 vCPU / 32 GB — production)
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Host:           dedicated-edge-esxi-host-01  (NOT on compute hosts)
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Management IP:  10.10.0.21/24
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>DNS:            10.10.0.5
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>NTP:            ntp1.example.local
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Transport configuration:
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  Overlay TZ:  tz-overlay-compute
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  VLAN TZ:     tz-vlan-edge
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  Uplink profile: uplink-profile-edge
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  TEP pool:    pool-tep-edge
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  fp-eth0 → edge-uplink portgroup 1 (ToR VLAN)
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  fp-eth1 → edge-uplink portgroup 2 (ToR VLAN — second path)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Name:           edge-node-01
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Form factor:    Large (8 vCPU / 32 GB — production)
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Host:           dedicated-edge-esxi-host-01  (NOT on compute hosts)
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Management IP:  10.10.0.21/24
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>DNS:            10.10.0.5
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>NTP:            ntp1.example.local
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Transport configuration:
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>  Overlay TZ:  tz-overlay-compute
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>  VLAN TZ:     tz-vlan-edge
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  Uplink profile: uplink-profile-edge
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  TEP pool:    pool-tep-edge
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  fp-eth0 → edge-uplink portgroup 1 (ToR VLAN)
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  fp-eth1 → edge-uplink portgroup 2 (ToR VLAN — second path)
 </code></pre></div>
 <p>Repeat for edge-node-02 on a different host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify Edge transport node status</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>nsxcli
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>get<span class="w"> </span>transport-nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>edge
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Both Edge nodes: state = UP</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify Edge transport node status</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>nsxcli
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>get<span class="w"> </span>transport-nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>edge
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Both Edge nodes: state = UP</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>NSX CLI (Build 20.0.3.1)
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Connected to: nsx-manager-01.lab.local (192.168.1.50)
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>transport-node-0 (edge-01.lab.local):
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  state: UP
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  status: READY
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  host-switch-mode: VDS
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>transport-node-1 (edge-02.lab.local):
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  state: UP
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>  status: READY
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  host-switch-mode: VDS
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>2 edge transport nodes found, all UP
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nsxcli: command not found</code></strong> — Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path <code>/opt/vmware/nsx-cli/bin/nsxcli</code>.
+<strong><code>Connection refused: Unable to connect to nsx-manager-01.lab.local:443</code></strong> — Verify the NSX Manager is reachable and running, and check network connectivity with <code>ping</code> and <code>curl -k https://&lt;nsx-manager-ip&gt;</code>.
+<strong><code>transport-node-0: state = DOWN</code></strong> — Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures.</p>
+</div>
 <h3 id="create-edge-cluster">Create Edge Cluster<a class="headerlink" href="#create-edge-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Edge Clusters → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name:          edge-cluster-prod
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Edge nodes:    edge-node-01, edge-node-02
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>BFD:           enabled (fast failure detection, 300 ms)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Name:          edge-cluster-prod
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Edge nodes:    edge-node-01, edge-node-02
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>BFD:           enabled (fast failure detection, 300 ms)
 </code></pre></div>
 <h3 id="create-t0-gateway">Create T0 Gateway<a class="headerlink" href="#create-t0-gateway" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → Tier-0 Gateways → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name:          T0-Prod
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>HA Mode:       Active/Standby
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Edge cluster:  edge-cluster-prod
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Interfaces → Add:
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  Type:         External
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  Name:         T0-uplink-edge01
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  IP:           10.10.10.2/30
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  Connected to: edge-node-01 / fp-eth0 (VLAN-backed segment)
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  Type:         External
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  Name:         T0-uplink-edge02
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  IP:           10.10.10.6/30
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  Connected to: edge-node-02 / fp-eth0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Name:          T0-Prod
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>HA Mode:       Active/Standby
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Edge cluster:  edge-cluster-prod
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>Interfaces → Add:
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  Type:         External
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  Name:         T0-uplink-edge01
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>  IP:           10.10.10.2/30
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>  Connected to: edge-node-01 / fp-eth0 (VLAN-backed segment)
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>  Type:         External
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>  Name:         T0-uplink-edge02
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>  IP:           10.10.10.6/30
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>  Connected to: edge-node-02 / fp-eth0
 </code></pre></div>
 <h3 id="configure-bgp-on-t0">Configure BGP on T0<a class="headerlink" href="#configure-bgp-on-t0" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Networking → T0-Prod → Routing → BGP
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Local AS:     65100
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Graceful restart: Enabled
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>BGP Neighbor 1:
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Neighbor IP:  10.10.10.1   (ToR 1)
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  Remote AS:    65200
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  BFD:          Enabled
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>BGP Neighbor 2:
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Neighbor IP:  10.10.10.5   (ToR 2)
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  Remote AS:    65200
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  BFD:          Enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Networking → T0-Prod → Routing → BGP
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  Local AS:     65100
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  Graceful restart: Enabled
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>BGP Neighbor 1:
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  Neighbor IP:  10.10.10.1   (ToR 1)
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  Remote AS:    65200
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>  BFD:          Enabled
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>BGP Neighbor 2:
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  Neighbor IP:  10.10.10.5   (ToR 2)
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>  Remote AS:    65200
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>  BFD:          Enabled
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Verify BGP from Edge node CLI</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Both neighbors: State = Established</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Verify routes received from physical fabric</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>get<span class="w"> </span>route
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Physical fabric prefixes should appear in routing table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Verify BGP from Edge node CLI</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># Both neighbors: State = Established</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="c1"># Verify routes received from physical fabric</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>get<span class="w"> </span>route
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Physical fabric prefixes should appear in routing table</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>NSX-Edge&gt; get bgp neighbor summary
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>10.100.1.1      4 65000    1247    1251        0    0    0 5d12h23m Established
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>10.100.1.2      4 65000    1248    1252        0    0    0 5d12h22m Established
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>NSX-Edge&gt; get route
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Codes: K - kernel, C - connected, S - static, R - RIP, B - BGP
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>       O - OSPF, IA - OSPF inter area, E1 - OSPF external type 1
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>       E2 - OSPF external type 2, i - IS-IS, L1 - IS-IS level-1
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>       L2 - IS-IS level-2, * - candidate default, U - per-user static route
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>       + - replicated route, % - next hop override
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>B   10.50.0.0/16 [200/0] via 10.100.1.1, 0d02h14m
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>B   10.51.0.0/16 [200/0] via 10.100.1.2, 0d02h14m
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>B   172.16.0.0/12 [200/0] via 10.100.1.1, 0d02h14m
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>C   192.168.1.0/24 is directly connected, eth0
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>S   0.0.0.0/0 [1/0] via 10.100.1.1, 0d05h22m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Unknown command</code></strong> — Verify the exact command syntax for your NSX version; use <code>?</code> to list available commands.
+<strong><code>BGP neighbor 10.100.1.1 not established (State = Idle)</code></strong> — Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179.</p>
+</div>
 <hr />
 <h2 id="phase-6-logical-networking-and-validation">Phase 6 — Logical Networking and Validation<a class="headerlink" href="#phase-6-logical-networking-and-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> T1 gateway, overlay segment, and DFW baseline policy in place; east-west and north-south traffic tested.</p>
 <h3 id="create-t1-gateway">Create T1 Gateway<a class="headerlink" href="#create-t1-gateway" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → Tier-1 Gateways → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Name:          T1-Tenant-01
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Linked T0:     T0-Prod
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Edge cluster:  edge-cluster-prod  (required for stateful services: NAT, LB)
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Route advertisement:
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  Connected segments: Enabled
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>  Static routes:      Enabled (if applicable)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Name:          T1-Tenant-01
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Linked T0:     T0-Prod
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Edge cluster:  edge-cluster-prod  (required for stateful services: NAT, LB)
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Route advertisement:
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>  Connected segments: Enabled
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>  Static routes:      Enabled (if applicable)
 </code></pre></div>
 <h3 id="create-overlay-segment">Create Overlay Segment<a class="headerlink" href="#create-overlay-segment" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → Segments → Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Name:          seg-web-tier
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Transport zone: tz-overlay-compute
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Connected gateway: T1-Tenant-01 / routed
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Subnets:       192.168.50.1/24
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Name:          seg-web-tier
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Transport zone: tz-overlay-compute
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Connected gateway: T1-Tenant-01 / routed
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Subnets:       192.168.50.1/24
 </code></pre></div>
 <p>Attach test VMs to <code>seg-web-tier</code> and verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># From a VM on seg-web-tier — verify gateway reachability</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ping<span class="w"> </span><span class="m">192</span>.168.50.1
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># From NSX Manager — check segment VNI assignment</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>nsxcli
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>seg-web-tier<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># From a VM on seg-web-tier — verify gateway reachability</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ping<span class="w"> </span><span class="m">192</span>.168.50.1
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># From NSX Manager — check segment VNI assignment</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>nsxcli
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>seg-web-tier<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>PING 192.168.50.1 (192.168.50.1) 56(84) bytes of data.
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>64 bytes from 192.168.50.1: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>64 bytes from 192.168.50.1: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>64 bytes from 192.168.50.1: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>^C
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>--- 192.168.50.1 statistics ---
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>rtt min/avg/max/stddev = 1.89/2.11/2.34/0.19 ms
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>nsxcli&gt; get logical-switch seg-web-tier | grep VNI
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>VNI: 5001
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING: sendto: No route to host</code></strong> — Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment.
+<strong><code>nsxcli: command not found</code></strong> — SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI.
+<strong><code>No logical switch named 'seg-web-tier' found</code></strong> — Confirm the segment name matches exactly in NSX Manager; use <code>get logical-switches</code> to list all available segments.</p>
+</div>
 <h3 id="dfw-baseline-policy">DFW Baseline Policy<a class="headerlink" href="#dfw-baseline-policy" title="Permanent link">&para;</a></h3>
 <p><strong>Security → Distributed Firewall → Add Policy</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Category:  Infrastructure
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Policy name: Allow-Management
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>Rules:
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  1. Allow SSH from mgmt subnet (10.10.0.0/24) → ANY, port 22
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  2. Allow monitoring from monitoring subnet → ANY, ICMP + ports 161, 9100
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  3. Allow backup traffic → backup subnet, port 22
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>  4. Deny ALL (default rule 65535 — do not modify, remains DROP)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Category:  Infrastructure
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Policy name: Allow-Management
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>Rules:
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>  1. Allow SSH from mgmt subnet (10.10.0.0/24) → ANY, port 22
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>  2. Allow monitoring from monitoring subnet → ANY, ICMP + ports 161, 9100
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>  3. Allow backup traffic → backup subnet, port 22
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>  4. Deny ALL (default rule 65535 — do not modify, remains DROP)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Verify DFW rules pushed to hosts</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># SSH to any ESXi host</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>summarize-dvfilter
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Each VM vNIC should have a vmware-sfw filter listed</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Infrastructure allow rules should appear</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Verify DFW rules pushed to hosts</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># SSH to any ESXi host</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>summarize-dvfilter
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Each VM vNIC should have a vmware-sfw filter listed</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="c1"># Infrastructure allow rules should appear</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Filter Summary
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>==============
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>VM Name                    vNIC  Filter Name                    Status
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>web-prod-01                eth0  dvfilter-generic-fw-0          ACTIVE
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>web-prod-01                eth1  dvfilter-generic-fw-1          ACTIVE
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>db-backup-02               eth0  dvfilter-generic-fw-0          ACTIVE
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>app-cache-03               eth0  dvfilter-generic-fw-0          ACTIVE
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>app-cache-03               eth1  dvfilter-generic-fw-1          ACTIVE
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>...
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>Total VMs with filters: 47
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>Rules for dvfilter-generic-fw-0:
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>==================================
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>Rule ID  Direction  Protocol  Source         Destination    Port   Action
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>1001     INBOUND    TCP       10.20.0.0/16   10.30.0.0/16   443    ALLOW
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>1002     INBOUND    TCP       10.20.0.0/16   10.30.0.0/16   8443   ALLOW
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>1003     INBOUND    TCP       ANY            10.30.50.0/24  22     DENY
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>1004     OUTBOUND   TCP       10.30.0.0/16   8.8.8.8        53     ALLOW
+<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>1005     OUTBOUND   TCP       10.30.0.0/16   ANY            443    ALLOW
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>summarize-dvfilter: command not found</code></strong> — Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with <code>esxcli software vib list | grep nsx</code>.
+<strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations.
+<strong><code>Error: Filter '&lt;filter-name&gt;' not found in kernel</code></strong> — Verify the filter name is correct by running <code>summarize-dvfilter</code> first to list active filters, then use the exact filter name from the output.</p>
+</div>
 <h3 id="end-to-end-validation">End-to-End Validation<a class="headerlink" href="#end-to-end-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># East-West: VM on seg-web-tier pings VM on a second segment via T1</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ping<span class="w"> </span>&lt;vm2-ip&gt;
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># North-South: VM reaches external IP via T0 BGP path</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>ping<span class="w"> </span><span class="m">8</span>.8.8.8
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># NSX Manager route table</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>nsxcli
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>get<span class="w"> </span>route
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># Default route via T0 uplinks should be present</span>
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
-<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="c1"># BGP summary from both Edge nodes</span>
-<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="c1"># All peers: Established, Prefixes Received &gt; 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># East-West: VM on seg-web-tier pings VM on a second segment via T1</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>ping<span class="w"> </span>&lt;vm2-ip&gt;
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># North-South: VM reaches external IP via T0 BGP path</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>ping<span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># NSX Manager route table</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>nsxcli
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>get<span class="w"> </span>route
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="c1"># Default route via T0 uplinks should be present</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="c1"># BGP summary from both Edge nodes</span>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a><span class="c1"># All peers: Established, Prefixes Received &gt; 0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>PING 192.168.20.15 (192.168.20.15) 56(84) bytes of data.
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>64 bytes from 192.168.20.15: icmp_seq=1 ttl=64 time=2.341 ms
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>64 bytes from 192.168.20.15: icmp_seq=2 ttl=64 time=1.987 ms
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>64 bytes from 192.168.20.15: icmp_seq=3 ttl=64 time=2.156 ms
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>--- 192.168.20.15 statistics ---
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>rtt min/avg/max/stddev = 1.987/2.161/2.341/0.149 ms
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=18.742 ms
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=19.156 ms
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>64 bytes from 8.8.8.8: icmp_seq=3 ttl=118 time=18.923 ms
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>--- 8.8.8.8 statistics ---
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>3 packets transmitted, 3 received, 0% packet loss, time 3004ms
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>rtt min/avg/max/stddev = 18.742/18.940/19.156/0.187 ms
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>
+<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a>NSX Manager CLI
+<a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a>nsx&gt; get route
+<a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a>Flags: [U]p, [G]ateway, [R]ejected, [B]lackhole, [D]ynamic, [A]cive
+<a id="__codelineno-34-20" name="__codelineno-34-20" href="#__codelineno-34-20"></a>Destination        Gateway          Flags  Metric  Interface
+<a id="__codelineno-34-21" name="__codelineno-34-21" href="#__codelineno-34-21"></a>0.0.0.0/0          10.100.1.1       UG     0       eth0
+<a id="__codelineno-34-22" name="__codelineno-34-22" href="#__codelineno-34-22"></a>10.0.0.0/8         0.0.0.0          U      0       eth1
+<a id="__codelineno-34-23" name="__codelineno-34-23" href="#__codelineno-34-23"></a>192.168.0.0/16     0.0.0.0          U      0       eth2
+<a id="__codelineno-34-24" name="__codelineno-34-24" href="#__codelineno-34-24"></a>169.254.0.0/16     0.0.0.0          U      256     eth0
+<a id="__codelineno-34-25" name="__codelineno-34-25" href="#__codelineno-34-25"></a>
+<a id="__codelineno-34-26" name="__codelineno-34-26" href="#__codelineno-34-26"></a>nsx&gt; get bgp neighbor summary
+<a id="__codelineno-34-27" name="__codelineno-34-27" href="#__codelineno-34-27"></a>BGP router identifier 10.50.0.1, local AS number 65001
+<a id="__codelineno-34-28" name="__codelineno-34-28" href="#__codelineno-34-28"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-34-29" name="__codelineno-34-29" href="#__codelineno-34-29"></a>10.100.1.1      4 65000    1247    1251        0    0    0 2d14h23m Established/847
+<a id="__codelineno-34-30" name="__codelineno-34-30" href="#__codelineno-34-30"></a>10.100.1.2      4 65000    1248    1250        0    0    0 2d14h22m Established/851
+<a id="__codelineno-34-31" name="__codelineno-34-31" href="#__codelineno-34-31"></a>---OUTPUT---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: sendmsg: Operation not permitted</code></strong> — Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic.
+<strong><code>get bgp neighbor summary: command not found</code></strong> — Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry.
+**`0.0.0.0/0 route missing</p>
+</div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9451,7 +9709,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

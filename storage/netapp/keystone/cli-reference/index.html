@@ -8359,62 +8359,187 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token acquired&quot;</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List service levels (tiers) available under a subscription</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/service-levels&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Token acquired
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if any tier is in burst (consumed &gt; committed)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/usage&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">alert = False</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">for tier in data.get(&#39;usageDetails&#39;, []):</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">    committed = float(tier.get(&#39;committedCapacity&#39;, 0))</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">    consumed  = float(tier.get(&#39;consumedCapacity&#39;,  0))</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">    pct = (consumed / committed * 100) if committed &gt; 0 else 0</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    status = &#39;BURST&#39; if consumed &gt; committed else (&#39;WARN&#39; if pct &gt;= 90 else &#39;OK&#39;)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    print(f\&quot;{status}  {tier[&#39;serviceLevel&#39;]:20s}  {pct:5.1f}%  ({consumed:.1f} / {committed:.1f} TiB)\&quot;)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    if status != &#39;OK&#39;:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">        alert = True</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">sys.exit(1 if alert else 0)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: netapp-cloud-account.auth0.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to auth0.com.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Verify your client_id and client_secret are correct; check the curl response by removing the python3 pipe temporarily to see the actual error message from Auth0.
+<strong><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></strong> — Update your CA certificate bundle or add <code>-k</code> flag to curl (not recommended for production); ensure your system's certificate store is current.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List service levels (tiers) available under a subscription</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/service-levels&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All volumes: size, used, available</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Sort by percent-used (highest first)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Aggregate-level capacity</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># SVM-level logical space view</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>name<span class="w"> </span>-type<span class="w"> </span>data
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,logical-used,available
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># QoS workload to correlate per-volume performance with Keystone tier</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>qos<span class="w"> </span>workload<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>workload-name,volume,policy-group
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Check volume space guarantee (impacts Keystone committed capacity)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>space-guarantee,size,used
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;service_levels&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;id&quot;: &quot;sl-premium-001&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;name&quot;: &quot;Premium&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;description&quot;: &quot;High-performance tier with guaranteed IOPS&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;storage_type&quot;: &quot;SSD&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;committed_capacity_gb&quot;: 10240,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;burst_capacity_gb&quot;: 2048
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    },
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    {
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;id&quot;: &quot;sl-standard-001&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;name&quot;: &quot;Standard&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;description&quot;: &quot;General-purpose tier with balanced performance&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;storage_type&quot;: &quot;SAS&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;committed_capacity_gb&quot;: 51200,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;burst_capacity_gb&quot;: 10240
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    },
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    {
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;id&quot;: &quot;sl-economy-001&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;name&quot;: &quot;Economy&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;description&quot;: &quot;Cost-optimized tier for archival workloads&quot;,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;storage_type&quot;: &quot;SATA&quot;,
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;committed_capacity_gb&quot;: 102400,
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;burst_capacity_gb&quot;: 20480
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    }
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  ],
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;subscription_id&quot;: &quot;sub-a7f2c9e1-4b6d-11ed-bdc3-0242ac120002&quot;,
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;total_count&quot;: 3
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Volumes with thick guarantee (count against committed immediately)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>volume<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Volumes with thin/none guarantee (count against committed as written)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.activeiq.netapp.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound traffic to the ActiveIQ API endpoint.
+<strong><code>{"error": "Unauthorized", "message": "Invalid or expired token"}</code></strong> — Regenerate your Bearer token using the ActiveIQ authentication endpoint and ensure <code>$TOKEN</code> is set correctly.
+<strong><code>curl: (7) Failed to connect to api.activeiq.netapp.com port 443: Connection refused</code></strong> — Confirm the API endpoint URL is correct and that ActiveIQ services are operational; check your organization's proxy settings if applicable.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if any tier is in burst (consumed &gt; committed)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/usage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">alert = False</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">for tier in data.get(&#39;usageDetails&#39;, []):</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">    committed = float(tier.get(&#39;committedCapacity&#39;, 0))</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">    consumed  = float(tier.get(&#39;consumedCapacity&#39;,  0))</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">    pct = (consumed / committed * 100) if committed &gt; 0 else 0</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    status = &#39;BURST&#39; if consumed &gt; committed else (&#39;WARN&#39; if pct &gt;= 90 else &#39;OK&#39;)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    print(f\&quot;{status}  {tier[&#39;serviceLevel&#39;]:20s}  {pct:5.1f}%  ({consumed:.1f} / {committed:.1f} TiB)\&quot;)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">    if status != &#39;OK&#39;:</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">        alert = True</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">sys.exit(1 if alert else 0)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">BLUEXP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;bluexp_bearer_token&gt;&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># List Digital Wallet assets</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check capacity pool status</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>OK       Standard                 45.2%  (22.6 / 50.0 TiB)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>OK       Premium                  78.5%  (157.0 / 200.0 TiB)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>WARN     Premium-Plus             91.3%  (219.1 / 240.0 TiB)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>BURST    Extreme                  105.7%  (127.0 / 120.0 TiB)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (6) Could not resolve host: api.activeiq.netapp.com</code></strong> — Verify network connectivity and DNS resolution; check if a proxy or firewall is blocking access to the ActiveIQ API endpoint.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Confirm that <code>$TOKEN</code> is valid and not expired by regenerating it in the ActiveIQ portal, then retry the request.
+<strong><code>KeyError: 'usageDetails'</code></strong> — Verify that <code>$SUBSCRIPTION_ID</code> is correct and that the subscription has active usage data; check subscription status in ActiveIQ console.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All volumes: size, used, available</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Sort by percent-used (highest first)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Aggregate-level capacity</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># SVM-level logical space view</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>name<span class="w"> </span>-type<span class="w"> </span>data
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,logical-used,available
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># QoS workload to correlate per-volume performance with Keystone tier</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>qos<span class="w"> </span>workload<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>workload-name,volume,policy-group
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Check volume space guarantee (impacts Keystone committed capacity)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>space-guarantee,size,used
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Vserver   Volume       Size       Used       Available  Percent-Used
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------- ------------ ---------- ---------- ---------- ------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>svm-prod  vol_data_01  500GB      385GB      115GB      77%
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>svm-prod  vol_data_02  1TB        650GB      350GB      65%
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>svm-prod  vol_logs     200GB      180GB      20GB       90%
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>svm-dev   vol_test_01  250GB      45GB       205GB      18%
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>svm-dev   vol_backup   2TB        1.2TB      800GB      60%
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Vserver   Volume       Size       Percent-Used
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>--------- ------------ ---------- -----------
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>svm-prod  vol_logs     200GB      90%
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>svm-prod  vol_data_01  500GB      77%
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>svm-prod  vol_data_02  1TB        65%
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>svm-dev   vol_backup   2TB        60%
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>svm-dev   vol_test_01  250GB      18%
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Aggregate         Size       Used       Available  Percent-Used
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>----------------- ---------- ---------- ---------- -----------
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>aggr_ssd_01       10TB       7.8TB      2.2TB      78%
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>aggr_ssd_02       8TB        5.2TB      2.8TB      65%
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>aggr_sas_01       20TB       14.5TB     5.5TB      72%
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Vserver Name
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>------------ 
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>svm-prod
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>svm-dev
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>svm-keystone
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>Vserver   Volume       Size       Used       Logical-Used Available
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>--------- ------------ ---------- ---------- ------------ ----------
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>svm-prod  vol_data_01  500GB      385GB      392GB        115GB
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>svm-prod  vol_data_02  1TB        650GB      668GB        350GB
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>Workload-Name              Volume       Policy-Group
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>-------------------------- ------------ ----------------
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>prod_oltp_tier1            vol_data_01  gold-tier
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>prod_analytics_tier2       vol_data_02  silver-tier
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>dev_batch_tier3            vol_test_01  bronze-tier
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>Volume       Space-Guarantee  Size       Used
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>------------ ---------------- ---------- ----------
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>vol_data_01  volume           500GB      385GB
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>vol_data_02  none             1TB        650GB
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>vol_logs     file             200GB      180GB
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>vol_backup   volume           2TB        1.2TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume show</code></strong> — Ensure you are logged into the NetApp cluster management interface (SSH to cluster IP) and not a local shell.
+<strong><code>Error: access denied for command "volume show"</code></strong> — Verify your RBAC role includes the "volume" command capability; contact your cluster administrator to grant necessary permissions.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Volumes with thick guarantee (count against committed immediately)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>volume<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Volumes with thin/none guarantee (count against committed as written)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver   Volume       Size       Used       Space Guarantee
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>--------- ------------ ---------- ---------- -----------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>svm-prod  vol_data_01  1.0TB      487.2GB    volume
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>svm-prod  vol_data_02  2.0TB      1.2TB      volume
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>svm-prod  vol_backup   500GB      125.3GB    volume
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>svm-dev   vol_test_01  250GB      89.5GB     volume
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Vserver   Volume       Size       Used       Space Guarantee
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>--------- ------------ ---------- ---------- -----------------
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>svm-prod  vol_thin_01  5.0TB      2.1TB      none
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>svm-prod  vol_thin_02  3.0TB      1.8TB      none
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>svm-dev   vol_thin_03  1.5TB      340GB      none
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell.
+<strong><code>Error: invalid field name "space-guarantee"</code></strong> — Verify your ONTAP version supports the space-guarantee field; use <code>volume show -fields ?</code> to list available fields.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">BLUEXP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;bluexp_bearer_token&gt;&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># List Digital Wallet assets</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check capacity pool status</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8442,7 +8567,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:16:01 UTC"><span class="timeago" datetime="2026-06-29T05:16:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:16:01 UTC">2026-06-29</span>
   </span>
 
     

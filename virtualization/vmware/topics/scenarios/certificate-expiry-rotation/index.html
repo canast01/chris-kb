@@ -10752,21 +10752,67 @@ again. This scenario covers identification, rotation order, and validation acros
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>arialogs.domain.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Batch audit across all known VMware hosts — outputs hostname and notAfter date</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.domain.local<span class="w"> </span>nsxmanager.domain.local<span class="w"> </span>ariaops.domain.local<span class="w"> </span>arialogs.domain.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">:&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>notAfter
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">done</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>notBefore=Jan 15 08:32:14 2023 GMT
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>notAfter=Jan 15 08:32:14 2024 GMT
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>notBefore=Feb 20 14:47:22 2023 GMT
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>notAfter=Feb 20 14:47:22 2025 GMT
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>notBefore=Mar 10 10:15:33 2023 GMT
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>notAfter=Mar 10 10:15:33 2026 GMT
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>notBefore=Apr 5 16:28:45 2023 GMT
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>notAfter=Apr 5 16:28:45 2024 GMT
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>notBefore=May 12 09:51:07 2023 GMT
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>notAfter=May 12 09:51:07 2025 GMT
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to connect to vcenter.domain.local:443</code></strong> — Verify the hostname is correct and the vCenter server is reachable with <code>ping vcenter.domain.local</code> or <code>nc -zv vcenter.domain.local 443</code>.
+<strong><code>routines:tls_process_server_certificate:certificate verify failed</code></strong> — Add <code>-showcerts</code> flag or use <code>openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;</code> to properly retrieve the certificate chain.
+<strong><code>error in x509_print_fp:num=20:unable to get local issuer certificate</code></strong> — This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Batch audit across all known VMware hosts — outputs hostname and notAfter date</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.domain.local<span class="w"> </span>nsxmanager.domain.local<span class="w"> </span>ariaops.domain.local<span class="w"> </span>arialogs.domain.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">:&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>notAfter
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vcenter.domain.local:                    notAfter=Dec 15 23:59:59 2025 GMT
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxmanager.domain.local:                 notAfter=Mar 22 23:59:59 2026 GMT
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ariaops.domain.local:                    notAfter=Jan 8 23:59:59 2024 GMT
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>arialogs.domain.local:                   notAfter=Feb 14 23:59:59 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the host is reachable on port 443 and the certificate chain is complete; try <code>openssl s_client -connect $host:443 -showcerts</code> to diagnose.
+<strong><code>grep: (standard input) is empty</code></strong> — The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with <code>timeout 5 echo | openssl s_client -connect $host:443</code>.
+<strong><code>Name or service not known</code></strong> — Ensure all hostnames resolve correctly by running <code>nslookup $host</code> or update the host list to use IP addresses instead.</p>
+</div>
 <p>Expected: each line prints the hostname and a <code>notAfter</code> date; any date within 60 days requires rotation.</p>
 <hr />
 <h2 id="2-rotate-vcenter-vmca-certificate">2. Rotate vCenter VMCA Certificate<a class="headerlink" href="#2-rotate-vcenter-vmca-certificate" title="Permanent link">&para;</a></h2>
 <p>Option A (CA-signed) is recommended for all production environments; Option B (self-signed renewal) is acceptable for isolated lab environments only.</p>
 <p><strong>Option A — Replace with CA-signed certificate (recommended):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH into vCenter VCSA, then run the certificate manager</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH into vCenter VCSA, then run the certificate manager</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter Certificate Manager
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>1. Replace Machine SSL Certificate
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2. Replace VMCA Root Certificate
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>3. Replace Solution User Certificates
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>4. Replace Machine SSL Certificate with Custom Certificate
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>5. Regenerate a New VMCA Root Certificate and all Certificates
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>6. Reset all Certificates to Default
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>7. Quit
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Please select an option [1 to 7]:
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>certificate-manager: command not found</code></strong> — Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root: <code>sudo /usr/lib/vmware-vmca/bin/certificate-manager</code>.
+<strong><code>/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory</code></strong> — Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running <code>rpm -qa | grep vmware-vmca</code>.</p>
+</div>
 <p>In the certificate manager menu:</p>
 <ol>
 <li>Select <strong>Option 1</strong>: Replace Machine SSL Certificate with Custom Certificate</li>
@@ -10776,19 +10822,51 @@ again. This scenario covers identification, rotation order, and validation acros
 <li>The VCSA services restart automatically after import</li>
 </ol>
 <p><strong>Option B — Renew VMCA self-signed certificate (lab use only):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Select Option 8: Regenerate all certificates</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Select Option 8: Regenerate all certificates</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VMware Certificate Manager
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>1. Generate a Self-Signed Root CA Certificate
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2. Generate a Self-Signed SSL Certificate
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>3. Generate a Certificate Signing Request (CSR)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>4. Install SSL Certificate
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>5. Install Root CA Certificate
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>6. Get SSL Certificate and Key in PEM Format
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>7. Regenerate a Self-Signed Root CA Certificate
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>8. Regenerate all certificates
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>9. Reset all Certificates to default
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>10. Exit
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Please select an option [1-10]: 8
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Regenerating all certificates...
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Backup of certificates created at: /etc/vmware-vpx/ssl/backup-20240115-143022
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Generating new Root CA certificate...
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Root CA certificate generated successfully
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Generating new Machine SSL certificate...
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Machine SSL certificate generated successfully
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Generating new Solution User certificates...
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Solution User certificates generated successfully
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>All certificates regenerated successfully
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>vCenter services will be restarted to apply changes...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate generation failed - insufficient disk space</code></strong> — Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again.
+<strong><code>Error: Failed to restart vCenter services - timeout waiting for service startup</code></strong> — Wait 5-10 minutes for services to fully initialize, then verify with <code>service-control --status --all</code>.
+<strong><code>Error: Permission denied - cannot write to /etc/vmware-vpx/ssl</code></strong> — Run the certificate-manager command with root privileges using <code>sudo</code> or as the root user.</p>
+</div>
 <p>Expected: VCSA services restart; <code>openssl s_client</code> against vCenter returns a <code>notAfter</code> date beyond 1 year from today.</p>
 <hr />
 <h2 id="3-rotate-esxi-host-certificates">3. Rotate ESXi Host Certificates<a class="headerlink" href="#3-rotate-esxi-host-certificates" title="Permanent link">&para;</a></h2>
 <p>After replacing the VMCA cert, regenerate all ESXi host certificates so they are signed by the new VMCA root.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — renew ESXi certificates from vCenter for all hosts in a cluster</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmhost</span> <span class="k">in</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$certMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$vmhost</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">CertificateManager</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Renewing cert on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$certMgr</span><span class="p">.</span><span class="n">InstallServerCertificate</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — renew ESXi certificates from vCenter for all hosts in a cluster</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmhost</span> <span class="k">in</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nv">$certMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$vmhost</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">CertificateManager</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Renewing cert on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="nv">$certMgr</span><span class="p">.</span><span class="n">InstallServerCertificate</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
 </code></pre></div>
 <p>Expected: thumbprint warning banner on each host in vCenter clears after renewal.</p>
 <p>Alternatively via the vCenter UI: <strong>Administration → Certificate Management → Renew</strong>. This
@@ -10863,13 +10941,24 @@ cert signed by the new VMCA root, but the product's trust store still contains o
 root — the new cert is immediately untrusted, breaking product-to-vCenter communication.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify new expiry dates on all products after rotation</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.domain.local<span class="w"> </span>nsxmanager.domain.local<span class="w"> </span>ariaops.domain.local<span class="w"> </span>arialogs.domain.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">:&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>notAfter
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify new expiry dates on all products after rotation</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.domain.local<span class="w"> </span>nsxmanager.domain.local<span class="w"> </span>ariaops.domain.local<span class="w"> </span>arialogs.domain.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">:&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>notAfter
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">done</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vcenter.domain.local:                   notAfter=Dec 15 23:59:59 2025 GMT
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nsxmanager.domain.local:                notAfter=Dec 15 23:59:59 2025 GMT
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ariaops.domain.local:                   notAfter=Dec 15 23:59:59 2025 GMT
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>arialogs.domain.local:                  notAfter=Dec 15 23:59:59 2025 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to connect to host:443</code></strong> — Verify the hostname resolves and the management interface is reachable on port 443 with <code>ping</code> and <code>nc -zv</code>.
+<strong><code>depth=0 self signed certificate</code></strong> — This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use <code>openssl s_client -connect $host:443 -showcerts</code>.
+<strong><code>grep: (standard input) is empty</code></strong> — The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add <code>-servername $host</code> to the openssl command for SNI support.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -10988,7 +11077,7 @@ root — the new cert is immediately untrusted, breaking product-to-vCenter comm
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

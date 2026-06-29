@@ -9708,40 +9708,176 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Restart a specific adapter (get ID from list output)</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>restart<span class="w"> </span>--id<span class="w"> </span>&lt;adapter-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NAME                          ID                                    TYPE              STATUS
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vSphere Adapter               adapter-vsphere-prod-01               VMware vSphere    ACTIVE
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Kubernetes Adapter            adapter-k8s-cluster-01                 Kubernetes        ACTIVE
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>NSX Adapter                   adapter-nsx-mgmt-01                   NSX               ACTIVE
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vSAN Adapter                  adapter-vsan-prod-01                  vSAN              ACTIVE
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Custom REST Adapter           adapter-rest-webhook-01               REST              INACTIVE
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>NAME: vSphere Adapter
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ID: adapter-vsphere-prod-01
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>TYPE: VMware vSphere
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>STATUS: ACTIVE
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>COLLECTION_INTERVAL: 300s
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>LAST_COLLECTION: 2024-01-15T14:32:18Z
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>OBJECTS_COLLECTED: 1247
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ERROR_COUNT: 0
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>NAME: Kubernetes Adapter
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ID: adapter-k8s-cluster-01
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>TYPE: Kubernetes
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>STATUS: ACTIVE
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>COLLECTION_INTERVAL: 120s
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>LAST_COLLECTION: 2024-01-15T14:33:05Z
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>OBJECTS_COLLECTED: 892
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ERROR_COUNT: 2
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Restarting adapter &#39;adapter-vsphere-prod-01&#39;...
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Adapter restart initiated successfully. Restart will complete in 30-60 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: adapter not found: adapter-invalid-id</code></strong> — Verify the adapter ID from <code>vracli adapter list</code> output and ensure it is spelled correctly.
+<strong><code>Error: permission denied - insufficient privileges</code></strong> — Run the command with appropriate sudo privileges or as a user with vRealize Operations administrator role.</p>
+</div>
 <h3 id="status-and-services">Status and Services<a class="headerlink" href="#status-and-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Overall service health summary</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check individual service</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-&lt;service-name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all VMware services</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span>
-</code></pre></div>
-<h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current certificate info</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Overall service health summary</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>status
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Replace certificate (PEM format)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>/tmp/aria-ops.crt<span class="w"> </span>--key<span class="w"> </span>/tmp/aria-ops.key<span class="w"> </span>--ca<span class="w"> </span>/tmp/ca-chain.crt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check individual service</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-&lt;service-name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List all VMware services</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span>
 </code></pre></div>
-<h3 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Generate support bundle</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List existing support bundles</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># View recent logs</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vracli<span class="w"> </span>log<span class="w"> </span>tail<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>● vmware-vcops-controller.service - VMware vRealize Operations Controller
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-controller.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2 days ago
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Main PID: 4521 (java)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>     CGroup: /system.slice/vmware-vcops-controller.service
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>             └─4521 /usr/java/default/bin/java -Xmx8192m -Xms4096m...
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vmware-vcops-ui.service - VMware vRealize Operations UI
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-ui.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     Active: active (running) since Mon 2024-01-15 09:24:12 UTC; 2 days ago
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   Main PID: 5847 (java)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vmware-vcops-analytics.service - VMware vRealize Operations Analytics
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-analytics.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>     Active: active (running) since Mon 2024-01-15 09:25:33 UTC; 2 days ago
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>   Main PID: 6234 (java)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>vmware-vcops-collector.service - VMware vRealize Operations Collector
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-collector.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>     Active: active (running) since Mon 2024-01-15 09:26:01 UTC; 2 days ago
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>   Main PID: 7102 (java)
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>vmware-vcops-gateway.service - VMware vRealize Operations Gateway
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>     Loaded: loaded (/etc/systemd/system/vmware-vcops-gateway.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>     Active: active (running) since Mon 2024-01-15 09:26:45 UTC; 2 days ago
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>   Main PID: 8456 (java)
 </code></pre></div>
-<h3 id="authentication-and-users">Authentication and Users<a class="headerlink" href="#authentication-and-users" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List configured auth sources</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>auth<span class="w"> </span>list
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit vmware-vcops-&lt;service-name&gt;.service could not be found.</code></strong> — Replace <code>&lt;service-name&gt;</code> with an actual service name like <code>controller</code>, <code>ui</code>, <code>analytics</code>, or <code>collector</code>.
+<strong><code>Failed to get unit file state for vmware-vcops-controller.service: Connection refused</code></strong> — Ensure the systemd daemon is running with <code>systemctl daemon-reexec</code> and verify the service file exists in <code>/etc/systemd/system/</code>.
+<strong><code>No units matching 'vmware-*' were found.</code></strong> — Confirm VMware vRealize Operations is installed and systemd service files are present in <code>/etc/systemd/system/</code> or <code>/usr/lib/systemd/system/</code>.</p>
+</div>
+<h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current certificate info</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test LDAP connectivity</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Replace certificate (PEM format)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>/tmp/aria-ops.crt<span class="w"> </span>--key<span class="w"> </span>/tmp/aria-ops.key<span class="w"> </span>--ca<span class="w"> </span>/tmp/ca-chain.crt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Certificate Information:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Issuer: CN=aria-ops.example.com,O=IT Operations,C=US
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Subject: CN=aria-ops.example.com,O=IT Operations,C=US
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Valid From: 2024-01-15 10:23:45 UTC
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Valid Until: 2025-01-15 10:23:45 UTC
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Fingerprint (SHA256): a7:b2:c9:d4:e1:f6:2a:3b:4c:5d:6e:7f:8a:9b:0c:1d:2e:3f:4a:5b
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Serial Number: 0x1A2B3C4D5E6F7A8B
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Certificate import initiated...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Validating certificate chain...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Installing certificate on all nodes...
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Node 1 (aria-ops-node1.local): ✓ Complete
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Node 2 (aria-ops-node2.local): ✓ Complete
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  Node 3 (aria-ops-node3.local): ✓ Complete
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Certificate installation successful. Services will restart in 30 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Certificate file not found: /tmp/aria-ops.crt</code></strong> — Verify the certificate file path exists and is readable with <code>ls -la /tmp/aria-ops.crt</code>.
+<strong><code>Error: Private key and certificate do not match</code></strong> — Ensure the key and certificate were generated as a pair; regenerate both from the same CSR if mismatch persists.
+<strong><code>Error: CA chain validation failed - untrusted root</code></strong> — Verify the CA chain file contains the complete certificate hierarchy in correct order (leaf to root) using <code>openssl crl2pkcs7 -nocrl -certfile /tmp/ca-chain.crt | openssl pkcs7 -print_certs -text -noout</code>.</p>
+</div>
+<h3 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate support bundle</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List existing support bundles</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># View recent logs</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vracli<span class="w"> </span>log<span class="w"> </span>tail<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Generating support bundle...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Support bundle generated successfully: /storage/log/support-bundle/vra-support-bundle-2024-01-15-143022.tar.gz
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Bundle size: 487 MB
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Timestamp: 2024-01-15T14:30:22Z
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>total 2.3G
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-rw-r--r-- 1 root root 487M Jan 15 14:30 vra-support-bundle-2024-01-15-143022.tar.gz
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>-rw-r--r-- 1 root root 512M Jan 14 09:15 vra-support-bundle-2024-01-14-091502.tar.gz
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>-rw-r--r-- 1 root root 495M Jan 13 16:42 vra-support-bundle-2024-01-13-164215.tar.gz
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>-rw-r--r-- 1 root root 501M Jan 12 11:28 vra-support-bundle-2024-01-12-112847.tar.gz
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>2024-01-15 14:29:58 [INFO] Cluster health check passed
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>2024-01-15 14:29:45 [INFO] Database connection pool: 45/50 active
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>2024-01-15 14:29:32 [WARN] Memory usage at 78% on node-02
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>2024-01-15 14:29:15 [INFO] vRealize Operations Agent v8.10.2 heartbeat received
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>2024-01-15 14:28:58 [INFO] Collector sync completed in 2.3s
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>2024-01-15 14:28:42 [INFO] Policy engine evaluation cycle: 847ms
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-15 14:28:25 [DEBUG] Metric ingestion rate: 125,430 points/sec
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure vRealize Operations is installed and the vracli binary is in your PATH, or run with full path <code>/opt/vmware/vrealize-operations/bin/vracli</code>.
+<strong><code>Permission denied</code></strong> — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
+<strong><code>/storage/log/support-bundle/: No such file or directory</code></strong> — Verify the storage mount is accessible and the support-bundle directory exists; check with <code>df -h /storage</code> and create the directory if needed.</p>
+</div>
+<h3 id="authentication-and-users">Authentication and Users<a class="headerlink" href="#authentication-and-users" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List configured auth sources</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vracli<span class="w"> </span>auth<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Test LDAP connectivity</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Authentication Sources:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Name: corp-ldap
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Type: LDAP
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Server: ldap.corp.local
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Port: 389
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Base DN: dc=corp,dc=local
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Status: ACTIVE
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Name: local-users
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Type: LOCAL
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Status: ACTIVE
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Testing LDAP connectivity for &#39;corp-ldap&#39;...
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Connection: SUCCESS
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Bind Test: SUCCESS
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Search Test: SUCCESS (5 users found)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Authentication source 'corp-ldap' not found</code></strong> — Verify the exact source name with <code>vracli auth list</code> and use the correct spelling.
+<strong><code>Error: LDAP connection timeout after 30 seconds</code></strong> — Check network connectivity to the LDAP server and confirm the hostname/port are correct with <code>telnet ldap.corp.local 389</code>.
+<strong><code>Error: LDAP bind failed: Invalid credentials</code></strong> — Verify the bind DN and password configured for the LDAP source are correct in the auth source settings.</p>
+</div>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9752,12 +9888,23 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 </ul>
 <hr />
 <h2 id="chkconfig-legacy-service-enabledisable">chkconfig (Legacy / Service Enable/Disable)<a class="headerlink" href="#chkconfig-legacy-service-enabledisable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List services and their runlevel status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chkconfig<span class="w"> </span>--list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmware
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Enable a service at boot</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>chkconfig<span class="w"> </span>vmware-vcops<span class="w"> </span>on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List services and their runlevel status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chkconfig<span class="w"> </span>--list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmware
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Enable a service at boot</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>chkconfig<span class="w"> </span>vmware-vcops<span class="w"> </span>on
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vmware-vcops        0:off   1:off   2:on    3:on    4:on    5:on    6:off
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vmware-postgres     0:off   1:off   2:on    3:on    4:on    5:on    6:off
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>vmware-mariadb      0:off   1:off   2:on    3:on    4:on    5:on    6:off
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>vmware-rabbitmq     0:off   1:off   2:on    3:on    4:on    5:on    6:off
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>vmware-nginx        0:off   1:off   2:on    3:on    4:on    5:on    6:off
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>chkconfig: command not found</code></strong> — Use <code>systemctl list-unit-files | grep vmware</code> on systemd-based systems (RHEL 7+, CentOS 7+).
+<strong><code>error reading information on service vmware-vcops: No such file or directory</code></strong> — Verify the exact service name with <code>systemctl list-unit-files | grep vmware</code> and use the correct name in the chkconfig command.</p>
+</div>
 <hr />
 <h2 id="useful-paths">Useful Paths<a class="headerlink" href="#useful-paths" title="Permanent link">&para;</a></h2>
 <table>
@@ -9789,19 +9936,87 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 <hr />
 <h2 id="rest-api-quick-reference">REST API Quick Reference<a class="headerlink" href="#rest-api-quick-reference" title="Permanent link">&para;</a></h2>
 <p>Base URL: <code>https://&lt;aria-ops-fqdn&gt;/suite-api/api</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate and get token</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;authSource&quot;:&quot;LOCAL&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List resources</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Get all active alerts</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;authSource&quot;:&quot;LOCAL&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># List resources</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Get all active alerts</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDY3MjAwMH0.a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;validity&quot;: 7200,
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;expiryTime&quot;: 1704679200000
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>}
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>{
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;pageInfo&quot;: {
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    &quot;pageSize&quot;: 100,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;totalCount&quot;: 47,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    &quot;page&quot;: 1
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  },
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  &quot;resources&quot;: [
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    {
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>      &quot;identifier&quot;: &quot;vc-prod-01&quot;,
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>      &quot;resourceKey&quot;: {
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>        &quot;name&quot;: &quot;vc-prod-01&quot;,
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        &quot;resourceType&quot;: &quot;VMwareAdapter Instance&quot;
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>      },
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>      &quot;resourceStatus&quot;: &quot;STARTED&quot;
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>    },
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>    {
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>      &quot;identifier&quot;: &quot;esx-host-12.corp.local&quot;,
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>      &quot;resourceKey&quot;: {
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>        &quot;name&quot;: &quot;esx-host-12.corp.local&quot;,
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>        &quot;resourceType&quot;: &quot;HostSystem&quot;
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>      },
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>      &quot;resourceStatus&quot;: &quot;STARTED&quot;
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>    },
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>    {
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>      &quot;identifier&quot;: &quot;vm-web-prod-04&quot;,
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>      &quot;resourceKey&quot;: {
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>        &quot;name&quot;: &quot;vm-web-prod-04&quot;,
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>        &quot;resourceType&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>      },
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>      &quot;resourceStatus&quot;: &quot;STARTED&quot;
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>    }
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>  ]
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>}
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>{
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>  &quot;pageInfo&quot;: {
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>    &quot;pageSize&quot;: 100,
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>    &quot;totalCount&quot;: 12,
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>    &quot;page&quot;: 1
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>  },
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>  &quot;alerts&quot;: [
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>    {
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>      &quot;alertId&quot;: &quot;alert-8472&quot;,
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>      &quot;resourceName&quot;: &quot;esx-host-12.corp.local&quot;,
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>      &quot;alertDefinitionName&quot;: &quot;CPU Contention&quot;,
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>      &quot;severity&quot;: &quot;WARNING&quot;,
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>      &quot;startTime&quot;: 1704668400000
+<a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a>    },
+<a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a>    {
+<a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a>      &quot;alertId&quot;: &quot;alert-8471&quot;,
+<a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a>      &quot;resourceName&quot;: &quot;vm-web-prod-04&quot;,
+<a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a>      &quot;alertDefinitionName&quot;: &quot;Memory Pressure&quot;,
+<a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a>      &quot;severity&quot;: &quot;CRITICAL&quot;,
+<a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a>      &quot;startTime&quot;: 1704665800000
+<a id="__codelineno-13-59" name="__codelineno-13-59" href="#__codelineno-13-59"></a>    }
+<a id="__codelineno-13-60" name="__codelineno-13-60" href="#__codelineno-13-60"></a>  ]
+<a id="__codelineno-13-61" name="__codelineno-13-61" href="#__codelineno-13-61"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the Aria Operations certificate into your system trust store.
+<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Verify the API endpoint URL is correct and the Aria Operations service is running; check response with <code>curl -sk ... | head -20</code> to see actual content.
+<strong><code>{"error":"Invalid token or token expired"}</code></strong> — Re-authenticate to get a fresh token using the first curl command and update the Authorization header with the new token value.</p>
+</div>
 <hr />
 <h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9844,7 +10059,7 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

@@ -7889,67 +7889,204 @@ How to escalate Linux OS issues to Red Hat or Canonical support: what data to co
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>lscpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Model name|Sockets|Cores|Threads&quot;</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>free<span class="w"> </span>-h
 </code></pre></div>
-<h3 id="2-collect-recent-journal-and-dmesg-output">2. Collect recent journal and dmesg output<a class="headerlink" href="#2-collect-recent-journal-and-dmesg-output" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Last 200 error-level journal entries (captures service failures + kernel messages)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-errors-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Kernel ring buffer (hardware faults, driver messages, OOM kills)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dmesg<span class="w"> </span>-T<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Full journal from last boot (useful for crash/reboot scenarios)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-lastboot-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># If OOM killer is suspected</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|out of memory\|kill process&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span>/var/log/kern.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NAME=&quot;Red Hat Enterprise Linux&quot;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VERSION=&quot;9.4 (Plow)&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ID=&quot;rhel&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ID_LIKE=&quot;fedora&quot;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>VERSION_ID=&quot;9.4&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PLATFORM_ID=&quot;platform:el9&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>PRETTY_NAME=&quot;Red Hat Enterprise Linux 9.4 (Plow)&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Linux host01 5.14.0-427.13.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Jan 15 10:22:33 UTC 2025 x86_64 GNU/Linux
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    Manufacturer: Dell Inc.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    Product Name: PowerEdge R750
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    Serial Number: 8N4K9P2
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Model name:          Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Socket(s):           2
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Core(s) per socket:  20
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Thread(s) per core:  2
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>               total        used        free      shared  buff/cache   available
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Mem:           251Gi       187Gi        32Gi       2.1Gi        31Gi        61Gi
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Swap:           16Gi       8.2Gi       7.8Gi
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /etc/os-release: No such file or directory</code></strong> — Use <code>cat /etc/system-release</code> on older RHEL/CentOS systems, or check <code>/etc/redhat-release</code>.
+<strong><code>dmidecode: command not found</code></strong> — Install the dmidecode package with <code>sudo yum install dmidecode</code> or <code>sudo apt install dmidecode</code>.
+<strong><code>lscpu: command not found</code></strong> — Install util-linux package with <code>sudo yum install util-linux</code> or <code>sudo apt install util-linux</code>.</p>
+</div>
+<h3 id="2-collect-recent-journal-and-dmesg-output">2. Collect recent journal and dmesg output<a class="headerlink" href="#2-collect-recent-journal-and-dmesg-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Last 200 error-level journal entries (captures service failures + kernel messages)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-errors-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Kernel ring buffer (hardware faults, driver messages, OOM kills)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dmesg<span class="w"> </span>-T<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Full journal from last boot (useful for crash/reboot scenarios)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/journal-lastboot-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If OOM killer is suspected</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|out of memory\|kill process&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span>/var/log/kern.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[1234.567890] Out of memory: Kill process 2847 (java) score 512 or sacrifice child
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[1234.568901] Killed process 2847 (java) total-vm:4096000kB, anon-rss:3891234kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:7890kB oom_score_adj:300
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[5678.123456] systemd-journald[512]: Suppressed 342 messages from /system.slice/nginx.service
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>[5678.234567] kernel: audit: type=1130 audit(1704067890.456:789): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=&#39;unit=mysql-server comm=&quot;systemd&quot; exe=&quot;/lib/systemd/systemd&quot; hostname=? addr=? terminal=? res=failed&#39;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[9012.345678] systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[9012.456789] kernel: [Hardware Error]: Machine check from unknown source
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>[9012.567890] systemd-coredump[8234]: Process 2847 (java) of user 1000 dumped core.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[9012.678901] kernel: Out of memory: Kill process 3156 (python) score 287 or sacrifice child
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tail: cannot open &#39;/var/log/messages&#39; for reading: No such file or directory
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tail: cannot open '/var/log/messages' for reading: No such file or directory</code></strong> — Use <code>/var/log/syslog</code> on Debian/Ubuntu systems or check the actual log path with <code>ls /var/log/*.log</code>.
+<strong><code>journalctl: command not found</code></strong> — Install systemd with <code>apt-get install systemd</code> or <code>yum install systemd</code> depending on your distribution.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root to access full journal and kernel buffer contents.</p>
+</div>
 <h3 id="3-run-sosreport-rhel-or-apport-collect-ubuntu">3. Run sosreport (RHEL) or apport-collect (Ubuntu)<a class="headerlink" href="#3-run-sosreport-rhel-or-apport-collect-ubuntu" title="Permanent link">&para;</a></h3>
 <p><strong>RHEL:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install if not present</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sos
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run sosreport — takes 2–10 minutes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--no-report
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># The report is saved to /var/tmp/</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/tmp/sosreport-*.tar.xz
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Example: /var/tmp/sosreport-hostname-20260614-123456.tar.xz</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install if not present</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sos
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Run sosreport — takes 2–10 minutes</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--no-report
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># The report is saved to /var/tmp/</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/tmp/sosreport-*.tar.xz
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Example: /var/tmp/sosreport-hostname-20260614-123456.tar.xz</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Last metadata expiration check: 0:12:34 ago on Thu Jun 14 12:45:23 2026.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Dependencies resolved.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>================================================================================
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> Package             Arch        Version              Repository         Size
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>================================================================================
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Installing:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> sos                 x86_64      4.7.1-2.el9          baseos            1.2 M
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Transaction Summary
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>================================================================================
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Install  1 Package
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Total download size: 1.2 M
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Installed size: 4.8 M
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Downloading Packages:
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>[100%] sos-4.7.1-2.el9.x86_64.rpm
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Running transaction
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Preparing        :                                                        1/1
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  Installing       : sos-4.7.1-2.el9.x86_64.rpm                           1/1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  Verifying        : sos-4.7.1-2.el9.x86_64.rpm                           1/1
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Installed:
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  sos-4.7.1-2.el9.x86_64
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Complete!
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>sosreport (version 4.7.1)
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>This utility will collect diagnostic and configuration information from
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>this Linux system and installed packages. An archive containing the
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>collected information will be generated in /var/tmp/sosreport-hostname-20260614-123456
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>Running plugins. This may take a few minutes...
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>  kernel                                                              [plugin:on]
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>  networking                                                          [plugin:on]
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>  systemd                                                             [plugin:on]
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>  selinux                                                             [plugin:on]
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>  logs                                                                [plugin:on]
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>Creating compressed archive...
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>Your sosreport has been successfully generated and saved in:
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>  /var/tmp/sosreport-hostname-20260614-123456.tar.xz (287 MB)
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>-rw-r--r--. 1 root root 287M Jun 14 12:57 /var/tmp/sosreport-hostname-20260614-123456.tar.xz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to find a match: sos</code></strong> — Ensure your system repositories are enabled with <code>dnf repolist</code> and run <code>dnf update</code> before retrying the install.
+<strong><code>ERROR: sosreport requires root privileges to run</code></strong> — Execute the sosreport command with <code>sudo</code> or as the root user.</p>
+</div>
 <p><strong>Ubuntu:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install if not present</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>apport
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Collect diagnostics</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--no-report<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>apport-collect<span class="w"> </span>--output<span class="w"> </span>/tmp/ubuntu-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tgz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install if not present</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>apport
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Collect diagnostics</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--no-report<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>apport-collect<span class="w"> </span>--output<span class="w"> </span>/tmp/ubuntu-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tgz
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Reading package lists... Done
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Building dependency tree... Done
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Setting up apport (2.20.11-0ubuntu27.26) ...
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Processing triggers for man-db (2.10.2-1) ...
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>sosreport (version 4.3)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>This command will collect system diagnostic and configuration information from this Linux system.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Running plugins. This may take a few minutes...
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Finishing plugins              [Running: last]
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Compressing the archive...
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Removing temporary directory...
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Your sosreport has been generated and saved in:
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  /var/tmp/sosreport-ip-172-31-24-156-20240115-abcd1234.tar.xz
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>The checksum is: 7f2e8c9d5a1b3c4e6f9a2b8d5e1c3a4f
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the command with <code>sudo</code> or as the root user.
+<strong><code>sosreport: command not found</code></strong> — Install sosreport with <code>apt-get install -y sosreport</code> before running the diagnostic collection.
+<strong><code>apport-collect: command not found</code></strong> — Install apport with <code>apt-get install -y apport</code> or use sosreport as the primary diagnostic tool.</p>
+</div>
 <p>Upload the archive to the support case. It contains: package list, kernel version, service status, network config, hardware info, and recent logs.</p>
 <h3 id="4-collect-the-crash-dump-if-host-has-kernel-panicked">4. Collect the crash dump (if host has kernel-panicked)<a class="headerlink" href="#4-collect-the-crash-dump-if-host-has-kernel-panicked" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if kdump captured a crash dump</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/crash/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Example: /var/crash/127.0.0.1-2026-06-14-14:30:00/vmcore</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify kdump is configured and will capture future crashes</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kdump
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>cat<span class="w"> </span>/proc/cmdline<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>crashkernel<span class="w">   </span><span class="c1"># Should include crashkernel=auto or a value</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check if kdump captured a crash dump</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/crash/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Example: /var/crash/127.0.0.1-2026-06-14-14:30:00/vmcore</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Verify kdump is configured and will capture future crashes</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kdump
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>cat<span class="w"> </span>/proc/cmdline<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>crashkernel<span class="w">   </span><span class="c1"># Should include crashkernel=auto or a value</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>total 0
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>drwxr-xr-x. 3 root root 4.0K Jun 14 14:30 127.0.0.1-2026-06-14-14:30:00
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>● kdump.service - Crash recovery kernel dump service
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>     Loaded: loaded (/usr/lib/systemd/system/kdump.service; enabled; vendor preset: enabled)
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>     Active: active (exited) since Sun 2026-06-14 14:28:33 UTC; 2min ago
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    Process: 1247 ExecStart=/usr/sbin/kdumpctl start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>   Main PID: 1247 (code=exited, status=0/SUCCESS)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>      Tasks: 0 (limit: 4915)
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>     Memory: 0B
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        CPU: 0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>BOOT_IMAGE=/boot/vmlinuz-5.14.0-427.el9.x86_64 root=UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890 ro crashkernel=auto
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ls: cannot access '/var/crash/': No such file or directory</code></strong> — Create the directory with <code>mkdir -p /var/crash/</code> and ensure kdump is properly initialized with <code>kdumpctl rebuild</code>.
+<strong><code>● kdump.service - Crash recovery kernel dump service Loaded: loaded ... Active: inactive (dead)</code></strong> — Enable and start kdump with <code>systemctl enable kdump &amp;&amp; systemctl start kdump</code>.
+<strong><code>grep: (standard input) is empty</code></strong> — Add <code>crashkernel=auto</code> to the kernel boot parameters in <code>/etc/default/grub</code>, run <code>grub2-mkconfig -o /boot/grub2/grub.cfg</code>, and reboot.</p>
+</div>
 <p>If a crash dump exists, include the path in the case description. The dump file may be large (several GB) — the vendor will provide SFTP instructions.</p>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>OS: Red Hat Enterprise Linux 9.4
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Kernel: 5.14.0-427.13.1.el9_4.x86_64
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Host: prod-app-01.corp.local
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Subscription: active (checked 2026-06-14; expires 2027-05-31)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Issue first observed: 2026-06-14 14:30 UTC
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Last known good state: 2026-06-14 12:00 UTC
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Changes in the 24h before the issue:
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - 12:00: kernel update via yum update kernel applied; host rebooted
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - 14:30: host showed kernel panic; kdump triggered; host rebooted automatically
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - 14:35: host came back up but kernel panic recurred after 10 minutes
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Steps already taken:
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  - kdump captured: /var/crash/127.0.0.1-2026-06-14-14:30:00/vmcore
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - sosreport collected and ready to upload
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - Did NOT apply any additional kernel updates or run fsck
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Blast radius: 3 applications on this host unavailable; 150 users affected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>OS: Red Hat Enterprise Linux 9.4
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Kernel: 5.14.0-427.13.1.el9_4.x86_64
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Host: prod-app-01.corp.local
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Subscription: active (checked 2026-06-14; expires 2027-05-31)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Issue first observed: 2026-06-14 14:30 UTC
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Last known good state: 2026-06-14 12:00 UTC
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Changes in the 24h before the issue:
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  - 12:00: kernel update via yum update kernel applied; host rebooted
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  - 14:30: host showed kernel panic; kdump triggered; host rebooted automatically
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 14:35: host came back up but kernel panic recurred after 10 minutes
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Steps already taken:
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  - kdump captured: /var/crash/127.0.0.1-2026-06-14-14:30:00/vmcore
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  - sosreport collected and ready to upload
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  - Did NOT apply any additional kernel updates or run fsck
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>Blast radius: 3 applications on this host unavailable; 150 users affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-red-hat">How to Open the SR — Red Hat<a class="headerlink" href="#how-to-open-the-sr-red-hat" title="Permanent link">&para;</a></h2>
@@ -8071,29 +8208,55 @@ How to escalate Linux OS issues to Red Hat or Canonical support: what data to co
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Current host state — paste into every case update</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uname<span class="w"> </span>-r
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>uptime
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>df<span class="w"> </span>-h
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>free<span class="w"> </span>-h
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Recent kernel panics or OOM kills</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Service status for the affected service</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>--no-pager
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Package recently updated</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--last<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">     </span><span class="c1"># RHEL</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^ii&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w">   </span><span class="c1"># Ubuntu (check for recently installed)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">         </span><span class="c1"># RHEL — shows recent yum/dnf transactions</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># SELinux denials (RHEL only)</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>AVC<span class="w"> </span>-ts<span class="w"> </span>recent<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Current host state — paste into every case update</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>uname<span class="w"> </span>-r
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>uptime
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>df<span class="w"> </span>-h
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>free<span class="w"> </span>-h
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Recent kernel panics or OOM kills</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Service status for the affected service</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>--no-pager
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Package recently updated</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--last<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">     </span><span class="c1"># RHEL</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^ii&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w">   </span><span class="c1"># Ubuntu (check for recently installed)</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">         </span><span class="c1"># RHEL — shows recent yum/dnf transactions</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># SELinux denials (RHEL only)</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>AVC<span class="w"> </span>-ts<span class="w"> </span>recent<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
-<hr />
+<h2 id="expected-output5100-28-generic-29-ubuntu-smp-thu-oct-10-121522-utc-2024-143218-up-87-days-345-2-users-load-average-214-187-192-unit-load-active-sub-description-systemd-journaldservice-loaded-failed-failed-journal-service-systemd-journaldservice-journal-service-loaded-loaded-libsystemdsystemsystemd-journaldservice-static-active-failed-result-exit-code-since-thu-2024-10-10-142803-utc-4min-15s-ago-filesystem-size-used-avail-use-mounted-on-devsda1-50g-48g-12g-98-devsda2-200g-156g-44g-78-var-tmpfs-78g-0-78g-0-devshm-total-used-free-shared-buffcache-available-mem-15gi-82gi-21gi-512mi-47gi-61gi-swap-40gi-23gi-17gi-oct-10-141522-prod-db-01-kernel-1847293442156-out-of-memory-kill-process-4521-java-score-892-or-sacrifice-child-oct-10-141208-prod-db-01-kernel-1847128891234-kernel-panic-not-syncing-vfs-unable-to-mount-root-fs-on-unknown-block00-oct-10-135844-prod-db-01-systemd1-postgresqlservice-main-process-exited-codeexited-status1failure-oct-10-134512-prod-db-01-audit-type1130-audit17285739124458821-pid1-uid0-auid4294967295-ses4294967295-msgunitnetworking-commsystemd-exelibsystemdsystem-generatorssystemd-getty-generator-hostname-addr-terminal-ressuccess-postgresqlservice-postgresql-database-server-loaded-loaded-etcsystemdsystempostgresqlservice-enabled-vendor-preset-enabled-active-failed-result-exit-code-since-thu-2024-10-10-141208-utc-20min-ago-process-3847-execstartusrlibpostgresqlbinpg_ctl-start-codeexited-status1-ii-postgresql-14-149-1pgdg1101-amd64-object-relational-sql-database-ii-openssl-111w-0deb11u1-amd64-secure-sockets-layer-and-cryptography-libraries-and-tools-ii-curl-7740-13deb11u7-amd64-command-line-tool-for-transferring-data-with-urls-ii-systemd-2473-7deb11u4"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>5.10.0-28-generic #29-Ubuntu SMP Thu Oct 10 12:15:22 UTC 2024
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a> 14:32:18 up 87 days, 3:45, 2 users, load average: 2.14, 1.87, 1.92
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  UNIT                          LOAD   ACTIVE SUB    DESCRIPTION
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  systemd-journald.service      loaded failed failed Journal Service
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>● systemd-journald.service - Journal Service
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>   Loaded: loaded (/lib/systemd/system/systemd-journald.service; static)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>   Active: failed (Result: exit-code) since Thu 2024-10-10 14:28:03 UTC; 4min 15s ago
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>/dev/sda1       50G   48G  1.2G  98% /
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>/dev/sda2      200G  156G   44G  78% /var
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>tmpfs          7.8G     0  7.8G   0% /dev/shm
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Mem:           15Gi       8.2Gi       2.1Gi       512Mi       4.7Gi       6.1Gi
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Swap:          4.0Gi       2.3Gi       1.7Gi
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Oct 10 14:15:22 prod-db-01 kernel: [1847293.442156] Out of memory: Kill process 4521 (java) score 892 or sacrifice child
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Oct 10 14:12:08 prod-db-01 kernel: [1847128.891234] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>Oct 10 13:58:44 prod-db-01 systemd[1]: postgresql.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>Oct 10 13:45:12 prod-db-01 audit: type=1130 audit(1728573912.445:8821): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=&#39;unit=networking comm=&quot;systemd&quot; exe=&quot;/lib/systemd/system-generators/systemd-getty-generator&quot; hostname=? addr=? terminal=? res=success&#39;
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>● postgresql.service - PostgreSQL Database Server
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>   Loaded: loaded (/etc/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>   Active: failed (Result: exit-code) since Thu 2024-10-10 14:12:08 UTC; 20min ago
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>  Process: 3847 ExecStart=/usr/lib/postgresql/bin/pg_ctl start (code=exited, status=1)
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>ii  postgresql-14              14.9-1.pgdg110+1     amd64        object-relational SQL database
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>ii  openssl                    1.1.1w-0+deb11u1     amd64        Secure Sockets Layer and cryptography libraries and tools
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>ii  curl                       7.74.0-1.3+deb11u7   amd64        command line tool for transferring data with URLs
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>ii  systemd                    247.3-7+deb11u4
+</code></pre></div><a class="headerlink" href="#expected-output5100-28-generic-29-ubuntu-smp-thu-oct-10-121522-utc-2024-143218-up-87-days-345-2-users-load-average-214-187-192-unit-load-active-sub-description-systemd-journaldservice-loaded-failed-failed-journal-service-systemd-journaldservice-journal-service-loaded-loaded-libsystemdsystemsystemd-journaldservice-static-active-failed-result-exit-code-since-thu-2024-10-10-142803-utc-4min-15s-ago-filesystem-size-used-avail-use-mounted-on-devsda1-50g-48g-12g-98-devsda2-200g-156g-44g-78-var-tmpfs-78g-0-78g-0-devshm-total-used-free-shared-buffcache-available-mem-15gi-82gi-21gi-512mi-47gi-61gi-swap-40gi-23gi-17gi-oct-10-141522-prod-db-01-kernel-1847293442156-out-of-memory-kill-process-4521-java-score-892-or-sacrifice-child-oct-10-141208-prod-db-01-kernel-1847128891234-kernel-panic-not-syncing-vfs-unable-to-mount-root-fs-on-unknown-block00-oct-10-135844-prod-db-01-systemd1-postgresqlservice-main-process-exited-codeexited-status1failure-oct-10-134512-prod-db-01-audit-type1130-audit17285739124458821-pid1-uid0-auid4294967295-ses4294967295-msgunitnetworking-commsystemd-exelibsystemdsystem-generatorssystemd-getty-generator-hostname-addr-terminal-ressuccess-postgresqlservice-postgresql-database-server-loaded-loaded-etcsystemdsystempostgresqlservice-enabled-vendor-preset-enabled-active-failed-result-exit-code-since-thu-2024-10-10-141208-utc-20min-ago-process-3847-execstartusrlibpostgresqlbinpg_ctl-start-codeexited-status1-ii-postgresql-14-149-1pgdg1101-amd64-object-relational-sql-database-ii-openssl-111w-0deb11u1-amd64-secure-sockets-layer-and-cryptography-libraries-and-tools-ii-curl-7740-13deb11u7-amd64-command-line-tool-for-transferring-data-with-urls-ii-systemd-2473-7deb11u4" title="Permanent link">&para;</a></h2>
 <h2 id="subscription-lifecycle-reference">Subscription / Lifecycle Reference<a class="headerlink" href="#subscription-lifecycle-reference" title="Permanent link">&para;</a></h2>
 <h3 id="rhel">RHEL<a class="headerlink" href="#rhel" title="Permanent link">&para;</a></h3>
 <table>
@@ -8195,7 +8358,7 @@ How to escalate Linux OS issues to Red Hat or Canonical support: what data to co
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

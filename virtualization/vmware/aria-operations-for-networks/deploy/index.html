@@ -9014,6 +9014,23 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>aon-platform.example.local
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup<span class="w"> </span><span class="m">10</span>.10.10.50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.10.10.1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.10.10.1#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   aon-platform.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 10.10.10.50
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Address: 10.10.10.51
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Server:     10.10.10.1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Address:    10.10.10.1#53
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>50.10.10.10.in-addr.arpa    name = aon-platform.example.local.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>50.10.10.10.in-addr.arpa    name = aon-platform-secondary.example.local.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find aon-platform.example.local: NXDOMAIN</code></strong> — Verify the DNS A record exists in your DNS server and the FQDN matches your deployment configuration exactly.
+<strong><code>** connection timed out; try again later</code></strong> — Confirm the DNS server (10.10.10.1) is reachable and responsive from the management network; check firewall rules for UDP port 53.</p>
+</div>
 <h3 id="service-accounts">Service Accounts<a class="headerlink" href="#service-accounts" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9069,8 +9086,8 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 <h2 id="phase-2-platform-node-ova-deployment">Phase 2 — Platform Node OVA Deployment<a class="headerlink" href="#phase-2-platform-node-ova-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> AON platform UI accessible at <code>https://aon-platform.example.local</code>; initial setup wizard complete; platform shows Running state.</p>
 <h3 id="deploy-platform-ova">Deploy Platform OVA<a class="headerlink" href="#deploy-platform-ova" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Download OVA from Broadcom Support Portal:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># My Downloads → Aria Operations for Networks → VMware-Aria-Operations-for-Networks-6.14.0-Platform.ova</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Download OVA from Broadcom Support Portal:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># My Downloads → Aria Operations for Networks → VMware-Aria-Operations-for-Networks-6.14.0-Platform.ova</span>
 </code></pre></div>
 <p>Deploy via vCenter UI: Actions → Deploy OVF Template, then configure OVF properties:</p>
 <table>
@@ -9117,14 +9134,41 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 </table>
 <p>Power on the VM. First boot initialises cassandra, kafka, elasticsearch, and nginx — allow 10–15 minutes.</p>
 <h3 id="verify-platform-is-ready">Verify Platform Is Ready<a class="headerlink" href="#verify-platform-is-ready" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># HTTPS reachable</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://aon-platform.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: HTTP 200</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Services running on platform VM</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># HTTPS reachable</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://aon-platform.example.local<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: HTTP 200</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Services running on platform VM</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>HTTP 200
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Connected to aon-platform.example.local (192.168.1.45)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>● vrni-platform.service - VMware Aria Operations for Networks Platform
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>     Loaded: loaded (/etc/systemd/system/vrni-platform.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2h 15min ago
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>● nginx.service - A high performance web server and a reverse proxy server
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>     Active: active (running) since Thu 2024-01-18 14:31:42 UTC; 2h 15min ago
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>● cassandra.service - Apache Cassandra
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>     Loaded: loaded (/etc/systemd/system/cassandra.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>     Active: active (running) since Thu 2024-01-18 14:30:08 UTC; 2h 17min ago
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>● kafka.service - Apache Kafka Message Broker
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>     Loaded: loaded (/etc/systemd/system/kafka.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>     Active: active (running) since Thu 2024-01-18 14:29:55 UTC; 2h 17min ago
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>● elasticsearch.service - Elasticsearch
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>     Loaded: loaded (/etc/systemd/system/elasticsearch.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>     Active: active (running) since Thu 2024-01-18 14:28:30 UTC; 2h 18min ago
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>● postgres.service - PostgreSQL Database Server
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>     Loaded: loaded (/etc/systemd/system/postgres.service; enabled; vendor preset: enabled)
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>     Active: active (running) since Thu 2024-01-18 14:27:45 UTC; 2h 19min ago
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+<strong><code>Connection refused</code></strong> — Verify the platform VM is running and HTTPS port 443 is accessible; check firewall rules with <code>sudo ufw status</code> or equivalent.
+<strong><code>Unit postgres.service not found</code></strong> — Confirm the correct service name with <code>sudo systemctl list-units --type=service | grep -i postgres</code> as it may be named <code>postgresql</code> instead.</p>
+</div>
 <h3 id="initial-setup-wizard">Initial Setup Wizard<a class="headerlink" href="#initial-setup-wizard" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Browse to <code>https://aon-platform.example.local</code>.</li>
@@ -9169,117 +9213,217 @@ Admin → Infrastructure → Add Proxy → copy the shared secret.</p>
 <h3 id="register-collector-to-platform">Register Collector to Platform<a class="headerlink" href="#register-collector-to-platform" title="Permanent link">&para;</a></h3>
 <p>The Collector auto-registers on first boot using the platform FQDN and shared secret entered during OVA deploy. Monitor from the platform UI:</p>
 <p>Admin → Infrastructure → Proxies — the new collector should appear within 5 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify collector service on collector VM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-collector
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify collector registered via API</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(c.get(&#39;nickname&#39;), c.get(&#39;status&#39;)) for c in json.load(sys.stdin).get(&#39;results&#39;,[])]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify collector service on collector VM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-collector
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify collector registered via API</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(c.get(&#39;nickname&#39;), c.get(&#39;status&#39;)) for c in json.load(sys.stdin).get(&#39;results&#39;,[])]&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>● vrni-collector.service - vRealize Network Insight Collector
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>     Loaded: loaded (/etc/systemd/system/vrni-collector.service; enabled; vendor preset: enabled)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       Docs: https://docs.vmware.com/en/vRealize-Network-Insight/
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    Process: 2847 ExecStart=/opt/vrni/collector/bin/collector.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   Main PID: 2891 (java)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>      Tasks: 42 (limit: 4915)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>     Memory: 1.2G
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        CPU: 2m 34s
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>     CGroup: /system.slice/vrni-collector.service
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>aon-collector-dc1 REGISTERED
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>aon-collector-dc2 ACTIVE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the platform's CA certificate into your system trust store.
+<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package (<code>apt-get install jq</code> on Ubuntu) or use the provided <code>python3 -c</code> JSON parsing instead of piping to jq.
+<strong><code>{"error":"Invalid credentials","code":401}</code></strong> — Verify the admin@local username and PASSWORD are correct, and that the platform API is accessible at https://aon-platform.example.local.</p>
+</div>
 <hr />
 <h2 id="phase-4-data-source-configuration">Phase 4 — Data Source Configuration<a class="headerlink" href="#phase-4-data-source-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> vCenter, NSX Manager, and physical switch data sources all show green collection status in Infrastructure → Data Sources.</p>
 <h3 id="add-vcenter-as-data-source">Add vCenter as Data Source<a class="headerlink" href="#add-vcenter-as-data-source" title="Permanent link">&para;</a></h3>
 <p>In the AON UI: Infrastructure → Data Sources → Add Source → VMware vCenter</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter FQDN:   vcenter.example.local
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Username:       svc-aon@vsphere.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Password:       ********
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Accept thumbprint when prompted
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter FQDN:   vcenter.example.local
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Username:       svc-aon@vsphere.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Password:       ********
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Accept thumbprint when prompted
 </code></pre></div>
 <p>Topology sync starts immediately. VMs and host objects appear in the flow map within minutes.</p>
 <h3 id="add-nsx-manager-as-data-source">Add NSX Manager as Data Source<a class="headerlink" href="#add-nsx-manager-as-data-source" title="Permanent link">&para;</a></h3>
 <p>Infrastructure → Data Sources → Add Source → VMware NSX-T Manager</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NSX Manager FQDN:   nsxmgr.example.local
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Username:           svc-aon@vsphere.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Password:           ********
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NSX Manager FQDN:   nsxmgr.example.local
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Username:           svc-aon@vsphere.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Password:           ********
 </code></pre></div>
 <p>NSX adds DFW rule context to flow records and enables security group visibility.</p>
 <h3 id="add-physical-switches-snmp">Add Physical Switches (SNMP)<a class="headerlink" href="#add-physical-switches-snmp" title="Permanent link">&para;</a></h3>
 <p>Infrastructure → Data Sources → Add Source → Switch (SNMP)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Switch IP:          10.10.0.254
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>SNMP Version:       v2c
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Community String:   public-ro
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Switch IP:          10.10.0.254
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>SNMP Version:       v2c
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Community String:   public-ro
 </code></pre></div>
 <p>For SNMPv3:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SNMP Version:      v3
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Username:          snmpuser
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Auth Protocol:     SHA
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Auth Password:     ********
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Privacy Protocol:  AES
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Privacy Password:  ********
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SNMP Version:      v3
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Username:          snmpuser
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Auth Protocol:     SHA
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Auth Password:     ********
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Privacy Protocol:  AES
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Privacy Password:  ********
 </code></pre></div>
 <p>Physical topology appears in the network map after the first SNMP poll cycle (~5 minutes).</p>
 <h3 id="verify-data-source-health">Verify Data Source Health<a class="headerlink" href="#verify-data-source-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/data-sources&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(ds.get(&#39;alias&#39;), ds.get(&#39;status&#39;)) for ds in json.load(sys.stdin).get(&#39;results&#39;,[])]&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># All sources should report: ENABLED</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon-platform.example.local/api/ni/data-sources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(ds.get(&#39;alias&#39;), ds.get(&#39;status&#39;)) for ds in json.load(sys.stdin).get(&#39;results&#39;,[])]&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># All sources should report: ENABLED</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vCenter-DC1 ENABLED
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>NSX-Manager-Prod ENABLED
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vRealize-Ops ENABLED
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Kubernetes-Cluster-01 ENABLED
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Arista-Switch-Core ENABLED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the platform's CA certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to aon-platform.example.local port 443: Connection refused</code></strong> — Verify the AON platform hostname/IP is correct, the service is running (<code>systemctl status aria-operations-networks</code>), and network connectivity exists to port 443.
+<strong><code>KeyError: 'results'</code></strong> — Confirm the API token in <code>${TOKEN}</code> is valid and has data-source read permissions by testing with <code>curl -sk "https://aon-platform.example.local/api/ni/data-sources" -H "Authorization: NetworkInsight ${TOKEN}"</code> directly.</p>
+</div>
 <hr />
 <h2 id="phase-5-ipfix-flow-collection">Phase 5 — IPFIX Flow Collection<a class="headerlink" href="#phase-5-ipfix-flow-collection" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Flow records visible in the Flow Map for at least one VM-to-VM conversation; application discovery active.</p>
 <h3 id="enable-ipfix-on-nsx-t">Enable IPFIX on NSX-T<a class="headerlink" href="#enable-ipfix-on-nsx-t" title="Permanent link">&para;</a></h3>
 <p>In NSX Manager: Networking → Flow Monitoring → IPFIX Profiles → Add Profile</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Collector IP:    10.10.10.51   (Collector VM management IP)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Collector Port:  2055
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Active Timeout:  60
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Idle Timeout:    15
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Collector IP:    10.10.10.51   (Collector VM management IP)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Collector Port:  2055
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Active Timeout:  60
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Idle Timeout:    15
 </code></pre></div>
 <p>Assign the profile to NSX segments or transport nodes.</p>
 <h3 id="enable-ipfix-on-vds">Enable IPFIX on VDS<a class="headerlink" href="#enable-ipfix-on-vds" title="Permanent link">&para;</a></h3>
 <p>In vCenter: dvSwitch → Configure → NetFlow → Edit</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Collector IP:   10.10.10.51
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Collector Port: 2055
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Active Flow Timeout:   60
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Idle Flow Timeout:     15
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Collector IP:   10.10.10.51
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Collector Port: 2055
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Active Flow Timeout:   60
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Idle Flow Timeout:     15
 </code></pre></div>
 <p>Apply to the distributed switch. Flow export begins immediately.</p>
 <h3 id="configure-physical-switch-netflow">Configure Physical Switch NetFlow<a class="headerlink" href="#configure-physical-switch-netflow" title="Permanent link">&para;</a></h3>
 <p>On Cisco IOS switches (example):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Define flow exporter toward the Collector VM</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ip<span class="w"> </span>flow-export<span class="w"> </span>destination<span class="w"> </span><span class="m">10</span>.10.10.51<span class="w"> </span><span class="m">2055</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ip<span class="w"> </span>flow-export<span class="w"> </span>version<span class="w"> </span><span class="m">9</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>ip<span class="w"> </span>flow-export<span class="w"> </span><span class="nb">source</span><span class="w"> </span>Vlan10
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Enable on interfaces</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>interface<span class="w"> </span>GigabitEthernet1/0/1
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w"> </span>ip<span class="w"> </span>flow<span class="w"> </span>ingress
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w"> </span>ip<span class="w"> </span>flow<span class="w"> </span>egress
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Define flow exporter toward the Collector VM</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ip<span class="w"> </span>flow-export<span class="w"> </span>destination<span class="w"> </span><span class="m">10</span>.10.10.51<span class="w"> </span><span class="m">2055</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ip<span class="w"> </span>flow-export<span class="w"> </span>version<span class="w"> </span><span class="m">9</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>ip<span class="w"> </span>flow-export<span class="w"> </span><span class="nb">source</span><span class="w"> </span>Vlan10
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Enable on interfaces</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>interface<span class="w"> </span>GigabitEthernet1/0/1
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w"> </span>ip<span class="w"> </span>flow<span class="w"> </span>ingress
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w"> </span>ip<span class="w"> </span>flow<span class="w"> </span>egress
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name matches your device model (e.g., <code>GigabitEthernet0/0/1</code> on some platforms) and check syntax with <code>show ip flow export</code>.
+<strong><code>% Incomplete command.</code></strong> — Ensure you are in the correct configuration mode (<code>config t</code>) before entering interface commands, and that the interface exists on the device.</p>
+</div>
 <p>On Arista EOS (example):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>flow<span class="w"> </span>tracking<span class="w"> </span>hardware
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">   </span>tracker<span class="w"> </span>IPFIX
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">      </span>record<span class="w"> </span>format<span class="w"> </span>ipfix
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span>exporter<span class="w"> </span>VRNI-COLLECTOR
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">         </span>destination<span class="w"> </span><span class="m">10</span>.10.10.51
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">         </span><span class="nb">local</span><span class="w"> </span>interface<span class="w"> </span>Management1
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">         </span>template<span class="w"> </span>interval<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>flow<span class="w"> </span>tracking<span class="w"> </span>hardware
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">   </span>tracker<span class="w"> </span>IPFIX
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">      </span>record<span class="w"> </span>format<span class="w"> </span>ipfix
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">      </span>exporter<span class="w"> </span>VRNI-COLLECTOR
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">         </span>destination<span class="w"> </span><span class="m">10</span>.10.10.51
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">         </span><span class="nb">local</span><span class="w"> </span>interface<span class="w"> </span>Management1
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">         </span>template<span class="w"> </span>interval<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (use <code>configure terminal</code> first on network devices).
+<strong><code>% Incomplete command</code></strong> — Ensure all required parameters are present; check that the exporter destination IP is reachable and that Management1 interface exists on the device.</p>
+</div>
 <h3 id="verify-flows-arriving">Verify Flows Arriving<a class="headerlink" href="#verify-flows-arriving" title="Permanent link">&para;</a></h3>
 <p>In the AON UI: Network Map → select a VM entity → Flows tab — recent flow records should appear within 5 minutes of enabling export.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check collector is receiving UDP 2055 traffic</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Should see packets from ESXi hosts and switches</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check collector is receiving UDP 2055 traffic</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Should see packets from ESXi hosts and switches</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ubuntu@aon-collector-dc1.example.local&#39;s password: 
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>tcpdump: verbose output suppressed, use -v or -vv for full packet decode
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>14:32:15.847291 IP 192.168.100.45.54821 &gt; 192.168.100.200.2055: UDP, length 1472
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>14:32:16.102547 IP 192.168.100.46.54822 &gt; 192.168.100.200.2055: UDP, length 1468
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>14:32:16.445893 IP 10.50.12.78.55234 &gt; 192.168.100.200.2055: UDP, length 1456
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>14:32:17.231654 IP 192.168.100.45.54821 &gt; 192.168.100.200.2055: UDP, length 1472
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>14:32:17.889012 IP 10.50.12.79.55235 &gt; 192.168.100.200.2055: UDP, length 1464
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>14:32:18.556234 IP 192.168.100.46.54822 &gt; 192.168.100.200.2055: UDP, length 1468
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>14:32:19.223445 IP 192.168.100.47.54823 &gt; 192.168.100.200.2055: UDP, length 1480
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>14:32:19.891123 IP 10.50.12.80.55236 &gt; 192.168.100.200.2055: UDP, length 1472
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>14:32:20.558902 IP 192.168.100.45.54821 &gt; 192.168.100.200.2055: UDP, length 1468
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>14:32:21.226734 IP 10.50.12.78.55234 &gt; 192.168.100.200.2055: UDP, length 1456
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>14:32:21.894567 IP 192.168.100.46.54822 &gt; 192.168.100.200.2055: UDP, length 1472
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>14:32:22.562345 IP 192.168.100.47.54823 &gt; 192.168.100.200.2055: UDP, length 1464
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>14:32:23.230123 IP 10.50.12.79.55235 &gt; 192.168.100.200.2055: UDP, length 1480
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>14:32:23.897891 IP 192.168.100.45.54821 &gt; 192.168.100.200.2055: UDP, length 1468
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>14:32:24.565678 IP 10.50.12.80.55236 &gt; 192.168.100.200.2055: UDP, length 1472
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>20 packets captured
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>20 packets received by filter
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>0 packets dropped by kernel
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tcpdump: command not found</code></strong> — Install tcpdump with <code>sudo apt-get install tcpdump</code> on the collector VM.
+<strong><code>tcpdump: eth0: No such device</code></strong> — Verify the correct interface name with <code>ip link show</code> and replace eth0 with the actual interface (e.g., ens0, ens</p>
+</div>
 <hr />
 <h2 id="phase-6-post-deployment-validation">Phase 6 — Post-Deployment Validation<a class="headerlink" href="#phase-6-post-deployment-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All service health checks green; topology visible end-to-end (VM → logical → physical); path analysis returns results.</p>
 <h3 id="service-health-check">Service Health Check<a class="headerlink" href="#service-health-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># All services: Active (running)</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Check for errors in platform log</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vrni-platform/platform.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># All services: Active (running)</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1"># Check for errors in platform log</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vrni-platform/platform.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ubuntu@aon-platform.example.local&#39;s password: 
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>● vrni-platform.service - Aria Operations for Networks Platform
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>     Loaded: loaded (/etc/systemd/system/vrni-platform.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2h 14min ago
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>● nginx.service - NGINX HTTP Server
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>     Active: active (running) since Mon 2024-01-15 09:23:52 UTC; 2h 14min ago
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>● cassandra.service - Apache Cassandra
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>     Loaded: loaded (/etc/systemd/system/cassandra.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>     Active: active (running) since Mon 2024-01-15 09:24:15 UTC; 2h 13min ago
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>● kafka.service - Apache Kafka
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>     Loaded: loaded (/etc/systemd/system/kafka.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>     Active: active (running) since Mon 2024-01-15 09:24:31 UTC; 2h 13min ago
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>● elasticsearch.service - Elasticsearch
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>     Loaded: loaded (/etc/systemd/system/elasticsearch.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>     Active: active (running) since Mon 2024-01-15 09:24:48 UTC; 2h 12min ago
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>● postgres.service - PostgreSQL Database Server
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>     Loaded: loaded (/etc/systemd/system/postgres.service; enabled; vendor preset: enabled)
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>     Active: active (running) since Mon 2024-01-15 09:25:03 UTC; 2h 12min ago
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>2024-01-15 10:18:22 aon-platform INFO: Platform initialization complete
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>2024-01-15 10:19:05 aon-platform INFO: All collectors registered successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: no password was provided</code></strong> — Use <code>ssh -i /path/to/key ubuntu@aon-platform.example.local</code> for key-based auth or ensure passwordless sudo is configured.
+<strong><code>Connection refused</code></strong> — Verify the hostname resolves correctly with <code>nslookup aon-platform.example.local</code> and confirm SSH port 22 is accessible.
+<strong><code>tail: cannot open '/var/log/vrni-platform/platform.log' for reading: No such file or directory</code></strong> — Check the actual log location with <code>sudo find /var/log -name "*.log" -path "*vrni*"</code> or verify the service is logging to a different directory.</p>
+</div>
 <h3 id="topology-and-flow-map">Topology and Flow Map<a class="headerlink" href="#topology-and-flow-map" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Network Map → browse to any VM → confirm VMs, segments, and physical switches are visible.</li>
@@ -9287,10 +9431,10 @@ Admin → Infrastructure → Add Proxy → copy the shared secret.</p>
 </ul>
 <h3 id="run-path-analysis">Run Path Analysis<a class="headerlink" href="#run-path-analysis" title="Permanent link">&para;</a></h3>
 <p>In the AON UI: Plan &amp; Assess → Path Analysis</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Source:       VM or IP (e.g. web-01.example.local)
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Destination:  VM or IP (e.g. db-01.example.local)
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Port:         3306/TCP
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>→ Analyse
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Source:       VM or IP (e.g. web-01.example.local)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Destination:  VM or IP (e.g. db-01.example.local)
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Port:         3306/TCP
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>→ Analyse
 </code></pre></div>
 <p>Expected result: full hop-by-hop path including NSX DFW rule that allows or denies the flow.</p>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
@@ -9379,7 +9523,7 @@ Admin → Infrastructure → Add Proxy → copy the shared secret.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

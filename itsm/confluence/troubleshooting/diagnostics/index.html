@@ -7564,26 +7564,81 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>free<span class="w"> </span>-h
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>top<span class="w"> </span>-b<span class="w"> </span>-n1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>java<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&quot;state&quot;:&quot;RUNNING&quot;}
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15 14:32:18,445 ERROR [http-nio-8090-exec-42] com.atlassian.confluence.pages.actions.ViewPageAction - Exception rendering page: Page ID 98765
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>java.lang.NullPointerException: Cannot invoke method on null object
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    at com.atlassian.confluence.pages.PageManager.getPage(PageManager.java:287)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-01-15 14:28:03,221 WARN [scheduler-7] com.atlassian.confluence.search.v2.SearchManager - Error indexing page 54321: timeout after 5000ms
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2024-01-15 13:55:42,109 ERROR [http-nio-8090-exec-18] com.atlassian.plugin.manager.DefaultPluginManager - Failed to start bundle: com.example.custom-plugin v2.1.4
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15 15:01:22,334 WARN [http-nio-8090-exec-51] com.atlassian.confluence.pages.actions.ViewPageAction - Slow page render took 8234ms for page Dashboard
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15 14:59:18,556 WARN [http-nio-8090-exec-33] com.atlassian.confluence.search.v2.SearchManager - Search query took 6891ms
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>/dev/sda2      500G  387G  113G  78% /var/atlassian/application-data/confluence
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>-rw-r--r-- 1 confluence confluence 2.3G Jan 15 15:02 page-98765-attachment.pdf
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>-rw-r--r-- 1 confluence confluence 1.8G Jan 14 22:15 export-backup-20240114.zip
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>-rw-r--r-- 1 confluence confluence 892M Jan 13 18:44 video-demo.mp4
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>-rw-r--r-- 1 confluence confluence 567M Jan 12 10:33 archive-2024Q1.tar.gz
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>-rw-r--r-- 1 confluence confluence 445M Jan 11 09:22 presentation-slides.pptx
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>               total        used        free      shared  buff/cache   available
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Mem:            31Gi       18Gi       4.2Gi       256Mi       8.8Gi       12Gi
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>java     1847  2.4 58.3 6234568 18234456   ?  Sl   14:22   2:47 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx20g -Xms8g
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>java     1923  0.1  2.1 1024567 678234     ?  Sl   14:25   0:12 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx2g
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to localhost port 8090: Connection refused</code></strong> — Verify Confluence service is running with <code>systemctl status confluence</code> and check if the port binding changed in <code>confluence.cfg.xml</code>.
+**`grep: /var/atlassian/application-</p>
+</div>
 <hr />
 <h2 id="step-2-jvm-heap-analysis">Step 2 — JVM heap analysis<a class="headerlink" href="#step-2-jvm-heap-analysis" title="Permanent link">&para;</a></h2>
 <h3 id="check-current-heap-usage">Check current heap usage<a class="headerlink" href="#check-current-heap-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Summary heap stats (every 5 seconds, 5 samples)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Columns: S0, S1, E (Eden), O (Old), M (Metaspace), YGC, YGCT, FGC, FGCT, GCT</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Alert if O &gt; 90% between GC cycles</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Full GC info</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>jstat<span class="w"> </span>-gc<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="m">3</span>
-</code></pre></div>
-<h3 id="capture-an-on-demand-heap-dump">Capture an on-demand heap dump<a class="headerlink" href="#capture-an-on-demand-heap-dump" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">DUMP_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/confluence-heap-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span><span class="s2">.hprof&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>jmap<span class="w"> </span>-dump:format<span class="o">=</span>b,file<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Heap dump: </span><span class="nv">$DUMP_FILE</span><span class="s2"> (</span><span class="k">$(</span>du<span class="w"> </span>-sh<span class="w"> </span><span class="nv">$DUMP_FILE</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="k">)</span><span class="s2">)&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Summary heap stats (every 5 seconds, 5 samples)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Columns: S0, S1, E (Eden), O (Old), M (Metaspace), YGC, YGCT, FGC, FGCT, GCT</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Alert if O &gt; 90% between GC cycles</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Full GC info</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>jstat<span class="w"> </span>-gc<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="m">3</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>12345
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  S0     S1     E      O      M     YGC     YGCT    FGC    FGCT     GCT
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  0.00  45.23  78.91  72.34  88.12   1247   156.32    18    45.67  201.99
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  0.00  45.23  82.15  72.34  88.12   1247   156.32    18    45.67  201.99
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  0.00  45.23  85.42  73.21  88.45   1248   156.89    18    45.67  202.56
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  0.00  45.23  12.08  73.21  88.45   1248   156.89    18    45.67  202.56
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  0.00  45.23  18.34  73.89  88.67   1249   157.45    18    45.67  203.12
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU    YGC     YGCT    FGC    FGCT     GCT
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>655360 655360      0 296576 5242880 4390912 11010048 8070144 176128 155648 20480 18432   1248  157.45     18   45.67  203.12
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>655360 655360      0 296576 5242880 4521984 11010048 8070144 176128 155648 20480 18432   1248  157.45     18   45.67  203.12
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>655360 655360      0 296576 5242880 4653056 11010048 8070144 176128 155648 20480 18432   1249  158.01     18   45.67  203.68
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>12345: No such process</code></strong> — Verify Confluence is running with <code>systemctl status confluence</code> and check the correct process name with <code>ps aux | grep confluence</code>.
+<strong><code>jstat: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the confluence system user to access the JVM process statistics.</p>
+</div>
+<h3 id="capture-an-on-demand-heap-dump">Capture an on-demand heap dump<a class="headerlink" href="#capture-an-on-demand-heap-dump" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">DUMP_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/confluence-heap-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span><span class="s2">.hprof&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>jmap<span class="w"> </span>-dump:format<span class="o">=</span>b,file<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Heap dump: </span><span class="nv">$DUMP_FILE</span><span class="s2"> (</span><span class="k">$(</span>du<span class="w"> </span>-sh<span class="w"> </span><span class="nv">$DUMP_FILE</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="k">)</span><span class="s2">)&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Heap dump: /tmp/confluence-heap-202401151430.hprof (2.3G)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>jmap: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
+<strong><code>Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file</code></strong> — Ensure Confluence is running as the same user executing jmap, or run jmap with sudo.
+<strong><code>No such file or directory</code></strong> — Verify the Confluence PID exists with <code>pgrep -f "atlassian-confluence"</code> before running jmap, as the process may have stopped.</p>
+</div>
 <h3 id="analyse-heap-dump-with-eclipse-mat">Analyse heap dump with Eclipse MAT<a class="headerlink" href="#analyse-heap-dump-with-eclipse-mat" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Download <a href="https://www.eclipse.org/mat/">Eclipse Memory Analyzer (MAT)</a></li>
@@ -7625,31 +7680,74 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 <h2 id="step-3-thread-dump-capture-and-analysis">Step 3 — Thread dump capture and analysis<a class="headerlink" href="#step-3-thread-dump-capture-and-analysis" title="Permanent link">&para;</a></h2>
 <p>Thread dumps reveal what all JVM threads are doing at a point in time. Capture 3 dumps 10 seconds apart to identify patterns — stuck threads repeat across dumps; busy threads appear in different states.</p>
 <h3 id="capture-thread-dumps">Capture thread dumps<a class="headerlink" href="#capture-thread-dumps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nv">DUMP_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/threaddump_</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">_</span><span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span><span class="s2">.txt&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>jstack<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Captured: </span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">done</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Merge for analysis</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cat<span class="w"> </span>/tmp/threaddump_*.txt<span class="w"> </span>&gt;<span class="w"> </span>/tmp/threaddump_merged.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nv">DUMP_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/threaddump_</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">_</span><span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>jstack<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Captured: </span><span class="nv">$DUMP_FILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">done</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Merge for analysis</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>cat<span class="w"> </span>/tmp/threaddump_*.txt<span class="w"> </span>&gt;<span class="w"> </span>/tmp/threaddump_merged.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Captured: /tmp/threaddump_1_143022.txt
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Captured: /tmp/threaddump_2_143032.txt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Captured: /tmp/threaddump_3_143042.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>jstack: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions.
+<strong><code>Could not attach to &lt;PID&gt;: Permission denied</code></strong> — Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user).
+<strong><code>pgrep: command not found</code></strong> — Install the procps package (<code>apt-get install procps</code> on Debian/Ubuntu or <code>yum install procps-ng</code> on RHEL/CentOS).</p>
+</div>
 <h3 id="thread-dump-quick-analysis">Thread dump quick analysis<a class="headerlink" href="#thread-dump-quick-analysis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Count threads by state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span><span class="s2">&quot;java.lang.Thread.State:&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Find all BLOCKED threads</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;java.lang.Thread.State: BLOCKED&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-60
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Find all threads waiting on a lock</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>grep<span class="w"> </span>-B<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;waiting to lock&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;\&quot;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Find deadlocks (jstack outputs these at the end)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;DEADLOCK&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Count threads by state</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span><span class="s2">&quot;java.lang.Thread.State:&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Find all BLOCKED threads</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;java.lang.Thread.State: BLOCKED&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-60
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Find all threads waiting on a lock</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>grep<span class="w"> </span>-B<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;waiting to lock&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;\&quot;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Find deadlocks (jstack outputs these at the end)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;DEADLOCK&quot;</span><span class="w"> </span>/tmp/threaddump_1_*.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>245 RUNNABLE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>      87 TIMED_WAITING
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>      42 WAITING
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      18 BLOCKED
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>       3 NEW
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>java.lang.Thread.State: BLOCKED (on object monitor)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    at com.example.service.DatabasePool.getConnection(DatabasePool.java:156)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    - waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    at com.example.api.RequestHandler.processQuery(RequestHandler.java:423)
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    at java.lang.Thread.run(Thread.java:834)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>java.lang.Thread.State: BLOCKED (on object monitor)
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    at com.example.cache.CacheManager.invalidate(CacheManager.java:89)
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    - waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    at com.example.service.DataService.refresh(DataService.java:201)
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    at java.lang.Thread.run(Thread.java:834)
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>&quot;http-nio-8080-exec-12&quot; #47 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a2000 nid=0x5f2a waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>&quot;http-nio-8080-exec-15&quot; #50 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a5800 nid=0x5f2d waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>&quot;http-nio-8080-exec-18&quot; #53 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a8c00 nid=0x5f30 waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>&quot;scheduler-pool-1&quot; #61 daemon prio=5 os_prio=0 tid=0x00007f8c3e5b1000 nid=0x5f3e waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>&quot;background-worker-4&quot; #78 daemon prio=5 os_prio=0 tid=0x00007f8c3e6c2400 nid=0x5f55 waiting to lock &lt;0x00007f8c4a2b9f80&gt; (a java.lang.Object)
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>Found one Java-level deadlock:
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>=============================
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>&quot;http-nio-8080-exec-9&quot; #44:
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  waiting to lock monitor 0x00007f8c4a2b9f80 (object 0x00007f8c4a2b9f80, a java.lang.Object),
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>  which is held by &quot;scheduler-pool-2&quot; #62
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>&quot;scheduler-pool-2&quot; #62:
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  waiting to lock monitor 0x00007f8c4a2ba100 (object 0x00007f8c4a2ba100, a java.lang.Object),
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  which is held by &quot;http
 </code></pre></div>
 <h3 id="thread-states-reference">Thread states reference<a class="headerlink" href="#thread-states-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -7692,46 +7790,95 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 <hr />
 <h2 id="step-4-database-query-performance">Step 4 — Database query performance<a class="headerlink" href="#step-4-database-query-performance" title="Permanent link">&para;</a></h2>
 <h3 id="identify-slow-queries">Identify slow queries<a class="headerlink" href="#identify-slow-queries" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable slow query logging in PostgreSQL (threshold: 500ms)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;ALTER SYSTEM SET log_min_duration_statement = &#39;500&#39;;&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_reload_conf();&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View slow queries from pg log</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;duration:&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Real-time active query monitoring</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">             round(extract(epoch from now() - query_start)::numeric, 2) AS elapsed_s,</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">             state,</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">             left(query, 100) AS query_snippet</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">      FROM pg_stat_activity</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s2">        AND query_start &lt; now() - interval &#39;5 seconds&#39;</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s2">      ORDER BY elapsed_s DESC;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable slow query logging in PostgreSQL (threshold: 500ms)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;ALTER SYSTEM SET log_min_duration_statement = &#39;500&#39;;&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_reload_conf();&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># View slow queries from pg log</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;duration:&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Real-time active query monitoring</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">             round(extract(epoch from now() - query_start)::numeric, 2) AS elapsed_s,</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">             state,</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="s2">             left(query, 100) AS query_snippet</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="s2">      FROM pg_stat_activity</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="s2">        AND query_start &lt; now() - interval &#39;5 seconds&#39;</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="s2">      ORDER BY elapsed_s DESC;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ALTER SYSTEM
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SELECT 1
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>2024-01-15 14:23:47.891 UTC [8472] LOG:  duration: 2847.523 ms  statement: SELECT * FROM orders WHERE created_at &gt; NOW() - INTERVAL &#39;30 days&#39;;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>2024-01-15 14:25:12.445 UTC [8501] LOG:  duration: 1205.678 ms  statement: SELECT COUNT(*) FROM audit_logs WHERE timestamp &gt; NOW() - INTERVAL &#39;1 hour&#39;;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>2024-01-15 14:27:33.112 UTC [8534] LOG:  duration: 623.891 ms  statement: UPDATE inventory SET stock = stock - 1 WHERE product_id = $1;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>2024-01-15 14:29:01.667 UTC [8556] LOG:  duration: 512.234 ms  statement: SELECT * FROM users u JOIN orders o ON u.id = o.user_id LIMIT 1000;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a> pid  | elapsed_s |      state      | query_snippet
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>------+-----------+----------------+----------------------------------------------
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a> 9847 |    18.45  | active         | SELECT * FROM large_transactions WHERE status
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a> 9823 |    12.67  | active         | UPDATE customer_profiles SET last_login = now()
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a> 9801 |     8.34  | active         | INSERT INTO event_log (event_type, timestamp)
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>(3 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></strong> — Replace <code>$DB_HOST</code> with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script.
+<strong><code>psql: error: FATAL:  Ident authentication failed for user "postgres"</code></strong> — Configure PostgreSQL to accept password authentication in <code>pg_hba.conf</code> or use a <code>.pgpass</code> file with credentials for the postgres user.
+<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Verify the PostgreSQL log directory path matches your installation (check <code>log_directory</code> in <code>postgresql.conf</code>) and ensure the user running the command has read permissions.</p>
+</div>
 <h3 id="table-bloat-check">Table bloat check<a class="headerlink" href="#table-bloat-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT tablename,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">             pg_size_pretty(pg_relation_size(tablename::regclass)) AS table_size,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">             pg_size_pretty(pg_total_relation_size(tablename::regclass)) AS total_size,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">             n_dead_tup AS dead_tuples</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">      FROM pg_stat_user_tables</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s2">      ORDER BY n_dead_tup DESC</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">      LIMIT 15;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT tablename,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s2">             pg_size_pretty(pg_relation_size(tablename::regclass)) AS table_size,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s2">             pg_size_pretty(pg_total_relation_size(tablename::regclass)) AS total_size,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s2">             n_dead_tup AS dead_tuples</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s2">      FROM pg_stat_user_tables</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s2">      ORDER BY n_dead_tup DESC</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s2">      LIMIT 15;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>psql (14.8, server 14.9)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, compression: off)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Type &quot;help&quot; for help.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>           tablename            | table_size | total_size | dead_tuples
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>---------------------------------+------------+------------+-------------
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a> audit_logs                      | 2847 MB    | 3156 MB    |      847293
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a> user_sessions                   | 1203 MB    | 1456 MB    |      623841
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a> event_queue                     | 892 MB     | 1087 MB    |      412756
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a> page_revisions                  | 654 MB     | 891 MB     |      287654
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a> attachment_metadata             | 423 MB     | 567 MB     |      156432
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a> workflow_transitions            | 287 MB     | 401 MB     |       98765
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a> comment_history                 | 156 MB     | 234 MB     |       67543
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a> notification_log                | 89 MB      | 145 MB     |       34521
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a> cache_entries                   | 45 MB      | 78 MB      |       12987
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a> permission_grants               | 34 MB      | 52 MB      |        8234
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a> label_assignments               | 28 MB      | 41 MB      |        5123
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a> space_settings                  | 12 MB      | 18 MB      |        1456
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a> user_preferences                | 8 MB       | 14 MB      |         892
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a> api_tokens                      | 3 MB       | 5 MB       |         234
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a> temp_imports                    | 1 MB       | 2 MB       |          45
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>(15 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></strong> — Verify the <code>$DB_HOST</code> environment variable is set correctly with <code>echo $DB_HOST</code> and confirm the hostname resolves via <code>nslookup</code> or <code>ping</code>.
+<strong><code>psql: error: FATAL: Ident authentication failed for user "$DB_USER"</code></strong> — Ensure the PostgreSQL <code>pg_hba.conf</code> file permits the connection method for your user and host, or use a <code>.pgpass</code> file with proper permissions (600).
+<strong><code>ERROR: relation "pg_stat_user_tables" does not exist</code></strong> — Confirm you are connecting to the correct database with <code>-d "$DB_NAME"</code> and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+).</p>
+</div>
 <p>High <code>dead_tuples</code> → run <code>VACUUM ANALYZE &lt;tablename&gt;;</code></p>
 <h3 id="explain-analyze-a-suspicious-query">EXPLAIN ANALYZE a suspicious query<a class="headerlink" href="#explain-analyze-a-suspicious-query" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Prefix the slow query from pg_stat_activity with EXPLAIN (ANALYZE, BUFFERS)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="k">ANALYZE</span><span class="p">,</span><span class="w"> </span><span class="n">BUFFERS</span><span class="p">,</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="k">version</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">content</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">spacekey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;OPS&#39;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contenttype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PAGE&#39;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">prevver</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- Prefix the slow query from pg_stat_activity with EXPLAIN (ANALYZE, BUFFERS)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="k">ANALYZE</span><span class="p">,</span><span class="w"> </span><span class="n">BUFFERS</span><span class="p">,</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="k">version</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">content</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">spacekey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;OPS&#39;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contenttype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PAGE&#39;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">prevver</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
 </code></pre></div>
 <p>Look for: <strong>Seq Scan</strong> on large tables (missing index), high <strong>actual rows</strong> vs <strong>estimated rows</strong> (stale statistics — run <code>ANALYZE</code>).</p>
 <hr />
@@ -7741,30 +7888,51 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 <p><strong>Admin &gt; General Configuration &gt; Troubleshooting and Support Tools &gt; Create Support Zip</strong></p>
 <p>Select: Application Logs, Thread Dumps, System Information, Configuration Files.</p>
 <h3 id="generate-via-command-line">Generate via command line<a class="headerlink" href="#generate-via-command-line" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># The support zip script (ships with Confluence)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/opt/atlassian/confluence/bin/confluence-support-zip.sh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--output<span class="w"> </span>/tmp/confluence-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.zip
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If the script is unavailable, manually collect:</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">SUPPORT_DIR</span><span class="o">=</span><span class="s2">&quot;/tmp/confluence-support-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUPPORT_DIR</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Logs</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>cp<span class="w"> </span>-r<span class="w"> </span>/var/atlassian/application-data/confluence/logs/<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/logs/&quot;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Thread dumps</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>confluence<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>jstack<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/threaddump_</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">.txt&quot;</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="k">done</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Heap histogram (non-invasive)</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>jmap<span class="w"> </span>-histo:live<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/heap_histo.txt&quot;</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>zip<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">.zip&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUPPORT_DIR</span><span class="s2">/&quot;</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Support zip: </span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">.zip&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># The support zip script (ships with Confluence)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/opt/atlassian/confluence/bin/confluence-support-zip.sh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--output<span class="w"> </span>/tmp/confluence-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.zip
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># If the script is unavailable, manually collect:</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nv">SUPPORT_DIR</span><span class="o">=</span><span class="s2">&quot;/tmp/confluence-support-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUPPORT_DIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Logs</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>cp<span class="w"> </span>-r<span class="w"> </span>/var/atlassian/application-data/confluence/logs/<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/logs/&quot;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Thread dumps</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>confluence<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span>jstack<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/threaddump_</span><span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">done</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="c1"># Heap histogram (non-invasive)</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>jmap<span class="w"> </span>-histo:live<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">/heap_histo.txt&quot;</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>zip<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">.zip&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUPPORT_DIR</span><span class="s2">/&quot;</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Support zip: </span><span class="si">${</span><span class="nv">SUPPORT_DIR</span><span class="si">}</span><span class="s2">.zip&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Creating support zip for Confluence...
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Gathering logs from /var/atlassian/application-data/confluence/logs/
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Collecting thread dumps (3 iterations, 10s apart)...
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>2024-01-15 14:32:18 | Thread dump 1/3 captured (PID: 2847)
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>2024-01-15 14:32:28 | Thread dump 2/3 captured (PID: 2847)
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>2024-01-15 14:32:38 | Thread dump 3/3 captured (PID: 2847)
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Generating heap histogram (non-invasive)...
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>Heap histogram written to /tmp/confluence-support-20240115/heap_histo.txt
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  adding: confluence-support-20240115/logs/ (stored 0%)
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  adding: confluence-support-20240115/threaddump_1.txt (deflated 87%)
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  adding: confluence-support-20240115/threaddump_2.txt (deflated 87%)
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  adding: confluence-support-20240115/threaddump_3.txt (deflated 87%)
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  adding: confluence-support-20240115/heap_histo.txt (deflated 92%)
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>Support zip: /tmp/confluence-support-20240115.zip
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pgrep: no process found</code></strong> — Ensure Confluence is running with <code>systemctl status confluence</code> before collecting diagnostics.
+<strong><code>jstack: command not found</code></strong> — Install the JDK (not just JRE) with <code>apt-get install openjdk-11-jdk</code> or equivalent for your OS.
+<strong><code>Permission denied</code></strong> — Run the script with <code>sudo</code> or as the confluence system user to access logs and process memory.</p>
+</div>
 <h3 id="what-support-will-ask-for">What support will ask for<a class="headerlink" href="#what-support-will-ask-for" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7889,7 +8057,7 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -8290,6 +8290,24 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Delete a local account that is no longer needed</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>old-admin
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name            Role            Created                 Last Login
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>s.jones         array_admin     2024-01-15T09:22:14Z    2024-01-18T14:33:02Z
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>p.smith         storage_admin   2024-01-15T09:24:51Z    2024-01-17T11:05:18Z
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svc-monitoring  readonly        2024-01-15T09:26:33Z    2024-01-18T16:42:19Z
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pureuser        array_admin     2023-11-02T08:15:00Z    2024-01-18T17:01:45Z
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Admin account &#39;s.jones&#39; created successfully.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Admin account &#39;p.smith&#39; created successfully.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Admin account &#39;svc-monitoring&#39; created successfully.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Password updated for admin account &#39;s.jones&#39;.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Admin account &#39;old-admin&#39; deleted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Admin account 's.jones' already exists</code></strong> — Use <code>purefb admin update</code> instead of <code>create</code> if modifying an existing account.
+<strong><code>Error: Invalid role 'storage_admin'. Valid roles are: array_admin, storage_admin, readonly</code></strong> — Verify the role name matches exactly; use <code>purefb admin list-roles</code> to see all available roles.
+<strong><code>Error: Cannot delete account 'pureuser': default system account cannot be removed</code></strong> — Only delete custom-created admin accounts; system default accounts cannot be deleted.</p>
+</div>
 <p><strong>Roles reference:</strong></p>
 <table>
 <thead>
@@ -8319,9 +8337,21 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 </table>
 <p><strong>Break-glass account:</strong></p>
 <p>Maintain exactly one local <code>array_admin</code> account as a break-glass credential for use when SAML/AD is unavailable. Store this credential in a PAM vault (CyberArk, HashiCorp Vault) with access restricted to the on-call escalation procedure. Name the account <code>break-glass</code> or similar to make its purpose obvious in audit logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="k">break</span>-glass<span class="w"> </span>--role<span class="w"> </span>array_admin
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Immediately store the password in the PAM vault — do not leave it written down</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="k">break</span>-glass<span class="w"> </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Immediately store the password in the PAM vault — do not leave it written down</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin user &#39;break-glass&#39; created successfully.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Role: array_admin
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>User ID: 00000000-1111-2222-3333-444455556666
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>API token: T-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Password: Tn@9kL#mP$vQ2wRx5yZ8aB1cD4eF7gH0j
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Admin user 'break-glass' already exists</code></strong> — Delete the existing user with <code>purefb admin delete --name break-glass</code> before recreating it.
+<strong><code>Error: Invalid role 'array_admin'. Valid roles are: array_admin, ops_admin, readonly</code></strong> — Verify the role name matches exactly; use <code>purefb admin list-roles</code> to see available options.
+<strong><code>Error: Connection refused to management IP</code></strong> — Ensure the FlashBlade management interface is reachable and the CLI is authenticated with valid credentials via <code>purefb connect</code>.</p>
+</div>
 <hr />
 <h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
 <p>AD integration in Purity//FB serves two functions:</p>
@@ -8330,73 +8360,164 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <li><strong>Admin authentication via LDAP</strong> — AD group membership is mapped to Purity//FB admin roles, enabling domain accounts to log into the FlashBlade management GUI and CLI</li>
 </ol>
 <h3 id="join-flashblade-to-active-directory">Join FlashBlade to Active Directory<a class="headerlink" href="#join-flashblade-to-active-directory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure the AD join</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test the directory service connection</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Verify the current directory service configuration</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure the AD join</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Test the directory service connection</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Verify the current directory service configuration</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Directory service configuration updated successfully.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Enabled: true
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  URI: ldaps://dc01.example.com
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Base DN: DC=example,DC=com
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Bind User: CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Testing directory service connection...
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Connection test passed. LDAP bind successful.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Response time: 245ms
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Name                    Enabled  URI                          Base DN              Bind User
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>directory-service       true     ldaps://dc01.example.com     DC=example,DC=com    CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused on ldaps://dc01.example.com:636</code></strong> — Verify the LDAP server hostname/IP is reachable and port 636 is open in firewall rules.
+<strong><code>Error: Invalid bind credentials for CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com</code></strong> — Confirm the bind user account exists, password is correct, and the account has permission to query the directory.
+<strong><code>Error: Certificate verification failed for ldaps://dc01.example.com</code></strong> — Import the LDAP server's CA certificate to the FlashBlade or use <code>--insecure-tls true</code> if testing in a non-production environment.</p>
+</div>
 <p><strong>DNS requirement:</strong> The FlashBlade management interface must be able to resolve the AD domain and domain controller FQDNs. Confirm DNS is configured before attempting the AD join:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>dns<span class="w"> </span>list
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>dns-lookup<span class="w"> </span>--name<span class="w"> </span>dc01.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purefb<span class="w"> </span>dns<span class="w"> </span>list
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>dns-lookup<span class="w"> </span>--name<span class="w"> </span>dc01.example.com
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name Servers
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>10.20.30.40
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>10.20.30.41
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Lookup Results
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>dc01.example.com resolves to 192.168.1.50
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Query time: 2ms
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Server: 10.20.30.40#53
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: DNS server unreachable</code></strong> — Verify network connectivity to the configured DNS servers and ensure firewall rules permit DNS traffic on port 53.
+<strong><code>Error: Name resolution failed for dc01.example.com</code></strong> — Confirm the hostname exists in DNS and check that the correct DNS servers are configured with <code>purefb dns list</code>.</p>
+</div>
 <p><strong>NTP requirement:</strong> FlashBlade and AD domain controllers must have clocks within 5 minutes of each other (Kerberos 5-minute skew limit). Confirm NTP is configured:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purefb<span class="w"> </span>ntp<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purefb<span class="w"> </span>ntp<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NTP Servers
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Name          Enabled  Status
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ntp.ubuntu.com    true     synced
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>time.google.com   true     synced
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pool.ntp.org      false    unreachable
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Pure1 session not authenticated</code></strong> — Run <code>purefb login</code> with valid credentials before executing NTP commands.
+<strong><code>Error: Connection timeout to management interface</code></strong> — Verify the FlashBlade management IP is reachable and the array is online using <code>ping</code> or <code>purefb list</code>.</p>
+</div>
 <h3 id="map-ad-groups-to-purity-roles">Map AD Groups to Purity Roles<a class="headerlink" href="#map-ad-groups-to-purity-roles" title="Permanent link">&para;</a></h3>
 <p>After joining AD, create role mappings from AD security groups to Purity//FB roles. Assign all operational access to AD groups — remove individual local accounts for human admins once AD groups are validated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Map an AD group to the array_admin role</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-fb-admins,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Map a group to storage_admin</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-storage-ops,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>--role<span class="w"> </span>storage_admin
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Map a group to readonly for monitoring</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span>--role<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># List configured group-to-role mappings</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Map an AD group to the array_admin role</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-fb-admins,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Map a group to storage_admin</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-storage-ops,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Map a group to readonly for monitoring</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># List configured group-to-role mappings</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Group CN=pure-fb-admins,OU=Groups,DC=example,DC=com successfully mapped to array_admin role
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Group CN=pure-storage-ops,OU=Groups,DC=example,DC=com successfully mapped to storage_admin role
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Group CN=pure-readonly,OU=Groups,DC=example,DC=com successfully mapped to readonly role
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Name                                                    Role              Type
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>CN=pure-fb-admins,OU=Groups,DC=example,DC=com         array_admin       group
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>CN=pure-storage-ops,OU=Groups,DC=example,DC=com       storage_admin     group
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>CN=pure-readonly,OU=Groups,DC=example,DC=com          readonly          group
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: LDAP connection failed - unable to reach domain controller</code></strong> — Verify network connectivity to the AD domain controller and confirm the FlashBlade's DNS resolves the AD domain correctly.
+<strong><code>Error: Group CN=pure-fb-admins,OU=Groups,DC=example,DC=com not found in Active Directory</code></strong> — Confirm the group DN is correct and exists in AD by querying it directly with <code>ldapsearch</code> or Active Directory Users and Computers.
+<strong><code>Error: Role 'array_admin' does not exist</code></strong> — Use <code>purefb admin list --roles</code> to verify the exact role name and spelling.</p>
+</div>
 <p><strong>Validation:</strong> Log out and log back in using a domain account that is a member of the <code>pure-fb-admins</code> group. Confirm the expected role is assigned before removing individual local admin accounts.</p>
 <h3 id="smb-and-kerberos-nfs">SMB and Kerberos NFS<a class="headerlink" href="#smb-and-kerberos-nfs" title="Permanent link">&para;</a></h3>
 <p>Once the FlashBlade is joined to AD, SMB shares automatically use Kerberos authentication — Windows clients presenting valid domain tickets can access shares without additional configuration. For NFS with Kerberos authentication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable NFS Kerberos authentication on a filesystem</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># krb5 = authentication only</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># krb5i = authentication + integrity</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># krb5p = authentication + integrity + privacy (full encryption)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash,sec=krb5p)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable NFS Kerberos authentication on a filesystem</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># krb5 = authentication only</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># krb5i = authentication + integrity</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># krb5p = authentication + integrity + privacy (full encryption)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash,sec=krb5p)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Filesystem prod-nfs updated.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Name: prod-nfs
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>NFS Rules: 10.0.1.0/24(rw,no_root_squash,sec=krb5p)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>NFS Enabled: true
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>SMB Enabled: false
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>HTTP Enabled: false
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Snapshot Enabled: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Filesystem 'prod-nfs' not found</code></strong> — Verify the filesystem name exists with <code>purefb filesystem list</code> and correct any typos.
+<strong><code>Error: Invalid NFS rule syntax</code></strong> — Ensure the rule follows the format <code>subnet(options)</code> with valid options like <code>rw</code>, <code>sec=krb5p</code>, and no spaces inside parentheses.
+<strong><code>Error: Kerberos realm not configured on array</code></strong> — Configure Kerberos settings on the FlashBlade first using <code>purefb kerberos</code> commands before applying krb5 security policies.</p>
+</div>
 <p>Kerberos NFS requires the NFS client to obtain a Kerberos ticket from the KDC (domain controller) — configure <code>/etc/krb5.conf</code> on Linux clients and ensure the client has a Kerberos keytab or principal.</p>
 <hr />
 <h2 id="ldap-integration-non-ad">LDAP Integration (Non-AD)<a class="headerlink" href="#ldap-integration-non-ad" title="Permanent link">&para;</a></h2>
 <p>For Linux-centric environments without Active Directory, configure LDAP directly (OpenLDAP, FreeIPA, etc.) for NFS UID/GID resolution. FlashBlade uses LDAP to resolve NFS user and group IDs to names for export policy enforcement.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure LDAP for NFS UID/GID mapping</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Test the LDAP connection</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure LDAP for NFS UID/GID mapping</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Test the LDAP connection</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Directory service configuration updated successfully.
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  URI: ldap://ldap.example.com
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  Base DN: DC=example,DC=com
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  Bind User: CN=svc-pure-bind,DC=example,DC=com
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  Enabled: true
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Testing LDAP connection...
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Connection test passed.
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  Response time: 142ms
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  Bind successful: true
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  Base DN reachable: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid bind credentials</code></strong> — Verify the bind user DN and password are correct by testing them directly against the LDAP server with <code>ldapsearch</code>.
+<strong><code>Error: Unable to resolve ldap://ldap.example.com</code></strong> — Ensure the FlashBlade management network can reach the LDAP server and that DNS resolution is working with <code>nslookup ldap.example.com</code>.
+<strong><code>Error: Base DN "DC=example,DC=com" not found in directory</code></strong> — Confirm the base DN matches your LDAP directory structure by querying the LDAP server with <code>ldapsearch -x -H ldap://ldap.example.com -b "DC=example,DC=com"</code>.</p>
+</div>
 <p><strong>UID/GID consistency:</strong> Ensure NFS clients and the LDAP directory use consistent UID and GID assignments. Mismatched UIDs between the client and the LDAP directory cause incorrect ownership resolution on the FlashBlade, which can result in access denials even when export policy IP rules match.</p>
 <hr />
 <h2 id="saml-sso-configuration">SAML SSO Configuration<a class="headerlink" href="#saml-sso-configuration" title="Permanent link">&para;</a></h2>
@@ -8440,28 +8561,52 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <li>Confirm the expected role is shown in the FlashBlade GUI</li>
 <li>Keep the break-glass local account active until SSO is validated</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify SSO is configured (CLI shows SSO enabled/disabled status)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--sso
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify SSO is configured (CLI shows SSO enabled/disabled status)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--sso
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Name                          SSO Enabled
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>flashblade-prod-01            true
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>flashblade-prod-02            true
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>flashblade-dr-backup          false
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>flashblade-test-lab           false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or authentication token expired</code></strong> — Re-authenticate using <code>purefb login</code> with valid credentials before running the command.
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the FlashBlade management IP and confirm the array hostname/IP is reachable via <code>ping</code> or <code>nslookup</code>.</p>
+</div>
 <p><strong>SAML failover:</strong> If the IdP is unreachable, SSO authentication will fail for all domain users. The local break-glass account bypasses SSO and provides emergency access. Ensure the break-glass password is current and stored in the PAM vault before enabling SSO-only mode.</p>
 <hr />
 <h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
 <p>API tokens authenticate REST API calls and CLI sessions for automation, monitoring, and backup integrations. Each admin account can have one API token. Tokens do not expire by default — rotate them on a defined schedule and revoke immediately when a service account is decommissioned.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all accounts and show their API token status</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create an API token for an admin account</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Output:</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">#   api_token: &lt;token_value&gt;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Save the token immediately — it is shown only at creation and cannot be retrieved later</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Revoke an API token without deleting the account</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-old-monitoring
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Delete an account and its token</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-decommissioned
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List all accounts and show their API token status</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Create an API token for an admin account</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Output:</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">#   api_token: &lt;token_value&gt;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Save the token immediately — it is shown only at creation and cannot be retrieved later</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Revoke an API token without deleting the account</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-old-monitoring
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Delete an account and its token</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-decommissioned
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Name                 Created                  Expires                 Last Used
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>svc-veeam            2024-01-15T09:22:14Z     2025-01-15T09:22:14Z    2024-01-18T14:33:22Z
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>svc-monitoring       2023-11-02T16:45:30Z     2024-11-02T16:45:30Z    2024-01-10T08:15:09Z
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>svc-backup-legacy    2023-06-20T11:12:05Z     2024-06-20T11:12:05Z    Never
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>api_token: 8f4a9c2b-7e1d-4f6a-9k3m-2p5q8r1s9t0u
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>(no output — command completes silently)
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: API token 'svc-old-monitoring' not found</code></strong> — Verify the token name with <code>purefb admin apitoken list</code> before attempting deletion.
+<strong><code>Error: Account 'svc-decommissioned' is in use by active sessions</code></strong> — Revoke all active API tokens for the account before deletion using <code>purefb admin apitoken delete</code>.</p>
+</div>
 <p><strong>Service account token standards:</strong></p>
 <table>
 <thead>
@@ -8507,38 +8652,114 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <li>Revoke the old token: <code>purefb admin apitoken delete --name &lt;account&gt;</code> (this overwrites the existing token — step 1 already replaced it, so deletion in this context means the old value is gone after step 1)</li>
 </ol>
 <p><strong>Authenticating with an API token (REST API example):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Use x-auth-token header for API calls</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Or log in with username/password to get a session token, then use it</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;pureuser&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>-c<span class="w"> </span>/tmp/fb_session.txt
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/filesystems&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>-b<span class="w"> </span>/tmp/fb_session.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Use x-auth-token header for API calls</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Or log in with username/password to get a session token, then use it</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;pureuser&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">    </span>-c<span class="w"> </span>/tmp/fb_session.txt
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/filesystems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">    </span>-b<span class="w"> </span>/tmp/fb_session.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;items&quot;: [
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    {
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>      &quot;name&quot;: &quot;FB-M20R2-1&quot;,
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      &quot;id&quot;: &quot;12345678-1234-5678-90ab-cdef12345678&quot;,
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>      &quot;version&quot;: &quot;4.2.1&quot;,
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>      &quot;status&quot;: &quot;healthy&quot;,
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>      &quot;capacity&quot;: 107374182400
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    }
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  ],
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  &quot;continuation_token&quot;: null
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>}
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>{
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>  &quot;username&quot;: &quot;pureuser&quot;,
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>  &quot;api_token&quot;: &quot;T-1a2b3c4d5e6f7g8h9i0j&quot;
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>}
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>{
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  &quot;items&quot;: [
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>    {
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>      &quot;name&quot;: &quot;fs-prod-01&quot;,
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>      &quot;id&quot;: &quot;87654321-4321-8765-ba09-fedcba987654&quot;,
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>      &quot;provisioned&quot;: 1099511627776,
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>      &quot;used&quot;: 549755813888,
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>      &quot;status&quot;: &quot;available&quot;
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>    },
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>    {
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>      &quot;name&quot;: &quot;fs-backup-02&quot;,
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>      &quot;id&quot;: &quot;11223344-5566-7788-99aa-bbccddeeff00&quot;,
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>      &quot;provisioned&quot;: 549755813888,
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>      &quot;used&quot;: 274877906944,
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>      &quot;status&quot;: &quot;available&quot;
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>    }
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>  ],
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>  &quot;continuation_token&quot;: null
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the FlashBlade's CA certificate into your system trust store.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API token is valid and the endpoint is reachable; check that the response is not an HTML error page by removing <code>| jq .</code> temporarily.
+<strong><code>curl: (7) Failed to connect to &lt;fb-management-ip&gt; port 443: Connection refused</code></strong> — Confirm the FlashBlade management IP is correct and reachable from your host using <code>ping</code> or <code>nc -zv</code>.</p>
+</div>
 <hr />
 <h2 id="authentication-audit-and-review">Authentication Audit and Review<a class="headerlink" href="#authentication-audit-and-review" title="Permanent link">&para;</a></h2>
 <p>Run the following checks quarterly and before any access control review:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all local accounts and their roles</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List all API tokens and their last-used timestamps</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Review AD/LDAP group-to-role mappings</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Review directory service configuration</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Check audit log for recent authentication events</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth\|token&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List all local accounts and their roles</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># List all API tokens and their last-used timestamps</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Review AD/LDAP group-to-role mappings</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># Review directory service configuration</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># Check audit log for recent authentication events</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth\|token&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Name                          Role
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>admin                         storage_admin
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>backup_svc                    storage_operator
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>monitoring_user               storage_reader
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>audit_admin                   audit_admin
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Name                          Created                    Last Used
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>token_monitoring_01           2024-01-15T08:22:14Z       2024-01-18T14:33:52Z
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>token_backup_daily            2024-01-10T10:45:30Z       2024-01-18T09:15:22Z
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>token_api_integration         2023-11-22T16:18:09Z       2024-01-17T23:42:18Z
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>Group Name                    Role Mapping
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>LDAP_Storage_Admins          storage_admin
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>LDAP_Backup_Operators        storage_operator
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>AD_Audit_Team                audit_admin
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>Directory Service             Status              Type
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>ldap.corp.local               connected           LDAP
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>ad.internal.example.com       connected           Active Directory
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>Time                          User                Event Type              Details
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>2024-01-18T14:33:52Z          monitoring_user     token_auth_success      API token authenticated
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>2024-01-18T14:22:18Z          admin               login_success           Web UI login from 192.168.1.45
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>2024-01-18T13:55:41Z          backup_svc          token_auth_success      API token authenticated
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>2024-01-18T12:10:33Z          audit_admin         login_success           Web UI login from 10.50.22.88
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a>2024-01-18T11:44:22Z          unknown_user        login_failure           Invalid credentials attempted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid command 'admin list'. Did you mean 'admin show'?</code></strong> — Use <code>purefb admin show</code> instead of <code>purefb admin list</code> to display local accounts.
+<strong><code>Error: Connection refused to management IP 192.168.1.100:443</code></strong> — Verify the FlashBlade management IP is reachable and the purefb CLI is configured with the correct target using <code>purefb connect</code>.
+<strong><code>Error: Insufficient privileges to list audit logs</code></strong> — Ensure your user account has the audit_admin or storage_admin role assigned via <code>purefb admin grant</code>.</p>
+</div>
 <p><strong>Quarterly review checklist:</strong></p>
 <ul>
 <li>[ ] Confirm all local accounts are accounted for — no orphaned accounts from departed staff</li>
@@ -8584,7 +8805,7 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

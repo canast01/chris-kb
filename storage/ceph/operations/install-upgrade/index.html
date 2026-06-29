@@ -7838,69 +7838,187 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># 7. Check manager module health</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;enabled_modules|disabled_modules&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HEALTH_OK
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>x osds: 12 up, 12 in
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>recovering 0 B/s, 0 objects/s
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>noscrub is set
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nodeep-scrub is set
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>dumped all config-keys
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>exported auth(s)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph version 16.2.10 (45ac8adee3d3226cc9dd0850e2cd9150b4d60ed5) pacific (stable)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>require_osd_release 16
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>enabled_modules: [balancer, status, prometheus, pg_stat]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>disabled_modules: [dashboard, influx, insights, iostat, nfs, orchestrator, rbd_support, selftest, snap_schedule, telegraf, telemetry, test_orchestrator, volumes]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>HEALTH_WARN</code></strong> — Address the warning with <code>ceph health detail</code> and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding.
+<strong><code>error: (2) No such file or directory</code></strong> — Verify the Ceph cluster is initialized and the monitor is running with <code>ceph -s</code>; check <code>/etc/ceph/ceph.conf</code> exists and <code>CEPH_ARGS</code> environment variable is not overriding the cluster name.
+<strong><code>require_osd_release mismatch detected</code></strong> — Set the require-osd-release flag to match the current cluster version with <code>ceph osd set-require-osd-release &lt;version&gt;</code> before upgrading OSDs.</p>
+</div>
 <h2 id="upgrade-with-cephadm">Upgrade with cephadm<a class="headerlink" href="#upgrade-with-cephadm" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-update-cephadm-itself">Step 1 — Update cephadm itself<a class="headerlink" href="#step-1-update-cephadm-itself" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cephadm version on bootstrap node</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cephadm<span class="w"> </span>version
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Update cephadm to the latest build for the target release</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Disable and re-enable the mgr module to pick up the new binary</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>cephadm
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cephadm<span class="w"> </span>install<span class="w">          </span><span class="c1"># re-downloads and installs latest cephadm binary</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>cephadm
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify the mgr module is running</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>cephadm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cephadm version on bootstrap node</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cephadm<span class="w"> </span>version
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Update cephadm to the latest build for the target release</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Disable and re-enable the mgr module to pick up the new binary</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>cephadm
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>cephadm<span class="w"> </span>install<span class="w">          </span><span class="c1"># re-downloads and installs latest cephadm binary</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>cephadm
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify the mgr module is running</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>cephadm
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cephadm version 16.2.11.45-1-g1a2b3c4d (octopus)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>(no output — command completes silently)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cephadm                           on  ceph-mgr.node-01.abc123def456
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>(no output — command completes silently)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cephadm                           on  ceph-mgr.node-01.abc123def456
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No module named 'cephadm'</code></strong> — Ensure cephadm is installed on the bootstrap node with <code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm &amp;&amp; chmod +x cephadm</code>.
+<strong><code>Error: mgr module 'cephadm' is not available</code></strong> — Verify the Ceph cluster is healthy with <code>ceph health</code> and check that the mgr daemon is running with <code>ceph mgr stat</code>.
+<strong><code>command not found: cephadm</code></strong> — Add cephadm to your PATH or use the full path <code>/usr/sbin/cephadm</code> if installed via package manager.</p>
+</div>
 <h3 id="step-2-start-the-rolling-upgrade">Step 2 — Start the rolling upgrade<a class="headerlink" href="#step-2-start-the-rolling-upgrade" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Specify the exact version or a container image tag</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># quay.io/ceph/ceph:vX.Y.Z is the canonical source</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>start<span class="w"> </span>--ceph-version<span class="w"> </span><span class="m">18</span>.2.4
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or specify image directly:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># ceph orch upgrade start --image quay.io/ceph/ceph:v18.2.4</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Upgrade daemon order (automatic, orchestrated by cephadm):</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   1. MGR daemons — active MGR fails over; standby becomes active</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   2. MON daemons — one at a time; quorum maintained throughout</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   3. OSD daemons — one at a time; cephadm sets noout automatically</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">#   4. MDS daemons — active MDS fails over to standby before upgrade</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">#   5. RGW daemons — rolling restart, gateway remains available</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Specify the exact version or a container image tag</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># quay.io/ceph/ceph:vX.Y.Z is the canonical source</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>start<span class="w"> </span>--ceph-version<span class="w"> </span><span class="m">18</span>.2.4
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or specify image directly:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># ceph orch upgrade start --image quay.io/ceph/ceph:v18.2.4</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Upgrade daemon order (automatic, orchestrated by cephadm):</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#   1. MGR daemons — active MGR fails over; standby becomes active</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">#   2. MON daemons — one at a time; quorum maintained throughout</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1">#   3. OSD daemons — one at a time; cephadm sets noout automatically</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1">#   4. MDS daemons — active MDS fails over to standby before upgrade</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1">#   5. RGW daemons — rolling restart, gateway remains available</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Upgrading to ceph version 18.2.4
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Pulling image quay.io/ceph/ceph:v18.2.4
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Image pulled successfully
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Starting upgrade...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Upgrade started: 6a8f2c1e-9d4b-42f1-8c3a-7b2e5f9d1a4c
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Upgrade progress:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  MGR: 2/2 daemons upgraded
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  MON: 3/3 daemons upgraded
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  OSD: 8/12 daemons upgraded (in progress)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  MDS: 1/1 daemons upgraded
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  RGW: 2/2 daemons upgraded
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Overall progress: 16/20 daemons complete (80%)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid ceph version '18.2.4'</code></strong> — Use the full semantic version format (e.g., <code>18.2.4</code>) or verify the version exists on quay.io/ceph/ceph.
+<strong><code>Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout</code></strong> — Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror.
+<strong><code>Error: upgrade already in progress</code></strong> — Wait for the current upgrade to complete or use <code>ceph orch upgrade pause</code> then <code>ceph orch upgrade resume</code> to restart.</p>
+</div>
 <h3 id="step-3-monitor-upgrade-progress">Step 3 — Monitor upgrade progress<a class="headerlink" href="#step-3-monitor-upgrade-progress" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Watch upgrade status — refreshes every 10 s</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Output shows:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">#   target_image, progress (%), current daemon type being upgraded</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Secondary view — watch cluster health during upgrade</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;ceph -s | head -20&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Inspect which daemons are still on the old version</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>versions
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Example mid-upgrade output:</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># {</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">#   &quot;mon&quot;: {&quot;ceph version 18.2.2&quot;: 3},</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1">#   &quot;mgr&quot;: {&quot;ceph version 18.2.4&quot;: 2},</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1">#   &quot;osd&quot;: {&quot;ceph version 18.2.2&quot;: 9, &quot;ceph version 18.2.4&quot;: 3},</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1">#   ...</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># }</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Typical duration: 30–120 min depending on OSD count and rebalancing speed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Watch upgrade status — refreshes every 10 s</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output shows:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">#   target_image, progress (%), current daemon type being upgraded</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Secondary view — watch cluster health during upgrade</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;ceph -s | head -20&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Inspect which daemons are still on the old version</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ceph<span class="w"> </span>versions
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Example mid-upgrade output:</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># {</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1">#   &quot;mon&quot;: {&quot;ceph version 18.2.2&quot;: 3},</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">#   &quot;mgr&quot;: {&quot;ceph version 18.2.4&quot;: 2},</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1">#   &quot;osd&quot;: {&quot;ceph version 18.2.2&quot;: 9, &quot;ceph version 18.2.4&quot;: 3},</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1">#   ...</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># }</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Typical duration: 30–120 min depending on OSD count and rebalancing speed</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Every 10.0s: ceph orch upgrade status                                                                                                                    Mon Jan 13 14:32:47 2025
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>TARGET IMAGE: quay.io/ceph/ceph:v18.2.4
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>PROGRESS: 45%
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>UPGRADING: osd
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Every 5.0s: ceph -s | head -20                                                                                                                          Mon Jan 13 14:32:52 2025
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  cluster:
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    health: HEALTH_WARN
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            Degraded data redundancy: 156/468 objects degraded (33.3%), 52 pgs degraded
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  services:
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    mon: 3 daemons, quorum ceph-mon-01,ceph-mon-02,ceph-mon-03 (age 2h)
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    mgr: 2 daemons, standbys: ceph-mgr-02
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    osd: 12 osds: 9 up, 12 in; 45 degraded
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  data:
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    pools:   3 pools, 96 pgs
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    objects: 468 objects, 1.2 TiB
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>{
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  &quot;mon&quot;: {
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    &quot;ceph version 18.2.2&quot;: 3
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  },
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  &quot;mgr&quot;: {
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    &quot;ceph version 18.2.2&quot;: 1,
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    &quot;ceph version 18.2.4&quot;: 1
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>  },
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  &quot;osd&quot;: {
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>    &quot;ceph version 18.2.2&quot;: 9,
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>    &quot;ceph version 18.2.4&quot;: 3
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>  },
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  &quot;rgw&quot;: {
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    &quot;ceph version 18.2.4&quot;: 2
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>  }
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: No orchestrator backend found</code></strong> — Ensure Cephadm is deployed with <code>ceph orch status</code> and that the mgr orchestrator module is enabled.
+<strong><code>Error: upgrade already in progress</code></strong> — Wait for the current upgrade to complete or check <code>ceph orch upgrade pause</code> to pause and resume safely.</p>
+</div>
 <h3 id="step-4-pause-and-resume-if-needed">Step 4 — Pause and resume if needed<a class="headerlink" href="#step-4-pause-and-resume-if-needed" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pause upgrade (e.g., unexpected HEALTH_WARN during OSD upgrades)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>pause
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check cluster health while paused</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>-s
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Resume when cluster is stable</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>resume
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Stop upgrade entirely (reverts plan but does not downgrade already-upgraded daemons)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>stop
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pause upgrade (e.g., unexpected HEALTH_WARN during OSD upgrades)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>pause
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check cluster health while paused</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ceph<span class="w"> </span>-s
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Resume when cluster is stable</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>resume
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Stop upgrade entirely (reverts plan but does not downgrade already-upgraded daemons)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ceph<span class="w"> </span>orch<span class="w"> </span>upgrade<span class="w"> </span>stop
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Upgrade paused
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>HEALTH_WARN [WRN] OSD_DOWN: 1 osd(s) down
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    osd.3 is down (since 2m)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[WRN] PG_DEGRADED: Degraded data, 128 pg(s) degraded
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    128 active+degraded
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[WRN] SLOW_OPS: 12 slow ops, oldest one blocked for 45 sec
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>cluster:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    health: HEALTH_WARN
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    mon: 3 daemons, quorum mon.0,mon.1,mon.2 (age 3h)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    mgr: mgr.host1(active, since 2h), mgr.host2(standby, since 2h)
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    osd: 12 osds: 11 up, 1 down; 10 in, 1 out
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    data: 2.4 TiB used, 9.6 TiB / 12 TiB avail
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    pgs: 256 active+clean; 128 active+degraded
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Upgrade resumed
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Upgrade stopped
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error ENOENT: no upgrade in progress</code></strong> — Ensure an upgrade was actually initiated with <code>ceph orch upgrade start</code> before attempting to pause or resume.
+<strong><code>Error EINVAL: cannot pause: upgrade is already paused</code></strong> — Check current upgrade state with <code>ceph orch upgrade status</code> before issuing pause/resume commands.</p>
+</div>
 <h2 id="rolling-upgrade-behaviour">Rolling Upgrade Behaviour<a class="headerlink" href="#rolling-upgrade-behaviour" title="Permanent link">&para;</a></h2>
 <ul>
 <li>cephadm pulls the new container image on each host before restarting the daemon.</li>
@@ -7909,23 +8027,63 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 <li>If a daemon fails to come back after upgrade, cephadm halts and waits; the operator must investigate before the upgrade continues.</li>
 </ul>
 <h2 id="major-version-upgrade-requirements">Major-Version Upgrade Requirements<a class="headerlink" href="#major-version-upgrade-requirements" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After completing all daemon upgrades (e.g., Pacific → Quincy):</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 1. Confirm all daemons are on the new version</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>versions
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># All entries must show the new major version</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># 2. Update the OSD release flag to unlock new features</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>require-osd-release<span class="w"> </span>quincy
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Replace &quot;quincy&quot; with the codename for your target version</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 3. Enable new CRUSH features (if applicable)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-require-min-compat-client<span class="w"> </span>reef
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Only run this if all clients (RBD, CephFS, RGW) support the new release</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 4. Re-enable scrubs</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># After completing all daemon upgrades (e.g., Pacific → Quincy):</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 1. Confirm all daemons are on the new version</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ceph<span class="w"> </span>versions
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># All entries must show the new major version</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># 2. Update the OSD release flag to unlock new features</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>require-osd-release<span class="w"> </span>quincy
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Replace &quot;quincy&quot; with the codename for your target version</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 3. Enable new CRUSH features (if applicable)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>set-require-min-compat-client<span class="w"> </span>reef
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Only run this if all clients (RBD, CephFS, RGW) support the new release</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># 4. Re-enable scrubs</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;mon&quot;: [
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    {
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>      &quot;version&quot;: &quot;ceph version 17.2.5 (quincy)&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>      &quot;release&quot;: &quot;quincy&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>      &quot;num&quot;: 3
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    }
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  ],
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  &quot;mgr&quot;: [
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    {
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>      &quot;version&quot;: &quot;ceph version 17.2.5 (quincy)&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>      &quot;release&quot;: &quot;quincy&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>      &quot;num&quot;: 2
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    }
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  ],
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  &quot;osd&quot;: [
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    {
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>      &quot;version&quot;: &quot;ceph version 17.2.5 (quincy)&quot;,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>      &quot;release&quot;: &quot;quincy&quot;,
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>      &quot;num&quot;: 12
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    }
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  ],
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>  &quot;rgw&quot;: [
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    {
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>      &quot;version&quot;: &quot;ceph version 17.2.5 (quincy)&quot;,
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>      &quot;release&quot;: &quot;quincy&quot;,
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>      &quot;num&quot;: 2
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    }
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>  ]
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>}
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>set require-osd-release to quincy
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>set-require-min-compat-client reef
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>noscrub is unset
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>nodeep-scrub is unset
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EPERM: insufficient caps</code></strong> — Run the commands with appropriate admin privileges (e.g., as root or with <code>sudo ceph</code>) and ensure your keyring has <code>osd</code> capability.
+<strong><code>Error EINVAL: invalid release name 'quincy'</code></strong> — Verify the release codename matches your target version exactly (e.g., <code>reef</code>, <code>squid</code>) and that all daemons have already been upgraded to that version.</p>
+</div>
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7963,31 +8121,76 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify all daemons report the new version</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>versions
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># All entries must show target version only</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Example: {&quot;mon&quot;: {&quot;ceph version 18.2.4&quot;: 3}, &quot;osd&quot;: {&quot;ceph version 18.2.4&quot;: 12}, ...}</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Run full health check</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected: HEALTH_OK</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Confirm PG states recovered</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># All PGs should be active+clean</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Test I/O — write and read benchmark</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>rbd<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>5G<span class="w"> </span>rbd/upgrade-test
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span>write<span class="w"> </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>512M<span class="w"> </span>rbd/upgrade-test
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span><span class="nb">read</span><span class="w">  </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>512M<span class="w"> </span>rbd/upgrade-test
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>rbd<span class="w"> </span>rm<span class="w"> </span>rbd/upgrade-test
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Verify OSD feature flags reflect new release</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>ceph<span class="w"> </span>osd<span class="w"> </span>features
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># New features should be listed for the target codename</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Check dashboard is accessible and shows correct cluster version</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>services<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dashboard
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify all daemons report the new version</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ceph<span class="w"> </span>versions
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># All entries must show target version only</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Example: {&quot;mon&quot;: {&quot;ceph version 18.2.4&quot;: 3}, &quot;osd&quot;: {&quot;ceph version 18.2.4&quot;: 12}, ...}</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Run full health check</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Expected: HEALTH_OK</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Confirm PG states recovered</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># All PGs should be active+clean</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Test I/O — write and read benchmark</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>rbd<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>5G<span class="w"> </span>rbd/upgrade-test
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span>write<span class="w"> </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>512M<span class="w"> </span>rbd/upgrade-test
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span><span class="nb">read</span><span class="w">  </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>512M<span class="w"> </span>rbd/upgrade-test
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>rbd<span class="w"> </span>rm<span class="w"> </span>rbd/upgrade-test
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># Verify OSD feature flags reflect new release</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>ceph<span class="w"> </span>osd<span class="w"> </span>features
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># New features should be listed for the target codename</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="c1"># Check dashboard is accessible and shows correct cluster version</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>services<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dashboard
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;mon&quot;: {
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    &quot;ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)&quot;: 3
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  },
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;mgr&quot;: {
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    &quot;ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)&quot;: 2
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  },
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  &quot;osd&quot;: {
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)&quot;: 12
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  },
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;mds&quot;: {
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    &quot;ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)&quot;: 2
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  }
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>}
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>cluster 8f7a3c2b-1d4e-4a9f-b8c1-5e6d7f9a2c3b
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a> health HEALTH_OK
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a> monmap e5: 3 mons at {mon01=10.0.1.10:6789/0,mon02=10.0.1.11:6789/0,mon03=10.0.1.12:6789/0}
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a> osdmap e847: 12 osds: 12 up, 12 in
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a> pgmap v2156: 256 pgs: 256 active+clean; 847 GiB data, 2.1 TiB used, 8.9 TiB / 11 TiB avail
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a> mdsmap e42: 2/2 up {0,1}, 2 up:active
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>Created image &#39;upgrade-test&#39; in pool &#39;rbd&#39;
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>  sec  Cur ops   ops/sec   ops/sec   bytes/sec   bytes/sec
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>    1       16    4096.0    4096.0    16.4 MiB   16.4 MiB
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>    2       16    4088.0    4092.0    16.4 MiB   16.4 MiB
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  ...
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  128       16    4102.0    4099.2    16.4 MiB   16.4 MiB
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>Total time run:       128.456 sec
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>Total ops:            524288
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>Total bytes:          512 MiB
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>Bandwidth (MiB/sec):  3.98
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>Stddev Bandwidth:     0.12
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>Max bandwidth (MiB/sec): 4.21
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>Min bandwidth (MiB/sec): 3.76
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>  sec  Cur ops   ops/sec   ops/sec   bytes/sec   bytes/sec
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>    1       16    4156.0    4156.0    16.6 MiB   16.6 MiB
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>  ...
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>  128       16    4089.0    4098.5    16.4 MiB   16.4 MiB
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>Total time run:       125.123 sec
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>Total ops:            524288
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>Total bytes:          512 MiB
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>Bandwidth (MiB/sec):  4.09
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>Stddev Bandwidth:     0.08
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>Max bandwidth (MiB/sec): 4.31
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>Min bandwidth (MiB/sec):
 </code></pre></div>
 <h2 id="rollback-considerations">Rollback Considerations<a class="headerlink" href="#rollback-considerations" title="Permanent link">&para;</a></h2>
 <p>Ceph does <strong>not</strong> support automatic rollback. Key points:</p>
@@ -7996,12 +8199,20 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 <li>If the upgrade is paused or stopped mid-way, the cluster will run a mixed-version state, which is stable for short periods but should be resolved promptly.</li>
 <li>To manually revert a specific daemon to the old image:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Pin a specific daemon to an older image (emergency use only)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>redeploy<span class="w"> </span>&lt;daemon-type&gt;.&lt;id&gt;<span class="w"> </span>--image<span class="w"> </span>quay.io/ceph/ceph:v18.2.2
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example: revert a specific MGR</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>redeploy<span class="w"> </span>mgr.ceph-node1<span class="w"> </span>--image<span class="w"> </span>quay.io/ceph/ceph:v18.2.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Pin a specific daemon to an older image (emergency use only)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>redeploy<span class="w"> </span>&lt;daemon-type&gt;.&lt;id&gt;<span class="w"> </span>--image<span class="w"> </span>quay.io/ceph/ceph:v18.2.2
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Example: revert a specific MGR</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>redeploy<span class="w"> </span>mgr.ceph-node1<span class="w"> </span>--image<span class="w"> </span>quay.io/ceph/ceph:v18.2.2
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Scheduled mgr.ceph-node1 redeploy with image quay.io/ceph/ceph:v18.2.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error EINVAL: unknown daemon type &lt;daemon-type&gt;</code></strong> — Replace <code>&lt;daemon-type&gt;</code> with a valid daemon type (mon, mgr, osd, mds, rgw, etc.).
+<strong><code>Error: No such daemon mgr.ceph-node1</code></strong> — Verify the daemon exists by running <code>ceph orch ps</code> and use the correct daemon name from the output.
+<strong><code>Error pulling image quay.io/ceph/ceph:v18.2.2: image not found</code></strong> — Ensure the image tag exists in the registry and the host has network access to quay.io.</p>
+</div>
 <ul>
 <li>Major version rollback (e.g., Reef → Quincy) is not supported and will corrupt OSD data if attempted after <code>ceph osd require-osd-release</code> has been updated.</li>
 </ul>
@@ -8040,7 +8251,7 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
   </span>
 
     

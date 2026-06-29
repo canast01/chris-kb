@@ -9310,46 +9310,89 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># List all replication configurations seen by the VR appliance</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>cat<span class="w"> </span>/var/log/vmware/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;ReplicationConfig\|vmId\|rpoSla&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrsrv.log | grep -i &quot;error\|fail\|warn&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:42:33.847Z warn [hbrsrv] Replication state: running for vm-245 (RPO: 300s)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15T09:43:12.521Z warn [hbrsrv] Network latency detected: 45ms to recovery site
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T09:44:01.634Z info [hbrsrv] Replication state: running for vm-512 (RPO: 600s)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrfilter.log | grep -i &quot;error\|fail&quot;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>(no output — command completes silently)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>admin@vr-appliance-01:~$ systemctl status vmware-hbrsrv
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>● vmware-hbrsrv.service - VMware vSphere Replication Server
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   Loaded: loaded (/etc/systemd/system/vmware-hbrsrv.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   Active: active (running) since Mon 2024-01-15 09:30:22 UTC; 14min ago
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   Process: 2847 ExecStart=/usr/lib/vmware-hbrsrv/bin/hbrsrv (code=exited, status=0/SUCCESS)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>   Main PID: 2851 (hbrsrv)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   Tasks: 12 (limit: 4096)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>   Memory: 487.3M
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   CGroup: /systemd/system.slice/vmware-hbrsrv.service
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>admin@vr-appliance-01:~$ cat /var/log/vmware/hbrsrv.log | grep &quot;ReplicationConfig\|vmId\|rpoSla&quot; | tail -50
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>2024-01-15T09:15:44.221Z info ReplicationConfig loaded: vmId=vm-245, rpoSla=300, target=10.50.12.88
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>2024-01-15T09:16:22.445Z info ReplicationConfig loaded: vmId=vm-512, rpoSla=600, target=10.50.12.88
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>2024-01-15T09:17:05.889Z info ReplicationConfig loaded: vmId=vm-789, rpoSla=1800, target=10.50.12.89
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>2024-01-15T09:18:33.112Z info ReplicationConfig synced: 3 active replications, 0 paused
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>2024-01-15T09:42:15.667Z info vmId=vm-245 checkpoint created, bytes transferred: 2.4GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password)</code></strong> — Verify SSH credentials and that the admin user exists on the VR appliance; check <code>/etc/ssh/sshd_config</code> allows password authentication.
+<strong><code>No such file or directory: /var/log/vmware/hbrsrv.log</code></strong> — Confirm the vSphere Replication server is installed and has started at least once; check <code>/var/log/vmware/</code></p>
+</div>
 <p><strong>If hbrsrv.log shows replication is behind:</strong>
 1. Check network bandwidth between production and recovery site (VR uses HTTPS/TCP 443 and TCP 31031)
 2. Check ESXi host disk I/O on the production side — heavy I/O increases data to replicate
 3. Verify the vRA appliance has adequate resources (vCPU, RAM, network interface)</p>
 <hr />
 <h2 id="step-4-check-sra-and-array-side-replication">Step 4 — Check SRA and array-side replication<a class="headerlink" href="#step-4-check-sra-and-array-side-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SRA log location (on the SRM Windows Server)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Log file name depends on the array vendor adapter</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Dell SRDF SRA</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># NetApp SRA</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-*.log&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Check SRA command output (SRM calls SRA commands; each call is logged)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Look for: discoverArrays, discoverDevices, testFailoverStart errors</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SRA log location (on the SRM Windows Server)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Log file name depends on the array vendor adapter</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Dell SRDF SRA</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># NetApp SRA</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-*.log&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check SRA command output (SRM calls SRA commands; each call is logged)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Look for: discoverArrays, discoverDevices, testFailoverStart errors</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:142:2024-01-15T08:23:45.123Z ERROR [SRA-Worker-12] Failed to query array symmetrix ID SYM-123456789
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:187:2024-01-15T08:24:12.456Z WARN [SRA-Worker-12] RDF link latency exceeded threshold: 245ms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:203:2024-01-15T08:25:03.789Z ERROR [SRA-Worker-15] discoverArrays command timeout after 30s
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:251:2024-01-15T08:26:44.012Z ERROR [SRA-Worker-15] Connection refused to array management port 4443
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-2024-01-15.log:89:2024-01-15T08:27:15.334Z ERROR [SRA-Worker-8] testFailoverStart failed: SnapMirror relationship not initialized
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-2024-01-15.log:156:2024-01-15T08:28:22.567Z WARN [SRA-Worker-8] discoverDevices returned 0 LUNs from vserver prod-svm-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Select-String : Cannot find path 'C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log' because it does not exist.</code></strong> — Verify SRM is installed on this Windows Server and check the actual log directory path with <code>dir "C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\"</code>.
+<strong><code>ERROR [SRA-Worker] Connection refused to array management port</code></strong> — Confirm the SRA array management IP/hostname is reachable and the SRA credentials configured in SRM are correct by testing connectivity from the SRM server.
+<strong><code>ERROR [SRA-Worker] discoverArrays command timeout after 30s</code></strong> — Increase SRA command timeout in the SRM configuration or check array responsiveness; if the array is slow, restart the SRA service on the array management appliance.</p>
+</div>
 <p><strong>SRA error patterns:</strong>
 - <code>"discoverArrays failed"</code> → SRA cannot authenticate to the array; verify SRA credentials in SRM UI
 - <code>"testFailoverStart timeout"</code> → array is not responding to the SRA failover command; check array replication state
 - <code>"Inconsistent state"</code> → array reports replication is not ready; check array-side replication health</p>
 <hr />
 <h2 id="step-5-verify-site-pairing-and-service-health">Step 5 — Verify site pairing and service health<a class="headerlink" href="#step-5-verify-site-pairing-and-service-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check SRM service on the SRM Windows Server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Site Recovery Manager Server&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Test network connectivity to the remote site vCenter (TCP 443)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">remote-vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Expected: TcpTestSucceeded = True</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Test SRM extension port between sites (TCP 8095 — SRM API)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">remote-srm-server-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">8095</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># View vCenter events related to SRM (from the local vCenter)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># vSphere Client → Monitor → Events → filter by: Component = Site Recovery Manager</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Look for: &quot;Site pairing connection failed&quot;, &quot;Certificate error&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check SRM service on the SRM Windows Server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Site Recovery Manager Server&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Test network connectivity to the remote site vCenter (TCP 443)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">remote-vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Expected: TcpTestSucceeded = True</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Test SRM extension port between sites (TCP 8095 — SRM API)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">remote-srm-server-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">8095</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># View vCenter events related to SRM (from the local vCenter)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># vSphere Client → Monitor → Events → filter by: Component = Site Recovery Manager</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Look for: &quot;Site pairing connection failed&quot;, &quot;Certificate error&quot;</span>
 </code></pre></div>
 <p><strong>Re-pairing sites if certificate trust is broken:</strong>
 1. SRM vSphere Client plugin → Administration → Sites → select the paired site
@@ -9434,7 +9477,7 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

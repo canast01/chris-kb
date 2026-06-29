@@ -7808,213 +7808,327 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Alternative: oc rsync (if oc debug was used to run the backup)</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>oc<span class="w"> </span>rsync<span class="w"> </span>&lt;master-pod&gt;:/home/core/assets/backup/<span class="w"> </span>./etcd-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>core@master-0.example.com:~$ sudo -i
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>root@master-0.example.com:~# /usr/local/bin/cluster-backup.sh /home/core/assets/backup
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Backing up etcd data...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Backup complete. Files written to /home/core/assets/backup
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>root@master-0.example.com:~# ls -lh /home/core/assets/backup/
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>total 892M
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>-rw-r--r-- 1 core core 847M Nov 14 10:23 snapshot_2024-11-14_102345.db
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>-rw-r--r-- 1 core core  12M Nov 14 10:23 static_kuberesources_2024-11-14_102345.tar.gz
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>root@master-0.example.com:~# exit
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>logout
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>$ scp core@192.168.1.45:/home/core/assets/backup/snapshot_*.db /backup/etcd/
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>snapshot_2024-11-14_102345.db                    100%  847MB   18.2MB/s   00:47
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>$ scp core@192.168.1.45:/home/core/assets/backup/static_kuberesources_*.tar.gz /backup/etcd/
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>static_kuberesources_2024-11-14_102345.tar.gz    100%   12MB    8.4MB/s   00:01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/usr/local/bin/cluster-backup.sh: No such file or directory</code></strong> — Verify the OCP version includes the backup script; on older versions use <code>oc debug node/&lt;master-node&gt;</code> to access the script or manually back up etcd using <code>etcdctl</code>.
+<strong><code>scp: /backup/etcd/: No such file or directory</code></strong> — Create the destination directory on your workstation with <code>mkdir -p /backup/etcd/</code> before running the scp command.
+<strong><code>Permission denied (publickey,gssapi-keyexchange)</code></strong> — Ensure your SSH key is added to the ssh-agent (<code>ssh-add ~/.ssh/id_rsa</code>) and the core user's authorized_keys includes your public key.</p>
+</div>
 <h2 id="automate-etcd-backup-with-cronjob">Automate etcd Backup with CronJob<a class="headerlink" href="#automate-etcd-backup-with-cronjob" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CronJob</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-etcd</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">jobTemplate</span><span class="p">:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">template</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">          </span><span class="nt">hostPID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">          </span><span class="nt">hostNetwork</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">          </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">          </span><span class="nt">containers</span><span class="p">:</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.redhat.io/openshift4/ose-cli:latest</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">            </span><span class="nt">command</span><span class="p">:</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/bash</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">              </span><span class="no">oc debug node/$(oc get nodes -l node-role.kubernetes.io/master \</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">                </span><span class="no">-o name | head -1 | cut -d/ -f2) -- \</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                </span><span class="no">chroot /host /usr/local/bin/cluster-backup.sh /home/core/backup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CronJob</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-etcd</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">jobTemplate</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">template</span><span class="p">:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">          </span><span class="nt">hostPID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">          </span><span class="nt">hostNetwork</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">          </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">          </span><span class="nt">containers</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">etcd-backup</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.redhat.io/openshift4/ose-cli:latest</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="nt">command</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/bash</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">              </span><span class="no">oc debug node/$(oc get nodes -l node-role.kubernetes.io/master \</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">                </span><span class="no">-o name | head -1 | cut -d/ -f2) -- \</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">                </span><span class="no">chroot /host /usr/local/bin/cluster-backup.sh /home/core/backup</span>
 </code></pre></div>
 <h2 id="etcd-restore-procedure-full-dr-quorum-lost">etcd Restore Procedure (Full DR — Quorum Lost)<a class="headerlink" href="#etcd-restore-procedure-full-dr-quorum-lost" title="Permanent link">&para;</a></h2>
 <p><strong>Warning:</strong> Only use when etcd quorum is lost and the cluster API is inaccessible. This procedure is destructive — all three masters are involved.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Stop the static API server pods on ALL masters</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">#    SSH to each master and move the manifests out of the static pod directory</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ssh<span class="w"> </span>core@master-0
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-apiserver.yaml<span class="w"> </span>/tmp/
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-controller-manager.yaml<span class="w"> </span>/tmp/
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-scheduler.yaml<span class="w"> </span>/tmp/
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Repeat on master-1 and master-2</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 2. On the recovery master (master-0), place the backup files</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/core/assets/backup
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/backup/etcd/snapshot_*.db<span class="w"> </span>/home/core/assets/backup/
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/backup/etcd/static_kuberesources_*.tar.gz<span class="w"> </span>/home/core/assets/backup/
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># 3. Run the restore script on the recovery master only</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>sudo<span class="w"> </span>/usr/local/bin/cluster-restore.sh<span class="w"> </span>/home/core/assets/backup
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># 4. Restore static pod manifests on the recovery master</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-apiserver.yaml<span class="w"> </span>/etc/kubernetes/manifests/
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-controller-manager.yaml<span class="w"> </span>/etc/kubernetes/manifests/
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-scheduler.yaml<span class="w"> </span>/etc/kubernetes/manifests/
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># 5. Wait for API server to come up on master-0</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="k">until</span><span class="w"> </span>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># 6. Restart remaining masters — move manifests back on master-1 and master-2</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># They will rejoin the restored etcd automatically</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># 7. Delete stale etcd pods to force re-sync</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>--selector<span class="o">=</span><span class="nv">app</span><span class="o">=</span>etcd
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1"># 8. Approve CSRs for any nodes that need re-joining</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="c1"># 9. Verify cluster health</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>oc<span class="w"> </span>get<span class="w"> </span>co
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Stop the static API server pods on ALL masters</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">#    SSH to each master and move the manifests out of the static pod directory</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ssh<span class="w"> </span>core@master-0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-apiserver.yaml<span class="w"> </span>/tmp/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-controller-manager.yaml<span class="w"> </span>/tmp/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/kube-scheduler.yaml<span class="w"> </span>/tmp/
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Repeat on master-1 and master-2</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 2. On the recovery master (master-0), place the backup files</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/core/assets/backup
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/backup/etcd/snapshot_*.db<span class="w"> </span>/home/core/assets/backup/
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/backup/etcd/static_kuberesources_*.tar.gz<span class="w"> </span>/home/core/assets/backup/
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 3. Run the restore script on the recovery master only</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>sudo<span class="w"> </span>/usr/local/bin/cluster-restore.sh<span class="w"> </span>/home/core/assets/backup
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># 4. Restore static pod manifests on the recovery master</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-apiserver.yaml<span class="w"> </span>/etc/kubernetes/manifests/
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-controller-manager.yaml<span class="w"> </span>/etc/kubernetes/manifests/
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/tmp/kube-scheduler.yaml<span class="w"> </span>/etc/kubernetes/manifests/
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># 5. Wait for API server to come up on master-0</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="k">until</span><span class="w"> </span>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1"># 6. Restart remaining masters — move manifests back on master-1 and master-2</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># They will rejoin the restored etcd automatically</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="c1"># 7. Delete stale etcd pods to force re-sync</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>--selector<span class="o">=</span><span class="nv">app</span><span class="o">=</span>etcd
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="c1"># 8. Approve CSRs for any nodes that need re-joining</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="c1"># 9. Verify cluster health</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>oc<span class="w"> </span>get<span class="w"> </span>co
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /tmp/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-controller-manager.yaml /tmp/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>core@master-0:~$ sudo mkdir -p /home/core/assets/backup
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>core@master-0:~$ sudo cp /backup/etcd/snapshot_*.db /home/core/assets/backup/
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>core@master-0:~$ sudo cp /backup/etcd/static_kuberesources_*.tar.gz /home/core/assets/backup/
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>core@master-0:~$ sudo /usr/local/bin/cluster-restore.sh /home/core/assets/backup
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Restoring etcd snapshot from /home/core/assets/backup/snapshot_20240115-143022.db
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Restoring static resources from /home/core/assets/backup/static_kuberesources_20240115-143022.tar.gz
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Restore completed successfully
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>core@master-0:~$ sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>core@master-0:~$ sudo mv /tmp/kube-controller-manager.yaml /etc/kubernetes/manifests/
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>core@master-0:~$ sudo mv /tmp/kube-scheduler.yaml /etc/kubernetes/manifests/
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>core@master-0:~$ until oc get nodes; do sleep 10; done
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>NAME       STATUS   ROLES    AGE    VERSION
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>master-0   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>master-1   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>master-2   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>worker-0   Ready    worker   42d    v1.27.8
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>worker-1   Ready    worker   42d    v1.27.8
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>core@master-0:~$ oc delete pod -n openshift-etcd --selector=app=etcd
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>pod &quot;etcd-master-0&quot; deleted
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>pod &quot;etcd-master-1&quot; deleted
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>pod &quot;etcd-master-2&quot; deleted
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>core@master-0:~$ oc get csr | grep Pending
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>node-bootstrapper-csr-abc123def456   47m   kubernetes.io/kubelet-serving   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>core@master-0:~$ oc get csr -o name | xargs oc adm certificate approve
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>certificatesigningrequest.certificates.k8s.io/node-bootstrapper-csr-abc123def456 approved
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>core@master-0:~$ oc get nodes
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>NAME       STATUS   ROLES    AGE    VERSION
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>master-0   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>master-1   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>master-2   Ready    master   45d    v1.27.8
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>worker-0   Ready    worker   42d    v1.27.8
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>worker-1   Ready    worker   42d    v1.27.8
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>core@master-0:~$ oc get co
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>NAME                                       READY
 </code></pre></div>
 <h2 id="replace-single-etcd-member">Replace Single etcd Member<a class="headerlink" href="#replace-single-etcd-member" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># For: one master node failed, other two are healthy (quorum maintained)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># 1. Remove failed member from etcd</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>remove<span class="w"> </span>&lt;member-id&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 2. Delete the failed Machine object</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>oc<span class="w"> </span>get<span class="w"> </span>machine<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;failed-node&gt;
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>oc<span class="w"> </span>delete<span class="w"> </span>machine<span class="w"> </span>&lt;machine-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 3. Scale MachineSet or add new machine — new master joins via ignition</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 4. Approve CSR for new master</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr&gt;
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># 5. Verify etcd member joined</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;master&gt;<span class="w"> </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># For: one master node failed, other two are healthy (quorum maintained)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># 1. Remove failed member from etcd</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;healthy-master&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>etcdctl<span class="w"> </span>member<span class="w"> </span>remove<span class="w"> </span>&lt;member-id&gt;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 2. Delete the failed Machine object</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>oc<span class="w"> </span>get<span class="w"> </span>machine<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;failed-node&gt;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>oc<span class="w"> </span>delete<span class="w"> </span>machine<span class="w"> </span>&lt;machine-name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 3. Scale MachineSet or add new machine — new master joins via ignition</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 4. Approve CSR for new master</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr&gt;
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># 5. Verify etcd member joined</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>etcd-&lt;master&gt;<span class="w"> </span>etcdctl<span class="w"> </span>member<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>member 2891874932c66141: name=etcd-master-0 peerURLs=http://10.0.1.45:2380 clientURLs=http://10.0.1.45:2379
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>member 6a4c8b1f9e2d5c73: name=etcd-master-1 peerURLs=http://10.0.1.46:2380 clientURLs=http://10.0.1.46:2379
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>member 8f3d2e9c1a7b4f56: name=etcd-master-2 peerURLs=http://10.0.1.47:2380 clientURLs=http://10.0.1.47:2379
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Member 8f3d2e9c1a7b4f56 removed
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>NAME                                    STATE     TYPE    REPLICAS   UPDATED   READY   AVAILABLE   AGE
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>master-us-east-1a                       Running   Master  3          3         2       2           45d
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>master-us-east-1b                       Running   Master  3          3         3       3           45d
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>master-us-east-1c                       Unhealthy Master  3          3         2       2           12m
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>machine-master-us-east-1c-xyz9q deleted
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>NAME                                      PENDING   CERTIFICATE REQUEST AGE
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>system:serviceaccount:openshift-machine-config-operator:default  5s
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>csr-8x9kl approved
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>member 2891874932c66141: name=etcd-master-0 peerURLs=http://10.0.1.45:2380 clientURLs=http://10.0.1.45:2379
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>member 6a4c8b1f9e2d5c73: name=etcd-master-1 peerURLs=http://10.0.1.46:2380 clientURLs=http://10.0.1.46:2379
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>member 9c2f5e8a3d1b7g64: name=etcd-master-2 peerURLs=http://10.0.1.48:2380 clientURLs=http://10.0.1.48:2379
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to etcd: context deadline exceeded</code></strong> — Verify the healthy master pod is running with <code>oc get pod -n openshift-etcd</code> and use the correct pod name in the rsh command.
+<strong><code>Error from server (NotFound): machines.machine.openshift.io "&lt;machine-name&gt;" not found</code></strong> — Confirm the exact machine name with <code>oc get machine -n openshift-machine-api -o wide</code> before deletion.
+<strong><code>error: certificate request csr-xxxx is not pending</code></strong> — Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval.</p>
+</div>
 <h2 id="oadp-application-backup">OADP Application Backup<a class="headerlink" href="#oadp-application-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Install OADP operator from OperatorHub</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 2. Create BackupStorageLocation</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">apiVersion: velero.io/v1</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">kind: BackupStorageLocation</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">metadata:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">  name: s3-backup</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">  namespace: openshift-adp</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">spec:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s">  provider: aws</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s">  objectStorage:</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s">    bucket: ocp-backups</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s">    prefix: velero</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s">  config:</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s">    region: us-east-1</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s">    s3ForcePathStyle: &quot;false&quot;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s">  credential:</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s">    name: cloud-credentials</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s">    key: cloud</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s">EOF</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># 3. Create on-demand backup</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>oc<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="s">apiVersion: velero.io/v1</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="s">kind: Backup</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="s">metadata:</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="s">  name: my-app-backup</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="s">  namespace: openshift-adp</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="s">spec:</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s">  includedNamespaces:</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="s">  - my-app</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="s">  storageLocation: s3-backup</span>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="s">  ttl: 720h</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="s">EOF</span>
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="c1"># 4. Schedule automatic backups</span>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="s">apiVersion: velero.io/v1</span>
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="s">kind: Schedule</span>
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="s">metadata:</span>
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="s">  name: daily-backup</span>
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="s">  namespace: openshift-adp</span>
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="s">spec:</span>
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="s">  schedule: &quot;0 2 * * *&quot;</span>
-<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="s">  template:</span>
-<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="s">    includedNamespaces: [&quot;*&quot;]</span>
-<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="s">    excludedNamespaces: [&quot;openshift-*&quot;,&quot;kube-*&quot;]</span>
-<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="s">    storageLocation: s3-backup</span>
-<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="s">EOF</span>
-<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
-<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="c1"># 5. Restore from backup</span>
-<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>oc<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="s">apiVersion: velero.io/v1</span>
-<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="s">kind: Restore</span>
-<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="s">metadata:</span>
-<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="s">  name: my-app-restore</span>
-<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="s">  namespace: openshift-adp</span>
-<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="s">spec:</span>
-<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="s">  backupName: my-app-backup</span>
-<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="s">  includedNamespaces:</span>
-<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="s">  - my-app</span>
-<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="s">EOF</span>
-<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>
-<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a><span class="c1"># Monitor backup and restore status</span>
-<a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a>oc<span class="w"> </span>get<span class="w"> </span>backup<span class="w"> </span>-n<span class="w"> </span>openshift-adp
-<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>oc<span class="w"> </span>get<span class="w"> </span>restore<span class="w"> </span>-n<span class="w"> </span>openshift-adp
-<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>velero<span class="w"> </span>backup<span class="w"> </span>logs<span class="w"> </span>my-app-backup<span class="w"> </span>-n<span class="w"> </span>openshift-adp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Install OADP operator from OperatorHub</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># 2. Create BackupStorageLocation</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s">apiVersion: velero.io/v1</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s">kind: BackupStorageLocation</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s">metadata:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s">  name: s3-backup</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s">  namespace: openshift-adp</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s">spec:</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s">  provider: aws</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s">  objectStorage:</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s">    bucket: ocp-backups</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s">    prefix: velero</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s">  config:</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s">    region: us-east-1</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="s">    s3ForcePathStyle: &quot;false&quot;</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s">  credential:</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="s">    name: cloud-credentials</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s">    key: cloud</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s">EOF</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="c1"># 3. Create on-demand backup</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>oc<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="s">apiVersion: velero.io/v1</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="s">kind: Backup</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="s">metadata:</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="s">  name: my-app-backup</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="s">  namespace: openshift-adp</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="s">spec:</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="s">  includedNamespaces:</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="s">  - my-app</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="s">  storageLocation: s3-backup</span>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="s">  ttl: 720h</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="s">EOF</span>
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="c1"># 4. Schedule automatic backups</span>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="s">apiVersion: velero.io/v1</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="s">kind: Schedule</span>
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="s">metadata:</span>
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a><span class="s">  name: daily-backup</span>
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="s">  namespace: openshift-adp</span>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="s">spec:</span>
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="s">  schedule: &quot;0 2 * * *&quot;</span>
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="s">  template:</span>
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a><span class="s">    includedNamespaces: [&quot;*&quot;]</span>
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a><span class="s">    excludedNamespaces: [&quot;openshift-*&quot;,&quot;kube-*&quot;]</span>
+<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a><span class="s">    storageLocation: s3-backup</span>
+<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a><span class="s">EOF</span>
+<a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a>
+<a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a><span class="c1"># 5. Restore from backup</span>
+<a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a>oc<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-7-54" name="__codelineno-7-54" href="#__codelineno-7-54"></a><span class="s">apiVersion: velero.io/v1</span>
+<a id="__codelineno-7-55" name="__codelineno-7-55" href="#__codelineno-7-55"></a><span class="s">kind: Restore</span>
+<a id="__codelineno-7-56" name="__codelineno-7-56" href="#__codelineno-7-56"></a><span class="s">metadata:</span>
+<a id="__codelineno-7-57" name="__codelineno-7-57" href="#__codelineno-7-57"></a><span class="s">  name: my-app-restore</span>
+<a id="__codelineno-7-58" name="__codelineno-7-58" href="#__codelineno-7-58"></a><span class="s">  namespace: openshift-adp</span>
+<a id="__codelineno-7-59" name="__codelineno-7-59" href="#__codelineno-7-59"></a><span class="s">spec:</span>
+<a id="__codelineno-7-60" name="__codelineno-7-60" href="#__codelineno-7-60"></a><span class="s">  backupName: my-app-backup</span>
+<a id="__codelineno-7-61" name="__codelineno-7-61" href="#__codelineno-7-61"></a><span class="s">  includedNamespaces:</span>
+<a id="__codelineno-7-62" name="__codelineno-7-62" href="#__codelineno-7-62"></a><span class="s">  - my-app</span>
+<a id="__codelineno-7-63" name="__codelineno-7-63" href="#__codelineno-7-63"></a><span class="s">EOF</span>
+<a id="__codelineno-7-64" name="__codelineno-7-64" href="#__codelineno-7-64"></a>
+<a id="__codelineno-7-65" name="__codelineno-7-65" href="#__codelineno-7-65"></a><span class="c1"># Monitor backup and restore status</span>
+<a id="__codelineno-7-66" name="__codelineno-7-66" href="#__codelineno-7-66"></a>oc<span class="w"> </span>get<span class="w"> </span>backup<span class="w"> </span>-n<span class="w"> </span>openshift-adp
+<a id="__codelineno-7-67" name="__codelineno-7-67" href="#__codelineno-7-67"></a>oc<span class="w"> </span>get<span class="w"> </span>restore<span class="w"> </span>-n<span class="w"> </span>openshift-adp
+<a id="__codelineno-7-68" name="__codelineno-7-68" href="#__codelineno-7-68"></a>velero<span class="w"> </span>backup<span class="w"> </span>logs<span class="w"> </span>my-app-backup<span class="w"> </span>-n<span class="w"> </span>openshift-adp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>backupstoragelocation.velero.io/s3-backup created
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>backup.velero.io/my-app-backup created
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>schedule.velero.io/daily-backup created
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>restore.velero.io/my-app-restore created
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>NAME              STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>my-app-backup     Completed   0        2          2024-01-15T14:32:18Z            29d       s3-backup          &lt;none&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>daily-backup-20240115-020001  Completed   0        0          2024-01-15T02:00:15Z            29d       s3-backup          &lt;none&gt;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>NAME               STATUS      ERRORS   WARNINGS   CREATED                         SELECTOR
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>my-app-restore     Completed   0        1          2024-01-15T14:35:42Z            &lt;none&gt;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>time=&quot;2024-01-15T14:32:18Z&quot; level=info msg=&quot;Starting backup&quot; backup=openshift-adp/my-app-backup
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>time=&quot;2024-01-15T14:32:22Z&quot; level=info msg=&quot;Backing up resource&quot; logSource=&quot;pkg/backup/backup.go:431&quot; resource=deployments.apps
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>time=&quot;2024-01-15T14:32:25Z&quot; level=info msg=&quot;Backup completed successfully&quot; backup=openshift-adp/my-app-backup duration=7.234s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"</code></strong> — Verify the OADP operator is fully installed and the velero.io API is registered with <code>oc api-resources | grep velero</code>.
+<strong><code>error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found</code></strong> — Create the AWS credentials secret in the openshift-adp namespace using <code>oc create secret generic cloud-credentials --from-file=cloud=&lt;path-to-aws-creds&gt; -n openshift-adp</code>.
+<strong><code>backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found</code></strong> — Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with <code>oc get bsl -n openshift-adp</code>.</p>
+</div>
 <h2 id="pv-snapshot-backup-csi">PV Snapshot Backup (CSI)<a class="headerlink" href="#pv-snapshot-backup-csi" title="Permanent link">&para;</a></h2>
 <p>CSI-based snapshots are independent of OADP and operate at the storage driver level. Use alongside OADP for complete application protection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Create a VolumeSnapshotClass for your CSI driver</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s">apiVersion: snapshot.storage.k8s.io/v1</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s">kind: VolumeSnapshotClass</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s">metadata:</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s">  name: csi-snapclass</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s">driver: ebs.csi.aws.com        # replace with your CSI driver</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s">deletionPolicy: Retain</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s">EOF</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 2. Take a snapshot of a PVC</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s">apiVersion: snapshot.storage.k8s.io/v1</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s">kind: VolumeSnapshot</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s">metadata:</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s">  name: myapp-data-snap-$(date +%F)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s">  namespace: my-app</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s">spec:</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s">  volumeSnapshotClassName: csi-snapclass</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s">  source:</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s">    persistentVolumeClaimName: myapp-data</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s">EOF</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="c1"># 3. Verify snapshot is ready</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>oc<span class="w"> </span>get<span class="w"> </span>volumesnapshot<span class="w"> </span>-n<span class="w"> </span>my-app
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># 4. Restore: create PVC from snapshot</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s">apiVersion: v1</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s">kind: PersistentVolumeClaim</span>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s">metadata:</span>
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s">  name: myapp-data-restored</span>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s">  namespace: my-app</span>
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="s">spec:</span>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="s">  storageClassName: gp3-csi</span>
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="s">  dataSource:</span>
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="s">    name: myapp-data-snap-&lt;date&gt;</span>
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="s">    kind: VolumeSnapshot</span>
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="s">    apiGroup: snapshot.storage.k8s.io</span>
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="s">  accessModes:</span>
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="s">  - ReadWriteOnce</span>
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="s">  resources:</span>
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="s">    requests:</span>
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="s">      storage: 50Gi</span>
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Create a VolumeSnapshotClass for your CSI driver</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s">apiVersion: snapshot.storage.k8s.io/v1</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s">kind: VolumeSnapshotClass</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s">metadata:</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s">  name: csi-snapclass</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s">driver: ebs.csi.aws.com        # replace with your CSI driver</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s">deletionPolicy: Retain</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s">EOF</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># 2. Take a snapshot of a PVC</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="s">apiVersion: snapshot.storage.k8s.io/v1</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="s">kind: VolumeSnapshot</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="s">metadata:</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s">  name: myapp-data-snap-$(date +%F)</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="s">  namespace: my-app</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="s">spec:</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="s">  volumeSnapshotClassName: csi-snapclass</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="s">  source:</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="s">    persistentVolumeClaimName: myapp-data</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="s">EOF</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1"># 3. Verify snapshot is ready</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>oc<span class="w"> </span>get<span class="w"> </span>volumesnapshot<span class="w"> </span>-n<span class="w"> </span>my-app
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="c1"># 4. Restore: create PVC from snapshot</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | oc apply -f -</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="s">kind: PersistentVolumeClaim</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="s">metadata:</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="s">  name: myapp-data-restored</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="s">  namespace: my-app</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="s">spec:</span>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="s">  storageClassName: gp3-csi</span>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="s">  dataSource:</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="s">    name: myapp-data-snap-&lt;date&gt;</span>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="s">    kind: VolumeSnapshot</span>
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="s">    apiGroup: snapshot.storage.k8s.io</span>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="s">  accessModes:</span>
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="s">  - ReadWriteOnce</span>
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="s">  resources:</span>
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="s">    requests:</span>
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a><span class="s">      storage: 50Gi</span>
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a><span class="s">EOF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>volumesnapshotclass.snapshot.storage.k8s.io/csi-snapclass created
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>volumesnapshot.snapshot.storage.k8s.io/myapp-data-snap-2024-01-15 created
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>NAME                          READYTOUSE   SOURCEPVC      SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS   SNAPSHOTCONTENT                              CREATIONTIME   AGE
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>myapp-data-snap-2024-01-15    true         myapp-data     &lt;unset&gt;                 50Gi          csi-snapclass   snapshotcontent-a7f2c9e1-4b8d-11ee-9c2a   2024-01-15T14:32:18Z   45s
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>persistentvolumeclaim/myapp-data-restored created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"</code></strong> — Install the snapshot controller with <code>oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml</code>.
+<strong><code>VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use</code></strong> — Wait for the snapshot to reach <code>READYTOUSE: true</code> status before attempting restore, or check CSI driver logs with <code>oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller</code>.
+<strong><code>error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"</code></strong> — Replace <code>&lt;date&gt;</code> placeholder with actual snapshot name (e.g., <code>myapp-data-snap-2024-01-15</code>) in the restore PVC manifest.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8050,7 +8164,7 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

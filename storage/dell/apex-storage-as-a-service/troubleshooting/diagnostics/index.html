@@ -8847,115 +8847,281 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>multipathd<span class="w"> </span>show<span class="w"> </span>maps
 </code></pre></div>
-<h3 id="linux-hosts-fc">Linux hosts (FC)<a class="headerlink" href="#linux-hosts-fc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check FC HBA status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: Online for all HBAs</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check discovered FC targets</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat<span class="w"> </span>/sys/class/fc_transport/*/roles<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check multipath (same command as iSCSI)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DELL|failed|faulty&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ iscsiadm -m session
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tcp: [1] 192.168.10.45:3260,1 iqn.1991-05.com.dell:storage.apex01.target1 (non-flash)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tcp: [2] 192.168.10.46:3260,1 iqn.1991-05.com.dell:storage.apex01.target1 (non-flash)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>tcp: [3] 192.168.10.47:3260,1 iqn.1991-05.com.dell:storage.apex01.target2 (non-flash)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tcp: [4] 192.168.10.48:3260,1 iqn.1991-05.com.dell:storage.apex01.target2 (non-flash)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$ iscsiadm -m node
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>192.168.10.45:3260,1 iqn.1991-05.com.dell:storage.apex01.target1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>192.168.10.46:3260,1 iqn.1991-05.com.dell:storage.apex01.target1
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>192.168.10.47:3260,1 iqn.1991-05.com.dell:storage.apex01.target2
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>192.168.10.48:3260,1 iqn.1991-05.com.dell:storage.apex01.target2
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>$ multipath -ll
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>360060e80057f5200000057f52a2d5d11 dm-0 DELL,APEX Storage
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|- 2:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|- 3:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|- 4:0:0:0 sdd 8:48 active ready running
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|- 5:0:0:0 sde 8:64 active ready running
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>360060e80057f5200000057f52a2d5d12 dm-1 DELL,APEX Storage
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>size=1.5T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|- 2:0:0:1 sdf 8:80 active ready running
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|- 3:0:0:1 sdg 8:96 active ready running
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|- 4:0:0:1 sdh 8:112 failed faulty offline
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|- 5:0:0:1 sdi 8:128 active ready running
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>$ multipath -ll | grep -E &quot;failed|faulty|checker failed&quot;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|- 4:0:0:1 sdh 8:112 failed faulty offline
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>$ multipathd show paths
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>hcil    dev dev_t pri dm_st chk_st next_check
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>2:0:0:0 sdb 8:16  50  0    ready  *
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>3:0:0:0 sdc 8:32  50  0    ready  *
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>4:0:0:0 sdd 8:48  50  0    ready  *
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>5:0:0:0 sde 8:64  50  0    ready  *
 </code></pre></div>
+<h3 id="linux-hosts-fc">Linux hosts (FC)<a class="headerlink" href="#linux-hosts-fc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check FC HBA status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: Online for all HBAs</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check discovered FC targets</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cat<span class="w"> </span>/sys/class/fc_transport/*/roles<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check multipath (same command as iSCSI)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DELL|failed|faulty&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Online
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Online
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Online
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Online
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>initiator
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>target
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>initiator,target
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>initiator
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>| `- 4:0:0:1 sda 8:0  active ready running
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  `- 5:0:0:1 sdb 8:16 failed faulty offline
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /sys/class/fc_host/host*/port_state: No such file or directory</code></strong> — Verify FC HBA drivers are loaded with <code>lsmod | grep qla2xxx</code> and reseat the HBA if needed.
+<strong><code>failed faulty offline</code></strong> — Check FC cable connections and zoning on the SAN switch, then run <code>multipathd reconfigure</code> to refresh paths.</p>
+</div>
 <h3 id="windows-hosts">Windows hosts<a class="headerlink" href="#windows-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check MPIO disk paths (requires MPIO feature installed)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Shows: physical disk number, load balance policy, paths</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Expected: all paths show &quot;Active/Optimized&quot; or &quot;Active/Unoptimized&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># PowerShell equivalent</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">BusType</span> <span class="o">-eq</span> <span class="s2">&quot;iSCSI&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">BusType</span> <span class="o">-eq</span> <span class="s2">&quot;Fibre Channel&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span> <span class="p">|</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Check MPIO paths for a specific disk</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Get-MSDSMPathInformation</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">DiskNumber</span> <span class="o">-eq</span> <span class="p">&lt;</span><span class="n">disk-number</span><span class="p">&gt;}</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Shows: path state, weight, active status</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c"># Check iSCSI sessions on Windows</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nb">Get-IscsiSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Property</span> <span class="n">InitiatorNodeAddress</span><span class="p">,</span> <span class="n">TargetNodeAddress</span><span class="p">,</span> <span class="n">IsConnected</span><span class="p">,</span> <span class="n">SessionState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check MPIO disk paths (requires MPIO feature installed)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Shows: physical disk number, load balance policy, paths</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Expected: all paths show &quot;Active/Optimized&quot; or &quot;Active/Unoptimized&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># PowerShell equivalent</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">BusType</span> <span class="o">-eq</span> <span class="s2">&quot;iSCSI&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">BusType</span> <span class="o">-eq</span> <span class="s2">&quot;Fibre Channel&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">HealthStatus</span> <span class="p">|</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Check MPIO paths for a specific disk</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-MSDSMPathInformation</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">DiskNumber</span> <span class="o">-eq</span> <span class="p">&lt;</span><span class="n">disk-number</span><span class="p">&gt;}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Shows: path state, weight, active status</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c"># Check iSCSI sessions on Windows</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Get-IscsiSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Property</span> <span class="n">InitiatorNodeAddress</span><span class="p">,</span> <span class="n">TargetNodeAddress</span><span class="p">,</span> <span class="n">IsConnected</span><span class="p">,</span> <span class="n">SessionState</span>
 </code></pre></div>
 <hr />
 <h2 id="step-2-check-apex-console-for-system-and-capacity-status">Step 2 — Check APEX Console for system and capacity status<a class="headerlink" href="#step-2-check-apex-console-for-system-and-capacity-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Via APEX Console (console.dell.com or dell.com/apex):
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  1. Navigate to: Infrastructure → Storage Systems
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  2. Find the affected system; check &quot;Last Data Received&quot; timestamp
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     - If &gt; 30 minutes ago: SCG is not reporting (proceed to Step 3)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>     - If current: the issue is configuration or host-side
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  3. Navigate to: Subscriptions → select your subscription
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     - Check: Committed capacity vs current usage
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>     - Check: Burst capacity status (if near or at burst limit, new volume provisioning fails)
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     - Check: Subscription expiry date
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  4. Navigate to: Storage Systems → &lt;your system&gt; → Volumes
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>     - Confirm the affected volume exists and is in &quot;Ready&quot; state
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>     - Check: Volume Attachments — confirm the host is listed
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  5. To open a service request directly:
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>     - Navigate to: Support → Create Service Request
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>     - Select: the affected system and the system serial number
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Via APEX Console (console.dell.com or dell.com/apex):
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  1. Navigate to: Infrastructure → Storage Systems
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  2. Find the affected system; check &quot;Last Data Received&quot; timestamp
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>     - If &gt; 30 minutes ago: SCG is not reporting (proceed to Step 3)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>     - If current: the issue is configuration or host-side
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  3. Navigate to: Subscriptions → select your subscription
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>     - Check: Committed capacity vs current usage
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>     - Check: Burst capacity status (if near or at burst limit, new volume provisioning fails)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>     - Check: Subscription expiry date
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  4. Navigate to: Storage Systems → &lt;your system&gt; → Volumes
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>     - Confirm the affected volume exists and is in &quot;Ready&quot; state
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>     - Check: Volume Attachments — confirm the host is listed
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  5. To open a service request directly:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>     - Navigate to: Support → Create Service Request
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>     - Select: the affected system and the system serial number
 </code></pre></div>
 <hr />
 <h2 id="step-3-check-scg-telemetry-reporting">Step 3 — Check SCG telemetry reporting<a class="headerlink" href="#step-3-check-scg-telemetry-reporting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to the SCG appliance</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@&lt;scg-ip&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># SCG overall health</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>scg<span class="w"> </span>status
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected: SCG Service = Running; Connected to CloudIQ = Yes</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Test outbound connectivity to APEX Console and CloudIQ</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>scg<span class="w"> </span>connectivity<span class="w"> </span>--test
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Expected: all endpoints Reachable</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># List registered devices and their last poll time</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>scg<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Look for the APEX system; check Last Poll Time</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Test connectivity to the specific APEX array</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>scg<span class="w"> </span>device<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--id<span class="w"> </span>&lt;device-id&gt;
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Expected: Authentication OK; API reachable</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Collect SCG diagnostic bundle for Dell SR</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>scg<span class="w"> </span>log<span class="w"> </span>collect<span class="w"> </span>--output<span class="w"> </span>/tmp/scg-apex-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to the SCG appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>admin@&lt;scg-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># SCG overall health</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>scg<span class="w"> </span>status
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Expected: SCG Service = Running; Connected to CloudIQ = Yes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Test outbound connectivity to APEX Console and CloudIQ</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>scg<span class="w"> </span>connectivity<span class="w"> </span>--test
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Expected: all endpoints Reachable</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># List registered devices and their last poll time</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>scg<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Look for the APEX system; check Last Poll Time</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Test connectivity to the specific APEX array</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>scg<span class="w"> </span>device<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--id<span class="w"> </span>&lt;device-id&gt;
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Expected: Authentication OK; API reachable</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Collect SCG diagnostic bundle for Dell SR</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>scg<span class="w"> </span>log<span class="w"> </span>collect<span class="w"> </span>--output<span class="w"> </span>/tmp/scg-apex-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>admin@scg-01:~$ scg status
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>SCG Service = Running
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Connected to CloudIQ = Yes
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Last Heartbeat = 2024-01-15 14:32:18 UTC
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Version = 2.4.1.5
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>admin@scg-01:~$ scg connectivity --test
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Testing endpoint connectivity...
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>APEX Console (apex.dell.com:443) = Reachable
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>CloudIQ (cloudiq.dell.com:443) = Reachable
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>NTP Server (time.nist.gov:123) = Reachable
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>DNS Resolver (8.8.8.8:53) = Reachable
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>admin@scg-01:~$ scg device list
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Device ID | Name | Type | Last Poll Time | Status
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>----------|------|------|----------------|--------
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>dev-4a7f2c | APEX-SAN-01 | PowerFlex | 2024-01-15 14:31:42 | Connected
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>dev-8b1e9d | APEX-OBJ-02 | ObjectScale | 2024-01-15 14:29:15 | Connected
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>dev-5c3a6e | APEX-NAS-03 | PowerScale | 2024-01-15 14:30:58 | Connected
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>admin@scg-01:~$ scg device test --id dev-4a7f2c
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Testing device connectivity for APEX-SAN-01...
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Authentication OK
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>API Endpoint Reachable = Yes
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Response Time = 142ms
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Status = Healthy
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>admin@scg-01:~$ scg log collect --output /tmp/scg-apex-2024-01-15.tar.gz
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>Collecting diagnostic bundle...
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Gathering system logs...
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>Gathering connectivity logs...
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>Gathering device metrics...
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>Bundle created: /tmp/scg-apex-2024-01-15.tar.gz (287 MB)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>scg: command not found</code></strong> — Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH.
+<strong><code>Authentication failed for device dev-4a7f2c</code></strong> — Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network.
+<strong><code>Connected to CloudIQ = No</code></strong> — Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable.</p>
+</div>
 <hr />
 <h2 id="step-4-check-the-underlying-array-unisphere">Step 4 — Check the underlying array (Unisphere)<a class="headerlink" href="#step-4-check-the-underlying-array-unisphere" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># For PowerStore (via Unisphere or REST API)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/volume?select=name,state,health&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name, state, health}&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected: all volumes state = &quot;Ready&quot;, health = &quot;OK&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Check host connections</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/host_volume_mapping&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {host_id, volume_id, logical_unit_number}&#39;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check array port state</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/fc_port?select=name,current_speed,wwn,current_univ_wwn&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name, current_speed}&#39;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># For PowerFlex — check system via API gateway</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="s2">&quot;https://&lt;pfx-gateway&gt;:443/api/types/System/instances&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.name,.capacity&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># For PowerStore (via Unisphere or REST API)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/volume?select=name,state,health&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name, state, health}&#39;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Expected: all volumes state = &quot;Ready&quot;, health = &quot;OK&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check host connections</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/host_volume_mapping&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {host_id, volume_id, logical_unit_number}&#39;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check array port state</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-ip&gt;/api/rest/fc_port?select=name,current_speed,wwn,current_univ_wwn&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name, current_speed}&#39;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># For PowerFlex — check system via API gateway</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="s2">&quot;https://&lt;pfx-gateway&gt;:443/api/types/System/instances&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.name,.capacity&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;name&quot;: &quot;vol_prod_db_001&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;state&quot;: &quot;Ready&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;health&quot;: &quot;OK&quot;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>}
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>{
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;name&quot;: &quot;vol_prod_db_002&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;state&quot;: &quot;Ready&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;health&quot;: &quot;OK&quot;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>{
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;name&quot;: &quot;vol_backup_tier2&quot;,
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  &quot;state&quot;: &quot;Ready&quot;,
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;health&quot;: &quot;OK&quot;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>}
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>{
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;host_id&quot;: &quot;host-5f8c2a1b&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;volume_id&quot;: &quot;vol_prod_db_001&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  &quot;logical_unit_number&quot;: 0
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>}
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>{
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;host_id&quot;: &quot;host-5f8c2a1b&quot;,
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  &quot;volume_id&quot;: &quot;vol_prod_db_002&quot;,
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>  &quot;logical_unit_number&quot;: 1
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>}
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>{
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  &quot;name&quot;: &quot;FC_Port_A0&quot;,
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  &quot;current_speed&quot;: &quot;16 Gbps&quot;
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>}
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>{
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  &quot;name&quot;: &quot;FC_Port_B0&quot;,
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  &quot;current_speed&quot;: &quot;16 Gbps&quot;
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>}
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>&quot;PowerStore-Array-01&quot;
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>&quot;18.5 TB&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping).
+<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with <code>curl -sk ... | head -c 200</code> to inspect raw response.
+<strong><code>curl: (7) Failed to connect to &lt;powerstore-ip&gt; port 443: Connection refused</code></strong> — Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with <code>ping &lt;powerstore-ip&gt;</code> and check firewall rules.</p>
+</div>
 <hr />
 <h2 id="collect-diagnostic-snapshot-for-dell-sr">Collect diagnostic snapshot for Dell SR<a class="headerlink" href="#collect-diagnostic-snapshot-for-dell-sr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On Linux host — collect all path and session info</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="o">{</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== iSCSI sessions ===&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;iSCSI not in use&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== multipath ===&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>multipath<span class="w"> </span>-ll
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== multipathd paths ===&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>multipathd<span class="w"> </span>show<span class="w"> </span>paths
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== FC HBA state ===&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No FC HBAs&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== block devices ===&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,TRAN,MODEL<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^loop&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/apex-host-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On Linux host — collect all path and session info</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="o">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== iSCSI sessions ===&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;iSCSI not in use&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== multipath ===&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>multipath<span class="w"> </span>-ll
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== multipathd paths ===&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>multipathd<span class="w"> </span>show<span class="w"> </span>paths
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== FC HBA state ===&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No FC HBAs&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== block devices ===&quot;</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,TRAN,MODEL<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^loop&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/apex-host-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>=== iSCSI sessions ===
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>tcp: [1] 192.168.100.45:3260,1 iqn.1991-05.com.dell:APEX.array01.target1 (non-flash)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>tcp: [2] 192.168.100.46:3260,1 iqn.1991-05.com.dell:APEX.array01.target1 (non-flash)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>=== multipath ===
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>mpatha (360060e80057900000057900000010001) dm-0 DELL,APEX Storage
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  |- 2:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  `- 3:0:0:0 sdc 8:32 active ready running
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>=== multipathd paths ===
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>hcil    dev dev_t pri dm_st chk_st next_check
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>2:0:0:0 sdb 8:16  50 active ready  XXXXXXXX.XXX
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>3:0:0:0 sdc 8:32  50 active ready  XXXXXXXX.XXX
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>=== FC HBA state ===
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Online
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Online
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>=== block devices ===
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>NAME   SIZE TYPE TRAN MODEL
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>sdb    2.0T disk sas  APEX Storage
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>sdc    2.0T disk sas  APEX Storage
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>mpatha 2.0T mpath
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Diagnostic data saved to: /tmp/apex-host-diag-2024-01-15-1430.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Verify iSCSI target is configured and running with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code>.
+<strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath package with <code>apt-get install device-mapper-multipath</code> or <code>yum install device-mapper-multipath</code>.
+<strong><code>multipathd: socket connect failed, No such file or directory</code></strong> — Start the multipathd service with <code>systemctl start multipathd &amp;&amp; systemctl enable multipathd</code>.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8993,7 +9159,7 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:34:19 UTC"><span class="timeago" datetime="2026-06-29T03:34:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:34:19 UTC">2026-06-29</span>
   </span>
 
     

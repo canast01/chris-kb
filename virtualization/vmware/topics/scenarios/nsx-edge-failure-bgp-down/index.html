@@ -10819,6 +10819,21 @@ the physical network — and restoring connectivity with minimal downtime.
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-manager.domain.local/api/v1/transport-nodes?node_type=EdgeNode&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;display_name&quot;|&quot;status&quot;&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&quot;display_name&quot;: &quot;edge-node-01.domain.local&quot;,
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&quot;display_name&quot;: &quot;edge-node-02.domain.local&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&quot;display_name&quot;: &quot;edge-node-03.domain.local&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>&quot;status&quot;: &quot;DOWN&quot;,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&quot;display_name&quot;: &quot;edge-node-04.domain.local&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>&quot;status&quot;: &quot;UP&quot;,
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname matches certificate CN).
+<strong><code>jq: command not found</code></strong> — Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead of piping to <code>jq</code>.
+<strong><code>401 Unauthorized</code></strong> — Verify NSX Manager admin credentials and ensure the user has API access permissions in NSX Manager role-based access control.</p>
+</div>
 <hr />
 <h2 id="3-check-bgp-neighbor-state-on-the-t0-gateway">3. Check BGP Neighbor State on the T0 Gateway<a class="headerlink" href="#3-check-bgp-neighbor-state-on-the-t0-gateway" title="Permanent link">&para;</a></h2>
 <p>Navigate to NSX Manager → <strong>Networking</strong> → <strong>Tier-0 Gateways</strong> → select T0 → <strong>BGP</strong> → <strong>Neighbors</strong>.</p>
@@ -10852,46 +10867,137 @@ the physical network — and restoring connectivity with minimal downtime.
 <hr />
 <h2 id="4-ssh-to-the-edge-node-check-bgp-and-routes">4. SSH to the Edge Node — Check BGP and Routes<a class="headerlink" href="#4-ssh-to-the-edge-node-check-bgp-and-routes" title="Permanent link">&para;</a></h2>
 <p>SSH to the edge node and run the BGP and route commands in sequence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From NSX edge node CLI — list logical routers (VRFs)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>logical-routers
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Switch to the uplink VRF (note the UUID from the output above)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vrf<span class="w"> </span>&lt;uplink-vrf-uuid&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check BGP neighbor summary — look for State = Established</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check the route table for default route (0.0.0.0/0) and uplink prefixes</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>get<span class="w"> </span>route
-</code></pre></div>
-<p>Look for: <strong>Established</strong> state and a non-zero <strong>PfxRcd</strong> (prefixes received from upstream router).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ping the upstream router from the edge node uplink interface</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span>interface<span class="w"> </span>&lt;uplink-interface-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From NSX edge node CLI — list logical routers (VRFs)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>logical-routers
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check interface status on the edge node</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Switch to the uplink VRF (note the UUID from the output above)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vrf<span class="w"> </span>&lt;uplink-vrf-uuid&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check BGP neighbor summary — look for State = Established</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check the route table for default route (0.0.0.0/0) and uplink prefixes</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>get<span class="w"> </span>route
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Logical Router UUID                          Name                    Status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx         uplink-vrf             up
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy         tenant-vrf-prod        up
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz         tenant-vrf-dev         down
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Switched to VRF: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>BGP neighbor 10.0.0.1
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Remote AS: 65001
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  State: Established
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Uptime: 2d 14h 22m
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Messages: RX 4521 TX 4518
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>BGP neighbor 10.0.0.2
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Remote AS: 65001
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  State: Established
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Uptime: 1d 8h 15m
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  Messages: RX 3847 TX 3849
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Codes: C - connected, S - static, B - BGP, O - OSPF
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Destination          Gateway            Metric Type
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>0.0.0.0/0            10.0.0.1           0      B
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>10.0.0.0/24          10.0.0.254         0      C
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>192.168.1.0/24       10.0.0.1           100    B
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>172.16.0.0/16        10.0.0.2           200    B
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>invalid vrf uuid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code></strong> — Verify the UUID is copied exactly from the logical-routers output and matches an active VRF.
+<strong><code>bgp: neighbor not configured</code></strong> — Ensure BGP is enabled on the uplink VRF and neighbors are defined in the NSX Manager configuration.</p>
+</div>
+<p>Look for: <strong>Established</strong> state and a non-zero <strong>PfxRcd</strong> (prefixes received from upstream router).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ping the upstream router from the edge node uplink interface</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span>interface<span class="w"> </span>&lt;uplink-interface-name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check interface status on the edge node</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>get<span class="w"> </span>interfaces
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PING &lt;upstream-router-ip&gt; from &lt;uplink-interface-name&gt;: 56 data bytes
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>64 bytes from 192.168.1.1: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=2.289 ms
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.412 ms
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>----192.168.1.1 STATISTICS----
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>round-trip min/avg/max/stddev = 2.156/2.300/2.412/0.099 ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Interface: eth0 (uplink-interface-name)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Status: up
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Speed: 10000 Mbps
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  MTU: 1500
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  MAC: 00:50:56:a1:2e:f4
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  IP: 10.20.30.45/24
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  RX packets: 1245678 RX bytes: 987654321
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  TX packets: 987654 TX bytes: 654321098
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;upstream-router-ip&gt;</code></strong> — Replace <code>&lt;upstream-router-ip&gt;</code> with the actual IP address of your upstream router (e.g., <code>ping 192.168.1.1 interface eth0</code>).
+<strong><code>Interface &lt;uplink-interface-name&gt; not found</code></strong> — Verify the uplink interface name exists by running <code>get interfaces</code> first and use the correct interface identifier.
+<strong><code>Command not found: get interfaces</code></strong> — Use the correct CLI syntax for your hypervisor platform (e.g., <code>ip link show</code> for Linux or <code>show interfaces</code> for NSX edge nodes).</p>
+</div>
 <hr />
 <h2 id="5-check-tep-connectivity-edge-to-esxi-host-tunnels">5. Check TEP Connectivity — Edge to ESXi Host Tunnels<a class="headerlink" href="#5-check-tep-connectivity-edge-to-esxi-host-tunnels" title="Permanent link">&para;</a></h2>
 <p>TEP tunnels carry overlay traffic between edge nodes and ESXi hosts via GENEVE; broken TEPs mean VMs cannot be reached even if the edge node and BGP are healthy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From edge node — list all tunnel ports and their state</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>tunnel-ports
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check GENEVE tunnel state to each ESXi host TEP</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Look for tunnel state: UP</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>port<span class="w"> </span>&lt;port-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From edge node — list all tunnel ports and their state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>tunnel-ports
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check GENEVE tunnel state to each ESXi host TEP</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Look for tunnel state: UP</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>port<span class="w"> </span>&lt;port-id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From an ESXi host — verify TEP reachability to the edge node TEP IP</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;edge-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># vmk10 = TEP VMkernel interface (check your environment for the correct vmk)</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Port                          State    Encapsulation
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nsx-tunnel-1                  UP       GENEVE
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>nsx-tunnel-2                  UP       GENEVE
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>nsx-tunnel-3                  DOWN     GENEVE
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>nsx-tunnel-4                  UP       GENEVE
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>nsx-tunnel-5                  UP       GENEVE
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Logical Switch Port Details:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Port ID: nsx-tunnel-1
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>State: UP
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Encapsulation: GENEVE
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Remote TEP: 192.168.100.45
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Local TEP: 192.168.100.12
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>MTU: 1600
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Port &lt;port-id&gt; not found</code></strong> — Verify the port ID exists by running <code>get tunnel-ports</code> first and use the exact port name from the output.
+<strong><code>Command not found: get</code></strong> — Ensure you are connected to the NSX Manager or edge node CLI; reconnect with <code>ssh admin@&lt;nsx-manager-ip&gt;</code> and authenticate.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From an ESXi host — verify TEP reachability to the edge node TEP IP</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;edge-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># vmk10 = TEP VMkernel interface (check your environment for the correct vmk)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>PING 192.168.100.45 (192.168.100.45): 8972 data bytes
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>8980 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>8980 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>8980 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=2.298 ms
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>8980 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=2.412 ms
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>8980 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=2.187 ms
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>--- 192.168.100.45 statistics ---
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>round-trip min/avg/max = 2.156/2.278/2.412 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unable to route to 192.168.100.45</code></strong> — Verify the edge TEP IP is correct and the ESXi host has network connectivity to the TEP subnet; check routing tables with <code>esxcli network ip route ipv4 list</code>.
+<strong><code>Cannot find vmk10 interface</code></strong> — Confirm the correct TEP VMkernel interface name on your ESXi host by running <code>esxcli network ip interface list</code> and adjust the <code>-I</code> parameter accordingly.
+<strong><code>100% packet loss</code></strong> — Check that the edge node TEP interface is up and reachable; verify firewall rules and VLAN configuration allow traffic between the ESXi host and edge TEP.</p>
+</div>
 <p>Look for: failed large-packet pings between ESXi hosts and the edge node TEP IPs — this points to the underlay VLAN carrying TEP traffic; check the physical switch port.</p>
 <hr />
 <h2 id="6-check-the-edge-vm-in-vcenter">6. Check the Edge VM in vCenter<a class="headerlink" href="#6-check-the-edge-vm-in-vcenter" title="Permanent link">&para;</a></h2>
 <p>Edge nodes run as VMs; a powered-off or mis-placed edge VM takes down the node entirely.</p>
 <p>In vCenter navigate to the edge VM (typically named <code>edge-&lt;uuid&gt;</code>) and verify power state, host placement, and vNIC port group assignments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — find edge VMs and their host placement</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;edge-*&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">VMHost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># PowerCLI — find edge VMs and their host placement</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;edge-*&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">VMHost</span>
 </code></pre></div>
 <p>Look for: edge VM on a failed or maintenance-mode host — vSphere HA will restart it elsewhere; wait for HA to complete, then recheck BGP state.</p>
 <hr />
@@ -10903,12 +11009,28 @@ the physical network — and restoring connectivity with minimal downtime.
 <h2 id="8-physical-switch-upstream-bgp-peer">8. Physical Switch — Upstream BGP Peer<a class="headerlink" href="#8-physical-switch-upstream-bgp-peer" title="Permanent link">&para;</a></h2>
 <p>If both edge nodes show non-Established BGP and TEPs and edge VMs are healthy, the problem is the upstream physical switch or router.</p>
 <p>Check on the ToR switch: BGP neighbor state for the NSX T0 uplink IPs, port state for edge uplink ports, and MTU (GENEVE requires MTU 1600 or higher — mismatched MTU causes intermittent tunnel failures that destabilise BGP).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On Cisco Nexus — check BGP summary for NSX edge peers</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>ipv4<span class="w"> </span>unicast<span class="w"> </span>summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;edge-uplink-ip&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check port state for edge-connected ports</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>interface<span class="w"> </span>eth1/10<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># On Cisco Nexus — check BGP summary for NSX edge peers</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>ipv4<span class="w"> </span>unicast<span class="w"> </span>summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;edge-uplink-ip&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check port state for edge-connected ports</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>show<span class="w"> </span>interface<span class="w"> </span>eth1/10<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>BGP router identifier 10.20.1.1, local AS number 65001
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>10.50.2.5       4 65002   45821   45819   128456    0    0 5w2d        156
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>10.50.2.6       4 65002   45820   45818   128456    0    0 5w2d        152
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Eth1/10 is up
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>admin@nexus-01# show interface eth1/10 status
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Port          Name               Status    Vlan  Duplex Speed Type
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Eth1/10       NSX-Edge-Uplink    connected  trunk   full  10G Ethernet
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact interface name with <code>show interface brief</code> and use the correct format (e.g., <code>Ethernet1/10</code> instead of <code>eth1/10</code>).
+<strong><code>BGP neighbor not found in output</code></strong> — Confirm the edge uplink IP is correct and that BGP peering is established with <code>show bgp ipv4 unicast neighbors</code>.</p>
+</div>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>
@@ -11013,7 +11135,7 @@ the physical network — and restoring connectivity with minimal downtime.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

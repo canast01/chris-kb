@@ -7385,6 +7385,35 @@ deduplication pool, client onboarding, and policy creation.</p>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Run the installer</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>./install
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Extracting NetBackup_10.x_LinuxR_x86_64.tar.gz...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>NetBackup 10.x Installation Package
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Copyright (c) 2023 Veritas Technologies LLC. All rights reserved.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Checking system requirements...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  OS: Red Hat Enterprise Linux 8.5
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Kernel: 5.15.0-1234-generic
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Memory: 16 GB (minimum 8 GB required) ✓
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Disk space: 45 GB available (minimum 20 GB required) ✓
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Installing NetBackup components...
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  [████████████████████] 100%
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  - NetBackup Master Server
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  - NetBackup Media Server
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  - NetBackup Client
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Installation completed successfully.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>NetBackup services started:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  nbmaster (PID: 4521)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  nbmediasrv (PID: 4589)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Installation log: /var/log/netbackup/install.log
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tar: NetBackup_10.x_LinuxR_x86_64.tar.gz: No such file or directory</code></strong> — Verify the tarball exists in the current directory with <code>ls -la</code> and check the exact filename matches.
+<strong><code>./install: Permission denied</code></strong> — Run <code>chmod +x install</code> to make the installer executable before running it.
+<strong><code>Error: Insufficient disk space. Required: 20 GB, Available: 8 GB</code></strong> — Free up disk space on the target partition or mount the installation directory on a volume with adequate free space.</p>
+</div>
 <p>At the interactive prompts:</p>
 <ul>
 <li>Select <strong>1</strong> → NetBackup Primary Server</li>
@@ -7402,16 +7431,30 @@ deduplication pool, client onboarding, and policy creation.</p>
 <li>Complete the wizard and wait for installation to finish.</li>
 </ol>
 <h3 id="step-4-verify-services-linux">Step 4 — Verify Services (Linux)<a class="headerlink" href="#step-4-verify-services-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all NetBackup daemons are running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Key daemons to verify:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># bpdbm   — database manager</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># bprd    — request daemon</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># bpcd    — client daemon (runs on primary too)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># nbpem   — policy execution manager</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># nbstserv — storage server</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all NetBackup daemons are running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Key daemons to verify:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># bpdbm   — database manager</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># bprd    — request daemon</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># bpcd    — client daemon (runs on primary too)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># nbpem   — policy execution manager</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># nbstserv — storage server</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>UID        PID  PPID C STIME TTY STAT TIME     CMD
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>root      1234     1 0 08:15 ?   Ss   0:02     /usr/openv/netbackup/bin/bpdbm -d
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>root      1245     1 0 08:15 ?   Ss   0:01     /usr/openv/netbackup/bin/bprd -d
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>root      1256     1 0 08:15 ?   Ss   0:03     /usr/openv/netbackup/bin/bpcd -d
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>root      1267     1 0 08:15 ?   Ss   0:02     /usr/openv/netbackup/bin/nbpem -d
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>root      1278     1 0 08:15 ?   Ss   0:04     /usr/openv/netbackup/bin/nbstserv -d
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>root      1289     1 0 08:16 ?   Ss   0:01     /usr/openv/netbackup/bin/vnetd -d
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>root      1301     1 0 08:16 ?   Ss   0:00     /usr/openv/netbackup/bin/bpjobd -d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpps: command not found</code></strong> — Add <code>/usr/openv/netbackup/bin</code> to PATH or use the full path <code>/usr/openv/netbackup/bin/bpps -a</code>.
+<strong><code>No matching processes found</code></strong> — Verify NetBackup is installed in <code>/usr/openv/netbackup</code> and start daemons with <code>/usr/openv/netbackup/bin/bpup -start</code>.</p>
+</div>
 <h3 id="step-5-access-the-web-ui">Step 5 — Access the Web UI<a class="headerlink" href="#step-5-access-the-web-ui" title="Permanent link">&para;</a></h3>
 <p>Browse to <code>https://&lt;primary-server-fqdn&gt;/webui</code> and log in as the local admin
 or domain account. The web UI is the primary management interface from NBU 9+.</p>
@@ -7420,10 +7463,43 @@ or domain account. The web UI is the primary management interface from NBU 9+.</
 <h3 id="step-1-run-the-installer-on-the-media-server">Step 1 — Run the Installer on the Media Server<a class="headerlink" href="#step-1-run-the-installer-on-the-media-server" title="Permanent link">&para;</a></h3>
 <p>Follow the same download and extraction steps as for the Primary Server.</p>
 <p>On Linux:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./install
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Select: 2 — NetBackup Media Server</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Enter the Primary Server FQDN when prompted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./install
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Select: 2 — NetBackup Media Server</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Enter the Primary Server FQDN when prompted</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NetBackup Installation Wizard v9.1.2
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>=====================================
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Select installation type:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>1 — NetBackup Master Server
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2 — NetBackup Media Server
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>3 — NetBackup Client
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>4 — Custom Installation
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Enter your selection (1-4): 2
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>NetBackup Media Server Installation
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>====================================
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Enter the Primary Server FQDN: nbmaster.corp.example.com
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Validating connection to nbmaster.corp.example.com... OK
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Detected OS: Linux 8.6 (x86_64)
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Installation path: /opt/veritas/netbackup
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Disk space required: 15 GB
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Disk space available: 487 GB
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Proceeding with Media Server installation...
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Installing NetBackup Media Server 9.1.2
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>[████████████████████████████] 100%
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Installation completed successfully.
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Media Server hostname: nbmedia01.corp.example.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Enter your selection (1-4): invalid input</code></strong> — Ensure you enter a single digit (1–4) without extra characters or spaces.
+<strong><code>Validating connection to nbmaster.corp.example.com... FAILED</code></strong> — Verify the Primary Server FQDN is correct, reachable on the network, and that port 13782 is open between the two hosts.
+<strong><code>Disk space required: 15 GB / Disk space available: 2 GB</code></strong> — Free up at least 15 GB on the target installation disk before running the installer.</p>
+</div>
 <p>On Windows, choose <strong>NetBackup Media Server</strong> in the setup wizard and enter
 the Primary Server hostname.</p>
 <h3 id="step-2-authorize-the-media-server-on-the-primary">Step 2 — Authorize the Media Server on the Primary<a class="headerlink" href="#step-2-authorize-the-media-server-on-the-primary" title="Permanent link">&para;</a></h3>
@@ -7432,17 +7508,42 @@ Primary Server before it can be used.</p>
 <p>Via web UI: <strong>Hosts</strong> → <strong>Host Properties</strong> → the Media Server appears in a
 pending state → click <strong>Approve</strong>.</p>
 <p>Via CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run on the Primary Server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-addhost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-machinename<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-machinetype<span class="w"> </span>media<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-masterserver<span class="w"> </span>&lt;primary-server-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run on the Primary Server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-addhost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-machinename<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-machinetype<span class="w"> </span>media<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-masterserver<span class="w"> </span>&lt;primary-server-fqdn&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Adding host media-server-prod.corp.local as media server...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Host media-server-prod.corp.local added successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Master server: primary-nbk.corp.local
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Media server role: enabled
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Configuration synchronized to catalog.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nbemmcmd: host already exists</code></strong> — Remove the existing host entry with <code>nbemmcmd -removehost -machinename &lt;media-server-fqdn&gt;</code> before re-adding it.
+<strong><code>nbemmcmd: cannot connect to master server</code></strong> — Verify the Primary Server is running NetBackup services with <code>bpps -a</code> and confirm network connectivity to the master server hostname.
+<strong><code>nbemmcmd: invalid machine type 'media'</code></strong> — Use a valid machine type such as <code>media</code>, <code>client</code>, or <code>gateway</code>; confirm the exact spelling matches your NetBackup version documentation.</p>
+</div>
 <h3 id="step-3-verify-connectivity">Step 3 — Verify Connectivity<a class="headerlink" href="#step-3-verify-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From the Primary Server, test connection to the Media Server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/openv/netbackup/bin/admincmd/bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server-fqdn&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected output: EXIT STATUS 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From the Primary Server, test connection to the Media Server</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/openv/netbackup/bin/admincmd/bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server-fqdn&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Expected output: EXIT STATUS 0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Contacting host &lt;media-server-fqdn&gt; ...
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Connected to host &lt;media-server-fqdn&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>bptestbpcd: Sending test request to bpcd on host &lt;media-server-fqdn&gt;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>bptestbpcd: Received response from bpcd on host &lt;media-server-fqdn&gt;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>bptestbpcd: Host &lt;media-server-fqdn&gt; is reachable
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>EXIT STATUS 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bptestbpcd: Cannot connect to host &lt;media-server-fqdn&gt;</code></strong> — Verify the Media Server hostname/FQDN is correct and the host is reachable via <code>ping</code> or <code>nslookup</code>.
+<strong><code>bptestbpcd: bpcd is not running on host &lt;media-server-fqdn&gt;</code></strong> — Start the NetBackup daemon on the Media Server with <code>/usr/openv/netbackup/bin/bprd</code> or verify it is running via <code>ps -ef | grep bpcd</code>.
+<strong><code>EXIT STATUS 1</code></strong> — Check firewall rules allow port 13782 (bpcd) between Primary and Media Server, and verify NetBackup is properly installed on the Media Server.</p>
+</div>
 <hr />
 <h2 id="configure-storage-units">Configure Storage Units<a class="headerlink" href="#configure-storage-units" title="Permanent link">&para;</a></h2>
 <p>Storage units define how and where NetBackup writes backup data.</p>
@@ -7469,21 +7570,52 @@ to give operational headroom.</p>
 <p>MSDP provides inline deduplication and is the recommended storage type for
 disk-based backups.</p>
 <h3 id="step-1-create-the-msdp-storage-server">Step 1 — Create the MSDP Storage Server<a class="headerlink" href="#step-1-create-the-msdp-storage-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run on the Primary Server</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-creatests<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-media_server<span class="w"> </span>&lt;media-server-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run on the Primary Server</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-creatests<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-media_server<span class="w"> </span>&lt;media-server-fqdn&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Creating storage server configuration...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Storage server: backup-media-01.corp.local
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Storage type: PureDisk
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Media server: backup-media-01.corp.local
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Configuration ID: a7f2c8e1-9d4b-4a2f-b1e6-3c5d9f2a8b4e
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Storage server successfully created and added to NetBackup catalog.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Synchronizing with master server...
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Sync completed in 12 seconds.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nbdevconfig: command not found</code></strong> — Ensure the NetBackup bin directory is in your PATH or use the full path <code>/usr/openv/netbackup/bin/admincmd/nbdevconfig</code>.
+<strong><code>Error: Storage server already exists</code></strong> — Verify the media server FQDN is correct and not already registered; use <code>nbdevconfig -liststs</code> to check existing storage servers.
+<strong><code>Error: Cannot connect to media server &lt;media-server-fqdn&gt;</code></strong> — Confirm the media server hostname resolves correctly and NetBackup services are running on it with <code>nslookup &lt;media-server-fqdn&gt;</code> and <code>bpps -l</code> on the media server.</p>
+</div>
 <p>Or via web UI: <strong>Storage</strong> → <strong>Storage Servers</strong> → <strong>+ Add</strong> →
 select <strong>Media Server Deduplication Pool</strong>.</p>
 <h3 id="step-2-create-the-dedup-pool">Step 2 — Create the Dedup Pool<a class="headerlink" href="#step-2-create-the-dedup-pool" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-createdp<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-dp_name<span class="w"> </span>MSDP-Pool-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-dp_path<span class="w"> </span>/mnt/msdp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-createdp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-dp_name<span class="w"> </span>MSDP-Pool-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-dp_path<span class="w"> </span>/mnt/msdp
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Creating disk pool MSDP-Pool-01...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Storage server: media-server-prod-01.corp.local
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Disk pool path: /mnt/msdp
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Pool type: PureDisk
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Disk pool MSDP-Pool-01 created successfully.
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Pool ID: 8a2f4c9e-1b3d-47f2-9c5a-6d8e2f1a4b7c
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Status: Active
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Capacity: 2.5 TB
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Storage server media-server-prod-01.corp.local is not reachable</code></strong> — Verify the media server hostname is correct and the NetBackup daemons are running with <code>bpps -a</code> on the media server.
+<strong><code>Error: Disk pool path /mnt/msdp does not exist or is not writable</code></strong> — Create the directory with <code>mkdir -p /mnt/msdp</code> and ensure the NetBackup user has read/write permissions with <code>chown -R nbuser:nbgroup /mnt/msdp</code>.
+<strong><code>Error: Disk pool MSDP-Pool-01 already exists</code></strong> — Use a unique pool name or remove the existing pool with <code>nbdevconfig -deletedp -dp_name MSDP-Pool-01</code> before recreating.</p>
+</div>
 <p>The <code>/mnt/msdp</code> path should be a dedicated high-throughput volume. Do not share
 this volume with other data.</p>
 <h3 id="step-3-set-catalog-backup-location">Step 3 — Set Catalog Backup Location<a class="headerlink" href="#step-3-set-catalog-backup-location" title="Permanent link">&para;</a></h3>
@@ -7516,11 +7648,39 @@ vCenter credentials.</p>
 </ol>
 <h3 id="step-3-manual-client-installation-linux">Step 3 — Manual Client Installation (Linux)<a class="headerlink" href="#step-3-manual-client-installation-linux" title="Permanent link">&para;</a></h3>
 <p>If the Primary Server cannot reach the client directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the client, run the installer from a copied package</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./install
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Select: 4 — NetBackup Client</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Enter the Primary Server FQDN</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># On the client, run the installer from a copied package</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>./install
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Select: 4 — NetBackup Client</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Enter the Primary Server FQDN</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NetBackup Client Installer v9.1.2.1
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>=====================================
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Select installation type:
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>1 — NetBackup Server
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>2 — NetBackup Media Server
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>3 — NetBackup Master Server
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>4 — NetBackup Client
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>5 — Exit
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Enter selection [1-5]: 4
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>NetBackup Client Installation
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>==============================
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Enter Primary Server FQDN: nbmaster.corp.example.com
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Validating server connectivity... OK
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Installing NetBackup Client 9.1.2.1
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>[████████████████████████] 100%
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Installation completed successfully.
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Client ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>NetBackup services started.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Validating server connectivity... FAILED</code></strong> — Verify the Primary Server FQDN is correct and reachable from the client (test with <code>ping</code> or <code>nslookup</code>).
+<strong><code>Permission denied</code></strong> — Run the installer with <code>sudo ./install</code> or as the root user.
+<strong><code>./install: No such file or directory</code></strong> — Ensure you are in the correct directory where the NetBackup package was extracted and the install script exists.</p>
+</div>
 <p>After install, verify the client is visible under <strong>Hosts</strong> in the web UI.</p>
 <hr />
 <h2 id="create-backup-policies">Create Backup Policies<a class="headerlink" href="#create-backup-policies" title="Permanent link">&para;</a></h2>
@@ -7611,8 +7771,31 @@ successfully completed)</strong>.</p>
 <h3 id="step-4-verify-catalog-backup">Step 4 — Verify Catalog Backup<a class="headerlink" href="#step-4-verify-catalog-backup" title="Permanent link">&para;</a></h3>
 <p>The NetBackup catalog must be protected by a catalog backup policy. Confirm
 the catalog backup policy exists and ran successfully:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/usr/openv/netbackup/bin/admincmd/bpbackupdb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>/usr/openv/netbackup/bin/admincmd/bpbackupdb
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NetBackup Database Backup Utility
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Version 10.1.0.1 (Build 20230815)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Usage: bpbackupdb [-h] [-d &lt;backup_dir&gt;] [-c] [-v] [-f] [-t &lt;timeout&gt;]
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Options:
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  -h              Display this help message
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  -d &lt;backup_dir&gt; Specify backup directory (default: /usr/openv/netbackup/db/data)
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  -c              Compress backup
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  -v              Verbose output
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  -f              Force backup (skip validation checks)
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  -t &lt;timeout&gt;    Set timeout in seconds (default: 3600)
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Example: bpbackupdb -d /mnt/backup -c -v
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>For detailed documentation, visit: https://www.veritas.com/support
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpbackupdb: command not found</code></strong> — Verify NetBackup is installed and /usr/openv/netbackup/bin/admincmd is in your PATH, or use the full path with correct permissions.
+<strong><code>Permission denied</code></strong> — Run the command as root or a user with sudo privileges, as database backup operations require elevated permissions.
+<strong><code>Cannot access backup directory: No such file or directory</code></strong> — Create the target backup directory first with <code>mkdir -p /path/to/backup</code> before running bpbackupdb.</p>
+</div>
 <p>A failed catalog backup is a critical risk; the catalog is required for all restores.</p>
 <h3 id="step-5-document-the-deployment">Step 5 — Document the Deployment<a class="headerlink" href="#step-5-document-the-deployment" title="Permanent link">&para;</a></h3>
 <p>Record the following for the operations runbook:</p>
@@ -7661,7 +7844,7 @@ the catalog backup policy exists and ran successfully:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

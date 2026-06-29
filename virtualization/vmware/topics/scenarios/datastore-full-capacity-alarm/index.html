@@ -10825,13 +10825,28 @@ to prevent recurrence.
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find large delta files (snapshot deltas over 10 GB)</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-size<span class="w"> </span>+10G
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01.vmdk
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/vmfs/volumes/datastore1/vm-prod-02/vm-prod-02.vmdk
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/vmfs/volumes/datastore1/vm-dev-03/vm-dev-03.vmdk
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/vmfs/volumes/datastore1/vm-test-04/vm-test-04.vmdk
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/vmfs/volumes/datastore1/shared-storage/database-vm.vmdk
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000001-delta.vmdk
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/vmfs/volumes/datastore1/vm-prod-02/vm-prod-02-000001-delta.vmdk
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>/vmfs/volumes/datastore1/vm-test-04/vm-test-04-000002-delta.vmdk
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/vmfs/volumes/datastore-name/': No such file or directory</code></strong> — Replace <code>&lt;datastore-name&gt;</code> with the actual datastore name (e.g., <code>datastore1</code>) or run <code>ls /vmfs/volumes/</code> to list available datastores.
+<strong><code>Permission denied</code></strong> — SSH to the ESXi host with root credentials or an account with datastore read permissions; standard user accounts cannot access <code>/vmfs/volumes/</code>.
+<strong><code>find: paths must begin with "/" or "."</code></strong> — Ensure the datastore path is absolute (starts with <code>/vmfs/volumes/</code>) and contains no trailing spaces or special characters.</p>
+</div>
 <p>Look for: VMDKs absent from every VM's <strong>Edit Settings</strong> → <strong>Hard Disk</strong> list and not a system snapshot = orphan candidate.</p>
 <p><strong>Never delete a VMDK directly without confirming it has no vCenter registration.</strong> If in doubt, move it to a holding folder and monitor for 72 hours before deletion.</p>
 <hr />
 <h2 id="5-expand-capacity-or-storage-vmotion-vms">5. Expand Capacity or Storage vMotion VMs<a class="headerlink" href="#5-expand-capacity-or-storage-vmotion-vms" title="Permanent link">&para;</a></h2>
 <p>If removing snapshots and orphans is not enough, move VMs or add capacity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Move a VM&#39;s storage to a different datastore (no downtime)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;target-datastore&quot;</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Move a VM&#39;s storage to a different datastore (no downtime)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;target-datastore&quot;</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
 </code></pre></div>
 <p>For vSAN: add a host or additional disk capacity — new capacity is available immediately after the disk group rebuilds.</p>
 <hr />
@@ -10842,12 +10857,39 @@ to prevent recurrence.
 <h2 id="7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm">7. Aria Ops Capacity Trending — Get Ahead of the Next Alarm<a class="headerlink" href="#7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm" title="Permanent link">&para;</a></h2>
 <p>After recovering space, project the next fill date: Aria Operations → <strong>Capacity</strong> → <strong>vSAN Cluster</strong> → <strong>Time Remaining</strong>.</p>
 <p>Look for: Days Remaining to Full under 30 = expansion request; under 7 = urgent incident.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Aria Ops REST API — get capacity remaining for a specific resource</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/resources/&lt;resource-uuid&gt;/stats?statKey=summary|capacity_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Aria Ops REST API — get capacity remaining for a specific resource</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/resources/&lt;resource-uuid&gt;/stats?statKey=summary|capacity_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;timestamp&quot;: 1703088420000,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;value&quot;: 45.67
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>}
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>{
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;timestamp&quot;: 1703088480000,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;value&quot;: 45.62
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>}
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>{
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;timestamp&quot;: 1703088540000,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;value&quot;: 45.58
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>{
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;timestamp&quot;: 1703088600000,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;value&quot;: 45.51
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>}
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>{
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  &quot;timestamp&quot;: 1703088660000,
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  &quot;value&quot;: 45.49
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index array with string "statList"</code></strong> — The API response structure differs from expected; run the curl command without the jq pipe to inspect the actual JSON structure first.
+<strong><code>401 Unauthorized</code></strong> — Verify the Bearer token is valid and not expired by requesting a fresh token from the Aria Ops authentication endpoint.</p>
+</div>
 <p>Set proactive thresholds: vCenter → <strong>Cluster</strong> → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Configure</strong> → <strong>Advanced Options</strong> — set warning to 60% and error to 70% for production clusters, giving lead time before the 80% write-stop.</p>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
@@ -10953,7 +10995,7 @@ to prevent recurrence.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

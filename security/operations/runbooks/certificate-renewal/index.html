@@ -7273,54 +7273,141 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span>-config<span class="w"> </span>&lt;<span class="o">(</span>cat<span class="w"> </span>/etc/ssl/openssl.cnf<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;\n[SAN]\nsubjectAltName=DNS:&lt;hostname&gt;,DNS:&lt;alias&gt;&quot;</span><span class="o">))</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>-reqexts<span class="w"> </span>SAN
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Can't open config file: /etc/ssl/openssl.cnf</code></strong> — Verify the openssl config path with <code>openssl version -d</code> and adjust the path accordingly for your OS (e.g., <code>/usr/lib/ssl/openssl.cnf</code> on some Linux distributions).
+<strong><code>unable to write 'random state'</code></strong> — Ensure the user running the command has write permissions to <code>$HOME/.rnd</code> or set <code>RANDFILE=/tmp/.rnd</code> before executing.
+<strong><code>req: Unrecognized flag reqexts</code></strong> — Use <code>-addext</code> instead of <code>-reqexts</code> for newer OpenSSL versions (3.0+), or verify your OpenSSL version supports the <code>-reqexts</code> flag with <code>openssl version</code>.</p>
+</div>
 <h2 id="step-3-submit-to-ca">Step 3 — Submit to CA<a class="headerlink" href="#step-3-submit-to-ca" title="Permanent link">&para;</a></h2>
 <p><strong>Internal (ADCS):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Submit CSR via PowerShell</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:&lt;TemplateName&gt;&quot;</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">csr</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">cer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Submit CSR via PowerShell</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:&lt;TemplateName&gt;&quot;</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">csr</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">cer</span>
 </code></pre></div></p>
 <p><strong>Venafi:</strong>
 - Upload CSR in Aperture → Request Certificate → Paste CSR</p>
 <p><strong>External / Let's Encrypt (ACME):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>certbot<span class="w"> </span>certonly<span class="w"> </span>--manual<span class="w"> </span>--preferred-challenges<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>&lt;hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>certbot<span class="w"> </span>certonly<span class="w"> </span>--manual<span class="w"> </span>--preferred-challenges<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>&lt;hostname&gt;
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Saving debug log to /var/log/letsencrypt/letsencrypt.log
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Plugins selected: Authenticator (manual), Installer (None)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Please deploy a DNS TXT record under the name:
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>_acme-challenge.prod-api.example.com.
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>with the following value:
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>a7K9mP2xL_vQ8nR4sT6uW1yZ3aB5cD7eF9gH2jK4lM6nO8pQ0rS2tU4vW6xY8zA
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Before continuing, verify the record is deployed. Press ENTER to continue.
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Waiting for verification...
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Cleaning up challenges
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>IMPORTANT NOTES:
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a> - Congratulations! Your certificate is ready at /etc/letsencrypt/live/prod-api.example.com/fullchain.pem
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a> - Your key file has been saved at /etc/letsencrypt/live/prod-api.example.com/privkey.pem
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a> - Your cert will expire on 2025-04-15. To renew early, run the same command again.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The following errors were reported by the server: Domain authorization failed</code></strong> — Verify the DNS TXT record was created correctly and is propagating (use <code>dig _acme-challenge.&lt;hostname&gt; TXT</code>), then retry.
+<strong><code>Error: Timeout during authorization</code></strong> — Increase the wait time before pressing ENTER by checking DNS propagation with <code>nslookup</code> or <code>dig</code>, or use <code>--manual-auth-hook</code> to automate DNS updates.</p>
+</div>
 <h2 id="step-4-install-certificate">Step 4 — Install Certificate<a class="headerlink" href="#step-4-install-certificate" title="Permanent link">&para;</a></h2>
 <p><strong>Linux (nginx / apache):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cp<span class="w"> </span>&lt;ca-chain&gt;.pem<span class="w"> </span>/etc/ssl/certs/&lt;ca-chain&gt;.pem
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Test config before reload</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>nginx<span class="w"> </span>-t
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cp<span class="w"> </span>&lt;ca-chain&gt;.pem<span class="w"> </span>/etc/ssl/certs/&lt;ca-chain&gt;.pem
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test config before reload</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>nginx<span class="w"> </span>-t
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nginx: configuration file /etc/nginx/nginx.conf test is successful
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot create regular file '/etc/ssl/certs/&lt;hostname&gt;.crt': Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root user.
+<strong><code>nginx: [error] open() "/etc/ssl/private/&lt;hostname&gt;.key" failed (2: No such file or directory)</code></strong> — Verify the certificate and key filenames match exactly and exist in the source directory before copying.
+<strong><code>Job for nginx.service failed because the control process exited with error code.</code></strong> — Check <code>nginx -t</code> output for syntax errors in the certificate paths within nginx.conf, or ensure file permissions are readable by the nginx user (644 for certs, 600 for keys).</p>
+</div>
 <p><strong>VMware vCenter:</strong>
 - vSphere Client → Administration → Certificate Management → Replace Certificate</p>
 <p><strong>NetApp ONTAP:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Certificate installation initiated for SVM &#39;prod-svm-01&#39;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Generating certificate signing request (CSR)...
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>CSR generated successfully with serial number: 4A7B2C9E1F5D8K3L
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Waiting for certificate authority response...
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Certificate received and validated
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Installing certificate on vserver prod-svm-01...
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Certificate installation completed successfully
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Certificate details:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  Common Name: prod-svm-01.corp.local
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Issuer: CN=Corporate-CA-01
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Valid from: 2024-01-15 to 2026-01-14
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Thumbprint: 8F2E9C1A7B4D6K5L9M3N2O1P
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Vserver &lt;svm&gt; does not exist</code></strong> — Verify the SVM name with <code>security certificate show</code> and ensure you are connected to the correct cluster.
+<strong><code>Error: Certificate installation failed - CSR signing timeout</code></strong> — Check network connectivity to your certificate authority and verify firewall rules allow outbound HTTPS traffic on port 443.
+<strong><code>Error: A certificate of type 'server' already exists on this vserver</code></strong> — Delete the existing certificate with <code>security certificate delete -vserver &lt;svm&gt; -type server</code> before installing a new one.</p>
+</div>
 <p><strong>Windows IIS:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="p">&lt;</span><span class="n">cert</span><span class="p">.</span><span class="n">pfx</span><span class="p">&gt;</span> <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Then bind in IIS Manager → Site → Bindings → Edit → Select new cert</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="p">&lt;</span><span class="n">cert</span><span class="p">.</span><span class="n">pfx</span><span class="p">&gt;</span> <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># Then bind in IIS Manager → Site → Bindings → Edit → Select new cert</span>
 </code></pre></div></p>
 <h2 id="step-5-post-renewal-validation">Step 5 — Post-Renewal Validation<a class="headerlink" href="#step-5-post-renewal-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm new expiry date is live</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify chain is valid</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>&lt;ca-chain.pem&gt;<span class="w"> </span>&lt;hostname&gt;.crt
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Test from client</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SSL\|expire\|valid&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm new expiry date is live</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify chain is valid</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>&lt;ca-chain.pem&gt;<span class="w"> </span>&lt;hostname&gt;.crt
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Test from client</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SSL\|expire\|valid&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>notBefore=Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>notAfter=Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>&lt;hostname&gt;.crt: OK
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>*  SSL connection using TLSv1.3 / ECDHE-RSA-AES256-GCM-SHA384
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>*  Server certificate:
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>*   subject: CN=&lt;hostname&gt;,O=Example Corp,C=US
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>*   start date: Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>*   expire date: Jan 15 10:23:45 2025 GMT
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>*   issuer: CN=Example Intermediate CA,O=Example Corp,C=US
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>*   SSL certificate verify ok.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Add the intermediate CA certificate to your CA chain file or ensure the full chain is included in <code>&lt;ca-chain.pem&gt;</code>.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Either add the self-signed cert to your system's trusted store or use <code>curl -k</code> for testing only, then verify the cert manually with <code>openssl x509</code>.
+<strong><code>error in x509_check_cert_time(): certificate has expired</code></strong> — The certificate notAfter date has passed; renew the certificate immediately and redeploy it to the server.</p>
+</div>
 <p>Expected: <code>notAfter</code> should show the new expiry date (typically 1–2 years out).</p>
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>Keep the old certificate and key until the new cert is confirmed working:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Restore old cert if new cert causes issues</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt.bak<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cp<span class="w"> </span>&lt;hostname&gt;.key.bak<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Restore old cert if new cert causes issues</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt.bak<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>cp<span class="w"> </span>&lt;hostname&gt;.key.bak<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot stat '&lt;hostname&gt;.crt.bak': No such file or directory</code></strong> — Replace <code>&lt;hostname&gt;</code> with the actual certificate filename (e.g., <code>cp server.crt.bak /etc/ssl/certs/server.crt</code>) or verify backup files exist in the current directory.
+<strong><code>cp: permission denied</code></strong> — Run the commands with <code>sudo</code> since <code>/etc/ssl/certs/</code> and <code>/etc/ssl/private/</code> require root privileges.</p>
+</div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7406,7 +7493,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

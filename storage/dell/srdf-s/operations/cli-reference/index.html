@@ -8930,26 +8930,118 @@ SRDF/S CLI reference: `symrdf establish`, `symrdf query -synchronous`, `symrdf s
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Resynchronise after failover or split</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Director: 4e
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RDF group: 001
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Local device: 000AA
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Remote device: 000BB
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Pair state: Synchronized
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>RDF mode: Synchronous
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Failover completed successfully.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>R2 (Remote) is now Read/Write.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>R1 (Local) is now Read-Only.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Pair state: Failed Over
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>R2 state: R/W
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>R1 state: R/O
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Last update: 2024-01-15 14:32:18
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Failback initiated for group 001.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>R1 resuming R/W role.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>R2 reverting to R/O.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Failback completed successfully.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Resynchronization started for group 001.
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Synchronizing 2 pairs...
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Progress: 100%
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Resynchronization completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RDF pair not in a valid state for failover</code></strong> — Verify pair state is Synchronized using <code>symrdf -sid &lt;sid&gt; -g &lt;group&gt; query</code> before attempting failover.
+<strong><code>RDF group &lt;group&gt; not found for Symmetrix &lt;sid&gt;</code></strong> — Confirm the correct SID and group number with <code>symrdf -sid &lt;sid&gt; list</code> and verify RDF licensing is enabled.
+<strong><code>Cannot failback: R1 site is not accessible</code></strong> — Ensure R1 array is online and network connectivity between sites is restored before issuing failback.</p>
+</div>
 <hr />
 <h2 id="swap-metro-operations">Swap &amp; Metro Operations<a class="headerlink" href="#swap-metro-operations" title="Permanent link">&para;</a></h2>
 <p>For SRDF/Metro or swap operations on bidirectional configurations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Swap R1/R2 roles</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>swap<span class="w"> </span>-noprompt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set SRDF mode to synchronous</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-sync<span class="w"> </span>-noprompt
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set SRDF mode to asynchronous (temporary degraded mode)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-acp_disk<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Swap R1/R2 roles</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>swap<span class="w"> </span>-noprompt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set SRDF mode to synchronous</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-sync<span class="w"> </span>-noprompt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set SRDF mode to asynchronous (temporary degraded mode)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-acp_disk<span class="w"> </span>-noprompt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Swap R1/R2 roles
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Swap operation initiated for group SRDF_GRP_001 on array 000123456789
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Current R1: DF-SYS-PROD-01 (IP: 10.45.120.15)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Current R2: DF-SYS-DR-01 (IP: 10.45.120.45)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Swap completed successfully in 47 seconds
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>RDF link status: SYNCED
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Set SRDF mode to synchronous
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Mode change initiated for group SRDF_GRP_001
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Previous mode: Asynchronous (ACP_DISK)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>New mode: Synchronous
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Mode transition completed in 12 seconds
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>All RDF pairs now in SYNCED state
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Set SRDF mode to asynchronous (temporary degraded mode)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Mode change initiated for group SRDF_GRP_001
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Previous mode: Synchronous
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>New mode: Asynchronous (ACP_DISK)
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Mode transition completed in 8 seconds
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>RDF link latency: 45ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF group SRDF_GRP_001 not found on array 000123456789</code></strong> — Verify the group name with <code>symrdf -sid &lt;sid&gt; list</code> and confirm the SID matches your target array.
+<strong><code>RDF link is not READY — cannot perform swap operation</code></strong> — Check RDF link status with <code>symrdf -sid &lt;sid&gt; -g &lt;group&gt; query</code> and wait for SYNCED state before retrying.
+<strong><code>User does not have privilege to execute SRDF operations</code></strong> — Ensure your Symmetrix user account has SRDF admin privileges in Solutions Enabler or contact your storage administrator.</p>
+</div>
 <hr />
 <h2 id="common-health-check-sequence">Common Health Check Sequence<a class="headerlink" href="#common-health-check-sequence" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full SRDF/S pre-change health check</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symdg<span class="w"> </span>show<span class="w"> </span>&lt;group_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Full SRDF/S pre-change health check</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symdg<span class="w"> </span>show<span class="w"> </span>&lt;group_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                SRDF/S Group Information
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Group Name         Group #  Type  Priority  Domino  Witness  State
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>PROD_RDF_GRP_01    1        RDF   1         No      Yes      Ready
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>PROD_RDF_GRP_02    2        RDF   2         No      Yes      Ready
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                           SRDF/S Pair Information
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>PairName           Dev#  Type  TDEV  SDEV  State  Link  %Cpy  Domino
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>PROD_RDF_GRP_01    0001  RDF   Yes   Yes   Syncd  OK    100   No
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>PROD_RDF_GRP_01    0002  RDF   Yes   Yes   Syncd  OK    100   No
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                    SRDF/S Link Information
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Link ID  Local IP      Remote IP     State  Latency(ms)  Bandwidth(Mbps)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>1        192.168.1.10  192.168.2.10  Ready  2.3          1000
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>2        192.168.1.11  192.168.2.11  Ready  2.1          1000
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                    Device Group: PROD_RDF_GRP_01
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Group Type: RDF/S
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Number of Devices: 2
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Device Name    Capacity(GB)  Type    Status
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>PROD_VOL_001   500           TDEV    Ready
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>PROD_VOL_002   250           TDEV    Ready
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMCFG-00001: Cannot find Symmetrix with ID &lt;sid&gt;</code></strong> — Verify the correct Symmetrix ID with <code>symcfg list</code> and ensure the array is accessible.
+<strong><code>SYMRDF-00456: RDF group &lt;group&gt; does not exist</code></strong> — Confirm the RDF group name exists using <code>symrdf -sid &lt;sid&gt; list</code> before querying.
+<strong><code>SYMDG-00789: Device group &lt;group_name&gt; not found</code></strong> — Check the exact device group name spelling with <code>symdg list</code> and retry.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8986,7 +9078,7 @@ SRDF/S CLI reference: `symrdf establish`, `symrdf query -synchronous`, `symrdf s
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:51:21 UTC"><span class="timeago" datetime="2026-06-29T04:51:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:51:21 UTC">2026-06-29</span>
   </span>
 
     

@@ -8168,72 +8168,172 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># no member device-alias fa01_ct0_p1</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># exit</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>switch# zone name esxi01_hba0__fa01_ct0_p0 vsan 10
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>switch(config-zone)# member device-alias esxi01_hba0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>switch(config-zone)# member device-alias fa01_ct0_p0
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>switch(config-zone)# member device-alias fa01_ct0_p1
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>switch(config-zone)# exit
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>switch# zone name esxi01_hba0__fa01_ct0_p0 vsan 10
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>switch(config-zone)# no member device-alias fa01_ct0_p1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>switch(config-zone)# exit
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>switch#
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the device-alias names exist in the switch configuration using <code>show device-alias database</code>.
+<strong><code>% Zone member already exists</code></strong> — Remove the duplicate member first with <code>no member device-alias &lt;name&gt;</code> before re-adding it.</p>
+</div>
 <h3 id="zone-set-management">Zone Set Management<a class="headerlink" href="#zone-set-management" title="Permanent link">&para;</a></h3>
 <p><img alt="Zone Set Management" src="../../../../../assets/cisco-mds-proc-zone-set-management.svg" /></p>
 <p><img alt="Zone Set Management" src="../../../../../assets/cisco-mds-proc-zone-set-management.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create zone set and add zones</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member esxi01_hba0__fa01_ct0_p0</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member esxi01_hba1__fa01_ct1_p0</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Activate zone set</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Commit to fabric and save</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>switch#<span class="w"> </span>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create zone set and add zones</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member esxi01_hba0__fa01_ct0_p0</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member esxi01_hba1__fa01_ct1_p0</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Activate zone set</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Commit to fabric and save</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>switch#<span class="w"> </span>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>switch# zoneset name dc1-fabA-prod vsan 10
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>switch(config-zoneset)# member esxi01_hba0__fa01_ct0_p0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>switch(config-zoneset)# member esxi01_hba1__fa01_ct1_p0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>switch(config-zoneset)# exit
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>switch# zoneset activate name dc1-fabA-prod vsan 10
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Zoneset activation initiated. Please wait...
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Zoneset &quot;dc1-fabA-prod&quot; activated successfully for VSAN 10.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>switch# zone commit vsan 10
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Zone commit in progress...
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Zone commit completed successfully for VSAN 10.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>switch# copy running-config startup-config
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>[########################################] 100%
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Configuration saved successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid VSAN ID</code></strong> — Verify the VSAN exists with <code>show vsan</code> and use a valid VSAN number between 1–4094.
+<strong><code>% Zone member not found</code></strong> — Confirm the zone member name exists in the fabric using <code>show flogi database vsan 10</code> before adding it to the zoneset.
+<strong><code>% Zoneset activation failed: conflicting zones detected</code></strong> — Review existing zone configurations with <code>show zoneset active vsan 10</code> and resolve overlapping member definitions before reactivating.</p>
+</div>
 <h3 id="enhanced-zoning-recommended">Enhanced Zoning (recommended)<a class="headerlink" href="#enhanced-zoning-recommended" title="Permanent link">&para;</a></h3>
 <p><img alt="Enhanced Zoning (recommended)" src="../../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg" /></p>
 <p><img alt="Enhanced Zoning (recommended)" src="../../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable enhanced zoning — default-deny for non-zoned devices</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>switch#<span class="w"> </span>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Mode: Enhanced</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable enhanced zoning — default-deny for non-zoned devices</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>switch#<span class="w"> </span>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Mode: Enhanced</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>switch# zone mode enhanced vsan 10
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>switch# show zone status vsan 10
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>VSAN: 10
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Admin Mode: enhanced
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Operation Mode: enhanced
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Default Zone Access: deny
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Session ID: 0x60a8c2d1
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Default Zone Reject Frames: 0
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Broadcast and Multicast Frames: 0
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Unicast Frames: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the VSAN exists with <code>show vsan</code> and confirm you have zone admin privileges.
+<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first using <code>vsan database</code> and <code>vsan 10 activate</code> commands.
+<strong><code>% Zone mode change will activate after session exit</code></strong> — Exit the current session or use <code>no system session timeout</code> to apply changes immediately.</p>
+</div>
 <h3 id="example-zone-a-new-host-to-flasharray">Example: Zone a New Host to FlashArray<a class="headerlink" href="#example-zone-a-new-host-to-flasharray" title="Permanent link">&para;</a></h3>
 <p><img alt="Example: Zone a New Host to FlashArray" src="../../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg" /></p>
 <p><img alt="Example: Zone a New Host to FlashArray" src="../../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Add device aliases</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>database
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name web01_hba1 pwwn 10:00:00:90:fa:ab:cd:f0</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>commit
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 2. Create zone (Fabric A — VSAN 10)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>switch#<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>web01_hba0__fa01_ct0_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># member device-alias web01_hba0</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># member device-alias fa01_ct0_p0</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 3. Add to active zone set</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member web01_hba0__fa01_ct0_p0</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># 4. Activate and save</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>switch#<span class="w"> </span>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># Repeat on Fabric B switch / VSAN for HBA1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Add device aliases</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>database
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name web01_hba1 pwwn 10:00:00:90:fa:ab:cd:f0</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>commit
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 2. Create zone (Fabric A — VSAN 10)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>switch#<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>web01_hba0__fa01_ct0_p0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># member device-alias web01_hba0</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># member device-alias fa01_ct0_p0</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>switch<span class="o">(</span>config-zone<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 3. Add to active zone set</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># member web01_hba0__fa01_ct0_p0</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>switch<span class="o">(</span>config-zoneset<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># 4. Activate and save</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>switch#<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>dc1-fabA-prod<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>switch#<span class="w"> </span>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Repeat on Fabric B switch / VSAN for HBA1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Device-alias database opened for edit session.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef configured.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Device-alias name web01_hba1 pwwn 10:00:00:90:fa:ab:cd:f0 configured.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Device-alias database closed.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Device-alias committed successfully.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Zone name web01_hba0__fa01_ct0_p0 created.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Zone member device-alias web01_hba0 added.
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Zone member device-alias fa01_ct0_p0 added.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Zoneset name dc1-fabA-prod created.
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Zoneset member web01_hba0__fa01_ct0_p0 added.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Activating zoneset dc1-fabA-prod in VSAN 10...
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Zoneset dc1-fabA-prod activated successfully.
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Zone commit in VSAN 10 completed.
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>[#] 100.0%
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Copy complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.</code></strong> — Run <code>device-alias delete name web01_hba0</code> before re-adding, or use a unique device-alias name.
+<strong><code>Zone member device-alias fa01_ct0_p0 not found.</code></strong> — Create the device-alias <code>fa01_ct0_p0</code> in the device-alias database before adding it to the zone.
+<strong><code>Zoneset activation failed: conflicting zone configuration.</code></strong> — Run <code>zoneset deactivate name &lt;current-zoneset&gt; vsan 10</code> to deactivate the active zoneset before activating a new one.</p>
+</div>
 <h3 id="vsan-membership">VSAN Membership<a class="headerlink" href="#vsan-membership" title="Permanent link">&para;</a></h3>
 <p><img alt="VSAN Membership" src="../../../../../assets/cisco-mds-proc-vsan-membership.svg" /></p>
 <p><img alt="VSAN Membership" src="../../../../../assets/cisco-mds-proc-vsan-membership.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show which ports are in a VSAN</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>membership
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Assign a port to a VSAN</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>switch#<span class="w"> </span>vsan<span class="w"> </span>database
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># vsan 10 interface fc1/5</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show which ports are in a VSAN</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span>membership
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Assign a port to a VSAN</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>switch#<span class="w"> </span>vsan<span class="w"> </span>database
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># vsan 10 interface fc1/5</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>VSAN 10 Membership Information
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>===============================
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Interface          VSAN    Status      Speed
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>fc1/1              10      trunking    8 Gbps
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>fc1/2              10      trunking    8 Gbps
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>fc1/5              10      trunking    8 Gbps
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>fc2/3              10      online      4 Gbps
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>fc2/8              10      online      4 Gbps
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>---
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>(no output — command completes silently)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>(no output — command completes silently)
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>(no output — command completes silently)
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>(no output — command completes silently)
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>[########################################] 100.0%
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Copy complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode; use <code>vsan database</code> to enter VSAN configuration mode before assigning ports.
+<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first with <code>vsan 10</code> in VSAN database mode before assigning interfaces to it.</p>
+</div>
 <h3 id="zone-troubleshooting">Zone Troubleshooting<a class="headerlink" href="#zone-troubleshooting" title="Permanent link">&para;</a></h3>
 <p><img alt="Zone Troubleshooting" src="../../../../../assets/cisco-mds-proc-zone-troubleshooting.svg" /></p>
 <p><img alt="Zone Troubleshooting" src="../../../../../assets/cisco-mds-proc-zone-troubleshooting.svg" /></p>
@@ -8281,82 +8381,232 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
 <h3 id="zone-audit">Zone Audit<a class="headerlink" href="#zone-audit" title="Permanent link">&para;</a></h3>
 <p><img alt="Zone Audit" src="../../../../../assets/cisco-mds-proc-zone-audit.svg" /></p>
 <p><img alt="Zone Audit" src="../../../../../assets/cisco-mds-proc-zone-audit.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all zones in VSAN — review for multi-initiator zones</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check what a specific device can reach</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:12:34:56<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show fabric name server — all visible devices</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>switch#<span class="w"> </span>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Diff running vs active zone set (catch uncommitted changes)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>switch#<span class="w"> </span>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all zones in VSAN — review for multi-initiator zones</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check what a specific device can reach</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:12:34:56<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Show fabric name server — all visible devices</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>switch#<span class="w"> </span>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Diff running vs active zone set (catch uncommitted changes)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>switch#<span class="w"> </span>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>switch# show zone vsan 10
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>zone name zone_prod_lun01 vsan 10
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  member pwwn 10:00:00:90:fa:12:34:56
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  member pwwn 10:00:00:90:fa:12:34:78
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>zone name zone_prod_lun02 vsan 10
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  member pwwn 10:00:00:90:fa:12:34:9a
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  member pwwn 10:00:00:90:fa:12:34:bc
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>zone name zone_dev_lun03 vsan 10
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  member pwwn 10:00:00:90:fa:12:34:de
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>switch# show zone member pwwn 10:00:00:90:fa:12:34:56 vsan 10
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>pwwn 10:00:00:90:fa:12:34:56 is in the following zones:
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  zone_prod_lun01
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>switch# show fcns database vsan 10
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>VSAN 10:
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  FC4-Types: FCP
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  Fabric Port Name: 10:00:00:90:fa:12:34:56
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    Port Index: 0x010001  Flags: 0x00
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    Device Alias: hba-esx01-fc0
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    Port Type: N_Port
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    Class: 3
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    IpAddress: 10.100.50.12
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>  Fabric Port Name: 10:00:00:90:fa:12:34:78
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    Port Index: 0x010002  Flags: 0x00
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    Device Alias: storage-array-01-port-a
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>    Port Type: N_Port
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    Class: 3
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>...
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>switch# show zone vsan 10
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>zone name zone_prod_lun01 vsan 10
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>  member pwwn 10:00:00:90:fa:12:34:56
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>  member pwwn 10:00:00:90:fa:12:34:78
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>switch# show zoneset active vsan 10
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>zoneset name prod_zoneset vsan 10
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>  zone name zone_prod_lun01 vsan 10
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>    member pwwn 10:00:00:90:fa:12:34:56
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>    member pwwn 10:00:00:90:fa:12:34:78
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>  zone name zone_prod_lun02 vsan 10
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>    member pwwn 10:00:00:90:fa:12:34:9a
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify VSAN 10 exists with <code>show vsan</code> and confirm the switch supports zoning on that VSAN.
+<strong><code>% No matching zones found</code></strong> — Confirm the pwwn format is correct (16 hex digits with colons) and the device is actually zoned in VSAN 10.</p>
+</div>
 <h2 id="add-a-new-switch-to-an-existing-vsan">Add a New Switch to an Existing VSAN<a class="headerlink" href="#add-a-new-switch-to-an-existing-vsan" title="Permanent link">&para;</a></h2>
 <p>Connect ISL → on existing switch: <code>vsan database; vsan &lt;id&gt; interface fc1/1</code> → on new switch: set domain ID to auto → <code>no shutdown</code> → verify <code>show topology</code> includes new switch.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On existing switch: add ISL port to VSAN</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>switch#<span class="w"> </span>vsan<span class="w"> </span>database
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># vsan &lt;id&gt; interface fc1/1</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># On new switch: bring up ISL port</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>switch#<span class="w"> </span>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>switch<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># no shutdown</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify new switch appears in fabric topology</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>topology
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># On existing switch: add ISL port to VSAN</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>switch#<span class="w"> </span>vsan<span class="w"> </span>database
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># vsan &lt;id&gt; interface fc1/1</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># On new switch: bring up ISL port</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>switch#<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>switch<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># no shutdown</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Verify new switch appears in fabric topology</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>topology
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>switch# vsan database
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>switch(config-vsan-db)# vsan 1 interface fc1/1
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>switch(config-vsan-db)# exit
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>switch# interface fc1/1
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>switch(config-if)# no shutdown
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>switch# show topology
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>FC Topology for VSAN 1:
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Switch ID   WWN                    Model      State
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>--------    ---                    -----      -----
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>[1]         50:00:09:73:a1:2b:4d:01  MDS 9148S  Principal
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>[2]         50:00:09:73:a2:5e:8c:92  MDS 9148S  Principal
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>[3]         50:00:09:73:a3:7f:1c:45  MDS 9148S  Principal
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>ISL Links:
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Port        Remote Port    Remote Switch  State
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>----        -----------    ---------------  -----
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>fc1/1       fc1/1          [2]            Up
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>fc2/1       fc2/2          [3]            Up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the VSAN ID exists with <code>show vsan</code> before adding the interface.
+<strong><code>Interface fc1/1 is not online</code></strong> — Ensure the ISL port is physically connected and the remote switch port is also enabled with <code>no shutdown</code>.
+<strong><code>VSAN &lt;id&gt; not found in database</code></strong> — Create the VSAN first using <code>vsan &lt;id&gt;</code> in vsan database mode before assigning interfaces to it.</p>
+</div>
 <h2 id="create-a-device-alias">Create a Device Alias<a class="headerlink" href="#create-a-device-alias" title="Permanent link">&para;</a></h2>
 <p><code>device-alias database; device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01; device-alias commit</code> — simplifies zone membership management.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>database
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>database
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>commit
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid PWWN format</code></strong> — Ensure the PWWN is in the correct format (10 hexadecimal pairs separated by colons, e.g., 10:00:00:00:00:00:00:01).
+<strong><code>% Device alias 'host01_hba0' already exists</code></strong> — Delete the existing device alias with <code>device-alias delete host01_hba0</code> before creating a new one with the same name.</p>
+</div>
 <h2 id="create-an-ivr-zone-inter-vsan-routing">Create an IVR Zone (Inter-VSAN Routing)<a class="headerlink" href="#create-an-ivr-zone-inter-vsan-routing" title="Permanent link">&para;</a></h2>
 <p>Configure IVR topology → <code>ivr zoneset name ivr_prod</code> → <code>ivr zone name zone_ivr_host01_array01</code> → add members from different VSANs → <code>ivr zoneset activate name ivr_prod</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Configure IVR topology</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>topology<span class="w"> </span>distribute
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Create IVR zone with members from different VSANs</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>zone_ivr_host01_array01
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 10:00:00:00:00:00:00:01 vsan 10</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 50:00:00:00:00:00:00:02 vsan 20</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Add to IVR zone set and activate</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>ivr_prod
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># member zone_ivr_host01_array01</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># exit</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>ivr_prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Configure IVR topology</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>topology<span class="w"> </span>distribute
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Create IVR zone with members from different VSANs</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>zone_ivr_host01_array01
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 10:00:00:00:00:00:00:01 vsan 10</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 50:00:00:00:00:00:00:02 vsan 20</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Add to IVR zone set and activate</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>ivr_prod
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># member zone_ivr_host01_array01</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>ivr_prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>switch# ivr topology distribute
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Topology distribution in progress...
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>switch# ivr zone name zone_ivr_host01_array01
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>switch(config-ivr-zone)# member pwwn 10:00:00:00:00:00:00:01 vsan 10
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>switch(config-ivr-zone)# member pwwn 50:00:00:00:00:00:00:02 vsan 20
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>switch(config-ivr-zone)# exit
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>switch# ivr zoneset name ivr_prod
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>switch(config-ivr-zoneset)# member zone_ivr_host01_array01
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>switch(config-ivr-zoneset)# exit
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>switch# ivr zoneset activate name ivr_prod
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Zoneset activation in progress...
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>IVR zoneset &#39;ivr_prod&#39; activated successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid PWWN format</code></strong> — Verify the PWWN is in colon-separated hexadecimal format (16 characters total, e.g., 10:00:00:00:00:00:00:01).
+<strong><code>% VSAN does not exist</code></strong> — Confirm both VSAN 10 and VSAN 20 are created and active on the switch before adding members.
+<strong><code>% Zone does not exist</code></strong> — Ensure zone_ivr_host01_array01 is created before attempting to add it as a member to the zoneset.</p>
+</div>
 <h2 id="check-fabric-login-table">Check Fabric Login Table<a class="headerlink" href="#check-fabric-login-table" title="Permanent link">&para;</a></h2>
 <p><code>show flogi database vsan &lt;id&gt;</code> — lists all logged-in devices with FCID and WWPN; confirm expected hosts and arrays present.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>switch#<span class="w"> </span>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>switch#<span class="w"> </span>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>VSAN 1:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>FLOGI Database for VSAN 1:
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a> FC_ID     Port Name               Node Name               Interface
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a> 010001    50:00:09:4d:1a:2b:3c:4d 50:00:09:4d:1a:2b:3c:4e fc1/1
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a> 010002    50:00:09:4d:1a:2b:3c:5e 50:00:09:4d:1a:2b:3c:5f fc1/2
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a> 010003    50:00:09:4d:1a:2b:3c:6d 50:00:09:4d:1a:2b:3c:6e fc1/3
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a> 010004    50:00:09:4d:1a:2b:3c:7d 50:00:09:4d:1a:2b:3c:7e fc1/4
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a> 010005    50:00:09:4d:1a:2b:3c:8d 50:00:09:4d:1a:2b:3c:8e fc1/5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Invalid VSAN ID &lt;id&gt;</code></strong> — Verify the VSAN exists with <code>show vsan</code> and use a valid numeric ID between 1 and 4094.
+<strong><code>% Invalid command</code></strong> — Ensure you are in the correct command mode (exec or config) and the MDS switch supports FLOGI database queries.</p>
+</div>
 <h2 id="collect-nx-os-tech-support-for-tac">Collect NX-OS Tech-Support for TAC<a class="headerlink" href="#collect-nx-os-tech-support-for-tac" title="Permanent link">&para;</a></h2>
 <p><code>show tech-support</code> → save output to file; <code>copy running-config bootflash:switch-config-backup.cfg</code> for configuration backup.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Collect tech-support (redirect to file)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Save configuration backup</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>bootflash:switch-config-backup.cfg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Collect tech-support (redirect to file)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Save configuration backup</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>bootflash:switch-config-backup.cfg
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Generating tech-support output, this may take a few minutes...
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Tech-support file generated successfully.
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Destination filename [switch-config-backup.cfg]? 
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>1234 bytes copied in 1.203 secs (1026 bytes/sec)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>%Error: Invalid command</code></strong> — Ensure you are in the correct mode (exec mode, not config mode); use <code>exit</code> to return to the switch prompt if needed.
+<strong><code>%Error: bootflash: is full</code></strong> — Delete old tech-support or backup files using <code>delete bootflash:filename</code> to free space before retrying.</p>
+</div>
 <h2 id="replace-a-failed-module-line-card">Replace a Failed Module (Line Card)<a class="headerlink" href="#replace-a-failed-module-line-card" title="Permanent link">&para;</a></h2>
 <p><code>out-of-service module &lt;slot&gt;</code> → physically swap module → <code>no out-of-service module &lt;slot&gt;</code> → verify <code>show module</code> shows Online.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Take module out of service</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>switch#<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># -- Physical swap of line card --</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Bring module back into service</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>switch#<span class="w"> </span>no<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Verify module is Online</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>switch#<span class="w"> </span>show<span class="w"> </span>module
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Take module out of service</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>switch#<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># -- Physical swap of line card --</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Bring module back into service</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>switch#<span class="w"> </span>no<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1"># Verify module is Online</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>switch#<span class="w"> </span>show<span class="w"> </span>module
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>switch# out-of-service module 2
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Module 2 is being brought out of service. This may take a few minutes.
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Module 2 is now out of service.
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>switch# no out-of-service module 2
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Module 2 is being brought into service. This may take a few minutes.
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Module 2 is now online.
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>switch# show module
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>Mod Ports Module-Type                Model              Status
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>--- ----- -------------------------  ----------------   ---------
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>1   16    16Gb FC Module             DS-X97-SF16K9      ok
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>2   16    16Gb FC Module             DS-X97-SF16K9      ok
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>3   48    48-port 10Gb iSCSI Module  DS-X97-48ISL-GE    ok
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Mod  Sw              Fw              Hw    Status
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>--- --------------- --------------- ----- ---------
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>1   9.1(1)          12.2(1s1)       1.3   active *
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>2   9.1(1)          12.2(1s1)       1.3   ok
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>3   9.1(1)          12.2(1s1)       1.4   ok
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the slot number exists and use the correct syntax <code>out-of-service module &lt;slot&gt;</code> without additional parameters.
+<strong><code>Module &lt;slot&gt; is not in a valid state for this operation</code></strong> — Wait for the module to complete its current state transition (check with <code>show module</code>) before issuing the command again.
+<strong><code>% Incomplete command</code></strong> — Provide the slot number; the command requires a module slot argument (e.g., <code>out-of-service module 2</code>).</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8393,7 +8643,7 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
   </span>
 
     

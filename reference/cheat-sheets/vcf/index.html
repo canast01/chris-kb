@@ -7457,10 +7457,118 @@ Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades,
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Cluster operations</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AUTH</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">$BASE</span>/v1/clusters<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">         </span><span class="c1"># all clusters</span>
 </code></pre></div>
-<h2 id="password-management-sddc-manager-appliance-ssh">Password management (SDDC Manager appliance SSH)<a class="headerlink" href="#password-management-sddc-manager-appliance-ssh" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vcf-password-ops<span class="w"> </span>--getpassword<span class="w"> </span>--component<span class="w"> </span>VCENTER<span class="w"> </span>--account<span class="w"> </span>root
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vcf-password-ops<span class="w"> </span>--rotatepassword<span class="w"> </span>--component<span class="w"> </span>VCENTER<span class="w"> </span>--account<span class="w"> </span>root
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;accessToken&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImV4cCI6MTcwOTMxNjgwMH0.x7kQ9mZ2pL8vN3qR5sT1uW4yA6bC9dE2fG3hI4jK5lM&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;expiresIn&quot;: 3600
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>}
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>{
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    {
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      &quot;id&quot;: &quot;domain-1&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      &quot;name&quot;: &quot;primary-domain&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      &quot;status&quot;: &quot;HEALTHY&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    },
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;id&quot;: &quot;domain-2&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      &quot;name&quot;: &quot;secondary-domain&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      &quot;status&quot;: &quot;HEALTHY&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    }
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  ]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>}
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>{
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    {
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>      &quot;id&quot;: &quot;host-001&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      &quot;fqdn&quot;: &quot;esx-01.lab.local&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>      &quot;status&quot;: &quot;ASSIGNED&quot;,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>      &quot;ipAddress&quot;: &quot;192.168.1.45&quot;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    },
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    {
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>      &quot;id&quot;: &quot;host-002&quot;,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>      &quot;fqdn&quot;: &quot;esx-02.lab.local&quot;,
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>      &quot;status&quot;: &quot;ASSIGNED&quot;,
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>      &quot;ipAddress&quot;: &quot;192.168.1.46&quot;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    }
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  ]
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>}
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>{
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    {
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>      &quot;id&quot;: &quot;host-003&quot;,
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>      &quot;fqdn&quot;: &quot;esx-03.lab.local&quot;,
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>      &quot;status&quot;: &quot;UNASSIGNED&quot;,
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>      &quot;ipAddress&quot;: &quot;192.168.1.47&quot;
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    }
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  ]
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>}
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>{
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    {
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>      &quot;id&quot;: &quot;bundle-8.0.1&quot;,
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>      &quot;version&quot;: &quot;8.0.1&quot;,
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>      &quot;releaseDate&quot;: &quot;2024-02-15&quot;
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    },
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>    {
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>      &quot;id&quot;: &quot;bundle-8.0.2&quot;,
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>      &quot;version&quot;: &quot;8.0.2&quot;,
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>      &quot;releaseDate&quot;: &quot;2024-03-10&quot;
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>    }
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>  ]
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>}
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>{
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>    {
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>      &quot;id&quot;: &quot;upgrade-1&quot;,
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>      &quot;fromVersion&quot;: &quot;7.0.3&quot;,
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>      &quot;toVersion&quot;: &quot;8.0.1&quot;,
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>      &quot;status&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>      &quot;completedAt&quot;: &quot;2024-01-20T14:32:00Z&quot;
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>    }
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>  ]
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>}
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>{
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>  &quot;elements&quot;: [
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>    {
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>      &quot;id&quot;: &quot;cluster-primary&quot;,
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      &quot;name&quot;: &quot;primary-cluster&quot;,
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>      &quot;domainId&quot;: &quot;domain-1&quot;,
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>      &quot;hostCount&quot;: 3
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>    },
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>    {
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>      &quot;id&quot;: &quot;cluster-secondary&quot;,
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>      &quot;name&quot;: &quot;secondary-cluster&quot;,
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>      &quot;domainId&quot;: &quot;domain-2&quot;,
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>      &quot;hostCount&quot;: 2
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>    }
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>  ]
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>}
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; ensure curl supports <code>-k</code> on your system).
+**`jq: parse error</p>
+</div>
+<h2 id="password-management-sddc-manager-appliance-ssh">Password management (SDDC Manager appliance SSH)<a class="headerlink" href="#password-management-sddc-manager-appliance-ssh" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vcf-password-ops<span class="w"> </span>--getpassword<span class="w"> </span>--component<span class="w"> </span>VCENTER<span class="w"> </span>--account<span class="w"> </span>root
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vcf-password-ops<span class="w"> </span>--rotatepassword<span class="w"> </span>--component<span class="w"> </span>VCENTER<span class="w"> </span>--account<span class="w"> </span>root
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Password for root account in VCENTER component:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Vc0mpl3x!P@ssw0rd2024
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Rotating password for root account in VCENTER component...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Password rotation initiated. Rotation ID: a7f3c2e1-9b4d-4f8a-b2c9-d5e8f1a3b6c9
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Waiting for rotation to complete...
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Password rotation completed successfully.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>New password has been synced to all dependent services.
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Rotation completed at 2024-01-15T14:32:18Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Component 'VCENTER' not found in configuration</code></strong> — Verify the component name matches your VCF deployment (use <code>vcf-password-ops --listcomponents</code> to see available options).
+<strong><code>Error: Authentication failed. Insufficient permissions to rotate password</code></strong> — Ensure your user account has the VCENTER_ADMIN role or equivalent credentials configured in the VCF environment.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../virtualization/vmware/vmware-cloud-foundation/operations/procedures/">VCF Operations</a></li>
@@ -7488,7 +7596,7 @@ Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

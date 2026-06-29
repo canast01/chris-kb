@@ -9565,43 +9565,143 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Current PSP (Path Selection Policy)</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device:|PSP:&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>State: active
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Adapter: vmhba0
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>State: active
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Adapter: vmhba1
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>State: standby
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l3
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Adapter: vmhba2
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>State: dead
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l4
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Adapter: vmhba3
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Active: 2
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Active: 1
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l3
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>PSP: VMW_PSP_RR
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l3
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>PSP: VMW_PSP_FIXED
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l4
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>PSP: VMW_PSP_MRU
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown command or namespace esxcli storage</code></strong> — Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again.
+<strong><code>State: dead</code> paths persist after reboot</strong> — Run <code>esxcli storage core path set --path=&lt;path_id&gt; --state=active</code> to manually recover the path, or check array-side LUN masking and fabric connectivity.
+<strong><code>grep: (standard input) is empty</code></strong> — The storage subsystem may not have detected any paths; verify LUN presentation with <code>esxcli storage core device list</code> and rescan HBAs using <code>esxcli storage core adapter rescan --adapter=vmhba0</code>.</p>
+</div>
 <h2 id="step-3-check-for-vsan-resync-or-rebuild">Step 3: Check for vSAN Resync or Rebuild<a class="headerlink" href="#step-3-check-for-vsan-resync-or-rebuild" title="Permanent link">&para;</a></h2>
 <p>vSAN resync heavily consumes storage backend IOPS:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Active resync (if running — latency will be elevated)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Resync byte count (estimate duration)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total Bytes|Remaining&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check if objects are degraded</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
-</code></pre></div>
-<h2 id="step-4-queue-depth-and-congestion">Step 4: Queue Depth and Congestion<a class="headerlink" href="#step-4-queue-depth-and-congestion" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Device queue depth</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Queue Full Threshold&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Active resync (if running — latency will be elevated)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check if devices are hitting queue full</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;queue full\|queue depth\|SCSI cmd abort&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Resync byte count (estimate duration)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total Bytes|Remaining&quot;</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Adjust queue depth for a specific device (requires reboot to persist)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-O<span class="w"> </span><span class="nv">MaxQueueDepth</span><span class="o">=</span><span class="m">32</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check if objects are degraded</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>UUID                                  ResyncState  TotalBytes       ResyncedBytes    RemainingBytes   EstimatedTime
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>550e8400-e29b-41d4-a716-446655440000  Active       1099511627776   274877906944     824633720832     3h 45m
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>660e8400-e29b-41d4-a716-446655440001  Active       549755813888    137438953472     412316860416     1h 52m
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Total Bytes: 1649267441664
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Remaining: 412316860416
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Object UUID                           State        Health   ComponentCount
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>770e8400-e29b-41d4-a716-446655440002  Inaccessible Degraded 3
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>880e8400-e29b-41d4-a716-446655440003  Accessible   Degraded 4
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>990e8400-e29b-41d4-a716-446655440004  Accessible   Degraded 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VSAN is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled; if not, enable it via vSphere Client or <code>esxcli vsan cluster new</code>.
+<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure the first <code>esxcli vsan debug resync list</code> command completes successfully before piping; check host connectivity and VSAN service status with <code>systemctl status vsanvpd</code>.</p>
+</div>
+<h2 id="step-4-queue-depth-and-congestion">Step 4: Queue Depth and Congestion<a class="headerlink" href="#step-4-queue-depth-and-congestion" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Device queue depth</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Queue Full Threshold&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check if devices are hitting queue full</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;queue full\|queue depth\|SCSI cmd abort&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Adjust queue depth for a specific device (requires reboot to persist)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-O<span class="w"> </span><span class="nv">MaxQueueDepth</span><span class="o">=</span><span class="m">32</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Queue Full Threshold: 64
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Queue Full Threshold: 64
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Queue Full Threshold: 128
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Queue Full Threshold: 64
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>2024-01-15T09:23:47.123Z cpu15:2048)ScsiDeviceIO: 3847: SCSI cmd abort on device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m, CmdSN 0x4521
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>2024-01-15T09:24:12.456Z cpu8:4096)ScsiDeviceIO: 3847: Queue full condition detected on naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m, depth 64/64
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>2024-01-15T09:25:33.789Z cpu22:8192)ScsiDeviceIO: 3847: SCSI cmd abort on device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m, CmdSN 0x4533
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>2024-01-15T09:26:01.234Z cpu5:1024)ScsiDeviceIO: 3847: Queue full condition detected on naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m, depth 64/64
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Operation completed successfully on device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m. MaxQueueDepth set to 32. Host reboot required for changes to persist.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option --device</code></strong> — Use the correct flag format <code>--device=&lt;naa.xxx&gt;</code> or check esxcli storage core device set --help for valid parameters.
+<strong><code>Error: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m not found</code></strong> — Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> and copying the exact device name.
+<strong><code>Permission denied: /var/log/vmkernel.log</code></strong> — Run the grep command with <code>sudo</code> or as root user to access vmkernel logs.</p>
+</div>
 <h2 id="step-5-datastores-on-the-same-lunvolume">Step 5: Datastores on the Same LUN/Volume<a class="headerlink" href="#step-5-datastores-on-the-same-lunvolume" title="Permanent link">&para;</a></h2>
 <p>Multiple datastores sharing an underlying volume compete for IOPS:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># LUN to device mapping</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Device Display&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check VAAI support (helps with copy offload and ATS locking)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># LUN to device mapping</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Device Display&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check VAAI support (helps with copy offload and ATS locking)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Device Display Name: NETAPP Fibre Channel Disk (naa.60a98000572d534b4e6d396f59386b41)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Device Display Name: NETAPP Fibre Channel Disk (naa.60a98000572d534b4e6d396f59386b42)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Device Display Name: PURE FlashArray//X Fibre Channel Disk (naa.624a9370abcd1234ef567890abcd1234)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Device Display Name: EMC VMAX Fibre Channel Disk (naa.60000970000192700533533030303031)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Device Display Name: NETAPP Fibre Channel Disk (naa.60a98000572d534b4e6d396f59386b43)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>VAAI Status:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>   ATS/Locking: supported
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>   Clone: supported
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>   Delete: supported
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>   Unmap: supported
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>   Write Same: supported
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>   Xcopy: supported
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device naa.60a98000572d534b4e6d396f59386b41 not found</code></strong> — Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> without the <code>-d</code> flag to list all available devices.
+<strong><code>Unknown command or namespace</code></strong> — Ensure you are running this command on an ESXi host with VAAI-capable storage; older ESXi versions may not support the <code>vaai status get</code> subcommand.</p>
+</div>
 <h2 id="step-6-esxtop-storage-analysis">Step 6: esxtop Storage Analysis<a class="headerlink" href="#step-6-esxtop-storage-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Launch esxtop, switch to storage view</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxtop
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Press &#39;u&#39; for device view</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Key columns: DAVG/cmd (device latency), KAVG/cmd (kernel latency), QAVG/cmd (queue latency)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># DAVG &gt; 10ms = storage backend issue</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># KAVG &gt; 2ms  = host-side queuing issue</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Launch esxtop, switch to storage view</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxtop
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Press &#39;u&#39; for device view</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Key columns: DAVG/cmd (device latency), KAVG/cmd (kernel latency), QAVG/cmd (queue latency)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># DAVG &gt; 10ms = storage backend issue</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># KAVG &gt; 2ms  = host-side queuing issue</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>CPU  MEMORY  DISK  NETWORK  SWAP  POWER  DUMPPART  SCSI  NETWORK  RESOURCE  STORAGE  HELP
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Press &#39;u&#39; to switch to device view...
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>DEVICE                READS/s  WRITES/s  DAVG/cmd  KAVG/cmd  QAVG/cmd  ACTV  QUED  %UTIL
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>naa.60060e8007e3a00001234567890abcd  145.2  89.7  8.3ms  1.1ms  0.2ms  12  2  67%
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>naa.60060e8007e3a00001234567890cdef  203.1  156.4  14.7ms  2.8ms  1.5ms  18  8  89%
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>naa.60060e8007e3a00001234567890ef01  98.5  42.3  3.2ms  0.9ms  0.1ms  6  0  34%
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>naa.60060e8007e3a00001234567890gh23  167.8  201.5  22.1ms  3.4ms  2.9ms  24  14  94%
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>naa.60060e8007e3a00001234567890ij45  112.3  67.9  6.8ms  1.3ms  0.3ms  9  1  52%
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Press &#39;q&#39; to quit esxtop
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxtop: command not found</code></strong> — Ensure you are logged into an ESXi host directly (SSH) or use vSphere Client; esxtop only runs on ESXi, not vCenter.
+<strong><code>DAVG/cmd column not visible</code></strong> — Press 'f' to customize fields and enable DAVG, KAVG, and QAVG columns in the storage device view.</p>
+</div>
 <h2 id="common-causes-reference">Common Causes Reference<a class="headerlink" href="#common-causes-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9671,7 +9771,7 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

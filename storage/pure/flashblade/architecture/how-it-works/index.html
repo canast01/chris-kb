@@ -8240,19 +8240,70 @@ How It Works reference covering Overview, Scale-Out Architecture, HA Topology, C
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>purefb<span class="w"> </span>fs<span class="w"> </span>destroy<span class="w"> </span>&lt;fs_name&gt;
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>purefb<span class="w"> </span>fs<span class="w"> </span>eradicate<span class="w"> </span>&lt;fs_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># purefb fs list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Name                    Size      Provisioned   Used       NFS v3    NFS v4.1  SMB
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>data-prod               10.0T     10.0T         2.3T       enabled   enabled   disabled
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>backup-share            5.0T      5.0T          1.8T       enabled   disabled  disabled
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>archive-old             20.0T     20.0T         18.5T      disabled  disabled  enabled
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># purefb fs create --name nfs-export --size 10T --nfs-v3-enabled true --nfs-v4-1-enabled true
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Name                    Size      Provisioned   NFS v3    NFS v4.1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nfs-export              10.0T     10.0T         enabled   enabled
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># purefb fs update nfs-export --nfs-rules &quot;*(rw,no_root_squash)&quot; --nfs-v4-1-enabled true
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Name                    Size      NFS Rules
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>nfs-export              10.0T     *(rw,no_root_squash)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># mount -t nfs 192.168.1.50:/nfs-export /mnt/nfs-export
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>(no output — command completes silently)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># purefb fs update nfs-export --size 20T
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Name                    Size      Provisioned
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>nfs-export              20.0T     20.0T
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># purefb fs destroy nfs-export
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Name                    Destroyed
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>nfs-export              true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid filesystem name '&lt;fs_name&gt;'</code></strong> — Replace <code>&lt;fs_name&gt;</code> with an actual filesystem name (e.g., <code>purefb fs create --name my-nfs-fs --size 10T --nfs-v3-enabled true</code>).
+<strong><code>mount.nfs: access denied by server while mounting 192.168.1.50:/nfs-export</code></strong> — Verify NFS export rules are correctly set and the client IP is included in the rules (e.g., <code>purefb fs update nfs-export --nfs-rules "192.168.1.0/24(rw)"</code>).
+<strong><code>Error: Filesystem nfs-export not found</code></strong> — Confirm the filesystem exists with <code>purefb fs list</code> before attempting to update or destroy it.</p>
+</div>
 <h2 id="object-services-s3">Object Services (S3)<a class="headerlink" href="#object-services-s3" title="Permanent link">&para;</a></h2>
 <p>FlashBlade provides S3-compatible object storage through accounts, buckets, and access keys.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span>--account<span class="w"> </span>&lt;account_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;account_name&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;user_name&gt;<span class="w"> </span>--account<span class="w"> </span>&lt;account_name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span>--user<span class="w"> </span>&lt;user_name&gt;/&lt;account_name&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># S3 client access</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;flashblade_s3_vip&gt;/
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>local_file.txt<span class="w"> </span>s3://&lt;bucket_name&gt;/<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;flashblade_s3_vip&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span>--account<span class="w"> </span>&lt;account_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>purefb<span class="w"> </span>object-store-account<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;account_name&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>object-store-user<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;user_name&gt;<span class="w"> </span>--account<span class="w"> </span>&lt;account_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>purefb<span class="w"> </span>object-store-access-key<span class="w"> </span>create<span class="w"> </span>--user<span class="w"> </span>&lt;user_name&gt;/&lt;account_name&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># S3 client access</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;flashblade_s3_vip&gt;/
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>local_file.txt<span class="w"> </span>s3://&lt;bucket_name&gt;/<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;flashblade_s3_vip&gt;/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                          Account                       Created
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>test-bucket-01                prod-account                  2024-01-15T09:23:44Z
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>archive-bucket-02             dev-account                   2024-01-14T16:45:12Z
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>backup-bucket-03              prod-account                  2024-01-10T11:02:33Z
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Account created successfully: prod-account
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>User created successfully: s3-user
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Access Key created successfully
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Access Key ID: PKABC123DEF456GHI789
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Secret Access Key: +jK9mL2nOpQrStUvWxYz1aB3cD4eF5gH6iJ7kL8m
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15 14:32:18       1024 local_file.txt
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>upload: ./local_file.txt to s3://test-bucket-01/local_file.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: account '&lt;account_name&gt;' does not exist</code></strong> — Create the object-store-account before creating users with <code>purefb object-store-account create --name &lt;account_name&gt;</code>.
+<strong><code>An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.</code></strong> — Verify the AWS credentials are set correctly with <code>aws configure</code> and match the access key created via <code>purefb object-store-access-key create</code>.
+<strong><code>error: unable to connect to https://&lt;flashblade_s3_vip&gt;/: certificate verify failed</code></strong> — Add <code>--no-verify-ssl</code> flag to the aws s3 command or configure your environment to trust the FlashBlade's self-signed certificate.</p>
+</div>
 <h2 id="purityfb-data-services">Purity//FB Data Services<a class="headerlink" href="#purityfb-data-services" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8293,16 +8344,62 @@ How It Works reference covering Overview, Scale-Out Architecture, HA Topology, C
 </tbody>
 </table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w">              </span><span class="c1"># array status, Purity version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list<span class="w">              </span><span class="c1"># all blades with health state and capacity</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list<span class="w">           </span><span class="c1"># hardware components (FMs, PSUs, fans)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list<span class="w">              </span><span class="c1"># active alerts</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w">         </span><span class="c1"># filesystems with capacity usage</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list<span class="w">             </span><span class="c1"># S3 buckets</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list<span class="w">               </span><span class="c1"># filesystem and object store snapshots</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list<span class="w">        </span><span class="c1"># ActiveDR links and lag</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list<span class="w">  </span><span class="c1"># data and replication interface status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w">              </span><span class="c1"># array status, Purity version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list<span class="w">              </span><span class="c1"># all blades with health state and capacity</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list<span class="w">           </span><span class="c1"># hardware components (FMs, PSUs, fans)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list<span class="w">              </span><span class="c1"># active alerts</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w">         </span><span class="c1"># filesystems with capacity usage</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list<span class="w">             </span><span class="c1"># S3 buckets</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list<span class="w">               </span><span class="c1"># filesystem and object store snapshots</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list<span class="w">        </span><span class="c1"># ActiveDR links and lag</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list<span class="w">  </span><span class="c1"># data and replication interface status</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name          Status    Version           Capacity
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>flashblade-1  Optimal   5.3.2             365.3 TB
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>flashblade-2  Optimal   5.3.2             365.3 TB
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Name     Status    Capacity      Used       Health
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>blade-1  Optimal   365.3 TB      142.8 TB   OK
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>blade-2  Optimal   365.3 TB      156.2 TB   OK
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>blade-3  Optimal   365.3 TB      128.5 TB   OK
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Name     Type       Status    Count
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>FM-1     Controller Optimal   2
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>PSU-1    Power      Optimal   4
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>FAN-1    Cooling    Optimal   8
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Severity  Code    Message                              Time
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Warning   PFA001  Disk predictive failure imminent     2024-01-15T09:42:31Z
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Critical  TEMP02  Blade-2 temperature threshold high   2024-01-15T08:15:22Z
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Name              Provisioned  Used       Snapshots
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>data-prod         50.0 TB      38.2 TB    12
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>archive-backup    100.0 TB     67.5 TB    8
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>logs-retention    25.0 TB      19.3 TB    4
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Name              Owner        Size       Created
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>backup-archive    eng-team     2.3 TB     2024-01-10T14:22:00Z
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>metrics-store     ops-team     5.8 TB     2024-01-12T09:15:00Z
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>Name                           Type       Created              Size
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>data-prod.20240115-0200       Filesystem 2024-01-15T02:00:00Z 38.2 TB
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>backup-archive.20240114-2300  Object     2024-01-14T23:00:00Z 2.3 TB
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>Source Array      Target Array      Status    Lag (ms)
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>flashblade-1      flashblade-dr     Active    45
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>flashblade-1      flashblade-dr2    Active    128
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>Name      IP Address       Status    Role
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>eth0      10.21.100.45     Up        Data
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>eth1      10.21.100.46     Up        Data
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>eth2      10.22.50.10      Up        Replication
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (10.21.100.45:443)</code></strong> — Verify the FlashBlade management IP is reachable and the REST API service is running with <code>purefb network interface list</code>.
+<strong><code>Error: Invalid credentials</code></strong> — Confirm your API token is valid and not expired by re-authenticating with <code>purefb login</code>.
+<strong><code>Error: Array not found</code></strong> — Ensure the array name or IP is correctly configured in your purefb connection settings.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8332,7 +8429,7 @@ How It Works reference covering Overview, Scale-Out Architecture, HA Topology, C
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:06:42 UTC"><span class="timeago" datetime="2026-06-29T06:06:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:06:42 UTC">2026-06-29</span>
   </span>
 
     

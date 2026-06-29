@@ -7245,76 +7245,143 @@ P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may
 <p><strong>Check current fill rate (ONTAP):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used,available
 </code></pre></div>
-<p><strong>Identify rate of growth:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ONTAP: check recent space events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-event<span class="w"> </span>*vol*<span class="w"> </span>-severity<span class="w"> </span>ALERT<span class="w"> </span>-time-range<span class="w"> </span>1h
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Vserver   Volume       Size       Used       Percent-Used   Available
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>--------- ------------ ---------- ---------- -------------- ----------
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>svm-prod  vol_data_01  2.0TB      1.9TB      95%            100.0GB
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>svm-prod  vol_logs     500GB      487GB      97%            13.0GB
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>svm-prod  vol_backup   1.5TB      1.2TB      80%            300.0GB
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>svm-dr    vol_replica  2.0TB      1.8TB      90%            200.0GB
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>svm-dr    vol_temp     750GB      45GB       6%             705.0GB
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are connected to a NetApp ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
+<strong><code>Error: Invalid field name "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) for your ONTAP version.</p>
+</div>
+<p><strong>Identify rate of growth:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ONTAP: check recent space events</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-event<span class="w"> </span>*vol*<span class="w"> </span>-severity<span class="w"> </span>ALERT<span class="w"> </span>-time-range<span class="w"> </span>1h
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Time                 Severity Event
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>-------------------- -------- -----------------------------------------------
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2024-01-15 14:32:18  ALERT    vol.nearly.full: Volume &#39;data_prod&#39; is 92% full
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>2024-01-15 14:28:45  ALERT    vol.nearly.full: Volume &#39;backup_tier&#39; is 88% full
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>2024-01-15 14:15:22  ALERT    vol.space.low: Volume &#39;logs_archive&#39; space low
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>2024-01-15 13:47:09  ALERT    vol.snapshot.full: Snapshot reserve exhausted on &#39;dr_sync&#39;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>2024-01-15 13:22:51  ALERT    vol.nearly.full: Volume &#39;temp_staging&#39; is 95% full
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: event</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not the local shell.
+<strong><code>Error: No matching events found</code></strong> — Adjust the time-range parameter (e.g., <code>-time-range 24h</code>) or remove the severity filter to broaden the search.</p>
+</div>
 <hr />
 <h2 id="stop-the-bleeding">Stop the Bleeding<a class="headerlink" href="#stop-the-bleeding" title="Permanent link">&para;</a></h2>
 <p>The priority is to stop growth immediately before attempting permanent fixes.</p>
 <h3 id="pause-all-snapshot-policies-on-affected-datastores">Pause all snapshot policies on affected datastores<a class="headerlink" href="#pause-all-snapshot-policies-on-affected-datastores" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — find all snapshots on VMs in the affected datastore</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$ds</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;DATASTORE-NAME&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — find all snapshots on VMs in the affected datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$ds</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;DATASTORE-NAME&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p>Remove oversized snapshots immediately (async):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="nb">Remove-Snapshot</span> <span class="n">-RunAsync</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="nb">Remove-Snapshot</span> <span class="n">-RunAsync</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="find-large-files-on-vmfs">Find large files on VMFS<a class="headerlink" href="#find-large-files-on-vmfs" title="Permanent link">&para;</a></h3>
 <p>SSH to an ESXi host with access to the datastore:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Find files larger than 10 GB</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;UUID-or-label&gt;<span class="w"> </span>-size<span class="w"> </span>+10G<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List top 20 largest files</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;UUID-or-label&gt;<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find files larger than 10 GB</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;UUID-or-label&gt;<span class="w"> </span>-size<span class="w"> </span>+10G<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List top 20 largest files</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;UUID-or-label&gt;<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>-rw------- 1 root root 15G Nov 12 10:34 /vmfs/volumes/datastore1/vm-logs/esx-host-07.log
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>-rw------- 1 root root 12G Nov 11 23:18 /vmfs/volumes/datastore1/vm-swap/prod-db-01.vswp
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>-rw------- 1 root root 11G Nov 10 15:42 /vmfs/volumes/datastore1/backups/snapshot-2024-11-10.vmdk
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>15G /vmfs/volumes/datastore1/vm-logs/esx-host-07.log
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>12G /vmfs/volumes/datastore1/vm-swap/prod-db-01.vswp
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>11G /vmfs/volumes/datastore1/backups/snapshot-2024-11-10.vmdk
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>8.5G    /vmfs/volumes/datastore1/vms/web-app-03/disk-2.vmdk
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>7.2G    /vmfs/volumes/datastore1/vms/app-server-02/memory.dump
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>6.8G    /vmfs/volumes/datastore1/iso-images/rhel-8.9-full.iso
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>5.4G    /vmfs/volumes/datastore1/vms/legacy-app/disk-1.vmdk
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>4.9G    /vmfs/volumes/datastore1/backups/incremental-2024-11-09.vmdk
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>3.7G    /vmfs/volumes/datastore1/logs/vmkernel.log
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>2.1G    /vmfs/volumes/datastore1/vms/test-vm-04/disk-0.vmdk
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/vmfs/volumes/&lt;UUID-or-label&gt;': No such file or directory</code></strong> — Replace <code>&lt;UUID-or-label&gt;</code> with the actual datastore name or UUID (e.g., <code>/vmfs/volumes/datastore1</code> or <code>/vmfs/volumes/5a3c8e2f-1b4d-7c9a-e2f1-3d5a8c2b9e4f</code>).
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user since <code>/vmfs/volumes</code> requires elevated privileges on ESXi hosts.</p>
+</div>
 <h3 id="suspend-non-critical-snapshot-schedules">Suspend non-critical snapshot schedules<a class="headerlink" href="#suspend-non-critical-snapshot-schedules" title="Permanent link">&para;</a></h3>
 <p>In ONTAP, temporarily suspend the SnapMirror schedule on the affected volume to stop growth from replication overhead:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm:volume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm:volume
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Operation succeeded: SnapMirror relationship quiesced.
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Destination: cluster2://svm_dr/vol_backup
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Source: cluster1://svm_prod/vol_data
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Last Transfer Size: 2.1GB
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Last Transfer Duration: 00:04:32
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Quiesce Status: Success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Unexpected error from Data ONTAP: entry doesn't exist</code></strong> — Verify the destination path syntax matches the format <code>cluster-name://svm-name/volume-name</code> and that the SnapMirror relationship exists.
+<strong><code>Error: This operation is not permitted on a broken SnapMirror relationship</code></strong> — Resynchronize the SnapMirror relationship using <code>snapmirror resync -destination-path &lt;path&gt;</code> before attempting to quiesce.</p>
+</div>
 <hr />
 <h2 id="diagnose">Diagnose<a class="headerlink" href="#diagnose" title="Permanent link">&para;</a></h2>
 <h3 id="identify-top-space-consumers">Identify top space consumers<a class="headerlink" href="#identify-top-space-consumers" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI — VM disk usage on affected datastore</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Parent</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Disk&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CapacityGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="n">StorageFormat</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CapacityGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># PowerCLI — VM disk usage on affected datastore</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Parent</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Disk&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CapacityGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  <span class="n">StorageFormat</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CapacityGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p><strong>Check for failed snapshot consolidations:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Extensiondata</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ExtraConfig</span> <span class="p">|</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Key</span> <span class="o">-eq</span> <span class="s2">&quot;checkpoint.vmState&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="o">-ne</span> <span class="s2">&quot;&quot;</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Extensiondata</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ExtraConfig</span> <span class="p">|</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Key</span> <span class="o">-eq</span> <span class="s2">&quot;checkpoint.vmState&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="o">-ne</span> <span class="s2">&quot;&quot;</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span>
 </code></pre></div>
 <p>These VMs have stale snapshot chains consuming hidden space. Consolidate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;VM-NAME&quot;</span> <span class="p">|</span> <span class="nb">Invoke-VMScript</span> <span class="n">-GuestCredential</span> <span class="nv">$cred</span> <span class="n">-ScriptText</span> <span class="s2">&quot;echo done&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># Then in vCenter: right-click VM → Snapshots → Consolidate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;VM-NAME&quot;</span> <span class="p">|</span> <span class="nb">Invoke-VMScript</span> <span class="n">-GuestCredential</span> <span class="nv">$cred</span> <span class="n">-ScriptText</span> <span class="s2">&quot;echo done&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># Then in vCenter: right-click VM → Snapshots → Consolidate</span>
 </code></pre></div>
 <hr />
 <h2 id="fix">Fix<a class="headerlink" href="#fix" title="Permanent link">&para;</a></h2>
 <h3 id="option-a-delete-stale-snapshots-fastest">Option A: Delete stale snapshots (fastest)<a class="headerlink" href="#option-a-delete-stale-snapshots-fastest" title="Permanent link">&para;</a></h3>
 <p>Already covered in Stop the Bleeding. After async removal completes, verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">SizeGB</span> <span class="n">-Sum</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">SizeGB</span> <span class="n">-Sum</span>
 </code></pre></div>
 <h3 id="option-b-storage-vmotion-to-a-datastore-with-free-space">Option B: Storage vMotion to a datastore with free space<a class="headerlink" href="#option-b-storage-vmotion-to-a-datastore-with-free-space" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Find target datastore with sufficient free space</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="o">-gt</span> <span class="n">200</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">FreeSpaceGB</span> <span class="n">-Descending</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Migrate VM storage (live, no downtime)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;VM-NAME&quot;</span><span class="p">)</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;TARGET-DS&quot;</span><span class="p">)</span> <span class="n">-RunAsync</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Find target datastore with sufficient free space</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="o">-gt</span> <span class="n">200</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">FreeSpaceGB</span> <span class="n">-Descending</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># Migrate VM storage (live, no downtime)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;VM-NAME&quot;</span><span class="p">)</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;TARGET-DS&quot;</span><span class="p">)</span> <span class="n">-RunAsync</span>
 </code></pre></div>
 <h3 id="option-c-expand-the-datastore-lun-extend-ontap-vmfs">Option C: Expand the datastore — LUN extend (ONTAP + VMFS)<a class="headerlink" href="#option-c-expand-the-datastore-lun-extend-ontap-vmfs" title="Permanent link">&para;</a></h3>
 <p><strong>Step 1 — Expand the ONTAP volume and LUN:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Extend the volume first</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-size<span class="w"> </span>+500g
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Then extend the LUN</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>lun<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-path<span class="w"> </span>/vol/vol_name/lun_name<span class="w"> </span>-size<span class="w"> </span>+500g
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Extend the volume first</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-size<span class="w"> </span>+500g
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Then extend the LUN</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>lun<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-path<span class="w"> </span>/vol/vol_name/lun_name<span class="w"> </span>-size<span class="w"> </span>+500g
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Volume modify successful: Volume &quot;vol_name&quot; size extended.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>LUN resize successful: LUN &quot;/vol/vol_name/lun_name&quot; size extended to 1.5TB.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP or use System Manager) rather than a standard Linux shell.
+<strong><code>Error: LUN is mapped and cannot be resized</code></strong> — Unmount the LUN from all hosts and unmap it from igroups before resizing, then remap and remount after the operation completes.</p>
+</div>
 <p><strong>Step 2 — Rescan storage on ESXi hosts:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-VMHostStorage</span> <span class="n">-RescanAllHba</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-VMHostStorage</span> <span class="n">-RescanAllHba</span>
 </code></pre></div>
 <p><strong>Step 3 — Expand the VMFS datastore in vCenter:</strong></p>
 <ul>
@@ -7325,40 +7392,65 @@ P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may
 <p>If the LUN cannot be expanded, add a new LUN as an extent to the existing VMFS-5 datastore, or create a new datastore and vMotion VMs.</p>
 <hr />
 <h2 id="ontap-specific-checks">ONTAP-Specific Checks<a class="headerlink" href="#ontap-specific-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Volume space breakdown (data, snapshots, reserves)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>volume<span class="w"> </span>show-space<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Snapshot usage per volume</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-fields<span class="w"> </span>size,create-time<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort-by<span class="w"> </span>size
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Delete old snapshots to reclaim space immediately</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snapshot-name&gt;
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Check if snapshot autodelete is configured</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>autodelete<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Volume space breakdown (data, snapshots, reserves)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>volume<span class="w"> </span>show-space<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Snapshot usage per volume</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-fields<span class="w"> </span>size,create-time<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort-by<span class="w"> </span>size
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Delete old snapshots to reclaim space immediately</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snapshot-name&gt;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Check if snapshot autodelete is configured</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>autodelete<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>SVM<span class="w"> </span>-volume<span class="w"> </span>vol_name
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Vserver     Volume       Data Used   Snapshots   Reserves    Available
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>----------- ------------ ----------- ----------- ----------- -----------
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>prod-svm    vol_name     847.2GB     156.8GB     42.1GB      54.9GB
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Vserver     Volume       Snapshot                 Size        Create Time
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>----------- ------------ ----------------------- ----------- -----------------
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>prod-svm    vol_name     hourly.2024-01-15_0200  18.3GB      Jan 15 02:00
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>prod-svm    vol_name     hourly.2024-01-15_0100  17.9GB      Jan 15 01:00
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>prod-svm    vol_name     daily.2024-01-14_2300   22.4GB      Jan 14 23:00
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>prod-svm    vol_name     daily.2024-01-13_2300   21.7GB      Jan 13 23:00
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>prod-svm    vol_name     hourly.2024-01-15_0000  16.8GB      Jan 15 00:00
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>...
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>Snapshot &quot;hourly.2024-01-15_0200&quot; deleted successfully.
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>Vserver     Volume       State    Enabled   Trigger   Target Free Space
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>----------- ------------ -------- --------- --------- ------------------
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>prod-svm    vol_name     on       true      snap_reserve  10%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Snapshot "hourly.2024-01-15_0200" is in use by a clone or SnapMirror relationship</code></strong> — Verify the snapshot has no dependent clones or SnapMirror destinations before deletion using <code>snapshot show -vserver SVM -volume vol_name -snapshot &lt;snapshot-name&gt; -fields owners</code>.
+<strong><code>Error: command not found: volume show-space</code></strong> — Confirm you are connected to a NetApp ONTAP cluster with appropriate admin credentials and the correct SVM context is set.
+<strong><code>Vserver "SVM" does not exist</code></strong> — Replace "SVM" with the actual SVM name from your cluster, obtainable via <code>vserver show</code>.</p>
+</div>
 <hr />
 <h2 id="vsan-specific-checks">vSAN-Specific Checks<a class="headerlink" href="#vsan-specific-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Check vSAN datastore capacity</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanSpaceReportSystem-vsan-space-report-system&quot;</span> <span class="p">|</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  <span class="nb">Invoke-Method</span> <span class="n">-MethodName</span> <span class="s2">&quot;VsanQuerySpaceUsage&quot;</span> <span class="n">-Arguments</span> <span class="p">@{</span><span class="n">cluster</span><span class="p">=(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;ClusterName&quot;</span><span class="p">).</span><span class="n">Id</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Check vSAN datastore capacity</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanSpaceReportSystem-vsan-space-report-system&quot;</span> <span class="p">|</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  <span class="nb">Invoke-Method</span> <span class="n">-MethodName</span> <span class="s2">&quot;VsanQuerySpaceUsage&quot;</span> <span class="n">-Arguments</span> <span class="p">@{</span><span class="n">cluster</span><span class="p">=(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;ClusterName&quot;</span><span class="p">).</span><span class="n">Id</span><span class="p">}</span>
 </code></pre></div>
 <p><strong>vSAN slack space rule:</strong> vSAN requires at least 30% free (slack space) to rebuild after disk failure. If below 30%, DO NOT add more VMs — resolve space first.</p>
 <p>To decommission a disk and return its space:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Evacuate disk first, then remove</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Set-VMHostDisk</span> <span class="n">-Disk</span> <span class="p">(</span><span class="nb">Get-VMHostDisk</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ScsiLun</span> <span class="o">-eq</span> <span class="s2">&quot;naa.xxx&quot;</span><span class="p">})</span> <span class="n">-Evacuate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># Evacuate disk first, then remove</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">Set-VMHostDisk</span> <span class="n">-Disk</span> <span class="p">(</span><span class="nb">Get-VMHostDisk</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ScsiLun</span> <span class="o">-eq</span> <span class="s2">&quot;naa.xxx&quot;</span><span class="p">})</span> <span class="n">-Evacuate</span>
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <p>After remediation, confirm all checks pass:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># All datastores above 20% free</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="o">-lt</span> <span class="n">0</span><span class="p">.</span><span class="n">2</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># No VMs in paused or invalid state</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;Suspended&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s2">&quot;connected&quot;</span><span class="p">}</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c"># No pending snapshot consolidations</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Extensiondata</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c"># All datastores above 20% free</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="o">-lt</span> <span class="n">0</span><span class="p">.</span><span class="n">2</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c"># No VMs in paused or invalid state</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;Suspended&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s2">&quot;connected&quot;</span><span class="p">}</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c"># No pending snapshot consolidations</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Extensiondata</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span><span class="p">}</span>
 </code></pre></div>
 <p>Confirm with storage team that ONTAP volume is below 80% used and snapshot policy is re-enabled.</p>
 <hr />
@@ -7398,7 +7490,7 @@ P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 03:02:12 UTC"><span class="timeago" datetime="2026-06-28T03:02:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 03:02:12 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

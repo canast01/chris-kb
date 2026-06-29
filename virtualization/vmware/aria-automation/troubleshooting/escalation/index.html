@@ -9385,30 +9385,81 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Application Version:  8.16.1.21527</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Build Number: 23480234</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@aria-automation-01.corp.local:~# vracli version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Application Version:  8.16.1.21527
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Build Number: 23480234
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Patch Level: 8.16.1-23480234-20240115
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Installation Date: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Database Version: PostgreSQL 13.8
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with <code>source /etc/profile.d/vra-env.sh</code> or restart the appliance.
+<strong><code>Permission denied (publickey,password)</code></strong> — Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking <code>/etc/ssh/sshd_config</code> for <code>PermitRootLogin yes</code>.
+<strong><code>Connection refused</code></strong> — Confirm the appliance hostname resolves correctly with <code>nslookup &lt;vra-fqdn&gt;</code> and that port 22 is accessible from your client using <code>telnet &lt;vra-fqdn&gt; 22</code>.</p>
+</div>
 <h3 id="2-check-pod-health-all-vra-microservices-run-as-pods">2. Check pod health (all vRA microservices run as pods)<a class="headerlink" href="#2-check-pod-health-all-vra-microservices-run-as-pods" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get pod state in the prelude namespace</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Look for CrashLoopBackOff, Error, or pods with 0/1 containers ready</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Save full output to a file</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pods-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># For any failing pods, get the recent logs</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pod-log-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check all namespaces (for upgrade issues with LCM components)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
-</code></pre></div>
-<h3 id="3-generate-the-vracli-support-bundle">3. Generate the vracli support bundle<a class="headerlink" href="#3-generate-the-vracli-support-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate the support bundle — takes 5–15 minutes</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>support-bundle
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get pod state in the prelude namespace</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Bundle is saved to /tmp/</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/vracli-support-bundle*.tar.gz
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Copy to a local machine for upload to the case</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># scp root@&lt;vra-fqdn&gt;:/tmp/vracli-support-bundle*.tar.gz /tmp/</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Look for CrashLoopBackOff, Error, or pods with 0/1 containers ready</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Save full output to a file</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pods-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># For any failing pods, get the recent logs</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pod-log-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check all namespaces (for upgrade issues with LCM components)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aria-automation-api-7d4f8c2b9-kx5m2     1/1     Running   0          2d
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>aria-automation-ui-5c9e2a1b3-jq7r8      1/1     Running   0          2d
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prelude-controller-8f2c1a9d-lm3k9       0/1     CrashLoopBackOff   5          45m
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>prelude-worker-6b5e3c2f-np2q4           1/1     Running   0          1d
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>prelude-scheduler-4a7d9e1c-vx8s6        1/1     Running   0          2d
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>prelude-cache-9f3b2e5a-yz1m7            0/1     Error     0          12m
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>NAMESPACE              NAME                                    READY   STATUS              RESTARTS   AGE
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aria-automation       aria-config-sync-7c4d2e9f-ab1k2         0/1     ImagePullBackOff    0          8m
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>kube-system           coredns-558bd4d5db-9x2m5                1/1     Running             0          5d
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>prelude               prelude-controller-8f2c1a9d-lm3k9       0/1     CrashLoopBackOff    5          45m
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>prelude               prelude-cache-9f3b2e5a-yz1m7            0/1     Error               0          12m
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>lcm                   lcm-upgrade-job-8h2k9-5x7q2             0/1     Pending             0          3m
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></strong> — Replace <code>&lt;pod-name&gt;</code> with the actual pod name from the first kubectl get output (e.g., <code>prelude-controller-8f2c1a9d-lm3k9</code>).
+<strong><code>error: you must specify a body with the request body</code></strong> — Ensure the pod name is specified correctly and the namespace flag <code>-n prelude</code> is included in the kubectl logs command.
+<strong><code>The connection to the server localhost:8080 was refused</code></strong> — Verify kubectl is configured correctly by running <code>kubectl cluster-info</code> and check that your kubeconfig points to the correct cluster.</p>
+</div>
+<h3 id="3-generate-the-vracli-support-bundle">3. Generate the vracli support bundle<a class="headerlink" href="#3-generate-the-vracli-support-bundle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate the support bundle — takes 5–15 minutes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>support-bundle
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Bundle is saved to /tmp/</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/vracli-support-bundle*.tar.gz
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Copy to a local machine for upload to the case</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># scp root@&lt;vra-fqdn&gt;:/tmp/vracli-support-bundle*.tar.gz /tmp/</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Generating support bundle for Aria Automation...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Collecting system logs... [████████████████████] 100%
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Collecting configuration data... [████████████████████] 100%
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Collecting diagnostic information... [████████████████████] 100%
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Compressing bundle... [████████████████████] 100%
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Support bundle generated successfully.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Bundle location: /tmp/vracli-support-bundle-aria-automation-2024-01-15-14-32-45.tar.gz
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>-rw-r--r-- 1 root root 2.3G Jan 15 14:35 /tmp/vracli-support-bundle-aria-automation-2024-01-15-14-32-45.tar.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure vracli is installed and in the system PATH, or run <code>/opt/vmware/vra/bin/vracli support-bundle</code> with the full path.
+<strong><code>Permission denied</code></strong> — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
+<strong><code>No space left on device</code></strong> — Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with <code>vracli support-bundle --output-dir /var/tmp</code>.</p>
+</div>
 <p>This bundle contains pod logs, Postgres state, configuration, and the last 72h of service logs.</p>
 <h3 id="4-collect-vami-cluster-status-for-upgrade-failures">4. Collect VAMI cluster status (for upgrade failures)<a class="headerlink" href="#4-collect-vami-cluster-status-for-upgrade-failures" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9418,20 +9469,20 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 <li>Take a screenshot of the cluster status and attach to the case.</li>
 </ol>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Aria Automation version: 8.16.1 build 23480234
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Deployment: 3-node HA cluster (vra01, vra02, vra03)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vIDM: internal vIDM (same appliances)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Issue first observed: 2026-06-14 02:30 UTC
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Last known good state: 2026-06-14 02:00 UTC
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  - 02:00: Aria Automation 8.16.0 → 8.16.1 upgrade initiated via VAMI
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  - 02:25: VAMI upgrade showed &quot;Upgrade failed&quot; on node vra02
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  - 02:30: vRA UI unresponsive; VAMI shows 3 services in Error state
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Steps already taken:
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  - kubectl get pods -n prelude: 4 pods in CrashLoopBackOff
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  - Did NOT restart any services or attempt upgrade retry
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  - VAMI shows upgrade status: FAILED at &quot;Migrating database&quot;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Blast radius: Aria Automation UI completely unavailable; no new deployments possible; 200 projects affected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Aria Automation version: 8.16.1 build 23480234
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Deployment: 3-node HA cluster (vra01, vra02, vra03)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vIDM: internal vIDM (same appliances)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Issue first observed: 2026-06-14 02:30 UTC
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Last known good state: 2026-06-14 02:00 UTC
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - 02:00: Aria Automation 8.16.0 → 8.16.1 upgrade initiated via VAMI
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - 02:25: VAMI upgrade showed &quot;Upgrade failed&quot; on node vra02
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - 02:30: vRA UI unresponsive; VAMI shows 3 services in Error state
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Steps already taken:
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  - kubectl get pods -n prelude: 4 pods in CrashLoopBackOff
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  - Did NOT restart any services or attempt upgrade retry
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  - VAMI shows upgrade status: FAILED at &quot;Migrating database&quot;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Blast radius: Aria Automation UI completely unavailable; no new deployments possible; 200 projects affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -9536,29 +9587,71 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Paste these into every case update (SSH to vRA appliance as root)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Version confirmation</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vracli<span class="w"> </span>version
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Pod health — the most important state indicator</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Failing pod logs</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Cluster overall health</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># vIDM connectivity</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>vracli<span class="w"> </span>vIDM<span class="w"> </span>status
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Disk space (low disk space is a common upgrade failure cause)</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>df<span class="w"> </span>-h
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Database connectivity check (non-destructive)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>vracli<span class="w"> </span>db<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Paste these into every case update (SSH to vRA appliance as root)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Version confirmation</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Pod health — the most important state indicator</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Failing pod logs</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Cluster overall health</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># vIDM connectivity</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>vracli<span class="w"> </span>vIDM<span class="w"> </span>status
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Disk space (low disk space is a common upgrade failure cause)</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>df<span class="w"> </span>-h
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="c1"># Database connectivity check (non-destructive)</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>vracli<span class="w"> </span>db<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vRA Appliance Version: 8.10.2.1234567
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Build: 20231015-001
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>prelude-api-deployment-5d8f7c9b4-kx2m9  1/1     Running   0          3d
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>prelude-ui-deployment-7c4a2b1f6-jq8p3   1/1     Running   0          3d
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>prelude-db-sync-job-28h4x               1/1     Running   0          2h
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>prelude-worker-0                        1/1     Running   1          5d
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>prelude-worker-1                        1/1     Running   0          4d
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>[2024-01-15T09:42:31Z] INFO: Pod prelude-api-deployment-5d8f7c9b4-kx2m9 logs:
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>[2024-01-15T09:42:15Z] WARN: Slow query detected on vIDM auth endpoint (1250ms)
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>[2024-01-15T09:41:58Z] INFO: Successfully authenticated 847 sessions
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>[2024-01-15T09:40:22Z] DEBUG: Cache refresh completed
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Cluster Status: HEALTHY
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  Control Plane: READY (3/3 nodes)
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  Worker Nodes: READY (2/2 nodes)
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  Storage: HEALTHY (87% used)
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  Network: HEALTHY
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>vIDM Status: CONNECTED
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  Last Sync: 2024-01-15 09:35:42 UTC
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  User Count: 1,247
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>  Groups: 342
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>/dev/sda1      100G   78G   18G  82% /
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>/dev/sdb1      500G  412G   65G  85% /data
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>tmpfs          8.0G     0  8.0G   0% /dev/shm
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>Database Status: CONNECTED
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>  Connection Pool: 45/50 active
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>  Replication Lag: 0.2s
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>  Last Health Check: 2024-01-15 09:42:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>kubectl: command not found</code></strong> — Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself.
+<strong><code>Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.</code></strong> — Verify vIDM hostname resolution with <code>nslookup</code> and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with <code>openssl s_client -connect &lt;vIDM-IP&gt;:443</code>.
+<strong><code>Filesystem /dev/sda1: 95% used — Disk space critically low</code></strong> — Delete old pod logs with <code>kubectl delete pods --all-namespaces --field-selector status.phase=Failed</code> and clear package cache with <code>apt-get clean</code>, then monitor with <code>df -h</code> again.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9631,7 +9724,7 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

@@ -9128,6 +9128,30 @@ Design standards, sizing guidelines, naming conventions, and configuration basel
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Simulate ICL failure (in lab/pre-prod only) and confirm Witness grants quorum to one cluster</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># — do not perform this test in production without a detailed runbook and application owner approval</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster: cluster-1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Witness:
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    address: 192.168.100.50
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    port: 7080
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    status: connected
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    reachable: true
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    last_heartbeat: 2024-01-15T14:32:18Z
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    quorum_capable: true
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Cluster: cluster-2
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Witness:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    address: 192.168.100.50
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    port: 7080
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    status: connected
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    reachable: true
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    last_heartbeat: 2024-01-15T14:32:19Z
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    quorum_capable: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Witness: status = unreachable</code></strong> — Verify network connectivity between the witness appliance and both cluster management IPs, and confirm firewall rules allow port 7080.
+<strong><code>Error: witness not configured for cluster-2</code></strong> — Run <code>vplexcli -e "create /clusters/cluster-2/cluster-witness/ address=&lt;witness-ip&gt;"</code> to register the witness with the second cluster.
+<strong><code>Connection refused on 192.168.100.50:7080</code></strong> — SSH to the witness appliance and verify the witness service is running with <code>systemctl status vplex-witness</code>.</p>
+</div>
 <h2 id="build-baseline">Build Baseline<a class="headerlink" href="#build-baseline" title="Permanent link">&para;</a></h2>
 <p>Every VPLEX deployment must be configured to this baseline before handover to operations.</p>
 <h3 id="consistency-group-policy">Consistency Group Policy<a class="headerlink" href="#consistency-group-policy" title="Permanent link">&para;</a></h3>
@@ -9252,7 +9276,7 @@ Design standards, sizing guidelines, naming conventions, and configuration basel
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:59:39 UTC"><span class="timeago" datetime="2026-06-29T04:59:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:59:39 UTC">2026-06-29</span>
   </span>
 
     

@@ -9037,266 +9037,544 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Use a temporary test host to verify firewall rules are open</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-site-management-IP&gt;<span class="w"> </span><span class="m">443</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection to 192.168.100.45 31031 port [tcp/*] succeeded!
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection to 192.168.100.46 44046 port [tcp/*] succeeded!
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Connection to 10.50.12.8 443 port [tcp/*] succeeded!
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection refused</code></strong> — Verify the VRA is fully deployed and the vSphere Replication service is running on the target host.
+<strong><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection timed out</code></strong> — Check that firewall rules allow port 31031 between source and target ESXi hosts, and that the target IP is reachable.
+<strong><code>command not found: nc</code></strong> — Install netcat using <code>esxcli software vib install -v /tmp/netcat.vib</code> or use <code>telnet &lt;IP&gt; &lt;port&gt;</code> as an alternative connectivity test.</p>
+</div>
 <h3 id="dns-validation">DNS Validation<a class="headerlink" href="#dns-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># VRA FQDNs must resolve from both sites before deployment</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>vra-siteA.example.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nslookup<span class="w"> </span>vra-siteB.example.local
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Verify PTR records also exist</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>nslookup<span class="w"> </span>&lt;planned<span class="w"> </span>VRA<span class="w"> </span>site-A<span class="w"> </span>IP&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nslookup<span class="w"> </span>&lt;planned<span class="w"> </span>VRA<span class="w"> </span>site-B<span class="w"> </span>IP&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VRA FQDNs must resolve from both sites before deployment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nslookup<span class="w"> </span>vra-siteA.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nslookup<span class="w"> </span>vra-siteB.example.local
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify PTR records also exist</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>nslookup<span class="w"> </span>&lt;planned<span class="w"> </span>VRA<span class="w"> </span>site-A<span class="w"> </span>IP&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>nslookup<span class="w"> </span>&lt;planned<span class="w"> </span>VRA<span class="w"> </span>site-B<span class="w"> </span>IP&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Server:     10.0.1.10
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Address:    10.0.1.10#53
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Name:   vra-siteA.example.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Address: 192.168.10.45
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Server:     10.0.1.10
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Address:    10.0.1.10#53
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name:   vra-siteB.example.local
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Address: 192.168.20.48
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Server:     10.0.1.10
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Address:    10.0.1.10#53
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Name:   host-vra-siteA.example.local
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Address: 192.168.10.45
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Server:     10.0.1.10
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Address:    10.0.1.10#53
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Name:   host-vra-siteB.example.local
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Address: 192.168.20.48
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>** server can't find vra-siteA.example.local: NXDOMAIN</code></strong> — Add the VRA FQDNs to your DNS zone file or create A records in your DNS server before proceeding.
+<strong><code>** server can't find 192.168.10.45.in-addr.arpa: NXDOMAIN</code></strong> — Configure reverse DNS (PTR) records for both VRA IP addresses in your DNS reverse zone.
+<strong><code>connection timed out; try again</code></strong> — Verify DNS server 10.0.1.10 is reachable and responding; check firewall rules blocking UDP port 53.</p>
+</div>
 <h3 id="inter-site-latency-check">Inter-Site Latency Check<a class="headerlink" href="#inter-site-latency-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Measure round-trip latency between sites (must be ≤ 200 ms for stable replication)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Run from source ESXi host to target site management IP</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span><span class="w"> </span>&lt;target-site-gateway-or-host-IP&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Maximum acceptable: 200 ms average RTT; excessive jitter causes RPO violations</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Measure round-trip latency between sites (must be ≤ 200 ms for stable replication)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Run from source ESXi host to target site management IP</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span><span class="w"> </span>&lt;target-site-gateway-or-host-IP&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Maximum acceptable: 200 ms average RTT; excessive jitter causes RPO violations</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PING 10.50.12.1 (10.50.12.1) 56(84) bytes of data.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>64 bytes from 10.50.12.1: icmp_seq=1 ttl=64 time=45.2 ms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>64 bytes from 10.50.12.1: icmp_seq=2 ttl=64 time=46.1 ms
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>64 bytes from 10.50.12.1: icmp_seq=3 ttl=64 time=45.8 ms
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>64 bytes from 10.50.12.1: icmp_seq=4 ttl=64 time=47.3 ms
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>64 bytes from 10.50.12.1: icmp_seq=5 ttl=64 time=45.9 ms
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>64 bytes from 10.50.12.1: icmp_seq=6 ttl=64 time=48.2 ms
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>64 bytes from 10.50.12.1: icmp_seq=7 ttl=64 time=46.5 ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>64 bytes from 10.50.12.1: icmp_seq=8 ttl=64 time=49.1 ms
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>64 bytes from 10.50.12.1: icmp_seq=20 ttl=64 time=46.8 ms
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>--- 10.50.12.1 statistics ---
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>20 packets transmitted, 20 received, 0% packet loss, time 19234ms
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>rtt min/avg/max/stddev = 45.2/46.8/49.1/1.2 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: unknown host &lt;target-site-gateway-or-host-IP&gt;</code></strong> — Replace the placeholder with an actual IP address or resolvable hostname (e.g., <code>10.50.12.1</code> or <code>dr-gateway.corp.local</code>).
+<strong><code>100% packet loss</code></strong> — Verify network connectivity between sites, check firewall rules allow ICMP, and confirm the target IP is reachable from the source ESXi host.
+<strong><code>rtt min/avg/max/stddev = .../250.5/...</code></strong> — Average RTT exceeds 200 ms threshold; investigate WAN link congestion, increase bandwidth, or optimize routing before deploying replication.</p>
+</div>
 <h3 id="target-datastore-capacity-estimate">Target Datastore Capacity Estimate<a class="headerlink" href="#target-datastore-capacity-estimate" title="Permanent link">&para;</a></h3>
 <p>Estimate target storage required:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Per replicated VM:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  - Base replica disk: same size as source VMDK
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  - MPIT delta disks: (write rate × RPO × MPIT count)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Example (3 VMs, 200 GB each, 1 hr RPO, 3 MPIT):
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Base:   3 × 200 GB = 600 GB
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Deltas: 3 × (avg 5 GB per cycle × 3 instances) = 45 GB
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Total:  ~650 GB minimum; add 20% safety margin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Per replicated VM:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  - Base replica disk: same size as source VMDK
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  - MPIT delta disks: (write rate × RPO × MPIT count)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Example (3 VMs, 200 GB each, 1 hr RPO, 3 MPIT):
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Base:   3 × 200 GB = 600 GB
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Deltas: 3 × (avg 5 GB per cycle × 3 instances) = 45 GB
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Total:  ~650 GB minimum; add 20% safety margin
 </code></pre></div>
 <hr />
 <h2 id="phase-2-vra-deployment-source-site">Phase 2 — VRA Deployment: Source Site<a class="headerlink" href="#phase-2-vra-deployment-source-site" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Source site VRA deployed, registered with source vCenter, and VR plugin visible in vSphere Client.</p>
 <h3 id="deploy-vra-ova-at-source-site">Deploy VRA OVA at Source Site<a class="headerlink" href="#deploy-vra-ova-at-source-site" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter (source site) → Deploy OVF Template
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Source: VMware-vSphere-Replication-&lt;version&gt;.ovf
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Step 1: VM name and folder
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    Name: vra-siteA
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    Folder: Infrastructure VMs
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Step 2: Compute resource
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    Select: host or cluster for the VRA VM
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  Step 3: Storage
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    Storage policy: default
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    Datastore: management datastore (≥ 20 GB free)
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  Step 4: Network
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    Network: Management portgroup
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  Step 5: Customize template
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    Hostname: vra-siteA.example.local
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    IP Address: 10.10.10.50
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    Subnet Mask: 255.255.255.0
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    Default Gateway: 10.10.10.1
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    DNS Server: 10.10.10.53
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    NTP Server: ntp.example.local
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    Admin password: &lt;strong password&gt;
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    Root password: &lt;strong password&gt;
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    → Deploy (~5 minutes)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter (source site) → Deploy OVF Template
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Source: VMware-vSphere-Replication-&lt;version&gt;.ovf
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Step 1: VM name and folder
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    Name: vra-siteA
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Folder: Infrastructure VMs
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Step 2: Compute resource
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    Select: host or cluster for the VRA VM
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Step 3: Storage
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    Storage policy: default
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    Datastore: management datastore (≥ 20 GB free)
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Step 4: Network
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    Network: Management portgroup
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Step 5: Customize template
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    Hostname: vra-siteA.example.local
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    IP Address: 10.10.10.50
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    Subnet Mask: 255.255.255.0
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    Default Gateway: 10.10.10.1
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    DNS Server: 10.10.10.53
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    NTP Server: ntp.example.local
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    Admin password: &lt;strong password&gt;
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    Root password: &lt;strong password&gt;
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    → Deploy (~5 minutes)
 </code></pre></div>
 <h3 id="register-vra-with-source-vcenter">Register VRA with Source vCenter<a class="headerlink" href="#register-vra-with-source-vcenter" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VRA VAMI: https://vra-siteA.example.local:5480
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Login: admin / &lt;password&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Configuration → vCenter Server
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    vCenter Address: vcenter-siteA.example.local
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    vCenter Port: 443
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    SSO Admin Username: administrator@vsphere.local
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    SSO Admin Password: &lt;password&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    → Register
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    Accept vCenter certificate thumbprint → OK
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VRA VAMI: https://vra-siteA.example.local:5480
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Login: admin / &lt;password&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Configuration → vCenter Server
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    vCenter Address: vcenter-siteA.example.local
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    vCenter Port: 443
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    SSO Admin Username: administrator@vsphere.local
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    SSO Admin Password: &lt;password&gt;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    → Register
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    Accept vCenter certificate thumbprint → OK
 </code></pre></div>
 <h3 id="verify-registration">Verify Registration<a class="headerlink" href="#verify-registration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify VR plugin is active in vSphere Client</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># vSphere Client → Menu → Site Recovery</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># VRA should appear as a Replication Appliance</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify HMS and VRMS services on VRA</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Both should show: active (running)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify VR plugin is active in vSphere Client</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># vSphere Client → Menu → Site Recovery</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># VRA should appear as a Replication Appliance</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify HMS and VRMS services on VRA</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Both should show: active (running)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>admin@vra-siteA.example.local&#39;s password: 
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>● hms.service - HMS Service
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>       Docs: https://docs.vmware.com/en/vSphere-Replication
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    Process: 2847 ExecStart=/opt/vmware/hms/bin/hms.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>   Main PID: 2891 (java)
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>      Tasks: 28 (limit: 4915)
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>     Memory: 512.3M
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        CPU: 2min 14.328s
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>     CGroup: /system.slice/hms.service
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>             └─2891 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java -Xmx1024m
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>● vrms.service - VRMS Service
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>     Loaded: loaded (/etc/systemd/system/vrms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>     Active: active (running) since Mon 2024-01-15 14:33:05 UTC; 2h 44min ago
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>       Docs: https://docs.vmware.com/en/vSphere-Replication
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    Process: 2956 ExecStart=/opt/vmware/vrms/bin/vrms.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>   Main PID: 3012 (java)
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>      Tasks: 31 (limit: 4915)
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>     Memory: 768.1M
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>        CPU: 3min 42.891s
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>     CGroup: /system.slice/vrms.service
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>             └─3012 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java -Xmx2048m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit hms.service could not be found.</code></strong> — Verify VRA was deployed correctly by checking <code>/opt/vmware/hms/</code> exists; if missing, redeploy the VRA OVA.
+<strong><code>Connection refused</code></strong> — Ensure SSH is enabled on the VRA and the hostname/IP is reachable; verify network connectivity with <code>ping vra-siteA.example.local</code> first.
+<strong><code>Active: inactive (dead)</code></strong> — Restart the service with <code>systemctl restart hms</code> and check logs via <code>journalctl -u hms -n 50</code> to identify the root cause.</p>
+</div>
 <hr />
 <h2 id="phase-3-vra-deployment-target-site-and-site-pairing">Phase 3 — VRA Deployment: Target Site and Site Pairing<a class="headerlink" href="#phase-3-vra-deployment-target-site-and-site-pairing" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Target site VRA deployed and registered; site pair established between both VRAs; both sites visible in vSphere Client Site Recovery.</p>
 <h3 id="deploy-vra-ova-at-target-site">Deploy VRA OVA at Target Site<a class="headerlink" href="#deploy-vra-ova-at-target-site" title="Permanent link">&para;</a></h3>
 <p>Deploy using the same procedure as Phase 2 but targeting the recovery site:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VRA name: vra-siteB
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>IP: 10.20.10.50 (example target site IP)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vCenter to register with: vcenter-siteB.example.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>VRA name: vra-siteB
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>IP: 10.20.10.50 (example target site IP)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>vCenter to register with: vcenter-siteB.example.local
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify target VRA services</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify target VRA services</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@vra-siteB.example.local&#39;s password: 
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>● hms.service - vSphere Replication Management Service
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>       Docs: https://docs.vmware.com/en/vSphere-Replication/
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    Process: 2847 ExecStart=/opt/vmware/hms/bin/hms.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>   Main PID: 2891 (java)
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      Tasks: 28 (limit: 4915)
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>     Memory: 512.3M
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        CPU: 2min 34.821s
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>     CGroup: /system.slice/hms.service
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>             └─2891 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java -Xmx1024m...
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>● vrms.service - vSphere Replication Management Server
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>     Loaded: loaded (/etc/systemd/system/vrms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>     Active: active (running) since Mon 2024-01-15 14:33:02 UTC; 2h 44min ago
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>       Docs: https://docs.vmware.com/en/vSphere-Replication/
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    Process: 3156 ExecStart=/opt/vmware/vrms/bin/vrms.sh start (code=exited, status=0/SUCCESS)
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>   Main PID: 3201 (java)
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>      Tasks: 42 (limit: 4915)
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>     Memory: 1.2G
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>        CPU: 5min 12.340s
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>     CGroup: /system.slice/vrms.service
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>             └─3201 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java -Xmx2048m...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit hms.service could not be found.</code></strong> — Verify VRA is installed on this host by checking <code>/opt/vmware/hms/</code> exists, or confirm you are connecting to the correct VRA appliance.
+<strong><code>Connection refused</code></strong> — Ensure SSH is enabled on the VRA appliance and the admin account credentials are correct; check network connectivity to vra-siteB.example.local.
+<strong><code>● hms.service - vSphere Replication Management Service ... Active: inactive (dead)</code></strong> — Restart the service with <code>sudo systemctl restart hms</code> and check logs via <code>sudo journalctl -u hms -n 50</code> for startup errors.</p>
+</div>
 <h3 id="pair-the-sites">Pair the Sites<a class="headerlink" href="#pair-the-sites" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter (source site) → Menu → Site Recovery → New Site Pair
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Step 1: Site pair details
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    PSC / vCenter Server of remote site: vcenter-siteB.example.local
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    SSO username: administrator@vsphere.local
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    SSO password: &lt;remote vCenter SSO password&gt;
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Step 2: Remote site services
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    Select VRA: vra-siteB.example.local
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    Accept certificate thumbprints for:
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      - Remote vCenter
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      - Remote VRA (vra-siteB)
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    → Pair
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Pairing completes in ~2 minutes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter (source site) → Menu → Site Recovery → New Site Pair
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Step 1: Site pair details
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    PSC / vCenter Server of remote site: vcenter-siteB.example.local
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    SSO username: administrator@vsphere.local
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    SSO password: &lt;remote vCenter SSO password&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Step 2: Remote site services
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    Select VRA: vra-siteB.example.local
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    Accept certificate thumbprints for:
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>      - Remote vCenter
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>      - Remote VRA (vra-siteB)
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    → Pair
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  Pairing completes in ~2 minutes
 </code></pre></div>
 <h3 id="verify-site-pair">Verify Site Pair<a class="headerlink" href="#verify-site-pair" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check pairing status via VRA API</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>https://vra-siteA.example.local:8043/api/sites<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Expected: both sites listed, status Connected</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># In vSphere Client: Site Recovery → Sites</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Both sites should show: Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check pairing status via VRA API</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>https://vra-siteA.example.local:8043/api/sites<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Expected: both sites listed, status Connected</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># In vSphere Client: Site Recovery → Sites</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Both sites should show: Connected</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  &quot;name&quot;: &quot;Site-A&quot;,
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  &quot;status&quot;: &quot;Connected&quot;
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>}
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>{
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  &quot;name&quot;: &quot;Site-B&quot;,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  &quot;status&quot;: &quot;Connected&quot;
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Connection refused</code></strong> — Verify the VRA appliance is running, the hostname resolves correctly, and port 8043 is accessible from your client (check firewall rules and VRA service status).</p>
+</div>
 <hr />
 <h2 id="phase-4-configure-vm-replication">Phase 4 — Configure VM Replication<a class="headerlink" href="#phase-4-configure-vm-replication" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> At least one test VM fully configured for replication; initial sync completed; status shows Syncing or OK.</p>
 <h3 id="configure-replication-on-a-vm">Configure Replication on a VM<a class="headerlink" href="#configure-replication-on-a-vm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vSphere Client → [source VM] → right-click → Configure Replication
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  (or: Site Recovery → Replications → New Replication)
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Step 1: Target site
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    Replication type: vSphere Replication
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    Target site: siteB (paired site)
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  Step 2: Target location
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    Target datastore: ds-siteB-replica (target datastore)
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    Target folder: Replicas (optional subfolder)
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  Step 3: Replication settings
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    RPO: 1 hour  (minimum 5 minutes; maximum 24 hours)
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    Enable multiple point in time (MPIT): Yes
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    Instances: 3  (range 1–24)
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    Quiesce: Yes (requires VMware Tools — application-consistent)
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    Network compression: Yes (recommended for WAN links)
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Step 4: Recovery settings
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    Network mapping: leave default or specify target portgroup
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  Step 5: Review → Finish
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>vSphere Client → [source VM] → right-click → Configure Replication
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  (or: Site Recovery → Replications → New Replication)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  Step 1: Target site
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    Replication type: vSphere Replication
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    Target site: siteB (paired site)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  Step 2: Target location
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    Target datastore: ds-siteB-replica (target datastore)
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    Target folder: Replicas (optional subfolder)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  Step 3: Replication settings
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    RPO: 1 hour  (minimum 5 minutes; maximum 24 hours)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    Enable multiple point in time (MPIT): Yes
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>    Instances: 3  (range 1–24)
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    Quiesce: Yes (requires VMware Tools — application-consistent)
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    Network compression: Yes (recommended for WAN links)
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  Step 4: Recovery settings
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>    Network mapping: leave default or specify target portgroup
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>  Step 5: Review → Finish
 </code></pre></div>
 <h3 id="monitor-initial-full-sync">Monitor Initial Full Sync<a class="headerlink" href="#monitor-initial-full-sync" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Status: &quot;Initial Full Sync&quot; → progress percentage shown</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Large disks may take hours over WAN; can seed from backup media to reduce transfer</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check hbrsvc on source ESXi host (SSH to ESXi)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Expected: VM listed with state &quot;SYNCING&quot;</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Shows per-VM replication stats including bytes transferred</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Status: &quot;Initial Full Sync&quot; → progress percentage shown</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Large disks may take hours over WAN; can seed from backup media to reduce transfer</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check hbrsvc on source ESXi host (SSH to ESXi)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Expected: VM listed with state &quot;SYNCING&quot;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Shows per-VM replication stats including bytes transferred</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Virtual Machine: vm-prod-db-01
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>State: SYNCING
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>RPO: 3600
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Source: 192.168.1.45
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Target: 192.168.2.50
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Replication Rate: 45.2 MB/s
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Virtual Machine: vm-web-frontend
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>State: SYNCING
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>RPO: 1800
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Source: 192.168.1.46
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Target: 192.168.2.51
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Replication Rate: 12.8 MB/s
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>VM Name: vm-prod-db-01
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>Bytes Transferred: 847362891776
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>Bytes Remaining: 1253698541056
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Percentage Complete: 40.3%
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>Elapsed Time: 14h 22m
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Estimated Time Remaining: 21h 15m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to hbrsvc</code></strong> — Verify the vSphere Replication appliance is running and network connectivity exists between source and target sites.
+<strong><code>Error: No replication found for VM</code></strong> — Confirm the replication was successfully configured in vSphere Client under Site Recovery and the VM is powered on.</p>
+</div>
 <h3 id="configure-multiple-vms-batch">Configure Multiple VMs (Batch)<a class="headerlink" href="#configure-multiple-vms-batch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># PowerCLI: configure replication for all VMs in a folder</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter-siteA</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-VmReplication</span>  <span class="c"># check if already configured</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="c"># Use vSphere Replication API or Site Recovery UI for batch config</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># PowerCLI: configure replication for all VMs in a folder</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter-siteA</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-VmReplication</span>  <span class="c"># check if already configured</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="c"># Use vSphere Replication API or Site Recovery UI for batch config</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-5-monitor-rpo-compliance">Phase 5 — Monitor RPO Compliance<a class="headerlink" href="#phase-5-monitor-rpo-compliance" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All configured VMs showing RPO status OK (green); no persistent violations; bandwidth usage within capacity.</p>
 <h3 id="check-rpo-status">Check RPO Status<a class="headerlink" href="#check-rpo-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Each VM shows RPO status:</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">#   Green (OK):     last sync within configured RPO window</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1">#   Yellow (Warn):  &gt;80% of RPO elapsed since last sync</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">#   Red (Error):    RPO violated — most recent recovery point is stale</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Check VRMS logs for replication errors</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrms/vrms.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|violation&quot;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Check HMS logs (data reception at target)</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/hms/hms.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># Each VM shows RPO status:</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1">#   Green (OK):     last sync within configured RPO window</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1">#   Yellow (Warn):  &gt;80% of RPO elapsed since last sync</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1">#   Red (Error):    RPO violated — most recent recovery point is stale</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Check VRMS logs for replication errors</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrms/vrms.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|violation&quot;</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="c1"># Check HMS logs (data reception at target)</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/hms/hms.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>admin@vra-siteA.example.local&#39;s password: 
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>2024-01-15 14:32:18.456 [VRMS] WARNING: Replication lag detected for VM &#39;prod-db-01&#39; — 45 minutes elapsed, RPO target 30 minutes
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>2024-01-15 14:28:03.122 [VRMS] ERROR: Failed to send checkpoint for VM &#39;web-app-03&#39; to target site — network timeout after 120s
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>2024-01-15 14:15:47.891 [VRMS] WARNING: Bandwidth throttling active — replication queue depth at 87% capacity
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>2024-01-15 13:52:14.334 [VRMS] ERROR: Snapshot consolidation failed on VM &#39;backup-srv-02&#39; — insufficient storage on replica datastore
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>2024-01-15 13:41:09.567 [VRMS] WARNING: RPO violation imminent for VM &#39;mail-exchange&#39; — 28 of 30 minute window consumed
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>admin@vra-siteB.example.local&#39;s password: 
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>2024-01-15 14:33:52.789 [HMS] WARNING: Received out-of-order checkpoint sequence for VM &#39;prod-db-01&#39; — reordering buffer engaged
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>2024-01-15 14:29:15.445 [HMS] ERROR: Disk write failed on replica VM &#39;web-app-03&#39; — target datastore &#39;ds-replica-02&#39; at 94% capacity
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>2024-01-15 14:18:33.221 [HMS] WARNING: Network latency spike detected — 250ms RTT to source site
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>2024-01-15 14:05:47.612 [HMS] ERROR: Failed to apply snapshot for VM &#39;backup-srv-02&#39; — quiesced snapshot timed out after 180s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and ensure the vRA appliance user account is enabled; check <code>/etc/ssh/sshd_config</code> for PasswordAuthentication setting.
+<strong><code>tail: cannot open '/var/log/vmware/vrms/vrms.log' for reading: No such file or directory</code></strong> — Confirm the vSphere Replication Management Server is running with <code>systemctl status vmware-vrms</code> and check actual log path with <code>find /var/log -name '*vrms*'</code>.
+<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the admin user has read permissions on <code>/var/log/vmware/*/</code> directories via <code>sudo usermod -aG adm admin</code>.</p>
+</div>
 <h3 id="verify-hbrsvc-on-source-esxi-hosts">Verify hbrsvc on Source ESXi Hosts<a class="headerlink" href="#verify-hbrsvc-on-source-esxi-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># SSH to a source ESXi host</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ssh<span class="w"> </span>root@esxi-siteA-01.example.local
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># List active replications</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Show detailed state (including last sync time and next expected sync)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Check hbr kernel module is loaded</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hbr
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Expected: hbr module present</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># View hbr log</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># SSH to a source ESXi host</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>ssh<span class="w"> </span>root@esxi-siteA-01.example.local
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># List active replications</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Show detailed state (including last sync time and next expected sync)</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Check hbr kernel module is loaded</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hbr
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="c1"># Expected: hbr module present</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="c1"># View hbr log</span>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hbr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>root@esxi-siteA-01.example.local:~]
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>esxcli hbr replication list
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>VM Name                          State      RPO Status
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>-------------------------------- ---------- -----------
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>prod-web-01                      Syncing    On Schedule
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>prod-db-02                       Syncing    On Schedule
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>dev-app-03                       Idle       On Schedule
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>esxcli hbr replication getstate
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>VM: prod-web-01
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>  State: Syncing
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>  Last Sync Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>  Next Expected Sync: 2024-01-15 14:37:18 UTC
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>  Data Transferred: 2.3 GB
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>  Sync Duration: 4m 22s
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>vmkload_mod -l | grep hbr
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>hbr                                 1  0x4200000000 0x1000000 /usr/lib/vmkmod/hbr
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>tail -50 /var/log/hbr.log | grep -i &quot;error\|warn&quot;
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>2024-01-15T14:31:02Z warn: Replication lag detected for prod-web-01: 45 seconds
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>2024-01-15T14:25:14Z warn: Network bandwidth throttled to 50 Mbps
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli hbr replication list: Unknown command or namespace hbr</code></strong> — Verify vSphere Replication is installed on the ESXi host by checking <code>/etc/vmware/vpx/vpxa.cfg</code> or reinstall the VR agent.
+<strong><code>vmkload_mod: Command not found</code></strong> — Use the correct command <code>vmkload_mod -l</code> or check the ESXi version; on some versions use <code>esxcli system module list | grep hbr</code> instead.
+<strong><code>tail: /var/log/hbr.log: No such file or directory</code></strong> — Confirm vSphere Replication services are running with <code>service hbrsrv status</code> and check <code>/var/log/vmkernel.log</code> for initialization errors.</p>
+</div>
 <h3 id="configure-replication-alerts">Configure Replication Alerts<a class="headerlink" href="#configure-replication-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>vSphere Client → [VM] → Monitor → vSphere Replication → Manage Notifications
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  Add email notification for: RPO violation, replication error, full sync triggered
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vSphere Client → [VM] → Monitor → vSphere Replication → Manage Notifications
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  Add email notification for: RPO violation, replication error, full sync triggered
 </code></pre></div>
 <hr />
 <h2 id="phase-6-end-to-end-validation">Phase 6 — End-to-End Validation<a class="headerlink" href="#phase-6-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All replication health checks pass. RPO met. MPIT snapshots present. Sign off.</p>
 <h3 id="verify-all-vm-rpo-status">Verify All VM RPO Status<a class="headerlink" href="#verify-all-vm-rpo-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># All replicated VMs should show green RPO status</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Filter: Status = Error or Warning → resolve before sign-off</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Check replication lag via VRA API</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span>https://vra-siteA.example.local:8043/api/vms<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;vmName&quot;|&quot;rpoStatus&quot;|&quot;lastReplicationTime&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># All replicated VMs should show green RPO status</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1"># Filter: Status = Error or Warning → resolve before sign-off</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Check replication lag via VRA API</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">  </span>https://vra-siteA.example.local:8043/api/vms<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;vmName&quot;|&quot;rpoStatus&quot;|&quot;lastReplicationTime&quot;&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>{
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>  &quot;vmName&quot;: &quot;prod-db-01&quot;,
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>  &quot;rpoStatus&quot;: &quot;Green&quot;,
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>  &quot;lastReplicationTime&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>}
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>{
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>  &quot;vmName&quot;: &quot;prod-web-02&quot;,
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>  &quot;rpoStatus&quot;: &quot;Green&quot;,
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>  &quot;lastReplicationTime&quot;: &quot;2024-01-15T14:31:45Z&quot;
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>}
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>{
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>  &quot;vmName&quot;: &quot;prod-app-03&quot;,
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>  &quot;rpoStatus&quot;: &quot;Yellow&quot;,
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>  &quot;lastReplicationTime&quot;: &quot;2024-01-15T14:15:22Z&quot;
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>}
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>{
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>  &quot;vmName&quot;: &quot;prod-cache-04&quot;,
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>  &quot;rpoStatus&quot;: &quot;Green&quot;,
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>  &quot;lastReplicationTime&quot;: &quot;2024-01-15T14:33:01Z&quot;
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify VRA hostname matches certificate CN).
+<strong><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Name or service not known</code></strong> — Confirm VRA hostname is resolvable and port 8043 is accessible from your network location using <code>nslookup vra-siteA.example.local</code> and <code>telnet vra-siteA.example.local 8043</code>.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify API authentication credentials are correct and the VRA service is running; test with <code>curl -sk -u admin:&lt;password&gt; https://vra-siteA.example.local:8043/api/health</code> first.</p>
+</div>
 <h3 id="verify-mpit-recovery-points">Verify MPIT Recovery Points<a class="headerlink" href="#verify-mpit-recovery-points" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Verify MPIT snapshots captured at target site</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications → [VM] → Recovery Points</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Multiple instances should be listed (matching configured MPIT count)</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check target datastore for replica VMDK structure</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Target datastore should contain:</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">#   &lt;vm-name&gt;.vmdk         (base replica)</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1">#   &lt;vm-name&gt;-000001.vmdk  (delta disk for recovery point 1)</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1">#   &lt;vm-name&gt;-000002.vmdk  (delta disk for recovery point 2)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Verify MPIT snapshots captured at target site</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications → [VM] → Recovery Points</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="c1"># Multiple instances should be listed (matching configured MPIT count)</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># Check target datastore for replica VMDK structure</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1"># Target datastore should contain:</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1">#   &lt;vm-name&gt;.vmdk         (base replica)</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="c1">#   &lt;vm-name&gt;-000001.vmdk  (delta disk for recovery point 1)</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="c1">#   &lt;vm-name&gt;-000002.vmdk  (delta disk for recovery point 2)</span>
 </code></pre></div>
 <h3 id="test-planned-migration-non-destructive">Test Planned Migration (Non-Destructive)<a class="headerlink" href="#test-planned-migration-non-destructive" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Test recovery using a test VM (not production) before sign-off</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications → [test VM] → Migrate</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Planned migration (graceful):</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1">#   1. Source VM quiesced and final sync triggered</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">#   2. VM powered off at source</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1">#   3. Replica promoted to running VM at target</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1">#   4. Verify VM boots and application responds</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># After test: reprotect VM to resume replication</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># vSphere Client → [migrated VM at target] → Configure Replication (back to source)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Test recovery using a test VM (not production) before sign-off</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1"># vSphere Client → Site Recovery → Replications → [test VM] → Migrate</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Planned migration (graceful):</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1">#   1. Source VM quiesced and final sync triggered</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="c1">#   2. VM powered off at source</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1">#   3. Replica promoted to running VM at target</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="c1">#   4. Verify VM boots and application responds</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="c1"># After test: reprotect VM to resume replication</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="c1"># vSphere Client → [migrated VM at target] → Configure Replication (back to source)</span>
 </code></pre></div>
 <h3 id="vra-service-health">VRA Service Health<a class="headerlink" href="#vra-service-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Both site VRAs: verify HMS and VRMS healthy</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms<span class="w"> </span>vrms
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Both: active (running)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms<span class="w"> </span>vrms
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Both: active (running)</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Verify VRA API health endpoint</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-siteA.example.local/api/rest/vr/health
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-siteB.example.local/api/rest/vr/health
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Expected: {&quot;status&quot;:&quot;OK&quot;} or equivalent healthy response</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Both site VRAs: verify HMS and VRMS healthy</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>ssh<span class="w"> </span>admin@vra-siteA.example.local
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms<span class="w"> </span>vrms
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Both: active (running)</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>ssh<span class="w"> </span>admin@vra-siteB.example.local
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms<span class="w"> </span>vrms
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># Both: active (running)</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="c1"># Verify VRA API health endpoint</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-siteA.example.local/api/rest/vr/health
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-siteB.example.local/api/rest/vr/health
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="c1"># Expected: {&quot;status&quot;:&quot;OK&quot;} or equivalent healthy response</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>● hms.service - Hybrid Management Service
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>     Loaded: loaded (/usr/lib/systemd/system/hms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 8 days ago
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>   Main PID: 2847 (java)
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>      Tasks: 47 (limit: 4915)
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>     Memory: 512.3M
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>     CGroup: /system.slice/hms.service
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>             └─2847 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>● vrms.service - vSphere Replication Management Service
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>     Loaded: loaded (/usr/lib/systemd/system/vrms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>     Active: active (running) since Wed 2024-01-17 14:33:05 UTC; 8 days ago
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>   Main PID: 3156 (java)
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>      Tasks: 52 (limit: 4915)
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>     Memory: 768.1M
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>● hms.service - Hybrid Management Service
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>     Loaded: loaded (/usr/lib/systemd/system/hms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>     Active: active (running) since Thu 2024-01-18 09:15:42 UTC; 7 days ago
+<a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>   Main PID: 4521 (java)
+<a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>      Tasks: 48 (limit: 4915)
+<a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>     Memory: 501.7M
+<a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>
+<a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>● vrms.service - vSphere Replication Management Service
+<a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>     Loaded: loaded (/usr/lib/systemd/system/vrms.service; enabled; vendor preset: enabled)
+<a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a>     Active: active (running) since Thu 2024-01-18 09:16:11 UTC; 7 days ago
+<a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a>   Main PID: 4892 (java)
+<a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a>      Tasks: 51 (limit: 4915)
+<a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a>     Memory: 755.4M
+<a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>
+<a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>{&quot;status&quot;:&quot;OK&quot;,&quot;version&quot;:&quot;8.7.0.1&quot;,&quot;build&quot;:&quot;21457896&quot;,&quot;timestamp&quot;:&quot;2024-01-25T10:42:33.847Z&quot;}
+<a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>{&quot;status&quot;:&quot;OK&quot;,&quot;version&quot;:&quot;8.7.0.1&quot;,&quot;build&quot;:&quot;21457896&quot;,&quot;timestamp&quot;:&quot;2024-01-25T10:42:34.102Z&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+<strong><code>Connection refused</code></strong> — Verify the VRA API service is listening on port 443 by running <code>netstat -tlnp | grep 443</code> and restart vrms if needed with <code>systemctl restart vrms</code>.
+<strong><code>Active: inactive (dead)</code></strong> — Start the service with <code>systemctl start hms vrms</code> and check logs with <code>journalctl -u hms -n 50</code> to diagnose startup failures.</p>
+</div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9395,7 +9673,7 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

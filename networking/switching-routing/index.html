@@ -6810,201 +6810,686 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>show<span class="w"> </span>interfaces<span class="w"> </span>trunk
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>status
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>trunk
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>&lt;id1&gt;,&lt;id2&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>native<span class="w"> </span>vlan<span class="w"> </span>&lt;native_id&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VLAN Name                             Status    Ports
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>---- -------------------------------- --------- -------------------------------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>10   Management                       active    Fa0/5, Fa0/6
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>20   Production                       active    Fa0/7, Fa0/8, Fa0/9, Fa0/10
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>30   Guest                            suspended Fa0/11
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>100  DMZ                              active    Fa0/12, Gi0/1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VLAN ID  Name                             Status    Ports
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-------- -------------------------------- --------- -------------------------------
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>20       Production                       active    Fa0/7, Fa0/8, Fa0/9, Fa0/10
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Port        Mode             Encapsulation  Status        Native vlan
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Fa0/1       on               802.1q         trunking      1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Fa0/2       on               802.1q         trunking      1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Gi0/1       on               802.1q         trunking      1
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Interface      Status       Protocol
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Fa0/1          connected    up
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Fa0/2          notconnect   down
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Fa0/3          connected    up
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>add<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>remove<span class="w"> </span>&lt;id&gt;
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax for your switch model; some platforms use <code>show vlan brief</code> while others require <code>show vlan</code>.
+<strong><code>% Incomplete command</code></strong> — Provide the complete VLAN ID number after <code>show vlan id</code> (e.g., <code>show vlan id 20</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>trunk
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>&lt;id1&gt;,&lt;id2&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>native<span class="w"> </span>vlan<span class="w"> </span>&lt;native_id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm VLAN exists</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>vlan<span class="w"> </span>brief<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm port is in correct VLAN</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>status
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm VLAN crosses trunk</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>interfaces<span class="w"> </span>trunk<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># End-to-end test</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ping<span class="w"> </span>&lt;ip_on_same_vlan&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>configure<span class="w"> </span>terminal
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vlan<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>name<span class="w"> </span>&lt;vlan_name&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">exit</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in interface configuration mode by running <code>configure terminal</code> then <code>interface &lt;int&gt;</code> before entering switchport commands.
+<strong><code>% Incomplete command</code></strong> — Ensure all VLAN IDs are numeric and comma-separated without spaces (e.g., <code>switchport trunk allowed vlan 10,20,30</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>add<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>remove<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>access
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>switchport<span class="w"> </span>access<span class="w"> </span>vlan<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>description<span class="w"> </span>&lt;description&gt;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">exit</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>trunk
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>encapsulation<span class="w"> </span>dot1q<span class="w">    </span><span class="c1"># if required by platform</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>native<span class="w"> </span>vlan<span class="w"> </span>&lt;native_id&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>&lt;id1&gt;,&lt;id2&gt;,&lt;id3&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">exit</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in interface configuration mode with <code>configure terminal</code> and <code>interface &lt;port&gt;</code> before running switchport commands.
+<strong><code>% Incomplete command</code></strong> — Replace <code>&lt;id&gt;</code> with an actual VLAN ID number (e.g., <code>switchport trunk allowed vlan add 100</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm VLAN exists</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>vlan<span class="w"> </span>brief<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm port is in correct VLAN</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>status
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Confirm VLAN crosses trunk</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>show<span class="w"> </span>interfaces<span class="w"> </span>trunk<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># End-to-end test</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ping<span class="w"> </span>&lt;ip_on_same_vlan&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>add<span class="w"> </span>&lt;id&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VLAN Name                             Status    Ports
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>---- -------------------------------- --------- -------------------------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>100  Production-VLAN                  active    Fa0/1, Fa0/2, Fa0/3, Fa0/24
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Name                         Status       Vlan
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>FastEthernet0/1              connected    trunk
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>FastEthernet0/2              connected    100
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>FastEthernet0/3              connected    100
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Port        Vlans allowed on trunk
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Fa0/1       1,100,200,300,1002-1005
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Fa0/2       1-4094
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Type escape sequence to abort.
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Sending 5, 100-byte ICMP Echos to 192.168.100.45, timeout is 2 seconds:
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>!!!!!
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>remove<span class="w"> </span>&lt;id&gt;
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the VLAN ID syntax matches your device OS (Cisco IOS uses <code>show vlan id &lt;number&gt;</code>, not <code>include</code>).
+<strong><code>Destination Host Unreachable.</code></strong> — Confirm the target IP is actually on the same VLAN and the device is powered on and reachable.
+<strong><code>% Ambiguous command: "show interfaces trunk"</code></strong> — Use the exact command syntax for your platform; some devices require <code>show trunk</code> or <code>show spanning-tree vlan</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>configure<span class="w"> </span>terminal
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vlan<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>name<span class="w"> </span>&lt;vlan_name&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">exit</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># or (NX-OS)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config<span class="w"> </span>vdc-all
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm VLAN exists</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>vlan<span class="w"> </span>brief<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirm port VLAN assignment</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>status
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Confirm trunk carries VLAN</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>show<span class="w"> </span>interfaces<span class="w"> </span>trunk<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Confirm VLAN on both sides of a trunk</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># (Run on both switches)</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Ensure you are in privileged EXEC mode (enable) before entering configure terminal.
+<strong><code>% VLAN &lt;id&gt; does not exist</code></strong> — Create the VLAN first with the global config command <code>vlan &lt;id&gt;</code> before attempting to name it.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>access
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>switchport<span class="w"> </span>access<span class="w"> </span>vlan<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>description<span class="w"> </span>&lt;description&gt;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>no<span class="w"> </span>shutdown
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">exit</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination_ip&gt;<span class="w">    </span><span class="c1"># show which route would be used</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>route print
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify that <code>&lt;int&gt;</code>, <code>&lt;id&gt;</code>, and <code>&lt;description&gt;</code> are replaced with actual values (e.g., <code>interface GigabitEthernet0/0/1</code>) and that no angle brackets remain in the command.
+<strong><code>% Interface does not exist.</code></strong> — Confirm the interface name matches your device's nomenclature by running <code>show interfaces</code> to list available interfaces.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>trunk
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>encapsulation<span class="w"> </span>dot1q<span class="w">    </span><span class="c1"># if required by platform</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>native<span class="w"> </span>vlan<span class="w"> </span>&lt;native_id&gt;
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>&lt;id1&gt;,&lt;id2&gt;,&lt;id3&gt;
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>no<span class="w"> </span>shutdown
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nb">exit</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>show<span class="w"> </span>ip<span class="w"> </span>route
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>summary
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Linux — confirm default route</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Windows</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>route<span class="w"> </span>print<span class="w"> </span><span class="m">0</span>.0.0.0
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify you are in interface configuration mode (use <code>configure terminal</code> then <code>interface &lt;int&gt;</code>) before entering switchport commands.
+<strong><code>% Incomplete command</code></strong> — Ensure all VLAN IDs in the <code>allowed vlan</code> list are valid integers separated by commas with no spaces (e.g., <code>1,10,20</code> not <code>1, 10, 20</code>).
+<strong><code>% Invalid input detected</code></strong> — Confirm the native VLAN ID exists and is not already assigned to another interface; use <code>show vlan</code> to verify available VLANs.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>add<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check OSPF neighbor state</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Verify OSPF routes</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ospf
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># OSPF interface status</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>interface<span class="w"> </span>brief
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># BGP summary (neighbor states)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>summary
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>neighbors<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># BGP routes</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>show<span class="w"> </span>bgp
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>show<span class="w"> </span>bgp<span class="w"> </span>routes
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name syntax matches your device model (e.g., <code>GigabitEthernet0/0/1</code> or <code>Ethernet1/1</code>) and that you are in interface configuration mode.
+<strong><code>% VLAN &lt;id&gt; does not exist.</code></strong> — Create the VLAN first using <code>vlan &lt;id&gt;</code> in global configuration mode before adding it to the trunk.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vlan<span class="w"> </span>remove<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Linux — add a static route</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span>&lt;network&gt;/&lt;prefix&gt;<span class="w"> </span>via<span class="w"> </span>&lt;gateway&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Persist (add to /etc/network/interfaces or nmcli)</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span>&lt;conn&gt;<span class="w"> </span>+ipv4.routes<span class="w"> </span><span class="s2">&quot;&lt;network&gt;/&lt;prefix&gt; &lt;gateway&gt;&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name syntax matches your device model (e.g., <code>GigabitEthernet0/0/1</code> or <code>Ethernet1/1</code>) and that you are in interface configuration mode.
+<strong><code>% VLAN &lt;id&gt; is not in the allowed list for this trunk.</code></strong> — Confirm the VLAN ID exists in the current allowed list using <code>show interface &lt;int&gt; trunk</code> before attempting removal.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># or (NX-OS)</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config<span class="w"> </span>vdc-all
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Capture current route table</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-before.txt
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Capture traceroute to critical destinations</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>traceroute<span class="w"> </span>&lt;production_host&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>traceroute<span class="w"> </span>&lt;replication_peer&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>(no output — command completes silently)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Compare route tables</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-after.txt
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>diff<span class="w"> </span>/tmp/routes-before.txt<span class="w"> </span>/tmp/routes-after.txt
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Confirm specific routes still present</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Trace paths to critical systems</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>traceroute<span class="w"> </span>&lt;production_host&gt;
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Ensure you are in privileged EXEC mode (enable) before running copy commands.
+<strong><code>% Error opening destination file</code></strong> — Verify the startup-config file system has write permissions and sufficient space available.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Confirm VLAN exists</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>show<span class="w"> </span>vlan<span class="w"> </span>brief<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Confirm port VLAN assignment</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>status
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Confirm trunk carries VLAN</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>show<span class="w"> </span>interfaces<span class="w"> </span>trunk<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Confirm VLAN on both sides of a trunk</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># (Run on both switches)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>VLAN Name                             Status    Ports
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>---- -------------------------------- --------- -------------------------------
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>10   Management                       active    Gi0/1, Gi0/2, Gi0/3
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>20   Sales                            active    Gi0/5, Gi0/6
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>30   Engineering                      active    Gi0/7, Gi0/8, Gi0/9
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>40   Guest                            suspended Gi0/10
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Interface            Status       Protocol
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Gi0/5                connected    up
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>Gi0/6                notconnect   down
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>Gi0/7                connected    up
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>Port        Mode             Encapsulation  Status        Native vlan
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Gi0/24      on               802.1q         trunking      1
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>Gi0/48      on               802.1q         trunking      1
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>VLAN ID  10
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>  Port Gi0/24 (trunking)
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  Port Gi0/48 (trunking)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w">            </span><span class="c1"># all neighbors in FULL state</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># specific neighbor detail</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ospf<span class="w">               </span><span class="c1"># routes learned via OSPF</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax for your switch model (Cisco IOS uses <code>show vlan id &lt;id&gt;</code> instead of <code>include</code>).
+<strong><code>% Incomplete command</code></strong> — Replace <code>&lt;int&gt;</code> and <code>&lt;id&gt;</code> with actual interface names (e.g., <code>Gi0/5</code>) and VLAN numbers (e.g., <code>10</code>).
+<strong><code>VLAN &lt;id&gt; does not exist</code></strong> — Create the VLAN first using <code>vlan &lt;id&gt;</code> in global configuration mode before checking trunk membership.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination_ip&gt;<span class="w">    </span><span class="c1"># show which route would be used</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>show<span class="w"> </span>bgp<span class="w"> </span>summary<span class="w">                  </span><span class="c1"># peer state: Established</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>neighbors<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>routes<span class="w">    </span><span class="c1"># routes received from peer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>route print
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Confirm key services reachable after routing change</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span><span class="m">443</span><span class="w">    </span><span class="c1"># storage management</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter_fqdn&gt;<span class="w"> </span><span class="m">443</span><span class="w">   </span><span class="c1"># vCenter</span>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;app_vip&gt;/<span class="w">  </span><span class="c1"># application VIP</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Linux — ipcalc</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ipcalc<span class="w"> </span><span class="m">10</span>.10.10.0/24
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Python one-liner</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import ipaddress; n = ipaddress.ip_network(&#39;10.10.10.0/24&#39;); print(n.network_address, n.broadcast_address, n.num_addresses)&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ipcalc<span class="w"> </span><span class="m">10</span>.10.10.45/24
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># Returns: network, broadcast, first/last usable host</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="s2">import ipaddress</span>
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="s2">a = ipaddress.ip_address(&#39;10.10.10.45&#39;)</span>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="s2">b = ipaddress.ip_address(&#39;10.10.10.200&#39;)</span>
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="s2">net = ipaddress.ip_network(&#39;10.10.10.0/24&#39;)</span>
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="s2">print(a in net, b in net)</span>
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="s2">&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Linux — show all routes</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Check for overlap manually or with ipcalc</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>ipcalc<span class="w"> </span>&lt;new_network&gt;/&lt;prefix&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>ip<span class="w"> </span>addr<span class="w"> </span>add<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>dev<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span>default<span class="w"> </span>via<span class="w"> </span>&lt;gateway&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nb">Get-NetIPAddress</span>
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="nb">Get-NetIPConfiguration</span>
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">all</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Test TCP port reachability</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>telnet<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
-<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># PowerShell</span>
-<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>Test-NetConnection<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-Port<span class="w"> </span>&lt;port&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Linux</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>ss<span class="w"> </span>-tnp<span class="w">         </span><span class="c1"># TCP connections with process info</span>
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>ss<span class="w"> </span>-tnlp<span class="w">        </span><span class="c1"># listening ports</span>
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>netstat<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># legacy equivalent</span>
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1"># Windows</span>
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>netstat<span class="w"> </span>-ano
-<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>Get-NetTCPConnection
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Check interface MTU</span>
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Test path MTU (don&#39;t-fragment bit)</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># 1500 MTU test</span>
-<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># 9000 MTU test</span>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="c1"># Windows</span>
-<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>ping<span class="w"> </span>/f<span class="w"> </span>/l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>show<span class="w"> </span>ip<span class="w"> </span>route
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>summary
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Codes: K - kernel route, C - connected, S - static, R - RIP, B - BGP
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>       O - OSPF, IA - OSPF inter area
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>       E1 - OSPF external type 1, E2 - OSPF external type 2
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>       ia - IS-IS inter area, * - candidate default, U - per-user static route
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>       o - ODR, P - periodic downloaded static route, H - nssa-external, l - LISP
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>       a - application route
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>       + - replicated route, % - next hop override, p - overrides from PfR
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>Gateway of last resort is 10.0.0.1 to network 0.0.0.0
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>S*    0.0.0.0/0 [1/0] via 10.0.0.1, 00:15:32, GigabitEthernet0/0/0
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>C     10.0.0.0/24 is directly connected, GigabitEthernet0/0/0
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>L     10.0.0.5/32 is directly connected, GigabitEthernet0/0/0
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>O     192.168.1.0/24 [110/65] via 10.0.0.1, 00:12:45, GigabitEthernet0/0/0
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>O     192.168.2.0/24 [110/130] via 10.0.0.1, 00:12:40, GigabitEthernet0/0/0
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>B     172.16.0.0/16 [20/0] via 10.0.0.2, 00:08:19, GigabitEthernet0/0/1
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>Route Summary for VRF &quot;default&quot; (1 OSPF process):
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>*OSPF process 1, distance 110
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>  Intra-area: 2 routes, Intra-area summary: 0 routes
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>  Inter-area: 0 routes, Inter-area summary: 0 routes
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>  External type 1: 0 routes, External type 2: 1 routes
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>  NSSA External type 1: 0 routes, NSSA External type 2: 0 routes
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>  Redistributed: 0 routes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the destination IP address format is valid (e.g., <code>show ip route 192.168.1.0</code>).
+<strong><code>% Incomplete command.</code></strong> — Complete the command with a valid destination address or use <code>show ip route</code> without parameters to display all routes.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Linux — confirm default route</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Windows</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>route<span class="w"> </span>print<span class="w"> </span><span class="m">0</span>.0.0.0
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a># Linux output:
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>default via 192.168.1.1 dev eth0 proto dhcp metric 100
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a># Windows output:
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>===========================================================================
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>Interface List
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>  1...00 1a 2b 3c 4d 5e ......Intel(R) Ethernet Connection (2) I219-LM
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>  2...00 1a 2b 3c 4d 5f ......Realtek PCIe GbE Family Controller
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>===========================================================================
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>IPv4 Route Table
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>===========================================================================
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>Active Routes:
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>Network Destination        Netmask          Gateway       Interface  Metric
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>          0.0.0.0          0.0.0.0      192.168.1.1    192.168.1.100    25
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>===========================================================================
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RTNETLINK answers: Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>The system cannot find the file specified.</code></strong> — On Windows, ensure you're running Command Prompt or PowerShell with administrator privileges.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Check OSPF neighbor state</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Verify OSPF routes</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ospf
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># OSPF interface status</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>interface<span class="w"> </span>brief
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Neighbor ID     Pri   State           Dead Time   Address         Interface
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>10.0.0.1        1     FULL/DR         00:00:32    192.168.1.1     GigabitEthernet0/0/0
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>10.0.0.2        1     FULL/BDR        00:00:35    192.168.1.2     GigabitEthernet0/0/1
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>10.0.0.3        0     INIT/DROTHER    00:00:38    192.168.2.1     GigabitEthernet0/0/2
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>O       10.1.0.0/24 [110/65] via 192.168.1.1, 00:12:45, GigabitEthernet0/0/0
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>O       10.2.0.0/24 [110/128] via 192.168.1.2, 00:08:22, GigabitEthernet0/0/1
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>O       10.3.0.0/24 [110/192] via 192.168.1.1, 00:05:10, GigabitEthernet0/0/0
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Gi0/0/0      1     0.0.0.0         192.168.1.254/24   1     DR    2/2
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>Gi0/0/1      1     0.0.0.0         192.168.1.253/24   1     BDR   1/1
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>Gi0/0/2      1     0.0.0.1         192.168.2.254/24   10    DR    0/0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the device is in privileged EXEC mode (use <code>enable</code> command) and the OSPF process is configured.
+<strong><code>% OSPF process not running</code></strong> — Enable OSPF routing with <code>router ospf &lt;process-id&gt;</code> and configure at least one network statement.
+<strong><code>Neighbor ID     Pri   State           Dead Time   Address         Interface</code></strong> (header only, no neighbors listed) — Verify OSPF is enabled on interfaces with <code>ip ospf &lt;process-id&gt; area &lt;area-id&gt;</code> and check physical link status with <code>show interface</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># BGP summary (neighbor states)</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>summary
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>neighbors<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># BGP routes</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>show<span class="w"> </span>bgp
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>show<span class="w"> </span>bgp<span class="w"> </span>routes
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>BGP router identifier 192.168.1.1, local AS number 65001
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>10.0.1.254      4 65002    1247    1251       42    0    0 00:45:23       1205
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>10.0.2.254      4 65003     892     895       42    0    0 00:32:15        847
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>10.1.1.1        4 65004    2156    2159       42    0    0 02:18:47       3421
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>10.1.2.1        4 65005     445     448       42    0    0 00:15:32 Idle (Admin)
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>BGP table version is 42, main routing table version 42
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>Origin codes: i - IGP, e - EGP, ? - incomplete
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>   Network          Next Hop            Metric LocPrf Weight Path
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>*&gt; 10.0.0.0/24      10.0.1.254               0             0 65002 i
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>*&gt; 10.1.0.0/24      10.0.2.254             100             0 65003 65004 i
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>*&gt; 172.16.0.0/16    10.1.1.1                50             0 65004 i
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>*&gt; 192.168.0.0/16   10.1.2.1               200             0 65005 i
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the exact command syntax for your device OS (Cisco IOS uses <code>show ip bgp</code>, Juniper uses <code>show route protocol bgp</code>).
+<strong><code>% BGP not enabled</code></strong> — Enable BGP with <code>router bgp &lt;AS-number&gt;</code> in configuration mode before running show commands.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Linux — add a static route</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span>&lt;network&gt;/&lt;prefix&gt;<span class="w"> </span>via<span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Persist (add to /etc/network/interfaces or nmcli)</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span>&lt;conn&gt;<span class="w"> </span>+ipv4.routes<span class="w"> </span><span class="s2">&quot;&lt;network&gt;/&lt;prefix&gt; &lt;gateway&gt;&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>(no output — command completes silently)
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: unknown or ambiguous command 'route'.</code></strong> — Ensure you're using <code>ip route</code> (not just <code>route</code>) and that the iproute2 package is installed.
+<strong><code>Error: connection '&lt;conn&gt;' not found.</code></strong> — Replace <code>&lt;conn&gt;</code> with an actual connection name from <code>nmcli connection show</code> output.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a> 1  gateway.local (192.168.1.1)  2.341 ms  2.156 ms  2.089 ms
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a> 2  isp-router.net (10.0.0.1)  8.923 ms  9.104 ms  8.756 ms
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a> 3  core-backbone-01.isp.net (203.0.113.45)  15.234 ms  15.678 ms  15.412 ms
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a> 4  transit-peer-02.net (198.51.100.22)  22.891 ms  23.145 ms  22.567 ms
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a> 5  example.com (93.184.216.34)  28.734 ms  28.456 ms  28.912 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>traceroute: command not found</code></strong> — Install traceroute using <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).
+<strong><code>traceroute: getaddrinfo: Name or service not known</code></strong> — Verify the destination hostname or IP address is correct and that DNS resolution is working with <code>nslookup &lt;destination&gt;</code>.
+<strong><code>* * *</code> (all hops timing out)</strong> — Check firewall rules blocking ICMP packets; the destination or intermediate routers may be configured to drop traceroute probes.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Capture current route table</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Capture traceroute to critical destinations</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>traceroute<span class="w"> </span>&lt;production_host&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>traceroute<span class="w"> </span>&lt;replication_peer&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>default via 192.168.1.1 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>10.0.0.0/8 via 10.20.30.1 dev eth1 proto static
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>172.16.0.0/12 via 10.20.30.2 dev eth1 proto static
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>traceroute to prod-app-01.internal (10.50.100.42), 30 hops max, 60 byte packets
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a> 1  gateway.local (192.168.1.1)  2.145 ms  1.987 ms  2.034 ms
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a> 2  core-router-01.dc1 (10.20.30.1)  8.432 ms  8.521 ms  8.389 ms
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a> 3  prod-app-01.internal (10.50.100.42)  12.654 ms  12.701 ms  12.589 ms
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>traceroute to storage-vip.internal (10.60.50.100), 30 hops max, 60 byte packets
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a> 1  gateway.local (192.168.1.1)  1.876 ms  1.923 ms  1.945 ms
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a> 2  core-router-01.dc1 (10.20.30.1)  7.234 ms  7.189 ms  7.301 ms
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a> 3  storage-vip.internal (10.60.50.100)  15.432 ms  15.501 ms  15.378 ms
+<a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>traceroute to repl-peer-02.internal (10.70.20.55), 30 hops max, 60 byte packets
+<a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a> 1  gateway.local (192.168.1.1)  2.012 ms  1.998 ms  2.045 ms
+<a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a> 2  core-router-01.dc1 (10.20.30.1)  8.876 ms  8.923 ms  8.801 ms
+<a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a> 3  repl-peer-02.internal (10.70.20.55)  18.234 ms  18.156 ms  18.301 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).
+<strong><code>traceroute: sendto: Operation not permitted</code></strong> — Run the script with <code>sudo</code> or ensure the user has CAP_NET_RAW capability.
+<strong><code>Cannot open /tmp/routes-before.txt: Permission denied</code></strong> — Verify /tmp is writable with <code>ls -ld /tmp</code> and check disk space with <code>df /tmp</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Compare route tables</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-after.txt
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>diff<span class="w"> </span>/tmp/routes-before.txt<span class="w"> </span>/tmp/routes-after.txt
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="c1"># Confirm specific routes still present</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="c1"># Trace paths to critical systems</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>traceroute<span class="w"> </span>&lt;production_host&gt;
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>1c1
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>&lt; default via 192.168.1.1 dev eth0 proto dhcp metric 100
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>---
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>&gt; default via 192.168.1.1 dev eth0 proto static metric 100
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>3a4
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>&gt; 10.50.0.0/16 via 192.168.2.254 dev eth1 metric 50
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>10.0.0.0/8 via 192.168.1.254 dev eth0 proto kernel scope link src 10.0.5.42
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>10.20.30.0/24 dev eth0 proto kernel scope link src 10.20.30.15 metric 256
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>traceroute to prod-db-01.internal (10.50.12.88), 30 hops max, 60 byte packets
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a> 1  gateway.local (192.168.1.1)  2.145 ms  2.089 ms  2.156 ms
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a> 2  core-switch-01.internal (10.0.0.1)  5.234 ms  5.198 ms  5.267 ms
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a> 3  prod-db-01.internal (10.50.12.88)  12.456 ms  12.389 ms  12.521 ms
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>traceroute to storage-vip.internal (10.50.100.5), 30 hops max, 60 byte packets
+<a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a> 1  gateway.local (192.168.1.1)  1.987 ms  1.945 ms  2.012 ms
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a> 2  core-switch-01.internal (10.0.0.1)  4.156 ms  4.123 ms  4.189 ms
+<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a> 3  storage-vip.internal (10.50.100.5)  8.734 ms  8.701 ms  8.789 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>diff: /tmp/routes-before.txt: No such file or directory</code></strong> — Run <code>ip route show &gt; /tmp/routes-before.txt</code> before making network changes to capture the baseline state.
+<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).
+<strong><code>ICMP Host Unreachable</code></strong> — Verify the destination IP is correct and that firewall rules permit ICMP traffic to the target host.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>default via 192.168.1.1 dev eth0 proto static metric 100
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.34 ms
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.89 ms
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.12 ms
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>^C
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>--- 192.168.1.1 statistics ---
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>rtt min/avg/max/stddev = 1.89/2.11/2.34/0.18 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ping: connect: Network is unreachable</code></strong> — Verify the default route exists with <code>ip route show</code> and check that the network interface is up with <code>ip link show</code>.
+<strong><code>ping: Name or service not known</code></strong> — Replace <code>&lt;gateway_ip&gt;</code> with an actual IP address (e.g., <code>192.168.1.1</code>) instead of a placeholder variable.
+<strong><code>PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.</code> followed by no responses and timeout</strong> — Check gateway connectivity with <code>ip neighbor show</code> and verify the interface has a valid IP address using <code>ip addr show</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w">            </span><span class="c1"># all neighbors in FULL state</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># specific neighbor detail</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ospf<span class="w">               </span><span class="c1"># routes learned via OSPF</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Neighbor ID     Pri   State           Dead Time   Address         Interface
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>10.0.0.1         1   FULL/DR         00:00:38    192.168.1.1     GigabitEthernet0/0
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>10.0.0.2         1   FULL/BDR        00:00:35    192.168.1.2     GigabitEthernet0/1
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>10.0.0.3         0   FULL/DROTHER    00:00:39    192.168.1.3     GigabitEthernet0/2
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>10.0.0.5         1   2WAY/DROTHER    00:00:37    192.168.1.5     GigabitEthernet0/3
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>Neighbor 10.0.0.1, interface address 192.168.1.1
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>    In the area 0.0.0.0 via interface GigabitEthernet0/0
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>    Neighbor priority is 1, State is FULL, 6 state changes
+<a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a>    DR is 10.0.0.1 BDR is 10.0.0.2
+<a id="__codelineno-43-11" name="__codelineno-43-11" href="#__codelineno-43-11"></a>    Options is 0x12 *|E|-
+<a id="__codelineno-43-12" name="__codelineno-43-12" href="#__codelineno-43-12"></a>    Dead timer due in 00:00:38
+<a id="__codelineno-43-13" name="__codelineno-43-13" href="#__codelineno-43-13"></a>    Neighbor is up for 02:14:52
+<a id="__codelineno-43-14" name="__codelineno-43-14" href="#__codelineno-43-14"></a>
+<a id="__codelineno-43-15" name="__codelineno-43-15" href="#__codelineno-43-15"></a>O       10.2.0.0/24 [110/65] via 192.168.1.1, 00:45:23, GigabitEthernet0/0
+<a id="__codelineno-43-16" name="__codelineno-43-16" href="#__codelineno-43-16"></a>O       10.3.0.0/24 [110/130] via 192.168.1.2, 00:32:15, GigabitEthernet0/1
+<a id="__codelineno-43-17" name="__codelineno-43-17" href="#__codelineno-43-17"></a>O       10.4.0.0/24 [110/195] via 192.168.1.3, 01:12:08, GigabitEthernet0/2
+<a id="__codelineno-43-18" name="__codelineno-43-18" href="#__codelineno-43-18"></a>O IA    172.16.0.0/16 [110/256] via 192.168.1.1, 00:28:44, GigabitEthernet0/0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the command syntax matches your IOS version; some devices use <code>show ip ospf neighbor detail</code> instead of <code>show ip ospf neighbor &lt;id&gt;</code>.
+<strong><code>% Incomplete command.</code></strong> — Ensure OSPF is enabled with <code>router ospf &lt;process-id&gt;</code> and at least one network is configured in the OSPF process.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>show<span class="w"> </span>bgp<span class="w"> </span>summary<span class="w">                  </span><span class="c1"># peer state: Established</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>neighbors<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>routes<span class="w">    </span><span class="c1"># routes received from peer</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>BGP router identifier 10.0.1.1, local AS number 65001
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>10.20.30.40     4 65002    1247    1251       89    0    0 00:42:15       156
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>10.20.30.41     4 65002    1089    1092       89    0    0 00:38:22       142
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>10.50.60.70     4 65003     892     895       89    0    0 00:31:08   Idle (Admin)
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>Total number of neighbors 3
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>For address family: IPv4 Unicast
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>Neighbor        Prefix Received Sent  Best Paths
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>10.20.30.40          156      0    156
+<a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>10.20.30.41          142      0    142
+<a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a>10.50.60.70            0      0      0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the correct syntax for your router OS (Cisco IOS uses <code>show ip bgp summary</code>, Juniper uses <code>show bgp summary</code>).
+<strong><code>% Neighbor not found</code></strong> — Confirm the neighbor IP address is configured and the BGP session is established before querying its routes.
+<strong><code>Connection refused</code> or <code>% Connection timeout</code></strong> — Ensure the management interface is reachable and SSH/Telnet access is enabled on the router.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1"># Confirm key services reachable after routing change</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span><span class="m">443</span><span class="w">    </span><span class="c1"># storage management</span>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter_fqdn&gt;<span class="w"> </span><span class="m">443</span><span class="w">   </span><span class="c1"># vCenter</span>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;app_vip&gt;/<span class="w">  </span><span class="c1"># application VIP</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>Connection to 192.168.50.45 443 port [tcp/https] succeeded!
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>Connection to vcenter.prod.local 443 port [tcp/https] succeeded!
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>100   1247  100   1247    0     0   2840      0 --:--:-- --:--:-- --:--:-- --:--:--
+<a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>&lt;!DOCTYPE html&gt;
+<a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>&lt;html&gt;
+<a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a>&lt;head&gt;&lt;title&gt;Application Portal&lt;/title&gt;&lt;/head&gt;
+<a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a>&lt;body&gt;Welcome to App VIP&lt;/body&gt;
+<a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a>&lt;/html&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: connect to 192.168.50.45 port 443 (tcp) failed: Connection timed out</code></strong> — Verify the storage VIP is reachable by checking routing table (<code>ip route show</code>) and confirming firewall rules allow port 443 from your management network.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl (already present) or import the application's CA certificate into your system trust store if certificate validation is required.
+<strong><code>nc: getaddrinfo for host "vcenter.prod.local" failed: Name or service not known</code></strong> — Confirm DNS resolution is working by testing <code>nslookup vcenter.prod.local</code> and verify your <code>/etc/resolv.conf</code> points to the correct nameserver.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="c1"># Linux — ipcalc</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>ipcalc<span class="w"> </span><span class="m">10</span>.10.10.0/24
+<a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>
+<a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="c1"># Python one-liner</span>
+<a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import ipaddress; n = ipaddress.ip_network(&#39;10.10.10.0/24&#39;); print(n.network_address, n.broadcast_address, n.num_addresses)&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>Address:   10.10.10.0
+<a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>Netmask:   255.255.255.0
+<a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>Broadcast: 10.10.10.255
+<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>Hostmin:   10.10.10.1
+<a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a>Hostmax:   10.10.10.254
+<a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>Hosts/Net: 254
+<a id="__codelineno-49-7" name="__codelineno-49-7" href="#__codelineno-49-7"></a>
+<a id="__codelineno-49-8" name="__codelineno-49-8" href="#__codelineno-49-8"></a>10.10.10.0 10.10.10.255 256
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: ipcalc</code></strong> — Install ipcalc with <code>apt-get install ipcalc</code> (Debian/Ubuntu) or <code>yum install ipcalc</code> (RHEL/CentOS).
+<strong><code>ModuleNotFoundError: No module named 'ipaddress'</code></strong> — Upgrade to Python 3.3+ or install the backport with <code>pip install ipaddress</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ipcalc<span class="w"> </span><span class="m">10</span>.10.10.45/24
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a><span class="c1"># Returns: network, broadcast, first/last usable host</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>Address:   10.10.10.45
+<a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>Netmask:   255.255.255.0 = 24
+<a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>Wildcard:  0.0.0.255
+<a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a>Network:   10.10.10.0/24
+<a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a>HostMin:   10.10.10.1
+<a id="__codelineno-51-6" name="__codelineno-51-6" href="#__codelineno-51-6"></a>HostMax:   10.10.10.254
+<a id="__codelineno-51-7" name="__codelineno-51-7" href="#__codelineno-51-7"></a>Broadcast: 10.10.10.255
+<a id="__codelineno-51-8" name="__codelineno-51-8" href="#__codelineno-51-8"></a>Hosts/Net: 254
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ipcalc: command not found</code></strong> — Install ipcalc with <code>apt-get install ipcalc</code> (Debian/Ubuntu) or <code>yum install ipcalc</code> (RHEL/CentOS).
+<strong><code>ipcalc: invalid address 10.10.10.45/24</code></strong> — Verify the CIDR notation is correct; use a valid IP address and prefix length (e.g., <code>ipcalc 10.10.10.45/24</code>).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="s2">import ipaddress</span>
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="s2">a = ipaddress.ip_address(&#39;10.10.10.45&#39;)</span>
+<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="s2">b = ipaddress.ip_address(&#39;10.10.10.200&#39;)</span>
+<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="s2">net = ipaddress.ip_network(&#39;10.10.10.0/24&#39;)</span>
+<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="s2">print(a in net, b in net)</span>
+<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>True False
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ModuleNotFoundError: No module named 'ipaddress'</code></strong> — Install Python 3.3+ or use <code>python3 -m pip install ipaddress</code> on older Python versions (ipaddress is built-in for Python 3.3+, so verify your Python version with <code>python3 --version</code>).
+<strong><code>SyntaxError: invalid syntax</code></strong> — Ensure you're using <code>python3</code> not <code>python</code> (which may point to Python 2), or check that the multi-line string is properly quoted with matching single or double quotes.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="c1"># Linux — show all routes</span>
+<a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a>
+<a id="__codelineno-54-4" name="__codelineno-54-4" href="#__codelineno-54-4"></a><span class="c1"># Check for overlap manually or with ipcalc</span>
+<a id="__codelineno-54-5" name="__codelineno-54-5" href="#__codelineno-54-5"></a>ipcalc<span class="w"> </span>&lt;new_network&gt;/&lt;prefix&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>default via 192.168.1.1 dev eth0 proto dhcp metric 100
+<a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.50 metric 100
+<a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a>10.0.0.0/8 via 192.168.1.254 dev eth0 metric 50
+<a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a>172.16.0.0/12 dev tun0 proto none scope link metric 1000
+<a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a>fe80::/64 dev eth0 proto kernel metric 256 pref medium
+<a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a>
+<a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a>Address:   10.20.30.0
+<a id="__codelineno-55-8" name="__codelineno-55-8" href="#__codelineno-55-8"></a>Netmask:   255.255.255.0
+<a id="__codelineno-55-9" name="__codelineno-55-9" href="#__codelineno-55-9"></a>Broadcast: 10.20.30.255
+<a id="__codelineno-55-10" name="__codelineno-55-10" href="#__codelineno-55-10"></a>Network:   10.20.30.0/24
+<a id="__codelineno-55-11" name="__codelineno-55-11" href="#__codelineno-55-11"></a>HostMin:   10.20.30.1
+<a id="__codelineno-55-12" name="__codelineno-55-12" href="#__codelineno-55-12"></a>HostMax:   10.20.30.254
+<a id="__codelineno-55-13" name="__codelineno-55-13" href="#__codelineno-55-13"></a>Hosts/Net: 254
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: ipcalc</code></strong> — Install ipcalc with <code>apt install ipcalc</code> (Debian/Ubuntu) or <code>yum install ipcalc</code> (RHEL/CentOS).
+<strong><code>CIDR &lt;new_network&gt;/&lt;prefix&gt;: Invalid CIDR address</code></strong> — Verify the network address is valid (e.g., <code>10.20.30.0/24</code> not <code>10.20.30.5/24</code>).</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a>ip<span class="w"> </span>addr<span class="w"> </span>add<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>dev<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-56-4" name="__codelineno-56-4" href="#__codelineno-56-4"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span>default<span class="w"> </span>via<span class="w"> </span>&lt;gateway&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="nb">Get-NetIPAddress</span>
+<a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a><span class="nb">Get-NetIPConfiguration</span>
+<a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">all</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="c1"># Test TCP port reachability</span>
+<a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>telnet<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>
+<a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a><span class="c1"># PowerShell</span>
+<a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a>Test-NetConnection<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-Port<span class="w"> </span>&lt;port&gt;
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>Connection to 192.168.1.42 22 port [tcp/ssh] succeeded!
+<a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>Trying 192.168.1.42...
+<a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>Connected to 192.168.1.42.
+<a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a>Escape character is &#39;^]&#39;.
+<a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a>SSH-2.0-OpenSSH_7.4
+<a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a>
+<a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a>TNComputerName   : db-server-01.corp.local
+<a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a>RemoteAddress    : 192.168.1.42
+<a id="__codelineno-59-9" name="__codelineno-59-9" href="#__codelineno-59-9"></a>RemotePort       : 22
+<a id="__codelineno-59-10" name="__codelineno-59-10" href="#__codelineno-59-10"></a>InterfaceAlias   : Ethernet
+<a id="__codelineno-59-11" name="__codelineno-59-11" href="#__codelineno-59-11"></a>SourceAddress    : 192.168.1.100
+<a id="__codelineno-59-12" name="__codelineno-59-12" href="#__codelineno-59-12"></a>TcpTestSucceeded : True
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Verify the hostname is correct and resolvable with <code>nslookup &lt;host&gt;</code> or check DNS configuration.
+<strong><code>Connection refused</code></strong> — Confirm the service is running on the target port with <code>ss -tlnp | grep &lt;port&gt;</code> on the remote host.
+<strong><code>No route to host</code></strong> — Check network connectivity and firewall rules with <code>ping &lt;host&gt;</code> and verify the route exists using <code>ip route show</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a>ss<span class="w"> </span>-tnp<span class="w">         </span><span class="c1"># TCP connections with process info</span>
+<a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a>ss<span class="w"> </span>-tnlp<span class="w">        </span><span class="c1"># listening ports</span>
+<a id="__codelineno-60-4" name="__codelineno-60-4" href="#__codelineno-60-4"></a>netstat<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># legacy equivalent</span>
+<a id="__codelineno-60-5" name="__codelineno-60-5" href="#__codelineno-60-5"></a>
+<a id="__codelineno-60-6" name="__codelineno-60-6" href="#__codelineno-60-6"></a><span class="c1"># Windows</span>
+<a id="__codelineno-60-7" name="__codelineno-60-7" href="#__codelineno-60-7"></a>netstat<span class="w"> </span>-ano
+<a id="__codelineno-60-8" name="__codelineno-60-8" href="#__codelineno-60-8"></a>Get-NetTCPConnection
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a># Linux output from ss -tnp
+<a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
+<a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a>ESTAB      0      0      192.168.1.45:22         203.0.113.12:54321 users:((&quot;sshd&quot;,pid=2847,fd=3))
+<a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a>ESTAB      0      0      192.168.1.45:443        198.51.100.8:49152 users:((&quot;nginx&quot;,pid=1203,fd=12))
+<a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a>LISTEN     0      128    0.0.0.0:22              0.0.0.0:*        users:((&quot;sshd&quot;,pid=891,fd=4))
+<a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a>LISTEN     0      511    127.0.0.1:5432          0.0.0.0:*        users:((&quot;postgres&quot;,pid=3421,fd=5))
+<a id="__codelineno-61-7" name="__codelineno-61-7" href="#__codelineno-61-7"></a>
+<a id="__codelineno-61-8" name="__codelineno-61-8" href="#__codelineno-61-8"></a># Linux output from ss -tnlp
+<a id="__codelineno-61-9" name="__codelineno-61-9" href="#__codelineno-61-9"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
+<a id="__codelineno-61-10" name="__codelineno-61-10" href="#__codelineno-61-10"></a>LISTEN     0      128    0.0.0.0:22              0.0.0.0:*        users:((&quot;sshd&quot;,pid=891,fd=4))
+<a id="__codelineno-61-11" name="__codelineno-61-11" href="#__codelineno-61-11"></a>LISTEN     0      511    127.0.0.1:5432          0.0.0.0:*        users:((&quot;postgres&quot;,pid=3421,fd=5))
+<a id="__codelineno-61-12" name="__codelineno-61-12" href="#__codelineno-61-12"></a>LISTEN     0      128    0.0.0.0:80              0.0.0.0:*        users:((&quot;nginx&quot;,pid=1203,fd=8))
+<a id="__codelineno-61-13" name="__codelineno-61-13" href="#__codelineno-61-13"></a>
+<a id="__codelineno-61-14" name="__codelineno-61-14" href="#__codelineno-61-14"></a># Windows output from netstat -ano
+<a id="__codelineno-61-15" name="__codelineno-61-15" href="#__codelineno-61-15"></a>Proto  Local Address          Foreign Address        State           PID
+<a id="__codelineno-61-16" name="__codelineno-61-16" href="#__codelineno-61-16"></a>TCP    0.0.0.0:22             0.0.0.0:0              LISTENING       2847
+<a id="__codelineno-61-17" name="__codelineno-61-17" href="#__codelineno-61-17"></a>TCP    192.168.1.100:443      203.0.113.12:54321     ESTABLISHED     1203
+<a id="__codelineno-61-18" name="__codelineno-61-18" href="#__codelineno-61-18"></a>TCP    127.0.0.1:5432         0.0.0.0:0              LISTENING       3421
+<a id="__codelineno-61-19" name="__codelineno-61-19" href="#__codelineno-61-19"></a>TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       891
+<a id="__codelineno-61-20" name="__codelineno-61-20" href="#__codelineno-61-20"></a>
+<a id="__codelineno-61-21" name="__codelineno-61-21" href="#__codelineno-61-21"></a># Windows output from Get-NetTCPConnection
+<a id="__codelineno-61-22" name="__codelineno-61-22" href="#__codelineno-61-22"></a>LocalAddress      LocalPort RemoteAddress RemotePort State       OwningProcess
+<a id="__codelineno-61-23" name="__codelineno-61-23" href="#__codelineno-61-23"></a>0.0.0.0           22        0.0.0.0       0          Listen      2847
+<a id="__codelineno-61-24" name="__codelineno-61-24" href="#__codelineno-61-24"></a>192.168.1.100     443       203.0.113.12  54321      Established 1203
+<a id="__codelineno-61-25" name="__codelineno-61-25" href="#__codelineno-61-25"></a>127.0.0.1         5432      0.0.0.0       0          Listen      3421
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ss: No such file or directory</code></strong> — Install iproute2 package with <code>apt install iproute2</code> (Debian/Ubuntu) or <code>yum install iproute2</code> (RHEL/CentOS).
+<strong><code>netstat: command not found</code></strong> — Install net-tools with <code>apt install net-tools</code> or use <code>ss</code> instead, which is the modern replacement.
+<strong><code>Access denied</code> (Windows)</strong> — Run PowerShell or Command Prompt as Administrator to view all process information.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="c1"># Check interface MTU</span>
+<a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>
+<a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a><span class="c1"># Test path MTU (don&#39;t-fragment bit)</span>
+<a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># 1500 MTU test</span>
+<a id="__codelineno-62-6" name="__codelineno-62-6" href="#__codelineno-62-6"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># 9000 MTU test</span>
+<a id="__codelineno-62-7" name="__codelineno-62-7" href="#__codelineno-62-7"></a>
+<a id="__codelineno-62-8" name="__codelineno-62-8" href="#__codelineno-62-8"></a><span class="c1"># Windows</span>
+<a id="__codelineno-62-9" name="__codelineno-62-9" href="#__codelineno-62-9"></a>ping<span class="w"> </span>/f<span class="w"> </span>/l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 
 
@@ -7028,7 +7513,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

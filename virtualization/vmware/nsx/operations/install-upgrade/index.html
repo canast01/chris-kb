@@ -9282,41 +9282,159 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/upgrade/status-summary&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On Edge node CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>version
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># All peers should be Established</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># NSX Manager cluster health</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nsxcli
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>get<span class="w"> </span>managers
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>get<span class="w"> </span>services
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Transport node health</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check: up_count equals total_count</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Edge cluster health and BGP</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># SSH to each Edge node</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Open alarms</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Should return result_count: 0</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># DFW rule push</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;upgrade_status&quot;: &quot;READY&quot;,
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;current_version&quot;: &quot;3.2.1.0&quot;,
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &quot;target_version&quot;: &quot;3.2.2.0&quot;,
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &quot;upgrade_progress&quot;: 0,
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  &quot;upgrade_start_time&quot;: null,
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  &quot;upgrade_end_time&quot;: null,
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  &quot;upgrade_duration&quot;: null,
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  &quot;upgrade_error&quot;: null,
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  &quot;upgrade_error_details&quot;: null,
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  &quot;node_upgrade_status&quot;: [
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    {
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>      &quot;node_id&quot;: &quot;nsx-mgr-01&quot;,
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>      &quot;node_ip&quot;: &quot;192.168.1.50&quot;,
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      &quot;upgrade_status&quot;: &quot;READY&quot;,
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      &quot;current_version&quot;: &quot;3.2.1.0&quot;
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    },
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    {
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>      &quot;node_id&quot;: &quot;nsx-mgr-02&quot;,
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>      &quot;node_ip&quot;: &quot;192.168.1.51&quot;,
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>      &quot;upgrade_status&quot;: &quot;READY&quot;,
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>      &quot;current_version&quot;: &quot;3.2.1.0&quot;
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    },
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    {
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>      &quot;node_id&quot;: &quot;nsx-mgr-03&quot;,
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>      &quot;node_ip&quot;: &quot;192.168.1.52&quot;,
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>      &quot;upgrade_status&quot;: &quot;READY&quot;,
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>      &quot;current_version&quot;: &quot;3.2.1.0&quot;
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>    }
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>  ]
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's certificate into your system trust store.
+<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the account has not been locked after failed login attempts.
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct, reachable on the network, and the management service is running with <code>systemctl status nsx-manager</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On Edge node CLI</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>get<span class="w"> </span>version
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># All peers should be Established</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NSX Edge&gt; get version
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>NSX Edge version: 6.4.13.1 Build 21589934
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>NSX Edge&gt; get bgp neighbor summary
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>BGP router identifier 192.168.100.1, local AS number 65001
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>10.0.0.1        4 65002    1247    1251        0    0    0 5d12h34m Established
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>10.0.0.2        4 65002    1248    1250        0    0    0 5d12h34m Established
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>10.0.0.3        4 65003     892     895        0    0    0 2d08h12m Established
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>10.0.0.4        4 65003     156     159        0    0    0 00h47m23s Connect
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>State/PfxRcd: Connect</code></strong> — Verify BGP neighbor configuration and network connectivity; check firewall rules allowing TCP 179 between Edge and peer.
+<strong><code>State/PfxRcd: Idle</code></strong> — Confirm BGP neighbor IP address is reachable and the remote AS number matches the configuration on both sides.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># NSX Manager cluster health</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nsxcli
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>get<span class="w"> </span>services
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Transport node health</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Check: up_count equals total_count</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Edge cluster health and BGP</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># SSH to each Edge node</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Open alarms</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Should return result_count: 0</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># DFW rule push</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>nsx-manager-01&gt; get cluster status
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Cluster Status: STABLE
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Leader: nsx-manager-01 (192.168.1.10)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Follower: nsx-manager-02 (192.168.1.11)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Follower: nsx-manager-03 (192.168.1.12)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>nsx-manager-01&gt; get managers
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>UUID                                   Hostname            IP              Status
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>550e8400-e29b-41d4-a716-446655440001   nsx-manager-01      192.168.1.10    UP
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>550e8400-e29b-41d4-a716-446655440002   nsx-manager-02      192.168.1.11    UP
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>550e8400-e29b-41d4-a716-446655440003   nsx-manager-03      192.168.1.12    UP
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>nsx-manager-01&gt; get services
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Service Name              Status    PID
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>nsx-manager              UP        2847
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>policy-service          UP        3156
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>search-service          UP        3421
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>cluster-service         UP        2934
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>{
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  &quot;result_count&quot;: 24,
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  &quot;results&quot;: [
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    {
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>      &quot;node_id&quot;: &quot;tn-edge-01&quot;,
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>      &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>      &quot;up_count&quot;: 2,
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>      &quot;total_count&quot;: 2
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    },
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>    {
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>      &quot;node_id&quot;: &quot;tn-host-01&quot;,
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>      &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>      &quot;up_count&quot;: 4,
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>      &quot;total_count&quot;: 4
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>    }
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>  ]
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>}
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>edge-node-01&gt; get version
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>Product: NSX-T
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>Version: 3.2.1.0
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>Build: 19480675
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>edge-node-01&gt; get bgp neighbor summary
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>BGP router identifier 10.0.0.1, local AS number 65001
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>10.0.0.254      4 65000    1247    1251        8    0    0 00:42:18 Established
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>10.0.1.254      4 65000    1248    1252        8    0    0 00:42:15 Established
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>edge-node-01&gt; get edge-cluster status
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>Edge Cluster: edge-cluster-01
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>Member: edge-node-01 (Active)
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a>Member: edge-node-02 (Standby)
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a>
+<a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>{
+<a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a>  &quot;result_count&quot;: 0,
+<a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a>  &quot;results&quot;: []
+<a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification, or import the NSX Manager certificate into your CA bundle.
+<strong><code>401 Unauthorized</code></strong> — Verify the admin credentials in the curl command are correct and the user has API access permissions in NSX Manager.
+<strong><code>Cluster Status: UNSTABLE</code></strong> — Check the NSX Manager node connectivity and logs with <code>get log follow</code> to identify which manager is down, then restart the failed node's services.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9364,7 +9482,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

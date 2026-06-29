@@ -8182,47 +8182,79 @@ SMB Share Permissions reference covering Overview, Viewing and Setting Share Per
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List all shares on the local server</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>net<span class="w"> </span>share
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Finance was shared successfully.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Finance$ was shared successfully.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Finance was deleted successfully.
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Share name        C$
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Remote path       C:\
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Remark            Default share
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Path              C:\
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Share name        IPC$
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Remote path       IPC
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Remark            Remote IPC
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Path              
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Share name        Finance$
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Remote path       C:\Shares\Finance
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Remark            
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Path              C:\Shares\Finance
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>Share name        ADMIN$
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Remote path       C:\Windows
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>Remark            Remote Admin
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>Path              C:\Windows
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>The command completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>System error 5 has occurred. Access is denied.</code></strong> — Run the command prompt as Administrator.
+<strong><code>System error 67 has occurred. The network name cannot be found.</code></strong> — Verify the path C:\Shares\Finance exists and is accessible before creating the share.
+<strong><code>The syntax of this command is not correct.</code></strong> — Ensure the domain\username format is correct and use commas without spaces in the /GRANT parameter (e.g., <code>DOMAIN\Finance_Users,CHANGE</code>).</p>
+</div>
 <h2 id="combining-ntfs-and-share-permissions">Combining NTFS and Share Permissions<a class="headerlink" href="#combining-ntfs-and-share-permissions" title="Permanent link">&para;</a></h2>
 <p>Effective access for a network user equals the intersection (most restrictive) of share and NTFS permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="l l-Scalar l-Scalar-Plain">Effective = MIN(Share Permission, NTFS Permission)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="l l-Scalar l-Scalar-Plain">Example A</span><span class="p p-Indicator">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Read</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Modify</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (share is the bottleneck)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">Example B</span><span class="p">:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Full Control</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Read</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (NTFS is the bottleneck)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">Effective = MIN(Share Permission, NTFS Permission)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="l l-Scalar l-Scalar-Plain">Example A</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Read</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Modify</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (share is the bottleneck)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">Example B</span><span class="p">:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Full Control</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Read</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (NTFS is the bottleneck)</span>
 </code></pre></div>
 <p>Best practice: set share to <strong>Everyone: Full Control</strong>, then use NTFS permissions exclusively. This avoids confusing double-restriction calculations and simplifies troubleshooting.</p>
 <h2 id="powershell-share-creation">PowerShell Share Creation<a class="headerlink" href="#powershell-share-creation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create share with granular access tiers</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>             <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>             <span class="n">-Description</span> <span class="s2">&quot;Finance department share&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>             <span class="n">-FullAccess</span> <span class="s2">&quot;DOMAIN\Domain Admins&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>             <span class="n">-ChangeAccess</span> <span class="s2">&quot;DOMAIN\Finance_Users&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>             <span class="n">-ReadAccess</span> <span class="s2">&quot;DOMAIN\Finance_ReadOnly&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Modify share properties after creation</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Updated Finance share&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Limit concurrent connections</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">50</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create share with granular access tiers</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>             <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>             <span class="n">-Description</span> <span class="s2">&quot;Finance department share&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>             <span class="n">-FullAccess</span> <span class="s2">&quot;DOMAIN\Domain Admins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>             <span class="n">-ChangeAccess</span> <span class="s2">&quot;DOMAIN\Finance_Users&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>             <span class="n">-ReadAccess</span> <span class="s2">&quot;DOMAIN\Finance_ReadOnly&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Modify share properties after creation</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Updated Finance share&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Limit concurrent connections</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">50</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="auditing-share-permission-changes">Auditing Share Permission Changes<a class="headerlink" href="#auditing-share-permission-changes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Export all share permissions to CSV for documentation</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$share</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="nv">$share</span><span class="p">.</span><span class="n">Name</span> <span class="p">|</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Share&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$share</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">AccountName</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">AccessRight</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Audit\SharePermissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="o">-f</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Review share access events (Event ID 5140 = share accessed)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">5140</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Export all share permissions to CSV for documentation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nv">$share</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="nv">$share</span><span class="p">.</span><span class="n">Name</span> <span class="p">|</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Share&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$share</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">AccountName</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">AccessRight</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Audit\SharePermissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="o">-f</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Review share access events (Event ID 5140 = share accessed)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">5140</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 
 
@@ -8246,7 +8278,7 @@ SMB Share Permissions reference covering Overview, Viewing and Setting Share Per
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

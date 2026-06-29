@@ -8251,9 +8251,24 @@ MySQL encryption — InnoDB tablespace encryption (TDE), SSL/TLS for connections
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--encrypt-key-file<span class="o">=</span>/etc/xtrabackup.key<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--target-dir<span class="o">=</span>/backup/xb-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>xtrabackup: recognized server arguments: --datadir=/var/lib/mysql --port=3306
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>xtrabackup: recognized client arguments: --socket=/var/run/mysqld/mysqld.sock
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>230415 14:32:18 Backup created in directory &#39;/backup/xb-2024-04-15&#39;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>230415 14:32:18 MySQL binlog position: filename &#39;mysql-bin.000042&#39;, position &#39;1847293&#39;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>230415 14:32:45 [00] Encrypting backup with AES256...
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>230415 14:32:52 [00] Encryption completed
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>230415 14:32:52 Backup successfully prepared
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>230415 14:32:53 All done! Backup saved in &#39;/backup/xb-2024-04-15&#39;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>xtrabackup: error: failed to read encryption key from '/etc/xtrabackup.key': Permission denied</code></strong> — Ensure the key file is readable by the MySQL/backup user with <code>chmod 400 /etc/xtrabackup.key &amp;&amp; chown mysql:mysql /etc/xtrabackup.key</code>.
+<strong><code>xtrabackup: error: Target directory '/backup/xb-2024-04-15' already exists</code></strong> — Remove the existing backup directory or use a unique target directory name with a different timestamp or suffix.
+<strong><code>xtrabackup: error: Failed to connect to MySQL server on 'localhost' (111)</code></strong> — Verify MySQL is running with <code>systemctl status mysql</code> and check socket/port connectivity.</p>
+</div>
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Rotate the master key (re-encrypts all tablespace keys)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="n">ROTATE</span><span class="w"> </span><span class="n">INNODB</span><span class="w"> </span><span class="n">MASTER</span><span class="w"> </span><span class="k">KEY</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Rotate the master key (re-encrypts all tablespace keys)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="n">ROTATE</span><span class="w"> </span><span class="n">INNODB</span><span class="w"> </span><span class="n">MASTER</span><span class="w"> </span><span class="k">KEY</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8284,7 +8299,7 @@ MySQL encryption — InnoDB tablespace encryption (TDE), SSL/TLS for connections
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
   </span>
 
     

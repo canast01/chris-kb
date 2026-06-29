@@ -9514,6 +9514,33 @@ VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution 
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>store<span class="w"> </span>list
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/var/lib/vmware/vmca/ca.crt
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/var/lib/vmware/vmca/ca.key
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Store : MACHINE_SSL_CERT
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Store : TRUSTED_ROOT_CRTS
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Store : TRUSTED_MGMT_CRTS
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Store : VSPHERE_LOGIN_BANNER
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Entry [1]:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    Alias: __MACHINE_CERT
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    Certificate DN: CN=vcenter-01.lab.local,O=lab,C=US
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    Not Before: Jan 15 10:23:45 2024 GMT
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Not After: Jan 15 10:23:45 2027 GMT
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Fingerprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D:7E:8F
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Entry [2]:
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    Alias: __MACHINE_CERT_CA
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    Certificate DN: CN=VMware-VMCA,O=VMware,C=US
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    Not Before: Jan 10 08:15:30 2023 GMT
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    Not After: Jan 10 08:15:30 2033 GMT
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    Fingerprint: F1:E2:D3:C4:B5:A6:97:88:79:6A:5B:4C:3D:2E:1F:0G:AH:BI
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not connect to VMware Certificate Store. Error code: 1</code></strong> — Ensure the vmafd service is running with <code>systemctl status vmware-vmafd</code> and restart if needed.
+<strong><code>Error: Permission denied</code></strong> — Run the vecs-cli commands with root privileges using <code>sudo</code> or from a root shell session.</p>
+</div>
 <h2 id="trust-hierarchy">Trust Hierarchy<a class="headerlink" href="#trust-hierarchy" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9609,17 +9636,55 @@ When the STS signing cert expires, all SAML token validation fails. Symptoms:
 - REST API calls return 401 Unauthorized.
 - Local <code>administrator@vsphere.local</code> login also fails (uses SSO).</p>
 <p><strong>Recovery when STS is expired:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to vCenter as root (DCUI or direct SSH — SSO login is broken)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Navigate to STS renewal script</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">cd</span><span class="w"> </span>/usr/lib/vmware-vmca/bin/
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Run the STS renewal script (vSphere 7.x)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>python<span class="w"> </span>/usr/lib/vmware-vmca/bin/certificate_manager.py
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Select option 8: Reset all certificates (or specific STS renewal option)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Alternative: use the STS renewal script directly</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>/usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to vCenter as root (DCUI or direct SSH — SSO login is broken)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Navigate to STS renewal script</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>/usr/lib/vmware-vmca/bin/
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Run the STS renewal script (vSphere 7.x)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>python<span class="w"> </span>/usr/lib/vmware-vmca/bin/certificate_manager.py
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Select option 8: Reset all certificates (or specific STS renewal option)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Alternative: use the STS renewal script directly</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>/usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@vcenter-01 [ ~ ]# cd /usr/lib/vmware-vmca/bin/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>root@vcenter-01 [ /usr/lib/vmware-vmca/bin ]# python /usr/lib/vmware-vmca/bin/certificate_manager.py
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     *** Welcome to the vSphere Certificate Manager ***
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>     1. Replace Machine SSL certificate with Custom Certificate
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>     2. Replace VMCA Root certificate with Custom Signing Certificate
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     3. Replace Machine SSL certificate with VMCA-signed certificate
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>     4. Regenerate a new VMCA Root certificate and replace all certificates
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     5. Replace Solution user certificates
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>     6. Replace Machine SSL certificate with Custom Certificate (API)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>     7. Regenerate all certificates
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>     8. Reset all certificates
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>     9. Exit
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>     Select an option [1 to 9]: 8
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>     Retrieving VMCA certificates...
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>     Stopping services...
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>     Backing up certificates to /etc/vmware-vpx/ssl-backup-20240115-143022/
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>     Regenerating STS certificate...
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>     Regenerating Machine SSL certificate...
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>     Restarting services...
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>     Certificate reset completed successfully.
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>     All services are running.
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>root@vcenter-01 [ /usr/lib/vmware-vmca/bin ]# /usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Renewing STS certificate...
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>STS certificate renewal completed. Service restart required.
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Restarting vmware-stsd service...
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Service restarted successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>python: command not found</code></strong> — Use <code>python3</code> instead, or check PATH with <code>which python3</code> and create a symlink if needed.
+<strong><code>/usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh: No such file or directory</code></strong> — Verify the vSphere version and correct path with <code>find /usr/lib/vmware-sso -name "*renew*"</code> before running.
+<strong><code>ERROR: Failed to stop service vmware-vpxd</code></strong> — Ensure no active vCenter tasks are running and retry, or manually stop services with <code>service vmware-vpxd stop</code> before certificate renewal.</p>
+</div>
 <h2 id="certificate-renewal-order-critical">Certificate Renewal Order (Critical)<a class="headerlink" href="#certificate-renewal-order-critical" title="Permanent link">&para;</a></h2>
 <p>Renewal must follow this strict order to prevent breaking service-to-service authentication:</p>
 <ol>
@@ -9630,12 +9695,31 @@ When the STS signing cert expires, all SAML token validation fails. Symptoms:
 </ol>
 <p>Renewing out of order can leave services unable to authenticate mid-renewal. Always plan a maintenance window.</p>
 <p><strong>Renew machine SSL using certificate-manager:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to vCenter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmca/bin/certificate_manager
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Option 3: Replace Machine SSL cert with VMCA cert (VMCA-signed renewal)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Option 1: Replace Machine SSL cert with Custom CA cert (enterprise CA path)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to vCenter</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware-vmca/bin/certificate_manager
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Option 3: Replace Machine SSL cert with VMCA cert (VMCA-signed renewal)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Option 1: Replace Machine SSL cert with Custom CA cert (enterprise CA path)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter Certificate Manager
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>1. Replace Machine SSL certificate with VMCA certificate
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2. Replace Machine SSL certificate with Custom CA certificate
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>3. Replace VMCA certificate
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>4. Replace Solution user certificates
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>5. Replace ELM certificate
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>6. Regenerate a new VMCA certificate
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>7. Reset all certificates to defaults
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>8. View/Export certificate details
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Select an option [1-8]:
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: /usr/lib/vmware-vmca/bin/certificate_manager: No such file or directory</code></strong> — Verify the vCenter version and ensure the certificate_manager utility exists at that path; on newer versions it may be located at <code>/usr/lib/vmware-vmafd/bin/certificate_manager</code>.
+<strong><code>Error: Unable to connect to local service</code></strong> — Ensure the vCenter services (vmafd, vmca) are running with <code>systemctl status vmware-vmafd</code> and restart if needed.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root since certificate operations require elevated privileges.</p>
+</div>
 <h2 id="esxi-certificate-management">ESXi Certificate Management<a class="headerlink" href="#esxi-certificate-management" title="Permanent link">&para;</a></h2>
 <p>By default, VMCA issues a unique certificate per ESXi host when the host is added to vCenter inventory.</p>
 <table>
@@ -9664,15 +9748,38 @@ When the STS signing cert expires, all SAML token validation fails. Symptoms:
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Renew ESXi host cert via vCenter push (PowerCLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$hosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>foreach<span class="w"> </span><span class="o">(</span><span class="nv">$h</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$hosts</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nv">$h</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHost<span class="w"> </span>-CertificateOperation<span class="w"> </span>Refresh
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">}</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Or from ESXi host CLI</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>security<span class="w"> </span>certificatestore<span class="w"> </span>refresh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Renew ESXi host cert via vCenter push (PowerCLI)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$hosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>foreach<span class="w"> </span><span class="o">(</span><span class="nv">$h</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$hosts</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nv">$h</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHost<span class="w"> </span>-CertificateOperation<span class="w"> </span>Refresh
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">}</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Or from ESXi host CLI</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>security<span class="w"> </span>certificatestore<span class="w"> </span>refresh
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Connecting to vCenter server vcenter.lab.local...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Connected to vCenter 7.0.3 (Build 19480866)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Processing host: esx-prod-01.lab.local
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Certificate refresh initiated for esx-prod-01.lab.local
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Refresh completed successfully. New cert valid until: 2026-03-15
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Processing host: esx-prod-02.lab.local
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Certificate refresh initiated for esx-prod-02.lab.local
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Refresh completed successfully. New cert valid until: 2026-03-15
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Processing host: esx-prod-03.lab.local
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Certificate refresh initiated for esx-prod-03.lab.local
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Refresh completed successfully. New cert valid until: 2026-03-15
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Certificate refresh operation completed for 3 hosts.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Verify vCenter SSL certificate is valid and the FQDN matches the certificate CN; if using self-signed certs, add <code>-WarningAction SilentlyContinue</code> or update your certificate.
+<strong><code>esxcli system security certificatestore refresh: Error: Certificate refresh failed - unable to contact vCenter</code></strong> — Ensure the ESXi host can reach vCenter on port 443 and that the host is registered with vCenter.
+<strong><code>Set-VMHost : The operation is not supported on the object.</code></strong> — Confirm the ESXi host is in a connected state (not disconnected or in maintenance mode) and that you have Administrator privileges in vCenter.</p>
+</div>
 <h2 id="common-certificate-failure-scenarios">Common Certificate Failure Scenarios<a class="headerlink" href="#common-certificate-failure-scenarios" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9732,7 +9839,7 @@ When the STS signing cert expires, all SAML token validation fails. Symptoms:
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

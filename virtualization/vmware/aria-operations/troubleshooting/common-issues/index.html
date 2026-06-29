@@ -9208,67 +9208,220 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Restart the watchdog (restarts failed services automatically)</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>service<span class="w"> </span>vmware-vcops-watchdog<span class="w"> </span>restart
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check analytics processing — if analytics queue is backed up, processing is delayed</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;queue\|backlog\|warn\|error&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check GemFire (real-time cache) health</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-100<span class="w"> </span>/data/vcops/log/gemfire/vcopssuite_gemfire.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;warn\|error&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Confirm the adapter is actually collecting (not just in a Collecting state with zero data)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name, lastCollected: .identifier}&#39;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@vrops-prod-01.example.local&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Adapter Name          Status    Version    Last Heartbeat
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VMwareAdapter         STARTED   8.10.1     2024-01-15 14:32:18
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vSphereAdapter        STARTED   8.10.1     2024-01-15 14:31:55
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>NSXAdapter            STOPPED   8.10.1     2024-01-15 14:15:42
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>CustomAdapter         ERROR     8.10.0     2024-01-15 13:48:09
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15 14:35:22 ERROR [AdapterManager] VMwareAdapter connection timeout after 30s
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15 14:34:18 EXCEPTION [CollectorService] java.net.SocketTimeoutException: Connection refused
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-15 14:33:05 ERROR [AuthHandler] Authentication failed for vCenter credentials
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>VMwareAdapter
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NSXAdapter
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vSphereAdapter
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>2024-01-15 14:28:33 ERROR [VMwareAdapter] Failed to authenticate: Invalid credentials for vcenter.example.com
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>2024-01-15 14:27:15 ERROR [ConnectionPool] Connection timeout: vcenter.example.com:443
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2024-01-15 14:26:42 AUTH [SSLContext] Certificate validation failed for host
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Stopping vmware-vcops-watchdog: [  OK  ]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Starting vmware-vcops-watchdog: [  OK  ]
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Force a capacity recalculation</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/analytics/run&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;analyticsJobName&quot;: &quot;CapacityAnalytics&quot;}&#39;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ERROR [AdapterManager] VMwareAdapter connection timeout after 30s</code></strong> — Verify network connectivity to the target vCenter and check firewall rules allowing port 443 from the vROps appliance.
+<strong><code>ERROR [AuthHandler] Authentication failed for vCenter credentials</code></strong> — Re-enter the vCenter adapter credentials in the vROps UI under Administration &gt; Adapters and ensure the service account password has not expired.
+<strong><code>Certificate validation failed for host</code></strong> — Add the vCenter SSL certificate to the vROps trust store using <code>vracli certificate add --file /path/to/cert.pem</code> or disable certificate validation in the adapter configuration if using a self-signed cert.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check analytics processing — if analytics queue is backed up, processing is delayed</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;queue\|backlog\|warn\|error&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check GemFire (real-time cache) health</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-100<span class="w"> </span>/data/vcops/log/gemfire/vcopssuite_gemfire.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;warn\|error&quot;</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check analytics job status</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Confirm the adapter is actually collecting (not just in a Collecting state with zero data)</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/analytics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | select(.name == &quot;CapacityAnalytics&quot;) | {status: .status, lastRun: .lastRunTime}&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name, lastCollected: .identifier}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test LDAP connectivity from the Aria Operations appliance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Manually test LDAP bind</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrops-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>sAMAccountName<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>==&gt; tail -200 /data/vcops/log/analytics.log | grep -i &quot;queue\|backlog\|warn\|error&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15 14:32:18,445 WARN  [AnalyticsProcessor-7] Queue depth at 8,234 events — processing lag detected
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15 14:33:02,891 WARN  [AnalyticsProcessor-12] Backlog threshold exceeded: 12,456 pending calculations
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15 14:33:45,123 ERROR [AnalyticsQueue] Failed to dequeue metric batch: timeout after 30s
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15 14:34:12,567 WARN  [MetricsAggregator] Queue utilization at 87% capacity
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>==&gt; tail -100 /data/vcops/log/gemfire/vcopssuite_gemfire.log | grep -i &quot;warn\|error&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15 14:35:01,234 WARN  [GemFireServer-1] Member vrops-prod-02.example.local:40404 slow to respond (latency 2847ms)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15 14:35:33,456 WARN  [CacheManager] Eviction triggered — heap usage at 91%
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>==&gt; curl -sk -H &quot;Authorization: vRealizeOpsToken $TOKEN&quot; &quot;https://vrops-prod-01.example.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5&quot; | jq &#39;.resourceList[] | {name: .resourceKey.name, lastCollected: .identifier}&#39;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>{
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  &quot;name&quot;: &quot;prod-web-01.example.local&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;lastCollected&quot;: &quot;2024-01-15T14:38:22Z&quot;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>}
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>{
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;name&quot;: &quot;prod-db-02.example.local&quot;,
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;lastCollected&quot;: &quot;2024-01-15T14:38:19Z&quot;
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>}
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>{
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;name&quot;: &quot;prod-app-03.example.local&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;lastCollected&quot;: &quot;2024-01-15T14:38:21Z&quot;
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>}
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>{
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  &quot;name&quot;: &quot;dev-test-04.example.local&quot;,
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  &quot;lastCollected&quot;: &quot;2024-01-15T14:37:55Z&quot;
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>}
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>{
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;name&quot;: &quot;legacy-vm-05.example.local&quot;,
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  &quot;lastCollected&quot;: &quot;2024-01-15T14:36:42Z&quot;
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify SMTP configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.notificationList[] | {name: .name, plugin: .pluginTypeId, enabled: .active}&#39;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Send a test notification via API</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications/&lt;notification-id&gt;/actions/test&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check outbound SMTP from the appliance</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-v<span class="w"> </span>smtp://smtp.example.local:25<span class="w"> </span>--mail-from<span class="w"> </span>aria-ops@corp.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--mail-rcpt<span class="w"> </span>test@corp.local<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the vRops certificate into your system CA bundle with <code>update-ca-certificates</code>.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index array with string "resourceList"</code></strong> — Verify the API token is valid by checking <code>echo $TOKEN</code> and confirm the vRops API endpoint is responding with JSON using <code>curl -sk ... | head -c 200</code>.
+<strong><code>Authorization: vRealizeOpsToken: command not found</code></strong> — Ensure the TOKEN variable is exported in your shell session with <code>export TOKEN=$(cat /path/to/token.txt)</code> before running the curl command.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Force a capacity recalculation</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/analytics/run&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;analyticsJobName&quot;: &quot;CapacityAnalytics&quot;}&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check analytics job status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/analytics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | select(.name == &quot;CapacityAnalytics&quot;) | {status: .status, lastRun: .lastRunTime}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check CPU and memory pressure on the primary node</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check GemFire heap usage (in-memory cache)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>tail<span class="w"> </span>-20<span class="w"> </span>/data/vcops/log/gemfire/vcopssuite_gemfire.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heap\|memory&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check Cassandra compaction — heavy compaction causes query slowness</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>nodetool<span class="w"> </span>compactionstats
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check for very large queries — long-running queries appear in the analytics log</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow\|timeout\|duration&quot;</span>
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{&quot;status&quot;:&quot;RUNNING&quot;,&quot;lastRun&quot;:1699564823000}
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>{&quot;status&quot;:&quot;COMPLETED&quot;,&quot;lastRun&quot;:1699564945000}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the vROps certificate into your system trust store.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index object with string "[]"</code></strong> — Ensure the API response is valid JSON by checking that <code>$TOKEN</code> is set correctly and the vROps instance is accessible; test with <code>curl -sk https://vrops-prod-01.example.local/suite-api/api/analytics</code>.
+<strong><code>{"error":"Invalid token or insufficient permissions"}</code></strong> — Regenerate the API token in vROps Administration &gt; API Access and ensure the service account has Analytics Administrator role assigned.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test LDAP connectivity from the Aria Operations appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Manually test LDAP bind</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrops-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>sAMAccountName<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Connected to vrops-prod-01.example.local.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Testing LDAP source: corp-ldap-prod
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Connection: SUCCESS
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Bind: SUCCESS
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Search: SUCCESS
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>User resolution: SUCCESS
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Test completed successfully.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a># LDAP manual bind test output:
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>version: 3
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a># extended LDIF
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>#
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a># LDAPv3
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a># base &lt;DC=corp,DC=local&gt; with scope subtree
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a># filter (sAMAccountName=testuser)
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a># requesting: sAMAccountName
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>#
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>dn: CN=Test User,OU=Users,OU=Corp,DC=corp,DC=local
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>sAMAccountName: testuser
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a># numResponses: 2
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a># numEntries: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090453, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"</code></strong> — Verify the service account password is correct and the account is not locked; reset credentials in Active Directory if needed.
+<strong><code>ldapsearch: error code 1 "Operations error"</code></strong> — Confirm the LDAP source hostname and port (636 for LDAPS) are correct and the firewall allows outbound connectivity from the Aria Operations appliance to the domain controller.
+<strong><code>vracli: command not found</code></strong> — SSH into the Aria Operations appliance using the correct admin credentials and ensure you are in the correct shell context; try <code>/usr/bin/vracli</code> with the full path if needed.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify SMTP configuration</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.notificationList[] | {name: .name, plugin: .pluginTypeId, enabled: .active}&#39;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Send a test notification via API</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications/&lt;notification-id&gt;/actions/test&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check outbound SMTP from the appliance</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-v<span class="w"> </span>smtp://smtp.example.local:25<span class="w"> </span>--mail-from<span class="w"> </span>aria-ops@corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>--mail-rcpt<span class="w"> </span>test@corp.local<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;name&quot;: &quot;Email Notification&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;plugin&quot;: &quot;EmailNotificationPlugin&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;enabled&quot;: true
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>}
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>{
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;name&quot;: &quot;Slack Integration&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;plugin&quot;: &quot;SlackNotificationPlugin&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;enabled&quot;: false
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>{
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;name&quot;: &quot;PagerDuty Alert&quot;,
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  &quot;plugin&quot;: &quot;PagerDutyNotificationPlugin&quot;,
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;enabled&quot;: true
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>}
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>*   Trying 10.45.120.88...
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>* Connected to vrops-prod-01.example.local (10.45.120.88) port 443 (#0)
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>* Server certificate:
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>*   subject: CN=vrops-prod-01.example.local
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>*   issuer: CN=Example Root CA
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>* SSL connection made
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>&gt; POST /suite-api/api/notifications/notif-8f2c4a91-7e3d-4b2a-9f1c-3d5e8a2b4c6f/actions/test HTTP/1.1
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>&lt; HTTP/1.1 202 Accepted
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>&lt; Content-Type: application/json
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>&lt; X-vRealizeOps-Version: 8.14.1
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>admin@vrops-prod-01.example.local&#39;s password:
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>*   Trying 10.45.120.99...
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>* Connected to smtp.example.local (10.45.120.99) port 25 (#0)
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>&lt; 220 smtp.example.local ESMTP Postfix 3.4.8
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>&gt; EHLO vrops-prod-01.example.local
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>&lt; 250-smtp.example.local
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>&lt; 250-PIPELINING
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>&lt; 250-SIZE 10240000
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>&lt; 250-VRFY
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>&lt; 250 HELP
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>&gt; MAIL FROM:&lt;aria-ops@corp.local&gt;
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>&lt; 250 2.1.0 Ok
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>&gt; RCPT TO:&lt;test@corp.local&gt;
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>&lt; 250 2.1.5 Ok
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification or import the vROps certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to vrops-prod-01.example.local port 443: Connection refused</code></strong> — Verify the vROps appliance is running and accessible on the network; check firewall rules and DNS resolution with <code>nslookup vrops-prod-01.example.local</code>.
+<strong><code>jq: parse error: Invalid JSON</code></strong> — Confirm the <code>$TOKEN</code> variable is set correctly with <code>echo $TOKEN</code> and that the API endpoint is responding with valid JSON using <code>curl -sk ... | head -c 500</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check CPU and memory pressure on the primary node</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check GemFire heap usage (in-memory cache)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>tail<span class="w"> </span>-20<span class="w"> </span>/data/vcops/log/gemfire/vcopssuite_gemfire.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heap\|memory&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check Cassandra compaction — heavy compaction causes query slowness</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>nodetool<span class="w"> </span>compactionstats
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Check for very large queries — long-running queries appear in the analytics log</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow\|timeout\|duration&quot;</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVEtu2zAQ3fsUg-yNwp98Fy0cCQEM1E4gpfGmmzE1kYhQpEBSNoyi2x6gl-m-R8lJOpRkJQslQLriiJo3v_eGmbQkvDT6CqzMCz8apVdwsinQg3TgCwJ3KCtvyi8n8MMVWBE7MgJ1rujn6HrC3osMK08WtPEgjFIhoM4hQ4_DoCmDYnTF1qDNYKtQP4EJ-Hcws5BIkfXgvLHlsNOcnSKsUEh_AIFK1ApDc7C3RufDmFPG7NLFGkrUmFNJ2gNHeIJSOhf6KMlbKdww-ozRa5MRmMdHJTWFPoSqXZgH42sahMVhbPFk8F8S_iU09uQ8HEcbGa1bnuDvH_imleECU7I7KQgWQpha--_6-dfvHhFLJ1oQZcN5AgsPZOXjAVJTWw6UEIoCt1KF8XGeqCBOE7WUcmNfTf7BJHFD9XS4gFnTqDNqR33EZZgZ3EjrPtxPQ35T8UZmOXlIhako9MHfpOFeltwie1MbeW0gZrmB1NCLcZjlJGgkQem4zkaC94UlVxiVheiLLIMNSg_RQShy4Sqtq4o9HMS1DRJaodSeNGrR5W7DpG8qOQm6ujGBlF7PCb1W9E4iLO6WbbjeJ3rlsXlT88n5C_WN9Fcv0r8L0l9q55FZz15UcOSh18AgcNXtzOqdnYkD7_FsuLIL_ndn9pzoVkOzWH0FSx6hHetwtya_N_bpyCPf3Hbr9wmibvuWb25fctkKzyNzsCv3aGm8Y624fqP6nA-L1bKPmHr0tfvPpKMUxp_hetKd0-6cdee8O0-784zfiGAkk6Mx5WVqjNnRmPOr2Bin_PI1xhk_Z41xzlNujIujcTn6B_QdCDM=?" /></p>
@@ -9318,7 +9471,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

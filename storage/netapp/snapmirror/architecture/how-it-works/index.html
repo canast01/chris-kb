@@ -8338,6 +8338,42 @@ How It Works reference covering Overview, Replication Types, Components, Connect
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show transfer history</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source Destination Lag Time Healthy Last Transfer End Timestamp
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>svm_src:vol_src svm_dst:vol_dst 00:15:32 true 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svm_prod:vol_data svm_dr:vol_data 00:08:47 true 2024-01-15 14:39:05 +00:00
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svm_app:vol_logs svm_backup:vol_logs 02:43:21 false 2024-01-15 12:04:33 +00:00
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Source Destination Policy Type Healthy Lag Time
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>svm_dst:vol_dst svm_dst:vol_dst MirrorAllSnapshots XDP true 00:15:32
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Last Transfer Size: 2.5GB
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Last Transfer Duration: 8m 22s
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Last Transfer End Timestamp: 2024-01-15 14:32:18 +00:00
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Unhealthy Reason: -
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Source Destination Relationship Status
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>svm_app:vol_logs svm_backup:vol_logs broken-off
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Operation succeeded: SnapMirror update started for destination svm_dst:vol_dst
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Operation succeeded: SnapMirror resync started for destination svm_dst:vol_dst
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Operation succeeded: SnapMirror break completed for destination svm_dst:vol_dst
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Operation succeeded: SnapMirror initialize started for destination svm_dst:vol_dst
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Operation succeeded: SnapMirror quiesce completed for destination svm_dst:vol_dst
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Source Destination Snapshot Timestamp Transfer Status
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>svm_dst:vol_dst svm_dst:vol_dst sm_daily.0 2024-01-15 14:32:18 +00:00 Success
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>svm_dst:vol_dst svm_dst:vol_dst sm_daily.1 2024-01-14 14:15:42 +00:00 Success
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>svm_dst:vol_dst svm_dst:vol_dst sm_daily.2 2024-01-13 14:08:09 +00:00 Success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: destination path is not a SnapMirror destination</code></strong> — Verify the destination SVM and volume exist and are properly configured as a SnapMirror destination with <code>snapmirror show</code>.
+<strong><code>Error: SnapMirror relationship is not in a state that allows this operation</code></strong> — Ensure the relationship is healthy and not already in a transitional state (quiesced, transferring, or broken-off) before attempting the operation.
+<strong><code>Error: transfer is already in progress for this destination</code></strong> — Wait for the current transfer to complete or abort it with <code>snapmirror abort -destination-path &lt;path&gt;</code> before issuing a new update command.</p>
+</div>
 <h2 id="dr-failover-sequence">DR Failover Sequence<a class="headerlink" href="#dr-failover-sequence" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Detect RPO breach or site failure</strong> — identify that the source is unavailable or lag has exceeded the RPO threshold</li>
@@ -8350,19 +8386,37 @@ How It Works reference covering Overview, Replication Types, Components, Connect
 </ol>
 <h2 id="svm-level-replication">SVM-Level Replication<a class="headerlink" href="#svm-level-replication" title="Permanent link">&para;</a></h2>
 <p>SVM DR replicates the full SVM configuration (volumes, LIFs, NFS exports, CIFS shares, igroups) in addition to data:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an SVM DR relationship</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_src:<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-policy<span class="w"> </span>MirrorAllSnapshots
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Initialize SVM DR baseline</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Update SVM DR configuration</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Activate SVM at DR site</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>svm_dst
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an SVM DR relationship</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_src:<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Initialize SVM DR baseline</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Update SVM DR configuration</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Activate SVM at DR site</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>svm_dst
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Operation succeeded: SnapMirror relationship created.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[Job 123] Job is running.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[Job 123] Job succeeded: transfer queued for SnapMirror relationship of type &quot;XDP&quot;.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Operation succeeded: SnapMirror relationship initialized.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[Job 124] Job is running.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[Job 124] Job succeeded: SnapMirror baseline transfer completed. Transfer size: 847.3GB. Elapsed time: 18m42s.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Operation succeeded: SnapMirror relationship updated.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[Job 125] Job is running.
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>[Job 125] Job succeeded: SnapMirror update transfer completed. Transfer size: 2.1GB. Elapsed time: 3m15s.
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Operation succeeded: SnapMirror relationship broken.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Vserver &quot;svm_dst&quot; started successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Relationship does not exist.</code></strong> — Verify the source and destination SVM names are correct and the relationship was created successfully with <code>snapmirror show</code>.
+<strong><code>Error: command failed: SnapMirror relationship is not idle.</code></strong> — Wait for the previous transfer to complete or abort it with <code>snapmirror abort -destination-path svm_dst:</code> before breaking the relationship.
+<strong><code>Error: command failed: Vserver is already running.</code></strong> — Check the current state with <code>vserver show -vserver svm_dst</code> and skip the start command if the vserver is already online.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8392,7 +8446,7 @@ How It Works reference covering Overview, Replication Types, Components, Connect
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:32:23 UTC"><span class="timeago" datetime="2026-06-29T05:32:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:32:23 UTC">2026-06-29</span>
   </span>
 
     

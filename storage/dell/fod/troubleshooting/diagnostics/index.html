@@ -8801,92 +8801,217 @@ Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verif
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Feature names: COD, CLOUD_TIERING, SRDF_ASYNC, SRDF_SYNC, etc.</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Shows: installed date, expiry, key ID, and SN the key is bound to</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>License Name                Feature              Status      Expiry
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>-----------                -------              ------      ------
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Dell EMC Symmetrix         COD                  Enabled     2025-12-31
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Dell EMC Symmetrix         CLOUD_TIERING       Enabled     2026-06-15
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Dell EMC Symmetrix         SRDF_ASYNC          Enabled     2024-09-30
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Dell EMC Symmetrix         SRDF_SYNC           Missing     N/A
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Dell EMC Symmetrix         REPLICATION         Expired     2023-11-20
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Feature Name: COD
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Installed Date: 2022-03-15
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Expiry Date: 2025-12-31
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>License Key ID: LK-8F9E2D1C4B7A6
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Serial Number Bound: 000123456789012
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Status: Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>License feature &lt;feature-name&gt; is not found</code></strong> — Verify the feature name spelling against the list output and use the exact name shown in the Feature column.
+<strong><code>Symmetrix ID &lt;SID&gt; is not recognized</code></strong> — Confirm the SID is correct by running <code>symcfg list</code> to display all available array IDs on the system.</p>
+</div>
 <hr />
 <h2 id="step-2-check-array-serial-number">Step 2 — Check array serial number<a class="headerlink" href="#step-2-check-array-serial-number" title="Permanent link">&para;</a></h2>
 <p>The FoD key is cryptographically bound to the array serial number. A serial number mismatch is the most common cause of key rejection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all arrays visible from this SE host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Output columns: SID, Name, Microcode, Model, Size (GB)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Note the SID you are working with</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Get the full array configuration including serial number</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Look for: &quot;System Serial Number&quot; or &quot;Array Serial Number&quot; in the output</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># This value must match the VENDOR_SN field in the .lic key file</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Alternative: check array management web UI</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Unisphere → System → Properties → Serial Number</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Compare to chassis label</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># The serial number is on a physical label on the front of the array</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Photo the label if there is any mismatch concern</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all arrays visible from this SE host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Output columns: SID, Name, Microcode, Model, Size (GB)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Note the SID you are working with</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Get the full array configuration including serial number</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Look for: &quot;System Serial Number&quot; or &quot;Array Serial Number&quot; in the output</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># This value must match the VENDOR_SN field in the .lic key file</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Alternative: check array management web UI</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Unisphere → System → Properties → Serial Number</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Compare to chassis label</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># The serial number is on a physical label on the front of the array</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Photo the label if there is any mismatch concern</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Array Name: PROD-ARRAY-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Microcode: 5978.669.669
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Model: PowerMax 8000
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Size: 50.0 TB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Symmetrix ID: 000987654321098
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Array Name: DR-ARRAY-02
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Microcode: 5978.668.668
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Model: PowerMax 2000
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Size: 12.5 TB
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>---
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>System Serial Number: 070123456789ABC
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Array Serial Number: 070123456789ABC
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Microcode Version: 5978.669.669
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Model: PowerMax 8000
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Symmetrix ID (SID): 000123456789012
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Total Usable Capacity: 50.0 TB
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Command not found</code></strong> — Install the EMC Solutions Enabler package or add the Symmetrix CLI bin directory to your PATH environment variable.
+<strong><code>A Symmetrix ID must be supplied</code></strong> — Replace <code>&lt;SID&gt;</code> with an actual array ID from the <code>symcfg list</code> output (e.g., <code>symcfg -sid 000123456789012 list -v</code>).</p>
+</div>
 <hr />
 <h2 id="step-3-inspect-the-fod-key-file">Step 3 — Inspect the FoD key file<a class="headerlink" href="#step-3-inspect-the-fod-key-file" title="Permanent link">&para;</a></h2>
 <p>The <code>.lic</code> file is plain text. You can open it with any text editor or inspect specific fields:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check which array serial number the key is bound to</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN|SERIAL&quot;</span><span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: VENDOR_SN=&lt;your-array-SN&gt;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># If VENDOR_SN does not match your array SN → key was generated for a different array</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check expiry date</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;expiry\|expire\|date&quot;</span><span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Expected: either no expiry line (perpetual) or a future date</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># If expired: contact Dell Account team to renew the term license</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check which features this key enables</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;feature\|increment&quot;</span><span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Lists the specific features (e.g., CLOUD_TIERING, SRDF_ASYNC, COD_CAPACITY)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># DO NOT edit any field in the .lic file</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># License files have cryptographic signatures — edited files will always be rejected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check which array serial number the key is bound to</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN|SERIAL&quot;</span><span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: VENDOR_SN=&lt;your-array-SN&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If VENDOR_SN does not match your array SN → key was generated for a different array</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Check expiry date</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;expiry\|expire\|date&quot;</span><span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Expected: either no expiry line (perpetual) or a future date</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># If expired: contact Dell Account team to renew the term license</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check which features this key enables</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;feature\|increment&quot;</span><span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Lists the specific features (e.g., CLOUD_TIERING, SRDF_ASYNC, COD_CAPACITY)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># DO NOT edit any field in the .lic file</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># License files have cryptographic signatures — edited files will always be rejected</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VENDOR_SN=CX480-SN-A7K9M2L5
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>SERIAL=CX480-SN-A7K9M2L5
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>VENDOR_ID=DELL_EMC
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>EXPIRY_DATE=2026-12-31
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>FEATURE_CLOUD_TIERING=enabled
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>FEATURE_SRDF_ASYNC=enabled
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>FEATURE_COD_CAPACITY=enabled
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>INCREMENT_CLOUD_TIERING=1
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>INCREMENT_SRDF_ASYNC=1
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>INCREMENT_COD_CAPACITY=5
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /path/to/fod-key.lic: No such file or directory</code></strong> — Replace <code>/path/to/fod-key.lic</code> with the actual path to your license file (typically <code>/opt/emc/fod/license.lic</code> or similar).
+<strong><code>VENDOR_SN=CX480-SN-DIFFERENT</code></strong> — The serial number in the license does not match your array; request a new license key from Dell Account team with your correct array serial number.
+<strong><code>EXPIRY_DATE=2023-06-15</code></strong> — The license has expired; contact Dell Account team immediately to renew the term license before features are disabled.</p>
+</div>
 <hr />
 <h2 id="step-4-dry-run-the-key-install-preview">Step 4 — Dry-run the key install (preview)<a class="headerlink" href="#step-4-dry-run-the-key-install-preview" title="Permanent link">&para;</a></h2>
 <p>Before installing a key on the array, use <code>preview</code> to validate it without activating:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test whether the key file is valid for this array (no changes made)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected output (if key is valid):</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">#   Feature: CLOUD_TIERING</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">#   Status: Will be enabled</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   Expiry: &lt;date or None&gt;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   Ready to install.</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># If preview fails with &quot;SYMAPI_C_INVALID_LICENSE&quot;:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   The key SN does not match the array SN → request re-issue from Dell Licensing</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Capture preview output for the SR</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fod-preview-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test whether the key file is valid for this array (no changes made)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected output (if key is valid):</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">#   Feature: CLOUD_TIERING</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">#   Status: Will be enabled</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">#   Expiry: &lt;date or None&gt;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   Ready to install.</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># If preview fails with &quot;SYMAPI_C_INVALID_LICENSE&quot;:</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#   The key SN does not match the array SN → request re-issue from Dell Licensing</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Capture preview output for the SR</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fod-preview-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Feature: CLOUD_TIERING
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Status: Will be enabled
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Expiry: 2025-12-31
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Ready to install.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>(no output — command completes silently)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Feature: CLOUD_TIERING
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Status: Will be enabled
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Expiry: 2025-12-31
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Ready to install.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>---OUTPUT---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMAPI_C_INVALID_LICENSE</code></strong> — Verify the key file SN matches the array SN with <code>symlicense -sid &lt;SID&gt; show_license</code> and request a re-issue from Dell Licensing if they do not match.
+<strong><code>symlicense: command not found</code></strong> — Ensure the Symmetrix CLI tools are installed and the <code>$PATH</code> includes the installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>No such file or directory: /path/to/fod-key.lic</code></strong> — Verify the key file path is correct and readable with <code>ls -l /path/to/fod-key.lic</code>.</p>
+</div>
 <hr />
 <h2 id="step-5-check-firmware-version-compatibility">Step 5 — Check firmware version compatibility<a class="headerlink" href="#step-5-check-firmware-version-compatibility" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check firmware version on the array</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware\|enginuity&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Compare to the minimum firmware version listed in the Dell FoD documentation for the feature</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># For Unisphere-based arrays (Unity/PowerStore):</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Look for: &quot;Model&quot;, &quot;Software version&quot;, and &quot;Serial Number&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check firmware version on the array</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware\|enginuity&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Compare to the minimum firmware version listed in the Dell FoD documentation for the feature</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># For Unisphere-based arrays (Unity/PowerStore):</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Look for: &quot;Model&quot;, &quot;Software version&quot;, and &quot;Serial Number&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Microcode Version: 5978.669.669
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Enginuity Version: 5978
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Firmware Level: T10.1
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Model: Dell EMC PowerStore 500T
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Software version: 3.0.0.0 (Build 1.2.3456.7)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Serial Number: PS-ABC123XYZ789
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Command not found</code></strong> — Ensure Symmetrix Tools are installed and the <code>$PATH</code> includes the installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>Error: Invalid SID or array not responding</code></strong> — Verify the SID is correct with <code>symcfg list</code> and confirm the array is reachable on the management network.
+<strong><code>uemcli: unable to connect to &lt;mgmt-ip&gt;</code></strong> — Check that the management IP is correct, the array is online, and your user account has sufficient permissions on the Unisphere interface.</p>
+</div>
 <hr />
 <h2 id="step-6-collect-diagnostic-output-for-dell-sr">Step 6 — Collect diagnostic output for Dell SR<a class="headerlink" href="#step-6-collect-diagnostic-output-for-dell-sr" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># All-in-one diagnostic snapshot</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="o">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Array list ===&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>symcfg<span class="w"> </span>list
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Current licenses ===&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Firmware version ===&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Key preview (if key available) ===&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Key file SN field ===&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN&quot;</span><span class="w"> </span>/path/to/fod-key.lic
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/fod-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Attach to SR: fod-diag-&lt;date&gt;.txt</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Include: Dell order number, SN from chassis label, expected feature name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># All-in-one diagnostic snapshot</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="o">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Array list ===&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>symcfg<span class="w"> </span>list
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Current licenses ===&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Firmware version ===&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;microcode\|firmware&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Key preview (if key available) ===&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>preview<span class="w"> </span>-file<span class="w"> </span>/path/to/fod-key.lic<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Key file SN field ===&quot;</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;VENDOR_SN|SN&quot;</span><span class="w"> </span>/path/to/fod-key.lic
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/fod-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Attach to SR: fod-diag-&lt;date&gt;.txt</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Include: Dell order number, SN from chassis label, expected feature name</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>=== Array list ===
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Symmetrix ID: 000123456789ABC
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Symmetrix Model: PowerMax 2000
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>=== Current licenses ===
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Product                          Status      Capacity
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>SRDF/Metro                       Licensed    Unlimited
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Thin Provisioning                Licensed    Unlimited
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>=== Firmware version ===
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Microcode Version: 5978.1234.1234
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Firmware Version: T253_R010_M001_1A00
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>=== Key preview (if key available) ===
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>License Key File: /path/to/fod-key.lic
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Symmetrix Serial Number: 000123456789ABC
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Feature: PowerMax_Replication
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Expiration Date: 2025-12-31
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>Status: Valid
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>=== Key file SN field ===
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>VENDOR_SN=000123456789ABC
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>SN=000123456789ABC
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Diagnostic snapshot saved to: /tmp/fod-diag-2024-01-15-1430.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symlicense: Command not found</code></strong> — Ensure the EMC Solutions Enabler package is installed and <code>/opt/emc/SYMCLI/bin</code> is in your PATH.
+<strong><code>License Key File: Invalid or corrupted</code></strong> — Verify the key file path is correct and readable with <code>file /path/to/fod-key.lic</code>, and confirm it matches your array's serial number.
+<strong><code>Symmetrix Serial Number mismatch between key and array</code></strong> — Cross-check the SN on your chassis label against the VENDOR_SN in the key file and Dell's order documentation.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8923,7 +9048,7 @@ Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verif
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:59:33 UTC"><span class="timeago" datetime="2026-06-29T03:59:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:59:33 UTC">2026-06-29</span>
   </span>
 
     

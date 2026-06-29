@@ -9312,22 +9312,59 @@ Access Control reference covering RBAC Roles, Configuring Active Directory Integ
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected: {&quot;version&quot;: &quot;8.x.y.zzz&quot;, ...}</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>{
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  &quot;version&quot;: &quot;8.14.2.23456789&quot;,
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  &quot;buildNumber&quot;: &quot;23456789&quot;,
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  &quot;productName&quot;: &quot;VMware Aria Operations for Logs&quot;,
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  &quot;releaseDate&quot;: &quot;2024-01-15T00:00:00Z&quot;,
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  &quot;buildTimestamp&quot;: 1705276800000
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present in example) or import the CA certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to vrli-prod-01.example.local port 443: Connection refused</code></strong> — Verify the VRLI hostname/IP is correct, the service is running (<code>systemctl status vrli</code> on the appliance), and network connectivity exists.
+<strong><code>{"error":"Unauthorized","statusCode":401}</code></strong> — Confirm the password is correct and the service account <code>svc-vrli-api</code> exists; reset credentials in VRLI Administration &gt; Users if needed.</p>
+</div>
 <p>For service accounts: assign the minimum required role — use the <code>User</code> role for scripts that only query logs; use the <code>Admin</code> role for scripts that create or modify alert definitions.</p>
 <hr />
 <h2 id="session-and-access-logging">Session and Access Logging<a class="headerlink" href="#session-and-access-logging" title="Permanent link">&para;</a></h2>
 <p>All authentication events are logged to the runtime log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View login and authentication events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout\|failed&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View admin operations (alert create/delete, user changes)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;admin\|user\|alert\|content&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;create\|update\|delete&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View login and authentication events</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout\|failed&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View admin operations (alert create/delete, user changes)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;admin\|user\|alert\|content&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;create\|update\|delete&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>2024-01-15 09:23:47.123 [INFO] User &#39;admin&#39; authenticated successfully from 192.168.1.45
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2024-01-15 09:24:12.456 [INFO] User &#39;svc_monitor&#39; login attempt failed - invalid credentials
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2024-01-15 09:25:33.789 [INFO] User &#39;analyst01&#39; authenticated successfully from 10.50.22.18
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>2024-01-15 09:26:01.234 [INFO] User &#39;admin&#39; logout event recorded
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>2024-01-15 09:27:15.567 [INFO] Alert &#39;CPU_THRESHOLD&#39; created by user &#39;admin&#39;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>2024-01-15 09:28:42.890 [INFO] User &#39;readonly_user&#39; authentication failed - account locked
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>2024-01-15 09:29:55.123 [INFO] Content pack &#39;VMware-Default&#39; updated by &#39;admin&#39;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>2024-01-15 09:31:08.456 [INFO] User &#39;analyst02&#39; authenticated successfully from 172.16.5.33
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>2024-01-15 09:32:19.789 [INFO] Alert &#39;MEMORY_SPIKE&#39; deleted by user &#39;admin&#39;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>2024-01-15 09:33:44.012 [INFO] User &#39;svc_monitor&#39; authenticated successfully from 10.50.22.19
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/loginsight/runtime.log: No such file or directory</code></strong> — Verify the Aria Operations for Logs service is running with <code>systemctl status loginsight</code> and confirm the correct log path for your deployment version.
+<strong><code>grep: /var/log/loginsight/runtime.log: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>loginsight</code> group with <code>groups $USER</code>.</p>
+</div>
 <p>Forward these logs to a SIEM or dedicated audit log store by configuring the appliance's syslog output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Forward syslog from the Aria Ops for Logs appliance to an external SIEM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Forward syslog from the Aria Ops for Logs appliance to an external SIEM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as the root user.
+<strong><code>Unit rsyslog.service not found.</code></strong> — Verify rsyslog is installed with <code>apt install rsyslog</code> (Debian/Ubuntu) or <code>yum install rsyslog</code> (RHEL/CentOS), then retry the restart.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../authentication/">Aria Ops for Logs — Authentication</a></li>
@@ -9355,7 +9392,7 @@ Access Control reference covering RBAC Roles, Configuring Active Directory Integ
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

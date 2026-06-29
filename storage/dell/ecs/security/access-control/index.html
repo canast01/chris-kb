@@ -9037,6 +9037,37 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(no output — command completes silently)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>{
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    &quot;Policy&quot;: &quot;{\&quot;Version\&quot;:\&quot;2012-10-17\&quot;,\&quot;Statement\&quot;:[{\&quot;Effect\&quot;:\&quot;Allow\&quot;,\&quot;Principal\&quot;:{\&quot;AWS\&quot;:\&quot;arn:aws:iam::111122223333:root\&quot;},\&quot;Action\&quot;:\&quot;s3:GetObject\&quot;,\&quot;Resource\&quot;:\&quot;arn:aws:s3:::analytics-prod-raw/*\&quot;},{\&quot;Effect\&quot;:\&quot;Deny\&quot;,\&quot;Principal\&quot;:\&quot;*\&quot;,\&quot;Action\&quot;:\&quot;s3:*\&quot;,\&quot;Resource\&quot;:\&quot;*\&quot;,\&quot;Condition\&quot;:{\&quot;StringNotEquals\&quot;:{\&quot;aws:SourceVpc\&quot;:\&quot;vpc-0a1b2c3d4e5f6g7h8\&quot;}}}]}&quot;
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>}
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>(no output — command completes silently)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>{
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    &quot;Owner&quot;: {
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        &quot;DisplayName&quot;: &quot;ecs-admin&quot;,
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        &quot;ID&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    },
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    &quot;Grants&quot;: [
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        {
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>            &quot;Grantee&quot;: {
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>                &quot;Type&quot;: &quot;CanonicalUser&quot;,
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>                &quot;ID&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>                &quot;DisplayName&quot;: &quot;ecs-admin&quot;
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            },
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>            &quot;Permission&quot;: &quot;FULL_CONTROL&quot;
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        }
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    ]
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist</code></strong> — Verify the bucket name matches exactly and exists in the ECS namespace with <code>aws s3api list-buckets --endpoint-url https://&lt;ecs-s3-endpoint&gt;:9021 --profile ecs</code>.
+<strong><code>An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid policy JSON</code></strong> — Validate the JSON syntax in <code>bucket-policy.json</code> using <code>jq . bucket-policy.json</code> or an online JSON validator before applying.
+<strong><code>Unable to locate credentials for the 'ecs' profile</code></strong> — Ensure the AWS credentials are configured in <code>~/.aws/credentials</code> with the <code>[ecs]</code> profile section containing valid access key and secret key.</p>
+</div>
 <h2 id="namespace-isolation">Namespace Isolation<a class="headerlink" href="#namespace-isolation" title="Permanent link">&para;</a></h2>
 <p>Namespaces are the primary multi-tenancy isolation boundary in ECS. Each namespace has independent:</p>
 <ul>
@@ -9115,22 +9146,50 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 </ul>
 <h2 id="access-review-procedure">Access Review Procedure<a class="headerlink" href="#access-review-procedure" title="Permanent link">&para;</a></h2>
 <p>Perform quarterly access reviews for all ECS namespaces:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all object users per namespace</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>list-object-users<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List access keys per user (key IDs only)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check bucket policy for each bucket</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List all namespaces</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all object users per namespace</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>list-object-users<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List access keys per user (key IDs only)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check bucket policy for each bucket</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># List all namespaces</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># List all object users per namespace
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ObjectUser1
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ObjectUser2
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ObjectUser3
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ServiceAccount-prod
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ServiceAccount-backup
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a># List access keys per user (key IDs only)
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>AKIAIOSFODNN7EXAMPLE
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>AKIA2B8C9D0E1F2G3H4I
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a># Check bucket policy for each bucket
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>{
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    &quot;Policy&quot;: &quot;{\&quot;Version\&quot;:\&quot;2012-10-17\&quot;,\&quot;Statement\&quot;:[{\&quot;Effect\&quot;:\&quot;Allow\&quot;,\&quot;Principal\&quot;:{\&quot;AWS\&quot;:\&quot;arn:aws:iam::123456789012:user/ObjectUser1\&quot;},\&quot;Action\&quot;:\&quot;s3:*\&quot;,\&quot;Resource\&quot;:[\&quot;arn:aws:s3:::prod-bucket\&quot;,\&quot;arn:aws:s3:::prod-bucket/*\&quot;]}]}&quot;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>}
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a># List all namespaces
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>namespace-prod
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>namespace-dev
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>namespace-archive
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>namespace-backup
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: namespace not found</code></strong> — Verify the namespace exists with <code>ecscli namespace list</code> and check for typos in the <code>&lt;namespace&gt;</code> parameter.
+<strong><code>An error occurred (NoSuchBucket) when calling the GetBucketPolicy operation: The specified bucket does not exist</code></strong> — Confirm the bucket name is correct and exists in the ECS system using <code>aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt;:9021 --profile ecs</code>.
+<strong><code>SSL: CERTIFICATE_VERIFY_FAILED</code></strong> — The <code>--no-verify-ssl</code> flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update your CA bundle.</p>
+</div>
 <p>For each access review:
 1. Confirm each object user maps to an active application or service in the CMDB
 2. Confirm bucket policies grant only the minimum required actions
@@ -9166,7 +9225,7 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:59:33 UTC"><span class="timeago" datetime="2026-06-29T03:59:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:59:33 UTC">2026-06-29</span>
   </span>
 
     

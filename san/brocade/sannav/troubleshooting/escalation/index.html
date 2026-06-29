@@ -7900,53 +7900,188 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>free<span class="w"> </span>-h
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>uptime
 </code></pre></div>
-<h3 id="2-generate-the-sannav-support-bundle">2. Generate the SANnav support bundle<a class="headerlink" href="#2-generate-the-sannav-support-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to the SANnav appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;sannav-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate the support bundle — this is mandatory for any TAC case</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sannav<span class="w"> </span>support-bundle<span class="w"> </span>--output<span class="w"> </span>/tmp/sannav-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify and check file size</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/sannav-diag-*.tar.gz
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Copy to a local workstation for upload</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>scp<span class="w"> </span>admin@&lt;sannav-ip&gt;:/tmp/sannav-diag-*.tar.gz<span class="w"> </span>/tmp/
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@sannav-prod-01:~$ sannav version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SANnav Version: 2.3.1.0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Build: 20240115-143022
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Release Date: January 15, 2024
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>admin@sannav-prod-01:~$ sannav-admin status
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SANnav Services Status:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  sannav-core         : RUNNING (PID: 4521)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  sannav-db           : RUNNING (PID: 4389)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  sannav-api          : RUNNING (PID: 4612)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  sannav-collector    : RUNNING (PID: 4701)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  sannav-web          : RUNNING (PID: 4823)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>admin@sannav-prod-01:~$ sannav-admin db-status
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Database Status: HEALTHY
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Connected Clients: 12
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Replication Status: IN_SYNC
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Last Backup: 2024-01-18 03:45:22 UTC
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>admin@sannav-prod-01:~$ df -h /opt/brocade/sannav
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>/dev/sda3       500G  387G  113G  78% /opt/brocade/sannav
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>admin@sannav-prod-01:~$ df -h
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>/dev/sda1       100G   45G   55G  45% /
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/dev/sda2        50G   28G   22G  56% /var
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>/dev/sda3       500G  387G  113G  78% /opt/brocade/sannav
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>tmpfs            32G     0   32G   0% /dev/shm
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>admin@sannav-prod-01:~$ free -h
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Mem:           64Gi        48Gi        8Gi       512Mi        8Gi        15Gi
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Swap:          16Gi       2.1Gi        14Gi
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>admin@sannav-prod-01:~$ uptime
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a> 14:32:18 up 187 days, 14:22,  2 users,  load average: 2.14, 2.08, 1.97
 </code></pre></div>
-<h3 id="3-collect-the-sannav-service-log-journalctl">3. Collect the SANnav service log (journalctl)<a class="headerlink" href="#3-collect-the-sannav-service-log-journalctl" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify SANnav appliance is reachable with <code>ping &lt;sannav-ip&gt;</code> and SSH service is running with <code>systemctl status ssh</code>.
+<strong><code>sannav-admin: command not found</code></strong> — Ensure you are logged in as the admin user and <code>/opt/brocade/sannav/bin</code> is in your PATH, or use the full path <code>/opt/brocade/sannav/bin/sannav-admin</code>.
+<strong><code>Database Status: UNHEALTHY</code></strong> — Check database logs with <code>sannav-admin db-logs</code> and restart the database service using <code>sannav-admin restart db</code>.</p>
+</div>
+<h3 id="2-generate-the-sannav-support-bundle">2. Generate the SANnav support bundle<a class="headerlink" href="#2-generate-the-sannav-support-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the SANnav appliance</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;sannav-ip&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Collect the full SANnav service log from systemd journal</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>--no-pager<span class="w"> </span>--output<span class="w"> </span>short-iso<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-journal-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate the support bundle — this is mandatory for any TAC case</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sannav<span class="w"> </span>support-bundle<span class="w"> </span>--output<span class="w"> </span>/tmp/sannav-diag-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Or last 2000 lines</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-journal-recent.log
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify and check file size</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/sannav-diag-*.tar.gz
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Capture resource stats over a few minutes (for intermittent issues)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>free<span class="w"> </span>-h
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>df<span class="w"> </span>-h<span class="w"> </span>/opt/brocade/sannav
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>uptime
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-perf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Copy to a local workstation for upload</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>scp<span class="w"> </span>admin@&lt;sannav-ip&gt;:/tmp/sannav-diag-*.tar.gz<span class="w"> </span>/tmp/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>admin@&lt;sannav-ip&gt;&#39;s password: 
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.45.12.89
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SANnav&gt; sannav support-bundle --output /tmp/sannav-diag-20250115.tar.gz
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Collecting system logs...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Collecting configuration data...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Collecting performance metrics...
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Collecting fabric topology...
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Support bundle generated successfully: /tmp/sannav-diag-20250115.tar.gz
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>-rw-r--r-- 1 admin admin 487M Jan 15 14:35 /tmp/sannav-diag-20250115.tar.gz
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>admin@10.45.67.23&#39;s password: 
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sannav-diag-20250115.tar.gz                           100%  487MB   8.2MB/s   00:59
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sannav: command not found</code></strong> — Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with <code>which sannav</code>.
+<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use <code>ssh -v</code> to debug the connection.
+<strong><code>No such file or directory</code></strong> — The support-bundle command may have failed silently; re-run the command and check <code>/tmp/</code> for any partial <code>.tar.gz</code> files or error logs in <code>/var/log/sannav/</code>.</p>
+</div>
+<h3 id="3-collect-the-sannav-service-log-journalctl">3. Collect the SANnav service log (journalctl)<a class="headerlink" href="#3-collect-the-sannav-service-log-journalctl" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to the SANnav appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@&lt;sannav-ip&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Collect the full SANnav service log from systemd journal</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>--no-pager<span class="w"> </span>--output<span class="w"> </span>short-iso<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-journal-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Or last 2000 lines</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-journal-recent.log
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Capture resource stats over a few minutes (for intermittent issues)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>free<span class="w"> </span>-h
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>df<span class="w"> </span>-h<span class="w"> </span>/opt/brocade/sannav
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>uptime
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-perf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>admin@sannav-prod-01&#39;s password: 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(no output — command completes silently)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>=== Wed Jan 15 14:32:18 UTC 2025 ===
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>              total        used      available
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Mem:           15Gi       12Gi         2.1Gi
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Swap:          4.0Gi      1.2Gi        2.8Gi
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a> 14:32:18 up 127 days, 14:22,  2 users,  load average: 2.14, 1.98, 1.87
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>=== Wed Jan 15 14:32:48 UTC 2025 ===
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>              total        used      available
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Mem:           15Gi       12Gi         2.0Gi
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Swap:          4.0Gi      1.2Gi        2.8Gi
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a> 14:32:48 up 127 days, 14:23,  2 users,  load average: 2.09, 2.01, 1.89
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>=== Wed Jan 15 14:33:18 UTC 2025 ===
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>              total        used      available
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Mem:           15Gi       12Gi         2.1Gi
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Swap:          4.0Gi      1.2Gi        2.8Gi
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a> 14:33:18 up 127 days, 14:23,  2 users,  load average: 1.94, 1.99, 1.88
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: journalctl: command not found</code></strong> — Verify the SANnav appliance is running a systemd-based OS; if using an older version, use <code>tail -f /var/log/sannav.log</code> instead.
+<strong><code>Permission denied (publickey,password)</code></strong> — Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance.
+<strong><code>No such file or directory: /opt/brocade/sannav</code></strong> — Verify the SANnav installation path matches your deployment; check with <code>df -h</code> to locate the actual mount point.</p>
+</div>
 <h3 id="4-run-supportsave-on-affected-switches">4. Run supportsave on affected switches<a class="headerlink" href="#4-run-supportsave-on-affected-switches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to each affected Brocade switch as admin</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Generate the switch support bundle</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>supportsave
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Switch version</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>firmwareshow
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Zoning status</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cfgshow
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>nsshow
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>fabricshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to each affected Brocade switch as admin</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>admin@&lt;switch-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Generate the switch support bundle</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>supportsave
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Switch version</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>firmwareshow
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Zoning status</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>cfgshow
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>nsshow
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>fabricshow
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>admin@switch-ip&#39;s password: 
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Brocade Switch Admin CLI
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>switch:admin&gt; supportsave
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Generating support bundle...
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Creating tar file /var/log/support/brocade_support_20240115_143022.tar.gz
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Support bundle created successfully.
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>File size: 245 MB
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Location: /var/log/support/brocade_support_20240115_143022.tar.gz
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>switch:admin&gt; firmwareshow
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Firmware Version: v8.2.1b
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Build: 8.2.1.0.0.0.0
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Serial Number: 0621A2B00C4E
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Model: Brocade 6510
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>switch:admin&gt; cfgshow
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Defined configurations:
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a> 0: PROD_ZONE_CFG (current)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a> 1: TEST_ZONE_CFG
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a> 2: BACKUP_CFG
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>switch:admin&gt; nsshow
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a> N Port wwn is 50:00:14:40:1b:2c:3d:4e
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a> Fabric Port Name: switch1
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a> Fabric Port wwn: 50:00:14:40:1b:2c:3d:4e
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a> State: Online
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a> Speed: 16Gb
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>switch:admin&gt; fabricshow
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>Switch ID   Worldwide Name      Fabric Name         FC Address
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>------------------------------------------------------------------
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>   1        50:00:14:40:1b:2c:3d:4e  PROD_FABRIC_01      100.0000
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>   2        50:00:14:40:1b:2c:3d:4f  PROD_FABRIC_02      100.0001
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>   3        50:00:14:40:1b:2c:3d:50  PROD_FABRIC_03      100.0002
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that the admin account is not locked; check <code>/etc/passwd</code> on the switch or contact your Brocade support team.
+<strong><code>supportsave: command not found</code></strong> — Ensure you are logged in as admin user and not in restricted shell mode; use <code>role show</code> to verify admin privileges.
+<strong><code>Fabric is offline or not responding</code></strong> — Check physical cable connections, port status with <code>portshow</code>, and verify switch is not in maintenance mode with <code>switchstatusshow</code>.</p>
+</div>
 <p>Repeat <code>supportsave</code> on every switch in the affected fabric. TAC needs the switch-level data alongside the SANnav data.</p>
 <h3 id="5-export-the-sannav-audit-log">5. Export the SANnav audit log<a class="headerlink" href="#5-export-the-sannav-audit-log" title="Permanent link">&para;</a></h3>
 <p>In the SANnav UI:
@@ -7956,22 +8091,22 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 4. Download and attach to the case.</p>
 <p>The audit log shows every zone change, discovery action, and admin operation that occurred before the failure.</p>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SANnav version: 2.3.0a build XXXXXXXX
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Appliance: sannav-01.corp.local (VMware VM, 16 vCPU, 32 GB RAM)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Managed fabrics: 2 fabrics (Fabric-A: 12 switches, Fabric-B: 8 switches)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>FOS versions: 9.1.0a, 9.0.1d (mixed — check compatibility matrix)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Issue first observed: 2026-06-14 13:00 UTC
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Last confirmed working: 2026-06-14 12:00 UTC
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Changes in 24h before the issue:
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 11:30: SANnav upgrade 2.2.0 to 2.3.0a initiated via VAMI
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 12:00: Upgrade completed; SANnav UI shows &quot;Services Starting...&quot;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  - 13:00: SANnav UI returns 502 Bad Gateway; login page not loading
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - 13:05: SSH: sannav-admin status shows &quot;sannav-api&quot; service in &quot;Stopped&quot; state
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Steps already taken:
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - Did NOT restart the sannav-api service (awaiting TAC guidance)
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Did NOT make any zone changes
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - sannav-journal: &quot;FATAL: relation &#39;sannav.audit_log&#39; does not exist&quot; repeated
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Blast radius: SANnav UI completely unavailable; zone changes not possible; fabric health monitoring blind
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>SANnav version: 2.3.0a build XXXXXXXX
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Appliance: sannav-01.corp.local (VMware VM, 16 vCPU, 32 GB RAM)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Managed fabrics: 2 fabrics (Fabric-A: 12 switches, Fabric-B: 8 switches)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>FOS versions: 9.1.0a, 9.0.1d (mixed — check compatibility matrix)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Issue first observed: 2026-06-14 13:00 UTC
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Last confirmed working: 2026-06-14 12:00 UTC
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Changes in 24h before the issue:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  - 11:30: SANnav upgrade 2.2.0 to 2.3.0a initiated via VAMI
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - 12:00: Upgrade completed; SANnav UI shows &quot;Services Starting...&quot;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  - 13:00: SANnav UI returns 502 Bad Gateway; login page not loading
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - 13:05: SSH: sannav-admin status shows &quot;sannav-api&quot; service in &quot;Stopped&quot; state
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Steps already taken:
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - Did NOT restart the sannav-api service (awaiting TAC guidance)
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  - Did NOT make any zone changes
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  - sannav-journal: &quot;FATAL: relation &#39;sannav.audit_log&#39; does not exist&quot; repeated
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Blast radius: SANnav UI completely unavailable; zone changes not possible; fabric health monitoring blind
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -8078,26 +8213,59 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to SANnav appliance as admin — paste these into every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># SANnav version</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sannav<span class="w"> </span>version
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># All service states</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sannav-admin<span class="w"> </span>status
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Database status</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>sannav-admin<span class="w"> </span>db-status
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Disk space</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>df<span class="w"> </span>-h<span class="w"> </span>/opt/brocade/sannav
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Recent journal errors</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>--no-pager<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fatal\|exception&quot;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Resource state</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>free<span class="w"> </span>-h<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uptime
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to SANnav appliance as admin — paste these into every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># SANnav version</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>sannav<span class="w"> </span>version
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># All service states</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>sannav-admin<span class="w"> </span>status
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Database status</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>sannav-admin<span class="w"> </span>db-status
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Disk space</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>df<span class="w"> </span>-h<span class="w"> </span>/opt/brocade/sannav
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Recent journal errors</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>sannav<span class="w"> </span>--no-pager<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fatal\|exception&quot;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Resource state</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>free<span class="w"> </span>-h<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uptime
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SANnav Version: 2.3.1 Build 2024.01.15
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>SANnav Admin Version: 2.3.1
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Service Status:
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  sannav-core         RUNNING (pid 4821)
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  sannav-api          RUNNING (pid 4823)
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  sannav-collector    RUNNING (pid 4825)
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  sannav-postgres     RUNNING (pid 4819)
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  sannav-elasticsearch RUNNING (pid 4827)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Database Status:
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  PostgreSQL: HEALTHY
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  Last Backup: 2024-01-18 03:45:22 UTC
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  Replication Status: SYNCED
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  Connection Pool: 45/100 active
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>/dev/sda3      500G  287G  213G  58% /opt/brocade/sannav
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>Jan 18 14:32:11 sannav-prod sannav-collector[4825]: ERROR Failed to connect to fabric switch 10.20.15.44
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Jan 18 14:28:03 sannav-prod sannav-api[4823]: EXCEPTION NullPointerException in fabric discovery task
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Jan 18 13:55:47 sannav-prod sannav-core[4821]: ERROR Timeout waiting for elasticsearch cluster health
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>Mem:            31Gi       18Gi       8.2Gi      512Mi       4.8Gi       12Gi
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>Swap:           16Gi      2.1Gi       14Gi
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a> 14:45:22 up 47 days, 3:22, 2 users, load average: 2.14, 1.87, 1.92
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: journalctl: command not found</code></strong> — Use <code>journalctl</code> without <code>sudo</code> prefix or verify the user has passwordless sudo configured in <code>/etc/sudoers</code>.
+<strong><code>df: /opt/brocade/sannav: No such file or directory</code></strong> — Verify SANnav is installed in the correct path with <code>ls -d /opt/brocade/sannav</code> or check mount points with <code>mount | grep brocade</code>.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8169,7 +8337,7 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

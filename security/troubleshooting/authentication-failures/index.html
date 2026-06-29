@@ -7113,6 +7113,42 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># objectClass: person
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a># objectClass: user
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># sAMAccountName: jsmith
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a># mail: jsmith@corp.example.com
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a># memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># search result
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a># search: 2
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># result: 0 Success
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Enter LDAP Password: 
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a># dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a># objectClass: person
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a># objectClass: user
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a># sAMAccountName: jsmith
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a># mail: jsmith@corp.example.com
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a># memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a># search result
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a># result: 0 Success
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Enter LDAP Password: 
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a># dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a># objectClass: person
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a># objectClass: user
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a># sAMAccountName: jsmith
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a># mail: jsmith@corp.example.com
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a># memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a># search result
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a># result: 0 Success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked or expired in Active Directory.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves correctly with <code>nslookup dc01.corp.example.com</code> and that port 389 (or 636 for LDAPS) is accessible via firewall rules.
+<strong><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></strong> — Import the DC's SSL certificate into the system CA store with <code>update-ca-certificates</code> or disable certificate validation with <code>LDAPTLS_REQCERT=never</code>.</p>
+</div>
 <h3 id="ldap-result-codes">LDAP Result Codes<a class="headerlink" href="#ldap-result-codes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7172,32 +7208,32 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 </table>
 <hr />
 <h2 id="certificate-based-authentication-failures">Certificate-Based Authentication Failures<a class="headerlink" href="#certificate-based-authentication-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry dates</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Output:</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># notBefore=May  8 00:00:00 2025 GMT</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># notAfter=May  8 23:59:59 2026 GMT</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify the full certificate chain</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-bundle.crt<span class="w"> </span>/etc/ssl/certs/client.crt
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check CRL distribution point from certificate</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;CRL Distribution&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Test OCSP manually</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>openssl<span class="w"> </span>ocsp<span class="w"> </span>-issuer<span class="w"> </span>issuer.crt<span class="w"> </span>-cert<span class="w"> </span>client.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-url<span class="w"> </span>http://ocsp.corp.example.com<span class="w"> </span>-text
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Check Extended Key Usage (must include Client Authentication)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Extended Key Usage&quot;</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Expected: TLS Web Client Authentication</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check certificate expiry dates</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># notBefore=May  8 00:00:00 2025 GMT</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># notAfter=May  8 23:59:59 2026 GMT</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify the full certificate chain</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-bundle.crt<span class="w"> </span>/etc/ssl/certs/client.crt
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check CRL distribution point from certificate</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;CRL Distribution&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Test OCSP manually</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>openssl<span class="w"> </span>ocsp<span class="w"> </span>-issuer<span class="w"> </span>issuer.crt<span class="w"> </span>-cert<span class="w"> </span>client.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-url<span class="w"> </span>http://ocsp.corp.example.com<span class="w"> </span>-text
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Check Extended Key Usage (must include Client Authentication)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Extended Key Usage&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Expected: TLS Web Client Authentication</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Windows: check certificate store</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">30</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Check NTAuth store (required for smart card / certificate logon to AD)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">NTAuth</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Windows: check certificate store</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">30</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Check NTAuth store (required for smart card / certificate logon to AD)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">NTAuth</span>
 </code></pre></div>
 <hr />
 <h2 id="kerberos-error-code-reference">Kerberos Error Code Reference<a class="headerlink" href="#kerberos-error-code-reference" title="Permanent link">&para;</a></h2>
@@ -7275,19 +7311,19 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 </ul>
 <hr />
 <h2 id="quick-reference-time-sync-verification-chain">Quick Reference: Time Sync Verification Chain<a class="headerlink" href="#quick-reference-time-sync-verification-chain" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Authoritative NTP (Stratum 1)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>        ↓
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PDC Emulator DC (Stratum 2) ← All DCs sync here
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        ↓
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Domain Members / Servers (Stratum 3)
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        ↓
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>VMs (sync from ESXi host OR domain — not both)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Authoritative NTP (Stratum 1)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>        ↓
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>PDC Emulator DC (Stratum 2) ← All DCs sync here
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        ↓
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Domain Members / Servers (Stratum 3)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        ↓
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>VMs (sync from ESXi host OR domain — not both)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Verify which NTP server a machine is using</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Identify PDC emulator in domain</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;PDC&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Verify which NTP server a machine is using</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Identify PDC emulator in domain</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;PDC&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -7323,7 +7359,7 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

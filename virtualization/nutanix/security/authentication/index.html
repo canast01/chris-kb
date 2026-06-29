@@ -7706,6 +7706,25 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Role assignment is done via Prism Element UI (not ncli)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>User Information
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>================================================================================
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                    Username                              Role
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>================================================================================
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                    admin                          Cluster Admin
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                    backup_svc                     Viewer
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                    monitoring                     Cluster Admin
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                    readonly_user                  Viewer
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>================================================================================
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>(no output — command completes silently)
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>(no output — command completes silently)
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'admin' already exists</code></strong> — Choose a different username or delete the existing user first with <code>ncli user delete name=admin</code>.
+<strong><code>Error: Current password is incorrect</code></strong> — Verify the current password is correct and try the change-password command again.</p>
+</div>
 <h3 id="default-local-accounts">Default Local Accounts<a class="headerlink" href="#default-local-accounts" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7731,49 +7750,71 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
 <hr />
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <h3 id="prism-element-add-directory">Prism Element — Add Directory<a class="headerlink" href="#prism-element-add-directory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Prism Element → Settings → Authentication → Directory List → Add New Directory
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Type: Active Directory
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Name: corp-ad (label only)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Domain: corp.local
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Directory URL: ldaps://dc1.corp.local:636
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Username: svc-nutanix@corp.local
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Password: &lt;service account password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Prism Element → Settings → Authentication → Directory List → Add New Directory
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Type: Active Directory
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Name: corp-ad (label only)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Domain: corp.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Directory URL: ldaps://dc1.corp.local:636
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Username: svc-nutanix@corp.local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Password: &lt;service account password&gt;
 </code></pre></div>
 <p>After saving, verify connectivity:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Test Directory → enter test user credentials → should return &quot;User found&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Test Directory → enter test user credentials → should return &quot;User found&quot;
 </code></pre></div></p>
 <h3 id="cli-check">CLI Check<a class="headerlink" href="#cli-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services<span class="w">   </span><span class="c1"># list configured directories</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>add-directory-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>directory-type<span class="o">=</span>ACTIVE_DIRECTORY<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>connection-type<span class="o">=</span>LDAP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>directory-url<span class="o">=</span>ldap://dc1.corp.local:389<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nv">domain</span><span class="o">=</span>corp.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>service-account-username<span class="o">=</span>svc-nutanix<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>service-account-password<span class="o">=</span>&lt;pass&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services<span class="w">   </span><span class="c1"># list configured directories</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>add-directory-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>directory-type<span class="o">=</span>ACTIVE_DIRECTORY<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>connection-type<span class="o">=</span>LDAP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>directory-url<span class="o">=</span>ldap://dc1.corp.local:389<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nv">domain</span><span class="o">=</span>corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>service-account-username<span class="o">=</span>svc-nutanix<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>service-account-password<span class="o">=</span>&lt;pass&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Directory Services Configuration
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>=================================
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Directory Type       : ACTIVE_DIRECTORY
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Connection Type      : LDAP
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Directory URL        : ldap://dc1.corp.local:389
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Domain               : corp.local
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Service Account      : svc-nutanix
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Status               : CONFIGURED
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Last Sync            : 2024-01-15 14:32:18
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Sync Interval        : 3600 seconds
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Adding directory configuration...
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Directory configuration added successfully.
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>Config ID: 550e8400-e29b-41d4-a716-446655440000
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (111)</code></strong> — Verify the LDAP server is reachable and listening on port 389 with <code>nc -zv dc1.corp.local 389</code>.
+<strong><code>Error: Invalid credentials for service account 'svc-nutanix'</code></strong> — Confirm the service account password is correct and the account has directory query permissions in Active Directory.
+<strong><code>Error: Domain 'corp.local' not found or unreachable</code></strong> — Ensure DNS resolution works for the domain with <code>nslookup corp.local</code> and that the domain name matches your Active Directory configuration.</p>
+</div>
 <h3 id="prism-central-add-directory">Prism Central — Add Directory<a class="headerlink" href="#prism-central-add-directory" title="Permanent link">&para;</a></h3>
 <p>Prism Central manages authentication for multi-cluster environments. Configure once in PC to apply across all registered clusters.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Prism Central → Settings → Authentication
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Click &quot;+&quot; → Add Directory
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Type: Active Directory or OpenLDAP
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Domain: corp.local
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  URL: ldaps://dc1.corp.local:636
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Service account: svc-pc@corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Central → Settings → Authentication
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Click &quot;+&quot; → Add Directory
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Type: Active Directory or OpenLDAP
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Domain: corp.local
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  URL: ldaps://dc1.corp.local:636
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Service account: svc-pc@corp.local
 </code></pre></div>
 <hr />
 <h2 id="role-mapping-ad-groups-prism-roles">Role Mapping (AD Groups → Prism Roles)<a class="headerlink" href="#role-mapping-ad-groups-prism-roles" title="Permanent link">&para;</a></h2>
 <p>After configuring the directory, map AD security groups to Prism roles:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Prism Element → Settings → Role Mapping → Add Mapping
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Directory: corp-ad
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Role: Cluster Admin / Viewer / User Admin
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Type: Group
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Values: infra-nutanix-admins (AD group name)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Element → Settings → Role Mapping → Add Mapping
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Directory: corp-ad
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Role: Cluster Admin / Viewer / User Admin
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Type: Group
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Values: infra-nutanix-admins (AD group name)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Central → Settings → Role Mapping → New Role Mapping
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Directory: corp-ad
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Role: Prism Admin / Viewer / Self Service
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Groups: infra-pc-admins
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Central → Settings → Role Mapping → New Role Mapping
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Directory: corp-ad
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Role: Prism Admin / Viewer / Self Service
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Groups: infra-pc-admins
 </code></pre></div>
 <h3 id="available-roles-prism-element">Available Roles (Prism Element)<a class="headerlink" href="#available-roles-prism-element" title="Permanent link">&para;</a></h3>
 <table>
@@ -7831,21 +7872,21 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
 </table>
 <hr />
 <h2 id="openldap-integration">OpenLDAP Integration<a class="headerlink" href="#openldap-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Element → Settings → Authentication → Add New Directory
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Type: OpenLDAP
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Directory URL: ldap://ldap.corp.local:389
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Username attribute: uid
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Group member attribute: memberUid
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  Base DN: dc=corp,dc=local
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Service account DN: cn=svc-nutanix,ou=service,dc=corp,dc=local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → Authentication → Add New Directory
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Type: OpenLDAP
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Directory URL: ldap://ldap.corp.local:389
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Username attribute: uid
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Group member attribute: memberUid
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  Base DN: dc=corp,dc=local
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  Service account DN: cn=svc-nutanix,ou=service,dc=corp,dc=local
 </code></pre></div>
 <hr />
 <h2 id="saml-sso-prism-central">SAML / SSO (Prism Central)<a class="headerlink" href="#saml-sso-prism-central" title="Permanent link">&para;</a></h2>
 <p>Prism Central supports SAML 2.0 for integration with identity providers (Okta, Azure AD, ADFS, PingFederate).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Central → Settings → Authentication → SAML Service Providers
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Add SP → configure IdP metadata URL or upload XML
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Map SAML attributes to Prism Central roles
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Test SSO login before enabling for all users
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prism Central → Settings → Authentication → SAML Service Providers
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Add SP → configure IdP metadata URL or upload XML
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Map SAML attributes to Prism Central roles
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Test SSO login before enabling for all users
 </code></pre></div>
 <p><strong>Okta setup outline:</strong>
 1. Create new SAML 2.0 app in Okta Admin → Applications
@@ -7855,22 +7896,44 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
 5. Download Okta IdP metadata XML and upload to Prism Central</p>
 <hr />
 <h2 id="session-and-timeout-settings">Session and Timeout Settings<a class="headerlink" href="#session-and-timeout-settings" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → Security → Session Timeout
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Timeout: 15 minutes (recommended for high-security environments)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Prism Central → Settings → Security → Session Timeout
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Same setting, applies to PC UI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Prism Element → Settings → Security → Session Timeout
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Timeout: 15 minutes (recommended for high-security environments)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Prism Central → Settings → Security → Session Timeout
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  Same setting, applies to PC UI
 </code></pre></div>
 <hr />
 <h2 id="verify-authentication">Verify Authentication<a class="headerlink" href="#verify-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Test AD auth from CVM (requires ldapsearch)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc1.corp.local:389<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-nutanix@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># NCC auth check</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>ldap_check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Test AD auth from CVM (requires ldapsearch)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc1.corp.local:389<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;svc-nutanix@corp.local&quot;</span><span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># NCC auth check</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>ldap_check
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># LDAP search results
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>dn: CN=testuser,OU=Users,DC=corp,DC=local
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>cn: Test User
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>mail: testuser@corp.local
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a># NCC health check output
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Starting health checks...
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>[2024-01-15 14:32:18] LDAP Configuration Check
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  Status: PASS
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  Details: LDAP server reachable at dc1.corp.local:389
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  Response Time: 142ms
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  Bind Status: SUCCESS
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  User Search: Successful (1 result found)
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Health check completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account has not been locked out in Active Directory.
+<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the LDAP server hostname/IP and port are correct, and that network connectivity exists from the CVM to the domain controller.
+<strong><code>ncc: command not found</code></strong> — Ensure you are running the command from a Nutanix CVM with NCC installed, or source the appropriate environment setup script.</p>
+</div>
 <p><strong>From Prism:</strong>
 - Settings → Authentication → Test Directory → login with an AD user
 - Confirm role mapping applies: log in with an AD group member and verify their role</p>
@@ -7902,7 +7965,7 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

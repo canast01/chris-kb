@@ -8287,40 +8287,117 @@ Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Monitor failback progress</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>igls<span class="w"> </span>failback<span class="w"> </span>status<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># igls failback list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Job Name                    Status      Last Run            Progress
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dr-vault-sync-prod          completed   2024-01-15 14:32    100%
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nfs-export-failback-01      idle        2024-01-10 09:15    —
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>san-lun-recovery-02         completed   2024-01-14 22:48    100%
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cifs-share-restore-03       failed      2024-01-13 18:22    45%
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>iscsi-target-failback-04    idle        2024-01-12 11:05    —
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># igls failback run --job dr-vault-sync-prod
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Failback job &#39;dr-vault-sync-prod&#39; started successfully
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Job ID: fb-2024-01-15-847392
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Estimated duration: 2 hours 15 minutes
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># igls failback status --job dr-vault-sync-prod
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Job ID:           fb-2024-01-15-847392
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Job Name:         dr-vault-sync-prod
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Status:           in_progress
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Progress:         67%
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Elapsed Time:     1 hour 32 minutes
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Estimated Time:   45 minutes remaining
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Data Transferred: 847.3 GB / 1.2 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Job '&lt;job_name&gt;' not found in failback queue</code></strong> — Verify the exact job name using <code>igls failback list</code> and ensure it exists before running.
+<strong><code>Error: Cannot start failback job - job already in progress</code></strong> — Wait for the current failback to complete or use <code>igls failback cancel --job &lt;job_name&gt;</code> to stop it first.
+<strong><code>Error: Authentication failed - invalid credentials</code></strong> — Ensure you are logged into the Eyeglass appliance with <code>igls login</code> and have appropriate failback permissions.</p>
+</div>
 <hr />
 <h2 id="onefs-synciq-supporting-commands">OneFS SyncIQ (Supporting Commands)<a class="headerlink" href="#onefs-synciq-supporting-commands" title="Permanent link">&para;</a></h2>
 <p>Run these on the PowerScale/Isilon cluster to verify the underlying replication state that Eyeglass monitors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all SyncIQ policies and their status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show detail for a policy</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List recent sync reports</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Start a manual SyncIQ sync</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check SyncIQ service status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>view
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all SyncIQ policies and their status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show detail for a policy</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List recent sync reports</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Start a manual SyncIQ sync</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check SyncIQ service status</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>view
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ID                                     Name                  Enabled  Target
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>b4a7c2f1-8e9d-4a2b-9f1c-3d5e6a7b8c9d   prod-to-dr-daily     true     192.168.50.42
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>a1f3e5d7-9c2b-4f6a-8e1d-2c3b4a5d6e7f   weekly-backup-sync   true     10.20.30.105
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>c8d2e4f6-1a3b-5c7d-9e0f-2a4b6c8d0e1f   archive-monthly      false    172.16.100.88
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Policy: prod-to-dr-daily
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Target: 192.168.50.42
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Enabled: true
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Last Run: 2024-01-15T03:45:22Z
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Status: Completed
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Next Run: 2024-01-16T03:00:00Z
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ID                          Policy Name           Status      Start Time              Duration
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>sync-rpt-20240115-034522    prod-to-dr-daily      Completed   2024-01-15T03:45:22Z   2h 14m
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>sync-rpt-20240114-030015    prod-to-dr-daily      Completed   2024-01-14T03:00:15Z   2h 8m
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>sync-rpt-20240113-025847    weekly-backup-sync    Completed   2024-01-13T02:58:47Z   45m
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Starting SyncIQ policy: prod-to-dr-daily
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Policy started successfully. Job ID: sync-job-20240115-142356
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>SyncIQ Service Status
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  Service Enabled: true
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  Service Running: true
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  Max Concurrent Jobs: 4
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  Current Active Jobs: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: policy '&lt;policy_name&gt;' not found</code></strong> — Verify the policy name with <code>isi sync policies list</code> and use the exact ID or name from the output.
+<strong><code>Error: target cluster unreachable (192.168.x.x)</code></strong> — Confirm network connectivity to the target cluster and verify the target IP address is correct in the policy configuration.
+<strong><code>Error: SyncIQ service is not running</code></strong> — Start the SyncIQ service with <code>isi sync settings modify --service-enabled=true</code> and verify with <code>isi sync settings view</code>.</p>
+</div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>The Eyeglass REST API is available at <code>https://&lt;eyeglass_ip&gt;/eca/api/v1</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/auth/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List sync jobs</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List failover jobs</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/failover<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/auth/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List sync jobs</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List failover jobs</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/failover<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{&quot;token&quot;:&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNDU2MCwiZXhwIjoxNzA5MzE4MTYwfQ.k7mN9pQrXyZ2vL4wJhFgHbKcDmNoPqRsT5uVwXyZ1aA&quot;,&quot;expires_in&quot;:3600}
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  {&quot;id&quot;:&quot;sync-job-001&quot;,&quot;name&quot;:&quot;prod-to-dr-daily&quot;,&quot;status&quot;:&quot;completed&quot;,&quot;last_run&quot;:&quot;2024-03-01T14:32:00Z&quot;,&quot;next_run&quot;:&quot;2024-03-02T14:00:00Z&quot;},
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  {&quot;id&quot;:&quot;sync-job-002&quot;,&quot;name&quot;:&quot;backup-mirror&quot;,&quot;status&quot;:&quot;running&quot;,&quot;progress&quot;:67,&quot;last_run&quot;:&quot;2024-03-01T10:15:00Z&quot;},
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  {&quot;id&quot;:&quot;sync-job-003&quot;,&quot;name&quot;:&quot;archive-sync&quot;,&quot;status&quot;:&quot;failed&quot;,&quot;error&quot;:&quot;Connection timeout&quot;,&quot;last_run&quot;:&quot;2024-03-01T08:00:00Z&quot;}
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>]
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>[
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  {&quot;id&quot;:&quot;failover-job-001&quot;,&quot;name&quot;:&quot;prod-cluster-failover&quot;,&quot;status&quot;:&quot;ready&quot;,&quot;last_tested&quot;:&quot;2024-02-28T09:30:00Z&quot;,&quot;rpo_minutes&quot;:15},
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  {&quot;id&quot;:&quot;failover-job-002&quot;,&quot;name&quot;:&quot;secondary-failover&quot;,&quot;status&quot;:&quot;ready&quot;,&quot;last_tested&quot;:&quot;2024-02-25T16:45:00Z&quot;,&quot;rpo_minutes&quot;:30}
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or install the Eyeglass CA certificate in your system trust store.
+<strong><code>{"error":"Invalid token","code":401}</code></strong> — Ensure the Bearer token from the login response is current and correctly formatted in the Authorization header.
+<strong><code>curl: (7) Failed to connect to &lt;eyeglass_ip&gt; port 443: Connection refused</code></strong> — Verify the Eyeglass IP address is correct, the service is running, and port 443 is accessible from your network.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8357,7 +8434,7 @@ Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:41:30 UTC"><span class="timeago" datetime="2026-06-29T05:41:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:41:30 UTC">2026-06-29</span>
   </span>
 
     

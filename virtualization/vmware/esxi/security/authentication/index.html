@@ -2010,17 +2010,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        # Confirm syslog configuration esxcli system syslog config get # Confirm log forwarding is working (check SIEM for recent ESXi entries) # Or generate a test entry logger -t esxi-auth-test &quot;Test auth log entry $(date)&quot;
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#related-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9371,6 +9360,21 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Remove an account</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uid=0 gid=0 homedir=/root shell=/bin/sh username=root
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uid=100 gid=100 homedir=/home/vpxuser shell=/bin/sh username=vpxuser
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>uid=101 gid=101 homedir=/home/dcui shell=/bin/sh username=dcui
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>uid=102 gid=102 homedir=/home/vsyslog shell=/bin/sh username=vsyslog
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uid=103 gid=103 homedir=/home/netdump shell=/bin/sh username=netdump
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>uid=104 gid=104 homedir=/home/hbrclient shell=/bin/sh username=hbrclient
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>uid=105 gid=105 homedir=/home/testuser shell=/bin/sh username=testuser
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or malformed command</code></strong> — Verify the username exists by running <code>esxcli system account list</code> first and use the exact username spelling.
+<strong><code>Error: Account is in use</code></strong> — Stop any active sessions or services using the account before removal, or use <code>esxcli system account remove -i &lt;username&gt; -f</code> to force removal.</p>
+</div>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9424,18 +9428,33 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 </tbody>
 </table>
 <p>Configure via advanced settings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View current password quality settings</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/PasswordQualityControl
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set password complexity requirements</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-o<span class="w"> </span>/Security/PasswordQualityControl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;similar=deny retry=3 min=disabled,disabled,disabled,7,7&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Failed login lockout</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current password quality settings</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/PasswordQualityControl
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set password complexity requirements</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-o<span class="w"> </span>/Security/PasswordQualityControl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;similar=deny retry=3 min=disabled,disabled,disabled,7,7&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Failed login lockout</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Path: /Security/PasswordQualityControl
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   Type: string
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   Int Value: N/A
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Default Value: similar=deny retry=3 min=disabled,disabled,disabled,7,7
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   Configured Value: similar=deny retry=3 min=disabled,disabled,disabled,7,7
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   Locked: false
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>(no output — command completes silently)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>(no output — command completes silently)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '-o /Security/PasswordQualityControl'</code></strong> — Verify the ESXi host is version 6.5 or later; older versions use different parameter syntax.
+<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate ESXi administrative privileges via SSH or the Direct Console User Interface.</p>
+</div>
 <p>Or via Host Profile: <strong>Policies and Profiles → Host Profile → Security → Security Settings → Login Banner / Password Policy</strong></p>
 <hr />
 <h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
@@ -9443,76 +9462,162 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 <blockquote>
 <p><strong>Note</strong>: Joining ESXi directly to AD is supported but not the recommended pattern for most environments. The preferred approach is to use vCenter as the AD identity broker and maintain lockdown mode on hosts. Only join ESXi hosts to AD if there is a specific operational requirement.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via ESXi Shell (or ESXCLI from vCenter)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcfg-auth<span class="w"> </span>--enablead<span class="w"> </span>--addomain<span class="o">=</span>corp.local<span class="w"> </span>--addc<span class="o">=</span>dc01.example.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or via ESXCLI</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lsass<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;ad_domain=corp.local ad_server=dc01.example.local&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify join status</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span>get<span class="w"> </span>-m<span class="w"> </span>lsass
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Via ESXi Shell (or ESXCLI from vCenter)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcfg-auth<span class="w"> </span>--enablead<span class="w"> </span>--addomain<span class="o">=</span>corp.local<span class="w"> </span>--addc<span class="o">=</span>dc01.example.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or via ESXCLI</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lsass<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;ad_domain=corp.local ad_server=dc01.example.local&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify join status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span>get<span class="w"> </span>-m<span class="w"> </span>lsass
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Joining domain corp.local...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Domain join completed successfully.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   Domain: corp.local
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>   Domain Controller: dc01.example.local
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>   Status: Joined
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   lsass.ad_domain = corp.local
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   lsass.ad_server = dc01.example.local
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   lsass.ad_enabled = true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Domain join failed: Unable to contact domain controller dc01.example.local</code></strong> — Verify network connectivity to the DC and ensure the hostname/IP is resolvable from the ESXi host.
+<strong><code>esxcli: error: Unknown module lsass</code></strong> — The lsass module may not be loaded; use <code>esxcli system module list</code> to confirm it exists, or use <code>esxcfg-auth</code> instead which handles module dependencies automatically.
+<strong><code>Permission denied</code></strong> — Ensure you are running commands as root or with appropriate ESXi administrative privileges via SSH or the DCUI.</p>
+</div>
 <p>Via vSphere Client: <strong>Host → Configure → System → Authentication Services → Change</strong></p>
 <p>After joining, AD users can be assigned roles in vCenter on this host. AD group <code>ESX Admins</code> is automatically granted administrator access — rename or disable this group if it exists in AD but should not have host access.</p>
 <h3 id="esx-admins-group-security-note">ESX Admins Group (Security Note)<a class="headerlink" href="#esx-admins-group-security-note" title="Permanent link">&para;</a></h3>
 <p>When an ESXi host is joined to AD, the AD group <code>ESX Admins</code> is granted full administrator access by default. This is a significant risk if the group exists in AD:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Rename or disable the automatic ESX Admins privilege</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-i<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Or change which AD group gets auto-admin rights</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;ESX-Controlled-Access-Group&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Rename or disable the automatic ESX Admins privilege</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-i<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Or change which AD group gets auto-admin rights</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;ESX-Controlled-Access-Group&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Value of IntOption /Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd is 1. New value will be 0.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Value of StringOption /Config/HostAgent/plugins/hostsvc/esxAdminsGroup is ESX Admins. New value will be ESX-Controlled-Access-Group.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option /Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd</code></strong> — Verify the exact option path matches your ESXi version (path may differ between 6.7, 7.0, and 8.0); consult VMware documentation for your build.
+<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate ESXi host privileges; use <code>esxcli system permission list</code> to verify your account permissions.</p>
+</div>
 <hr />
 <h2 id="authentication-hardening">Authentication Hardening<a class="headerlink" href="#authentication-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="disable-pam-telnet-and-ftp-if-enabled">Disable PAM Telnet and FTP (If Enabled)<a class="headerlink" href="#disable-pam-telnet-and-ftp-if-enabled" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if telnet or FTP is enabled</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|ftp&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable them</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check if telnet or FTP is enabled</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|ftp&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Disable them</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                    Enabled
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>----                    -------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ftpClient               true
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>ftpServer               true
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>telnetClient            false
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>telnetServer            true
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>(no output — command completes silently)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '--ruleset-id ftpClient'.</code></strong> — Use <code>--ruleset-id=ftpClient</code> with an equals sign instead of a space.
+<strong><code>Error: This command requires elevated privileges.</code></strong> — Run the commands as root or with appropriate ESXi administrative credentials via SSH.</p>
+</div>
 <h3 id="ssh-key-based-authentication">SSH Key-Based Authentication<a class="headerlink" href="#ssh-key-based-authentication" title="Permanent link">&para;</a></h3>
 <p>For break-glass SSH access, prefer key-based authentication over passwords:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the ESXi host — create authorized_keys directory</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssh/keys-root
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Add the public key</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssh/keys-root/authorized_keys
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ssh/keys-root/authorized_keys
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify key is loaded</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>root@&lt;esxi-host&gt;<span class="w"> </span><span class="s2">&quot;esxcli system version get&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On the ESXi host — create authorized_keys directory</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssh/keys-root
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Add the public key</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssh/keys-root/authorized_keys
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ssh/keys-root/authorized_keys
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify key is loaded</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>root@&lt;esxi-host&gt;<span class="w"> </span><span class="s2">&quot;esxcli system version get&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Product: VMware ESXi
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>   Version: 7.0.3
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>   Build: 20328353
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>   Update: 3
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>   Patch: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Ensure the authorized_keys file contains the correct public key and verify permissions are exactly 600 on the file and 700 on the /etc/ssh/keys-root directory.
+<strong><code>No such file or directory</code></strong> — Create the /etc/ssh/keys-root directory with <code>mkdir -p /etc/ssh/keys-root</code> before adding the authorized_keys file to it.
+<strong><code>Host key verification failed</code></strong> — Add the ESXi host's key to your local known_hosts file by running <code>ssh-keyscan -H &lt;esxi-host&gt; &gt;&gt; ~/.ssh/known_hosts</code> first.</p>
+</div>
 <p>Keys are not persisted across reboots on stateless ESXi (Auto Deploy) without configuration in the host profile.</p>
 <h3 id="ssh-hardening-esxi-sshd">SSH Hardening (ESXi SSHD)<a class="headerlink" href="#ssh-hardening-esxi-sshd" title="Permanent link">&para;</a></h3>
 <p>If SSH must remain enabled temporarily, review <code>/etc/ssh/sshd_config</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View current SSH config</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cat<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Key hardening settings to verify:</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># PermitRootLogin yes          (required for break-glass on ESXi)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># PasswordAuthentication yes   (ESXi default; disable if using key-only)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># ClientAliveInterval 300      (disconnect idle sessions after 5 minutes)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># ClientAliveCountMax 0        (strict: no keepalive retries before disconnect)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># AllowTcpForwarding no        (disable port forwarding)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># X11Forwarding no             (disable X11)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View current SSH config</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cat<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Key hardening settings to verify:</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># PermitRootLogin yes          (required for break-glass on ESXi)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># PasswordAuthentication yes   (ESXi default; disable if using key-only)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># ClientAliveInterval 300      (disconnect idle sessions after 5 minutes)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># ClientAliveCountMax 0        (strict: no keepalive retries before disconnect)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># AllowTcpForwarding no        (disable port forwarding)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># X11Forwarding no             (disable X11)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Port 22
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>AddressFamily any
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ListenAddress 0.0.0.0
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ListenAddress ::
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>PermitRootLogin yes
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>StrictModes yes
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>MaxAuthTries 3
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>MaxSessions 10
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>PubkeyAuthentication yes
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>PasswordAuthentication yes
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>PermitEmptyPasswords no
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>ClientAliveInterval 300
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>ClientAliveCountMax 0
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>AllowTcpForwarding no
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>X11Forwarding no
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>PrintMotd no
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>AcceptEnv LANG LC_*
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Subsystem sftp /usr/lib/vmware-vsan/bin/sftp-server
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Use <code>grep</code> directly on the file instead: <code>grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"</code> (remove the pipe from <code>cat</code>).
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root: <code>sudo cat /etc/ssh/sshd_config | grep -v "^#" | grep -v "^$"</code>.</p>
+</div>
 <p>Note: <code>/etc/ssh/sshd_config</code> changes do not persist across reboots unless stored in a persistent config location or enforced via host profile.</p>
 <hr />
 <h2 id="login-banner">Login Banner<a class="headerlink" href="#login-banner" title="Permanent link">&para;</a></h2>
 <p>Display a legal / unauthorised access warning banner on SSH and DCUI logins:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Set login banner</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Set login banner</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Verify</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(no output — command completes silently)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>   Path: /Config/Etc/issue
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>   Type: string
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>   Int Value: 0
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>   Value: AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option or flag '-o /Config/Etc/issue'</code></strong> — Use the correct syntax <code>--option /Config/Etc/issue</code> or verify the ESXi version supports this parameter.
+<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate ESXi administrative privileges; standard user accounts cannot modify system settings.</p>
+</div>
 <p>The banner appears on SSH login and in the DCUI. Configure via Host Profile to enforce consistently.</p>
 <hr />
 <h2 id="authentication-audit">Authentication Audit<a class="headerlink" href="#authentication-audit" title="Permanent link">&para;</a></h2>
@@ -9548,23 +9653,64 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View recent authentication failures</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span><span class="s2">&quot;Failed\|Invalid\|Authentication failure&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># View shell commands</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View DCUI logins</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>grep<span class="w"> </span><span class="s2">&quot;dcui\|DCUI\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># View recent authentication failures</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span><span class="s2">&quot;Failed\|Invalid\|Authentication failure&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># View shell commands</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># View DCUI logins</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>grep<span class="w"> </span><span class="s2">&quot;dcui\|DCUI\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>2024-01-15T09:23:14Z root: Authentication failure for user admin from 192.168.1.45
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15T09:24:02Z root: Invalid password attempt for root
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15T09:25:18Z root: Failed login attempt - user &#39;testuser&#39; from 10.0.0.88
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15T10:12:45Z root: Authentication failure for user dcui from 192.168.1.50
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15T10:15:33Z root: Failed SSH key validation for user backup
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15T11:02:19Z root: Invalid credentials - LDAP bind failure
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>2024-01-15T11:45:22Z root: Authentication failure for user admin from 192.168.1.45
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>/bin/vim-cmd vimsvc/license --show
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>/bin/esxcli system settings advanced list -o /Net/GuestIPHack
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>/bin/esxcli storage filesystem list
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>/bin/vim-cmd hostsvc/maintenance_mode_enter
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>/bin/esxcli network ip interface list
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>/bin/esxcli system module list
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>/bin/vim-cmd vimsvc/content/licenseManager queryLicenseSourceEdition
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>2024-01-15T09:10:22Z dcui[2847]: DCUI login attempt from console
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>2024-01-15T09:12:05Z dcui[2851]: DCUI session established for user root
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>2024-01-15T10:33:18Z login[3124]: Login attempt on tty1 - user root
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>2024-01-15T10:33:45Z dcui[3128]: DCUI logout - session duration 45 seconds
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>2024-01-15T11:22:09Z login[3456]: Login attempt on tty2 - user admin
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/auth.log: No such file or directory</code></strong> — Use <code>/var/log/hostd.log</code> or <code>/var/log/syslog.log</code> instead, as ESXi does not maintain a standard auth.log file.
+<strong><code>grep: /var/log/shell.log: No such file or directory</code></strong> — Check <code>/var/log/shell.log</code> existence with <code>ls -la /var/log/shell.log</code> or use <code>/var/log/hostd.log</code> for authentication events.
+<strong><code>grep: /var/log/vobd.log: No such file or directory</code></strong> — Verify the log file path with <code>find /var/log -name "vobd.log"</code> or check <code>/var/log/auth.log</code> for DCUI login records.</p>
+</div>
 <h3 id="verify-logs-are-forwarding">Verify Logs Are Forwarding<a class="headerlink" href="#verify-logs-are-forwarding" title="Permanent link">&para;</a></h3>
-<h2 id="confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date"><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm syslog configuration</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Confirm log forwarding is working (check SIEM for recent ESXi entries)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Or generate a test entry</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>esxi-auth-test<span class="w"> </span><span class="s2">&quot;Test auth log entry </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
-</code></pre></div><a class="headerlink" href="#confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Confirm syslog configuration</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Confirm log forwarding is working (check SIEM for recent ESXi entries)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Or generate a test entry</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>esxi-auth-test<span class="w"> </span><span class="s2">&quot;Test auth log entry </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Loghost: 192.168.1.50:514
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Default Network Retry Timeout: 180
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Config Path Loaded: /etc/vmware/syslog.conf
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Log Output: DEFAULT
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Queue Drop Mark: 100
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Dropped Log Messages: 0
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Test auth log entry Thu Mar 14 09:42:17 UTC 2024
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the syslog server IP and port are correct with <code>esxcli system syslog config set --loghost=&lt;ip&gt;:&lt;port&gt;</code> and ensure the remote syslog service is running.
+<strong><code>logger: invalid option -- 't'</code></strong> — Use <code>logger -t esxi-auth-test "message"</code> syntax (the <code>-t</code> tag option may require quotes around the entire message on some ESXi versions).
+<strong><code>Loghost: (none)</code></strong> — Configure a syslog destination first using <code>esxcli system syslog config set --loghost=&lt;syslog-server-ip&gt;:514</code>.</p>
+</div>
+<hr />
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../../../security/ldap-integration/">Standard LDAP Integration</a> — field reference, service account standards, TLS requirements, and connectivity testing</li>
@@ -9597,7 +9743,7 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

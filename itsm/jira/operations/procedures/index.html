@@ -7737,113 +7737,212 @@ Jira operational procedures — story and epic creation, sprint management, back
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;fields=summary,customfield_10016&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.issues[] | {key: .key, points: .fields.customfield_10016}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;10042&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;key&quot;: &quot;PLAT-123&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;fields&quot;: {
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;customfield_10016&quot;: 5
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  }
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>}
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>{
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;key&quot;: &quot;PLAT-101&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;points&quot;: 8
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>}
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>{
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;key&quot;: &quot;PLAT-102&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;points&quot;: 5
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>{
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;key&quot;: &quot;PLAT-103&quot;,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;points&quot;: 3
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>{
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;key&quot;: &quot;PLAT-104&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;points&quot;: null
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>}
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>{
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;key&quot;: &quot;PLAT-105&quot;,
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;points&quot;: 13
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>"errorMessages":["Field 'customfield_10016' cannot be set. It is not on the appropriate screen, or unknown."]</code></strong> — Verify the custom field ID matches your Jira instance by checking Administration &gt; Fields or using <code>curl -u user:token https://your-instance.atlassian.net/rest/api/2/field | jq '.[] | select(.name=="Story Points")'</code>.
+<strong><code>curl: (6) Could not resolve host: your-instance.atlassian.net</code></strong> — Replace <code>your-instance</code> with your actual Jira domain name (e.g., <code>mycompany.atlassian.net</code>).
+<strong><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></strong> — Ensure the API response is valid JSON by removing any authentication errors; check credentials with <code>curl -u user:token https://your-instance.atlassian.net/rest/api/2/myself</code>.</p>
+</div>
 <h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">&para;</a></h2>
 <p>Epics group related stories under a theme or deliverable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an epic</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;summary&quot;: &quot;Storage Automation&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Epic&quot;},</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      &quot;customfield_10011&quot;: &quot;Storage Automation&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    }</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Link a story to an epic</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fields&quot;: {&quot;customfield_10014&quot;: &quot;PLAT-10&quot;}}&#39;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># List all stories in an epic</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND &quot;Epic Link&quot; = PLAT-10&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an epic</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;fields&quot;: {</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">      &quot;summary&quot;: &quot;Storage Automation&quot;,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Epic&quot;},</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">      &quot;customfield_10011&quot;: &quot;Storage Automation&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    }</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Link a story to an epic</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fields&quot;: {&quot;customfield_10014&quot;: &quot;PLAT-10&quot;}}&#39;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># List all stories in an epic</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND &quot;Epic Link&quot; = PLAT-10&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{&quot;id&quot;:&quot;10042&quot;,&quot;key&quot;:&quot;PLAT-10&quot;,&quot;self&quot;:&quot;https://your-instance.atlassian.net/rest/api/2/issue/10042&quot;,&quot;fields&quot;:{&quot;summary&quot;:&quot;Storage Automation&quot;}}
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>(no output — command completes silently)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>{&quot;expand&quot;:&quot;names,schema&quot;,&quot;startAt&quot;:0,&quot;maxResults&quot;:50,&quot;total&quot;:3,&quot;issues&quot;:[{&quot;key&quot;:&quot;PLAT-123&quot;,&quot;fields&quot;:{&quot;summary&quot;:&quot;Implement S3 bucket policies&quot;}},{&quot;key&quot;:&quot;PLAT-124&quot;,&quot;fields&quot;:{&quot;summary&quot;:&quot;Configure lifecycle rules&quot;}},{&quot;key&quot;:&quot;PLAT-125&quot;,&quot;fields&quot;:{&quot;summary&quot;:&quot;Enable versioning on buckets&quot;}}]}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"errorMessages":["Authentication failed; verify you are logged in"]}</code></strong> — Verify your Jira instance URL, username, and API token are correct.
+<strong><code>{"errorMessages":["Field 'customfield_10014' does not exist or you do not have permission to edit it."]}</code></strong> — Confirm the custom field ID for "Epic Link" matches your Jira instance by checking Administration &gt; Custom Fields.</p>
+</div>
 <h2 id="story-splitting">Story Splitting<a class="headerlink" href="#story-splitting" title="Permanent link">&para;</a></h2>
 <p>Split large stories using these patterns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Patterns for splitting</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>By<span class="w"> </span>workflow<span class="w"> </span>step:<span class="w">     </span>One<span class="w"> </span>story<span class="w"> </span>per<span class="w"> </span>step<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>user<span class="w"> </span>workflow
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>By<span class="w"> </span>data<span class="w"> </span>type:<span class="w">         </span>Separate<span class="w"> </span>stories<span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span>entity/type
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>By<span class="w"> </span>interface:<span class="w">         </span>API<span class="w"> </span>first,<span class="w"> </span><span class="k">then</span><span class="w"> </span>UI
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>By<span class="w"> </span>acceptance<span class="w"> </span>criterion:<span class="w"> </span>Each<span class="w"> </span>criterion<span class="w"> </span>becomes<span class="w"> </span>its<span class="w"> </span>own<span class="w"> </span>story
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>By<span class="w"> </span>happy/unhappy<span class="w"> </span>path:<span class="w"> </span>Core<span class="w"> </span>flow<span class="w"> </span>first,<span class="w"> </span>error<span class="w"> </span>handling<span class="w"> </span>separate
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>By<span class="w"> </span>permission<span class="w"> </span>level:<span class="w">  </span>Admin<span class="w"> </span>view,<span class="w"> </span>user<span class="w"> </span>view<span class="w"> </span>as<span class="w"> </span>separate<span class="w"> </span>stories
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Patterns for splitting</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>By<span class="w"> </span>workflow<span class="w"> </span>step:<span class="w">     </span>One<span class="w"> </span>story<span class="w"> </span>per<span class="w"> </span>step<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>user<span class="w"> </span>workflow
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>By<span class="w"> </span>data<span class="w"> </span>type:<span class="w">         </span>Separate<span class="w"> </span>stories<span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span>entity/type
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>By<span class="w"> </span>interface:<span class="w">         </span>API<span class="w"> </span>first,<span class="w"> </span><span class="k">then</span><span class="w"> </span>UI
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>By<span class="w"> </span>acceptance<span class="w"> </span>criterion:<span class="w"> </span>Each<span class="w"> </span>criterion<span class="w"> </span>becomes<span class="w"> </span>its<span class="w"> </span>own<span class="w"> </span>story
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>By<span class="w"> </span>happy/unhappy<span class="w"> </span>path:<span class="w"> </span>Core<span class="w"> </span>flow<span class="w"> </span>first,<span class="w"> </span>error<span class="w"> </span>handling<span class="w"> </span>separate
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>By<span class="w"> </span>permission<span class="w"> </span>level:<span class="w">  </span>Admin<span class="w"> </span>view,<span class="w"> </span>user<span class="w"> </span>view<span class="w"> </span>as<span class="w"> </span>separate<span class="w"> </span>stories
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Signal</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Story &gt; 8 points</td>
-<td>Split before sprint planning</td>
-</tr>
-<tr>
-<td>Multiple "and" clauses in title</td>
-<td>Each clause is a separate story</td>
-</tr>
-<tr>
-<td>Multiple system touches</td>
-<td>Split by system boundary</td>
-</tr>
-<tr>
-<td>Unclear acceptance criteria</td>
-<td>Spike first, then story</td>
-</tr>
-</tbody>
-</table>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — this is a documentation comment block with pattern descriptions only)
+</code></pre></div>
+| Signal | Action |
+|--------|--------|
+| Story &gt; 8 points | Split before sprint planning |
+| Multiple "and" clauses in title | Each clause is a separate story |
+| Multiple system touches | Split by system boundary |
+| Unclear acceptance criteria | Spike first, then story |</p>
 <hr />
 <h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h2>
 <p>Task creation, sub-tasks, issue linking, workflow transitions, and bulk operations.</p>
 <h2 id="creating-tasks">Creating Tasks<a class="headerlink" href="#creating-tasks" title="Permanent link">&para;</a></h2>
 <p>Tasks represent technical work that does not map directly to a user story (infra changes, chores, spikes).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a task via REST API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">      &quot;summary&quot;: &quot;Upgrade Terraform AWS provider to v5&quot;,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Task&quot;},</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">      &quot;description&quot;: &quot;Provider v5 required for new S3 features. See migration guide.&quot;,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">      &quot;priority&quot;: {&quot;name&quot;: &quot;Medium&quot;},</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">      &quot;assignee&quot;: {&quot;name&quot;: &quot;jsmith&quot;},</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">      &quot;labels&quot;: [&quot;infrastructure&quot;, &quot;terraform&quot;]</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">    }</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Get a task by key</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a task via REST API</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;fields&quot;: {</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">      &quot;summary&quot;: &quot;Upgrade Terraform AWS provider to v5&quot;,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Task&quot;},</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">      &quot;description&quot;: &quot;Provider v5 required for new S3 features. See migration guide.&quot;,</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">      &quot;priority&quot;: {&quot;name&quot;: &quot;Medium&quot;},</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">      &quot;assignee&quot;: {&quot;name&quot;: &quot;jsmith&quot;},</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s1">      &quot;labels&quot;: [&quot;infrastructure&quot;, &quot;terraform&quot;]</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">    }</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Get a task by key</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;10042&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;key&quot;: &quot;PLAT-4521&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issue/10042&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;fields&quot;: {
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    &quot;summary&quot;: &quot;Upgrade Terraform AWS provider to v5&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    &quot;status&quot;: {
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      &quot;name&quot;: &quot;To Do&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    },
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    &quot;assignee&quot;: {
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      &quot;name&quot;: &quot;jsmith&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      &quot;emailAddress&quot;: &quot;jsmith@company.atlassian.net&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    }
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  }
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>}
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>{
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;expand&quot;: &quot;changelog,html&quot;,
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  &quot;id&quot;: &quot;10042&quot;,
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  &quot;key&quot;: &quot;PLAT-123&quot;,
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issue/10042&quot;,
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  &quot;fields&quot;: {
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    &quot;summary&quot;: &quot;Upgrade Terraform AWS provider to v5&quot;,
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    &quot;description&quot;: &quot;Provider v5 required for new S3 features. See migration guide.&quot;,
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    &quot;status&quot;: {&quot;name&quot;: &quot;To Do&quot;},
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    &quot;priority&quot;: {&quot;name&quot;: &quot;Medium&quot;},
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    &quot;assignee&quot;: {&quot;name&quot;: &quot;jsmith&quot;},
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    &quot;labels&quot;: [&quot;infrastructure&quot;, &quot;terraform&quot;],
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    &quot;created&quot;: &quot;2024-01-15T09:42:31.000+0000&quot;
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  }
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>"errorMessages":["User 'user' does not have permission to create issues in project PLAT"]</code></strong> — Verify the API token has project admin or create-issue permissions, or check project visibility settings.
+<strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance.atlassian.net</code> with your actual Jira domain and verify the instance is accessible.
+<strong><code>"errorMessages":["Issue Type 'Task' is not valid for project PLAT"]</code></strong> — Check the project's available issue types via the project settings or use <code>curl -u user:token "https://your-instance.atlassian.net/rest/api/2/project/PLAT/issuetypes"</code> to list valid types.</p>
+</div>
 <h2 id="sub-tasks">Sub-tasks<a class="headerlink" href="#sub-tasks" title="Permanent link">&para;</a></h2>
 <p>Sub-tasks break a parent issue into trackable pieces of work.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a sub-task</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;summary&quot;: &quot;Test provider upgrade in dev environment&quot;,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Sub-task&quot;},</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">      &quot;parent&quot;: {&quot;key&quot;: &quot;PLAT-123&quot;}</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">    }</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List sub-tasks for a parent issue</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.fields.subtasks[] | {key: .key, summary: .fields.summary, status: .fields.status.name}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a sub-task</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;fields&quot;: {</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">      &quot;project&quot;: {&quot;key&quot;: &quot;PLAT&quot;},</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">      &quot;summary&quot;: &quot;Test provider upgrade in dev environment&quot;,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      &quot;issuetype&quot;: {&quot;name&quot;: &quot;Sub-task&quot;},</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">      &quot;parent&quot;: {&quot;key&quot;: &quot;PLAT-123&quot;}</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">    }</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># List sub-tasks for a parent issue</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.fields.subtasks[] | {key: .key, summary: .fields.summary, status: .fields.status.name}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;id&quot;: &quot;10047&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;key&quot;: &quot;PLAT-124&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issue/10047&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;fields&quot;: {
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    &quot;summary&quot;: &quot;Test provider upgrade in dev environment&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;issuetype&quot;: {
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      &quot;name&quot;: &quot;Sub-task&quot;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    },
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;parent&quot;: {
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      &quot;key&quot;: &quot;PLAT-123&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    }
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  }
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>}
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>{
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;key&quot;: &quot;PLAT-124&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;summary&quot;: &quot;Test provider upgrade in dev environment&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;status&quot;: &quot;To Do&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>}
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>{
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  &quot;key&quot;: &quot;PLAT-125&quot;,
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;summary&quot;: &quot;Validate rollback procedure&quot;,
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  &quot;status&quot;: &quot;In Progress&quot;
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>{
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>  &quot;key&quot;: &quot;PLAT-126&quot;,
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  &quot;summary&quot;: &quot;Document breaking changes&quot;,
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  &quot;status&quot;: &quot;Done&quot;
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance.atlassian.net</code> with your actual Jira domain name.
+<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></strong> — Verify that PLAT-123 exists, is accessible to your user, and that the parent issue type supports sub-tasks.
+<strong><code>jq: parse error: Cannot index number with string "fields"</code></strong> — Ensure the curl response is valid JSON; add <code>-s</code> flag to curl to suppress progress output and check authentication credentials are correct.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -7882,24 +7981,53 @@ Jira operational procedures — story and epic creation, sprint management, back
 </table>
 <h2 id="issue-linking">Issue Linking<a class="headerlink" href="#issue-linking" title="Permanent link">&para;</a></h2>
 <p>Link issues to express relationships: blocks, is blocked by, duplicates, relates to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create an issue link</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLink&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;type&quot;: {&quot;name&quot;: &quot;Blocks&quot;},</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;inwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-123&quot;},</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;outwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-456&quot;}</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># List available link types</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLinkType&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Delete a link</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLink/LINK_ID&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create an issue link</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLink&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s1">    &quot;type&quot;: {&quot;name&quot;: &quot;Blocks&quot;},</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    &quot;inwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-123&quot;},</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    &quot;outwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-456&quot;}</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># List available link types</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLinkType&quot;</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Delete a link</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issueLink/LINK_ID&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;id&quot;: &quot;10042&quot;,
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issueLink/10042&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;type&quot;: {
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    &quot;id&quot;: &quot;10000&quot;,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    &quot;name&quot;: &quot;Blocks&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    &quot;inward&quot;: &quot;is blocked by&quot;,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    &quot;outward&quot;: &quot;blocks&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/issueLinkType/10000&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  },
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  &quot;inwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-123&quot;, &quot;id&quot;: &quot;10501&quot;},
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  &quot;outwardIssue&quot;: {&quot;key&quot;: &quot;PLAT-456&quot;, &quot;id&quot;: &quot;10502&quot;}
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>}
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>{
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  &quot;issueLinkTypes&quot;: [
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    {&quot;id&quot;: &quot;10000&quot;, &quot;name&quot;: &quot;Blocks&quot;, &quot;inward&quot;: &quot;is blocked by&quot;, &quot;outward&quot;: &quot;blocks&quot;},
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    {&quot;id&quot;: &quot;10001&quot;, &quot;name&quot;: &quot;Relates&quot;, &quot;inward&quot;: &quot;relates to&quot;, &quot;outward&quot;: &quot;relates to&quot;},
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    {&quot;id&quot;: &quot;10002&quot;, &quot;name&quot;: &quot;Duplicates&quot;, &quot;inward&quot;: &quot;is duplicated by&quot;, &quot;outward&quot;: &quot;duplicates&quot;},
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    {&quot;id&quot;: &quot;10003&quot;, &quot;name&quot;: &quot;Clones&quot;, &quot;inward&quot;: &quot;is cloned by&quot;, &quot;outward&quot;: &quot;clones&quot;}
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>  ]
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>}
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA challenge response."]}</code></strong> — Verify the username, API token, and instance URL are correct; regenerate the token if expired.
+<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></strong> — Confirm both PLAT-123 and PLAT-456 exist and the authenticated user has permission to view and link them.
+<strong><code>{"errorMessages":["Link type 'Blocks' does not exist."]}</code></strong> — Run the second curl command to list available link types and use a valid name from the response.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -7932,70 +8060,167 @@ Jira operational procedures — story and epic creation, sprint management, back
 </tbody>
 </table>
 <h2 id="workflow-transitions">Workflow Transitions<a class="headerlink" href="#workflow-transitions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get available transitions for an issue</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.transitions[] | {id: .id, name: .name}&#39;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Perform a transition (move to &quot;In Progress&quot;)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;transition&quot;: {&quot;id&quot;: &quot;21&quot;}}&#39;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Transition with a comment</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s1">    &quot;transition&quot;: {&quot;id&quot;: &quot;31&quot;},</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s1">    &quot;update&quot;: {</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s1">      &quot;comment&quot;: [{&quot;add&quot;: {&quot;body&quot;: &quot;Deployed to prod — monitoring for 30 min&quot;}}]</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s1">    }</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get available transitions for an issue</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.transitions[] | {id: .id, name: .name}&#39;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Perform a transition (move to &quot;In Progress&quot;)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;transition&quot;: {&quot;id&quot;: &quot;21&quot;}}&#39;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Transition with a comment</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/PLAT-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="s1">    &quot;transition&quot;: {&quot;id&quot;: &quot;31&quot;},</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="s1">    &quot;update&quot;: {</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="s1">      &quot;comment&quot;: [{&quot;add&quot;: {&quot;body&quot;: &quot;Deployed to prod — monitoring for 30 min&quot;}}]</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="s1">    }</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;id&quot;: &quot;11&quot;,
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;name&quot;: &quot;To Do&quot;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>{
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;id&quot;: &quot;21&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;name&quot;: &quot;In Progress&quot;
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>}
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>{
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  &quot;id&quot;: &quot;31&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;name&quot;: &quot;Done&quot;
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>}
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>{
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  &quot;id&quot;: &quot;41&quot;,
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>  &quot;name&quot;: &quot;In Review&quot;
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>}
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>(no output — command completes silently)
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual Jira domain name (e.g., <code>company.atlassian.net</code>).
+<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></strong> — Verify the issue key (PLAT-123) exists and your API token has read/write permissions for that project.
+<strong><code>{"errorMessages":["Transition is not available for the current status of the issue."]}</code></strong> — Confirm the transition ID is valid for the issue's current status by running the first command to list available transitions.</p>
+</div>
 <h2 id="bulk-operations">Bulk Operations<a class="headerlink" href="#bulk-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Bulk assign issues to a new assignee (via search + update loop)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">ISSUES</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND assignee = &quot;olduser&quot; AND status != Done&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.issues[].key&#39;</span><span class="k">)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">for</span><span class="w"> </span>ISSUE<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$ISSUES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/</span><span class="si">${</span><span class="nv">ISSUE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fields&quot;: {&quot;assignee&quot;: {&quot;name&quot;: &quot;newuser&quot;}}}&#39;</span><span class="w"> </span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">done</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Bulk transition via Jira UI:</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Board or issue list → select issues → Actions → Transition</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Bulk assign issues to a new assignee (via search + update loop)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">ISSUES</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND assignee = &quot;olduser&quot; AND status != Done&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.issues[].key&#39;</span><span class="k">)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">for</span><span class="w"> </span>ISSUE<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$ISSUES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/</span><span class="si">${</span><span class="nv">ISSUE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fields&quot;: {&quot;assignee&quot;: {&quot;name&quot;: &quot;newuser&quot;}}}&#39;</span><span class="w"> </span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="k">done</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Bulk transition via Jira UI:</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Board or issue list → select issues → Actions → Transition</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add a label to multiple issues</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span><span class="w"> </span>ISSUE<span class="w"> </span><span class="k">in</span><span class="w"> </span>PLAT-100<span class="w"> </span>PLAT-101<span class="w"> </span>PLAT-102<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/</span><span class="si">${</span><span class="nv">ISSUE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;update&quot;: {&quot;labels&quot;: [{&quot;add&quot;: &quot;needs-review&quot;}]}}&#39;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">done</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>PLAT-4521
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>PLAT-4589
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>PLAT-4603
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>PLAT-4671
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>PLAT-4702
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>PLAT-4758
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>PLAT-4819
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>...
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Successfully updated PLAT-4521
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Successfully updated PLAT-4589
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Successfully updated PLAT-4603
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Successfully updated PLAT-4671
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Successfully updated PLAT-4702
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Successfully updated PLAT-4758
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Successfully updated PLAT-4819
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (401) Unauthorized</code></strong> — Verify the API token is valid and base64-encoded correctly in the <code>-u user:token</code> parameter, or use <code>-H "Authorization: Bearer $TOKEN"</code> instead.
+<strong><code>jq: parse error: Invalid JSON</code></strong> — Check that the Jira instance URL is correct and accessible; the search endpoint may be returning an error page instead of JSON.
+<strong><code>"errorMessages": ["User does not exist"]</code></strong> — Confirm that "newuser" exists in your Jira instance and has permission to be assigned issues in the PLAT project.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Add a label to multiple issues</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">for</span><span class="w"> </span>ISSUE<span class="w"> </span><span class="k">in</span><span class="w"> </span>PLAT-100<span class="w"> </span>PLAT-101<span class="w"> </span>PLAT-102<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/issue/</span><span class="si">${</span><span class="nv">ISSUE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;update&quot;: {&quot;labels&quot;: [{&quot;add&quot;: &quot;needs-review&quot;}]}}&#39;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{&quot;id&quot;:&quot;10000&quot;,&quot;key&quot;:&quot;PLAT-100&quot;,&quot;self&quot;:&quot;https://your-instance.atlassian.net/rest/api/2/issue/10000&quot;}
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>{&quot;id&quot;:&quot;10001&quot;,&quot;key&quot;:&quot;PLAT-101&quot;,&quot;self&quot;:&quot;https://your-instance.atlassian.net/rest/api/2/issue/10001&quot;}
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>{&quot;id&quot;:&quot;10002&quot;,&quot;key&quot;:&quot;PLAT-102&quot;,&quot;self&quot;:&quot;https://your-instance.atlassian.net/rest/api/2/issue/10002&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA"]}</code></strong> — Verify the API token is valid and base64-encoded correctly in the <code>-u user:token</code> parameter.
+<strong><code>{"errorMessages":["You do not have permission to edit this issue"]}</code></strong> — Confirm the user account has the "Edit Issues" permission in the Jira project.
+<strong><code>curl: (6) Could not resolve host: your-instance.atlassian.net</code></strong> — Replace <code>your-instance</code> with your actual Jira instance name (e.g., <code>company.atlassian.net</code>).</p>
+</div>
 <hr />
 <h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
 <p>Sprint reports, velocity, burndown charts, cumulative flow diagrams, and data exports.</p>
 <h2 id="sprint-reports">Sprint Reports<a class="headerlink" href="#sprint-reports" title="Permanent link">&para;</a></h2>
 <p>Sprint reports show which issues were completed, incomplete, or removed during a sprint.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Get sprint report data via API</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=10&amp;sprintId=42&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># List all sprints for a board</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/agile/1.0/board/10/sprint?state=closed&amp;maxResults=10&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Get issues completed in a sprint</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/agile/1.0/sprint/42/issue?jql=status+in+(Done,Resolved)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Get sprint report data via API</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=10&amp;sprintId=42&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># List all sprints for a board</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/agile/1.0/board/10/sprint?state=closed&amp;maxResults=10&quot;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Get issues completed in a sprint</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/agile/1.0/sprint/42/issue?jql=status+in+(Done,Resolved)&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;contents&quot;: {
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    &quot;completedIssuesEstimate&quot;: 89,
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    &quot;issuesNotEstimated&quot;: 3,
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    &quot;issuesEstimate&quot;: 144,
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    &quot;completedIssuesCount&quot;: 34,
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    &quot;issuesCount&quot;: 42
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  },
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  &quot;sprint&quot;: {
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    &quot;id&quot;: 42,
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    &quot;name&quot;: &quot;Sprint 24&quot;,
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    &quot;startDate&quot;: &quot;2024-01-15T09:00:00.000Z&quot;,
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    &quot;endDate&quot;: &quot;2024-01-29T17:00:00.000Z&quot;
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  }
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>}
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>{
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>  &quot;values&quot;: [
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>    {&quot;id&quot;: 42, &quot;name&quot;: &quot;Sprint 24&quot;, &quot;state&quot;: &quot;closed&quot;, &quot;startDate&quot;: &quot;2024-01-15T09:00:00.000Z&quot;},
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    {&quot;id&quot;: 41, &quot;name&quot;: &quot;Sprint 23&quot;, &quot;state&quot;: &quot;closed&quot;, &quot;startDate&quot;: &quot;2024-01-01T09:00:00.000Z&quot;},
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>    {&quot;id&quot;: 40, &quot;name&quot;: &quot;Sprint 22&quot;, &quot;state&quot;: &quot;closed&quot;, &quot;startDate&quot;: &quot;2023-12-18T09:00:00.000Z&quot;}
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>  ],
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>  &quot;isLast&quot;: false,
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>  &quot;maxResults&quot;: 10
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>}
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>{
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>  &quot;expand&quot;: &quot;changelog,changelog.histories&quot;,
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>  &quot;issues&quot;: [
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>    {&quot;key&quot;: &quot;PROJ-1847&quot;, &quot;fields&quot;: {&quot;summary&quot;: &quot;Update authentication module&quot;, &quot;status&quot;: {&quot;name&quot;: &quot;Done&quot;}}},
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>    {&quot;key&quot;: &quot;PROJ-1842&quot;, &quot;fields&quot;: {&quot;summary&quot;: &quot;Fix database connection pooling&quot;, &quot;status&quot;: {&quot;name&quot;: &quot;Resolved&quot;}}},
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>    {&quot;key&quot;: &quot;PROJ-1839&quot;, &quot;fields&quot;: {&quot;summary&quot;: &quot;Refactor API response handler&quot;, &quot;status&quot;: {&quot;name&quot;: &quot;Done&quot;}}}
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>  ],
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>  &quot;total&quot;: 34
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual Jira domain name (e.g., <code>company.atlassian.net</code>).
+<strong><code>{"errorMessages":["User is not authenticated"],"errors":{}}</code></strong> — Verify the API token is valid and use base64 encoding: <code>curl -u user:$(echo -n token | base64)</code> or switch to <code>-H "Authorization: Bearer $TOKEN"</code> format.
+<strong><code>{"errorMessages":["The board does not exist or you do not have permission to view it"]}</code></strong> — Confirm the <code>rapidViewId</code> and <code>sprintId</code> values are correct and your user account has access to the board.</p>
+</div>
 <p>Key sprint metrics to review:
 - Commitment (story points planned at sprint start)
 - Completed points vs committed points
@@ -8003,15 +8228,47 @@ Jira operational procedures — story and epic creation, sprint management, back
 - Carried-over issues (not completed)</p>
 <h2 id="velocity-chart">Velocity Chart<a class="headerlink" href="#velocity-chart" title="Permanent link">&para;</a></h2>
 <p>Velocity measures average story points completed per sprint. Use it for capacity planning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Fetch velocity data (GreenHopper endpoint)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=10&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Export last 10 sprints of velocity data with jq</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=10&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.velocityStatEntries | to_entries[] | {sprint: .key, completed: .value.completed.value, estimated: .value.estimated.value}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Fetch velocity data (GreenHopper endpoint)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=10&quot;</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Export last 10 sprints of velocity data with jq</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=10&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.velocityStatEntries | to_entries[] | {sprint: .key, completed: .value.completed.value, estimated: .value.estimated.value}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;sprint&quot;: &quot;Sprint 47&quot;,
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  &quot;completed&quot;: 89,
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  &quot;estimated&quot;: 95
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>}
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>{
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  &quot;sprint&quot;: &quot;Sprint 46&quot;,
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  &quot;completed&quot;: 76,
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  &quot;estimated&quot;: 82
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>}
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>{
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  &quot;sprint&quot;: &quot;Sprint 45&quot;,
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  &quot;completed&quot;: 92,
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;estimated&quot;: 88
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>}
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>{
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>  &quot;sprint&quot;: &quot;Sprint 44&quot;,
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>  &quot;completed&quot;: 71,
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  &quot;estimated&quot;: 79
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>}
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>{
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>  &quot;sprint&quot;: &quot;Sprint 43&quot;,
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>  &quot;completed&quot;: 85,
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>  &quot;estimated&quot;: 90
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>}
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (401) Unauthorized</code></strong> — Verify the API token is valid and the user account has access to the Jira instance; regenerate the token if expired.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "velocityStatEntries"</code></strong> — Confirm the rapidViewId=10 exists and the GreenHopper endpoint is enabled; check the board ID with <code>curl -s -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/rapidviews/list" | jq '.views'</code>.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8040,54 +8297,220 @@ Jira operational procedures — story and epic creation, sprint management, back
 </table>
 <h2 id="burndown-chart">Burndown Chart<a class="headerlink" href="#burndown-chart" title="Permanent link">&para;</a></h2>
 <p>Burndown shows remaining work over a sprint's timeline. A healthy burndown trends toward zero at sprint end.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Fetch burndown data</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/scopechangeburndownchart?rapidViewId=10&amp;sprintId=42&quot;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Get current sprint remaining work via JQL</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=sprint in openSprints() AND project = PLAT AND status != Done&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;fields=summary,story_points,status&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;[.issues[].fields.customfield_10016 // 0] | add&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Fetch burndown data</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/scopechangeburndownchart?rapidViewId=10&amp;sprintId=42&quot;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Get current sprint remaining work via JQL</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=sprint in openSprints() AND project = PLAT AND status != Done&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;fields=summary,story_points,status&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;[.issues[].fields.customfield_10016 // 0] | add&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>{
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  &quot;contents&quot;: [
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    {
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>      &quot;key&quot;: &quot;PLAT-1847&quot;,
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>      &quot;summary&quot;: &quot;Refactor authentication module&quot;,
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>      &quot;estimatedStatistic&quot;: {
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>        &quot;statFieldValue&quot;: {
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>          &quot;value&quot;: 13
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>        }
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>      },
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>      &quot;changedEstimatedStatistic&quot;: {
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>        &quot;statFieldValue&quot;: {
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>          &quot;value&quot;: 13
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>        }
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>      }
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>    }
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>  ],
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>  &quot;sprint&quot;: {
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>    &quot;id&quot;: 42,
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>    &quot;name&quot;: &quot;Sprint 42 - Q1 Infrastructure&quot;,
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>    &quot;state&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>  }
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>}
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>[
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>  {
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a>    &quot;key&quot;: &quot;PLAT-1847&quot;,
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>    &quot;fields&quot;: {
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>      &quot;summary&quot;: &quot;Refactor authentication module&quot;,
+<a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a>      &quot;customfield_10016&quot;: 13,
+<a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a>      &quot;status&quot;: {
+<a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a>        &quot;name&quot;: &quot;In Progress&quot;
+<a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a>      }
+<a id="__codelineno-23-33" name="__codelineno-23-33" href="#__codelineno-23-33"></a>    }
+<a id="__codelineno-23-34" name="__codelineno-23-34" href="#__codelineno-23-34"></a>  },
+<a id="__codelineno-23-35" name="__codelineno-23-35" href="#__codelineno-23-35"></a>  {
+<a id="__codelineno-23-36" name="__codelineno-23-36" href="#__codelineno-23-36"></a>    &quot;key&quot;: &quot;PLAT-1892&quot;,
+<a id="__codelineno-23-37" name="__codelineno-23-37" href="#__codelineno-23-37"></a>    &quot;fields&quot;: {
+<a id="__codelineno-23-38" name="__codelineno-23-38" href="#__codelineno-23-38"></a>      &quot;summary&quot;: &quot;Update load balancer config&quot;,
+<a id="__codelineno-23-39" name="__codelineno-23-39" href="#__codelineno-23-39"></a>      &quot;customfield_10016&quot;: 8,
+<a id="__codelineno-23-40" name="__codelineno-23-40" href="#__codelineno-23-40"></a>      &quot;status&quot;: {
+<a id="__codelineno-23-41" name="__codelineno-23-41" href="#__codelineno-23-41"></a>        &quot;name&quot;: &quot;To Do&quot;
+<a id="__codelineno-23-42" name="__codelineno-23-42" href="#__codelineno-23-42"></a>      }
+<a id="__codelineno-23-43" name="__codelineno-23-43" href="#__codelineno-23-43"></a>    }
+<a id="__codelineno-23-44" name="__codelineno-23-44" href="#__codelineno-23-44"></a>  },
+<a id="__codelineno-23-45" name="__codelineno-23-45" href="#__codelineno-23-45"></a>  {
+<a id="__codelineno-23-46" name="__codelineno-23-46" href="#__codelineno-23-46"></a>    &quot;key&quot;: &quot;PLAT-1903&quot;,
+<a id="__codelineno-23-47" name="__codelineno-23-47" href="#__codelineno-23-47"></a>    &quot;fields&quot;: {
+<a id="__codelineno-23-48" name="__codelineno-23-48" href="#__codelineno-23-48"></a>      &quot;summary&quot;: &quot;Database migration prep&quot;,
+<a id="__codelineno-23-49" name="__codelineno-23-49" href="#__codelineno-23-49"></a>      &quot;customfield_10016&quot;: 5,
+<a id="__codelineno-23-50" name="__codelineno-23-50" href="#__codelineno-23-50"></a>      &quot;status&quot;: {
+<a id="__codelineno-23-51" name="__codelineno-23-51" href="#__codelineno-23-51"></a>        &quot;name&quot;: &quot;In Progress&quot;
+<a id="__codelineno-23-52" name="__codelineno-23-52" href="#__codelineno-23-52"></a>      }
+<a id="__codelineno-23-53" name="__codelineno-23-53" href="#__codelineno-23-53"></a>    }
+<a id="__codelineno-23-54" name="__codelineno-23-54" href="#__codelineno-23-54"></a>  }
+<a id="__codelineno-23-55" name="__codelineno-23-55" href="#__codelineno-23-55"></a>]
+<a id="__codelineno-23-56" name="__codelineno-23-56" href="#__codelineno-23-56"></a>31
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (401) Unauthorized</code></strong> — Verify your Jira API token is valid and base64-encoded correctly in the <code>-u user:token</code> parameter.
+<strong><code>jq: error (null) and number cannot be added</code></strong> — Ensure the custom field ID <code>customfield_10016</code> matches your Jira instance's story points field by checking Administration &gt; Custom Fields.</p>
+</div>
 <h2 id="cumulative-flow-diagram-cfd">Cumulative Flow Diagram (CFD)<a class="headerlink" href="#cumulative-flow-diagram-cfd" title="Permanent link">&para;</a></h2>
 <p>CFD shows how many issues are in each status over time. Widening bands indicate bottlenecks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Fetch CFD data</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/cumulativeflowdiagram?rapidViewId=10&amp;swimlaneId=0&amp;fromDate=2025-01-01&amp;toDate=2025-03-31&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Fetch CFD data</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/greenhopper/1.0/rapid/charts/cumulativeflowdiagram?rapidViewId=10&amp;swimlaneId=0&amp;fromDate=2025-01-01&amp;toDate=2025-03-31&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>{
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  &quot;queryKey&quot;: &quot;com.atlassian.jira.plugins.jira-agile-core:greenhopper-cfd&quot;,
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>  &quot;maxIssuesExceeded&quot;: false,
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>  &quot;issueCount&quot;: 247,
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>  &quot;columns&quot;: [
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    {
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>      &quot;columnId&quot;: &quot;TODO&quot;,
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>      &quot;columnName&quot;: &quot;To Do&quot;,
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>      &quot;statuses&quot;: [&quot;10000&quot;]
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    },
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>    {
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>      &quot;columnId&quot;: &quot;IN_PROGRESS&quot;,
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>      &quot;columnName&quot;: &quot;In Progress&quot;,
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>      &quot;statuses&quot;: [&quot;3&quot;, &quot;10001&quot;]
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>    },
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>    {
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>      &quot;columnId&quot;: &quot;DONE&quot;,
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>      &quot;columnName&quot;: &quot;Done&quot;,
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>      &quot;statuses&quot;: [&quot;10002&quot;]
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>    }
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>  ],
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>  &quot;cumulativeFlowDiagramData&quot;: {
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>    &quot;2025-01-01&quot;: {&quot;TODO&quot;: 89, &quot;IN_PROGRESS&quot;: 34, &quot;DONE&quot;: 12},
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>    &quot;2025-01-15&quot;: {&quot;TODO&quot;: 76, &quot;IN_PROGRESS&quot;: 52, &quot;DONE&quot;: 31},
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>    &quot;2025-02-01&quot;: {&quot;TODO&quot;: 61, &quot;IN_PROGRESS&quot;: 68, &quot;DONE&quot;: 58},
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    &quot;2025-03-31&quot;: {&quot;TODO&quot;: 42, &quot;IN_PROGRESS&quot;: 45, &quot;DONE&quot;: 160}
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>  }
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual Jira domain name (e.g., <code>mycompany.atlassian.net</code>).
+<strong><code>{"errorMessages":["User does not have permission to view this board"],"errors":{}}</code></strong> — Verify the API token has board access permissions and the <code>rapidViewId</code> matches a board the user can access.
+<strong><code>{"errorMessages":["Invalid rapidViewId: 10"],"errors":{}}</code></strong> — Confirm the board ID exists by listing available boards with <code>curl -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/boards"</code>.</p>
+</div>
 <p>Interpreting the CFD:
 - <strong>Widening "In Progress" band</strong> — WIP is accumulating, throughput is slower than input
 - <strong>Flat "Done" band</strong> — work is not being completed
 - <strong>Steep "To Do" drop</strong> — sudden scope removal
 - <strong>Parallel bands</strong> — healthy, consistent flow</p>
 <h2 id="jql-for-reporting">JQL for Reporting<a class="headerlink" href="#jql-for-reporting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Issues closed in the last 2 weeks</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>status<span class="w"> </span>changed<span class="w"> </span>to<span class="w"> </span>Done<span class="w"> </span>after<span class="w"> </span><span class="s2">&quot;-2w&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Issues created but not resolved in 30 days</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>created<span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;-30d&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Unresolved
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Bugs by priority</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span><span class="nv">issuetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Bug<span class="w"> </span>AND<span class="w"> </span>status<span class="w"> </span>!<span class="o">=</span><span class="w"> </span>Done<span class="w"> </span>ORDER<span class="w"> </span>BY<span class="w"> </span>priority<span class="w"> </span>ASC
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Issues by assignee with story points</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>sprint<span class="w"> </span><span class="k">in</span><span class="w"> </span>openSprints<span class="o">()</span><span class="w"> </span>AND<span class="w"> </span>assignee<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>EMPTY
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Issues closed in the last 2 weeks</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>status<span class="w"> </span>changed<span class="w"> </span>to<span class="w"> </span>Done<span class="w"> </span>after<span class="w"> </span><span class="s2">&quot;-2w&quot;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Issues created but not resolved in 30 days</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>created<span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;-30d&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Unresolved
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Bugs by priority</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span><span class="nv">issuetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Bug<span class="w"> </span>AND<span class="w"> </span>status<span class="w"> </span>!<span class="o">=</span><span class="w"> </span>Done<span class="w"> </span>ORDER<span class="w"> </span>BY<span class="w"> </span>priority<span class="w"> </span>ASC
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Issues by assignee with story points</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="nv">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PLAT<span class="w"> </span>AND<span class="w"> </span>sprint<span class="w"> </span><span class="k">in</span><span class="w"> </span>openSprints<span class="o">()</span><span class="w"> </span>AND<span class="w"> </span>assignee<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>EMPTY
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>JQL Query 1: Issues closed in the last 2 weeks
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>PLAT-4521 | Upgrade database schema | Done | 2024-01-12
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>PLAT-4518 | Fix authentication timeout | Done | 2024-01-11
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>PLAT-4512 | Deploy load balancer config | Done | 2024-01-10
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>(3 issues)
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>JQL Query 2: Issues created but not resolved in 30 days
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>PLAT-4201 | Implement caching layer | Open | Created: 2023-12-05
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>PLAT-4189 | Refactor API endpoints | In Progress | Created: 2023-12-04
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>PLAT-4156 | Update monitoring alerts | Open | Created: 2023-12-01
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>(7 issues)
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>JQL Query 3: Bugs by priority
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>PLAT-4534 | Memory leak in worker process | Blocker | Open
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>PLAT-4531 | SSL certificate validation error | High | In Progress
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>PLAT-4528 | Incorrect timestamp formatting | Medium | Open
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>PLAT-4515 | UI button misalignment | Low | Open
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>(12 issues)
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>JQL Query 4: Issues by assignee with story points
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>PLAT-4520 | alice.chen | 8 points | In Progress
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>PLAT-4519 | bob.martinez | 5 points | In Progress
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>PLAT-4517 | carol.singh | 13 points | Open
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>PLAT-4516 | david.lee | 3 points | Done
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>(24 issues)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>The value 'openSprints()' does not exist or you do not have permission to see it.</code></strong> — Replace <code>openSprints()</code> with the actual sprint name or ID (e.g., <code>sprint = "Sprint 47"</code>), or verify the Jira project has active sprints configured.
+<strong><code>Field 'resolution' does not exist or you do not have permission to see it.</code></strong> — Use <code>resolution is EMPTY</code> instead of <code>resolution = Unresolved</code>, as Unresolved is not a valid resolution value in standard Jira configurations.</p>
+</div>
 <h2 id="exporting-data">Exporting Data<a class="headerlink" href="#exporting-data" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Export issues to CSV via REST API</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND sprint in closedSprints()&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;fields=summary,assignee,status,story_points,resolutiondate&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;maxResults=500&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.issues[] | [.key, .fields.summary, .fields.status.name, (.fields.customfield_10016 // &quot;&quot;), (.fields.resolutiondate // &quot;&quot;)] | @csv&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>&gt;<span class="w"> </span>sprint_data.csv
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Export via Jira UI</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Issues → Export → CSV (all fields) or Excel</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Export issues to CSV via REST API</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;jql=project = PLAT AND sprint in closedSprints()&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;fields=summary,assignee,status,story_points,resolutiondate&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;maxResults=500&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.issues[] | [.key, .fields.summary, .fields.status.name, (.fields.customfield_10016 // &quot;&quot;), (.fields.resolutiondate // &quot;&quot;)] | @csv&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">  </span>&gt;<span class="w"> </span>sprint_data.csv
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Export via Jira UI</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="c1"># Issues → Export → CSV (all fields) or Excel</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>{
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  &quot;expand&quot;: &quot;names,schema&quot;,
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  &quot;startAt&quot;: 0,
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  &quot;maxResults&quot;: 500,
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  &quot;total&quot;: 247,
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>  &quot;issues&quot;: [
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>    {
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>      &quot;expand&quot;: &quot;changelog,versionedRepresentations&quot;,
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>      &quot;id&quot;: &quot;10847&quot;,
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>      &quot;key&quot;: &quot;PLAT-1523&quot;,
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>      &quot;fields&quot;: {
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>        &quot;summary&quot;: &quot;Implement OAuth2 token refresh mechanism&quot;,
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>        &quot;status&quot;: {
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>          &quot;self&quot;: &quot;https://your-instance.atlassian.net/rest/api/2/status/10000&quot;,
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>          &quot;description&quot;: &quot;Work has been completed&quot;,
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>          &quot;iconUrl&quot;: &quot;https://your-instance.atlassian.net/images/icons/statuses/done.png&quot;,
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>          &quot;name&quot;: &quot;Done&quot;,
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>          &quot;id&quot;: &quot;10000&quot;
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>        },
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>        &quot;customfield_10016&quot;: 8,
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>        &quot;resolutiondate&quot;: &quot;2024-01-15T14:32:00.000-0500&quot;
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>      }
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>    },
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>    ...
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>  ]
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a>}
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>&quot;PLAT-1523&quot;,&quot;Implement OAuth2 token refresh mechanism&quot;,&quot;Done&quot;,&quot;8&quot;,&quot;2024-01-15T14:32:00.000-0500&quot;
+<a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>&quot;PLAT-1524&quot;,&quot;Fix database connection pooling timeout&quot;,&quot;Done&quot;,&quot;5&quot;,&quot;2024-01-14T09:18:00.000-0500&quot;
+<a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a>&quot;PLAT-1525&quot;,&quot;Update API rate limiting documentation&quot;,&quot;In Progress&quot;,&quot;3&quot;,&quot;&quot;
+<a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a>&quot;PLAT-1526&quot;,&quot;Resolve memory leak in cache layer&quot;,&quot;Done&quot;,&quot;13&quot;,&quot;2024-01-16T16:45:00.000-0500&quot;
+<a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>&quot;PLAT-1527&quot;,&quot;Migrate legacy authentication service&quot;,&quot;In Progress&quot;,&quot;21&quot;,&quot;&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (401) Unauthorized</code></strong> — Verify your Jira username and API token are correct; generate a new token at https://id.atlassian.com/manage-profile/security/api-tokens if expired.
+<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index number with string "fields"</code></strong> — The custom field ID <code>customfield_10016</code> may not exist in your instance; run <code>curl -u user:token "https://your-instance.atlassian.net/rest/api/2/field" | jq '.[] | select(.name=="Story Points")'</code> to find the correct field ID.
+<strong><code>curl: (400) Bad Request</code></strong> — Ensure the JQL syntax is valid by testing it in the Jira UI search bar first, and verify the instance URL matches your Jira domain exactly.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8160,7 +8583,7 @@ Jira operational procedures — story and epic creation, sprint management, back
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

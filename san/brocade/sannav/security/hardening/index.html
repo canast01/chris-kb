@@ -7660,61 +7660,134 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Change default OS root password (if accessible)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>root
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Recommended settings:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Protocol<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PasswordAuthentication<span class="w"> </span>yes<span class="w">     </span><span class="c1"># or &#39;no&#39; if using SSH key auth</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>PubkeyAuthentication<span class="w"> </span>yes
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>PermitEmptyPasswords<span class="w"> </span>no
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>LoginGraceTime<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span><span class="w">        </span><span class="c1"># disconnect idle sessions after 5 minutes</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>X11Forwarding<span class="w"> </span>no
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>AllowTcpForwarding<span class="w"> </span>no
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>sannav<span class="w">        </span><span class="c1"># restrict SSH to specific local accounts</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|protocol|maxauthtries&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@sannav-dc1.corp.example.com&#39;s password: 
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last login: Mon Jan 15 14:32:18 2025 from 10.45.82.19
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Welcome to Brocade SANnav Management Server v8.2.1
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sannav-dc1:~$ passwd admin
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Changing password for user admin.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Current password: 
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>New password: 
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Retype new password: 
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>passwd: password updated successfully
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>sannav-dc1:~$ sudo passwd root
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>[sudo] password for admin: 
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>New password: 
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Retype new password: 
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>passwd: password updated successfully
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>sannav-dc1:~$
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check for available security updates</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Apply security patches only (does not touch SANnav application packages)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify SANnav services still running after OS update</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sannav<span class="w"> </span>status
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH is enabled on the SANnav appliance and the admin account exists; check network connectivity to sannav-dc1.corp.example.com.
+<strong><code>passwd: Authentication token manipulation error</code></strong> — Ensure the admin user has sufficient privileges and the /etc/shadow file is writable; try the command again after verifying sudo access.
+<strong><code>sudo: command not found</code></strong> — SANnav may not have sudo configured; use <code>su -</code> to switch to root directly instead, or contact Brocade support to enable sudo for the admin account.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Recommended settings:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Protocol<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>PasswordAuthentication<span class="w"> </span>yes<span class="w">     </span><span class="c1"># or &#39;no&#39; if using SSH key auth</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>PubkeyAuthentication<span class="w"> </span>yes
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>PermitEmptyPasswords<span class="w"> </span>no
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>LoginGraceTime<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span><span class="w">        </span><span class="c1"># disconnect idle sessions after 5 minutes</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>X11Forwarding<span class="w"> </span>no
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>AllowTcpForwarding<span class="w"> </span>no
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>sannav<span class="w">        </span><span class="c1"># restrict SSH to specific local accounts</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|protocol|maxauthtries&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check NTP synchronization</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: &quot;synchronized: yes&quot;, NTP service active</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If not synchronized, configure NTP</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/chrony.conf
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Add: server 10.10.0.10 prefer</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#       server 10.10.0.11</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: Reference ID should match your NTP server, offset &lt; 1ms</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>permitrootlogin no
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>passwordauthentication yes
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>protocol 2
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>maxauthtries 3
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>WARNING: This system is for authorized use only.
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>All connections are monitored and recorded.
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Unauthorized access or use is prohibited and may be subject to legal action.
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Ensure <code>/etc/ssh/ssh_host_*_key</code> files exist; regenerate with <code>sudo ssh-keygen -A</code> if missing.
+<strong><code>Job for sshd.service failed because the control process exited with error code.</code></strong> — Check syntax errors in sshd_config with <code>sudo sshd -t</code> before restarting the service.
+<strong><code>sshd_config: line X: Bad configuration option: "AllowUsers"</code></strong> — Verify the directive name is correct (should be <code>AllowUsers</code>, not <code>AllowUser</code>) and check for typos in usernames.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check for available security updates</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Apply security patches only (does not touch SANnav application packages)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify SANnav services still running after OS update</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sannav<span class="w"> </span>status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/issue.net
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Add:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># WARNING: Authorized access only. All activities are monitored and logged.</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Banner /etc/issue.net</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Loading &quot;fastestmirror&quot; plugin
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Loading &quot;security&quot; plugin
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Possible security updates
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>RHEL-7.9-Security-Update | kernel-3.10.0-1160.80.1.el7 | security
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>RHEL-7.9-Security-Update | openssl-1.0.2k-21.el7_9 | security
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>RHEL-7.9-Security-Update | glibc-2.17-317.el7 | security
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>RHEL-7.9-Security-Update | systemd-219-78.el7_9.5 | security
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>RHEL-7.9-Security-Update | bash-4.2.46-34.el7_9 | security
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Updated:
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  kernel.x86_64 0:3.10.0-1160.80.1.el7
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  openssl.x86_64 1:1.0.2k-21.el7_9
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  glibc.x86_64 0:2.17-317.el7
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  systemd.x86_64 0:219-78.el7_9.5
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  bash.x86_64 0:4.2.46-34.el7_9
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Complete! 5 packages updated.
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>SANnav-WebServer (pid 4821) is running...
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>SANnav-EventServer (pid 4834) is running...
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>SANnav-DataCollector (pid 4847) is running...
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>All SANnav services operational.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>sudo: yum: command not found</code></strong> — Verify the system uses yum (RHEL/CentOS) and not apt (Debian/Ubuntu); use <code>apt update &amp;&amp; apt install -y unattended-upgrades</code> on Debian-based systems instead.
+<strong><code>Error: Package kernel requires a reboot</code></strong> — Reboot the SANnav appliance with <code>sudo reboot</code> after kernel updates complete, then verify services restart automatically.
+<strong><code>SANnav-WebServer is not running</code></strong> — Restart SANnav services with <code>sudo systemctl restart sannav</code> and check logs with <code>sudo tail -f /var/log/sannav/sannav.log</code> to diagnose startup failures.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NTP synchronization</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: &quot;synchronized: yes&quot;, NTP service active</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If not synchronized, configure NTP</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/chrony.conf
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Add: server 10.10.0.10 prefer</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#       server 10.10.0.11</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expected: Reference ID should match your NTP server, offset &lt; 1ms</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>WARNING: This system is for authorized use only.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>All connections are monitored and recorded.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Unauthorized access or use is prohibited and may be subject to legal action.
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/issue.net
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Add:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># WARNING: Authorized access only. All activities are monitored and logged.</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Banner /etc/issue.net</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>(no output — command completes silently)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E325: ATTENTION</code></strong> — Close the existing vim swap file with <code>rm /etc/issue.net.swp</code> before editing, or use <code>vim -r</code> to recover.
+<strong><code>sshd[12345]: error: /etc/ssh/sshd_config line 50: Bad configuration option: "banner"</code></strong> — Change <code>Banner</code> to use correct capitalization in sshd_config (capital B).
+<strong><code>Job for ssh.service failed because the control process exited with error code.</code></strong> — Validate sshd_config syntax with <code>sudo sshd -t</code> before restarting to identify configuration errors.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7752,7 +7825,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

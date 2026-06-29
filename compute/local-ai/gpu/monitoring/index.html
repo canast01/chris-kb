@@ -7363,6 +7363,34 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>memory.used,memory.free,temperature.gpu,power.draw<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>--format<span class="o">=</span>csv,noheader,nounits<span class="w"> </span>-l<span class="w"> </span><span class="m">5</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/gpu_stats.csv
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Wed Dec 18 10:45:32 2024       
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>+-----------------------------------------------------------------------------+
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05                |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| GPU  Name                 Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|   0  NVIDIA A100-PCIE-40GB          On | 00:1E.0     Off |                  0 |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| N/A   38C    P0    45W / 250W |   8234MiB / 40960MiB |     12%      Default |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|   1  NVIDIA A100-PCIE-40GB          On | 00:1F.0     Off |                  0 |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| N/A   42C    P0    52W / 250W |  15678MiB / 40960MiB |     28%      Default |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>+-----------------------------------------------------------------------------+
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>gpu   pid  sm   mem   enc   dec   fb  pci rxpci txpci
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  0 12847  15    22     0     0 8234  100    12    18
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  1 13021  28    38     0     0 15678 100    45    67
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>gpu   pid  type  fb
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  0 12847  C    8234
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  1 13021  C    15678
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>2024/12/18 10:45:32.123, NVIDIA A100-PCIE-40GB, 12, 22, 8234, 32726, 38, 45.2
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>2024/12/18 10:45:37.456, NVIDIA A100-PCIE-40GB, 28, 38, 15678, 25282, 42, 52.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></strong> — Verify the NVIDIA driver is installed with <code>nvidia-smi</code> standalone, or reinstall with <code>sudo apt install nvidia-driver-535</code> (adjust version as needed).
+<strong><code>No such file or directory: /var/log/gpu_stats.csv</code></strong> — Create the log file and ensure write permissions with <code>sudo touch /var/log/gpu_stats.csv &amp;&amp; sudo chmod 666 /var/log/gpu_stats.csv</code>.
+<strong><code>Invalid GPU device id: 0</code></strong> — Confirm available GPUs with <code>nvidia-smi --list-gpus</code> and adjust the <code>-i</code> parameter to a valid device ID.</p>
+</div>
 <h2 id="key-metrics-to-track">Key Metrics to Track<a class="headerlink" href="#key-metrics-to-track" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7414,63 +7442,105 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 </table>
 <h2 id="dcgm-for-production-clusters">DCGM for Production Clusters<a class="headerlink" href="#dcgm-for-production-clusters" title="Permanent link">&para;</a></h2>
 <p>DCGM (Data Center GPU Manager) provides persistent monitoring, health checks, and Prometheus metrics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install DCGM (Ubuntu)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>datacenter-gpu-manager
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Start DCGM service</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>nvidia-dcgm
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Run a health check</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dcgmi<span class="w"> </span>health<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-c
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Diag level 1 (quick): ~30 seconds</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dcgmi<span class="w"> </span>diag<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-r<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List all field IDs available for monitoring</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dcgmi<span class="w"> </span>dmon<span class="w"> </span>--list
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Export Prometheus metrics via dcgm-exporter</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9400</span>:9400<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--cap-add<span class="w"> </span>SYS_ADMIN<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-ubuntu22.04
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install DCGM (Ubuntu)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>datacenter-gpu-manager
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Start DCGM service</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>nvidia-dcgm
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Run a health check</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dcgmi<span class="w"> </span>health<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-c
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Diag level 1 (quick): ~30 seconds</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>dcgmi<span class="w"> </span>diag<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-r<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List all field IDs available for monitoring</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>dcgmi<span class="w"> </span>dmon<span class="w"> </span>--list
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Export Prometheus metrics via dcgm-exporter</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9400</span>:9400<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--cap-add<span class="w"> </span>SYS_ADMIN<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-ubuntu22.04
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Reading package lists... Done
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Building dependency tree... Done
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>The following NEW packages will be installed:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  datacenter-gpu-manager
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Processing triggers for systemd (249.11-0ubuntu3.6) ...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Created symlink /etc/systemd/system/multi-user.target.wants/nvidia-dcgm.service → /etc/systemd/system/nvidia-dcgm.service.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>nvidia-dcgm.service is being started.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>GPU 0: NVIDIA A100-PCIE-40GB
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Health Status: Healthy
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Diag Level 1 (Quick) Results:
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  GPU 0: PASS
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Diagnostic Duration: 28.3 seconds
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Field ID | Field Name                              | Units
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>---------|----------------------------------------|----------
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>1        | GPU_TEMP                               | C
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2        | GPU_CLOCK                              | MHz
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>3        | SM_CLOCK                               | MHz
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>4        | MEMORY_CLOCK                           | MHz
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>9        | GPU_POWER_USAGE                        | W
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>...
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>3.3.0-3.2.0-ubuntu22.04: Pulling from nvidia/k8s/dcgm-exporter
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Digest: sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Status: Downloaded newer image for nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-ubuntu22.04
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>8f4a9c2e1d5b7a3f6e9c2b5d8a1f4e7c9b2d5a8f1e4c7a0d3b6e9f2c5a8d1e4
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>nvidia-dcgm.service is not active, it is inactive.</code></strong> — Verify NVIDIA drivers are installed with <code>nvidia-smi</code> and check systemd logs with <code>journalctl -u nvidia-dcgm -n 20</code>.
+<strong><code>docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].</code></strong> — Install NVIDIA Container Toolkit with <code>distribution=$(. /etc/os-release;echo $ID$VERSION_ID)</code> and <code>apt-get install -y nvidia-container-toolkit</code>, then restart Docker.</p>
+</div>
 <h2 id="prometheus-grafana-stack">Prometheus + Grafana Stack<a class="headerlink" href="#prometheus-grafana-stack" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># prometheus.yml scrape config for dcgm-exporter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">scrape_configs</span><span class="p">:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dcgm&#39;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gpu-node-1:9400&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;gpu-node-2:9400&#39;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># prometheus.yml scrape config for dcgm-exporter</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">scrape_configs</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dcgm&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gpu-node-1:9400&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;gpu-node-2:9400&#39;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
 </code></pre></div>
 <p>Key DCGM Prometheus metrics:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>DCGM_FI_DEV_GPU_UTIL           # GPU utilisation %
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>DCGM_FI_DEV_MEM_COPY_UTIL      # Memory bandwidth utilisation %
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>DCGM_FI_DEV_FB_USED            # Framebuffer memory used (MiB)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>DCGM_FI_DEV_GPU_TEMP           # Temperature (°C)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>DCGM_FI_DEV_POWER_USAGE        # Power draw (W)
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>DCGM_FI_DEV_ECC_DBE_VOL_TOTAL  # Double-bit ECC errors (fatal)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL  # NVLink bandwidth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DCGM_FI_DEV_GPU_UTIL           # GPU utilisation %
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>DCGM_FI_DEV_MEM_COPY_UTIL      # Memory bandwidth utilisation %
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>DCGM_FI_DEV_FB_USED            # Framebuffer memory used (MiB)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>DCGM_FI_DEV_GPU_TEMP           # Temperature (°C)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>DCGM_FI_DEV_POWER_USAGE        # Power draw (W)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>DCGM_FI_DEV_ECC_DBE_VOL_TOTAL  # Double-bit ECC errors (fatal)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL  # NVLink bandwidth
 </code></pre></div>
 <h2 id="alerts-for-gpu-workloads">Alerts for GPU Workloads<a class="headerlink" href="#alerts-for-gpu-workloads" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Prometheus alert rules (alerts.yml)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>groups:
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-<span class="w"> </span>name:<span class="w"> </span>gpu_alerts
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>rules:
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUHighTemperature
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_GPU_TEMP<span class="w"> </span>&gt;<span class="w"> </span><span class="m">85</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>2m
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span>labels:
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">          </span>severity:<span class="w"> </span>warning
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span>annotations:
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">&quot;GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUMemoryNearFull
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_FB_USED<span class="w"> </span>/<span class="w"> </span>DCGM_FI_DEV_FB_FREE<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span>.95
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>1m
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">        </span>labels:
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">          </span>severity:<span class="w"> </span>critical
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Prometheus alert rules (alerts.yml)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>groups:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-<span class="w"> </span>name:<span class="w"> </span>gpu_alerts
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>rules:
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUHighTemperature
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_GPU_TEMP<span class="w"> </span>&gt;<span class="w"> </span><span class="m">85</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>2m
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span>labels:
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">          </span>severity:<span class="w"> </span>warning
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span>annotations:
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">&quot;GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUMemoryNearFull
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_FB_USED<span class="w"> </span>/<span class="w"> </span>DCGM_FI_DEV_FB_FREE<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span>.95
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>1m
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span>labels:
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">          </span>severity:<span class="w"> </span>critical
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: field DCGM_FI_DEV_GPU_TEMP not found</code></strong> — Verify DCGM exporter is running and exposing metrics with <code>curl localhost:9400/metrics | grep DCGM_FI_DEV_GPU_TEMP</code>.
+<strong><code>yaml: line 5: mapping values are not allowed in this context</code></strong> — Check indentation is consistent (2 spaces per level) and there are no tabs in the YAML file.</p>
+</div>
 
 
 
@@ -7493,7 +7563,7 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

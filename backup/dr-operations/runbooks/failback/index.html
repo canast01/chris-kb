@@ -7768,43 +7768,124 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>interface<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>brief<span class="w">           </span><span class="c1"># Cisco MDS</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>switchshow<span class="w">                        </span><span class="c1"># Brocade</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ONTAP — confirm lag is zero before breaking</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># lag-time should be 00:00:00 or very small</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Break mirror — primary volume becomes writable</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ONTAP Health Status:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Status: ok
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Broken Disks:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no broken disks)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Pure FlashArray Status:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Name                          Revision  Serial                Mode
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>flasharray-prod-01            6.4.2     5b8c3e2f-a1b2-4c5d   optimal
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Pure Drive List (non-healthy):
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>(no unhealthy drives detected)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Cisco MDS FC Interface Status:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Interface            Status       Speed      State
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>fc1/1                up           16 Gbps    trunking
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>fc1/2                up           16 Gbps    trunking
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>fc1/3                down         unknown    notConnected
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>fc1/4                up           16 Gbps    trunking
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Brocade Switch Status:
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Switch Index: [0]
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Switch State: Online
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Fabric State: Stable
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Shut down VM at DR</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Power on at primary (VM should already be registered from original config)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">primary-vcenter</span><span class="p">&gt;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>system health status show: command not found</code></strong> — Verify you are connected to the ONTAP cluster management IP and have appropriate SSH credentials configured.
+<strong><code>purecli: command not found</code></strong> — Install the Pure Storage CLI package or ensure the FlashArray management network is reachable and purecli is in your PATH.
+<strong><code>show interface fc brief: command not found</code></strong> — Confirm you are in the correct CLI context (Cisco MDS switch) and not in a different device shell.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ONTAP — confirm lag is zero before breaking</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># lag-time should be 00:00:00 or very small</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Break mirror — primary volume becomes writable</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Storage visible at primary hosts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>lsblk
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>df<span class="w"> </span>-h
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Application services</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Application health</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;primary-app-url&gt;/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Shut down VM at DR</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Power on at primary (VM should already be registered from original config)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">primary-vcenter</span><span class="p">&gt;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PostgreSQL</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;&lt;db&gt;&#39;);&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># MSSQL (PowerShell)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Invoke-Sqlcmd<span class="w"> </span>-Query<span class="w"> </span><span class="s2">&quot;DBCC CHECKDB(&#39;&lt;db&gt;&#39;) WITH NO_INFOMSGS&quot;</span><span class="w"> </span>-ServerInstance<span class="w"> </span>&lt;primary-sql&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># ONTAP — resync back to original direction</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Storage visible at primary hosts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lsblk
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>df<span class="w"> </span>-h
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Application services</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Application health</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;primary-app-url&gt;/health
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mpatha (36001405a1b2c3d4e5f6g7h8i9j0k1l2m) dm-0 NETAPP,LUN C-Mode
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  |- 2:0:0:0 sda 8:0  active ready running
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  `- 3:0:0:0 sdb 8:16 active ready running
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sda      8:0    0  500G  0 disk
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>├─sda1   8:1    0  512M  0 part /boot
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>└─sda2   8:2    0 99.5G  0 part /
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>sdb      8:16   0  500G  0 disk /mnt/data
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>/dev/sda2       100G   45G   55G  45% /
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>/dev/sdb       500G  320G  180G  64% /mnt/data
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>tmpfs          7.8G     0  7.8G   0% /dev/shm
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Created symlink /etc/systemd/system/multi-user.target.wants/app-service.service → /etc/systemd/system/app-service.service.
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>● app-service.service - Application Service
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>     Loaded: loaded (/etc/systemd/system/app-service.service; enabled; vendor preset: disabled)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2s ago
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>   Main PID: 8742 (java)
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>*   Trying 10.42.18.105:443...
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>* Connected to primary-app-01.prod.local (10.42.18.105) port 443 (#0)
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>&gt; GET /health HTTP/1.1
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>&lt; HTTP/1.1 200 OK
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>&lt; Content-Type: application/json
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>{&quot;status&quot;:&quot;UP&quot;,&quot;timestamp&quot;:&quot;2024-01-15T14:32:45Z&quot;,&quot;version&quot;:&quot;8.2.1-build.4521&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit app-service.service not found.</code></strong> — Verify the service file exists at <code>/etc/systemd/system/app-service.service</code> and run <code>systemctl daemon-reload</code> before starting.
+<strong><code>curl: (7) Failed to connect to primary-app-01.prod.local port 443: Connection refused</code></strong> — Confirm the application service is listening on port 443 and firewall rules allow inbound HTTPS traffic to the primary host.
+<strong><code>Device or resource busy</code></strong> — Ensure no other processes are accessing the multipath devices and that the failback operation has fully completed before attempting to remount storage.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;&lt;db&gt;&#39;);&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># MSSQL (PowerShell)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Invoke-Sqlcmd<span class="w"> </span>-Query<span class="w"> </span><span class="s2">&quot;DBCC CHECKDB(&#39;&lt;db&gt;&#39;) WITH NO_INFOMSGS&quot;</span><span class="w"> </span>-ServerInstance<span class="w"> </span>&lt;primary-sql&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pg_database_size 
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>------------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a> 5368709120
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(1 row)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Checking database integrity for database &#39;production_db&#39;.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>DBCC execution completed. If DBCC printed error messages, review and correct the reported problems.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify the PostgreSQL service is running and the hostname/port in your connection string is correct.
+<strong><code>Login failed for user '&lt;user&gt;'. Reason: Could not find a login matching the name provided.</code></strong> — Ensure the SQL Server account exists and has appropriate permissions on the target instance.
+<strong><code>DBCC CHECKDB statement not recognized</code></strong> — Confirm you are running the Invoke-Sqlcmd command on a Windows system with SQL Server PowerShell module installed (Install-Module SqlServer).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># ONTAP — resync back to original direction</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Confirm</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7836,7 +7917,7 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

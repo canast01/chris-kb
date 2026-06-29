@@ -7802,58 +7802,160 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Verify</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>snmpconfig<span class="w"> </span>--show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SNMP v1 Configuration:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Community String: public
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Access Level: read-write
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Community String: private
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Access Level: read-only
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Deleting community string: public
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Community string removed successfully.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Deleting community string: private
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Community string removed successfully.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Configuring SNMP v3 with MIB capability...
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Enter SNMPv3 username: admin
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Enter authentication password (SHA): ••••••••••
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Confirm authentication password: ••••••••••
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Enter privacy password (AES-128): ••••••••••
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Confirm privacy password: ••••••••••
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>SNMPv3 user &#39;admin&#39; created successfully.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Current SNMP Configuration:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  SNMPv3 User: admin
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Authentication: SHA
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Privacy: AES-128
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  MIB Capability: Enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>snmpconfig: command not found</code></strong> — Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges.
+<strong><code>Error: Community string 'public' not found</code></strong> — Check the exact community string name using <code>snmpconfig --show snmpv1</code> before attempting deletion.
+<strong><code>Error: SNMPv3 user 'admin' already exists</code></strong> — Use a different username or delete the existing user with <code>snmpconfig --delete snmpv3 -user admin</code> first.</p>
+</div>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>Audit logging captures all login events, configuration changes, zone modifications, and firmware operations. These logs must be forwarded to the SIEM in real time.</p>
 <h3 id="enable-audit-logging">Enable Audit Logging<a class="headerlink" href="#enable-audit-logging" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable audit logging — classes:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># 1 = Fabric events (topology changes, domain changes)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 2 = Security events (logins, policy changes)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 3 = Configuration events (zone changes, port config)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 4 = Firmware events (firmware download, HA failover)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>auditcfg<span class="w"> </span>--class<span class="w"> </span><span class="m">1</span>,2,3,4
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify audit logging is active</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>auditcfg<span class="w"> </span>--show
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># View recent audit log entries</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>auditlog<span class="w"> </span>--show
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># View last 100 audit entries</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>auditlog<span class="w"> </span>--show<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable audit logging — classes:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># 1 = Fabric events (topology changes, domain changes)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># 2 = Security events (logins, policy changes)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 3 = Configuration events (zone changes, port config)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 4 = Firmware events (firmware download, HA failover)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>auditcfg<span class="w"> </span>--class<span class="w"> </span><span class="m">1</span>,2,3,4
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify audit logging is active</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>auditcfg<span class="w"> </span>--show
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># View recent audit log entries</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>auditlog<span class="w"> </span>--show
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># View last 100 audit entries</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>auditlog<span class="w"> </span>--show<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Audit class configuration updated successfully.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Classes enabled: 1,2,3,4
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Audit Logging Status
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>====================
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Audit Classes: 1,2,3,4
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Audit Log Size: 10000 entries
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Log Rotation: Enabled
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Retention Days: 30
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Status: Active
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Recent Audit Log Entries
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>========================
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2024-01-15 14:32:18 | USER_LOGIN | admin | 10.50.12.45 | Success
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>2024-01-15 14:28:05 | ZONE_CHANGE | sysadmin | 10.50.12.46 | Added member: 50:00:09:73:00:1a:2b:3c
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>2024-01-15 14:15:42 | POLICY_UPDATE | admin | 10.50.12.45 | Security policy modified
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>2024-01-15 13:58:19 | PORT_CONFIG | netadmin | 10.50.12.47 | Port 0/12 disabled
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>2024-01-15 13:45:33 | FABRIC_EVENT | system | local | Domain reconfiguration completed
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2024-01-15 13:22:11 | FIRMWARE_DOWNLOAD | admin | 10.50.12.45 | FOS v9.1.0 staged
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>...
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Last 100 Audit Entries (showing first 8):
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>2024-01-15 14:32:18 | USER_LOGIN | admin | 10.50.12.45 | Success
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>2024-01-15 14:28:05 | ZONE_CHANGE | sysadmin | 10.50.12.46 | Added member: 50:00:09:73:00:1a:2b:3c
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>2024-01-15 14:15:42 | POLICY_UPDATE | admin | 10.50.12.45 | Security policy modified
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>2024-01-15 13:58:19 | PORT_CONFIG | netadmin | 10.50.12.47 | Port 0/12 disabled
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>2024-01-15 13:45:33 | FABRIC_EVENT | system | local | Domain reconfiguration completed
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>2024-01-15 13:22:11 | FIRMWARE_DOWNLOAD | admin | 10.50.12.45 | FOS v9.1.0 staged
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>2024-01-15 13:01:47 | USER_LOGOUT | sysadmin | 10.50.12.46 | Session closed
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>2024-01-15 12:48:22 | ZONE_CHANGE | admin | 10.50.12.45 | Removed member: 50:00:09:73:00:1a:2b:3d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid audit class specified</code></strong> — Verify class numbers are 1–4 and separated by commas with no spaces (e.g., <code>--class 1,2,3,4</code>).
+<strong><code>Error: Audit log is full. Cannot write new entries</code></strong> — Increase log retention or manually clear old entries with <code>auditlog --clear</code> to free space.
+<strong><code>Error: Permission denied</code></strong> — Ensure your user account has admin or security-admin role; use <code>userconfig --show</code> to verify permissions.</p>
+</div>
 <h3 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add SIEM syslog destination</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify syslog destinations</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>syslogadmin<span class="w"> </span>--show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test by running a command that generates an audit event</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># e.g., cfgsave (triggers a zone config save audit event)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Then check the SIEM for the forwarded log entry</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add SIEM syslog destination</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify syslog destinations</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>syslogadmin<span class="w"> </span>--show
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test by running a command that generates an audit event</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># e.g., cfgsave (triggers a zone config save audit event)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Then check the SIEM for the forwarded log entry</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Syslog server added successfully.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>IP Address: 192.168.45.120
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Facility: local0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Severity: informational
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Status: enabled
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Syslog Destinations:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>=====================================
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>IP Address       | Port | Facility | Severity      | Status
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>=====================================
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>192.168.45.120   | 514  | local0   | informational | enabled
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>192.168.45.121   | 514  | local0   | informational | enabled
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Zone configuration saved.
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>cfgsave: Configuration saved successfully to flash memory.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Syslog server add failed: Invalid IP address format</code></strong> — Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command.
+<strong><code>Syslog server add failed: Connection timeout to &lt;siem-ip&gt;:514</code></strong> — Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch.
+<strong><code>cfgsave: Permission denied</code></strong> — Ensure your user account has admin or zone-config privileges by checking role assignments with <code>userconfig --show</code>.</p>
+</div>
 <h3 id="syslog-facility-and-severity">Syslog Facility and Severity<a class="headerlink" href="#syslog-facility-and-severity" title="Permanent link">&para;</a></h3>
 <p>Brocade FabricOS sends syslog at facility <code>LOCAL1</code> (by default). Configure the SIEM to accept and parse this facility. Log format includes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&lt;timestamp&gt; &lt;switch-hostname&gt; RASLOG: &lt;severity&gt; [&lt;module&gt;/&lt;id&gt;] &lt;message&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;timestamp&gt; &lt;switch-hostname&gt; RASLOG: &lt;severity&gt; [&lt;module&gt;/&lt;id&gt;] &lt;message&gt;
 </code></pre></div>
 <p>Severity levels map to standard syslog levels: <code>CRITICAL</code>, <code>ERROR</code>, <code>WARNING</code>, <code>INFO</code>, <code>DEBUG</code>.</p>
 <hr />
 <h2 id="default-zone-enforcement">Default Zone Enforcement<a class="headerlink" href="#default-zone-enforcement" title="Permanent link">&para;</a></h2>
 <p>The default zone controls what happens to devices that are not in any active zone. It must be disabled (set to <code>off</code>) in all production fabrics. If the default zone is <code>on</code>, devices not in any zone can see all other unzoned devices — a significant security risk.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check default zone state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>defzone<span class="w"> </span>--show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable the default zone (recommended for all production fabrics)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>defzone<span class="w"> </span>--noaccess
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Activate and save</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>cfgenable<span class="w"> </span>&lt;active-zoneset&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cfgsave
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>defzone<span class="w"> </span>--show<span class="w">    </span><span class="c1"># Expected: Default Zone: OFF (no access)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check default zone state</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>defzone<span class="w"> </span>--show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Disable the default zone (recommended for all production fabrics)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>defzone<span class="w"> </span>--noaccess
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Activate and save</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>cfgenable<span class="w"> </span>&lt;active-zoneset&gt;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>cfgsave
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>defzone<span class="w"> </span>--show<span class="w">    </span><span class="c1"># Expected: Default Zone: OFF (no access)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Default Zone: ON (all access)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Default Zone: OFF (no access)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>(no output — command completes silently)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>(no output — command completes silently)
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Default Zone: OFF (no access)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>defzone: command not found</code></strong> — Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility.
+<strong><code>Error: Active zone configuration not found</code></strong> — Run <code>cfgshow</code> to list available zone configurations and replace <code>&lt;active-zoneset&gt;</code> with a valid configuration name (e.g., <code>cfgenable production-zones</code>).
+<strong><code>Permission denied: cannot modify zone configuration</code></strong> — Verify your user account has admin or zone-admin role by running <code>userconfig --show</code> and request elevated privileges if needed.</p>
+</div>
 <hr />
 <h2 id="security-baselines-summary">Security Baselines Summary<a class="headerlink" href="#security-baselines-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -7930,36 +8032,86 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 <hr />
 <h2 id="post-hardening-verification">Post-Hardening Verification<a class="headerlink" href="#post-hardening-verification" title="Permanent link">&para;</a></h2>
 <p>Run this sequence after completing hardening to verify all controls are applied:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Management protocols</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sshutil<span class="w"> </span>--show<span class="w">        </span><span class="c1"># telnetd disabled</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>httpcfg<span class="w"> </span>--show<span class="w">        </span><span class="c1"># HTTP disabled; HTTPS enabled</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>snmpconfig<span class="w"> </span>--show<span class="w">     </span><span class="c1"># SNMPv3 configured; no community strings</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># 2. Authentication</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>aaaconfig<span class="w"> </span>--show<span class="w">      </span><span class="c1"># RADIUS configured; auth order includes LOCAL fallback</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 3. Network access control</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ipfilter<span class="w"> </span>--show<span class="w">       </span><span class="c1"># Active policy restricting management plane</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 4. Fabric security</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>defzone<span class="w"> </span>--show<span class="w">        </span><span class="c1"># Default zone off (no access)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>fabricbinding<span class="w"> </span>--show<span class="w">  </span><span class="c1"># Fabric binding enabled</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 5. Audit and logging</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>auditcfg<span class="w"> </span>--show<span class="w">       </span><span class="c1"># Audit classes 1,2,3,4 enabled</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>syslogadmin<span class="w"> </span>--show<span class="w">    </span><span class="c1"># SIEM syslog destination configured</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 6. NTP</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>tsclockserver<span class="w">         </span><span class="c1"># NTP servers configured</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>date<span class="w">                  </span><span class="c1"># Clock is synced (matches expected time)</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="c1"># 7. Domain ID</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Domain<span class="w">    </span><span class="c1"># Static domain ID matches SAN design register</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Management protocols</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sshutil<span class="w"> </span>--show<span class="w">        </span><span class="c1"># telnetd disabled</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>httpcfg<span class="w"> </span>--show<span class="w">        </span><span class="c1"># HTTP disabled; HTTPS enabled</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>snmpconfig<span class="w"> </span>--show<span class="w">     </span><span class="c1"># SNMPv3 configured; no community strings</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># 2. Authentication</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>aaaconfig<span class="w"> </span>--show<span class="w">      </span><span class="c1"># RADIUS configured; auth order includes LOCAL fallback</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># 3. Network access control</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>ipfilter<span class="w"> </span>--show<span class="w">       </span><span class="c1"># Active policy restricting management plane</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># 4. Fabric security</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>defzone<span class="w"> </span>--show<span class="w">        </span><span class="c1"># Default zone off (no access)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>fabricbinding<span class="w"> </span>--show<span class="w">  </span><span class="c1"># Fabric binding enabled</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># 5. Audit and logging</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>auditcfg<span class="w"> </span>--show<span class="w">       </span><span class="c1"># Audit classes 1,2,3,4 enabled</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>syslogadmin<span class="w"> </span>--show<span class="w">    </span><span class="c1"># SIEM syslog destination configured</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># 6. NTP</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>tsclockserver<span class="w">         </span><span class="c1"># NTP servers configured</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>date<span class="w">                  </span><span class="c1"># Clock is synced (matches expected time)</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1"># 7. Domain ID</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Domain<span class="w">    </span><span class="c1"># Static domain ID matches SAN design register</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SSH Enabled: No
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Telnet Enabled: No
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>HTTP Enabled: No
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>HTTPS Enabled: Yes
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>HTTPS Port: 443
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>SNMP Version: SNMPv3
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Community Strings: None configured
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Engine ID: 800007E5-7D2A4B9C-F1E3-92D6
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Authentication Order: RADIUS, LOCAL
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>RADIUS Server: 192.168.100.50
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>RADIUS Timeout: 30 seconds
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>IP Filter Policy: ACTIVE
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Restricted Management IPs: 10.0.1.0/24, 10.0.2.0/24
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>Default Zone: OFF
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Fabric Binding: ENABLED
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>Audit Classes Enabled: 1, 2, 3, 4
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Syslog Server: 10.50.200.15:514
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>Syslog Protocol: UDP
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>NTP Server 1: 10.0.0.1
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>NTP Server 2: 10.0.0.2
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>NTP Status: synchronized
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>Domain ID: 117 (Static)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RADIUS server unreachable: timeout after 30s</code></strong> — Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with <code>aaaconfig --test</code>.
+<strong><code>Syslog connection failed: Connection refused on 10.50.200.15:514</code></strong> — Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination.
+<strong><code>NTP: unsynchronized, stratum 16</code></strong> — Check NTP server reachability with <code>ping 10.0.0.1</code> and verify the switch can reach port 123 UDP; resync with <code>tsclockserver --sync</code>.</p>
+</div>
 <p>Take a configuration backup after completing verification:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cfgsave
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span>&lt;backup-server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/&lt;switch&gt;_post-hardening.cfg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cfgsave
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span>&lt;backup-server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/&lt;switch&gt;_post-hardening.cfg
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Saving configuration to flash memory...
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Configuration saved successfully.
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Uploading configuration to backup server...
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Connecting to 192.168.1.50 as user &#39;backup_admin&#39;...
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Transfer in progress: _post-hardening.cfg
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>100% complete
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Configuration uploaded successfully to /backups/brocade/switch-core-01_post-hardening.cfg
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>scp: command not found</code></strong> — Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22.
+<strong><code>Authentication failed for user &lt;user&gt;</code></strong> — Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions.
+<strong><code>Permission denied: /backups/brocade/</code></strong> — Ensure the destination directory exists on the backup server and the SCP user has write permissions to it.</p>
+</div>
 <hr />
 <h2 id="periodic-review">Periodic Review<a class="headerlink" href="#periodic-review" title="Permanent link">&para;</a></h2>
 <p>Hardening is not a one-time task. Schedule these reviews:</p>
@@ -8033,7 +8185,7 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:38:41 UTC"><span class="timeago" datetime="2026-06-29T06:38:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:38:41 UTC">2026-06-29</span>
   </span>
 
     

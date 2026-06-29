@@ -7745,6 +7745,21 @@ Operational procedures for certificate renewal, automation, and reporting.
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>--format<span class="w"> </span>pem<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>--file<span class="w"> </span>api-cert.pem
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Successfully enrolled certificate for api.corp.example.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Certificate ID: 01234567-89ab-cdef-0123-456789abcdef
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Certificate saved to: api-cert.pem
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Chain saved to: api-cert.pem
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Private key saved to: api-cert.pem
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Validity: 2024-01-15 to 2025-01-15
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Subject: CN=api.corp.example.com,O=Corp Inc,C=US
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: failed to authenticate: invalid token</code></strong> — Verify the <code>$VENAFI_TOKEN</code> environment variable is set and has not expired by running <code>echo $VENAFI_TOKEN</code>.
+<strong><code>Error: zone "Production\\Web" not found</code></strong> — Confirm the zone path exists in TPP and use the correct escape sequence (try single quotes or double backslashes: <code>--zone 'Production\Web'</code>).
+<strong><code>Error: certificate already exists for api.corp.example.com</code></strong> — Revoke the existing certificate in TPP or use <code>--force</code> flag to request a replacement.</p>
+</div>
 <hr />
 <h2 id="renew-an-expiring-certificate">Renew an Expiring Certificate<a class="headerlink" href="#renew-an-expiring-certificate" title="Permanent link">&para;</a></h2>
 <p>Renew a certificate that is approaching its expiry date. Venafi can automate this for managed applications; use the manual process when automation is not configured.</p>
@@ -7759,11 +7774,24 @@ Operational procedures for certificate renewal, automation, and reporting.
 <li>Once issued, Venafi pushes the new certificate to all configured application bindings.</li>
 <li>Verify the new expiry date in the certificate details pane.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Trigger renewal via vcert CLI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--token<span class="w"> </span><span class="nv">$VENAFI_TOKEN</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--thumbprint<span class="w"> </span>&lt;certificate-thumbprint&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger renewal via vcert CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--token<span class="w"> </span><span class="nv">$VENAFI_TOKEN</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--thumbprint<span class="w"> </span>&lt;certificate-thumbprint&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Renewal request submitted successfully
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Certificate: CN=app-server.corp.example.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Thumbprint: 7f3a9c2e1b4d8f6a5c9e2d1b7f3a9c2e
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Status: PENDING_RENEWAL
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Renewal ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Next check in: 24 hours
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid token or token expired</code></strong> — Refresh the VENAFI_TOKEN environment variable by re-authenticating with <code>vcert getcred</code> or your organization's token refresh process.
+<strong><code>Error: certificate not found with thumbprint &lt;certificate-thumbprint&gt;</code></strong> — Verify the thumbprint value is correct by listing certificates with <code>vcert find --url https://tpp.corp.example.com --token $VENAFI_TOKEN</code> and matching the exact thumbprint.
+<strong><code>Error: connection refused to https://tpp.corp.example.com</code></strong> — Confirm the TPP server is reachable and the URL is correct; test connectivity with <code>curl -k https://tpp.corp.example.com/vedsdk/</code> from your host.</p>
+</div>
 <p>Confirm the application is serving the renewed certificate using <code>openssl s_client -connect &lt;host&gt;:443</code> and checking the <code>Not After</code> date.</p>
 <hr />
 <h2 id="configure-a-discovery-job-agentless">Configure a Discovery Job (Agentless)<a class="headerlink" href="#configure-a-discovery-job-agentless" title="Permanent link">&para;</a></h2>
@@ -7855,7 +7883,7 @@ Operational procedures for certificate renewal, automation, and reporting.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

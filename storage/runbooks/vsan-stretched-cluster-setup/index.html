@@ -7590,6 +7590,38 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check existing vSAN cluster status</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PING 192.168.20.1 (192.168.20.1): 56 data bytes
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>64 bytes from 192.168.20.1: icmp_seq=0. time=4.521 ms
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>64 bytes from 192.168.20.1: icmp_seq=1. time=4.487 ms
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>64 bytes from 192.168.20.1: icmp_seq=2. time=4.506 ms
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>64 bytes from 192.168.20.1: icmp_seq=3. time=4.512 ms
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>--- 192.168.20.1 statistics ---
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>round trip min/avg/max = 4.487/4.507/4.521 ms
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Current Time: 2024-01-15T14:32:47Z
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Time until Next NTP Sync: 23 seconds
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NTP Servers:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   ntp.corp.local
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   ntp-backup.corp.local
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Cluster Health Status: green
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   Data Compliance: OK
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   Memory Compliance: OK
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   Network Connectivity: OK
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   Physical Disk Connectivity: OK
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Cluster UUID: 52d4a8f1-c2e9-4a7b-9e1f-8b3c5d2a1f6e
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Cluster Name: VSAN-Stretched-Cluster
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Enabled: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>PING 192.168.20.1 (192.168.20.1): 100% packet loss</code></strong> — Verify network connectivity between sites and confirm vmk_vsan interface is routable across the stretched cluster network.
+<strong><code>NTP Servers: (empty list)</code></strong> — Configure NTP servers on all ESXi hosts using <code>esxcli system ntp set --server=&lt;ntp-server&gt;</code> before proceeding with stretch.
+<strong><code>Cluster Health Status: red</code></strong> — Run <code>esxcli vsan health cluster get --verbose</code> to identify failing components and resolve disk/network issues before stretching the cluster.</p>
+</div>
 <hr />
 <h2 id="phase-1-deploy-the-witness-host">Phase 1: Deploy the Witness Host<a class="headerlink" href="#phase-1-deploy-the-witness-host" title="Permanent link">&para;</a></h2>
 <h3 id="11-download-and-deploy-witness-appliance-ova">1.1 Download and Deploy Witness Appliance OVA<a class="headerlink" href="#11-download-and-deploy-witness-appliance-ova" title="Permanent link">&para;</a></h3>
@@ -7609,24 +7641,42 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 <li>Power on the appliance</li>
 </ol>
 <h3 id="12-configure-witness-vmkernel">1.2 Configure Witness vmkernel<a class="headerlink" href="#12-configure-witness-vmkernel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to witness appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@vsan-witness-01.corp.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify witness vmkernel interfaces</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Add witness traffic vmkernel (if not auto-configured)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;Witness Traffic&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">192</span>.168.30.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span>--type<span class="w"> </span>static
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Enable vSAN witness traffic on vmk1</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="o">=</span>witness
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Should show vmk1 with trafficType = Witness</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to witness appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@vsan-witness-01.corp.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify witness vmkernel interfaces</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add witness traffic vmkernel (if not auto-configured)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;Witness Traffic&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">192</span>.168.30.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span>--type<span class="w"> </span>static
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Enable vSAN witness traffic on vmk1</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="o">=</span>witness
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Should show vmk1 with trafficType = Witness</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@vsan-witness-01 [ ~ ]# esxcli network ip interface list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Name  IPAddress      Netmask         Broadcast       Address Type  Gateway         DHCP DNS
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>----  -----------    ---------------  ---------------  -----------  ---------------  ----
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vmk0  192.168.10.50  255.255.255.0    192.168.10.255   STATIC       192.168.10.1     false
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vmk1  192.168.30.10  255.255.255.0    192.168.30.255   STATIC       0.0.0.0          false
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>root@vsan-witness-01 [ ~ ]# esxcli vsan network list
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Interface  Status  TrafficType
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>---------  ------  -----------
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vmk0       Up      Unicast
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vmk1       Up      Witness
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Network interface vmk1 already exists.</code></strong> — Check existing interfaces with <code>esxcli network ip interface list</code> and skip the add command if vmk1 is present.
+<strong><code>Portgroup "Witness Traffic" does not exist.</code></strong> — Create the portgroup first using <code>esxcli network vswitch standard portgroup add --vswitch-name vSwitch0 --portgroup-name "Witness Traffic"</code>.
+<strong><code>vSAN witness traffic is not enabled on this host.</code></strong> — Verify vSAN licensing and cluster configuration, then retry the <code>esxcli vsan network ip add</code> command.</p>
+</div>
 <h3 id="13-add-witness-host-to-vcenter">1.3 Add Witness Host to vCenter<a class="headerlink" href="#13-add-witness-host-to-vcenter" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In vCenter UI: <strong>Hosts and Clusters → Right-click datacenter → Add Host</strong></li>
@@ -7660,31 +7710,56 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 - Synchronize existing data (resync — can take minutes to hours depending on data size)
 - Enable the stretched cluster feature</p>
 <h3 id="23-verify-via-esxcli">2.3 Verify via esxcli<a class="headerlink" href="#23-verify-via-esxcli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to any Site A ESXi host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@esxi-a01.corp.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify stretched cluster is enabled</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected output includes:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   Stretched Cluster Enabled: true</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   Preferred Fault Domain: FD-SiteA</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   Witness Host: &lt;witness UUID&gt;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># List fault domains</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>faultdomain<span class="w"> </span>get
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check vSAN object resync status (wait for completion before proceeding)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Resync&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Should return no objects in resync state after initial sync completes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to any Site A ESXi host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@esxi-a01.corp.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify stretched cluster is enabled</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected output includes:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   Stretched Cluster Enabled: true</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#   Preferred Fault Domain: FD-SiteA</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">#   Witness Host: &lt;witness UUID&gt;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># List fault domains</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>faultdomain<span class="w"> </span>get
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check vSAN object resync status (wait for completion before proceeding)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Resync&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Should return no objects in resync state after initial sync completes</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>The ESXi host is running vSAN version 7.0.3 Build 19193900
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Cluster UUID: 52d4a8f1-7c2e-4d9a-b1e3-8f2c9a5d6e7f
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Stretched Cluster Enabled: true
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Preferred Fault Domain: FD-SiteA
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Witness Host: 52d4a8f2-8e3f-5d0b-c2f4-9g3d0b6e7f8g
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Witness Preferred Fault Domain: FD-Witness
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Fault Domain: FD-SiteA
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  UUID: 52d4a8f1-7c2e-4d9a-b1e3-8f2c9a5d6e7f
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Host Count: 4
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Fault Domain: FD-SiteB
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  UUID: 52d4a8f2-8e3f-5d0b-c2f4-9g3d0b6e7f8g
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Host Count: 4
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Fault Domain: FD-Witness
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  UUID: 52d4a8f3-9f4g-6e1c-d3g5-0h4e1c7f8g9h
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Host Count: 1
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>(no objects in resync state — cluster sync complete)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the ESXi host is reachable and SSH is enabled via <code>esxcli system ssh set --enabled=true</code> on the target host.
+<strong><code>vSAN cluster is not enabled</code></strong> — Enable vSAN on the cluster through vCenter: Home &gt; Cluster &gt; Configure &gt; vSAN &gt; General and toggle the vSAN service on.
+<strong><code>Witness Host: &lt;unknown&gt;</code></strong> — Ensure the witness host is properly configured and added to the stretched cluster; verify witness connectivity from both sites via <code>esxcli vsan cluster get</code>.</p>
+</div>
 <h3 id="24-powercli-verify-stretched-cluster-configuration">2.4 PowerCLI — Verify Stretched Cluster Configuration<a class="headerlink" href="#24-powercli-verify-stretched-cluster-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Stretched&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$vsanConfig</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SpbmEnabled</span><span class="p">,</span> <span class="n">StretchedClusterEnabled</span><span class="p">,</span> 
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="n">PreferredFaultDomainId</span><span class="p">,</span> <span class="n">WitnessHost</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Stretched&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$vsanConfig</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SpbmEnabled</span><span class="p">,</span> <span class="n">StretchedClusterEnabled</span><span class="p">,</span> 
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="n">PreferredFaultDomainId</span><span class="p">,</span> <span class="n">WitnessHost</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-storage-policy-for-stretched-cluster">Phase 3: Storage Policy for Stretched Cluster<a class="headerlink" href="#phase-3-storage-policy-for-stretched-cluster" title="Permanent link">&para;</a></h2>
@@ -7702,143 +7777,309 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 <li>Click <strong>Finish</strong></li>
 </ol>
 <h3 id="32-create-spbm-policy-via-powercli">3.2 Create SPBM Policy via PowerCLI<a class="headerlink" href="#32-create-spbm-policy-via-powercli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create the stretched cluster storage policy</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$ruleset</span> <span class="p">=</span> <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.checksumDisabled&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="nv">$false</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.stretchedCluster&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="nv">$true</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">New-SpbmStoragePolicy</span> <span class="p">`</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  <span class="n">-Name</span> <span class="s2">&quot;vSAN-Stretched-FTT1-RAID1&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="n">-Description</span> <span class="s2">&quot;Stretched cluster RAID-1 across both sites&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  <span class="n">-AnyOfRuleSets</span> <span class="nv">$ruleset</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create the stretched cluster storage policy</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$ruleset</span> <span class="p">=</span> <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.checksumDisabled&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="nv">$false</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.stretchedCluster&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  <span class="p">)</span> <span class="n">-Value</span> <span class="nv">$true</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">)</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">New-SpbmStoragePolicy</span> <span class="p">`</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  <span class="n">-Name</span> <span class="s2">&quot;vSAN-Stretched-FTT1-RAID1&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  <span class="n">-Description</span> <span class="s2">&quot;Stretched cluster RAID-1 across both sites&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  <span class="n">-AnyOfRuleSets</span> <span class="nv">$ruleset</span>
 </code></pre></div>
 <h3 id="33-assign-policy-to-vms">3.3 Assign Policy to VMs<a class="headerlink" href="#33-assign-policy-to-vms" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Assign storage policy to all VMs in the cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="nv">$harddisks</span> <span class="p">=</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="k">foreach</span> <span class="p">(</span><span class="nv">$disk</span> <span class="k">in</span> <span class="nv">$harddisks</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Set-SpbmEntityConfiguration</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span> <span class="n">-HardDisk</span> <span class="nv">$disk</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="p">}</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Verify compliance</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="p">|</span> 
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">StoragePolicy</span><span class="p">,</span> <span class="n">ComplianceStatus</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Assign storage policy to all VMs in the cluster</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  <span class="nv">$harddisks</span> <span class="p">=</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="k">foreach</span> <span class="p">(</span><span class="nv">$disk</span> <span class="k">in</span> <span class="nv">$harddisks</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Set-SpbmEntityConfiguration</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span> <span class="n">-HardDisk</span> <span class="nv">$disk</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  <span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">}</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Verify compliance</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="p">|</span> 
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">StoragePolicy</span><span class="p">,</span> <span class="n">ComplianceStatus</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-4-network-validation">Phase 4: Network Validation<a class="headerlink" href="#phase-4-network-validation" title="Permanent link">&para;</a></h2>
 <h3 id="41-test-inter-site-vsan-bandwidth">4.1 Test Inter-Site vSAN Bandwidth<a class="headerlink" href="#41-test-inter-site-vsan-bandwidth" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run vmkping with large payload (1400 bytes = near MTU) — from Site A to Site B vmkernel</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># SSH to esxi-a01</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ssh<span class="w"> </span>root@esxi-a01.corp.local
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Ping vSAN vmkernel of a Site B host</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span>-d<span class="w"> </span><span class="m">1400</span><span class="w"> </span><span class="m">192</span>.168.20.11
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Look for: RTT &lt; 5ms, 0% packet loss</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Extended test — send 1000 packets</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span>-d<span class="w"> </span><span class="m">1400</span><span class="w"> </span>-c<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">192</span>.168.20.11<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-</code></pre></div>
-<h3 id="42-verify-witness-traffic-routing">4.2 Verify Witness Traffic Routing<a class="headerlink" href="#42-verify-witness-traffic-routing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From Site A ESXi — ping witness vmkernel</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span><span class="m">192</span>.168.30.10
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Expected: RTT &lt; 200ms</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># From Site B ESXi — ping witness vmkernel</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span><span class="m">192</span>.168.30.10
-</code></pre></div>
-<h3 id="43-check-vsan-health-service">4.3 Check vSAN Health Service<a class="headerlink" href="#43-check-vsan-health-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run full health check from ESXi</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Key checks to verify:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># - vSAN cluster partition: Healthy</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># - Witness host fault domain: Healthy</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># - Network latency check: Healthy (RTT within limits)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># - vSAN disk balance: Healthy</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Via PowerCLI</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;vSAN-Stretched&quot;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Invoke-VsanHealthCheck<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-IncludeAllChecks<span class="w"> </span><span class="p">|</span><span class="w"> </span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Health<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Green&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>Select-Object<span class="w"> </span>TestName,<span class="w"> </span>Health,<span class="w"> </span>Suggestion<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-Wrap
-</code></pre></div>
-<h3 id="44-verify-vsan-object-placement">4.4 Verify vSAN Object Placement<a class="headerlink" href="#44-verify-vsan-object-placement" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From any ESXi host — verify objects have components in both sites</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># For each object, confirm:</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># - At least 1 component in FD-SiteA</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># - At least 1 component in FD-SiteB</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># - 1 witness component on witness host</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Run vmkping with large payload (1400 bytes = near MTU) — from Site A to Site B vmkernel</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># SSH to esxi-a01</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ssh<span class="w"> </span>root@esxi-a01.corp.local
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Ping vSAN vmkernel of a Site B host</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span>-d<span class="w"> </span><span class="m">1400</span><span class="w"> </span><span class="m">192</span>.168.20.11
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Look for: RTT &lt; 5ms, 0% packet loss</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Count objects per fault domain</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;FD-SiteA&quot;</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;FD-SiteB&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Extended test — send 1000 packets</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span>-d<span class="w"> </span><span class="m">1400</span><span class="w"> </span>-c<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">192</span>.168.20.11<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>root@esxi-a01.corp.local:~# vmkping -I vmk_vsan -d 1400 192.168.20.11
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>PING 192.168.20.11 (192.168.20.11): 1400 data bytes
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>1408 bytes from 192.168.20.11: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>1408 bytes from 192.168.20.11: icmp_seq=1 ttl=64 time=2.156 ms
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>1408 bytes from 192.168.20.11: icmp_seq=2 ttl=64 time=2.489 ms
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>1408 bytes from 192.168.20.11: icmp_seq=3 ttl=64 time=2.278 ms
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>1408 bytes from 192.168.20.11: icmp_seq=4 ttl=64 time=2.512 ms
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>^C
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>--- 192.168.20.11 statistics ---
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>5 packets transmitted, 5 packets received, 0% packet loss
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>round-trip min/avg/max = 2.156/2.355/2.512 ms
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>root@esxi-a01.corp.local:~# vmkping -I vmk_vsan -d 1400 -c 1000 192.168.20.11 | tail -5
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>1408 bytes from 192.168.20.11: icmp_seq=997 ttl=64 time=2.334 ms
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>1408 bytes from 192.168.20.11: icmp_seq=998 ttl=64 time=2.401 ms
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>1408 bytes from 192.168.20.11: icmp_seq=999 ttl=64 time=2.267 ms
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>--- 192.168.20.11 statistics ---
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>1000 packets transmitted, 1000 packets received, 0% packet loss
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>round-trip min/avg/max = 2.145/2.378/4.821 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown interface vmk_vsan</code></strong> — Verify the vSAN vmkernel interface name with <code>esxcli network ip interface list</code> and use the correct interface (typically <code>vmk1</code> or <code>vmk2</code>).
+<strong><code>PING 192.168.20.11 (192.168.20.11): 100% packet loss</code></strong> — Check network connectivity between sites, verify the vSAN network route exists with <code>esxcli network ip route ipv4 list</code>, and confirm the remote host is reachable.
+<strong><code>Permission denied (publickey)</code></strong> — Ensure SSH key is configured for root access or use <code>ssh -u root</code> with password authentication enabled on the ESXi host.</p>
+</div>
+<h3 id="42-verify-witness-traffic-routing">4.2 Verify Witness Traffic Routing<a class="headerlink" href="#42-verify-witness-traffic-routing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># From Site A ESXi — ping witness vmkernel</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span><span class="m">192</span>.168.30.10
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Expected: RTT &lt; 200ms</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># From Site B ESXi — ping witness vmkernel</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk_vsan<span class="w"> </span><span class="m">192</span>.168.30.10
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>PING 192.168.30.10 (192.168.30.10): 56 data bytes
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>64 bytes from 192.168.30.10: icmp_seq=0 ttl=64 time=87.234 ms
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>64 bytes from 192.168.30.10: icmp_seq=1 ttl=64 time=89.102 ms
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>64 bytes from 192.168.30.10: icmp_seq=2 ttl=64 time=88.567 ms
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>64 bytes from 192.168.30.10: icmp_seq=3 ttl=64 time=90.445 ms
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>--- 192.168.30.10 statistics ---
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>round-trip min/avg/max = 87.234/88.837/90.445 ms
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Password: (password prompt)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>PING 192.168.30.10 (192.168.30.10): 56 data bytes
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>64 bytes from 192.168.30.10: icmp_seq=0 ttl=64 time=156.891 ms
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>64 bytes from 192.168.30.10: icmp_seq=1 ttl=64 time=158.234 ms
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>64 bytes from 192.168.30.10: icmp_seq=2 ttl=64 time=157.445 ms
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>64 bytes from 192.168.30.10: icmp_seq=3 ttl=64 time=159.123 ms
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>--- 192.168.30.10 statistics ---
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>4 packets received, 0% packet loss
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>round-trip min/avg/max = 156.891/157.923/159.123 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown interface vmk_vsan</code></strong> — Verify the vSAN vmkernel interface name with <code>esxcli network ip interface list</code> and use the correct interface (e.g., <code>vmk1</code>).
+<strong><code>PING 192.168.30.10 (192.168.30.10): 56 data bytes (no response)</code></strong> — Confirm the witness appliance is running, the IP is correct, and network connectivity exists between sites (check firewall rules and routing).
+<strong><code>ssh: Could not resolve hostname esxi-b01.corp.local</code></strong> — Ensure DNS resolution is working or use the IP address directly instead of the hostname.</p>
+</div>
+<h3 id="43-check-vsan-health-service">4.3 Check vSAN Health Service<a class="headerlink" href="#43-check-vsan-health-service" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Run full health check from ESXi</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Key checks to verify:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># - vSAN cluster partition: Healthy</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># - Witness host fault domain: Healthy</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># - Network latency check: Healthy (RTT within limits)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># - vSAN disk balance: Healthy</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Via PowerCLI</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;vSAN-Stretched&quot;</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Invoke-VsanHealthCheck<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span>-IncludeAllChecks<span class="w"> </span><span class="p">|</span><span class="w"> </span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Health<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Green&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span>Select-Object<span class="w"> </span>TestName,<span class="w"> </span>Health,<span class="w"> </span>Suggestion<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-Wrap
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Cluster Health Status:
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Cluster: vsan-stretched-prod-01
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Overall Health: Green
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  vSAN cluster partition: Healthy
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  Witness host fault domain: Healthy
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  Network latency check: Healthy (RTT: 2.3ms, threshold: 10ms)
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  vSAN disk balance: Healthy
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Component limit health: Healthy
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  Physical disk health: Healthy
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>TestName                          Health Yellow Suggestion
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>--------                          ------ ------ ----------
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>vSAN Cluster Partition            Green
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>Witness Host Fault Domain         Green
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Network Latency Check             Green
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>vSAN Disk Balance                 Green
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>Physical Disk Health              Green
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Run the command directly on an ESXi host via SSH or use <code>Get-VMHost | Invoke-VMScript -ScriptText "esxcli vsan health cluster get"</code> from PowerCLI instead.
+<strong><code>Unable to find type [Invoke-VsanHealthCheck]</code></strong> — Load the VMware.VimAutomation.Vsan module first with <code>Import-Module VMware.VimAutomation.Vsan</code>.
+<strong><code>The vSAN cluster is not healthy. Witness host is unreachable.</code></strong> — Verify network connectivity between stretched cluster sites and confirm the witness host ESXi service is running with <code>esxcli system maintenanceMode get</code> on the witness.</p>
+</div>
+<h3 id="44-verify-vsan-object-placement">4.4 Verify vSAN Object Placement<a class="headerlink" href="#44-verify-vsan-object-placement" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># From any ESXi host — verify objects have components in both sites</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># For each object, confirm:</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># - At least 1 component in FD-SiteA</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># - At least 1 component in FD-SiteB</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># - 1 witness component on witness host</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Count objects per fault domain</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;FD-SiteA&quot;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;FD-SiteB&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Object UUID                          Policy                 Health  FD-SiteA  FD-SiteB  Witness
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>52e4a1c0-1234-5678-90ab-cdef12345678 raid1 pftt=1 stripes=1 Healthy 1         1         1
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>63f5b2d1-2345-6789-01bc-def123456789 raid1 pftt=1 stripes=1 Healthy 1         1         1
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>74g6c3e2-3456-7890-12cd-ef1234567890 raid1 pftt=1 stripes=1 Healthy 1         1         1
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>85h7d4f3-4567-8901-23de-f12345678901 raid1 pftt=1 stripes=1 Healthy 1         1         1
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>96i8e5g4-5678-9012-34ef-123456789012 raid1 pftt=1 stripes=1 Healthy 1         1         1
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>...
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>12
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: vSAN is not enabled on this cluster</code></strong> — Verify vSAN is licensed and enabled on the cluster, and run the command from a host that is part of the vSAN cluster.
+<strong><code>Error: No objects found</code></strong> — Confirm that virtual machines exist on the vSAN datastore; if the cluster is newly configured, create a test VM or check that vSAN has finished initial synchronization.</p>
+</div>
 <hr />
 <h2 id="phase-5-failover-simulation">Phase 5: Failover Simulation<a class="headerlink" href="#phase-5-failover-simulation" title="Permanent link">&para;</a></h2>
 <h3 id="51-simulate-site-a-isolation">5.1 Simulate Site A Isolation<a class="headerlink" href="#51-simulate-site-a-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># CAUTION: This causes a brief HA event — coordinate with change window</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Option A: Block vSAN vmkernel traffic from Site A hosts (on network switch)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Block ports on Site A physical switches carrying vmk_vsan traffic</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Option B: Manually isolate via firewall rule (lab only)</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># On each Site A host:</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>vsanEncryption
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Monitor from vCenter — VMs should restart on Site B within HA timeout (default 30s–120s)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># CAUTION: This causes a brief HA event — coordinate with change window</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Option A: Block vSAN vmkernel traffic from Site A hosts (on network switch)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Block ports on Site A physical switches carrying vmk_vsan traffic</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Option B: Manually isolate via firewall rule (lab only)</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># On each Site A host:</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>vsanEncryption
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Monitor from vCenter — VMs should restart on Site B within HA timeout (default 30s–120s)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown option --ruleset-id.</code></strong> — Use <code>--ruleset-name</code> instead of <code>--ruleset-id</code> in ESXi 6.5+.
+<strong><code>Error: Unable to connect to Management Agent on &lt;hostname&gt;.</code></strong> — Ensure SSH is enabled on the ESXi host and network connectivity to the management vmkernel is active before running the command.</p>
+</div>
 <h3 id="52-verify-vm-restart-on-site-b">5.2 Verify VM Restart on Site B<a class="headerlink" href="#52-verify-vm-restart-on-site-b" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Monitor HA events</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">50</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*Ha*&quot;</span><span class="p">}</span> <span class="p">|</span> 
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">FullFormattedMessage</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-Wrap</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c"># Verify VMs are running on Site B hosts</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> 
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOn&quot;</span><span class="p">}</span> <span class="p">|</span> 
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># Monitor HA events</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">50</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*Ha*&quot;</span><span class="p">}</span> <span class="p">|</span> 
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">FullFormattedMessage</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-Wrap</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c"># Verify VMs are running on Site B hosts</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;vSAN-Stretched&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> 
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOn&quot;</span><span class="p">}</span> <span class="p">|</span> 
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <h3 id="53-check-vsan-stretched-cluster-health-during-isolation">5.3 Check vSAN Stretched Cluster Health During Isolation<a class="headerlink" href="#53-check-vsan-stretched-cluster-health-during-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># From a Site B host (during Site A isolation)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Verify cluster is still accessible and vSAN is healthy</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Expected: cluster accessible, Preferred site = unreachable (normal during test)</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check that Site B has quorum with witness</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># From a Site B host (during Site A isolation)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Verify cluster is still accessible and vSAN is healthy</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Expected: cluster accessible, Preferred site = unreachable (normal during test)</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Check that Site B has quorum with witness</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>cluster<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Connected to esxi-b01.corp.local.
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>root@esxi-b01:~&gt; esxcli vsan cluster get
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Cluster Information
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>   Cluster UUID: 52d4a8f0-7c2e-4d91-b3e2-9f1a2c3d4e5f
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>   Cluster Name: prod-vsan-stretched
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>   Node UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>   Preferred Fault Domain: Site-A
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>   Current Preferred Fault Domain: unreachable
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>   Sub-Cluster UUID: 52d4a8f0-7c2e-4d91-b3e2-9f1a2c3d4e5f
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>   Sub-Cluster Master: esxi-b01.corp.local
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>   Cluster Health State: Healthy
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>   Cluster Health Message: 
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>   Cluster Quorum Status: Quorum present
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>   Cluster Quorum Master: esxi-b01.corp.local
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>root@esxi-b01:~&gt; esxcli vsan debug cluster get
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>Cluster Information
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>   UUID: 52d4a8f0-7c2e-4d91-b3e2-9f1a2c3d4e5f
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>   Quorum Master: esxi-b01.corp.local
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>   Quorum Master UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>   Quorum Present: true
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>   Witness Host: esxi-witness.corp.local
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>   Witness UUID: w1t2n3e4-s5s6-7890-wxyz-ef1234567890
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>   Witness Status: Online
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>   Cluster Mode: Stretched
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>   Partition Status: Site-B has quorum (Site-A isolated)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Cluster Quorum Status: No quorum</code></strong> — Verify witness host connectivity with <code>esxcli vsan cluster get</code> and check network partitioning between sites; if witness is unreachable, failover to witness host or restore network connectivity.
+<strong><code>Connection refused</code> or <code>ssh: connect to host esxi-b01.corp.local port 22: Connection refused</code></strong> — Verify the ESXi host is powered on and reachable with <code>ping esxi-b01.corp.local</code>, then check firewall rules allowing SSH on port 22.</p>
+</div>
 <h3 id="54-restore-site-a-and-verify-resync">5.4 Restore Site A and Verify Resync<a class="headerlink" href="#54-restore-site-a-and-verify-resync" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Re-enable Site A connectivity (reverse the isolation steps)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># On each Site A host:</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--ruleset-id<span class="w"> </span>vsanEncryption
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Monitor resync — components from Site A will resync with Site B</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>resync
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Wait until resync completes (no objects in resync state)</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Large datasets can take hours — monitor progress</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># Verify cluster health post-resync</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Re-enable Site A connectivity (reverse the isolation steps)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># On each Site A host:</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--ruleset-id<span class="w"> </span>vsanEncryption
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Monitor resync — components from Site A will resync with Site B</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>resync
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Wait until resync completes (no objects in resync state)</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1"># Large datasets can take hours — monitor progress</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="c1"># Verify cluster health post-resync</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>(no output — command completes silently)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>VSAN Object Resync Status:
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  Object UUID: 52e3f4a1-8c2d-4a9b-b1c3-7d9e2f5a8b6c
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>  Resync State: In Progress
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  Components Resyncing: 3
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  Estimated Time Remaining: 2h 15m
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>VSAN Resync Summary:
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>  Total Objects: 1247
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  Objects Resyncing: 89
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>  Bytes to Resync: 847.3 GB
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>  Resync Rate: 12.4 MB/s
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>  Estimated Completion: 18:45 UTC
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>Every 30.0s: esxcli vsan debug resync summary get
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>VSAN Resync Summary:
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>  Total Objects: 1247
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>  Objects Resyncing: 0
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>  Bytes to Resync: 0 B
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>  Resync Rate: 0 B/s
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>  Resync Complete: Yes
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>Cluster Health Status:
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a>  Cluster Status: Healthy
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>  Data Availability: OK
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>  Network Latency: 2.3 ms
+<a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a>  Component Health: OK
+<a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a>  Disk Health: OK
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unknown command or namespace firewall ruleset</code></strong> — Verify the ESXi version supports this command; use <code>esxcli network firewall ruleset list</code> to confirm the ruleset exists first.
+<strong><code>Error: VSAN is not enabled on this cluster</code></strong> — Ensure vSAN is licensed and enabled on the cluster before running vSAN debug commands.
+<strong><code>Error: Network partition detected — Site B unreachable</code></strong> — Verify network connectivity and firewall rules between sites; resync cannot proceed until both sites communicate.</p>
+</div>
 <h3 id="55-vsan-stretched-cluster-health-in-ui">5.5 vSAN Stretched Cluster Health in UI<a class="headerlink" href="#55-vsan-stretched-cluster-health-in-ui" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Cluster → Monitor → vSAN → Skyline Health</strong></li>
@@ -7851,50 +8092,81 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 <hr />
 <h2 id="srm-integration-note">SRM Integration Note<a class="headerlink" href="#srm-integration-note" title="Permanent link">&para;</a></h2>
 <p>If VMware Site Recovery Manager (SRM) is deployed alongside the stretched vSAN cluster:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>SRM + vSAN Stretched Cluster:
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>- Protection groups use vSAN-Stretched-FTT1-RAID1 storage policy
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>- VMs with this policy have RPO = 0 (synchronous replication built into vSAN)
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>- SRM recovery plans can trigger HA restart on secondary site OR controlled
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  failover of VMs using vSphere Replication as the transport mechanism
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>- vSAN stretched cluster is the recommended substitute for array-based
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  replication when both sites share the same vSAN cluster
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>SRM + vSAN Stretched Cluster:
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>- Protection groups use vSAN-Stretched-FTT1-RAID1 storage policy
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>- VMs with this policy have RPO = 0 (synchronous replication built into vSAN)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>- SRM recovery plans can trigger HA restart on secondary site OR controlled
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  failover of VMs using vSphere Replication as the transport mechanism
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>- vSAN stretched cluster is the recommended substitute for array-based
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>  replication when both sites share the same vSAN cluster
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Verify SRM-protected VMs use stretched cluster policy</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">$protectedVMs</span> <span class="p">=</span> <span class="nb">Get-SrmProtectionGroup</span> <span class="p">|</span> <span class="nb">Get-SrmProtectedVM</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$protectedVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  <span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="n">-Id</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">StoragePolicy</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">VM</span>     <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">Policy</span> <span class="p">=</span> <span class="nv">$policy</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">RPO</span>    <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$policy</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*Stretched*&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;0 (sync)&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Per replication schedule&quot;</span> <span class="p">}</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  <span class="p">}</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c"># Verify SRM-protected VMs use stretched cluster policy</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nv">$protectedVMs</span> <span class="p">=</span> <span class="nb">Get-SrmProtectionGroup</span> <span class="p">|</span> <span class="nb">Get-SrmProtectedVM</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$protectedVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>  <span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="n">-Id</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">StoragePolicy</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>  <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>    <span class="n">VM</span>     <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>    <span class="n">Policy</span> <span class="p">=</span> <span class="nv">$policy</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    <span class="n">RPO</span>    <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$policy</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*Stretched*&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;0 (sync)&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Per replication schedule&quot;</span> <span class="p">}</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>  <span class="p">}</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <hr />
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <h3 id="revert-from-stretched-cluster-to-standard-vsan">Revert from Stretched Cluster to Standard vSAN<a class="headerlink" href="#revert-from-stretched-cluster-to-standard-vsan" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># CAUTION: Reverting removes stretch and collapses to single-site vSAN</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># All VM objects will be migrated back to single fault domain</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Do not proceed if Site B has active VM workloads without migrating first</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Migrate all VMs back to Site A hosts first</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Then in vCenter UI:</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Cluster → Configure → vSAN → Services → Fault Tolerance → Edit → Disable Stretched Cluster</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Via CLI (after UI wizard completes conversion):</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># Stretched Cluster Enabled should now read: false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># CAUTION: Reverting removes stretch and collapses to single-site vSAN</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># All VM objects will be migrated back to single fault domain</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1"># Do not proceed if Site B has active VM workloads without migrating first</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Migrate all VMs back to Site A hosts first</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1"># Then in vCenter UI:</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Cluster → Configure → vSAN → Services → Fault Tolerance → Edit → Disable Stretched Cluster</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="c1"># Via CLI (after UI wizard completes conversion):</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="c1"># Stretched Cluster Enabled should now read: false</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Cluster UUID: 52d4a8f1-7c2e-4a9b-b3e2-1a9c8d7e6f5a
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Cluster Name: prod-vsan-cluster
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Node UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f-6a7b-8c9d
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Stretched Cluster Enabled: false
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Preferred Fault Domain: Site-A
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>Site A Members: 6
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Site B Members: 0
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>Witness Host: 10.20.30.45
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>vSAN Health: Healthy
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Stretched Cluster Enabled: true</code></strong> — The UI wizard did not complete successfully; re-run the vSAN Stretched Cluster wizard in vCenter and ensure you selected "Disable Stretched Cluster" in the final step.
+<strong><code>Error: vSAN cluster is not accessible</code></strong> — Verify all ESXi hosts in the cluster are in a connected state and vSAN is running on at least three hosts using <code>esxcli vsan cluster list</code>.
+<strong><code>Witness host is still present but not in Site A or Site B</code></strong> — Manually remove the witness host from the cluster configuration in vCenter before attempting to disable stretched cluster mode.</p>
+</div>
 <h3 id="emergency-force-vsan-to-site-b-without-witness-quorum">Emergency: Force vSAN to Site B Without Witness Quorum<a class="headerlink" href="#emergency-force-vsan-to-site-b-without-witness-quorum" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Use ONLY if Site A and Witness are both unreachable and VMs need to be accessed</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># This permanently marks Site B as authoritative — data loss risk if Site A was ahead</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>repair<span class="w"> </span>--force-unsync
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># WARNING: Run only on instruction from VMware GSS</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Use ONLY if Site A and Witness are both unreachable and VMs need to be accessed</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># This permanently marks Site B as authoritative — data loss risk if Site A was ahead</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>ssh<span class="w"> </span>root@esxi-b01.corp.local
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>repair<span class="w"> </span>--force-unsync
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1"># WARNING: Run only on instruction from VMware GSS</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>root@esxi-b01.corp.local&#39;s password: 
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>The authenticity of host &#39;esxi-b01.corp.local (10.20.15.42)&#39; can&#39;t be established.
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>ECDSA key fingerprint is SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uvW.
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Are you sure you want to continue connecting (yes/no)? yes
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Warning: Permanently added &#39;esxi-b01.corp.local,10.20.15.42&#39; (ECDSA) to /root/.ssh/known_hosts.
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>root@esxi-b01.corp.local:~&gt; esxcli vsan debug object repair --force-unsync
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>Object repair initiated on 24 objects
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>Repair job ID: 4a7c9e2f-b1d3-4e8a-9f2c-5d8e1a3b6c7f
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>Status: In Progress
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>esxcli: command not found</code></strong> — Verify you are logged into an ESXi host (not vCenter) and that VSAN is installed with <code>esxcli vsan cluster get</code>.
+<strong><code>Error: The VSAN cluster is not in a degraded state</code></strong> — This command only works when the cluster has lost quorum; confirm Site A and Witness are truly unreachable before proceeding.</p>
+</div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7927,7 +8199,7 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:20:53 UTC"><span class="timeago" datetime="2026-06-29T06:20:53+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:20:53 UTC">2026-06-29</span>
   </span>
 
     

@@ -10843,99 +10843,301 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Count total rules applied to this VM&#39;s vNIC (high count = performance overhead)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>/&lt;world-id&gt;/0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;rule&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get hit count for a specific DFW rule — confirms if rule is actively matching traffic</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>UUID: 564d3e8a-1234-5678-90ab-cdef12345678
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Display Name: prod-web-vm-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>World ID: 2147483648
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Config File: /vmfs/volumes/datastore1/prod-web-vm-01/prod-web-vm-01.vmx
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Memory: 8192 MB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>CPU Count: 4
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>World ID: 2147483648
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Rule ID: 1001 | Direction: IN | Protocol: TCP | Port: 443 | Action: ALLOW | Source: 10.0.0.0/8
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Rule ID: 1002 | Direction: IN | Protocol: TCP | Port: 80 | Action: ALLOW | Source: 10.0.0.0/8
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Rule ID: 1003 | Direction: OUT | Protocol: TCP | Port: 3306 | Action: ALLOW | Dest: 10.50.1.0/24
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Rule ID: 1004 | Direction: IN | Protocol: ICMP | Action: ALLOW | Source: 10.0.0.0/8
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Rule ID: 1005 | Direction: OUT | Protocol: DNS | Port: 53 | Action: ALLOW | Dest: 8.8.8.8
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Rule ID: 1006 | Direction: IN | Protocol: TCP | Port: 22 | Action: DENY | Source: 0.0.0.0/0
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>...
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>247
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vsipioctl: command not found</code></strong> — Verify you are running this command directly on the ESXi host (not vCenter) and that DFW is enabled on the cluster.
+<strong><code>No such file or directory: /&lt;world-id&gt;/0</code></strong> — Replace <code>&lt;world-id&gt;</code> with the actual numeric World ID from the <code>esxcli vm process list</code> output (e.g., <code>/2147483648/0</code>).
+<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi host privileges; use <code>su -</code> to elevate if needed.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get hit count for a specific DFW rule — confirms if rule is actively matching traffic</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;rule_id&quot;: &quot;1001&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;rule_name&quot;: &quot;Allow-Web-Traffic&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;hit_count&quot;: 47283,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;byte_count&quot;: 5847392,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;packet_count&quot;: 12456,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  &quot;last_hit_timestamp&quot;: 1699564823000,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  &quot;enabled&quot;: true,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  &quot;direction&quot;: &quot;IN_OUT&quot;,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;statistics&quot;: {
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    &quot;total_matches&quot;: 47283,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    &quot;denied_packets&quot;: 0,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    &quot;allowed_packets&quot;: 47283
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  }
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN).
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></strong> — Confirm NSX Manager hostname/IP is correct and resolvable from your network location.
+<strong><code>{"error_code": 401, "error_message": "Unauthorized"}</code></strong> — Verify admin credentials are correct and the user has API access permissions in NSX Manager.</p>
+</div>
 <p>Look for: a high-hit-count deny rule in a higher category (Emergency/Infrastructure) that matches the source or destination — this shadows any allow rule lower in the list.</p>
 <hr />
 <h2 id="4-segment-and-transport-node-check">4. Segment and Transport Node Check<a class="headerlink" href="#4-segment-and-transport-node-check" title="Permanent link">&para;</a></h2>
 <p>If Aria Networks shows the segment unreachable or the VM's MAC is unknown, verify the segment is bound to the affected host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># NSX Manager REST API — check transport node status for the segment (logical switch)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># First get the logical switch ID from NSX Manager UI → Networking → Segments</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/logical-switches/&lt;ls-id&gt;/transport-node-status&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;status|transport_node_id|display_name&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Expected: all transport nodes for the segment show &quot;UP&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># NSX Manager REST API — check transport node status for the segment (logical switch)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># First get the logical switch ID from NSX Manager UI → Networking → Segments</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/logical-switches/&lt;ls-id&gt;/transport-node-status&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;status|transport_node_id|display_name&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected: all transport nodes for the segment show &quot;UP&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;display_name&quot;: &quot;segment-prod-web-01&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;transport_node_id&quot;: &quot;tn-001-esx-01.lab.local&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>}
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>{
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;display_name&quot;: &quot;segment-prod-web-01&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;transport_node_id&quot;: &quot;tn-002-esx-02.lab.local&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>}
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>{
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;display_name&quot;: &quot;segment-prod-web-01&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;transport_node_id&quot;: &quot;tn-003-esx-03.lab.local&quot;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already in the command above) or import the NSX Manager CA certificate into your system trust store.
+<strong><code>curl: (401) Unauthorized</code></strong> — Verify the admin password is correct and the user has API access permissions in NSX Manager.
+<strong><code>jq: command not found</code></strong> — Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> if jq is installed, or ensure python3 is available on your system.</p>
+</div>
 <p>From vCenter, go to <strong>NSX → System → Fabric → Nodes → Host Transport Nodes</strong> and check configuration state. If the host shows "Failed" or "Pending":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NSX VIBs installed on the host — all should match the same version</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NSX VIBs installed on the host — all should match the same version</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                           Version                Install Date
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nsx-common                     4.1.0.0-21589934       2024-01-15
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>nsx-esx                        4.1.0.0-21589934       2024-01-15
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>nsx-vdrportset                 4.1.0.0-21589934       2024-01-15
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nsx-vxlan                      4.1.0.0-21589934       2024-01-15
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>nsx-vsipfe                     4.1.0.0-21589934       2024-01-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connect to localhost failed. Error: Unable to connect to the local hostd agent.</code></strong> — Ensure the ESXi host is in maintenance mode or restart the hostd service with <code>services.sh restart</code>.
+<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or execute it directly in an ESXi SSH session where you already have elevated permissions.</p>
+</div>
 <p>Look for: any NSX VIB at a different version than the rest indicates a partial upgrade or failed re-apply — re-apply the transport node profile from NSX Manager.</p>
 <hr />
 <h2 id="5-t1t0-routing-check">5. T1/T0 Routing Check<a class="headerlink" href="#5-t1t0-routing-check" title="Permanent link">&para;</a></h2>
 <p>For inter-segment routing failures, check the T1 route table and T1→T0 uplink from the edge node CLI.</p>
 <p>Navigate to <strong>NSX Manager → Networking → Tier-1 Gateways → select T1 → Route Table</strong>, or SSH to the edge node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to the NSX edge node (via vCenter console or direct SSH)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># List logical routers on the edge node</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>logical-routers
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Output shows VRF IDs:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">#   VRF 0 — management plane</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   VRF 1 — T0 uplink (SR — service router)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   VRF 2 — T1 DR (distributed router)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Enter the T1 VRF</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>vrf<span class="w"> </span>&lt;t1-vrf-id&gt;
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check route table on the T1</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>get<span class="w"> </span>route
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># If the connected subnet for the source or destination segment is missing:</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># the T1 is not connected to that segment — verify segment is attached to this T1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to the NSX edge node (via vCenter console or direct SSH)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># List logical routers on the edge node</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>logical-routers
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Output shows VRF IDs:</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1">#   VRF 0 — management plane</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">#   VRF 1 — T0 uplink (SR — service router)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1">#   VRF 2 — T1 DR (distributed router)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Enter the T1 VRF</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>vrf<span class="w"> </span>&lt;t1-vrf-id&gt;
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check route table on the T1</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>get<span class="w"> </span>route
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># If the connected subnet for the source or destination segment is missing:</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># the T1 is not connected to that segment — verify segment is attached to this T1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NSX Edge Node CLI
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>edge-node-01&gt; get logical-routers
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Logical Router ID          VRF    Type              Status
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>lr-mgmt-001                0      Management        up
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>lr-t0-uplink-prod          1      Service Router    up
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>lr-t1-distributed-web      2      Distributed       up
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>lr-t1-distributed-db       3      Distributed       up
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>edge-node-01&gt; vrf 2
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Entering VRF 2 (lr-t1-distributed-web)
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>edge-node-01(vrf-2)&gt; get route
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Destination          Next Hop         Metric  Type
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>192.168.10.0/24      Connected        0       Direct
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>192.168.20.0/24      192.168.10.1     10      Static
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>10.0.0.0/8           192.168.10.254   20      BGP
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>169.254.1.0/24       Kernel           0       Kernel
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vrf: invalid VRF ID</code></strong> — Verify the VRF ID from <code>get logical-routers</code> output matches your T1 router and use the correct numeric ID.
+<strong><code>get route: command not found</code></strong> — Ensure you are in the correct VRF context using <code>vrf &lt;id&gt;</code> before running route commands.</p>
+</div>
 <p>Check the T1 → T0 uplink and BGP state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enter the T0 VRF</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vrf<span class="w"> </span>&lt;t0-vrf-id&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check BGP neighbor state (for external/north-south connectivity)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Fields to check:</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">#   State    — Established (healthy) vs Active/Connect (session down)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">#   Up/Down  — time since BGP session last changed state</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># If BGP is down with upstream router: check IP reachability from edge to router</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;t0-uplink-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enter the T0 VRF</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vrf<span class="w"> </span>&lt;t0-vrf-id&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check BGP neighbor state (for external/north-south connectivity)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Fields to check:</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1">#   State    — Established (healthy) vs Active/Connect (session down)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1">#   Up/Down  — time since BGP session last changed state</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># If BGP is down with upstream router: check IP reachability from edge to router</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;t0-uplink-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vrf t0-vrf-001
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>get bgp neighbor summary
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>10.200.1.1      4 65001    4521    4518   128456    0    0 5w2d14h Established
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>10.200.1.5      4 65001    4512    4515   128456    0    0 5w2d14h Established
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>10.200.2.1      4 65002    3847    3851   128456    0    0 2d18h   Established
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>10.200.2.5      4 65002      12      14       0    0    0 00:02:34 Active
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>ping 10.200.1.1 source 10.100.0.5
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>PING 10.200.1.1 (10.200.1.1) from 10.100.0.5: 56 data bytes
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>64 bytes from 10.200.1.1: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>64 bytes from 10.200.1.1: icmp_seq=1 ttl=64 time=2.287 ms
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>64 bytes from 10.200.1.1: icmp_seq=2 ttl=64 time=2.305 ms
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>--- 10.200.1.1 statistics ---
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>round-trip min/avg/max/stddev = 2.287/2.311/2.341/0.022 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>% Invalid command</code></strong> — Verify the correct VRF ID syntax for your NSX-T or vSphere environment (use <code>show vrf</code> to list available VRFs).
+<strong><code>Neighbor 10.200.1.5: connect to peer failed (Connection refused)</code></strong> — Check that BGP is enabled on the upstream router and that the neighbor relationship is configured with matching AS numbers and timers.
+<strong><code>PING: sendto: No route to host</code></strong> — Verify the source IP address is assigned to an active interface on the T0 uplink and that a route exists to the upstream router IP.</p>
+</div>
 <p>Look for: <code>State = Active</code> or <code>Connect</code> on any BGP neighbor means the session is down — check IP reachability and AS/password configuration on both sides.</p>
 <hr />
 <h2 id="6-edge-node-health-check">6. Edge Node Health Check<a class="headerlink" href="#6-edge-node-health-check" title="Permanent link">&para;</a></h2>
 <p>If north-south traffic is broken and T0 BGP is down, verify the edge VM itself is healthy and its TEP connectivity is intact.</p>
 <p>In vCenter, confirm the edge VM is powered on: <strong>NSX → Fabric → Nodes → Edge Transport Nodes</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From edge node CLI — check overall system status</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>system<span class="w"> </span>health<span class="w"> </span>status
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check interfaces on the edge</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>get<span class="w"> </span>interfaces
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify TEP connectivity from the edge node to ESXi host TEPs</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>interface
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ping<span class="w"> </span>&lt;esxi-tep-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;edge-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># From edge node CLI — check overall system status</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>get<span class="w"> </span>system<span class="w"> </span>health<span class="w"> </span>status
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check interfaces on the edge</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Verify TEP connectivity from the edge node to ESXi host TEPs</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>interface
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>ping<span class="w"> </span>&lt;esxi-tep-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;edge-tep-ip&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># If edge TEP has a stale ARP entry after a recent migration or network event:</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>clear<span class="w"> </span>arp
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Then re-test BGP and TEP connectivity</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>System Health Status:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  Overall Status: HEALTHY
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  CPU Usage: 34%
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  Memory Usage: 62%
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  Disk Usage: 48%
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  Last Updated: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Interface Summary:
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  eth0: UP (10.45.12.88/24) — MTU 1500
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  eth1: UP (192.168.100.45/24) — MTU 1500
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  eth2: DOWN
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  bond0: UP (172.16.50.10/25) — MTU 9000
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Tunnel Port Interface:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  TEP Interface: vmk10
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  IP Address: 10.50.1.45/24
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  Status: CONNECTED
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  MTU: 1500
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>PING 10.50.1.88 from 10.50.1.45: 56 data bytes
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>64 bytes from 10.50.1.88: icmp_seq=0 ttl=64 time=2.34 ms
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>64 bytes from 10.50.1.88: icmp_seq=1 ttl=64 time=2.18 ms
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>64 bytes from 10.50.1.88: icmp_seq=2 ttl=64 time=2.41 ms
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>--- 10.50.1.88 statistics ---
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>3 packets transmitted, 3 packets received, 0% packet loss
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to resolve TEP interface — tunnel port not configured</code></strong> — Configure the tunnel endpoint (TEP) on the edge node using the appropriate network configuration command before attempting connectivity checks.
+<strong><code>PING: sendto: No route to host</code></strong> — Verify that the ESXi host TEP IP is reachable and that routing/firewall rules permit traffic between the edge TEP subnet and ESXi TEP subnet.
+<strong><code>Error: Command 'get tunnel-port interface' not found</code></strong> — Ensure you are running this command from the NSX edge node CLI context, not a standard ESXi or Linux shell.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># If edge TEP has a stale ARP entry after a recent migration or network event:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>clear<span class="w"> </span>arp
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Then re-test BGP and TEP connectivity</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Clearing ARP cache on edge TEP node-42.prod.local...
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ARP cache cleared successfully.
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Flushing neighbor table for all interfaces...
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  eth0: 127 entries removed
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  eth1: 89 entries removed
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  eth2: 0 entries removed
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Waiting 5 seconds for ARP table to stabilize...
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>BGP session status check:
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Neighbor 10.240.1.1: Established (uptime: 2d 14h)
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Neighbor 10.240.1.2: Established (uptime: 1d 3h)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>TEP connectivity test:
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  TEP IP 192.168.100.42 → 192.168.100.41: OK (RTT: 2.3ms)
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  TEP IP 192.168.100.42 → 192.168.100.43: OK (RTT: 2.1ms)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>All connectivity checks passed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: clear arp</code></strong> — Use <code>ip neigh flush all</code> or <code>arp -d -a</code> depending on your OS, or consult your hypervisor's CLI documentation for the correct ARP flush command.
+<strong><code>RTNETLINK answers: Operation not permitted</code></strong> — Run the command with sudo or as root, since ARP cache manipulation requires elevated privileges.
+<strong><code>BGP session down: Neighbor 10.240.1.1 not responding</code></strong> — Verify network connectivity to the BGP neighbor and check that the BGP daemon is running with <code>systemctl status bgpd</code> or equivalent.</p>
+</div>
 <hr />
 <h2 id="7-tep-tunnel-endpoint-connectivity-from-esxi">7. TEP (Tunnel Endpoint) Connectivity from ESXi<a class="headerlink" href="#7-tep-tunnel-endpoint-connectivity-from-esxi" title="Permanent link">&para;</a></h2>
 <p>GENEVE tunnels between ESXi hosts use TEP VMkernel interfaces — if TEP is unreachable, all overlay traffic between affected hosts is broken.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Identify the TEP VMkernel IP on the source host</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmk10
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Test GENEVE tunnel path to a remote TEP IP (use 1572-byte payload: GENEVE overhead ~50 bytes)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># If this fails: check that the physical underlay (VLAN, MTU, routing) allows</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># UDP port 6081 (GENEVE) between hosts</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Confirm GENEVE firewall rule is enabled on both hosts</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>geneve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Identify the TEP VMkernel IP on the source host</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmk10
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Test GENEVE tunnel path to a remote TEP IP (use 1572-byte payload: GENEVE overhead ~50 bytes)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># If this fails: check that the physical underlay (VLAN, MTU, routing) allows</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># UDP port 6081 (GENEVE) between hosts</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Confirm GENEVE firewall rule is enabled on both hosts</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>geneve
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Name  Port Group      IP Address      Netmask         Broadcast       MAC Address        MTU     TSO MSS Status VMotion Vsan Management
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>vmk10 TEP-Network    192.168.100.45  255.255.255.0   192.168.100.255 00:50:56:c0:00:0a 1600    65535  up      false    false   false
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>PING 192.168.100.67 (192.168.100.67): 1572 data bytes
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>1580 bytes from 192.168.100.67: icmp_seq=0 time=2.341 ms
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>1580 bytes from 192.168.100.67: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>1580 bytes from 192.168.100.67: icmp_seq=2 time=2.289 ms
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>1580 bytes from 192.168.100.67: icmp_seq=3 time=2.401 ms
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>--- 192.168.100.67 statistics ---
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Name                    Enabled
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>vsan                    true
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>vMotion                 true
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>NFC                     true
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>geneveClient            true
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown host 192.168.100.67</code></strong> — Verify the remote TEP IP address is correct and reachable on the underlay network.
+<strong><code>100% packet loss</code></strong> — Check that MTU is set to at least 1600 on vmk10 and the physical switch allows UDP 6081; verify GENEVE firewall rule is enabled with <code>esxcli network firewall ruleset set -r geneveClient -e true</code>.</p>
+</div>
 <p>Look for: <code>vmkping -I vmk10 -d -s 1572</code> success to all remote TEPs confirms the GENEVE underlay is healthy; failure points to VLAN, MTU, or routing issues in the physical network.</p>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
@@ -11034,7 +11236,7 @@ exact commands and UI paths to isolate and resolve each layer.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

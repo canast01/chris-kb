@@ -8865,66 +8865,214 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check the event log for the event that caused the Invalid state</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SRDF\|Invalid\|failover&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Event ID    Timestamp            Severity  Message
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>12847       2024-01-15 14:32:18  WARNING   SRDF link down on director 4e
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>12851       2024-01-15 14:32:45  CRITICAL  Invalid state detected on RDF pair
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>12856       2024-01-15 14:33:02  ERROR     SRDF failover initiated for device 0ABC
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>12860       2024-01-15 14:33:15  WARNING   SRDF link recovery in progress
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>12865       2024-01-15 14:34:22  CRITICAL  Invalid state cleared after failover
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symevent: command not found</code></strong> — Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>SYMCLI_CONNECT error: Could not connect to the Symmetrix</code></strong> — Verify the R1 SID is correct and the Symmetrix engine is reachable via the management network.
+<strong><code>grep: (standard input) is empty</code></strong> — Run <code>symevent -sid &lt;r1_sid&gt; list -last 100</code> without grep first to confirm events exist in the log.</p>
+</div>
 <p><strong>Resolution (R1 is authoritative — no real failover occurred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Pushes R1 data to R2 and re-establishes sync</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Pushes R1 data to R2 and re-establishes sync</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Director: 4e
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>RDF Group: 001
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Local RA Port: 4e.0
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Remote RA Port: 5e.0
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>RDF Mode: Synchronous
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Resync Operation: STARTED
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Resync Progress: 100%
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Resync Status: COMPLETED
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Consistency State: Synchronized
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Last Update Time: 2024-01-15 14:32:47
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR: RDF group &lt;dgname&gt; not found</code></strong> — Verify the RDF group name matches the output of <code>symrdf list -g all</code> and check spelling.
+<strong><code>SYMRDF ERROR: Symmetrix &lt;r1_sid&gt; is not available</code></strong> — Confirm the R1 Symmetrix ID is correct and the array is online with <code>symcfg list -v</code>.
+<strong><code>SYMRDF ERROR: RDF link is not in a valid state for resync</code></strong> — Check RDF link status with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and resolve any link failures before retrying.</p>
+</div>
 <p><strong>Resolution (R2 has the latest data — a real failover occurred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Then fail back to R1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Then fail back to R1</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Director: 4e
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Initiator: 4e:0
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Target: 5e:0
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>RA port: SE-4E:0
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Symmetrix ID: 000198765432109
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Director: 4e
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Initiator: 4e:0
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Target: 5e:0
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>RA port: SE-4E:0
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Failback operation initiated.
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Failback completed successfully.
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>RDF group 0 is now in Synchronized state.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF Error (4) : RDF group is not in a valid state for failback</code></strong> — Verify the RDF group is in Consistent or Synchronized state using <code>symrdf -g &lt;dgname&gt; query</code> before attempting failback.
+<strong><code>SYMRDF Error (2) : Invalid Symmetrix ID &lt;r2_sid&gt;</code></strong> — Confirm the R2 Symmetrix ID is correct and matches the remote array in the RDF pair using <code>symcfg list -v</code>.
+<strong><code>SYMRDF Error (6) : RDF link is not ready</code></strong> — Check RDF link connectivity and ensure both arrays are online using <code>symrdf -g &lt;dgname&gt; query</code> and verify network paths are active.</p>
+</div>
 <p><strong>Do not resync or restore without first confirming which side has the authoritative data.</strong> An incorrect resync will permanently overwrite data.</p>
 <hr />
 <h2 id="pair-in-split-state">Pair in <code>Split</code> State<a class="headerlink" href="#pair-in-split-state" title="Permanent link">&para;</a></h2>
 <p>A <code>Split</code> state means both R1 and R2 are R/W and data is diverging. This is normal during a planned failover but is an incident if unexpected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check when the split occurred</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span>24h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;split\|SRDF&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Identify which side has writes since the split</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check when the split occurred</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span>24h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;split\|SRDF&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Identify which side has writes since the split</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Timestamp                Event                                    Severity
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>07/15/2024 14:32:18 UTC  SRDF/S Split initiated on device 0001    Warning
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>07/15/2024 14:32:45 UTC  SRDF/S Split completed on device 0001    Info
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>07/15/2024 14:33:02 UTC  SRDF link established R1-&gt;R2             Info
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>07/15/2024 15:47:19 UTC  SRDF/S Resync started on device 0001     Info
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>                                    Device 0001
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Modified                            07/15/2024 15:48:33 UTC (R1 Side)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>                                    Device 0001
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Modified                            07/15/2024 14:31:55 UTC (R2 Side)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid SID &lt;r1_sid&gt;</code></strong> — Replace <code>&lt;r1_sid&gt;</code> with the actual R1 array SID (e.g., <code>000123456789</code>).
+<strong><code>Error: Device &lt;dev_id&gt; not found in this array</code></strong> — Verify the device ID exists on the specified array using <code>symdev -sid &lt;r1_sid&gt; list</code>.</p>
+</div>
 <p><strong>Never re-establish a split pair without application team sign-off.</strong> Restoring R1 overwrites any R2 writes made during the split period and vice versa.</p>
 <hr />
 <h2 id="isl-fcip-link-failure">ISL / FCIP Link Failure<a class="headerlink" href="#isl-fcip-link-failure" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> SRDF link is down; pairs move to <code>Suspended</code> or <code>Write Disabled</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SRDF director port state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port|State&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># From SAN switch (Cisco MDS)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary<span class="w">  </span><span class="c1"># if using port-channel</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># From Brocade</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>portshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>portcfgshow<span class="w">  </span><span class="c1"># check FCIP port config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check SRDF director port state</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port|State&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># From SAN switch (Cisco MDS)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary<span class="w">  </span><span class="c1"># if using port-channel</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># From Brocade</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>portcfgshow<span class="w">  </span><span class="c1"># check FCIP port config</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Director ID: 4a                    State: Online
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Port 0: RDF1                       State: Online
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Port 1: RDF2                       State: Online
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Port 2: RDF3                       State: Online
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Port 3: RDF4                       State: Online
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>FCIP Session Information:
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Session ID: 1              Status: Up              Remote IP: 192.168.50.10
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Session ID: 2              Status: Up              Remote IP: 192.168.50.11
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Packets Sent: 4521847     Packets Received: 4521802     Errors: 0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Port-Channel 10 is up
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Members in this channel: Gi1/1, Gi1/2, Gi1/3, Gi1/4
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Port-channel is in Layer 3 mode
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>GigabitEthernet1/1 is up, line protocol is up
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  MTU 1500 bytes, BW 1000000 Kbit/sec
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  Encapsulation ARPA, loopback not set
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  Last input 00:00:02, output 00:00:01
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>portName=4,0  portState=Online  portSpeed=16Gb
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>portName=4,1  portState=Online  portSpeed=16Gb
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>portName=4,2  portState=Offline portSpeed=16Gb
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symcfg: Command not found</code></strong> — Verify Symmetrix CLI is installed and $PATH includes the SymCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
+<strong><code>FCIP Session Information: No entries found</code></strong> — Confirm FCIP tunnels are configured on the switch and check that remote director IP is reachable via <code>ping</code> from the switch management interface.
+<strong><code>portState=Offline</code></strong> — Verify the physical cable is connected, the remote director port is online, and check for link errors with <code>portcfgshow</code> to identify speed/duplex mismatches.</p>
+</div>
 <p><strong>Recovery after link restoration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># If pairs remain Suspended, manually resume:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify Synchronized state is reached (may take time to fully sync)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># If pairs remain Suspended, manually resume:</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify Synchronized state is reached (may take time to fully sync)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Resuming SRDF pair for group PROD_DG on SID 000123456789...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SRDF pair resumed successfully.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Symmetrix ID: 000123456789
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Group Name: PROD_DG
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Local RA Port: SE-4E
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Remote RA Port: SE-4E
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>SRDF Mode: Synchronous
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Pair State: Synchronized
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Link State: Online
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>RDF Group Number: 1
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Hop ID: 1
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Consistency State: Consistent
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF pair is not in a valid state for resume operation</code></strong> — Verify the pair is in Suspended state using <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> before attempting resume.
+<strong><code>RDF link is offline or unavailable</code></strong> — Check physical RDF link connectivity and confirm remote array is reachable with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code>.
+<strong><code>Invalid device group name or SID</code></strong> — Confirm the device group exists and SID is correct by running <code>symcfg list -g</code> to list all configured groups.</p>
+</div>
 <hr />
 <h2 id="unintended-failover-during-maintenance">Unintended Failover During Maintenance<a class="headerlink" href="#unintended-failover-during-maintenance" title="Permanent link">&para;</a></h2>
 <p><strong>Cause:</strong> Maintenance was performed without declaring a maintenance window; SRDF monitors triggered automatic protection responses.</p>
 <p><strong>Prevention:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Before any maintenance that touches SRDF links, directors, or the arrays:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 1 — Suspend SRDF/S pair (converts to async temporarily)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Step 3 — Perform maintenance</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Step 4 — Resume and verify Synchronized state before re-enabling monitoring</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Before any maintenance that touches SRDF links, directors, or the arrays:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Step 1 — Suspend SRDF/S pair (converts to async temporarily)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Step 3 — Perform maintenance</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Step 4 — Resume and verify Synchronized state before re-enabling monitoring</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Director: SE-4E
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Group Name: prod_srdf_grp
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>SRDF/S Pair Information
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>=======================
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>R1 (Local):  000123456789012
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>R2 (Remote): 000987654321098
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Link: SE-4E &lt;-&gt; RF-5F
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>State: Suspended
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Mode: Asynchronous
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>(no output — command completes silently)
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>(maintenance steps performed)
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Director: SE-4E
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Group Name: prod_srdf_grp
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>SRDF/S Pair Information
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>=======================
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>R1 (Local):  000123456789012
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>R2 (Remote): 000987654321098
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Link: SE-4E &lt;-&gt; RF-5F
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>State: Synchronized
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Mode: Synchronous
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>RDF Health: Optimal
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF pair is not in a valid state for this operation</code></strong> — Verify the pair is not already in a transitional state by running <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and wait for any pending operations to complete.
+<strong><code>Cannot connect to remote array &lt;r2_sid&gt;</code></strong> — Confirm network connectivity between the SRDF directors and that the remote array is online using <code>symcfg -sid &lt;r2_sid&gt; list -v</code>.</p>
+</div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8961,7 +9109,7 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:51:21 UTC"><span class="timeago" datetime="2026-06-29T04:51:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:51:21 UTC">2026-06-29</span>
   </span>
 
     

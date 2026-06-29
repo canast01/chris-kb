@@ -7741,98 +7741,204 @@
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Filesystem backup complete: </span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
-<img alt="Jira — Backup and Restore — Diagram" src="../../../../assets/itsm-jira-operations-backup-restore-diagram.svg" />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># snapshot-backup.sh — Coordinated LVM snapshot backup</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">DB_HOST</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">LV_PATH</span><span class="o">=</span><span class="s2">&quot;/dev/vg_jira/lv_shared&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">SNAP_NAME</span><span class="o">=</span><span class="s2">&quot;lv_shared_snap&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">SNAP_SIZE</span><span class="o">=</span><span class="s2">&quot;50G&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">MOUNT_POINT</span><span class="o">=</span><span class="s2">&quot;/mnt/jira-snap&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 1. Create DB backup (consistent point-in-time)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-Fc<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>-f<span class="w"> </span>/backup/jira/db/jira_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.pgdump<span class="w"> </span><span class="p">&amp;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">DB_PID</span><span class="o">=</span><span class="nv">$!</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># 2. Create LVM snapshot (near-instant)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>lvcreate<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SNAP_SIZE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-s<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LV_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># 3. Wait for DB dump to complete</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">wait</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_PID</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># 4. Mount snapshot and archive</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>mount<span class="w"> </span><span class="s2">&quot;/dev/</span><span class="si">${</span><span class="nv">VG</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;/backup/jira/fs/jira_fs_</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>.
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="c1"># 5. Clean up snapshot</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>umount<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>lvremove<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;/dev/</span><span class="si">${</span><span class="nv">VG</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All nodes</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify no Jira processes remain</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>jira<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>grep
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Drop and recreate the database</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = &#39;jiradb&#39;;&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE jiradb;&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE jiradb OWNER jira ENCODING &#39;UTF8&#39;;&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Restore from custom-format dump</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_restore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-h<span class="w"> </span>db.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-U<span class="w"> </span>jira<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--jobs<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--no-acl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--no-owner<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>/backup/jira/db/jira_db_20260101-010000.pgdump
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Clear existing shared home</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/shared/*
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Restore from archive</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>/backup/jira/fs/jira_fs_20260101.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-C<span class="w"> </span>/var/atlassian/application-data/jira/shared/
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Fix ownership</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>chown<span class="w"> </span>-R<span class="w"> </span>jira:jira<span class="w"> </span>/var/atlassian/application-data/jira/shared/
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Start first node only</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Monitor startup logs</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/catalina.out
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>INFO  [main] Jira starting up...
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>INFO  [main] Jira has been successfully started
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s2">&quot;https://jira.example.com/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;type&quot;: &quot;FOREGROUND&quot;}&#39;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check cluster node registration</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT node_id, node_name, status, last_heartbeat FROM clusternodeinfo;&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify issue count matches backup</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM jiraissue;&quot;</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Health endpoint</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://jira.example.com/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Start additional nodes after primary is healthy</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira<span class="w">   </span><span class="c1"># on jira-app-02, jira-app-03</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>building file list ... done
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>./
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>application-data/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>application-data/plugins/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>application-data/plugins/installed-plugins/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>application-data/plugins/installed-plugins/jira-misc-web-panel-plugin-5.2.3.jar
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>application-data/attachments/
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>application-data/attachments/10001/
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>application-data/attachments/10001/10042/
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>...
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sent 2,847,392,156 bytes  received 48,291 bytes  transferred in 847.32s
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Filesystem backup complete: /backup/jira/filesystem/20240315-143022
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: Permission denied (13)</code></strong> — Run the script with sudo or ensure the user has read permissions on SHARED_HOME.
+<strong><code>tar: /backup/jira/filesystem/20240315-143022: Cannot open: No such file or directory</code></strong> — Verify that rsync completed successfully and the timestamp directory exists before tar attempts to compress it.
+<strong><code>ln: failed to create symbolic link '/backup/jira/filesystem/latest': File exists</code></strong> — The <code>-n</code> flag in <code>ln -snf</code> should force removal; if this persists, manually remove the existing symlink with <code>rm -f "${BACKUP_DIR}/latest"</code> before running the script.</p>
+</div>
+<p><img alt="Jira — Backup and Restore — Diagram" src="../../../../assets/itsm-jira-operations-backup-restore-diagram.svg" />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># snapshot-backup.sh — Coordinated LVM snapshot backup</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">DB_HOST</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">LV_PATH</span><span class="o">=</span><span class="s2">&quot;/dev/vg_jira/lv_shared&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">SNAP_NAME</span><span class="o">=</span><span class="s2">&quot;lv_shared_snap&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">SNAP_SIZE</span><span class="o">=</span><span class="s2">&quot;50G&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">MOUNT_POINT</span><span class="o">=</span><span class="s2">&quot;/mnt/jira-snap&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 1. Create DB backup (consistent point-in-time)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-Fc<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-f<span class="w"> </span>/backup/jira/db/jira_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.pgdump<span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">DB_PID</span><span class="o">=</span><span class="nv">$!</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># 2. Create LVM snapshot (near-instant)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>lvcreate<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SNAP_SIZE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-s<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LV_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># 3. Wait for DB dump to complete</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nb">wait</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_PID</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># 4. Mount snapshot and archive</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>mount<span class="w"> </span><span class="s2">&quot;/dev/</span><span class="si">${</span><span class="nv">VG</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;/backup/jira/fs/jira_fs_</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>.
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># 5. Clean up snapshot</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>umount<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">MOUNT_POINT</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>lvremove<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;/dev/</span><span class="si">${</span><span class="nv">VG</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SNAP_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Starting PostgreSQL dump of jiradb...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Logical volume &quot;lv_shared_snap&quot; created.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>PostgreSQL dump completed successfully.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Logical volume &quot;vg_jira/lv_shared_snap&quot; mounted at /mnt/jira-snap
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tar: ./lost+found: Permission denied
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>jira_fs_20240115.tar.gz created (12.4 GB)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Logical volume &quot;vg_jira/lv_shared_snap&quot; successfully removed.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Backup completed: jira_20240115.pgdump (2.1 GB), jira_fs_20240115.tar.gz (12.4 GB)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount: /mnt/jira-snap: mount point does not exist</code></strong> — Create the mount point directory before mounting: <code>mkdir -p /mnt/jira-snap</code>.
+<strong><code>Logical volume "vg_jira/lv_shared_snap" not found</code></strong> — Ensure the variable <code>VG</code> is set to the correct volume group name (e.g., <code>VG="vg_jira"</code>) before running the script.
+<strong><code>pg_dump: error: connection to server at "db.example.com" (10.50.12.8), port 5432 failed</code></strong> — Verify database connectivity and credentials; check that <code>JIRA_DB_PASSWORD</code> is set and the PostgreSQL server is accessible from this host.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All nodes</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify no Jira processes remain</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>jira<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>grep
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit jira.service not found.</code></strong> — Verify the correct systemd service name with <code>systemctl list-units --type=service | grep jira</code>.
+<strong><code>Failed to stop jira.service: Access denied</code></strong> — Run the command with <code>sudo</code> or as a user with systemctl privileges.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Drop and recreate the database</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = &#39;jiradb&#39;;&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE jiradb;&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE jiradb OWNER jira ENCODING &#39;UTF8&#39;;&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Restore from custom-format dump</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>-h<span class="w"> </span>db.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-U<span class="w"> </span>jira<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--jobs<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--no-acl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>--no-owner<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>/backup/jira/db/jira_db_20260101-010000.pgdump
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SELECT pg_terminate_backend
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>------------------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>                      0
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>(1 row)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>DROP DATABASE
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>psql: error: database &quot;jiradb&quot; does not exist
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>CREATE DATABASE
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>psql: error: role &quot;jira&quot; does not exist
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>pg_restore: error: could not connect to database &quot;jiradb&quot;: FATAL: database &quot;jiradb&quot; does not exist
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: role "jira" does not exist</code></strong> — Create the jira role first with <code>psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN;"</code>
+<strong><code>pg_restore: error: could not connect to database "jiradb": FATAL: database "jiradb" does not exist</code></strong> — Verify the CREATE DATABASE command succeeded and the database is accessible before running pg_restore.
+<strong><code>pg_restore: error: input file appears to be a text format dump. Use psql.</code></strong> — Use <code>psql</code> instead of <code>pg_restore</code> if the dump file is in plain SQL format (not custom format).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Clear existing shared home</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/shared/*
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Restore from archive</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>/backup/jira/fs/jira_fs_20260101.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-C<span class="w"> </span>/var/atlassian/application-data/jira/shared/
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Fix ownership</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>chown<span class="w"> </span>-R<span class="w"> </span>jira:jira<span class="w"> </span>/var/atlassian/application-data/jira/shared/
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>(no output — command completes silently)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>(no output — command completes silently)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>tar: /backup/jira/fs/jira_fs_20260101.tar.gz: Cannot open: No such file or directory</code></strong> — Verify the backup file path exists and the filename matches exactly with <code>ls -lh /backup/jira/fs/</code>.
+<strong><code>chown: changing ownership of '/var/atlassian/application-data/jira/shared/': Operation not permitted</code></strong> — Run the script with <code>sudo</code> or as root, since chown requires elevated privileges.
+<strong><code>rm: remove write-protected regular file in '/var/atlassian/application-data/jira/shared/'?</code></strong> — Add the <code>-f</code> flag to <code>rm -rf</code> to force removal without prompts, or stop the JIRA service before clearing the directory.</p>
+</div>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Start first node only</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Monitor startup logs</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/catalina.out
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>INFO  [main] Jira starting up...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>INFO  [main] Jira has been successfully started
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="s2">&quot;https://jira.example.com/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;type&quot;: &quot;FOREGROUND&quot;}&#39;</span>
+</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;progressUrl&quot;: &quot;/secure/RapidBoard.jspa?rapidView=1&quot;,
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;currentProgress&quot;: 0,
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  &quot;description&quot;: &quot;Reindexing Jira&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  &quot;taskId&quot;: &quot;com.atlassian.jira.service.ServiceOutcome@7f3a2c91&quot;
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or configure proper certificates on the Jira server.
+<strong><code>{"errorMessages":["User does not have permission to perform this operation"]}</code></strong> — Ensure the admin user has the JIRA Administrators global permission and the API token is valid and not expired.
+<strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the Jira server is running and accessible at the specified hostname and port, and check firewall rules.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check cluster node registration</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT node_id, node_name, status, last_heartbeat FROM clusternodeinfo;&quot;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Verify issue count matches backup</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM jiraissue;&quot;</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Health endpoint</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://jira.example.com/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>node_id | node_name | status | last_heartbeat
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>---------+-----------+--------+-------------------------------
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>       1 | jira-01   | ACTIVE | 2024-01-15 14:32:18.123456+00
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>       2 | jira-02   | ACTIVE | 2024-01-15 14:32:17.987654+00
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>       3 | jira-03   | ACTIVE | 2024-01-15 14:32:19.456789+00
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>(3 rows)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a> count
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>-------
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a> 24857
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>(1 row)
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>{
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  &quot;state&quot;: &quot;RUNNING&quot;,
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  &quot;description&quot;: &quot;JIRA is running&quot;,
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  &quot;unresolved-problem-count&quot;: 0,
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  &quot;version&quot;: &quot;8.20.11&quot;
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup db.example.com</code> and confirm the hostname matches your actual database server.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the self-signed cert into your system trust store.
+<strong><code>psql: FATAL: password authentication failed for user "jira"</code></strong> — Ensure the PGPASSWORD environment variable is set or use a <code>.pgpass</code> file with correct credentials for the jira database user.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Start additional nodes after primary is healthy</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira<span class="w">   </span><span class="c1"># on jira-app-02, jira-app-03</span>
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpV0DFPw0AMBeDdv8LqRIeCGLpkQIUQRWLoQKOwsFgXt1hJfKnvTqj_nktQpXZ7ev70Bu9CJItpHCD0ohMZjRj4nFgdv5r53-ZHXK8cAj4_bm-Q-aSd86ZsuAXIZRQnE2nE1cEnc_ytDx9itF4hBTx8lvfmjVyfJqz0JMoLqfb1PWnIThzxCVtKQ1xMUzcAeQs3L7MvsGWT4wVynqt8LvDLJDLkiJurKr0exUbu_mGu80aB714ZYMfazQ_4A1cRVns=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7878,7 +7984,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

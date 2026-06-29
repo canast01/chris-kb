@@ -8457,96 +8457,201 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Data directory and log path</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW data_directory; SHOW log_directory;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> PostgreSQL 14.8 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 11.2.0, 64-bit
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>(1 row)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>              name              |            setting             | description
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>─────────────────────────────────┼─────────────────────────────────┼──────────────────────────
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> allow_system_table_mods         | off                             | Allows modifications of...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> application_name                | psql                            | Sets the application name
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> archive_command                 | (disabled)                      | Sets the shell command...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> archive_mode                    | off                             | Allows archiving of WAL
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> ...
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>(330 rows)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a> data_directory | /var/lib/postgresql/14/main
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a> log_directory  | /var/log/postgresql
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>(2 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist</code></strong> — Create the postgres superuser role with <code>sudo -u postgres createuser -s postgres</code> or verify the role exists with <code>psql -U postgres -l</code>.
+<strong><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></strong> — Ensure PostgreSQL is running with <code>sudo systemctl status postgresql</code> and verify the connection parameters are correct.
+<strong><code>Permission denied</code> when writing to <code>/tmp/pg-config-*.txt</code></strong> — Check <code>/tmp</code> directory permissions with <code>ls -ld /tmp</code> and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like <code>~/pg-config-$(date +%Y%m%d).txt</code>.</p>
+</div>
 <h3 id="2-save-the-postgresql-error-log">2. Save the PostgreSQL error log<a class="headerlink" href="#2-save-the-postgresql-error-log" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Log directory (varies by distribution)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># RHEL: /var/lib/pgsql/&lt;version&gt;/data/log/ or /var/log/postgresql/</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Ubuntu: /var/log/postgresql/postgresql-&lt;version&gt;-main.log</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Save last 500 lines</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Search for PANIC and FATAL entries (the critical ones)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span><span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Log directory (varies by distribution)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># RHEL: /var/lib/pgsql/&lt;version&gt;/data/log/ or /var/log/postgresql/</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Ubuntu: /var/log/postgresql/postgresql-&lt;version&gt;-main.log</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Save last 500 lines</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Search for PANIC and FATAL entries (the critical ones)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span><span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>2024-01-15 09:47:23.156 UTC [8432] LOG:  database system was interrupted; last known up at 2024-01-15 09:45:12 UTC
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15 09:47:24.892 UTC [8432] FATAL:  could not open file &quot;pg_wal/000000010000000000000042&quot;: No such file or directory
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15 09:47:25.103 UTC [8445] ERROR:  relation &quot;public.users&quot; does not exist at character 15
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15 09:47:26.541 UTC [8450] PANIC:  write failed: No space left on device
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15 09:47:27.234 UTC [8451] ERROR:  permission denied for schema public
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15 09:47:28.667 UTC [8452] FATAL:  remaining connection slots are reserved for non-replication superuser connections
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2024-01-15 09:47:29.445 UTC [8453] ERROR:  deadlock detected
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15 09:47:30.112 UTC [8454] LOG:  autovacuum launcher started
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /tmp/pg-error-202401151234.log: No such file or directory</code></strong> — Run the tail command first or use a fixed timestamp variable: <code>TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log &gt; /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100</code>
+<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Check your PostgreSQL log directory location with <code>sudo -u postgres psql -c "SHOW log_directory;"</code> and adjust the path accordingly.</p>
+</div>
 <h3 id="3-capture-active-sessions-and-lock-waits">3. Capture active sessions and lock waits<a class="headerlink" href="#3-capture-active-sessions-and-lock-waits" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Active sessions with duration and query</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">SELECT pid, usename, application_name, client_addr, state,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">       now() - query_start AS query_duration,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">       wait_event_type, wait_event,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">       LEFT(query, 200) AS query_text</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">FROM pg_stat_activity</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">WHERE state != &#39;idle&#39;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">ORDER BY query_duration DESC NULLS LAST;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">SQL</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Lock waits (sessions blocked waiting for a lock)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">SELECT blocked.pid AS blocked_pid,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">       blocked.query AS blocked_query,</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">       blocking.pid AS blocking_pid,</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">       blocking.query AS blocking_query,</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s">       now() - blocked.query_start AS wait_duration</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s">FROM pg_stat_activity AS blocked</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s">JOIN pg_stat_activity AS blocking</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s">  ON blocking.pid = ANY(pg_blocking_pids(blocked.pid))</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s">WHERE NOT blocked.granted;</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s">SQL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Active sessions with duration and query</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">SELECT pid, usename, application_name, client_addr, state,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">       now() - query_start AS query_duration,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">       wait_event_type, wait_event,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">       LEFT(query, 200) AS query_text</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">FROM pg_stat_activity</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">WHERE state != &#39;idle&#39;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">ORDER BY query_duration DESC NULLS LAST;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">SQL</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Lock waits (sessions blocked waiting for a lock)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s">SELECT blocked.pid AS blocked_pid,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s">       blocked.query AS blocked_query,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s">       blocking.pid AS blocking_pid,</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s">       blocking.query AS blocking_query,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s">       now() - blocked.query_start AS wait_duration</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s">FROM pg_stat_activity AS blocked</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s">JOIN pg_stat_activity AS blocking</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s">  ON blocking.pid = ANY(pg_blocking_pids(blocked.pid))</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s">WHERE NOT blocked.granted;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s">SQL</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pid  | usename  | application_name | client_addr | state  | query_duration | wait_event_type | wait_event |                query_text
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------+----------+------------------+-------------+--------+----------------+-----------------+------------+------------------------------------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> 4521 | postgres | psql             | 127.0.0.1   | active | 00:02:34.521   | IO              | DataFileRead | SELECT * FROM large_table WHERE id &gt; 50
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> 3847 | appuser  | java-app         | 192.168.1.5 | active | 00:01:12.043   | Lock            | transactionid | UPDATE orders SET status = &#39;shipped&#39; W
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a> 2156 | postgres | pgAdmin          | 10.0.0.42   | active | 00:00:45.892   |                 |            | CREATE INDEX idx_orders_date ON orders(
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> 5234 | postgres | psql             | 127.0.0.1   | active | 00:00:08.156   | CPU             |            | VACUUM ANALYZE customers;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(4 rows)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a> blocked_pid | blocked_query | blocking_pid | blocking_query | wait_duration
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-------------+---------------+--------------+----------------+---------------
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        3847 | UPDATE orders | 4521         | UPDATE invoices | 00:01:08.234
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>(1 row)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></strong> — Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use <code>psql -h localhost -U postgres</code> with password authentication.
+<strong><code>ERROR: permission denied for schema pg_catalog</code></strong> — Grant necessary privileges with <code>GRANT USAGE ON SCHEMA pg_catalog TO postgres;</code> or run the query as a superuser.
+<strong><code>ERROR: column "granted" does not exist</code></strong> — This query requires PostgreSQL 13+; for earlier versions, use <code>pg_locks</code> view instead of <code>pg_blocking_pids()</code>.</p>
+</div>
 <h3 id="4-capture-replication-state-if-primary-with-replicas">4. Capture replication state (if primary with replicas)<a class="headerlink" href="#4-capture-replication-state-if-primary-with-replicas" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the primary server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-replication-$(date +%Y%m%d%H%M).txt</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s">SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">       pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s">       sync_state</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">FROM pg_stat_replication;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">-- Replication slots (check for stuck slots filling WAL)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">SELECT slot_name, plugin, slot_type, active, restart_lsn,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">       pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">FROM pg_replication_slots;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">SQL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the primary server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-replication-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s">SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">       pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">       sync_state</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s">FROM pg_stat_replication;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s">-- Replication slots (check for stuck slots filling WAL)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">SELECT slot_name, plugin, slot_type, active, restart_lsn,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s">       pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s">FROM pg_replication_slots;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s">SQL</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>client_addr  | state     | sent_lsn   | write_lsn  | flush_lsn  | replay_lsn | lag_bytes | sync_state
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------------+-----------+------------+------------+------------+------------+-----------+------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a> 192.168.1.42 | streaming | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8D10 |    528400 | async
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> 192.168.1.43 | streaming | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8C00 |    737280 | sync
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>(2 rows)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a> slot_name    | plugin | slot_type | active | restart_lsn | lag_bytes
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>--------------+--------+-----------+--------+-------------+-----------
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> replica_slot | NULL   | physical  | t      | 0/3A5B0000  |    1048576
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a> logical_slot | test   | logical   | f      | 0/39000000  |   33554432
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>(2 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check <code>postgresql.conf</code> for the correct listen_addresses.
+<strong><code>ERROR: permission denied for schema pg_catalog</code></strong> — Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on <code>pg_stat_replication</code> and <code>pg_replication_slots</code> views.
+<strong><code>ERROR: relation "pg_stat_replication" does not exist</code></strong> — Confirm this is a primary server with replication enabled; check <code>wal_level = replica</code> in <code>postgresql.conf</code> and restart if changed.</p>
+</div>
 <h3 id="5-capture-disk-usage-and-vacuum-state">5. Capture disk usage and vacuum state<a class="headerlink" href="#5-capture-disk-usage-and-vacuum-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disk space on PGDATA and WAL</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="nv">$PGDATA</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>df<span class="w"> </span>-h<span class="w">  </span><span class="c1"># full disk picture</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Autovacuum status (tables with high dead tuple counts)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">SELECT schemaname, relname, n_live_tup, n_dead_tup,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">       round(n_dead_tup::numeric / NULLIF(n_live_tup + n_dead_tup, 0) * 100, 1) AS dead_pct,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">       last_autovacuum, last_autoanalyze</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">FROM pg_stat_user_tables</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s">ORDER BY n_dead_tup DESC</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s">LIMIT 20;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s">SQL</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># XID wraparound distance (tables needing freeze)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s">SELECT datname, age(datfrozenxid) AS xid_age,</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s">       2147483647 - age(datfrozenxid) AS xids_remaining</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s">FROM pg_database</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s">ORDER BY age(datfrozenxid) DESC;</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s">SQL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Disk space on PGDATA and WAL</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="nv">$PGDATA</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>df<span class="w"> </span>-h<span class="w">  </span><span class="c1"># full disk picture</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Autovacuum status (tables with high dead tuple counts)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s">SELECT schemaname, relname, n_live_tup, n_dead_tup,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s">       round(n_dead_tup::numeric / NULLIF(n_live_tup + n_dead_tup, 0) * 100, 1) AS dead_pct,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s">       last_autovacuum, last_autoanalyze</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s">FROM pg_stat_user_tables</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s">ORDER BY n_dead_tup DESC</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s">LIMIT 20;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s">SQL</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># XID wraparound distance (tables needing freeze)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s">SELECT datname, age(datfrozenxid) AS xid_age,</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s">       2147483647 - age(datfrozenxid) AS xids_remaining</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s">FROM pg_database</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s">ORDER BY age(datfrozenxid) DESC;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s">SQL</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/dev/sda1       500G  387G  113G  78% /var/lib/postgresql
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/dev/sda1       500G  387G  113G  78% /
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/dev/sdb1       2.0T  1.8T  200G  90% /mnt/wal
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>/dev/sdc1       1.0T  856G  144G  86% /backup
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>tmpfs           16G  8.2G  7.8G  51% /dev/shm
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> schemaname |        relname         | n_live_tup | n_dead_tup | dead_pct |     last_autovacuum     |     last_autoanalyze
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>-------------+------------------------+------------+------------+----------+-------------------------+-------------------------
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> public      | orders_history         |    8945623 |    2156734 |     19.4 | 2024-01-15 03:22:18+00 | 2024-01-15 03:25:02+00
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> public      | transaction_log        |    5623412 |    1834562 |     24.6 | 2024-01-14 22:10:45+00 | 2024-01-14 22:15:33+00
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a> public      | audit_events           |    3421098 |     987654 |     22.4 | 2024-01-15 02:45:12+00 | 2024-01-15 02:48:56+00
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> public      | user_sessions          |    2156734 |     654321 |     23.3 | 2024-01-15 01:33:27+00 | 2024-01-15 01:36:44+00
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a> public      | event_queue            |    1234567 |     456789 |     27.0 | 2024-01-14 20:05:11+00 | 2024-01-14 20:08:22+00
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>...
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a> datname  |   xid_age   | xids_remaining
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>----------+-------------+----------------
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a> postgres |    1856234  |     2145627413
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a> template1|     234567  |     2147248880
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a> myapp_db |    1645892  |     2145837755
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>(3 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check PGHOST/PGPORT environment variables.
+<strong><code>ERROR: permission denied for schema public</code></strong> — Grant necessary privileges with <code>psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"</code> or run the query as a superuser.
+<strong><code>Disk space on PGDATA is critically low (&gt;95% used)</code></strong> — Immediately run <code>VACUUM FULL;</code> on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads.</p>
+</div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PostgreSQL version: 16.2 (Ubuntu 16.2-1.pgdg22.04+1)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Host: db-prod-01.corp.local (Ubuntu 22.04, 64 GB RAM)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Role: Primary; 2 streaming replicas (db-prod-02 standby, db-prod-03 standby)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>PGDATA: /var/lib/postgresql/16/main/
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Issue first observed: 2026-06-14 12:00 UTC
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Last confirmed healthy: 2026-06-14 10:00 UTC
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Changes in 24h before the issue:
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - 10:00: nightly maintenance job ran; included ALTER TABLE orders ADD COLUMN
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - 12:00: application reports connection timeouts from app servers
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - 12:05: pg_stat_activity: 150 sessions in state &quot;idle in transaction&quot; for &gt; 30 min
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - 12:10: pg_locks: 80 sessions blocked waiting for lock on &quot;orders&quot; table
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Steps already taken:
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - Identified head blocker: PID 12345, idle in transaction since 10:00 UTC
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - Did NOT cancel the blocking session (awaiting DBA review)
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  - Did NOT restart PostgreSQL
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Blast radius: All writes to &quot;orders&quot; table blocked; e-commerce checkout halted; 500 users affected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>PostgreSQL version: 16.2 (Ubuntu 16.2-1.pgdg22.04+1)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Host: db-prod-01.corp.local (Ubuntu 22.04, 64 GB RAM)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Role: Primary; 2 streaming replicas (db-prod-02 standby, db-prod-03 standby)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>PGDATA: /var/lib/postgresql/16/main/
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Issue first observed: 2026-06-14 12:00 UTC
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Last confirmed healthy: 2026-06-14 10:00 UTC
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Changes in 24h before the issue:
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  - 10:00: nightly maintenance job ran; included ALTER TABLE orders ADD COLUMN
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  - 12:00: application reports connection timeouts from app servers
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 12:05: pg_stat_activity: 150 sessions in state &quot;idle in transaction&quot; for &gt; 30 min
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 12:10: pg_locks: 80 sessions blocked waiting for lock on &quot;orders&quot; table
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Steps already taken:
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  - Identified head blocker: PID 12345, idle in transaction since 10:00 UTC
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  - Did NOT cancel the blocking session (awaiting DBA review)
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  - Did NOT restart PostgreSQL
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Blast radius: All writes to &quot;orders&quot; table blocked; e-commerce checkout halted; 500 users affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-case">How to Open the Case<a class="headerlink" href="#how-to-open-the-case" title="Permanent link">&para;</a></h2>
@@ -8626,42 +8731,121 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Paste these into every case update (as postgres user or with sudo)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Service status</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Active session count and states</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT state, count(*) FROM pg_stat_activity GROUP BY state;&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Lock waits (non-zero = blocking occurring)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_locks WHERE NOT granted;&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Replication lag (run on primary)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT client_addr, state, pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes FROM pg_stat_replication;&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># XID wraparound distance (run on each DB)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Disk space on PGDATA and WAL</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="nv">$PGDATA</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Error log recent entries</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Paste these into every case update (as postgres user or with sudo)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Service status</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Active session count and states</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT state, count(*) FROM pg_stat_activity GROUP BY state;&quot;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Lock waits (non-zero = blocking occurring)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_locks WHERE NOT granted;&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Replication lag (run on primary)</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT client_addr, state, pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes FROM pg_stat_replication;&quot;</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># XID wraparound distance (run on each DB)</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Disk space on PGDATA and WAL</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="nv">$PGDATA</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># Error log recent entries</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>● postgresql.service - PostgreSQL Database Server
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>     Loaded: loaded (/lib/systemd/postgresql.service; enabled; vendor preset: enabled)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>     Active: active (running) since Mon 2024-01-15 09:42:33 UTC; 18 days ago
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>       Docs: https://www.postgresql.org/docs/15/static/
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    Process: 1247 ExecStartPost=/usr/lib/postgresql/15/bin/postgresql-15-check-db-dir (code=exited, status=0/SUCCESS)
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>   Main PID: 1243 (postgres)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      Tasks: 47 (limit: 4915)
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>     Memory: 892.3M
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        CPU: 2h 14m 32s
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>     CGroup: /system.slice/postgresql.service
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a> state  | count
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>--------+-------
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a> active |    12
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a> idle   |     8
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a> idle in transaction |     2
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>(3 rows)
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a> count
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>-------
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>     0
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>(1 row)
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a> client_addr  |   state   | lag_bytes
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>--------------+-----------+-----------
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a> 10.42.18.105 | streaming |      4096
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a> 10.42.18.106 | streaming |      8192
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>(2 rows)
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a> datname  |      age
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>----------+----------------
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a> postgres |  2147483647
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a> template1|  2147483647
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a> myapp_db |  1847392156
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>(3 rows)
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>/dev/sda1       500G  287G  213G  58% /var/lib/postgresql
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>/dev/sda2       100G   45G   55G  45% /var/lib/postgresql/15/main/pg_wal
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>2024-01-15 14:22:18 UTC [1847]: ERROR: deadlock detected
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>2024-01-15 14:18:05 UTC [1823]: FATAL: remaining connection slots reserved for non-replication superuser connections
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>2024-01-15 09:42:33 UTC [1243]: LOG: database system is ready to accept connections
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check socket permissions with <code>ls -la /var/run/postgresql/</code>.
+<strong><code>ERROR: permission denied for schema public</code></strong> — Run the psql commands as the postgres user with <code>sudo -u postgres psql</code> or ensure your user has CONNECT privileges on the database.
+<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Check the actual log file location with <code>find /var/log -name "postgresql*.log" 2&gt;/dev/null</code> as the path varies by distribution.</p>
+</div>
 <hr />
 <h2 id="wraparound-emergency-procedure">Wraparound Emergency Procedure<a class="headerlink" href="#wraparound-emergency-procedure" title="Permanent link">&para;</a></h2>
 <p>If the PostgreSQL log shows "must be vacuumed within X transactions":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Emergency VACUUM FREEZE to prevent wraparound shutdown</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Run on the AFFECTED DATABASE as postgres superuser</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vacuumdb<span class="w"> </span>--all<span class="w"> </span>--freeze<span class="w"> </span>--analyze<span class="w"> </span>--echo<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/vacuum-freeze-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Or targeted at a specific database</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>vacuumdb<span class="w"> </span>--dbname<span class="o">=</span>app_prod<span class="w"> </span>--freeze<span class="w"> </span>--analyze<span class="w"> </span>--echo
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Emergency VACUUM FREEZE to prevent wraparound shutdown</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Run on the AFFECTED DATABASE as postgres superuser</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vacuumdb<span class="w"> </span>--all<span class="w"> </span>--freeze<span class="w"> </span>--analyze<span class="w"> </span>--echo<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/vacuum-freeze-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Or targeted at a specific database</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>vacuumdb<span class="w"> </span>--dbname<span class="o">=</span>app_prod<span class="w"> </span>--freeze<span class="w"> </span>--analyze<span class="w"> </span>--echo
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vacuumdb: vacuuming database &quot;postgres&quot;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>vacuumdb: vacuuming database &quot;template1&quot;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vacuumdb: vacuuming database &quot;template0&quot;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>vacuumdb: vacuuming database &quot;app_prod&quot;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>vacuumdb: vacuuming database &quot;monitoring&quot;
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>vacuumdb: vacuuming database &quot;app_staging&quot;
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>VACUUM FREEZE ANALYZE;
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a> datname  | age
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>----------+----------
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a> app_prod | 1847293
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a> postgres | 1203847
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a> app_staging | 892103
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a> monitoring | 445021
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a> template1 | 201
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a> template0 | 201
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>(6 rows)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode</code></strong> — Wait for the standby/replica to finish recovery or run the command on the primary server only.
+<strong><code>vacuumdb: error: permission denied for schema public</code></strong> — Ensure you are connected as a PostgreSQL superuser (postgres) using <code>sudo -u postgres vacuumdb</code> or set PGUSER environment variable.
+<strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — The database is nearly out of connection slots; kill idle sessions with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';</code> before retrying.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8735,7 +8919,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

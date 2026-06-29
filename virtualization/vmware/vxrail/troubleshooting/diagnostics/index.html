@@ -10309,7 +10309,39 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 5[0-9][0-9] &quot;</span><span class="w"> </span>/var/log/mystic/access.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50<span class="w">   </span><span class="c1"># server errors</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>sudo<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 401 &quot;</span><span class="w"> </span>/var/log/mystic/access.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">            </span><span class="c1"># auth failures</span>
 </code></pre></div>
-<p>LCM phase sequence to check in lcm.log:</p>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mystic@vxrail-manager:~$ ssh mystic@192.168.1.45
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last login: Wed Jun 12 10:34:22 2026 from 192.168.1.100
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mystic@vxrail-manager:~$ sudo ls -lh /var/log/mystic/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>total 2.3G
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-rw-r--r-- 1 root root 1.2G Jun 15 14:22 mystic.log
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>-rw-r--r-- 1 root root 456M Jun 15 13:45 lcm.log
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>-rw-r--r-- 1 root root 312M Jun 15 14:19 access.log
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>-rw-r--r-- 1 root root  84M Jun 14 22:10 mystic.log.1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>-rw-r--r-- 1 root root  12M Jun 12 18:33 lcm.log.1
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-rw-r--r-- 1 root root 8.4M Jun 11 06:15 audit.log
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>mystic@vxrail-manager:~$ sudo tail -500 /var/log/mystic/mystic.log
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>[2026-06-15 14:22:18.456] INFO: VxRail Manager v8.0.210 started successfully
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>[2026-06-15 14:22:45.123] INFO: Connected to vCenter 192.168.1.50:443
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>[2026-06-15 14:23:12.789] INFO: Cluster health check: 4/4 nodes online
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>[2026-06-15 14:24:33.012] DEBUG: Inventory sync completed - 127 VMs registered
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>[2026-06-15 14:25:01.445] INFO: License validation passed (expires 2027-12-31)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>mystic@vxrail-manager:~$ sudo tail -500 /var/log/mystic/mystic.log | grep -i &quot;error\|exception\|critical\|fail&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>[2026-06-15 13:18:44.567] ERROR: Failed to reach node-3 (192.168.1.53) - connection timeout
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>[2026-06-15 13:19:22.891] CRITICAL: Cluster quorum lost - 2/4 nodes unreachable
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>[2026-06-15 13:20:15.334] ERROR: Exception in thread &quot;inventory-sync&quot;: java.net.SocketTimeoutException
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>mystic@vxrail-manager:~$ sudo tail -f /var/log/mystic/mystic.log
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>[2026-06-15 14:26:02.123] INFO: Health check cycle 847 started
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>[2026-06-15 14:26:15.456] INFO: Node-1 CPU: 42%, Memory: 68%, Disk: 81%
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>[2026-06-15 14:26:15.789] INFO: Node-2 CPU: 38%, Memory: 71%, Disk: 79%
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>^C
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>mystic@vxrail-manager:~$ sudo tail -200 /var/log/mystic/lcm.log | grep -i &quot;error\|fail\|exception\|timeout&quot;
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>[2026-06-
+</code></pre></div>
+LCM phase sequence to check in lcm.log:</p>
 <table>
 <thead>
 <tr>
@@ -10342,29 +10374,60 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 </table>
 <hr />
 <h2 id="step-2-check-esxi-host-logs">Step 2 — Check ESXi host logs<a class="headerlink" href="#step-2-check-esxi-host-logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to the affected ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># vmkernel.log — vSAN storage layer and network errors</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan\|LSOM\|DOM&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|NMP\|path&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vmnic\|uplink\|link down&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Wider search window</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LSOM\|error&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># hostd.log — Host management and vCenter connection</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vpxd\|vCenter\|connect&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Storage path status</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Active&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Expected: all paths Active; problem: Dead, Standby (unexpected)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># vSAN object list on this host</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the affected ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># vmkernel.log — vSAN storage layer and network errors</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan\|LSOM\|DOM&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|NMP\|path&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vmnic\|uplink\|link down&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Wider search window</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LSOM\|error&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># hostd.log — Host management and vCenter connection</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vpxd\|vCenter\|connect&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Storage path status</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Active&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Expected: all paths Active; problem: Dead, Standby (unexpected)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># vSAN object list on this host</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
 </code></pre></div>
-<p>vmkernel.log patterns:</p>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connected to 192.168.1.45
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>root@esx-prod-04:~]
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T09:23:47.123Z cpu18:2097379)LSOM: [lsom-object-6f4a8c2d] Resync in progress, 2 components degraded
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15T09:24:12.456Z cpu22:2098401)DOM: Object 6f4a8c2d-dom-object state: DEGRADED, replica count 2/3
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15T09:25:03.789Z cpu8:2099145)vsan: Network partition detected on vmnic2, latency 450ms
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15T09:26:15.234Z cpu14:2100023)APD: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m timeout after 140s
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>2024-01-15T09:27:44.567Z cpu19:2101567)NMP: Adapter vmhba3 path state change: Dead
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15T09:28:01.890Z cpu5:2102234)vmnic1 Link Down detected, speed 10000Mbps
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15T09:28:45.123Z cpu11:2103012)uplink failover triggered on dvSwitch-vsan
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2024-01-15T09:29:33.456Z cpu16:2103890)LSOM: Resync error on component 4a7b9c1e, retrying...
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>2024-01-15T09:31:22.789Z hostd[2045]: [error] Failed to connect to vCenter vpxd at 192.168.1.10:443
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>2024-01-15T09:32:05.012Z hostd[2045]: [error] vCenter heartbeat timeout, connection lost
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>2024-01-15T09:33:18.345Z vpxd: Connection attempt 3/5 failed, retrying in 30s
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Name                          State     Adapter  Channel  Target  LUN  PathState
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>vmhba3:C0:T0:L0               Dead      vmhba3   0        0       0    Dead
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>vmhba4:C0:T1:L0               Active    vmhba4   0        1       0    Active
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>vmhba3:C0:T1:L0               Standby   vmhba3   0        1       0    Standby
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>vmhba5:C0:T0:L0               Active    vmhba5   0        0       0    Active
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Object UUID                          Bytes       Congestion  Health
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>6f4a8c2d-2e5f-4a1b-9c3d-7e8f1a2b3c4d 107374182400 0%          Degraded
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>5e7d9a1c-3f6b-4d2e-8a5f-9c1d2e3f4a5b 53687091200  5%          Healthy
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>4c6e8b2d-1a3f-5e7c-9d2b-4f6a8c1d3e5f 214748364800 0%          Healthy
+</code></pre></div>
+vmkernel.log patterns:</p>
 <table>
 <thead>
 <tr>
@@ -10401,39 +10464,80 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 </table>
 <hr />
 <h2 id="step-3-check-idrac-for-hardware-faults">Step 3 — Check iDRAC for hardware faults<a class="headerlink" href="#step-3-check-idrac-for-hardware-faults" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to node iDRAC</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;node-idrac-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or use racadm remotely from a management host</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>racadm<span class="w"> </span>-r<span class="w"> </span>&lt;idrac-ip&gt;<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>getsel
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># System Event Log — primary hardware fault source</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;critical\|warning\|fault&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Full system summary</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fault\|warning\|critical&quot;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Power supply status</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>pwrsupply
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Fan status (failure causes thermal shutdown)</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>fan
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Disk and RAID controller health</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>pdisks<span class="w"> </span>-o<span class="w"> </span>-p<span class="w"> </span>State,PredictiveFailureState,MediaType
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>controllers<span class="w"> </span>-o
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># NIC link status</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>racadm<span class="w"> </span>getniccfg<span class="w"> </span>-n<span class="w"> </span>NIC.Integrated.1-1
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Temperature readings</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>temp
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Quick hardware diagnostic test</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>racadm<span class="w"> </span>diagnostics<span class="w"> </span>run<span class="w"> </span>-t<span class="w"> </span>QuickTest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to node iDRAC</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@&lt;node-idrac-ip&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or use racadm remotely from a management host</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>racadm<span class="w"> </span>-r<span class="w"> </span>&lt;idrac-ip&gt;<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>getsel
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># System Event Log — primary hardware fault source</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;critical\|warning\|fault&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Full system summary</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fault\|warning\|critical&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Power supply status</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>pwrsupply
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Fan status (failure causes thermal shutdown)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>fan
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Disk and RAID controller health</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>pdisks<span class="w"> </span>-o<span class="w"> </span>-p<span class="w"> </span>State,PredictiveFailureState,MediaType
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>controllers<span class="w"> </span>-o
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># NIC link status</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>racadm<span class="w"> </span>getniccfg<span class="w"> </span>-n<span class="w"> </span>NIC.Integrated.1-1
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># Temperature readings</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>racadm<span class="w"> </span>getsysinfo<span class="w"> </span>-t<span class="w"> </span>temp
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Quick hardware diagnostic test</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>racadm<span class="w"> </span>diagnostics<span class="w"> </span>run<span class="w"> </span>-t<span class="w"> </span>QuickTest
 </code></pre></div>
-<p>SEL patterns to look for:</p>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>root@management-host:~# ssh root@192.168.1.45
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>root@192.168.1.45&#39;s password: 
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>root@idrac-192.168.1.45:~# racadm getsel | tail -50
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>SEL Records: 247
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ID | Date | Time | Sensor | Event
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>1a2 | 01/15/2025 | 14:32:18 | PS1 Status | Power Supply 1 Failure
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>1a3 | 01/15/2025 | 14:33:05 | Fan1 | Fan Speed Low Warning
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>1a4 | 01/15/2025 | 14:35:22 | Temp Sensor CPU1 | Temperature Critical
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>1a5 | 01/15/2025 | 14:36:10 | RAID Controller | Predictive Failure Detected
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>root@idrac-192.168.1.45:~# racadm getsel | grep -i &quot;critical\|warning\|fault&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>1a3 | 01/15/2025 | 14:33:05 | Fan1 | Fan Speed Low Warning
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>1a4 | 01/15/2025 | 14:35:22 | Temp Sensor CPU1 | Temperature Critical
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>1a5 | 01/15/2025 | 14:36:10 | RAID Controller | Predictive Failure Detected
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>root@idrac-192.168.1.45:~# racadm getsysinfo | grep -i &quot;fault\|warning\|critical&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>System Health Status: Critical
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>PSU1 Status: Non-Recoverable Error
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Fan Module 1: Warning
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>root@idrac-192.168.1.45:~# racadm getsysinfo -t pwrsupply
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>PSU1 Status: Non-Recoverable Error (Voltage out of range)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>PSU2 Status: OK
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>root@idrac-192.168.1.45:~# racadm getsysinfo -t fan
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Fan1 Speed: 8500 RPM (Warning threshold exceeded)
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Fan2 Speed: 6200 RPM
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Fan3 Speed: 6150 RPM
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Fan4 Speed: 6180 RPM
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>root@idrac-192.168.1.45:~# racadm storage get pdisks -o -p State,PredictiveFailureState,MediaType
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>ID | State | PredictiveFailureState | MediaType
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>Disk.Bay.1 | Online | No | SSD
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Disk.Bay.2 | Online | Yes | SSD
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>Disk.Bay.3 | Degraded | No | SSD
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>Disk.Bay.4 | Online | No | SSD
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>root@idrac-192.168.1.45:~# racadm storage get controllers -o
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>ID | Status | CacheSizeInMB | FirmwareVersion
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>RAID.SolidStateController.1-1 | Optimal | 2048 | 7.42.00.00-20240815
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>root@idrac-192.168.1.45:~# racadm getniccfg -n NIC.Integrated.1-1
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>NIC.Integrated.1-1
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>Speed: 10 Gbps
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>Duplex: Full
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>Link Status
+</code></pre></div>
+SEL patterns to look for:</p>
 <table>
 <thead>
 <tr>
@@ -10470,17 +10574,37 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 </table>
 <hr />
 <h2 id="step-4-collect-vm-support-esxi-bundle">Step 4 — Collect vm-support ESXi bundle<a class="headerlink" href="#step-4-collect-vm-support-esxi-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Collect full ESXi diagnostic bundle (does not impact running VMs)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Duration: 2-5 minutes</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List the generated bundle file</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/*.tgz
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># SCP to management workstation</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>scp<span class="w"> </span>root@&lt;esxi-host-ip&gt;:/tmp/esx-&lt;hostname&gt;-&lt;timestamp&gt;.tgz<span class="w"> </span>./
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Collect full ESXi diagnostic bundle (does not impact running VMs)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>root@&lt;esxi-host-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Duration: 2-5 minutes</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List the generated bundle file</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/*.tgz
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># SCP to management workstation</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>scp<span class="w"> </span>root@&lt;esxi-host-ip&gt;:/tmp/esx-&lt;hostname&gt;-&lt;timestamp&gt;.tgz<span class="w"> </span>./
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root@esxi-host-01:~] vm-support -n -w /tmp/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Generating support bundle...
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Collecting system logs (this may take a few minutes)...
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Bundle generation completed successfully.
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Created: /tmp/esx-esxi-host-01-2024-01-15--10-34-22.tgz
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>root@esxi-host-01:~] ls -lh /tmp/*.tgz
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>-rw-r--r-- 1 root root 487M Jan 15 10:34 /tmp/esx-esxi-host-01-2024-01-15--10-34-22.tgz
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>root@esxi-host-01:~] exit
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Connection to 192.168.1.42 closed.
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>$ scp root@192.168.1.42:/tmp/esx-esxi-host-01-2024-01-15--10-34-22.tgz ./
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>esx-esxi-host-01-2024-01-15--10-34-22.tgz    100%  487MB   8.2MB/s   00:59
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH key is loaded or use <code>ssh-keyscan</code> to add the host key, then retry the connection.
+<strong><code>No such file or directory</code></strong> — Confirm the exact bundle filename from the <code>ls -lh</code> output and use the correct timestamp in the SCP command path.</p>
+</div>
 <p>The vm-support bundle includes: vmkernel.log, hostd.log, vpxa.log, network config, storage config, and running process state.</p>
 <hr />
 <h2 id="step-5-generate-dell-vxrail-support-bundle">Step 5 — Generate Dell VxRail support bundle<a class="headerlink" href="#step-5-generate-dell-vxrail-support-bundle" title="Permanent link">&para;</a></h2>
@@ -10488,26 +10612,65 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 <p>Navigate to: <strong>VxRail Plugin → Support → Generate Support Bundle</strong></p>
 <p>Bundle generation takes 10–20 minutes. The download link appears when complete. Contents: VxRail Manager logs, node health data, iDRAC logs, and ESXi log excerpts from all nodes.</p>
 <h3 id="via-vxrail-manager-api">Via VxRail Manager API<a class="headerlink" href="#via-vxrail-manager-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to VxRail Manager</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>mystic@&lt;vxrail-manager-ip&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Trigger bundle generation</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/support/bundle&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Returns: JSON with job_id</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Poll job status</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/requests/&lt;job-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># When status = COMPLETED, download the bundle</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-O<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/support/bundle/download&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to VxRail Manager</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>mystic@&lt;vxrail-manager-ip&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Trigger bundle generation</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/support/bundle&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Returns: JSON with job_id</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Poll job status</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/requests/&lt;job-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># When status = COMPLETED, download the bundle</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-O<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="s2">&quot;https://localhost/rest/vxm/v1/support/bundle/download&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Welcome to VxRail Manager
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.45
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>mystic@vxrail-manager:~$ curl -sk -X POST \
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  -H &quot;Authorization: Basic $(echo -n &#39;mystic:password&#39; | base64)&quot; \
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;https://localhost/rest/vxm/v1/support/bundle&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>{
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;request_id&quot;: &quot;req-8f4c2a91-7e3d-4b9c-a1f2-9d8e5c3b7a2f&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;job_id&quot;: &quot;job-5d9a1c8e-2f4b-11ef-a8c3-0242ac120002&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;status&quot;: &quot;PENDING&quot;,
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;created_at&quot;: &quot;2025-01-15T14:33:22Z&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>}
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>mystic@vxrail-manager:~$ curl -sk \
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  -H &quot;Authorization: Basic $(echo -n &#39;mystic:password&#39; | base64)&quot; \
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;https://localhost/rest/vxm/v1/requests/job-5d9a1c8e-2f4b-11ef-a8c3-0242ac120002&quot; | python3 -m json.tool
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>{
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  &quot;job_id&quot;: &quot;job-5d9a1c8e-2f4b-11ef-a8c3-0242ac120002&quot;,
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  &quot;status&quot;: &quot;COMPLETED&quot;,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  &quot;progress&quot;: 100,
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;bundle_size_mb&quot;: 1247,
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  &quot;completed_at&quot;: &quot;2025-01-15T14:38:45Z&quot;
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>mystic@vxrail-manager:~$ curl -sk -O \
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  -H &quot;Authorization: Basic $(echo -n &#39;mystic:password&#39; | base64)&quot; \
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  &quot;https://localhost/rest/vxm/v1/support/bundle/download&quot;
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>100 1247M  100 1247M    0     0  45.2M      0  0:00:27 0:00:27 --:--:-- 45.2M
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>vxrail-support-bundle-20250115-143845.tar.gz saved
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl commands to skip SSL verification (already present in examples above).
+<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify base64 encoding of credentials with <code>echo -n 'mystic:password' | base64</code> and ensure the mystic user has API permissions in VxRail.
+<strong><code>{"error": "Bundle generation already in progress", "code": 409}</code></strong> — Wait for the previous bundle job to complete by checking status with the requests endpoint before triggering a new bundle.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -10598,7 +10761,7 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

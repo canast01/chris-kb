@@ -7846,6 +7846,34 @@ How It Works reference covering Overview, SAN Fabric Topology, Principal Switch 
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup<span class="w"> </span>&lt;wwpn&gt;
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>portloginshow<span class="w"> </span><span class="c1"># FLOGI database — all logged-in devices</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Node Name     Node Index  Fabric Index  IP Address      FC Port Count
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>brocade-sw01  0           0             192.168.1.100   16
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>brocade-sw02  1           1             192.168.1.101   16
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>brocade-sw03  2           2             192.168.1.102   16
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Switch Name   Domain ID  Principal  IP Address      Status
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>brocade-sw01  1          Yes        192.168.1.100   Online
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>brocade-sw02  2          No         192.168.1.101   Online
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>brocade-sw03  3          No         192.168.1.102   Online
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>WWPN: 50:00:14:40:1b:2c:3d:4e
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Symbolic Node Name: esx-host-01.prod.local
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>IP Address: 10.20.30.40
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Port Index: 5
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Port  Status  Speed  Connected Node Name        Connected WWPN
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>0     Online  16Gb  storage-array-01           50:00:09:73:48:2f:1a:5b
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>1     Online  16Gb  esx-host-02                50:00:14:40:1b:2c:3d:4f
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>2     Online  16Gb  esx-host-03                50:00:14:40:1b:2c:3d:50
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>3     Online  16Gb  tape-library-backup        50:00:0e:1e:59:3a:2b:6c
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>4     Offline  —    —                          —
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nslookup: command not found</code></strong> — Use <code>nsshow</code> or <code>nslookup wwpn</code> with the full WWPN format (50:xx:xx:xx:xx:xx:xx:xx) instead.
+<strong><code>portloginshow: Access denied</code></strong> — Run the command with admin credentials or ensure your user role has fabric-wide read permissions.</p>
+</div>
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7874,36 +7902,126 @@ How It Works reference covering Overview, SAN Fabric Topology, Principal Switch 
 </tbody>
 </table>
 <p><strong>Single-initiator zone model (required):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esxi01_hba0__pure_ct0_p0</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: esxi01_hba0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10:00:00:00:c9:12:34:56)   ← one initiator only</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: pure_ct0_p0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52:4a:93:7c:00:00:00:01)   ← one or more targets</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esxi01_hba0__pure_ct0_p0</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: esxi01_hba0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10:00:00:00:c9:12:34:56)   ← one initiator only</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: pure_ct0_p0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52:4a:93:7c:00:00:00:01)   ← one or more targets</span>
 </code></pre></div></p>
 <p>Never place two initiator WWPNs in the same zone. This creates a blast radius risk.</p>
 <h2 id="isl-trunking">ISL Trunking<a class="headerlink" href="#isl-trunking" title="Permanent link">&para;</a></h2>
 <p>Multiple physical ISL ports between the same pair of switches are grouped into a trunk (single logical high-bandwidth link). All links in a trunk must be same speed and between the same switch pair.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>islshow<span class="w">                    </span><span class="c1"># show ISL status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>trunkshow<span class="w">                  </span><span class="c1"># show trunk group membership and master port</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>portperfshow<span class="w">               </span><span class="c1"># show ISL throughput</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>porttrunkarea<span class="w"> </span>--enable<span class="w"> </span>&lt;slot/port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>islshow<span class="w">                    </span><span class="c1"># show ISL status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>trunkshow<span class="w">                  </span><span class="c1"># show trunk group membership and master port</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>portperfshow<span class="w">               </span><span class="c1"># show ISL throughput</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>porttrunkarea<span class="w"> </span>--enable<span class="w"> </span>&lt;slot/port&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ISL Status:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  0/0: Online        Fabric_ID: 1  Speed: 16Gb  Distance: 2km
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  0/1: Online        Fabric_ID: 1  Speed: 16Gb  Distance: 2km
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  1/0: Online        Fabric_ID: 2  Speed: 8Gb   Distance: 5km
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  1/1: Offline       Fabric_ID: 2  Speed: N/A   Distance: N/A
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Trunk Group: TG_01
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Master Port: 0/0
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  Member Ports: 0/0, 0/1, 0/2
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Status: Active
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ISL Performance (last 10 seconds):
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  Port 0/0: TX: 2.4 Gbps  RX: 2.3 Gbps  Frames: 1,245,632
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  Port 0/1: TX: 1.8 Gbps  RX: 1.9 Gbps  Frames: 987,451
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  Port 1/0: TX: 0.6 Gbps  RX: 0.7 Gbps  Frames: 342,108
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Enabling trunk area on slot 1, port 0...
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>Operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>porttrunkarea: Invalid slot/port format</code></strong> — Use the format <code>slot/port</code> (e.g., <code>1/0</code>) and verify the port exists with <code>islshow</code>.
+<strong><code>porttrunkarea: Port is not an ISL</code></strong> — Trunk area can only be enabled on ISL ports; confirm the port is online and connected to another switch.</p>
+</div>
 <h2 id="virtual-fabrics">Virtual Fabrics<a class="headerlink" href="#virtual-fabrics" title="Permanent link">&para;</a></h2>
 <p>Virtual Fabrics (VF) partition a single physical chassis into multiple independent logical switches, each with its own Fabric ID (FID). Ports are assigned to exactly one logical switch at a time.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>lscfg<span class="w"> </span>--show<span class="w">               </span><span class="c1"># list logical switches and their FIDs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">           </span><span class="c1"># switch CLI context to a specific FID</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;<span class="w">   </span><span class="c1"># assign port to logical switch</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>lscfg<span class="w"> </span>--show<span class="w">               </span><span class="c1"># list logical switches and their FIDs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">           </span><span class="c1"># switch CLI context to a specific FID</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;<span class="w">   </span><span class="c1"># assign port to logical switch</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Fabric OS v9.1.0 (build 2024.02.15)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Logical Switch Configuration:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>FID  Name              Status    Member Ports
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>1    prod-fabric-01    Online    0/0-0/47
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>2    dr-fabric-02      Online    1/0-1/47
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>3    test-fabric-03    Offline   2/0-2/23
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>4    maint-fabric-04   Online    3/0-3/15
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>...
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Current context: FID 1 (prod-fabric-01)
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Context switched to FID 2 (dr-fabric-02)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Port 0/24 successfully assigned to FID 2
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Configuration saved to flash memory
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: invalid FID &lt;fid&gt; -- FID does not exist</code></strong> — Verify the FID exists with <code>lscfg --show</code> and use a valid numeric FID value.
+<strong><code>error: port &lt;slot/port&gt; already assigned to FID &lt;fid&gt;</code></strong> — Remove the port from its current FID using <code>lscfg --config &lt;current_fid&gt; -port &lt;slot/port&gt; -remove</code> before reassigning it.
+<strong><code>error: insufficient privileges to modify fabric configuration</code></strong> — Ensure your user account has admin or fabric-admin role; check with <code>userconfig --show</code>.</p>
+</div>
 <h2 id="maps-monitoring-and-alerting-policy-suite">MAPS — Monitoring and Alerting Policy Suite<a class="headerlink" href="#maps-monitoring-and-alerting-policy-suite" title="Permanent link">&para;</a></h2>
 <p>MAPS provides threshold-based automated health monitoring. It monitors port error counters, ISL utilization, C3 discard rates, BB credit zero (slow drain), switch environment, fabric events, and security events.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mapsdashboard<span class="w"> </span>--show<span class="w">    </span><span class="c1"># current MAPS health dashboard</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mapsdb<span class="w"> </span>--show<span class="w">           </span><span class="c1"># all triggered MAPS alerts</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>mapspolicy<span class="w"> </span>--show<span class="w">       </span><span class="c1"># active MAPS policy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mapsdashboard<span class="w"> </span>--show<span class="w">    </span><span class="c1"># current MAPS health dashboard</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mapsdb<span class="w"> </span>--show<span class="w">           </span><span class="c1"># all triggered MAPS alerts</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mapspolicy<span class="w"> </span>--show<span class="w">       </span><span class="c1"># active MAPS policy</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>MAPS Health Dashboard:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  System Health: Healthy
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  CPU Usage: 42%
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Memory Usage: 58%
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Temperature: 38°C
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  Fan Status: OK
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Power Supply: OK
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  Last Update: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>MAPS Triggered Alerts:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Alert ID: 0x0042a1c8 | Severity: Warning | Rule: PortErrorThreshold | Port: 15 | Timestamp: 2024-01-15 13:45:22
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Alert ID: 0x0042a1d2 | Severity: Info | Rule: MemoryUsage | Threshold: 65% | Timestamp: 2024-01-15 12:18:55
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Alert ID: 0x0042a1e5 | Severity: Critical | Rule: FabricWildcardZone | Switch: switch-prod-02 | Timestamp: 2024-01-15 11:03:44
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Active MAPS Policy:
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  Policy Name: Production_Fabric_Policy
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>  Status: Enabled
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  Rules Loaded: 47
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  Last Modified: 2024-01-10 09:22:15 UTC
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  Monitoring Interval: 30 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mapsdashboard: command not found</code></strong> — Verify MAPS is installed and the admin CLI is in your PATH, or use the full path <code>/opt/brocade/bin/mapsdashboard</code>.
+<strong><code>MAPS service is not running</code></strong> — Start the MAPS daemon with <code>systemctl start brocade-maps</code> or equivalent on your platform.
+<strong><code>Permission denied</code></strong> — Run the commands with appropriate admin privileges using <code>sudo</code> or ensure your user is in the <code>brocade-admin</code> group.</p>
+</div>
 <h2 id="fcip-fibre-channel-over-ip">FCIP — Fibre Channel over IP<a class="headerlink" href="#fcip-fibre-channel-over-ip" title="Permanent link">&para;</a></h2>
 <p>FCIP extends a Fibre Channel fabric over an IP WAN connection for long-distance replication (SRDF, RecoverPoint). Brocade 7810/7840 extension platforms provide FCIP gateway functionality. Target IP network latency: &lt;5 ms one-way for synchronous replication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fciptunnel<span class="w"> </span>--show<span class="w">       </span><span class="c1"># FCIP tunnel status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fcipcircuit<span class="w"> </span>--show<span class="w">      </span><span class="c1"># FCIP circuit status</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>fcipcircuit<span class="w"> </span>--show<span class="w"> </span>-perf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fciptunnel<span class="w"> </span>--show<span class="w">       </span><span class="c1"># FCIP tunnel status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>fcipcircuit<span class="w"> </span>--show<span class="w">      </span><span class="c1"># FCIP circuit status</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>fcipcircuit<span class="w"> </span>--show<span class="w"> </span>-perf
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Tunnel Name          Admin Status  Oper Status  Remote IP       Local IP        Compression
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tunnel-1             Online        Online       192.168.100.45  192.168.100.10  None
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>tunnel-2             Online        Online       192.168.100.46  192.168.100.11  None
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Circuit Name         Tunnel Name    Admin Status  Oper Status  Remote WWN
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>circuit-dc1-dc2      tunnel-1       Online        Online       50:00:09:73:00:12:34:56
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>circuit-dr-backup    tunnel-2       Online        Online       50:00:09:73:00:87:65:43
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Circuit Name         Tunnel Name    Throughput(MB/s)  Latency(ms)  Packet Loss(%)  Frame Loss(%)
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>circuit-dc1-dc2      tunnel-1       487.3             2.1          0.0             0.0
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>circuit-dr-backup    tunnel-2       412.8             3.7          0.0             0.0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>fciptunnel: command not found</code></strong> — Verify Fabric OS version supports FCIP and load the appropriate license module with <code>licenseadd</code>.
+<strong><code>No tunnels configured</code></strong> — Create at least one FCIP tunnel using <code>fciptunnel --create</code> before querying status.
+<strong><code>Permission denied</code></strong> — Run commands with admin privileges using <code>sudo</code> or ensure your user account has fabric admin role assigned.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7933,7 +8051,7 @@ How It Works reference covering Overview, SAN Fabric Topology, Principal Switch 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:29:39 UTC"><span class="timeago" datetime="2026-06-29T06:29:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:29:39 UTC">2026-06-29</span>
   </span>
 
     

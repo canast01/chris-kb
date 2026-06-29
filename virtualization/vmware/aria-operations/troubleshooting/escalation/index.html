@@ -9420,25 +9420,84 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Copy to a local machine</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># scp root@&lt;vra-ops-fqdn&gt;:/tmp/support-bundle-*.zip /tmp/</span>
 </code></pre></div>
-<h3 id="3-check-cluster-node-and-service-status">3. Check cluster node and service status<a class="headerlink" href="#3-check-cluster-node-and-service-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to the master node</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@&lt;vra-ops-fqdn&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check overall cluster service status (run on master node only)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>service-control<span class="w"> </span>--status
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or use the Aria Ops script directly</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>status
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@aria-ops-master.corp.local:~# /usr/lib/vmware-casa/casa-support-bundle.sh
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Generating Aria Operations support bundle...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Collecting system logs...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Collecting database diagnostics...
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Collecting application logs...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Collecting configuration files...
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Bundle generation completed successfully.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Support bundle saved to: /tmp/support-bundle-20240215-143022.zip
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check which services are running on this node</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>--platform-service<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check disk space (low disk commonly causes collection failures)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>df<span class="w"> </span>-h
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Check memory usage</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>free<span class="w"> </span>-h
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>root@aria-ops-master.corp.local:~# ls -lh /tmp/support-bundle-*.zip
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>-rw-r--r-- 1 root root 487M Feb 15 14:30 /tmp/support-bundle-20240215-143022.zip
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>casa-support-bundle.sh: command not found</code></strong> — Verify the CaSA package is installed with <code>rpm -qa | grep casa</code> and check the correct installation path.
+<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or have sudo privileges; the script requires elevated permissions to access system and application logs.</p>
+</div>
+<h3 id="3-check-cluster-node-and-service-status">3. Check cluster node and service status<a class="headerlink" href="#3-check-cluster-node-and-service-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the master node</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;vra-ops-fqdn&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check overall cluster service status (run on master node only)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>service-control<span class="w"> </span>--status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Or use the Aria Ops script directly</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>status
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check which services are running on this node</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>--platform-service<span class="w"> </span>list
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check disk space (low disk commonly causes collection failures)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>df<span class="w"> </span>-h
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Check memory usage</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>free<span class="w"> </span>-h
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@aria-ops-master.corp.local:~# service-control --status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Service Status:
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  vpostgres                                    RUNNING
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  vmon                                         RUNNING
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  vmware-vcopssuite                            RUNNING
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  vmware-vcops-collector                       RUNNING
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  vmware-vcops-ui                              RUNNING
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  vmware-vcops-analytics                       RUNNING
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>root@aria-ops-master.corp.local:~# /usr/lib/vmware-vcopssuite/python/bin/vcops-admin status
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Cluster Status: HEALTHY
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Master Node: aria-ops-master.corp.local (192.168.1.45)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Replica Nodes: 2 active
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Database Status: OPERATIONAL
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Last Sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>root@aria-ops-master.corp.local:~# /usr/lib/vmware-vcopssuite/python/bin/vcops-admin --platform-service list
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Platform Services on aria-ops-master.corp.local:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  vmware-vcopssuite (RUNNING, PID: 8342)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  vmware-vcops-collector (RUNNING, PID: 8156)
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  vmware-vcops-ui (RUNNING, PID: 8289)
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  vmware-vcops-analytics (RUNNING, PID: 8401)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  vpostgres (RUNNING, PID: 7834)
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>root@aria-ops-master.corp.local:~# df -h
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Filesystem                Size  Used Avail Use% Mounted on
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>/dev/mapper/vg0-root     100G   67G   28G  71% /
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>/dev/mapper/vg0-var      200G  156G   38G  79% /var
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>/dev/mapper/vg0-storage  500G  412G   78G  83% /storage
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>tmpfs                     32G     0   32G   0% /dev/shm
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>root@aria-ops-master.corp.local:~# free -h
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>Mem:           64Gi        48Gi        8Gi       512Mi        8Gi        14Gi
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>Swap:          16Gi       2.5Gi       13.5Gi
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>service-control: command not found</code></strong> — Ensure you are running the command on the master node and that /usr/lib/vmware-vcopssuite is in your PATH, or use the full path <code>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin</code> instead.
+<strong><code>Cluster Status: UNHEALTHY - Replica node aria-ops-replica-2 is DOWN</code></strong> — SSH to the affected replica node and run <code>service-control --start</code> to restart services, then verify connectivity and disk space on that node.
+<strong><code>/var filesystem is 95% full - Collection may fail</code></strong> — Increase the /var partition size or delete old collection data using <code>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin --cleanup-old-data --days 30</code>.</p>
+</div>
 <h3 id="4-collect-adapter-error-details">4. Collect adapter error details<a class="headerlink" href="#4-collect-adapter-error-details" title="Permanent link">&para;</a></h3>
 <p>In Aria Ops UI: navigate to <strong>Administration → Integrations → Adapter Instances</strong>.</p>
 <p>For each adapter showing an error:
@@ -9447,21 +9506,21 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
 3. Click <strong>View Logs</strong> → note the most recent error message.</p>
 <p>Export the adapter list: <strong>Administration → Integrations → Adapter Instances → Export</strong>.</p>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Aria Operations version: 8.14.0 build 22546279
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Cluster: 1 master + 2 replica nodes (vrops01, vrops02, vrops03)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Adapters: 14 (vCenter, NSX, vSAN, vROps Self, Log Insight, etc.)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Issue first observed: 2026-06-14 08:00 UTC
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Last known good collection: 2026-06-14 06:00 UTC
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - 07:00: vrops03 (replica node) rebooted for OS patch
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - 08:00: vROps UI shows &quot;Cluster degraded&quot; — vrops03 not rejoining the cluster
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  - 08:15: All adapters showing collection error; no data received in UI
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Steps already taken:
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  - VAMI on vrops03: node shows &quot;Joining cluster&quot; stuck for 45 min
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  - SSH to vrops03: services appear running but cluster sync is failing
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  - Did NOT restart services on vrops01 or vrops02
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  - Did NOT delete any adapters
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Blast radius: Monitoring data collection halted for entire environment; 1,400 objects have no new data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Aria Operations version: 8.14.0 build 22546279
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Cluster: 1 master + 2 replica nodes (vrops01, vrops02, vrops03)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Adapters: 14 (vCenter, NSX, vSAN, vROps Self, Log Insight, etc.)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Issue first observed: 2026-06-14 08:00 UTC
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Last known good collection: 2026-06-14 06:00 UTC
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - 07:00: vrops03 (replica node) rebooted for OS patch
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 08:00: vROps UI shows &quot;Cluster degraded&quot; — vrops03 not rejoining the cluster
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 08:15: All adapters showing collection error; no data received in UI
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Steps already taken:
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - VAMI on vrops03: node shows &quot;Joining cluster&quot; stuck for 45 min
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  - SSH to vrops03: services appear running but cluster sync is failing
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - Did NOT restart services on vrops01 or vrops02
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Did NOT delete any adapters
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Blast radius: Monitoring data collection halted for entire environment; 1,400 objects have no new data
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -9562,28 +9621,73 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Paste these into every case update (SSH to master node as root)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Version</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>version
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Cluster node and service status</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>service-control<span class="w"> </span>--status
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>status
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disk space (low disk is a common cause)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>df<span class="w"> </span>-h
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Memory usage</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>free<span class="w"> </span>-h
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Node cluster health check</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>cat<span class="w"> </span>/data/vcops/log/analytics/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Adapter collection log (replace &lt;adapter-name&gt; with actual adapter name)</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ls<span class="w"> </span>/data/vcops/log/solutions/&lt;adapter-name&gt;/
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>tail<span class="w"> </span>-100<span class="w"> </span>/data/vcops/log/solutions/&lt;adapter-name&gt;/&lt;adapter&gt;.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Paste these into every case update (SSH to master node as root)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Version</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>version
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Cluster node and service status</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>service-control<span class="w"> </span>--status
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin<span class="w"> </span>status
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Disk space (low disk is a common cause)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>df<span class="w"> </span>-h
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Memory usage</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>free<span class="w"> </span>-h
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Node cluster health check</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>cat<span class="w"> </span>/data/vcops/log/analytics/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Adapter collection log (replace &lt;adapter-name&gt; with actual adapter name)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>ls<span class="w"> </span>/data/vcops/log/solutions/&lt;adapter-name&gt;/
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>tail<span class="w"> </span>-100<span class="w"> </span>/data/vcops/log/solutions/&lt;adapter-name&gt;/&lt;adapter&gt;.log
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VMware Aria Operations Suite Version: 8.14.1.23456789
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Build: 23456789
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Service Status:
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  vcopssuite (pid 4521) is running...
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  analytics (pid 4523) is running...
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  collector (pid 4525) is running...
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  ui (pid 4527) is running...
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  postgres (pid 4529) is running...
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Node Status:
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  Master Node: aria-ops-master-01.lab.local (192.168.1.50)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  Replica Node 1: aria-ops-replica-01.lab.local (192.168.1.51) - ONLINE
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  Replica Node 2: aria-ops-replica-02.lab.local (192.168.1.52) - ONLINE
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  Cluster Status: HEALTHY
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>/dev/sda1      500G  385G  115G  77% /
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>/dev/sdb1      2.0T  1.8T  200G  90% /data
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>/dev/sdc1      500G  450G   50G  90% /var/log
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>tmpfs           32G  8.2G   24G  26% /dev/shm
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>Mem:            64Gi        48Gi        8.2Gi       2.1Gi        7.8Gi        14Gi
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>2024-01-15 14:32:15 [INFO] Analytics engine started successfully
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>2024-01-15 14:32:18 [INFO] Cluster node sync completed
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>2024-01-15 14:32:22 [INFO] Data ingestion pipeline initialized
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>2024-01-15 14:35:45 [WARN] High memory utilization detected: 75%
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>2024-01-15 14:36:01 [INFO] Garbage collection cycle completed
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>vSphere/
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>NSX/
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>vRealize-Automation/
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>2024-01-15 14:38:22 [INFO] vSphere adapter collection cycle started
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>2024-01-15 14:38:45 [INFO] Collected 1247 objects from vCenter
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>2024-01-15 14:39:12 [INFO] Data processing completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>service-control: command not found</code></strong> — Use the full path <code>/usr/lib/vmware-vcopssuite/python/bin/vcops-admin</code> or verify the service-control utility is installed in the current PATH.
+<strong><code>tail: cannot open '/data/vcops/log/solutions/&lt;adapter-name&gt;/&lt;adapter&gt;.log' for reading: No such file or directory</code></strong> — Replace <code>&lt;adapter-name&gt;</code> and <code>&lt;adapter&gt;</code> with the actual adapter name (e.g., <code>vSphere</code> or <code>NSX</code>) by first listing the directory with <code>ls /data/vcops/log/solutions/</code>.
+<strong><code>Filesystem ... Use% ... 100% /data</code></strong> — Free up disk space immediately as the /data partition is full and will cause collection failures; consider archiving old logs or expanding the volume.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9655,7 +9759,7 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

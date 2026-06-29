@@ -8892,28 +8892,82 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>get<span class="w"> </span>rpa<span class="w"> </span>status
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Expected: all RPAs show STATUS=Active; no communication errors</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@rpa-mgmt-01:~&gt; get system status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>System health status: OK
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Number of RPAs: 2
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>System alerts: 0 active
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Last system check: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Cluster mode: Active-Active
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>admin@rpa-mgmt-01:~&gt; get alerts
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>No active alerts found.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Last alert cleared: 2024-01-15 09:47:22 UTC by admin
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>admin@rpa-mgmt-01:~&gt; get rpa status
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>RPA-01 (10.45.12.33):
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  STATUS: Active
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  Role: Primary
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  Replication links: 4/4 healthy
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  Last heartbeat: 2024-01-15 14:32:15 UTC
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>RPA-02 (10.45.12.34):
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  STATUS: Active
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Role: Secondary
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Replication links: 4/4 healthy
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Last heartbeat: 2024-01-15 14:32:16 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused — check that the RecoverPoint management appliance is powered on and SSH is enabled on port 22.</code></strong> — Verify network connectivity and appliance status with <code>ping &lt;rpa-management-ip&gt;</code> first.
+<strong><code>Authentication failed for user admin</code></strong> — Confirm credentials with your RecoverPoint administrator or reset the admin password via the appliance console.
+<strong><code>RPA-02 STATUS: Unreachable — communication error</code></strong> — Check network connectivity between management appliance and RPA-02, and verify no firewall rules are blocking the replication network.</p>
+</div>
 <p><strong>If output shows:</strong>
 - <code>System health status: ERROR</code> → check <code>get alerts</code> for the specific fault
 - One RPA offline → check ESXi host where the RPA VM runs; verify power state and datastore access
 - <code>Connectivity ERROR</code> between RPAs → network issue between sites; proceed to Step 4</p>
 <hr />
 <h2 id="step-2-check-consistency-group-states">Step 2 — Check consistency group states<a class="headerlink" href="#step-2-check-consistency-group-states" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all CGs and their current state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>cg<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected output columns: CG Name, Protection State, RPO, Lag</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Healthy state: Protection State = Active</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Problem states: Paused, Error, Initializing, Image Access</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Detailed state for a specific CG</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>get<span class="w"> </span>cg<span class="w"> </span>detailed_state<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Shows: R/W state per copy, journal utilization %, current lag, last bookmark time</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># If the CG is in Error state — look for the error string in output</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Common errors:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">#   &quot;Journal utilization &gt; 80%&quot; = writes filling journal faster than draining to DR</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#   &quot;Splitter connectivity lost&quot; = hypervisor/array splitter not delivering I/O to RPA</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1">#   &quot;Link communication error&quot; = network path between sites is degraded</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all CGs and their current state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>cg<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected output columns: CG Name, Protection State, RPO, Lag</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Healthy state: Protection State = Active</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Problem states: Paused, Error, Initializing, Image Access</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Detailed state for a specific CG</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>cg<span class="w"> </span>detailed_state<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Shows: R/W state per copy, journal utilization %, current lag, last bookmark time</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># If the CG is in Error state — look for the error string in output</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Common errors:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   &quot;Journal utilization &gt; 80%&quot; = writes filling journal faster than draining to DR</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#   &quot;Splitter connectivity lost&quot; = hypervisor/array splitter not delivering I/O to RPA</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1">#   &quot;Link communication error&quot; = network path between sites is degraded</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>get cg list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CG Name                    Protection State    RPO        Lag
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prod-db-01                 Active              00:05:00   00:00:12
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>prod-app-tier              Active              00:15:00   00:00:45
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dr-sync-test               Paused              00:10:00   00:02:30
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>backup-archive-cg          Error               00:30:00   00:45:15
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>legacy-vm-pool             Initializing        01:00:00   N/A
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get cg detailed_state &quot;prod-db-01&quot;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>CG Name: prod-db-01
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Protection State: Active
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>R/W State (Production Copy): Write Enabled
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>R/W State (DR Copy): Read Only
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Journal Utilization: 62%
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Current Lag: 00:00:12
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Last Bookmark Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Replication Link Status: Connected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Journal utilization &gt; 80%</code></strong> — Increase journal size on the RPA or reduce write rate to the protected volume by identifying and throttling heavy workloads.
+<strong><code>Splitter connectivity lost</code></strong> — Verify the hypervisor/array splitter is running and has network connectivity to the RPA by checking splitter logs and restarting the splitter service if needed.
+<strong><code>Link communication error</code></strong> — Check network connectivity between sites using <code>ping</code> and <code>traceroute</code> to the DR site IP, and verify firewall rules allow RPA replication ports (typically 7105-7110).</p>
+</div>
 <p><strong>Decision flow:</strong>
 - <code>Active</code> with high lag → proceed to journal and link diagnostics (Steps 3–4)
 - <code>Paused</code> → identify who paused it; check for maintenance windows; resume only after confirming data is consistent
@@ -8921,70 +8975,173 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 - <code>Initializing</code> → monitor sync progress with <code>get journal stats</code></p>
 <hr />
 <h2 id="step-3-check-journal-utilization-and-lag">Step 3 — Check journal utilization and lag<a class="headerlink" href="#step-3-check-journal-utilization-and-lag" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Journal statistics for a specific CG</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>journal<span class="w"> </span>stats<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Key fields to review:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">#   Production journal utilization: should be &lt; 20%</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#   Remote journal utilization:     should be &lt; 20%</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   Lag (seconds): acceptable &lt; RPO; alert if &gt; 50% of RPO target</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   Min/Avg RPO: actual RPO achieved; compare to required SLA</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># All-CG journal summary</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>get<span class="w"> </span>all<span class="w"> </span>journal<span class="w"> </span>stats
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Review each CG row for utilization; highlight any &gt; 50%</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Journal statistics for a specific CG</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>journal<span class="w"> </span>stats<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Key fields to review:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   Production journal utilization: should be &lt; 20%</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#   Remote journal utilization:     should be &lt; 20%</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#   Lag (seconds): acceptable &lt; RPO; alert if &gt; 50% of RPO target</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   Min/Avg RPO: actual RPO achieved; compare to required SLA</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># All-CG journal summary</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>get<span class="w"> </span>all<span class="w"> </span>journal<span class="w"> </span>stats
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Review each CG row for utilization; highlight any &gt; 50%</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Journal Statistics for CG: prod-db-01
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Production Journal Utilization: 18.5%
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Remote Journal Utilization: 12.3%
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Lag (seconds): 8.2
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Min RPO (seconds): 5.1
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Avg RPO (seconds): 7.8
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Max RPO (seconds): 12.4
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>All CGs Journal Summary:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>CG Name              | Prod Util | Remote Util | Lag (s) | Avg RPO (s)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>prod-db-01          | 18.5%     | 12.3%       | 8.2     | 7.8
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>prod-app-02         | 45.2%     | 38.1%       | 22.5    | 19.3
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>prod-web-03         | 67.8%     | 71.2%       | 156.3   | 142.1
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>dr-sync-04          | 9.1%      | 8.7%        | 3.1     | 2.9
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>archive-old-05      | 52.3%     | 49.8%       | 78.9    | 75.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: CG '&lt;cg-name&gt;' not found in cluster</code></strong> — Verify the exact CG name with <code>get cgs</code> and ensure it exists on the connected RecoverPoint appliance.
+<strong><code>Error: Journal statistics unavailable - replication not initialized</code></strong> — Initialize replication for the CG or wait for the initial snapshot to complete before querying journal stats.
+<strong><code>Connection timeout: unable to reach RecoverPoint management interface</code></strong> — Confirm network connectivity to the RecoverPoint appliance IP and verify credentials with <code>connect &lt;rp-ip&gt;</code>.</p>
+</div>
 <p><strong>If journal utilization is high (&gt; 60%):</strong>
 1. Check if host I/O to the production LUNs is abnormally elevated
 2. Check WAN link bandwidth in Step 4 — journal drains to DR over the replication link
 3. Check RPA CPU utilization in <code>get rpa status</code> — if &gt; 80%, RPA may not be processing the journal fast enough</p>
 <hr />
 <h2 id="step-4-check-network-connectivity-between-sites">Step 4 — Check network connectivity between sites<a class="headerlink" href="#step-4-check-network-connectivity-between-sites" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Network connectivity between clusters</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>network<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: &lt; 5ms latency, 0% packet loss (production); &lt; 80ms for typical WAN</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check replication link bandwidth and quality</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>get<span class="w"> </span>link<span class="w"> </span>stats
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Key fields:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   Bandwidth (Mbps): current vs maximum</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">#   Packet loss %:    should be 0%</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   Round-trip time:  should be stable; spikes indicate congestion</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Reachability between all RPA nodes</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>get<span class="w"> </span>connectivity<span class="w"> </span>status
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Lists reachability of each RPA node from every other RPA node in the cluster pair</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Network connectivity between clusters</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>network<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: &lt; 5ms latency, 0% packet loss (production); &lt; 80ms for typical WAN</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check replication link bandwidth and quality</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>get<span class="w"> </span>link<span class="w"> </span>stats
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Key fields:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   Bandwidth (Mbps): current vs maximum</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">#   Packet loss %:    should be 0%</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#   Round-trip time:  should be stable; spikes indicate congestion</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Reachability between all RPA nodes</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>get<span class="w"> </span>connectivity<span class="w"> </span>status
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Lists reachability of each RPA node from every other RPA node in the cluster pair</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Network Status:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Cluster: prod-rpa-01
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Link Latency: 3.2ms
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Packet Loss: 0.0%
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Status: HEALTHY
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Cluster: prod-rpa-02
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Link Latency: 4.8ms
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Packet Loss: 0.0%
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  Status: HEALTHY
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Link Statistics:
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Bandwidth Current: 847 Mbps
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Bandwidth Maximum: 1000 Mbps
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Packet Loss: 0.0%
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  Round-trip Time: 4.1ms (avg), 5.3ms (peak)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Link Quality: EXCELLENT
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Connectivity Status:
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  RPA Node prod-rpa-01-node1 → prod-rpa-02-node1: REACHABLE (2.9ms)
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  RPA Node prod-rpa-01-node1 → prod-rpa-02-node2: REACHABLE (3.1ms)
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  RPA Node prod-rpa-01-node2 → prod-rpa-02-node1: REACHABLE (3.0ms)
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  RPA Node prod-rpa-01-node2 → prod-rpa-02-node2: REACHABLE (3.2ms)
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  All nodes: FULLY CONNECTED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to retrieve network status — connection timeout</code></strong> — Verify network connectivity to the RPA management interface and confirm firewall rules allow port 9443 between clusters.
+<strong><code>Packet Loss: 2.3% detected on replication link</code></strong> — Check for congested network interfaces, duplex mismatches, or faulty cables; consider reducing replication load or increasing link bandwidth.
+<strong><code>RPA Node prod-rpa-02-node2 → prod-rpa-01-node1: UNREACHABLE</code></strong> — Verify the unreachable node is online, check routing tables, and confirm no network ACLs are blocking inter-cluster traffic on port 9898.</p>
+</div>
 <p><strong>If connectivity is degraded:</strong>
 - Contact the network team to check the WAN link quality between sites
 - Verify QoS policy is applying the correct priority to RecoverPoint replication traffic</p>
 <hr />
 <h2 id="step-5-check-splitter-status">Step 5 — Check splitter status<a class="headerlink" href="#step-5-check-splitter-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Splitter health from the RPA CLI</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>splitter<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Lists each splitter by name, type (vRPA / array), and connectivity state</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Expected: all splitters show &quot;Connected&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Splitter health from the RPA CLI</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>splitter<span class="w"> </span>status
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Lists each splitter by name, type (vRPA / array), and connectivity state</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Expected: all splitters show &quot;Connected&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Splitter Name          Type    Status      Last Heartbeat
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>================================================================================
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>splitter-prod-01       vRPA    Connected   2024-01-15 14:32:18 UTC
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>splitter-prod-02       vRPA    Connected   2024-01-15 14:32:19 UTC
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>splitter-array-san01   array   Connected   2024-01-15 14:32:17 UTC
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>splitter-array-san02   array   Connected   2024-01-15 14:32:18 UTC
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>splitter-dr-01         vRPA    Connected   2024-01-15 14:32:20 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to RPA management interface</code></strong> — Verify RPA cluster is running with <code>get system status</code> and check network connectivity to the RPA management IP.
+<strong><code>Splitter &lt;name&gt; status: Disconnected</code></strong> — Restart the splitter service with <code>set splitter restart &lt;name&gt;</code> or verify network path and firewall rules between RPA and splitter.</p>
+</div>
 <p><strong>If a vSphere splitter shows "Disconnected":</strong>
 1. Check network from RPA to ESXi management interface (TCP 7225)
 2. On the ESXi host, verify the splitter VIB is installed:
    - vCenter → Hosts → <code>&lt;host&gt;</code> → Configure → Software → Installed VIBs → search for <code>rp</code></p>
 <p><strong>For array-side splitter (PowerMax/Unity):</strong>
 - Verify the SRDF relationship between production and journal LUNs is active via Solutions Enabler:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;journal-rdfg&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;journal-rdfg&gt;
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>RDF Group Query Results
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>=======================
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>RDF Group ID: 000187654321
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>RDF Group Name: journal-rdfg
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Status: Ready
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Consistency Groups: 3
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  - cg_prod_db01 (RDF Mode: Synchronous, Link State: Connected)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  - cg_prod_db02 (RDF Mode: Synchronous, Link State: Connected)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  - cg_prod_app01 (RDF Mode: Asynchronous, Link State: Connected)
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Total Replication Pairs: 12
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Data Replicated (GB): 2847.5
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Last Sync Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Remote Array: 000298765432
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR (4): RDF group '&lt;journal-rdfg&gt;' not found on array &lt;SID&gt;</code></strong> — Verify the RDF group name matches exactly (case-sensitive) using <code>symrdf list -sid &lt;SID&gt;</code>.
+<strong><code>SYMRDF ERROR (26): Cannot connect to array &lt;SID&gt; - Check Symmetrix connectivity</code></strong> — Ensure the Symmetrix array is reachable and the SID is correct; verify network connectivity with <code>symcfg list -v</code>.</p>
+</div>
 <hr />
 <h2 id="step-6-collect-support-bundle">Step 6 — Collect support bundle<a class="headerlink" href="#step-6-collect-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Method 1: CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-management-ip&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>support<span class="w"> </span>collect<span class="w"> </span>bundle
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Output file path is displayed after collection completes</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Download via SCP:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>scp<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;:/opt/rp/var/support/rp-*.zip<span class="w"> </span>/tmp/
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Method 2: Web UI</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Navigate to RecoverPoint Management UI → Administration → Support → Collect Support Bundle</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Click &quot;Collect&quot; → download the ZIP when complete</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Method 1: CLI</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-management-ip&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>support<span class="w"> </span>collect<span class="w"> </span>bundle
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Output file path is displayed after collection completes</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Download via SCP:</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>scp<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;:/opt/rp/var/support/rp-*.zip<span class="w"> </span>/tmp/
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Method 2: Web UI</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Navigate to RecoverPoint Management UI → Administration → Support → Collect Support Bundle</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Click &quot;Collect&quot; → download the ZIP when complete</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@192.168.1.45&#39;s password: 
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>RecoverPoint CLI v5.4.2.1 (Build 12847)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>rpa-mgmt-01&gt; support collect bundle
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting support bundle...
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>[████████████████████████████] 100%
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Support bundle collection completed successfully.
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Output file: /opt/rp/var/support/rp-bundle-20240115-143022.zip
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Size: 487 MB
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>rpa-mgmt-01&gt; exit
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>admin@192.168.1.45:/opt/rp/var/support/rp-bundle-20240115-143022.zip 100%  487MB   8.2MB/s   00:59
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password)</code></strong> — Verify SSH credentials and ensure the admin user exists on the RPA management interface with correct network connectivity.
+<strong><code>No such file or directory</code></strong> — Confirm the RPA management IP address is correct and the support bundle collection completed successfully before attempting SCP download.
+<strong><code>Disk quota exceeded</code></strong> — Ensure <code>/tmp/</code> has at least 500 MB free space or specify an alternate download destination with sufficient capacity.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -9020,17 +9177,61 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 </table>
 <hr />
 <h2 id="quick-all-in-one-diagnostic-snapshot">Quick all-in-one diagnostic snapshot<a class="headerlink" href="#quick-all-in-one-diagnostic-snapshot" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run from your workstation — saves output for SR attachment</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s2">  get system status;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s2">  get alerts;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s2">  get cg list;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s2">  get rpa status;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s2">  get network status;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s2">  get splitter status;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s2">  get all journal stats</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/rp-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Run from your workstation — saves output for SR attachment</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="s2">  get system status;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="s2">  get alerts;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s2">  get cg list;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s2">  get rpa status;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="s2">  get network status;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="s2">  get splitter status;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="s2">  get all journal stats</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/rp-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>System Status:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  System Name: rpa-prod-01.dc1.local
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  System ID: 192.168.10.45
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  System State: HEALTHY
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  Build Version: 5.4.2.1234
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  Uptime: 45 days 12 hours
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Alerts:
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  Alert ID: ALR-2847392
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  Severity: WARNING
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  Message: Journal capacity at 78% on RPA-02
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  Timestamp: 2024-01-15 14:32:18
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Consistency Groups:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  CG Name: prod-db-01
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  CG ID: cg-uuid-a1b2c3d4
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  Status: ACTIVE
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>  RPA Status:
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    RPA-01: HEALTHY
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    RPA-02: HEALTHY
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    RPA-03: HEALTHY
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>Network Status:
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>  Interface eth0: UP (1000 Mbps)
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  Interface eth1: UP (1000 Mbps)
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>  Default Gateway: 192.168.10.1
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Splitter Status:
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>  Splitter ID: split-prod-01
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>  Status: CONNECTED
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>  Latency: 2.4ms
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Journal Stats:
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>  Total Capacity: 2.5 TB
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>  Used: 1.95 TB
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>  Available: 550 GB
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>  Oldest Journal: 2024-01-10 08:15:22
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: Could not resolve hostname &lt;rpa-mgmt-ip&gt;</code></strong> — Replace <code>&lt;rpa-mgmt-ip&gt;</code> with the actual RecoverPoint management IP address (e.g., 192.168.10.45).
+<strong><code>Permission denied (publickey,password)</code></strong> — Verify the admin account credentials and that your SSH key is authorized on the RPA, or use <code>ssh -u admin@&lt;rpa-mgmt-ip&gt;</code> with password authentication enabled.
+<strong><code>get: command not found</code></strong> — Ensure you are connecting to a RecoverPoint Appliance management interface; these commands only work on the RPA CLI, not standard Linux shells.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9068,7 +9269,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:42:48 UTC"><span class="timeago" datetime="2026-06-29T04:42:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:42:48 UTC">2026-06-29</span>
   </span>
 
     

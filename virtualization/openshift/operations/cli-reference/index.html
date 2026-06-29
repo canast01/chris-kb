@@ -7723,207 +7723,567 @@ oc command reference: resource management, log collection, exec, adm commands, d
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>oc<span class="w"> </span>new-project<span class="w"> </span>my-app
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>oc<span class="w"> </span>projects<span class="w">          </span><span class="c1"># list all accessible projects</span>
 </code></pre></div>
-<h2 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get resources</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w">            </span><span class="c1"># cluster operators</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w">           </span><span class="c1"># certificate signing requests</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Get all resources in a namespace</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>oc<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-n<span class="w"> </span>my-app
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Login successful.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>You have access to the following projects and can switch between them with &#39;oc project &lt;projectname&gt;&#39;:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  * default
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  * kube-system
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  * openshift-monitoring
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  * openshift-ingress
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  * my-app
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Describe and inspect</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Apply / delete</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>manifest.yaml
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--grace-period<span class="o">=</span><span class="m">0</span><span class="w"> </span>--force
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Using project &quot;admin&quot; on server &quot;https://api.ocp.example.com:6443&quot;.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>admin
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>sha256~ABC123DEF456GHI789JKL012MNO345PQR678STU901VWX234YZ567ABC890
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>admin
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Now using project &quot;openshift-monitoring&quot; on server &quot;https://api.ocp.example.com:6443&quot;.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Now using project &quot;my-app&quot; on server &quot;https://api.ocp.example.com:6443&quot;.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>openshift-monitoring
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>default
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>kube-system
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>openshift-ingress
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>my-app
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: invalid credentials provided</code></strong> — Verify the username, password, and API server URL are correct, then retry the login command.
+<strong><code>error: the server has asked for the client to provide credentials</code></strong> — Ensure your token is valid and not expired; generate a new token from the OpenShift web console if needed.
+<strong><code>error: You don't have permission to switch to project "my-app"</code></strong> — Confirm the project exists and your user account has access; contact your cluster administrator if access is required.</p>
+</div>
+<h2 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get resources</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w">            </span><span class="c1"># cluster operators</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w">           </span><span class="c1"># certificate signing requests</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get all resources in a namespace</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>oc<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-n<span class="w"> </span>my-app
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Describe and inspect</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Apply / delete</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>manifest.yaml
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>oc<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--grace-period<span class="o">=</span><span class="m">0</span><span class="w"> </span>--force
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME                                         STATUS   ROLES                  AGE   VERSION        INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>master-0.ocp.example.com                     Ready    control-plane,master   45d   v1.27.8+4fab27b 192.168.1.10     &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.13
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>master-1.ocp.example.com                     Ready    control-plane,master   45d   v1.27.8+4fab27b 192.168.1.11     &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.13
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>worker-0.ocp.example.com                     Ready    worker                 44d   v1.27.8+4fab27b 192.168.1.20     &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.13
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>worker-1.ocp.example.com                     Ready    worker                 44d   v1.27.8+4fab27b 192.168.1.21     &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.13
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>NAMESPACE            NAME                                             READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>openshift-etcd       etcd-master-0.ocp.example.com                    1/1     Running   2          45d
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>openshift-etcd       etcd-master-1.ocp.example.com                    1/1     Running   1          45d
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>openshift-etcd       etcd-master-2.ocp.example.com                    1/1     Running   3          45d
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>openshift-etcd       etcd-peering-master-0.ocp.example.com            1/1     Running   0          45d
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>NAMESPACE                  NAME                                                    READY   STATUS             RESTARTS   AGE
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>openshift-apiserver       apiserver-7d4f8c2b9                                     0/1     CrashLoopBackOff   12         2h
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>openshift-monitoring      prometheus-operator-6f7b8d9c5                           0/1     ImagePullBackOff   0          1h
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>NAME                                                                 STATUS      ROLES
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>authentication                                                       Available   
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>apiserver                                                            Degraded    
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>etcd                                                                 Available   
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>ingress                                                              Available   
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>NAME                                                                 AGE       SIGNERNAME                                    REQUESTOR                                     CONDITION
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>csr-7k9m2                                                            3d        kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   Approved,Issued
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>csr-9x2lp                                                            2d        kubernetes.io/kube-apiserver-client            system:admin                                   Pending
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>NAME                 READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>my-app-deploy-abc1   1/1     Running   0          5d
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>my-app-svc-xyz2      1/1     Running   1          4d
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Name:               master-0.ocp.example.com
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>Roles:              control-plane,master
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Status:             Ready
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>Allocatable:        cpu: 3500m, memory: 6Gi, ephemeral-storage: 50Gi
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>Conditions:         Ready True, MemoryP
 </code></pre></div>
 <h2 id="resource-watching">Resource Watching<a class="headerlink" href="#resource-watching" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Watch pod state changes in real time</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-w
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Watch events sorted by time (most useful for troubleshooting)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Watch nodes during a drain or upgrade</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Watch cluster operators settling after an upgrade</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Watch pod state changes in real time</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-w
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Watch events sorted by time (most useful for troubleshooting)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Watch nodes during a drain or upgrade</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Watch cluster operators settling after an upgrade</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nginx-deployment-66b6c48dd5-4k8vx       1/1     Running   0          2m
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>nginx-deployment-66b6c48dd5-7j2p9       1/1     Running   0          1m
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>redis-cache-0                           1/1     Running   0          5m
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>postgres-db-5d4f8c9b2-lmqrs             0/1     Pending   0          3s
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>postgres-db-5d4f8c9b2-lmqrs             0/1     ContainerCreating   0          5s
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>postgres-db-5d4f8c9b2-lmqrs             1/1     Running             0          12s
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>LAST SEEN   TYPE      REASON              OBJECT                                MESSAGE
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2m15s       Normal    Scheduled           pod/nginx-deployment-66b6c48dd5-4k8vx   Successfully assigned default/nginx-deployment-66b6c48dd5-4k8vx to worker-02.ocp.local
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>2m10s       Normal    Pulling             pod/nginx-deployment-66b6c48dd5-4k8vx   Pulling image &quot;nginx:1.21&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>2m8s        Normal    Pulled              pod/nginx-deployment-66b6c48dd5-4k8vx   Successfully pulled image &quot;nginx:1.21&quot; in 2.5s
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>2m5s        Normal    Created             pod/nginx-deployment-66b6c48dd5-4k8vx   Created container nginx
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>2m4s        Normal    Started             pod/nginx-deployment-66b6c48dd5-4k8vx   Started container nginx
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>45s         Warning   FailedScheduling    pod/postgres-db-5d4f8c9b2-lmqrs        0/3 nodes available: insufficient memory
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>NAME                STATUS   ROLES           AGE    VERSION
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>master-01.ocp.local   Ready    control-plane   45d    v1.27.3
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>master-02.ocp.local   Ready    control-plane   45d    v1.27.3
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>worker-01.ocp.local   Ready    worker          42d    v1.27.3
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>worker-02.ocp.local   NotReady SchedulingDisabled 2m    v1.27.3
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>NAME                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>authentication             4.13.5    True        False         False      3d
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>cloud-credential           4.13.5    True        False         False      3d
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>cluster-autoscaler         4.13.5    True        False         False      3d
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>console                    4.13.5    False       True          False      8m
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>dns                        4.13.5    True        False         False      3d
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "co"</code></strong> — Use the full name <code>oc get clusteroperators</code> or ensure you're on OpenShift 4.x where the <code>co</code> shorthand is available.
+<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Authenticate with <code>oc login &lt;cluster-url&gt;</code> or verify your kubeconfig is set correctly.
+**`error: namespace "<ns>" not found</p>
+</div>
 <h2 id="patching-resources">Patching Resources<a class="headerlink" href="#patching-resources" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Strategic merge patch (simple key overwrite)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;replicas&quot;:3}}&#39;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>oc<span class="w"> </span>patch<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;unschedulable&quot;:true}}&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># JSON patch (precise path operations)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;replace&quot;,&quot;path&quot;:&quot;/spec/replicas&quot;,&quot;value&quot;:3}]&#39;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Add a toleration via JSON patch</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/template/spec/tolerations&quot;,&quot;value&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}]&#39;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Remove a field</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/spec/template/spec/affinity&quot;}]&#39;</span>
-</code></pre></div>
-<h2 id="output-formats">Output Formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># JSON / YAML for full spec</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>json
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>yaml
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># jsonpath — extract a single field</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.conditions[?(@.type==&quot;Ready&quot;)].status}&#39;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># custom-columns — tabular output</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Get all pod images across namespaces</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NS:.metadata.namespace,NAME:.metadata.name,IMAGE:.spec.containers<span class="o">[</span><span class="m">0</span><span class="o">]</span>.image
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Output names only (for piping)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>name
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
-</code></pre></div>
-<h2 id="labels-selectors">Labels &amp; Selectors<a class="headerlink" href="#labels-selectors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Filter by label selector</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>myapp<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>myapp,tier<span class="o">=</span>frontend<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="s1">&#39;app in (frontend,backend)&#39;</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Label a node</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="nv">zone</span><span class="o">=</span>east<span class="w"> </span>--overwrite
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Remove a label</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>zone-
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Annotate a pod</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>oc<span class="w"> </span>annotate<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="nv">key</span><span class="o">=</span>value
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>oc<span class="w"> </span>annotate<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>key-<span class="w">       </span><span class="c1"># remove annotation</span>
-</code></pre></div>
-<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Pod logs</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container&gt;<span class="w">    </span><span class="c1"># specific container</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--previous<span class="w">        </span><span class="c1"># previous container instance</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--follow<span class="w">          </span><span class="c1"># stream (alias: -f)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w">        </span><span class="c1"># last 100 lines</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--since<span class="o">=</span>1h<span class="w">        </span><span class="c1"># last hour only</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Strategic merge patch (simple key overwrite)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;replicas&quot;:3}}&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>oc<span class="w"> </span>patch<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;unschedulable&quot;:true}}&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># JSON patch (precise path operations)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;replace&quot;,&quot;path&quot;:&quot;/spec/replicas&quot;,&quot;value&quot;:3}]&#39;</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Stream logs from a deployment (any pod matching)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Node logs (systemd journal via oc adm)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>crio<span class="w">         </span><span class="c1"># CRI-O container runtime</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w">      </span><span class="c1"># kubelet service</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>NetworkManager
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>--path<span class="o">=</span>/var/log/messages
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>--path<span class="o">=</span>/var/log/audit/audit.log
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Add a toleration via JSON patch</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/template/spec/tolerations&quot;,&quot;value&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}]&#39;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Remove a field</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>oc<span class="w"> </span>patch<span class="w"> </span>deployment/myapp<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/spec/template/spec/affinity&quot;}]&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>deployment.apps/myapp patched
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>node/worker-node-01 patched
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>deployment.apps/myapp patched
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>deployment.apps/myapp patched
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>deployment.apps/myapp patched
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "deployment"</code></strong> — Verify the resource exists with <code>oc get deployment</code> and check you're in the correct namespace with <code>oc project</code>.
+<strong><code>error: failed to apply strategic merge patch to body</code></strong> — Ensure your JSON syntax is valid (matching quotes and brackets) and the field path exists in the resource spec.
+<strong><code>error: jsonpatch: test failed</code></strong> — Use <code>oc get deployment/myapp -o yaml</code> to verify the exact current path structure before applying a JSON patch operation.</p>
+</div>
+<h2 id="output-formats">Output Formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># JSON / YAML for full spec</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>json
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>yaml
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># jsonpath — extract a single field</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.conditions[?(@.type==&quot;Ready&quot;)].status}&#39;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># custom-columns — tabular output</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Get all pod images across namespaces</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NS:.metadata.namespace,NAME:.metadata.name,IMAGE:.spec.containers<span class="o">[</span><span class="m">0</span><span class="o">]</span>.image
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Output names only (for piping)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span>name
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;apiVersion&quot;: &quot;v1&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;kind&quot;: &quot;Pod&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;metadata&quot;: {
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    &quot;name&quot;: &quot;nginx-deployment-66b6c48dd5-k9x2m&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    &quot;namespace&quot;: &quot;default&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;uid&quot;: &quot;a7f3e2c1-9b4d-4e8f-b2d6-1c5a9e7f3d2b&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  },
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;status&quot;: {
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    &quot;phase&quot;: &quot;Running&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    &quot;conditions&quot;: [
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      {&quot;type&quot;: &quot;Ready&quot;, &quot;status&quot;: &quot;True&quot;}
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    ]
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  }
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>}
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Running
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>True
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>NAME                                    STATUS    NODE
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>nginx-deployment-66b6c48dd5-k9x2m       Running   worker-node-01
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>nginx-deployment-66b6c48dd5-p7q2l       Running   worker-node-02
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>NAMESPACE     NAME                              IMAGE
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>default       nginx-deployment-66b6c48dd5-k9x2m nginx:1.21.6
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>kube-system   coredns-558bd4d5db-2xvkm          registry.k8s.io/coredns:v1.8.6
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>openshift-dns dns-default-8f7xq                 registry.redhat.com/openshift4/ose-dns:v4.12.5
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>pod/nginx-deployment-66b6c48dd5-k9x2m
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>pod/nginx-deployment-66b6c48dd5-p7q2l
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>certificatesigningrequest.certificates.k8s.io/node-csr-abc123def456
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>certificatesigningrequest.certificates.k8s.io/node-csr-xyz789uvw012
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>certificatesigningrequest.certificates.k8s.io/node-csr-abc123def456 approved
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>certificatesigningrequest.certificates.k8s.io/node-csr-xyz789uvw012 approved
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "pod" or "pods"</code></strong> — Verify the API group and resource name are correct; use <code>oc api-resources</code> to list available resources.
+<strong><code>Error from server (NotFound): pods "&lt;pod&gt;" not found</code></strong> — Confirm the pod name and namespace are correct with <code>oc get pods -n &lt;ns&gt;</code>.
+<strong><code>error: jsonpath expression is invalid</code></strong> — Check bracket syntax and field paths match the actual object structure using <code>oc get pod &lt;pod&gt; -o yaml</code> to verify field names.</p>
+</div>
+<h2 id="labels-selectors">Labels &amp; Selectors<a class="headerlink" href="#labels-selectors" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Filter by label selector</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>myapp<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>myapp,tier<span class="o">=</span>frontend<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="s1">&#39;app in (frontend,backend)&#39;</span><span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Label a node</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="nv">zone</span><span class="o">=</span>east<span class="w"> </span>--overwrite
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Remove a label</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>zone-
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Annotate a pod</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>oc<span class="w"> </span>annotate<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="nv">key</span><span class="o">=</span>value
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>oc<span class="w"> </span>annotate<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>key-<span class="w">       </span><span class="c1"># remove annotation</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>myapp-deployment-5d4c7b9f8-2kx9n       1/1     Running   0          3d
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>myapp-deployment-5d4c7b9f8-7qm2p       1/1     Running   0          2d
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>myapp-deployment-5d4c7b9f8-9lw3x       1/1     Running   0          1d
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>myapp-frontend-8c9d2e1f4-4pq6r         1/1     Running   0          5h
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>myapp-frontend-8c9d2e1f4-8vx2s         1/1     Running   0          4h
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>backend-service-6f3a1b2c9-jk8wl        1/1     Running   0          2d
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>frontend-app-4e7d9c5a2-m3n7p           1/1     Running   0          1d
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>node/worker-01.prod.local labeled
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>node/worker-02.prod.local labeled
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>node/worker-03.prod.local labeled
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>pod/myapp-5d4c7b9f8-2kx9n annotated
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>pod/myapp-5d4c7b9f8-7qm2p annotated
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: node "&lt;node&gt;" not found</code></strong> — Verify the node name with <code>oc get nodes</code> and ensure you're connected to the correct cluster.
+<strong><code>error: label must have a value</code></strong> — Add a value after the equals sign (e.g., <code>node-role.kubernetes.io/infra=true</code>) or use <code>--overwrite</code> flag if updating an existing label.
+<strong><code>Error from server (NotFound): pods "&lt;pod&gt;" not found</code></strong> — Confirm the pod name and namespace with <code>oc get pods -n &lt;ns&gt;</code>, and ensure the pod exists before annotating.</p>
+</div>
+<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Pod logs</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container&gt;<span class="w">    </span><span class="c1"># specific container</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--previous<span class="w">        </span><span class="c1"># previous container instance</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--follow<span class="w">          </span><span class="c1"># stream (alias: -f)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w">        </span><span class="c1"># last 100 lines</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>oc<span class="w"> </span>logs<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--since<span class="o">=</span>1h<span class="w">        </span><span class="c1"># last hour only</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Stream logs from a deployment (any pod matching)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>oc<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>deploy/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Node logs (systemd journal via oc adm)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>crio<span class="w">         </span><span class="c1"># CRI-O container runtime</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w">      </span><span class="c1"># kubelet service</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-u<span class="w"> </span>NetworkManager
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>--path<span class="o">=</span>/var/log/messages
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>node-logs<span class="w"> </span>&lt;node&gt;<span class="w"> </span>--path<span class="o">=</span>/var/log/audit/audit.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>2024-01-15T10:23:47.123456Z stdout F [INFO] Application started successfully
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>2024-01-15T10:23:48.456789Z stdout F [INFO] Listening on port 8080
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>2024-01-15T10:23:49.789012Z stdout F [DEBUG] Database connection pool initialized
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>2024-01-15T10:23:50.012345Z stdout F [INFO] Ready to accept requests
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>2024-01-15T10:23:51.345678Z stderr F [WARN] Deprecated API endpoint used
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>-- Logs begin at Mon 2024-01-15 09:45:22 UTC, end at Mon 2024-01-15 10:35:18 UTC --
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Jan 15 10:15:33 worker-node-02 crio[2847]: time=&quot;2024-01-15T10:15:33.456789Z&quot; level=info msg=&quot;Container started&quot; id=abc123def456
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Jan 15 10:15:34 worker-node-02 crio[2847]: time=&quot;2024-01-15T10:15:34.789012Z&quot; level=info msg=&quot;Image pulled&quot; image=&quot;quay.io/openshift/origin-node:v4.13.2&quot;
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Jan 15 10:15:35 worker-node-02 kubelet[1234]: I0115 10:15:35.123456 1234 kubelet.go:1234] Node status updated
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Jan 15 10:15:36 worker-node-02 NetworkManager[567]: &lt;info&gt; [1705318536.1234] device (eth0): state change: activated -&gt; unavailable
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): pods "&lt;pod&gt;" not found</code></strong> — Verify the pod name with <code>oc get pods -n &lt;ns&gt;</code> and ensure you're querying the correct namespace.
+<strong><code>error: the server doesn't have a resource type "adm"</code></strong> — Use <code>oc adm node-logs</code> only on OpenShift 4.3+; for earlier versions use <code>oc debug node/&lt;node&gt;</code> instead.
+<strong><code>error: you must be logged in to the server</code></strong> — Authenticate with <code>oc login &lt;cluster-url&gt;</code> before running log commands.</p>
+</div>
 <h2 id="exec-and-remote-shell">Exec and Remote Shell<a class="headerlink" href="#exec-and-remote-shell" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Execute a one-off command in a pod</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/log
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/config.yaml
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Interactive shell (exec with TTY)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>bash
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>sh<span class="w">        </span><span class="c1"># if bash not available</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Remote shell shorthand (oc-specific)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>oc<span class="w"> </span>rsh<span class="w"> </span>&lt;pod&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Debug node (spawns privileged pod on host network/PID/IPC)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Inside the debug pod:</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>chroot<span class="w"> </span>/host<span class="w">                          </span><span class="c1"># access node filesystem as root</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>crictl<span class="w"> </span>ps<span class="w">                             </span><span class="c1"># list running containers</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>crictl<span class="w"> </span>logs<span class="w"> </span>&lt;container-id&gt;
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 min ago&quot;</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># Debug a deployment using its image (runs as root by default in debug)</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--as-root
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># Override the command</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>/bin/sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;env | grep SECRET&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Execute a one-off command in a pod</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/log
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container&gt;<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/config.yaml
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Interactive shell (exec with TTY)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>bash
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>oc<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>sh<span class="w">        </span><span class="c1"># if bash not available</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Remote shell shorthand (oc-specific)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>oc<span class="w"> </span>rsh<span class="w"> </span>&lt;pod&gt;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>&lt;pod&gt;
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Debug node (spawns privileged pod on host network/PID/IPC)</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Inside the debug pod:</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>chroot<span class="w"> </span>/host<span class="w">                          </span><span class="c1"># access node filesystem as root</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>crictl<span class="w"> </span>ps<span class="w">                             </span><span class="c1"># list running containers</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>crictl<span class="w"> </span>logs<span class="w"> </span>&lt;container-id&gt;
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>crio<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 min ago&quot;</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="c1"># Debug a deployment using its image (runs as root by default in debug)</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--as-root
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Override the command</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--<span class="w"> </span>/bin/sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;env | grep SECRET&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>bin
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>dev
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>etc
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>lost+found
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>proc
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>sys
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>var
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>apiVersion: v1
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>kind: ConfigMap
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>metadata:
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  name: app-config
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>data:
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  config.yaml: |
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    server:
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>      port: 8080
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>      timeout: 30s
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>bash-4.4# exit
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Starting debug pod on node worker-02.example.com ...
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Creating debug namespace ... 
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Pod IP: 10.128.45.67
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>If you don&#39;t see a command prompt, try pressing enter.
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>sh-4.4# chroot /host
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>sh-4.4# systemctl status kubelet
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>● kubelet.service - Kubernetes Kubelet
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>   Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>   Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 47min ago
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>sh-4.4# crictl ps | head -8
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>CONTAINER ID        IMAGE                                    CREATED             STATE               NAME                      ATTEMPT             POD ID
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>a7f2e9c1d4b5       quay.io/openshift/crio:v4.13.2          2 hours ago         Running             crio                      0                   8f3a2c1e9d7b
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>b2c3d4e5f6a7       registry.redhat.io/ose-pod:v4.13        45 minutes ago      Running             POD                       0                   9g4b3d2f0e8c
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>c3d4e5f6a7b8       docker.io/library/nginx:1.24            12 minutes ago      Running             nginx-app                 1                   0h5c4e3g1f9d
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>...
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>sh-4.4# exit
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>Debugging deployment/web-server ...
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>Starting debug pod with image registry.redhat.io/ose-cli:v4.13 ...
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>Pod IP: 10.128.67.89
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>sh-4.4# SECRET_API_KEY=sk-1a2b3c4d5e6f7g8h
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>sh-4.4# exit
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: pod &lt;pod&gt; not found</code></strong> — Verify the pod name with <code>oc get pods -n &lt;ns&gt;</code> and ensure you're targeting the correct namespace.
+<strong><code>error: container &lt;container&gt; not found</code></strong> — List available containers in the pod with <code>oc get pod &lt;pod&gt; -n &lt;ns&gt; -o jsonpath='{.spec.containers[*].name}'</code> and use the correct container name.
+<strong><code>error: unable to upgrade connection: container not running or does not exist</code></strong> — Ensure the pod is in Running state with <code>oc get pod &lt;pod&gt; -n &lt;ns&gt;</code> and retry after the pod fully starts.</p>
+</div>
 <h2 id="administrative-commands">Administrative Commands<a class="headerlink" href="#administrative-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Node management</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>cordon<span class="w"> </span>&lt;node&gt;<span class="w">                  </span><span class="c1"># mark unschedulable</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>uncordon<span class="w"> </span>&lt;node&gt;
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>drain<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--ignore-daemonsets<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--delete-emptydir-data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--grace-period<span class="o">=</span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--timeout<span class="o">=</span>300s
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Certificate management</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr-name&gt;
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w">  </span><span class="c1"># approve all pending</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># RBAC</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-role-to-user<span class="w"> </span>admin<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;project&gt;
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-cluster-role-to-user<span class="w"> </span>cluster-admin<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>remove-cluster-role-from-user<span class="w"> </span>cluster-admin<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>who-can<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Resource usage</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--containers<span class="w">   </span><span class="c1"># per-container breakdown</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Node management</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>cordon<span class="w"> </span>&lt;node&gt;<span class="w">                  </span><span class="c1"># mark unschedulable</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>uncordon<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>drain<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>--ignore-daemonsets<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>--delete-emptydir-data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>--grace-period<span class="o">=</span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span>--timeout<span class="o">=</span>300s
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Certificate management</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w"> </span>&lt;csr-name&gt;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>oc<span class="w"> </span>get<span class="w"> </span>csr<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>oc<span class="w"> </span>adm<span class="w"> </span>certificate<span class="w"> </span>approve<span class="w">  </span><span class="c1"># approve all pending</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># RBAC</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-role-to-user<span class="w"> </span>admin<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;project&gt;
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-cluster-role-to-user<span class="w"> </span>cluster-admin<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>remove-cluster-role-from-user<span class="w"> </span>cluster-admin<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>who-can<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1"># Resource usage</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--containers<span class="w">   </span><span class="c1"># per-container breakdown</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME                          READY   STATUS   ROLES    AGE     VERSION
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>worker-node-01.prod.local    True    Ready    worker   45d     v1.27.8+4fab27b
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>worker-node-02.prod.local    True    Ready    worker   45d     v1.27.8+4fab27b
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>master-node-01.prod.local    True    Ready    master   120d    v1.27.8+4fab27b
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>NAME                                                   AGE   SIGNERNAME                                    REQUESTOR                                        CONDITION
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>csr-5k9m2                                              2m    kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   Pending
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>csr-7x3pq                                              1m    kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   Pending
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>certificatesigningrequest.certificates.k8s.io/csr-5k9m2 approved
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>certificatesigningrequest.certificates.k8s.io/csr-7x3pq approved
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>NAME                          CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>worker-node-01.prod.local    850m         12.4Gi
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>worker-node-02.prod.local    620m         8.7Gi
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>master-node-01.prod.local    1200m        16.2Gi
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>POD                                    NAMESPACE              CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>etcd-master-node-01.prod.local        openshift-etcd         180m         892Mi
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>kube-apiserver-master-node-01         openshift-kube-apiserver   320m    1.2Gi
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>...
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>NAME                          CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>nginx-deployment-5d4f7c9b8   default      45m          128Mi
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>nginx-deployment-5d4f7c9b8   default      42m          125Mi
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): certificatesigningrequest.certificates.k8s.io "&lt;csr-name&gt;" not found</code></strong> — Verify the CSR name with <code>oc get csr</code> and ensure it exists before approval.
+<strong><code>Error: user "&lt;username&gt;" cannot be found in the cluster</code></strong> — Confirm the username exists in your identity provider (LDAP/OAuth) and has logged in at least once.
+<strong><code>error: timed out waiting for the condition on nodes/&lt;node&gt;</code></strong> — Increase the <code>--timeout</code> value or manually evict pods with <code>oc delete pod &lt;pod&gt; -n &lt;ns&gt;</code> before draining.</p>
+</div>
 <h2 id="oc-adm-inspect">oc adm inspect<a class="headerlink" href="#oc-adm-inspect" title="Permanent link">&para;</a></h2>
 <p><code>oc adm inspect</code> dumps all resources associated with an operator or namespace into a local directory. More targeted than must-gather for a single component.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Dump all resources for the etcd operator</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/etcd<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/etcd-inspect
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Dump a namespace (all objects, logs, events)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/mon-inspect
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Dump a specific deployment</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>deployment/prometheus-operator<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/prom-inspect
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># The output directory contains:</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1">#   cluster-scoped-resources/  — CRDs, nodes, cluster operators</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1">#   namespaces/&lt;ns&gt;/           — pods, configmaps, secrets (redacted), events, logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Dump all resources for the etcd operator</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/etcd<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/etcd-inspect
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Dump a namespace (all objects, logs, events)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/mon-inspect
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Dump a specific deployment</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>deployment/prometheus-operator<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/prom-inspect
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># The output directory contains:</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1">#   cluster-scoped-resources/  — CRDs, nodes, cluster operators</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1">#   namespaces/&lt;ns&gt;/           — pods, configmaps, secrets (redacted), events, logs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Inspecting clusteroperator/etcd...
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Wrote cluster-scoped-resources/apiextensions.k8s.io/customresourcedefinitions.yaml
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Wrote cluster-scoped-resources/config.openshift.io/clusteroperators/etcd.yaml
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Wrote namespaces/openshift-etcd/pods/etcd-ip-10-0-45-12.ec2.internal/etcd/logs/current.log
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Wrote namespaces/openshift-etcd/events.yaml
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Wrote namespaces/openshift-etcd/configmaps.yaml
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Inspection complete. Resources saved to /tmp/etcd-inspect
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Inspecting namespace/openshift-monitoring...
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Wrote namespaces/openshift-monitoring/pods/prometheus-operator-7d4f8c9b2-kx9m4/prometheus-operator/logs/current.log
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Wrote namespaces/openshift-monitoring/pods/alertmanager-main-0/alertmanager/logs/current.log
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Wrote namespaces/openshift-monitoring/configmaps.yaml
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Wrote namespaces/openshift-monitoring/secrets.yaml (redacted)
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Wrote namespaces/openshift-monitoring/events.yaml
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>Inspection complete. Resources saved to /tmp/mon-inspect
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>Inspecting deployment/prometheus-operator in namespace openshift-monitoring...
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Wrote namespaces/openshift-monitoring/deployments/prometheus-operator.yaml
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>Wrote namespaces/openshift-monitoring/pods/prometheus-operator-7d4f8c9b2-kx9m4/logs/current.log
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Inspection complete. Resources saved to /tmp/prom-inspect
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: clusteroperator/etcd not found</code></strong> — Verify the cluster operator exists with <code>oc get clusteroperators</code> and check the exact name.
+<strong><code>Error: unable to create directory /tmp/etcd-inspect: permission denied</code></strong> — Ensure the destination directory is writable or use a different path like <code>/var/tmp</code> with appropriate permissions.
+<strong><code>Error: namespace openshift-monitoring not found</code></strong> — Confirm the namespace exists with <code>oc get namespaces</code> and verify it is not in a terminating state.</p>
+</div>
 <h2 id="must-gather">must-gather<a class="headerlink" href="#must-gather" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Collect full cluster state (takes 5-10 minutes)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w">                    </span><span class="c1"># default collection</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>&lt;custom&gt;<span class="w">   </span><span class="c1"># product-specific (ODF, ACM, Logging)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/mg
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># ODF-specific must-gather</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>registry.redhat.io/odf4/odf-must-gather-rhel9:latest
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Networking must-gather</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>registry.redhat.io/openshift4/network-tools-rhel8
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Quick cluster state snapshot</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Collect full cluster state (takes 5-10 minutes)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w">                    </span><span class="c1"># default collection</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>&lt;custom&gt;<span class="w">   </span><span class="c1"># product-specific (ODF, ACM, Logging)</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/mg
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># ODF-specific must-gather</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>registry.redhat.io/odf4/odf-must-gather-rhel9:latest
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Networking must-gather</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--image<span class="o">=</span>registry.redhat.io/openshift4/network-tools-rhel8
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Quick cluster state snapshot</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>$ oc adm must-gather
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gathering data...
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Gathering data for cluster...
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Compressing must-gather output...
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>must-gather data collected successfully. Your data is located in ./must-gather.local.5891748503421891234/
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>$ oc adm must-gather --dest-dir=/tmp/mg
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>gathering data...
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Gathering data for cluster...
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>Compressing must-gather output...
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>must-gather data collected successfully. Your data is located in /tmp/mg/must-gather.local.6234891234567891234/
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>$ oc adm top nodes
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>NAME                                       CPU(cores)   CPU%   MEMORY(Mi)   MEMORY%
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>worker-0.ocp.example.com                   892m         22%    7234Mi       45%
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>worker-1.ocp.example.com                   1156m        29%    8912Mi       56%
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>master-0.ocp.example.com                   645m         16%    6123Mi       38%
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>master-1.ocp.example.com                   723m         18%    6891Mi       43%
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>master-2.ocp.example.com                   698m         17%    6456Mi       40%
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>$ oc adm top pods --all-namespaces
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>NAMESPACE                  NAME                                       CPU(m)   MEMORY(Mi)
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>openshift-apiserver       apiserver-5d8f4c9b2-xk9lm                  234      512
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>openshift-controller-mgr  controller-manager-7c2b1f8d-qp3nk           156      384
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>openshift-etcd            etcd-master-0                               423      1024
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>openshift-kube-apiserver  kube-apiserver-master-1                    312      768
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>kube-system               coredns-6d4cf4b4c8-2jk8n                   45       128
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to the server: dial tcp: lookup api.ocp.example.com on 8.8.8.8:53: no such host</code></strong> — Verify cluster API endpoint is resolvable and accessible; check your kubeconfig with <code>oc config view</code>.
+<strong><code>Error: image pull backoff for registry.redhat.io/odf4/odf-must-gather-rhel9:latest</code></strong> — Ensure the node has pull credentials for registry.redhat.io configured in the cluster's pull-secret.
+<strong><code>error: metrics not available yet</code></strong> — Wait 2-3 minutes after cluster startup for metrics-server to initialize, then retry the <code>oc adm top</code> command.</p>
+</div>
 <h2 id="useful-aliases">Useful Aliases<a class="headerlink" href="#useful-aliases" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">k</span><span class="o">=</span>kubectl
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">alias</span><span class="w"> </span>oc-all<span class="o">=</span><span class="s1">&#39;oc get pods --all-namespaces | grep -v &quot;Running\|Completed&quot;&#39;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">alias</span><span class="w"> </span>oc-co<span class="o">=</span><span class="s1">&#39;oc get co | grep -E &quot;False|True.*True|True.*False.*True&quot;&#39;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">alias</span><span class="w"> </span>oc-events<span class="o">=</span><span class="s1">&#39;oc get events --all-namespaces --sort-by=.lastTimestamp | tail -30&#39;</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">alias</span><span class="w"> </span>oc-notready<span class="o">=</span><span class="s1">&#39;oc get nodes --no-headers | grep -v &quot; Ready&quot;&#39;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">alias</span><span class="w"> </span>oc-csr<span class="o">=</span><span class="s1">&#39;oc get csr | grep Pending&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">k</span><span class="o">=</span>kubectl
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">alias</span><span class="w"> </span>oc-all<span class="o">=</span><span class="s1">&#39;oc get pods --all-namespaces | grep -v &quot;Running\|Completed&quot;&#39;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nb">alias</span><span class="w"> </span>oc-co<span class="o">=</span><span class="s1">&#39;oc get co | grep -E &quot;False|True.*True|True.*False.*True&quot;&#39;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="nb">alias</span><span class="w"> </span>oc-events<span class="o">=</span><span class="s1">&#39;oc get events --all-namespaces --sort-by=.lastTimestamp | tail -30&#39;</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="nb">alias</span><span class="w"> </span>oc-notready<span class="o">=</span><span class="s1">&#39;oc get nodes --no-headers | grep -v &quot; Ready&quot;&#39;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="nb">alias</span><span class="w"> </span>oc-csr<span class="o">=</span><span class="s1">&#39;oc get csr | grep Pending&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>$ alias k=kubectl
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>$ alias oc-all=&#39;oc get pods --all-namespaces | grep -v &quot;Running\|Completed&quot;&#39;
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>$ alias oc-co=&#39;oc get co | grep -E &quot;False|True.*True|True.*False.*True&quot;&#39;
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>$ alias oc-events=&#39;oc get events --all-namespaces --sort-by=.lastTimestamp | tail -30&#39;
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>$ alias oc-notready=&#39;oc get nodes --no-headers | grep -v &quot; Ready&quot;&#39;
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>$ alias oc-csr=&#39;oc get csr | grep Pending&#39;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>$ k get nodes
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>NAME                           STATUS   ROLES           AGE     VERSION
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>master-01.ocp.local           Ready    control-plane   45d     v1.27.6+f67aeb3
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>master-02.ocp.local           Ready    control-plane   45d     v1.27.6+f67aeb3
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>worker-01.ocp.local           Ready    worker          42d     v1.27.6+f67aeb3
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>worker-02.ocp.local           Ready    worker          42d     v1.27.6+f67aeb3
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>$ oc-notready
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>worker-03.ocp.local           NotReady,SchedulingDisabled   worker   8d      v1.27.6+f67aeb3
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>$ oc-csr
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>NAME        AGE     SIGNERNAME                                    REQUESTOR                 REQUESTEDDURATION   CONDITION
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>csr-4m9kx   2m      kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   &lt;none&gt;              Pending
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>csr-7p2lq   1m      kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   &lt;none&gt;              Pending
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: oc</code></strong> — Ensure the OpenShift CLI is installed and in your PATH with <code>which oc</code> or install via <code>curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz | tar xz -C /usr/local/bin</code>.
+<strong><code>error: the server doesn't have a resource type "co"</code></strong> — Update your OpenShift CLI to match the cluster version, as <code>clusteroperator</code> (co) requires a compatible client build.
+<strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the parent command (e.g., <code>oc get pods</code>) succeeds independently before using the piped alias.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7959,7 +8319,7 @@ oc command reference: resource management, log collection, exec, adm commands, d
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -9347,28 +9347,90 @@
 <hr />
 <h2 id="service-type-loadbalancer-pending">Service Type LoadBalancer Pending<a class="headerlink" href="#service-type-loadbalancer-pending" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Service shows <code>EXTERNAL-IP: &lt;pending&gt;</code> for &gt;2 minutes</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Events section will show: &quot;no IPs available in NSX IP pool&quot; or similar</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check NSX-T load balancer IP pool capacity:</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># NSX-T → Networking → Load Balancing → Virtual Servers → check IP usage</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># AVI: AVI Controller → Cloud → SE Group → check IP pool capacity</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check Contour pods are running:</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>projectcontour
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check HTTPProxy status:</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httpproxy<span class="w"> </span>-n<span class="w"> </span>production
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>httpproxy<span class="w"> </span>myapp<span class="w"> </span>-n<span class="w"> </span>production
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Look for: Conditions - Valid</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check envoy DaemonSet (the data plane):</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>projectcontour<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>envoy
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Test: curl the Envoy service directly</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>projectcontour
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;envoy-LB-IP&gt;/<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: myapp.example.local&quot;</span>
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Name:                     my-app-service
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Namespace:                tanzu-system
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Labels:                   app=my-app
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Annotations:              &lt;none&gt;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Selector:                 app=my-app
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Type:                     LoadBalancer
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>IP:                       10.0.1.50
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>LoadBalancer Ingress:     pending
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Port:                     http  80/TCP
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>TargetPort:               8080/TCP
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>NodePort:                 31245/TCP
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Endpoints:                10.20.1.10:8080,10.20.1.11:8080
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Session Affinity:         None
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>External Traffic Policy:  Cluster
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>Events:
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>  Type     Reason                 Age    From                Message
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>  ----     ------                 ----   ----                -------
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  Warning  SyncLoadBalancerFailed 2m15s  service-controller  Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool &#39;TKG-LB-Pool&#39;
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>  Warning  UnAvailableLoadBalancer 1m30s service-controller  There are no available nodes for LoadBalancer
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool</code></strong> — Expand the NSX-T IP pool size or release unused LoadBalancer service IPs by deleting idle services.
+<strong><code>There are no available nodes for LoadBalancer</code></strong> — Verify worker nodes are in Ready state with <code>kubectl get nodes</code> and check NSX segment connectivity to those nodes.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check Contour pods are running:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>projectcontour
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check HTTPProxy status:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httpproxy<span class="w"> </span>-n<span class="w"> </span>production
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>httpproxy<span class="w"> </span>myapp<span class="w"> </span>-n<span class="w"> </span>production
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Look for: Conditions - Valid</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Check envoy DaemonSet (the data plane):</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>projectcontour<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>envoy
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Test: curl the Envoy service directly</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>projectcontour
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;envoy-LB-IP&gt;/<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: myapp.example.local&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>contour-5d8f4c9b7-2kx9m   1/1     Running   0          3d
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>contour-5d8f4c9b7-7pqrs   1/1     Running   0          3d
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>envoy-ds-9m4k2            1/1     Running   0          2d
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>envoy-ds-b7x3n            1/1     Running   0          2d
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>envoy-ds-c5k8p            1/1     Running   0          2d
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>NAME                    FQDN                      TLS SECRET      STATUS     STATUS DESCRIPTION
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>myapp                   myapp.example.local       myapp-tls       valid      
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>another-app             api.example.local         api-tls         valid      
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>Name:         myapp
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Namespace:    production
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Status:       valid
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>Conditions:
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>  Type    Status  Reason
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  ----    ------  ------
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>  Valid   True    ValidHTTPProxyFound
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>NAME                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>envoy-ds-9m4k2            1/1     Running   0          2d
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>envoy-ds-b7x3n            1/1     Running   0          2d
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>envoy-ds-c5k8p            1/1     Running   0          2d
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>NAME                TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>contour             ClusterIP      10.96.45.123    &lt;none&gt;          8001/TCP
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>envoy               LoadBalancer   10.96.78.234    203.0.113.45    80:31234/TCP,443:31567/TCP
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>curl: (60) SSL certificate problem: self signed certificate
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>subject: CN=myapp.example.local
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>issuer: CN=myapp.example.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "httpproxy"</code></strong> — Install Contour CRDs with <code>kubectl apply -f https://projectcontour.io/quickstart/contour.yaml</code> or verify the APIGroup is registered via <code>kubectl api-resources | grep httpproxy</code>.
+<strong><code>curl: (7) Failed to connect to 203.0.113.45 port 443: Connection refused</code></strong> — Verify the Envoy LoadBalancer service has an EXTERNAL-IP assigned and is listening on port 443 with <code>kubectl get svc -n projectcontour envoy -o wide</code>.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9405,7 +9467,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

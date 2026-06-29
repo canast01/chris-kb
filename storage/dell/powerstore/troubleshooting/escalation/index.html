@@ -8992,23 +8992,141 @@ How to escalate Dell PowerStore issues to Dell support: what data to collect, ho
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/appliance&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
 </code></pre></div>
-<h3 id="2-capture-all-active-alerts">2. Capture all active alerts<a class="headerlink" href="#2-capture-all-active-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get all active alerts via REST API — paste full output into the case description</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Alternative: PSM → Alerts → filter by Status=Active; Export to CSV</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;id&quot;: &quot;0&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;release_version&quot;: &quot;3.2.1.0&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;build_number&quot;: &quot;7891&quot;,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;build_date&quot;: &quot;2024-01-15T08:32:00Z&quot;,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;installed_date&quot;: &quot;2024-02-10T14:22:15Z&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>}
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>{
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;id&quot;: &quot;A1B2C3D4E5F6&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;name&quot;: &quot;PowerStore-T&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;model&quot;: &quot;DELL EMC PowerStore T630&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;serial_number&quot;: &quot;PS-2024-001847&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;service_tag&quot;: &quot;ABC1234&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;node_count&quot;: 3,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;management_address&quot;: &quot;192.168.1.50&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
 </code></pre></div>
-<h3 id="3-check-hardware-health-controller-and-drive-state">3. Check hardware health (controller and drive state)<a class="headerlink" href="#3-check-hardware-health-controller-and-drive-state" title="Permanent link">&para;</a></h3>
-<p>In PSM: click <strong>Hardware → Appliance</strong> and screenshot the hardware topology view showing controller and drive status.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># REST: check controller health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Node&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present in the example, so ensure it's not removed).
+<strong><code>curl: (7) Failed to connect to &lt;powerstore-mgmt-ip&gt; port 443: Connection refused</code></strong> — Verify the PowerStore management IP is correct and the REST API service is running with <code>ssh admin@&lt;ip&gt;</code> and check service status.
+<strong><code>{"error":"Unauthorized","code":"401"}</code></strong> — Ensure the base64-encoded credentials are correct by re-encoding with <code>echo -n "user:password" | base64</code> and updating the Authorization header.</p>
+</div>
+<h3 id="2-capture-all-active-alerts">2. Capture all active alerts<a class="headerlink" href="#2-capture-all-active-alerts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get all active alerts via REST API — paste full output into the case description</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># REST: check drive health</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Drive&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Alternative: PSM → Alerts → filter by Status=Active; Export to CSV</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;alerts&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;id&quot;: &quot;alert-2847392&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;severity&quot;: &quot;warning&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;message&quot;: &quot;Disk 14 in Enclosure 2 predicted failure&quot;,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;timestamp&quot;: &quot;2024-01-15T09:23:47Z&quot;,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;resource_id&quot;: &quot;disk-e2-14&quot;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    },
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    {
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;id&quot;: &quot;alert-2847391&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;severity&quot;: &quot;critical&quot;,
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;message&quot;: &quot;Array cache battery backup unit degraded&quot;,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;timestamp&quot;: &quot;2024-01-15T08:15:22Z&quot;,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;resource_id&quot;: &quot;battery-001&quot;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    },
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    {
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;id&quot;: &quot;alert-2847389&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;severity&quot;: &quot;info&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;message&quot;: &quot;Replication lag detected on remote array&quot;,
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;timestamp&quot;: &quot;2024-01-15T07:42:10Z&quot;,
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;resource_id&quot;: &quot;remote-array-nyc&quot;
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    }
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  ],
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;page&quot;: 1,
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;per_page&quot;: 100,
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  &quot;total&quot;: 3
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example; if still failing, verify the management IP is correct).
+<strong><code>curl: (7) Failed to connect to &lt;powerstore-mgmt-ip&gt; port 443: Connection refused</code></strong> — Confirm the PowerStore management IP is reachable and the REST API service is running with <code>ping &lt;powerstore-mgmt-ip&gt;</code> and check network connectivity.
+<strong><code>{"error": "Unauthorized"}</code></strong> — Verify the base64-encoded credentials are correct by re-encoding the username:password and ensure the user has API access permissions in PowerStore.</p>
+</div>
+<h3 id="3-check-hardware-health-controller-and-drive-state">3. Check hardware health (controller and drive state)<a class="headerlink" href="#3-check-hardware-health-controller-and-drive-state" title="Permanent link">&para;</a></h3>
+<p>In PSM: click <strong>Hardware → Appliance</strong> and screenshot the hardware topology view showing controller and drive status.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># REST: check controller health</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Node&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># REST: check drive health</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Drive&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;entries&quot;: [
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    {
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      &quot;id&quot;: &quot;N1&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      &quot;name&quot;: &quot;node-01&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;health_state&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;status&quot;: &quot;OK&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      &quot;power_supply_health&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;temperature&quot;: 42,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;cpu_usage&quot;: 18.5
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    },
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    {
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      &quot;id&quot;: &quot;N2&quot;,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;name&quot;: &quot;node-02&quot;,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;health_state&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;status&quot;: &quot;OK&quot;,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      &quot;power_supply_health&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      &quot;temperature&quot;: 39,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>      &quot;cpu_usage&quot;: 22.1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    }
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  ]
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>}
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>{
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  &quot;entries&quot;: [
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    {
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &quot;id&quot;: &quot;D1.0&quot;,
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>      &quot;name&quot;: &quot;SSD_001&quot;,
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>      &quot;health_state&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>      &quot;status&quot;: &quot;OK&quot;,
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>      &quot;capacity_bytes&quot;: 1099511627776,
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>      &quot;used_bytes&quot;: 412316860416
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    },
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    {
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      &quot;id&quot;: &quot;D1.1&quot;,
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      &quot;name&quot;: &quot;SSD_002&quot;,
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;health_state&quot;: &quot;Healthy&quot;,
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>      &quot;status&quot;: &quot;OK&quot;,
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>      &quot;capacity_bytes&quot;: 1099511627776,
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      &quot;used_bytes&quot;: 389412864000
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    },
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    {
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>      &quot;id&quot;: &quot;D2.0&quot;,
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>      &quot;name&quot;: &quot;SSD_003&quot;,
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>      &quot;health_state&quot;: &quot;Degraded&quot;,
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>      &quot;status&quot;: &quot;Warning&quot;,
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>      &quot;capacity_bytes&quot;: 1099511627776,
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>      &quot;used_bytes&quot;: 521109504000
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>    }
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>  ]
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+<strong><code>401 Unauthorized</code></strong> — Verify the base64-encoded credentials are correct by running <code>echo -n "user:password" | base64</code> and comparing the output to your Authorization header.
+<strong><code>curl: (7) Failed to connect to &lt;powerstore-mgmt-ip&gt; port 443: Connection refused</code></strong> — Confirm the PowerStore management IP is reachable and the REST API service is running with <code>ping &lt;powerstore-mgmt-ip&gt;</code> and check firewall rules.</p>
+</div>
 <h3 id="4-collect-the-support-bundle">4. Collect the support bundle<a class="headerlink" href="#4-collect-the-support-bundle" title="Permanent link">&para;</a></h3>
 <p>The support bundle packages all PSM logs, configuration data, and event history.</p>
 <ol>
@@ -9019,27 +9137,43 @@ How to escalate Dell PowerStore issues to Dell support: what data to collect, ho
 </ol>
 <p>This archive is the most important attachment for the Dell support case.</p>
 <p>If PSM is inaccessible:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># REST: trigger a support bundle collection</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/support_material&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;appliance_ids&quot;: [&quot;&lt;appliance-id&gt;&quot;]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># REST: trigger a support bundle collection</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/support_material&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;appliance_ids&quot;: [&quot;&lt;appliance-id&gt;&quot;]}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;support_material_request_20250115_093847&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;state&quot;: &quot;COLLECTION_IN_PROGRESS&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;appliance_ids&quot;: [&quot;A1B2C3D4E5F6G7H8&quot;],
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;created_at&quot;: &quot;2025-01-15T09:38:47Z&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;estimated_completion&quot;: &quot;2025-01-15T10:15:00Z&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;bundle_size_mb&quot;: null,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;status_message&quot;: &quot;Collecting diagnostic data from appliance A1B2C3D4E5F6G7H8&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present in the example, so ensure it's not being removed).
+<strong><code>{"error": "401 Unauthorized", "message": "Invalid or expired credentials"}</code></strong> — Verify the base64-encoded credentials are correct by re-encoding <code>username:password</code> and ensure the user has REST API permissions.
+<strong><code>{"error": "404 Not Found", "message": "Appliance ID not found"}</code></strong> — Confirm the appliance ID exists by running <code>curl -k -H "Authorization: Basic &lt;base64&gt;" https://&lt;powerstore-mgmt-ip&gt;/api/rest/appliances</code> to list valid IDs.</p>
+</div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PowerStoreOS version: 3.5.0.0.0.14
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Service tag: ABC1234
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Appliance model: PowerStore 1200T
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Issue first observed: 2026-06-14 14:30 UTC
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Last known good state: 2026-06-14 12:00 UTC
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - 12:00: Firmware update applied via PSM to both controllers
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 14:30: Alert fired: &quot;Node A hardware fault — node degraded&quot;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 14:35: 4 hosts lost I/O access to volumes on this appliance
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Steps already taken:
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - Reviewed PSM alerts: 3 Critical alerts for hardware fault on Node A
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  - Checked SupportAssist: no automatic case found
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - Did NOT reboot controllers or replace drives
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Blast radius: 4 ESXi hosts cannot access storage; 20 VMs have I/O stalled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>PowerStoreOS version: 3.5.0.0.0.14
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Service tag: ABC1234
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Appliance model: PowerStore 1200T
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Issue first observed: 2026-06-14 14:30 UTC
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Last known good state: 2026-06-14 12:00 UTC
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  - 12:00: Firmware update applied via PSM to both controllers
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  - 14:30: Alert fired: &quot;Node A hardware fault — node degraded&quot;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - 14:35: 4 hosts lost I/O access to volumes on this appliance
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Steps already taken:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - Reviewed PSM alerts: 3 Critical alerts for hardware fault on Node A
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - Checked SupportAssist: no automatic case found
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - Did NOT reboot controllers or replace drives
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Blast radius: 4 ESXi hosts cannot access storage; 20 VMs have I/O stalled
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-wwwdellcomsupport">How to Open the SR on www.dell.com/support<a class="headerlink" href="#how-to-open-the-sr-on-wwwdellcomsupport" title="Permanent link">&para;</a></h2>
@@ -9141,30 +9275,123 @@ How to escalate Dell PowerStore issues to Dell support: what data to collect, ho
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Active alerts snapshot — paste into every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Hardware health</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Node&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Drive health</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Drive&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Recent event log (last 50 events)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/event?order=created_timestamp%20desc&amp;limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Volume health</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/volume?select=name,state,size&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Replication session state (Metro / async)</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/replication_session&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Active alerts snapshot — paste into every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Hardware health</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Node&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Drive health</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/hardware?type=Drive&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Recent event log (last 50 events)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/event?order=created_timestamp%20desc&amp;limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Volume health</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/volume?select=name,state,size&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># Replication session state (Metro / async)</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;powerstore-mgmt-ip&gt;/api/rest/replication_session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic &lt;base64-user:pass&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    {
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>      &quot;id&quot;: &quot;alert-7f2c9e1a&quot;,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>      &quot;severity&quot;: &quot;critical&quot;,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>      &quot;message&quot;: &quot;Drive 2.0.3 predictive failure detected&quot;,
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>      &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>      &quot;created_timestamp&quot;: &quot;2024-01-15T09:42:31Z&quot;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    },
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    {
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>      &quot;id&quot;: &quot;alert-5b8d4c2f&quot;,
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>      &quot;severity&quot;: &quot;warning&quot;,
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>      &quot;message&quot;: &quot;Node A temperature threshold exceeded&quot;,
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>      &quot;state&quot;: &quot;active&quot;,
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>      &quot;created_timestamp&quot;: &quot;2024-01-15T08:15:22Z&quot;
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    }
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>  ]
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>}
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>{
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>    {
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>      &quot;id&quot;: &quot;node-001&quot;,
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>      &quot;name&quot;: &quot;Node-A&quot;,
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>      &quot;health_state&quot;: &quot;degraded&quot;,
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>      &quot;status&quot;: &quot;online&quot;
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>    },
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>    {
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>      &quot;id&quot;: &quot;node-002&quot;,
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>      &quot;name&quot;: &quot;Node-B&quot;,
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>      &quot;health_state&quot;: &quot;healthy&quot;,
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>      &quot;status&quot;: &quot;online&quot;
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>    }
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>  ]
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>}
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>{
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>    {
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>      &quot;id&quot;: &quot;drive-2-0-3&quot;,
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>      &quot;slot&quot;: &quot;2.0.3&quot;,
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>      &quot;health_state&quot;: &quot;degraded&quot;,
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>      &quot;predictive_failure&quot;: true
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>    },
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>    {
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>      &quot;id&quot;: &quot;drive-1-1-5&quot;,
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>      &quot;slot&quot;: &quot;1.1.5&quot;,
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>      &quot;health_state&quot;: &quot;healthy&quot;,
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>      &quot;predictive_failure&quot;: false
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>    }
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>  ]
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>}
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a>{
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a>    {&quot;id&quot;: &quot;evt-9847&quot;, &quot;severity&quot;: &quot;critical&quot;, &quot;message&quot;: &quot;Drive failure imminent&quot;, &quot;created_timestamp&quot;: &quot;2024-01-15T09:41:00Z&quot;},
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a>    {&quot;id&quot;: &quot;evt-9846&quot;, &quot;severity&quot;: &quot;warning&quot;, &quot;message&quot;: &quot;Replication lag detected&quot;, &quot;created_timestamp&quot;: &quot;2024-01-15T08:30:15Z&quot;},
+<a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a>    {&quot;id&quot;: &quot;evt-9845&quot;, &quot;severity&quot;: &quot;info&quot;, &quot;message&quot;: &quot;Snapshot created&quot;, &quot;created_timestamp&quot;: &quot;2024-01-15T07:00:00Z&quot;}
+<a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a>  ]
+<a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a>}
+<a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a>{
+<a id="__codelineno-10-59" name="__codelineno-10-59" href="#__codelineno-10-59"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-60" name="__codelineno-10-60" href="#__codelineno-10-60"></a>    {
+<a id="__codelineno-10-61" name="__codelineno-10-61" href="#__codelineno-10-61"></a>      &quot;name&quot;: &quot;prod-db-vol-01&quot;,
+<a id="__codelineno-10-62" name="__codelineno-10-62" href="#__codelineno-10-62"></a>      &quot;state&quot;: &quot;healthy&quot;,
+<a id="__codelineno-10-63" name="__codelineno-10-63" href="#__codelineno-10-63"></a>      &quot;size&quot;: 1099511627776
+<a id="__codelineno-10-64" name="__codelineno-10-64" href="#__codelineno-10-64"></a>    },
+<a id="__codelineno-10-65" name="__codelineno-10-65" href="#__codelineno-10-65"></a>    {
+<a id="__codelineno-10-66" name="__codelineno-10-66" href="#__codelineno-10-66"></a>      &quot;name&quot;: &quot;backup-vol-02&quot;,
+<a id="__codelineno-10-67" name="__codelineno-10-67" href="#__codelineno-10-67"></a>      &quot;state&quot;: &quot;healthy&quot;,
+<a id="__codelineno-10-68" name="__codelineno-10-68" href="#__codelineno-10-68"></a>      &quot;size&quot;: 549755813888
+<a id="__codelineno-10-69" name="__codelineno-10-69" href="#__codelineno-10-69"></a>    }
+<a id="__codelineno-10-70" name="__codelineno-10-70" href="#__codelineno-10-70"></a>  ]
+<a id="__codelineno-10-71" name="__codelineno-10-71" href="#__codelineno-10-71"></a>}
+<a id="__codelineno-10-72" name="__codelineno-10-72" href="#__codelineno-10-72"></a>{
+<a id="__codelineno-10-73" name="__codelineno-10-73" href="#__codelineno-10-73"></a>  &quot;entries&quot;: [
+<a id="__codelineno-10-74" name="__codelineno-10-74" href="#__codelineno-10-74"></a>    {
+<a id="__codelineno-10-75" name="__codelineno-10-75" href="#__codelineno-10-75"></a>      &quot;id&quot;: &quot;repl-sess-001&quot;,
+<a id="__codelineno-10-76" name="__codelineno-10-76" href="#__codelineno-10-76"></a>      &quot;name&quot;: &quot;metro-sync-dc1&quot;,
+<a id="__codelineno-10-77" name="__codelineno-10-77" href="#__codelineno-10-77"></a>      &quot;type&quot;: &quot;Metro&quot;,
+<a id="__codelineno-10-78" name="__codelineno-10-78" href="#__codelineno-10-78"></a>      &quot;state&quot;: &quot;synchronized&quot;
+<a id="__codelineno-10-79" name="__codelineno-10-79" href="#__codelineno-10-79"></a>    },
+<a id="__codelineno-10-80" name="__codelineno-10-80" href="#__codelineno-10-80"></a>    {
+<a id="__codelineno-10-81" name="__codelineno-10-81" href="#__codelineno-10-81"></a>      &quot;id&quot;: &quot;repl-sess-002&quot;,
+<a id="__codelineno-10-82" name="__codelineno-10-82" href="#__codelineno-10-82"></a>      &quot;name&quot;: &quot;async-dr-site&quot;,
+<a id="__codelineno-10-83" name="__codelineno-10-83" href="#__codelineno-10-83"></a>      &quot;type&quot;: &quot;Async&quot;,
+<a id="__codelineno-10-84" name="__codelineno-10-84" href="#__codelineno-10-84"></a>      &quot;state&quot;: &quot;synchronized&quot;
+<a id="__codelineno-10-85" name="__codelineno-10-85" href="#__codelineno-10-85"></a>    }
+<a id="__codelineno-10-86" name="__codelineno-10-86" href="#__codelineno-10-86"></a>  ]
+<a id="__codelineno-10-87" name="__codelineno-10-87" href="#__codelineno-10-87"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in examples, but ensure it's not removed).
+<strong><code>{"error": "Unauthorized"}</code></strong> — Verify base64 credentials are</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9237,7 +9464,7 @@ How to escalate Dell PowerStore issues to Dell support: what data to collect, ho
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:34:14 UTC"><span class="timeago" datetime="2026-06-29T04:34:14+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:34:14 UTC">2026-06-29</span>
   </span>
 
     

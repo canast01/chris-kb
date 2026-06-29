@@ -8310,68 +8310,158 @@ How to escalate Pure Storage FlashArray issues to Pure support: what data to col
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Name         Version     ID             Model     Status</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># flasharray1  6.4.10      &lt;uuid&gt;         FA-X70R4  ready</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name         Version     ID                                   Model     Status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>flasharray1  6.4.10      8b3e4c2a-91f7-4d2e-b8a1-7c5d9e2f1a3b FA-X70R4  ready
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure you are SSH'd directly to the array management IP (not a controller host) and the Pure CLI tools are installed.
+<strong><code>Connection refused</code></strong> — Verify the management IP is reachable with <code>ping</code> and that SSH is enabled on the array (check array network settings in the GUI).
+<strong><code>Authentication failed</code></strong> — Confirm you are using the correct credentials and that your SSH key or password is valid for the pureuser account.</p>
+</div>
 <p>Note the <strong>Version</strong> field (e.g. <code>6.4.10</code>) and the <strong>Serial</strong> field — both required for the support case.</p>
 <h3 id="2-capture-current-array-state">2. Capture current array state<a class="headerlink" href="#2-capture-current-array-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All active alerts — most important data for the case</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Controller health (CT0 and CT1)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Drive health — flag any &#39;failed&#39; or &#39;degraded&#39; entries</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Volume health</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purevol<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Port state (FC, iSCSI, NVMe-oF)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pureport<span class="w"> </span>list
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Host connections</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Array capacity and data reduction ratios</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All active alerts — most important data for the case</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Controller health (CT0 and CT1)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Drive health — flag any &#39;failed&#39; or &#39;degraded&#39; entries</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Volume health</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purevol<span class="w"> </span>list
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Port state (FC, iSCSI, NVMe-oF)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pureport<span class="w"> </span>list
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Host connections</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Array capacity and data reduction ratios</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                             Severity  Code  Description                          Created
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vol-backup-20240115             critical  230   Volume has failed                    2024-01-15T09:23:14Z
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cache-tier-01                   warning   120   Controller temperature elevated      2024-01-15T08:47:22Z
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>repl-lag-prod                   warning   105   Replication lag exceeds threshold    2024-01-15T07:12:09Z
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Name  Status   Model              Speed
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>CT0   healthy  FlashArray//X70-2  7.2.0.1234
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>CT1   healthy  FlashArray//X70-2  7.2.0.1234
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name        Status     Capacity  Serial
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>SSD-0.0     healthy    1.92TB    PUREFC191234567
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>SSD-0.1     healthy    1.92TB    PUREFC191234568
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>SSD-1.0     degraded   1.92TB    PUREFC191234569
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>SSD-1.1     failed     1.92TB    PUREFC191234570
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Name                  Size      Provisioned  Data Reduction
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>prod-db-01            500GB     1.2TB        3.8:1
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>backup-archive        2TB       4.5TB        2.1:1
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>dev-test-vol          100GB     250GB        1.5:1
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Name      Wwn                Port  Speed  Status
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>CT0.FC0   50:00:14:40:1a:2b:3c:4d  0      16Gb   online
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>CT0.FC1   50:00:14:40:1a:2b:3c:4e  1      16Gb   online
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>CT1.iSCSI 50:00:14:40:1a:2b:3c:4f  2      10Gb   online
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Name           Iqn                                    Volumes
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>host-esx-01    iqn.1991-05.com.example:esx-01        prod-db-01, dev-test-vol
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>host-esx-02    iqn.1991-05.com.example:esx-02        prod-db-01
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>host-backup    iqn.1991-05.com.example:backup-srv    backup-archive
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Capacity      Used       Data Reduction  Snapshots  Replication
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>10TB          6.2TB      2.3:1           1.8TB      0.9TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purealert: command not found</code></strong> — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically <code>/opt/pureapp/bin</code>).
+<strong><code>Error: Array unreachable at &lt;ip_address&gt;</code></strong> — Confirm network connectivity to the array management IP and verify credentials are set via <code>pureconfig</code> or environment variables.
+<strong><code>Error: Invalid credentials</code></strong> — Re-authenticate using <code>pureconfig --username &lt;user&gt; --password</code> or check that the API token in your session has not expired.</p>
+</div>
 <p>Save all CLI output to a text file for pasting into the case.</p>
 <h3 id="3-check-activecluster-pod-state-if-activecluster-is-configured">3. Check ActiveCluster pod state (if ActiveCluster is configured)<a class="headerlink" href="#3-check-activecluster-pod-state-if-activecluster-is-configured" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pod health — shows whether pods are Online and synchronized</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># If a pod is not Online, check the mediator status</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Pod member volumes</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purepod<span class="w"> </span>list<span class="w"> </span>--member-type<span class="w"> </span>volume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pod health — shows whether pods are Online and synchronized</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If a pod is not Online, check the mediator status</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Pod member volumes</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purepod<span class="w"> </span>list<span class="w"> </span>--member-type<span class="w"> </span>volume
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                          Status    Mediator Status    Replication Status
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pod-prod-01                   Online    Connected         Synchronized
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pod-prod-02                   Online    Connected         Synchronized
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pod-dr-backup                 Online    Connected         Synchronized
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Name                          Status    Mediator IP       Mediator Status
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>pod-prod-01                   Online    10.45.12.88       Connected
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>pod-prod-02                   Online    10.45.12.88       Connected
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>pod-dr-backup                 Online    10.45.12.89       Disconnected
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Name                          Pod Name              Volume Count
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>pod-prod-01                   flasharray-1          847
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>pod-prod-01                   flasharray-2          847
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>pod-prod-02                   flasharray-3          923
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>pod-dr-backup                 flasharray-4          612
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid option '--mediator'</code></strong> — Use <code>purepod list --mediator-status</code> or check your Pure OS version supports this flag.
+<strong><code>Error: Pod 'pod-name' status is Offline</code></strong> — Verify network connectivity between array members and check mediator connectivity with <code>purepod list --mediator</code>.</p>
+</div>
 <h3 id="4-generate-and-send-the-diagnostic-bundle">4. Generate and send the diagnostic bundle<a class="headerlink" href="#4-generate-and-send-the-diagnostic-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># If phone-home is enabled (recommended) — sends bundle directly to Pure TAC</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purediag<span class="w"> </span>--send
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># If phone-home is disabled — generate a local bundle for manual upload</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purediag<span class="w"> </span>--output<span class="w"> </span>/tmp/diag_<span class="k">$(</span>hostname<span class="k">)</span>_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.tgz
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Copy from the array to a management host</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>scp<span class="w"> </span>pureuser@&lt;array-mgmt-ip&gt;:/tmp/diag_*.tgz<span class="w"> </span>/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># If phone-home is enabled (recommended) — sends bundle directly to Pure TAC</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purediag<span class="w"> </span>--send
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># If phone-home is disabled — generate a local bundle for manual upload</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purediag<span class="w"> </span>--output<span class="w"> </span>/tmp/diag_<span class="k">$(</span>hostname<span class="k">)</span>_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.tgz
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Copy from the array to a management host</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>scp<span class="w"> </span>pureuser@&lt;array-mgmt-ip&gt;:/tmp/diag_*.tgz<span class="w"> </span>/tmp/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Generating diagnostic bundle...
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Connecting to Pure TAC...
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Bundle size: 2.3 GB
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Uploading: ████████████████████ 100%
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Upload complete. Case #: CS-2024-0847392
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Transmission time: 47 seconds
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Generating diagnostic bundle...
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Bundle written to: /tmp/diag_flasharray-prod-01_20240215_1423.tgz
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Size: 2.3 GB
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Generation time: 89 seconds
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>pureuser@192.168.1.45&#39;s password: 
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>diag_flasharray-prod-01_20240215_1423.tgz          100% 2342MB   18.5MB/s   02:06
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purediag: command not found</code></strong> — Ensure you are running this command on the FlashArray management interface or install the Pure CLI tools on your management host.
+<strong><code>Permission denied (publickey,password)</code></strong> — Verify the pureuser account credentials and that SSH key-based authentication is configured, or use <code>ssh-keyscan</code> to add the array to your known_hosts file first.
+<strong><code>No such file or directory</code></strong> — The diagnostic bundle may still be generating; wait 2-3 minutes and retry the scp command, or check available disk space on the array with <code>ssh pureuser@&lt;array-mgmt-ip&gt; df -h</code>.</p>
+</div>
 <p>Note: <code>purediag --send</code> ties the bundle to the array's Pure1 account. When you open the case, Pure support can retrieve the bundle from Pure1 directly using the array serial number.</p>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Purity version: 6.4.10
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Array: flasharray-prod-01 (serial: &lt;array-serial&gt;)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Model: FlashArray //X70R4
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Issue first observed: 2026-06-14 14:30 UTC
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Last known good state: 2026-06-14 12:00 UTC
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Changes in 24h before the issue:
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - 12:00: Purity upgrade from 6.4.9 → 6.4.10 applied via web GUI
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 14:30: Alert fired: &quot;CT0 hardware fault — controller degraded&quot;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 14:35: 6 hosts lost access to volumes on CT0&#39;s preferred paths
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Steps already taken:
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - purealert list: 2 Critical alerts for CT0 hardware fault
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  - purearray list --controller: CT0 shows degraded; CT1 shows ready
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - purediag --send: bundle sent at 14:40 UTC
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Pure1 portal: no automatic case found for this array
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - Did NOT reboot controllers or pull drives
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Blast radius: 6 ESXi hosts have partial path loss; VMs are I/O retrying on CT1 paths
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Purity version: 6.4.10
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Array: flasharray-prod-01 (serial: &lt;array-serial&gt;)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Model: FlashArray //X70R4
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Issue first observed: 2026-06-14 14:30 UTC
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Last known good state: 2026-06-14 12:00 UTC
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Changes in 24h before the issue:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  - 12:00: Purity upgrade from 6.4.9 → 6.4.10 applied via web GUI
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  - 14:30: Alert fired: &quot;CT0 hardware fault — controller degraded&quot;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - 14:35: 6 hosts lost access to volumes on CT0&#39;s preferred paths
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Steps already taken:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - purealert list: 2 Critical alerts for CT0 hardware fault
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - purearray list --controller: CT0 shows degraded; CT1 shows ready
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - purediag --send: bundle sent at 14:40 UTC
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  - Pure1 portal: no automatic case found for this array
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  - Did NOT reboot controllers or pull drives
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Blast radius: 6 ESXi hosts have partial path loss; VMs are I/O retrying on CT1 paths
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportpurestoragecom">How to Open the SR on support.purestorage.com<a class="headerlink" href="#how-to-open-the-sr-on-supportpurestoragecom" title="Permanent link">&para;</a></h2>
@@ -8478,33 +8568,87 @@ How to escalate Pure Storage FlashArray issues to Pure support: what data to col
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Array state snapshot — paste into every case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Drive health (flag any &#39;failed&#39; or &#39;degraded&#39; entries)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Volume health</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>purevol<span class="w"> </span>list
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Port and host connectivity</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>pureport<span class="w"> </span>list
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># ActiveCluster pod state</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Replication group state</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>purepgroup<span class="w"> </span>list
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Performance snapshot (latency and throughput)</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>purearray<span class="w"> </span>monitor
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Send updated diagnostic bundle to Pure1</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>purediag<span class="w"> </span>--send
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Array state snapshot — paste into every case update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Drive health (flag any &#39;failed&#39; or &#39;degraded&#39; entries)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Volume health</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>purevol<span class="w"> </span>list
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Port and host connectivity</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>pureport<span class="w"> </span>list
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># ActiveCluster pod state</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># Replication group state</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>purepgroup<span class="w"> </span>list
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="c1"># Performance snapshot (latency and throughput)</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>purearray<span class="w"> </span>monitor
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># Send updated diagnostic bundle to Pure1</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>purediag<span class="w"> </span>--send
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Name             Status      Version      Model
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>flasharray-prod  Online      6.4.2        FA-405
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>flasharray-prod  Online      6.4.2        FA-405
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>AlertId  Severity  Code           Message                          Timestamp
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>12847    warning   DRIVE_WEAR     Drive nearing end of life        2024-01-15T09:23:14Z
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>12891    critical  CTRL_TEMP      Controller temperature elevated  2024-01-15T10:45:22Z
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Name       Status     Capacity   Used       Type
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>SSD.1      Healthy    1.92TB     1.54TB     SSD
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>SSD.2      Healthy    1.92TB     1.68TB     SSD
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>SSD.3      Healthy    1.92TB     1.71TB     SSD
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>SSD.4      Degraded   1.92TB     1.89TB     SSD
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>...
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Name                Status     Size       Provisioned
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>prod-db-vol-01     Online     500GB      450GB
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>prod-db-vol-02     Online     1TB        950GB
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>backup-vol-03      Online     2TB        1.8TB
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>...
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Name          Status    Speed    Enabled
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>CT0.ETH0      Online    10Gbps   Yes
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>CT0.ETH1      Online    10Gbps   Yes
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>CT1.ETH0      Online    10Gbps   Yes
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>CT1.ETH1      Online    10Gbps   Yes
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>HostName              IQN/WWN                    Connection
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>esx-host-01          iqn.1991-05.com.emc:...    Connected
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>esx-host-02          iqn.1991-05.com.emc:...    Connected
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>db-server-prod       iqn.1991-05.com.emc:...    Connected
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>...
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>Name          Status    Replication  Mediator
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>pod-primary   Online    Active       mediator-01
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>pod-secondary Online    Active       mediator-01
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>Name                Status    Direction    Lag
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>pg-prod-to-dr      Synced    Outbound     0ms
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>pg-backup-sync     Synced    Outbound     2ms
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>Timestamp            Read_Latency  Write_Latency  Throughput_Read  Throughput_Write
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>2024-01-15T10:50:00  1.2ms         2.1ms          4.2GB/s          3.8GB/s
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>Diagnostic bundle generated: diag_flasharray-prod_20240115_105234.tar.gz
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>Uploading to Pure1... [████████████████████] 100%
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>Upload complete. Case reference: CS-2024-0847291
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically <code>/opt/purearray/bin</code>).
+<strong><code>Error: Array unreachable at 192.168.1.100</code></strong> — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
+<strong><code>purediag: Authentication failed</code></strong> — Confirm your Pure1 API token is valid and has not expired; regenerate credentials in Pure1 if necessary.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8578,7 +8722,7 @@ How to escalate Pure Storage FlashArray issues to Pure support: what data to col
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:06:42 UTC"><span class="timeago" datetime="2026-06-29T06:06:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:06:42 UTC">2026-06-29</span>
   </span>
 
     

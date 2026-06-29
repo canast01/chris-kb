@@ -9017,6 +9017,29 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>aac.example.local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nslookup<span class="w"> </span>service-broker.example.local
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/auth/heartbeat<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>alive
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server:     10.0.1.53
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Name:   aac.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Address: 10.20.5.42
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Server:     10.0.1.53
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Address:    10.0.1.53#53
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Name:   service-broker.example.local
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Address: 10.20.5.43
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>100   287  100   287    0     0   1205      0 --:--:-- -- 0:00:00 --:--:-- 0:00:00
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>&quot;status&quot;: &quot;ALIVE&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nslookup: can't resolve 'aac.example.local': No address associated with hostname</code></strong> — Verify DNS server is reachable and the hostname is registered in your DNS zone; use <code>nslookup @&lt;dns-ip&gt; aac.example.local</code> to test a specific server.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the vIDM certificate into your system's CA bundle with <code>curl -cacert /path/to/cert.pem https://vidm.example.local/SAAS/auth/heartbeat</code>.
+<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify vIDM appliance is running and accessible on port 443 using <code>telnet vidm.example.local 443</code> or check firewall rules between LCM and vIDM.</p>
+</div>
 <p>TLS: generate a SAN cert covering all FQDNs above; upload to LCM Certificate Management before deployment.</p>
 <hr />
 <h2 id="phase-2-lcm-deployment">Phase 2 — LCM Deployment<a class="headerlink" href="#phase-2-lcm-deployment" title="Permanent link">&para;</a></h2>
@@ -9024,79 +9047,155 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 <p><strong>Option A — Easy Installer (greenfield):</strong> mounts an ISO and deploys LCM + vIDM + Aria Automation in a single wizard. Collects all network parameters (FQDNs, DNS, NTP, vCenter targets) in one workflow.</p>
 <p><strong>Option B — Add to existing LCM:</strong></p>
 <p><img alt="Aria Automation — Deploy — Diagram" src="../../../../assets/virtualization-vmware-aria-automation-deploy-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Monitor deployment from LCM appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@lcm.example.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/lcm/lcm-debug.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DEPLOY|ERROR|WARN&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor deployment from LCM appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@lcm.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/lcm/lcm-debug.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DEPLOY|ERROR|WARN&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connected to lcm.example.local.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:42:33.521Z [INFO] DEPLOY: Starting deployment of Aria Automation 8.12.1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15T09:42:45.203Z [WARN] DEPLOY: Waiting for vCenter connectivity (attempt 2/5)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T09:43:12.847Z [INFO] DEPLOY: Configuring PostgreSQL database cluster
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15T09:44:01.556Z [ERROR] DEPLOY: Failed to mount NFS datastore at 192.168.1.50:/exports/aria
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15T09:44:02.112Z [WARN] DEPLOY: Retrying NFS mount (attempt 1/3)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2024-01-15T09:44:35.891Z [INFO] DEPLOY: Identity provider synchronization complete
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>2024-01-15T09:45:18.634Z [INFO] DEPLOY: Aria Automation deployment finished successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey).</code></strong> — Ensure SSH key is configured or use <code>ssh-keyscan</code> to add the host key, then verify root SSH access is enabled on the LCM appliance.
+<strong><code>tail: cannot open '/var/log/vmware/lcm/lcm-debug.log' for reading: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vmware-lcm</code> and check the correct log path with <code>find /var/log -name "*lcm*"</code>.
+<strong><code>grep: (standard input): No such device or address</code></strong> — The log file may be rotating; use <code>tail -f /var/log/vmware/lcm/lcm-debug.log*</code> to follow all rotated logs or increase the buffer with <code>tail -f -n 100</code>.</p>
+</div>
 <p>After the 60–90 minute deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@aac.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>status<span class="w">        </span><span class="c1"># all services: Running</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vracli<span class="w"> </span>status<span class="w"> </span>--all<span class="w">  </span><span class="c1"># detailed pod health</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>version<span class="w">       </span><span class="c1"># confirm build matches target</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected: no output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@aac.example.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>status<span class="w">        </span><span class="c1"># all services: Running</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vracli<span class="w"> </span>status<span class="w"> </span>--all<span class="w">  </span><span class="c1"># detailed pod health</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vracli<span class="w"> </span>version<span class="w">       </span><span class="c1"># confirm build matches target</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected: no output</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>root@aac.example.local&#39;s password: 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vRA Cloud Assembly is running
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vRA Service Broker is running
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vRA Orchestrator is running
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vRA Code Stream is running
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vRA Automation Config is running
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vra-automation-config-5d8c7f9b2-kx4m9   1/1     Running   0          14d
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vra-service-broker-7f2e1c6a9-jm3k2      1/1     Running   2          21d
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vra-orchestrator-9b4c2e5f1-pq7r8        1/1     Running   1          7d
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>vra-code-stream-6a3d9e2c4-nt5v3         1/1     Running   0          3d
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vRA Automation 8.11.2 Build 20231015.1234567
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the vRA CLI is installed in the PATH; check <code>/opt/vmware/vra/bin/vracli</code> exists.
+<strong><code>Unable to connect to Kubernetes cluster</code></strong> — Verify kubectl is configured with the correct kubeconfig and the cluster API server is reachable from this node.
+<strong><code>pod status shows CrashLoopBackOff or ImagePullBackOff</code></strong> — Check pod logs with <code>kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;</code> and verify container images are accessible in your registry.</p>
+</div>
 <hr />
 <h2 id="phase-3-cloud-account-configuration">Phase 3 — Cloud Account Configuration<a class="headerlink" href="#phase-3-cloud-account-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> vCenter cloud account shows green status; hosts, VMs, and datastores are visible in Infrastructure → Resources.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Infrastructure → Connections → Cloud Accounts → Add → vCenter
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>→ FQDN: vcenter.example.local
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>→ Credentials: svc-aria-automation@example.local
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>→ Accept thumbprint → Save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Infrastructure → Connections → Cloud Accounts → Add → vCenter
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ FQDN: vcenter.example.local
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>→ Credentials: svc-aria-automation@example.local
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>→ Accept thumbprint → Save
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vracli<span class="w"> </span>cloud-account<span class="w"> </span>list<span class="w">          </span><span class="c1"># STATUS: OK</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>cloud-account<span class="w"> </span>sync<span class="w"> </span>--id<span class="w"> </span>&lt;id&gt;<span class="w">  </span><span class="c1"># force re-sync if needed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vracli<span class="w"> </span>cloud-account<span class="w"> </span>list<span class="w">          </span><span class="c1"># STATUS: OK</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vracli<span class="w"> </span>cloud-account<span class="w"> </span>sync<span class="w"> </span>--id<span class="w"> </span>&lt;id&gt;<span class="w">  </span><span class="c1"># force re-sync if needed</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Cloud Accounts:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ID                                    Name              Type              Status
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>550e8400-e29b-41d4-a716-446655440000  aws-prod-east     aws               CONNECTED
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>6ba7b810-9e12-11e1-80d6-4f50646f6c61  azure-dev         azure             CONNECTED
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>6ba7b811-9e12-11e1-80d6-4f50646f6c61  vsphere-lab       vsphere           CONNECTED
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>7ba7b812-9e12-11e1-80d6-4f50646f6c61  gcp-staging       gcp               DISCONNECTED
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Syncing cloud account 550e8400-e29b-41d4-a716-446655440000...
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Sync initiated successfully. Job ID: job-2024-01-15-08-42-5f7e9c
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Cloud account not found: &lt;id&gt;</code></strong> — Verify the account ID with <code>vracli cloud-account list</code> and use the exact UUID from the ID column.
+<strong><code>Error: Sync already in progress for this account</code></strong> — Wait for the previous sync job to complete or check status with <code>vracli cloud-account show --id &lt;id&gt;</code>.
+<strong><code>Error: Authentication failed for cloud account</code></strong> — Re-validate the cloud account credentials in the Aria Automation UI under Infrastructure &gt; Cloud Accounts.</p>
+</div>
 <p>Create Cloud Zones — define per-cluster subsets available to projects:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Infrastructure → Configure → Cloud Zones → New Cloud Zone
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ Name: CZ-vSphere-Prod → Cloud Account: vcenter.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>→ Capability tags: env:prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Infrastructure → Configure → Cloud Zones → New Cloud Zone
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ Name: CZ-vSphere-Prod → Cloud Account: vcenter.example.local
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>→ Capability tags: env:prod
 </code></pre></div>
 <hr />
 <h2 id="phase-4-projects-mappings-and-governance">Phase 4 — Projects, Mappings, and Governance<a class="headerlink" href="#phase-4-projects-mappings-and-governance" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> At least one project with cloud zones, flavour and image mappings, and an approval policy are configured.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Infrastructure → Configure → Projects → New Project
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ Members: add AD groups (roles: Administrator, Member, Viewer)
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>→ Cloud Zones: assign CZ-vSphere-Prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Infrastructure → Configure → Projects → New Project
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>→ Members: add AD groups (roles: Administrator, Member, Viewer)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>→ Cloud Zones: assign CZ-vSphere-Prod
 </code></pre></div>
 <p>Flavour and image mappings translate logical sizes and OS names to vCenter specs and VM templates:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Flavor Mappings: small → 2 vCPU/4 GB  ·  medium → 4 vCPU/8 GB  ·  large → 8 vCPU/16 GB
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Image Mappings: ubuntu-22 → Ubuntu-22-Template  ·  rhel-9 → RHEL-9-Template
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Flavor Mappings: small → 2 vCPU/4 GB  ·  medium → 4 vCPU/8 GB  ·  large → 8 vCPU/16 GB
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Image Mappings: ubuntu-22 → Ubuntu-22-Template  ·  rhel-9 → RHEL-9-Template
 </code></pre></div>
 <p>Approval policy (gate large deployments):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Service Broker → Policies → New Policy → Approval Policy
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Criteria: flavor == large OR vmCount &gt; 3
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>→ Approvers: AD group infra-approvers  ·  Mode: Any one approver
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Service Broker → Policies → New Policy → Approval Policy
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>→ Criteria: flavor == large OR vmCount &gt; 3
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>→ Approvers: AD group infra-approvers  ·  Mode: Any one approver
 </code></pre></div>
 <hr />
 <h2 id="phase-5-blueprints-and-service-catalogue">Phase 5 — Blueprints and Service Catalogue<a class="headerlink" href="#phase-5-blueprints-and-service-catalogue" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> A blueprint is published to Service Broker and a test catalogue request completes successfully.</p>
 <p>Minimal YAML cloud template:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">inputs</span><span class="p">:</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">flavour</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">string</span><span class="p p-Indicator">,</span><span class="nt"> enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">small</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">large</span><span class="p p-Indicator">],</span><span class="nt"> default</span><span class="p">:</span><span class="w"> </span><span class="nv">small</span><span class="w"> </span><span class="p p-Indicator">}</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">string</span><span class="p p-Indicator">,</span><span class="nt"> enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ubuntu-22</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">rhel-9</span><span class="p p-Indicator">],</span><span class="nt"> default</span><span class="p">:</span><span class="w"> </span><span class="nv">ubuntu-22</span><span class="w"> </span><span class="p p-Indicator">}</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nt">resources</span><span class="p">:</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">Cloud_vSphere_Machine_1</span><span class="p">:</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cloud.vSphere.Machine</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${input.image}</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">      </span><span class="nt">flavor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${input.flavour}</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">      </span><span class="nt">cloudConfig</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="no">#cloud-config</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">        </span><span class="no">runcmd:</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">          </span><span class="no">- echo &quot;Provisioned by Aria Automation&quot; &gt;&gt; /etc/motd</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">flavour</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">string</span><span class="p p-Indicator">,</span><span class="nt"> enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">small</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">large</span><span class="p p-Indicator">],</span><span class="nt"> default</span><span class="p">:</span><span class="w"> </span><span class="nv">small</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">string</span><span class="p p-Indicator">,</span><span class="nt"> enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ubuntu-22</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">rhel-9</span><span class="p p-Indicator">],</span><span class="nt"> default</span><span class="p">:</span><span class="w"> </span><span class="nv">ubuntu-22</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nt">resources</span><span class="p">:</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="nt">Cloud_vSphere_Machine_1</span><span class="p">:</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cloud.vSphere.Machine</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${input.image}</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">      </span><span class="nt">flavor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${input.flavour}</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">      </span><span class="nt">cloudConfig</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">        </span><span class="no">#cloud-config</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">        </span><span class="no">runcmd:</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">          </span><span class="no">- echo &quot;Provisioned by Aria Automation&quot; &gt;&gt; /etc/motd</span>
 </code></pre></div>
 <p><img alt="Aria Automation — Deploy — Diagram" src="../../../../assets/virtualization-vmware-aria-automation-deploy-d2.svg" /></p>
 <hr />
 <h2 id="phase-6-end-to-end-validation">Phase 6 — End-to-End Validation<a class="headerlink" href="#phase-6-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks below pass. Backup configured. Hand off to operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh<span class="w"> </span>root@aac.example.local
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Expected: no output (all pods healthy)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>vracli<span class="w"> </span>status<span class="w">          </span><span class="c1"># all services: Running</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health<span class="w">  </span><span class="c1"># 3-node deployments: all members healthy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ssh<span class="w"> </span>root@aac.example.local
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Expected: no output (all pods healthy)</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>vracli<span class="w"> </span>status<span class="w">          </span><span class="c1"># all services: Running</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health<span class="w">  </span><span class="c1"># 3-node deployments: all members healthy</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>root@aac.example.local&#39;s password: 
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>vra-automation-config-5d8f9c2b1-xyz9k   1/1     Running   0          14d
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>vra-iaas-proxy-7c4a2e1f-abc3d           1/1     Running   2          8d
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>vra-orchestrator-engine-9b2k1m5-def6g   1/1     Running   0          21d
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Service Status Report:
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  vra-automation-service      Running (healthy)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  vra-iaas-service            Running (healthy)
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  vra-orchestrator-service    Running (healthy)
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  vra-config-service          Running (healthy)
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Cluster Health Status:
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  Node: aac-node-01.example.local    Status: Healthy   Quorum: Yes
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  Node: aac-node-02.example.local    Status: Healthy   Quorum: Yes
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  Node: aac-node-03.example.local    Status: Healthy   Quorum: Yes
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  Cluster consensus: ESTABLISHED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with <code>ping aac.example.local</code>.
+<strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the vracli binary is in the PATH; check <code>/opt/vmware/vra/bin/</code> exists.
+<strong><code>CrashLoopBackOff</code> or <code>ImagePullBackOff</code> in pod status</strong> — Check pod logs with <code>kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;</code> and verify image registry connectivity and disk space.</p>
+</div>
 <p>Submit a smoke-test deployment from Service Broker and confirm it reaches <code>DEPLOYMENT_SUCCESSFUL</code>, then delete it.</p>
 <table>
 <thead>
@@ -9189,7 +9288,7 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

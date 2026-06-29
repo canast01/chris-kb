@@ -9093,6 +9093,18 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Force overwrite if prompted (some versions prompt for confirmation)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>save<span class="w"> </span>force
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PowerPath configuration saved successfully to /etc/powerpath/powermt.custom
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Saved 12 device entries and 4 path group configurations.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>PowerPath configuration saved successfully to /etc/powerpath/powermt.custom
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Saved 12 device entries and 4 path group configurations.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Ensure PowerPath is installed and the powermt binary is in your PATH, or use the full path <code>/opt/emc/powerpath/bin/powermt</code>.
+<strong><code>powermt save: Permission denied</code></strong> — Run the command with sudo or as root, since PowerPath configuration changes require elevated privileges.
+<strong><code>powermt save: Configuration file locked by another process</code></strong> — Wait for any running PowerPath operations to complete, or check for stale lock files in <code>/var/lock/powerpath/</code> and remove them if safe.</p>
+</div>
 <p>Run <code>powermt save</code> after every configuration change. This includes:
 - After changing the load balancing policy (<code>powermt set policy=...</code>)
 - After running <code>powermt config</code> to discover new devices
@@ -9101,64 +9113,149 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 - Before any SAN fabric maintenance that will change path count</p>
 <h3 id="capture-a-dated-baseline-snapshot">Capture a Dated Baseline Snapshot<a class="headerlink" href="#capture-a-dated-baseline-snapshot" title="Permanent link">&para;</a></h3>
 <p>The baseline snapshot is a plain-text record of the full path state at a known-good point in time. Store this in the change record, runbook, or a shared team directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Capture full path state and policy to a dated file</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">OUTFILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">-powermt-baseline-</span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2">.txt&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== PowerPath Baseline: </span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2"> — </span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Version ---&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>powermt<span class="w"> </span>version
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Registration ---&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>powermt<span class="w"> </span>check_registration
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Options ---&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- All Devices and Paths ---&quot;</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- HBA Port States ---&quot;</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Baseline written to: </span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Capture full path state and policy to a dated file</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">OUTFILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">-powermt-baseline-</span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== PowerPath Baseline: </span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2"> — </span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Version ---&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>powermt<span class="w"> </span>version
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Registration ---&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Options ---&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- All Devices and Paths ---&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- HBA Port States ---&quot;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Baseline written to: </span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>=== PowerPath Baseline: storage-prod-01 — 2024-01-15 ===
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>--- Version ---
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>PowerPath Release: 6.2.1 (build 247)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>EMC PowerPath for Linux
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>--- Registration ---
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>PowerPath is registered.
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>License expires: 2025-12-31
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>--- Options ---
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Option Name                          Current Value
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>=====================================  ===============
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>load_balance_policy                  round_robin
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>failover_mode                         failover
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>auto_failback                         enabled
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>io_timeout                            60
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>--- All Devices and Paths ---
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Pseudo name=emcpowerb Symmetrix ID=000297900123 Logical device=0001
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a> Logical device ID=600000970000012345678901234567
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a> state=alive; policy=SymmOpt; priority=0; owner=sp_a
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a> ===
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a> Pseudo name=emcpowerc Symmetrix ID=000297900124 Logical device=0002
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a> Logical device ID=600000970000012346678901234568
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a> state=alive; policy=SymmOpt; priority=0; owner=sp_b
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>...
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>--- HBA Port States ---
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>HBA Port         Status           State
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>=============    ==============   ==========
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>qla2xxx 0:0:0    alive            enabled
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>qla2xxx 0:0:1    alive            enabled
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>qla2xxx 1:0:0    alive            enabled
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>qla2xxx 1:0:1    dead             enabled
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>...
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>Baseline written to: storage-prod-01-powermt-baseline-2024-01-15.txt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Install PowerPath EMC client package or verify the binary is in $PATH with <code>which powermt</code>.
+<strong><code>powermt: error: insufficient privileges</code></strong> — Run the script with <code>sudo</code> or as root user, as PowerPath commands require elevated permissions.
+<strong><code>Cannot open output file: Permission denied</code></strong> — Ensure write permissions on the current working directory or specify an absolute path for <code>OUTFILE</code>.</p>
+</div>
 <p>Store these baseline files in a location accessible to your team:
 - Change management ticket attachments
 - A shared <code>baselines/</code> directory under the host's runbook
 - Configuration management repository (e.g., Git)</p>
 <h3 id="backup-the-configuration-file-directly">Backup the Configuration File Directly<a class="headerlink" href="#backup-the-configuration-file-directly" title="Permanent link">&para;</a></h3>
 <p>In addition to the baseline snapshot, take a copy of the raw configuration file before any upgrade or significant change:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — copy the powermt.custom file with a date stamp</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>/etc/powermt.custom<span class="w"> </span>/etc/powermt.custom.bak-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm the backup exists</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/etc/powermt.custom*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux — copy the powermt.custom file with a date stamp</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/etc/powermt.custom<span class="w"> </span>/etc/powermt.custom.bak-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm the backup exists</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/etc/powermt.custom*
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>-rw-r--r-- 1 root root 4.2K Nov 15 09:23 /etc/powermt.custom
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>-rw-r--r-- 1 root root 4.2K Nov 15 09:23 /etc/powermt.custom.bak-2024-11-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot open '/etc/powermt.custom' for reading: No such file or directory</code></strong> — Verify the PowerPath configuration file exists at <code>/etc/powermt.custom</code> before attempting backup; if missing, reinstall or restore from a known good configuration.
+<strong><code>cp: permission denied</code></strong> — Run the command with <code>sudo</code> or as root, since <code>/etc/powermt.custom</code> requires elevated privileges to read and copy.</p>
+</div>
 <hr />
 <h2 id="configuration-restore">Configuration Restore<a class="headerlink" href="#configuration-restore" title="Permanent link">&para;</a></h2>
 <h3 id="restore-from-saved-configuration">Restore from Saved Configuration<a class="headerlink" href="#restore-from-saved-configuration" title="Permanent link">&para;</a></h3>
 <p><code>powermt restore</code> reloads configuration from the last saved <code>powermt.custom</code> file and instructs PowerPath to retry all paths currently marked dead. It serves double duty: restoring saved settings and attempting path recovery.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore PowerPath configuration from the saved powermt.custom file</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify that the policy was restored correctly</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify all paths are alive after restore</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm no dead paths remain</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Restore PowerPath configuration from the saved powermt.custom file</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify that the policy was restored correctly</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify all paths are alive after restore</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Confirm no dead paths remain</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Restore operation completed successfully.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Number of devices restored: 24
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Symmetrix ID: 000296701234
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Logical Device Name: emcpowera
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Symmetrix Device ID: 001234
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Number of Paths: 4
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Path Selection Policy: Optimized
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Failover Mode: Enabled
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Load Balancing: Round Robin
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Symmetrix ID: 000296701234
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Logical Device Name: emcpowera
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Dev #: 0 (c4t0d0s2)
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> Mfg: EMC Symmetrix VRAID
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> Logical device ID: 001234
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> state: alive
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> Logical device ID: 001235
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a> state: alive
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a> Logical device ID: 001236
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a> state: alive
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a> Logical device ID: 001237
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a> state: alive
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and install from Dell support portal if missing.
+<strong><code>powermt restore: No such file or directory</code></strong> — Ensure the powermt.custom backup file exists in the default location <code>/etc/powermt/</code> or specify the full path with <code>powermt restore -f /path/to/powermt.custom</code>.
+<strong><code>powermt: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user since PowerPath configuration changes require elevated privileges.</p>
+</div>
 <h3 id="when-to-run-powermt-restore">When to Run powermt restore<a class="headerlink" href="#when-to-run-powermt-restore" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9192,38 +9289,97 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 </table>
 <h3 id="manually-restore-from-a-configuration-file-backup">Manually Restore from a Configuration File Backup<a class="headerlink" href="#manually-restore-from-a-configuration-file-backup" title="Permanent link">&para;</a></h3>
 <p>If <code>powermt.custom</code> was corrupted or accidentally deleted, restore from the backup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux — restore from a dated backup of powermt.custom</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/etc/powermt.custom.bak-2025-01-15<span class="w"> </span>/etc/powermt.custom
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restart the PowerPath service to pick up the restored file</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>PowerPath
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify the configuration loaded correctly</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux — restore from a dated backup of powermt.custom</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cp<span class="w"> </span>/etc/powermt.custom.bak-2025-01-15<span class="w"> </span>/etc/powermt.custom
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Restart the PowerPath service to pick up the restored file</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>PowerPath
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify the configuration loaded correctly</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>PowerPath Service restarted.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>SYMMETRIX ID: 000297900001
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Logical device count=12
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Array failover mode: Enabled
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Optimization: Symmetrix
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Paths per LUN: 4
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Path Selection Policy: Optimized
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Redundancy (10 mins): Enabled
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Displayed (half) second(s): 5
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Symmetrix ID: 000297900001
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Physical Device Name    Logical Device Name     State   Flags
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>c3t0d0s2                emcpowerb               UP      A,0,1
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>c3t0d0s2                emcpowerc               UP      A,0,1
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>c3t1d0s2                emcpowerd               UP      A,0,1
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>c3t2d0s2                emcpowere               UP      A,0,1
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>c3t3d0s2                emcpowerf               UP      A,0,1
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>c3t4d0s2                emcpowerg               UP      A,0,1
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cp: cannot stat '/etc/powermt.custom.bak-2025-01-15': No such file or directory</code></strong> — Verify the backup file exists with <code>ls -la /etc/powermt.custom.bak-*</code> and use the correct dated filename.
+<strong><code>Failed to restart PowerPath: Unit PowerPath.service not found.</code></strong> — Check the correct service name with <code>systemctl list-units --type=service | grep -i power</code> and use the exact service name.
+<strong><code>powermt: command not found</code></strong> — Ensure PowerPath is installed and its bin directory is in PATH; run <code>/opt/PowerPath/bin/powermt display options</code> with the full path.</p>
+</div>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
 <p>After any restore operation, verify the following:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Confirm policy is correct (CLAROpt for Dell/EMC arrays)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: Policy=CLAROpt(co) or similar for all device classes</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Confirm all paths are alive</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^Pseudo|alive|dead&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Count dead paths — should be zero after a successful restore</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 4. Check HBA port states</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 5. Confirm license is still valid</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>powermt<span class="w"> </span>check_registration
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 6. Compare path count per device against the baseline snapshot</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Open the baseline file and compare device-by-device</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Confirm policy is correct (CLAROpt for Dell/EMC arrays)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Expected: Policy=CLAROpt(co) or similar for all device classes</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># 2. Confirm all paths are alive</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^Pseudo|alive|dead&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># 3. Count dead paths — should be zero after a successful restore</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># 4. Check HBA port states</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># 5. Confirm license is still valid</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 6. Compare path count per device against the baseline snapshot</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Open the baseline file and compare device-by-device</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Pseudo name=emcpowera
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Pseudo name=emcpowerb
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Pseudo name=emcpowerc
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Policy=CLAROpt(co)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Pseudo name=emcpowera
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>alive
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>alive
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>alive
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>dead
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Pseudo name=emcpowerb
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>alive
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>alive
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>alive
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>alive
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Pseudo name=emcpowerc
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>alive
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>alive
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>alive
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>1
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Port ID: fpd0  State: ONLINE  Speed: 8Gb
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>Port ID: fpd1  State: ONLINE  Speed: 8Gb
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>Port ID: fpd2  State: ONLINE  Speed: 8Gb
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>Port ID: fpd3  State: ONLINE  Speed: 8Gb
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>Registration Status: VALID
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>License Expiration: 2026-03-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and add <code>/opt/PowerPath/bin</code> to PATH if needed.
+<strong><code>Registration Status: EXPIRED</code></strong> — Contact Dell EMC support to renew the PowerPath license or the array connectivity will be blocked after the grace period.
+<strong><code>dead</code> count is non-zero after restore</strong> — Run <code>powermt config</code> to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct.</p>
+</div>
 <h3 id="post-restore-checklist">Post-Restore Checklist<a class="headerlink" href="#post-restore-checklist" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] <code>powermt display options</code> — policy matches pre-change baseline (CLAROpt for Dell/EMC arrays)</li>
@@ -9325,7 +9481,7 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:08:41 UTC"><span class="timeago" datetime="2026-06-29T04:08:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:08:41 UTC">2026-06-29</span>
   </span>
 
     

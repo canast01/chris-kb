@@ -8626,6 +8626,22 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct<span class="w">          </span><span class="c1"># hardware detail for CT0 and CT1</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name             Status    Version      Model
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>CT0              OK        6.4.2.1234   FlashArray//X
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>CT1              OK        6.4.2.1234   FlashArray//X
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Name    Slot    Status    Model              Serial
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>CT0     1       OK        FlashArray//X      PUREARRAY123ABC
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>CT1     2       OK        FlashArray//X      PUREARRAY123DEF
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Name    Slot    Status    Model              Serial            Speed
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>CT0     1       OK        FlashArray//X      PUREARRAY123ABC   10Gb/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid controller name 'ct0'. Did you mean 'CT0'?</code></strong> — Use uppercase controller identifiers (CT0, CT1) in Pure Storage commands.
+<strong><code>Error: Connection refused. Is the management IP reachable?</code></strong> — Verify network connectivity to the array management interface and check firewall rules.</p>
+</div>
 <h2 id="directflash-modules-dfm">DirectFlash Modules (DFM)<a class="headerlink" href="#directflash-modules-dfm" title="Permanent link">&para;</a></h2>
 <p>DirectFlash Modules are Pure Storage's proprietary NVMe flash storage units. Unlike commodity SSDs, they expose raw NAND flash directly to Purity OS, allowing Pure's software to manage wear levelling, garbage collection, and data placement at the array level.</p>
 <table>
@@ -8654,14 +8670,46 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w">         </span><span class="c1"># DFM health status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">   </span><span class="c1"># non-healthy drives only</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w">           </span><span class="c1"># capacity and data reduction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w">         </span><span class="c1"># DFM health status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">   </span><span class="c1"># non-healthy drives only</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w">           </span><span class="c1"># capacity and data reduction</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                    Status      Capacity  Serial
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>drive.0                 Healthy     1.92TB    1234567890AB
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>drive.1                 Healthy     1.92TB    1234567890CD
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>drive.2                 Healthy     1.92TB    1234567890EF
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>drive.3                 Healthy     1.92TB    1234567890GH
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>drive.4                 Healthy     1.92TB    1234567890IJ
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>drive.5                 Healthy     1.92TB    1234567890KL
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>...
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Name                    Status      Capacity  Serial
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>drive.12                Predictive  1.92TB    1234567890MN
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>drive.18                Failed      1.92TB    1234567890OP
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Capacity(GB)  Data Reduction  Used(GB)  Free(GB)  Snapshots(GB)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>10240         2.5x            4096      6144      512
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehw: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically <code>/opt/purearray/bin</code>).
+<strong><code>Error: Unable to connect to array</code></strong> — Verify network connectivity to the array management IP and confirm authentication credentials are set via <code>pureauthtoken</code> or environment variables.</p>
+</div>
 <h2 id="nvram-write-cache">NVRAM (Write Cache)<a class="headerlink" href="#nvram-write-cache" title="Permanent link">&para;</a></h2>
 <p>Each controller contains NVRAM — a supercapacitor-backed write cache. Write acknowledged to NVRAM on CT0 <strong>and</strong> CT1 before host ACK — write is safe even if one controller fails immediately after. NVRAM drains to DFM within seconds under normal operation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvram<span class="w">   </span><span class="c1"># NVRAM component health</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvram<span class="w">   </span><span class="c1"># NVRAM component health</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name                          Status    Capacity  Model
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nvram-0                       Healthy   64GB      NVRAM-64G-FC
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>nvram-1                       Healthy   64GB      NVRAM-64G-FC
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>nvram-2                       Healthy   64GB      NVRAM-64G-FC
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>nvram-3                       Healthy   64GB      NVRAM-64G-FC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehw: command not found</code></strong> — Ensure you are logged into the Pure Storage array management interface or have the Pure CLI tools installed and in your PATH.
+<strong><code>grep: (standard input) is empty</code></strong> — Run <code>purehw list</code> without grep to verify the command executes; if empty, the array may not have NVRAM components or the hardware inventory is not populated.</p>
+</div>
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
 <p>Each controller has host-facing connectivity ports and back-end storage ports:</p>
 <table>
@@ -8695,24 +8743,102 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pureport<span class="w"> </span>list<span class="w">                      </span><span class="c1"># all ports and status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureport<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|iSCSI\|NVMe&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">        </span><span class="c1"># port-level performance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pureport<span class="w"> </span>list<span class="w">                      </span><span class="c1"># all ports and status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pureport<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|iSCSI\|NVMe&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">        </span><span class="c1"># port-level performance</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                    Type      Status    Speed
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eth0                    Ethernet  up        10Gb/s
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eth1                    Ethernet  up        10Gb/s
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>fc0                     FC        up        16Gb/s
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>fc1                     FC        up        16Gb/s
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>iscsi0                  iSCSI     up        10Gb/s
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>iscsi1                  iSCSI     up        10Gb/s
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>nvme0                   NVMe      up        100Gb/s
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>nvme1                   NVMe      up        100Gb/s
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>fc0                     FC        up        16Gb/s
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>fc1                     FC        up        16Gb/s
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>iscsi0                  iSCSI     up        10Gb/s
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>iscsi1                  iSCSI     up        10Gb/s
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>nvme0                   NVMe      up        100Gb/s
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>nvme1                   NVMe      up        100Gb/s
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Name                    Type      Status    Throughput    IOPS      Latency
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>eth0                    Ethernet  up        8.2 GB/s      125000    0.8ms
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>eth1                    Ethernet  up        7.9 GB/s      118000    0.9ms
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>fc0                     FC        up        12.1 GB/s     185000    0.6ms
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>fc1                     FC        up        11.8 GB/s     180000    0.7ms
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>iscsi0                  iSCSI     up        6.5 GB/s      98000     1.2ms
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>iscsi1                  iSCSI     up        6.3 GB/s      95000     1.3ms
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>nvme0                   NVMe      up        24.7 GB/s     375000    0.3ms
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>nvme1                   NVMe      up        24.5 GB/s     372000    0.3ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pureport: command not found</code></strong> — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory.
+<strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the array's management IP and that credentials are properly configured.
+<strong><code>Error: Insufficient permissions to list port information</code></strong> — Confirm your user account has the required read permissions for port monitoring on the array.</p>
+</div>
 <h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>ActiveCluster</strong> — synchronous replication between two FlashArray systems; RPO=0, host-transparent failover via a Purity Mediator quorum service; requires ≤5 ms RTT between sites</li>
 <li><strong>Async replication</strong> — snapshot-based asynchronous replication to a remote FlashArray with configurable RPO intervals</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purepod<span class="w"> </span>list<span class="w">                       </span><span class="c1"># ActiveCluster pod status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">           </span><span class="c1"># replication connections</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purepod<span class="w"> </span>list<span class="w">                       </span><span class="c1"># ActiveCluster pod status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">           </span><span class="c1"># replication connections</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name                          Status      Appliance Type    Version
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pod-us-east-1                 Linked      FlashArray//X     6.4.2
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>pod-us-west-2                 Linked      FlashArray//X     6.4.2
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>pod-eu-central-1              Syncing     FlashArray//X     6.4.1
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Name                          Failover Preference    Priority
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>pod-us-east-1                 pod-us-west-2          1
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>pod-us-west-2                 pod-eu-central-1       2
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>pod-eu-central-1              pod-us-east-1          3
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Array Name                    Connected Array           Direction    Status
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>flasharray-prod-01            flasharray-prod-02        Bidirectional    Connected
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>flasharray-prod-02            flasharray-prod-01        Bidirectional    Connected
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>flasharray-prod-03            flasharray-dr-01          Unidirectional   Connected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or API token expired</code></strong> — Re-authenticate using <code>purepod login</code> with valid credentials.
+<strong><code>Error: Pod 'pod-us-east-1' is unreachable</code></strong> — Verify network connectivity to the pod's management IP and check firewall rules.</p>
+</div>
 <h2 id="component-health-summary">Component Health Summary<a class="headerlink" href="#component-health-summary" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purehw<span class="w"> </span>list<span class="w">                            </span><span class="c1"># full hardware inventory and health</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy\|Name\|---&quot;</span><span class="w">   </span><span class="c1"># non-healthy components only</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w">               </span><span class="c1"># open hardware alerts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>purehw<span class="w"> </span>list<span class="w">                            </span><span class="c1"># full hardware inventory and health</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy\|Name\|---&quot;</span><span class="w">   </span><span class="c1"># non-healthy components only</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w">               </span><span class="c1"># open hardware alerts</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>purehw list
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Name                          Status    Temperature  Power  Capacity
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>CH0.FM0.PSU0                  Healthy   N/A          OK     N/A
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>CH0.FM0.PSU1                  Healthy   N/A          OK     N/A
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>CH0.FM0.NVMe0                 Healthy   45°C         OK     3.2TB
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>CH0.FM0.NVMe1                 Healthy   42°C         OK     3.2TB
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>CH0.FM1.PSU0                  Healthy   N/A          OK     N/A
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>CH0.FM1.NVMe0                 Degraded  51°C         WARN   3.2TB
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>CH0.FM1.NVMe1                 Healthy   44°C         OK     3.2TB
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>CH0.FM2.PSU0                  Healthy   N/A          OK     N/A
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>CH0.FM2.PSU1                  Healthy   N/A          OK     N/A
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>purehw list | grep -v &quot;Healthy\|Name\|---&quot;
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>CH0.FM1.NVMe0                 Degraded  51°C         WARN   3.2TB
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>purealert list --flagged
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>AlertID  Severity  Component         Message                              Timestamp
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>12847    WARNING   CH0.FM1.NVMe0     NVMe drive temperature elevated      2024-01-15T09:23:14Z
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>12851    CRITICAL  CH0.FM0.PSU1      Power supply voltage out of range    2024-01-15T10:47:22Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purehw: command not found</code></strong> — Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory.
+<strong><code>purealert: command not found</code></strong> — Verify the Pure Storage CLI package is installed with <code>which purearray</code> to confirm the installation path.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8741,7 +8867,7 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 05:50:29 UTC"><span class="timeago" datetime="2026-06-29T05:50:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 05:50:29 UTC">2026-06-29</span>
   </span>
 
     

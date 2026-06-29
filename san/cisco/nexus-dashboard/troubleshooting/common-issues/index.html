@@ -7763,67 +7763,187 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># If a node shows NotReady: investigate the node-specific issue below</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check NDI pods</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># All should be Running</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.45.22.108
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Nexus Dashboard CLI
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nd-dc1-1#
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check flow collector logs</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|overflow&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check disk usage for NDI data</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-elasticsearch<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h<span class="w"> </span>/usr/share/elasticsearch/data
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># If &gt; 85% full: NDI stops writing new data (Elasticsearch circuit breaker)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nd-dc1-1# acs health
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Cluster Health Status: HEALTHY
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Overall Status: UP
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Services Running: 23/23
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Database Status: HEALTHY
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Last Health Check: 2025-01-15T14:32:45Z
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Replication Status: IN_SYNC
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>nd-dc1-1# acs nodes list
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Node Name          Status    IP Address      Role          CPU Usage  Memory Usage
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>nd-dc1-1           HEALTHY   10.45.20.101    Leader        45%        62%
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>nd-dc1-2           HEALTHY   10.45.20.102    Follower      38%        58%
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>nd-dc1-3           HEALTHY   10.45.20.103    Follower      41%        60%
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>nd-dc1-1# kubectl get nodes
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>NAME       STATUS   ROLES    AGE    VERSION
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>nd-dc1-1   Ready    master   287d   v1.24.8
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>nd-dc1-2   Ready    worker   287d   v1.24.8
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>nd-dc1-3   Ready    worker   287d   v1.24.8
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test remote backup connectivity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Review output for the specific error</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># If SSH key authentication: check if key is still authorized on backup server</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Update the backup configuration if credentials changed:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--key-file<span class="w"> </span>/home/ndadmin/.ssh/nd-backup-key
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify SSH connectivity and that the Nexus Dashboard management IP is reachable from your admin workstation.
+<strong><code>command not found: acs</code></strong> — Ensure you are logged into the Nexus Dashboard CLI (not a standard Linux shell) and have appropriate admin privileges.
+<strong><code>The connection to the server was refused</code></strong> — Restart the Kubernetes API server using <code>acs services restart kubernetes-api</code> if kubectl commands fail despite node connectivity.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NDI pods</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># All should be Running</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check flow collector logs</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|overflow&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check disk usage for NDI data</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-elasticsearch<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h<span class="w"> </span>/usr/share/elasticsearch/data
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If &gt; 85% full: NDI stops writing new data (Elasticsearch circuit breaker)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check ND authentication service logs for SAML errors</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nd-platform<span class="w"> </span>deployment/nd-keycloak<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;saml\|assertion\|redirect&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME                                          READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ndi-elasticsearch-0                           1/1     Running   0          45d
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ndi-elasticsearch-1                           1/1     Running   0          45d
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ndi-flow-collector-7d4c9f2b8-kx9m2           1/1     Running   2          8d
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ndi-flow-collector-7d4c9f2b8-pq6r5           1/1     Running   2          8d
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ndi-kafka-0                                   1/1     Running   0          45d
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ndi-kafka-1                                   1/1     Running   0          45d
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ndi-postgres-0                                1/1     Running   1          45d
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>2024-01-15T09:23:47.123Z WARN [FlowCollector] Packet drop rate 2.3% detected on interface eth0
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>2024-01-15T09:24:12.456Z ERROR [Elasticsearch] Circuit breaker triggered: heap memory at 89%
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>2024-01-15T09:24:15.789Z ERROR [FlowCollector] Failed to write 1247 flow records to Elasticsearch
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>/dev/sda1      500G  437G   48G  88% /usr/share/elasticsearch/data
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check app status</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>acs<span class="w"> </span>apps<span class="w"> </span>status
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to forward port because pod is not running</code></strong> — Verify the pod is in Running state with <code>kubectl get pods -n ndi</code> and wait for readiness probes to complete.
+<strong><code>Circuit breaker triggered: heap memory at 89%</code></strong> — Delete old indices with <code>kubectl exec -n ndi deployment/ndi-elasticsearch -- curl -X DELETE "localhost:9200/ndi-flow-*"</code> or expand storage and increase <code>es.indices.memory.index_buffer_size</code>.
+<strong><code>Failed to write flow records to Elasticsearch</code></strong> — Check Elasticsearch cluster health with <code>kubectl exec -n ndi deployment/ndi-elasticsearch -- curl localhost:9200/_cluster/health</code> and verify all nodes are in green status.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test remote backup connectivity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Review output for the specific error</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Check for pods stuck in Init or Error states</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Describe a stuck pod</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>&lt;pod-name&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check Events section for resource constraints, image pull errors, etc.</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check node resource availability</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>acs<span class="w"> </span>system<span class="w"> </span>resources
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># If nodes are at memory/CPU limit: scale down other apps or add resources</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># If the install image is corrupt:</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>acs<span class="w"> </span>apps<span class="w"> </span>remove-image<span class="w"> </span>&lt;app&gt;<span class="w"> </span>&lt;version&gt;
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Re-upload the image from a fresh download</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># If SSH key authentication: check if key is still authorized on backup server</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Update the backup configuration if credentials changed:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--key-file<span class="w"> </span>/home/ndadmin/.ssh/nd-backup-key
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NTP on all nodes</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If NTP is not synchronised, re-add NTP servers:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Wait 2-3 minutes and check again</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Expected offset: &lt; 100ms</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># If offset is large and nodes cannot sync (isolated network):</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Use chronyc on the node OS to force a step correction:</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>sudo<span class="w"> </span>chronyc<span class="w"> </span>makestep
-</code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Last login: Wed Mar 13 14:22:18 2024 from 10.45.22.108
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Nexus Dashboard Admin&gt; acs backup remote test
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Testing remote backup connectivity to backup-server.corp.example.com...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Connection established successfully
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Authentication method: SSH key
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Remote path: /backups/nexus-dashboard
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Available space: 2.3 TB
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Test backup write: PASSED
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Connection test completed successfully
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Nexus Dashboard Admin&gt; exit
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Connection to nd-dc1-1.corp.example.com closed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ssh: connect to host nd-dc1-1.corp.example.com port 22: Connection timed out</code></strong> — Verify network connectivity and firewall rules allow SSH (port 22) from your admin workstation to the Nexus Dashboard appliance.
+<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the SSH key at <code>/home/ndadmin/.ssh/nd-backup-key</code> exists with correct permissions (600) and the public key is authorized on the backup server.
+<strong><code>Remote path /backups/nexus-dashboard: Permission denied</code></strong> — Verify the nd-bkp user has write permissions on the backup server's target directory using <code>ls -ld /backups/nexus-dashboard</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check ND authentication service logs for SAML errors</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nd-platform<span class="w"> </span>deployment/nd-keycloak<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;saml\|assertion\|redirect&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>2024-01-15 14:32:18,445 INFO [org.keycloak.events] (default task-47) type=LOGIN, realmId=nexus-dashboard, clientId=nd-web, userId=a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6, ipAddress=192.168.1.105, error=invalid_grant
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2024-01-15 14:32:45,221 WARN [org.keycloak.saml] (default task-52) SAML assertion validation failed: Signature does not match
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2024-01-15 14:33:12,667 ERROR [org.keycloak.broker.saml] (default task-61) SAML redirect binding failed: RelayState parameter missing
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2024-01-15 14:33:58,334 INFO [org.keycloak.events] (default task-71) type=LOGIN_ERROR, realmId=nexus-dashboard, clientId=nd-web, error=invalid_saml_response
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-01-15 14:34:22,119 WARN [org.keycloak.saml.binding] (default task-88) Redirect URI mismatch: expected https://nd.example.com/auth/callback, got https://nd.example.com:8443/auth/callback
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-01-15 14:35:01,445 INFO [org.keycloak.events] (default task-95) type=LOGIN, realmId=nexus-dashboard, clientId=nd-web, userId=b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7, ipAddress=192.168.1.110, success
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "deployment"</code></strong> — Verify the correct namespace with <code>kubectl get ns | grep nd</code> and check that Keycloak is deployed as a StatefulSet instead using <code>kubectl get statefulset -n nd-platform</code>.
+<strong><code>No resources found in nd-platform namespace</code></strong> — Confirm the Keycloak pod is running with <code>kubectl get pods -n nd-platform | grep keycloak</code> and verify the namespace name matches your ND installation.
+<strong><code>connection refused</code> or <code>Unable to connect to the server</code></strong> — Ensure kubectl context is set to the correct cluster with <code>kubectl config current-context</code> and verify API server connectivity.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Check app status</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>acs<span class="w"> </span>apps<span class="w"> </span>status
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check for pods stuck in Init or Error states</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Describe a stuck pod</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>&lt;pod-name&gt;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Check Events section for resource constraints, image pull errors, etc.</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Check node resource availability</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>acs<span class="w"> </span>system<span class="w"> </span>resources
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># If nodes are at memory/CPU limit: scale down other apps or add resources</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># If the install image is corrupt:</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>acs<span class="w"> </span>apps<span class="w"> </span>remove-image<span class="w"> </span>&lt;app&gt;<span class="w"> </span>&lt;version&gt;
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Re-upload the image from a fresh download</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.45.22.88
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Cisco Nexus Dashboard
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>nd-dc1-1.corp.example.com#
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>acs apps status
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>App Name          Version    Status      Replicas  Ready
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>dcnm              14.1.1     Running     3         3/3
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ndfc              14.1.1     Running     3         3/3
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>mso               4.2.3      Running     2         2/2
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>ise               3.2.1      Running     1         1/1
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>NAMESPACE         NAME                                    READY   STATUS             RESTARTS   AGE
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>kube-system       coredns-558bd4d5db-7k9m2               1/1     Running            0          45d
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>ndfc              ndfc-api-7d8c9f2b1-4xqp9               0/1     Init:0/1           0          8m
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ndfc              ndfc-db-statefulset-0                  1/1     Running            0          45d
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>mso               mso-orchestrator-5f7c2d9e8-lmk92       0/1     ImagePullBackOff   2          12m
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Name:           ndfc-api-7d8c9f2b1-4xqp9
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Namespace:      ndfc
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Status:         Pending
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Events:
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  Type     Reason                 Age    Message
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  ----     ------                 ----   -------
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>  Warning  FailedScheduling       8m15s  0/3 nodes available: 3 Insufficient memory
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>acs system resources
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>Node Name              CPU Usage    CPU Limit    Memory Usage    Memory Limit
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>nd-dc1-1              2.8 cores    4.0 cores    6.2 GB          8.0 GB
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>nd-dc1-2              3.1 cores    4.0 cores    7.4 GB          8.0 GB
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>nd-dc1-3              2.9 cores    4.0 cores    7.8 GB          8.0 GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>0/3 nodes available: 3 Insufficient memory</code></strong> — Scale down non-critical apps with <code>acs apps scale &lt;app&gt; &lt;replicas&gt;</code> or add memory to cluster nodes.
+<strong><code>ImagePullBackOff</code></strong> — Verify image registry credentials with <code>acs registry status</code> and confirm the image tag exists in your repository.
+<strong><code>CrashLoopBackOff</code></strong> — Check pod logs with <code>kubectl logs -n &lt;namespace&gt; &lt;pod-name&gt;</code> to identify application startup failures.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NTP on all nodes</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># If NTP is not synchronised, re-add NTP servers:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Wait 2-3 minutes and check again</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Expected offset: &lt; 100ms</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># If offset is large and nodes cannot sync (isolated network):</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Use chronyc on the node OS to force a step correction:</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>sudo<span class="w"> </span>chronyc<span class="w"> </span>makestep
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVU7Fu3DAM3f0VRPYb7GS6oYXP5wAHBIcgF7SLF1mmbeJkyRHlBIei39W9X1bKlxYdVKCZROg9kY-PVEcedSBnt-BpGEOWlVu4KW_gG49qRrkVWNnB4PeszAU6L63cGOiQtacWYXZdY5VmMG5g6J0HNc-NrUbUZ7CuQ0nBbvEawdBEgdO5C8l9ooCgbAflPMOBecE0eReF7PI0FhP9Vfx4qODnDzg-P0LnqQ-NPdhX5ECDkmIvi_PLJNL5H5VuJdsXlIcX4KhOe-zQBlKGG_uEG48DcUB_RcnCcZ9OdPeB_qrYQhqJnUezxWMGDiosouP3TAYMcRyCGrOxakKelUYh3HtE6IjPQD3URkn7mlF5PUK_GJMutRpplrW7R-9ag1Na7l6I6a73Ue4TWnwTX-D54QQafaCetJjf2Hdj42z4YjW-LxJfpOYENszAo3tLZ_5vdbUQ6zQS1VXO9uSn6_x61XrSoJ21Qot6rpsk4sVweEXP8lUEn2YVqCVD4RLXQAbhg7Duq8jbQuzCX2_TlT-y7Sfhfh1VAGIII4o90xzc9Dm9Z_FnJJGshM0nKHP5xmtQyDeKwe5PcCvrvgZ3WRXPKpd9W4Mi28dzn8tE16DI6njWuZi4BkX2C4Qqbcc=?" /></p>
@@ -7873,7 +7993,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 13:38:25 UTC"><span class="timeago" datetime="2026-06-29T13:38:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 13:38:25 UTC">2026-06-29</span>
   </span>
 
     

@@ -9379,6 +9379,33 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># LCM version via local API</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://localhost/lcm/apis/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@lcm-prod-01.corp.local:~# systemctl status vrlcm
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>● vrlcm.service - VMware Aria Suite Lifecycle Manager
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>     Loaded: loaded (/etc/systemd/system/vrlcm.service; enabled; vendor preset: enabled)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   Main PID: 2847 (java)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      Tasks: 87 (limit: 4915)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>     Memory: 2.1G
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        CPU: 18min 42.340s
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>     CGroup: /system.slice/vrlcm.service
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>             └─2847 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el8_7.x86_64/bin/java...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>{
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;version&quot;: &quot;8.10.2.0&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;buildNumber&quot;: &quot;21567891&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;releaseDate&quot;: &quot;2024-01-10&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;status&quot;: &quot;RUNNING&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;uptime&quot;: &quot;172800&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;databaseStatus&quot;: &quot;CONNECTED&quot;,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;licenseStatus&quot;: &quot;VALID&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self-signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the LCM certificate into your system's trusted store.
+<strong><code>Connection refused</code></strong> — Verify the LCM service is running with <code>systemctl status vrlcm</code> and check that port 443 is listening with <code>netstat -tlnp | grep 443</code>.
+<strong><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></strong> — Ensure you are SSH'd directly into the LCM appliance and that the vrlcm service has fully started (check logs with <code>journalctl -u vrlcm -n 50</code>).</p>
+</div>
 <p>In the LCM UI:
 1. Click <strong>Settings</strong> → <strong>About</strong> — note the LCM version and build.
 2. Click <strong>Lifecycle Operations</strong> → <strong>Environments</strong> → open the affected environment.
@@ -9401,18 +9428,40 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 <li>Click <strong>Download</strong> when the bundle is ready.</li>
 </ol>
 <p><strong>Method 2 — Via SSH (for when UI is inaccessible):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to the LCM appliance as root</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@&lt;lcm-fqdn&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run the LCM support bundle script</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/usr/lib/vmware-vrlcm/bin/lcm-support.sh
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Bundle is written to /tmp/</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/lcm-support-bundle*.tar.gz
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Copy to a local machine</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>scp<span class="w"> </span>root@&lt;lcm-fqdn&gt;:/tmp/lcm-support-bundle*.tar.gz<span class="w"> </span>/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the LCM appliance as root</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;lcm-fqdn&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run the LCM support bundle script</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/lib/vmware-vrlcm/bin/lcm-support.sh
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Bundle is written to /tmp/</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/lcm-support-bundle*.tar.gz
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Copy to a local machine</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>scp<span class="w"> </span>root@&lt;lcm-fqdn&gt;:/tmp/lcm-support-bundle*.tar.gz<span class="w"> </span>/tmp/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@lcm-prod-01.corp.local:~# /usr/lib/vmware-vrlcm/bin/lcm-support.sh
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Generating LCM support bundle...
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Collecting system logs...
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Collecting LCM configuration...
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Collecting database diagnostics...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Bundle generation completed successfully.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Support bundle saved to: /tmp/lcm-support-bundle-20240115-143022.tar.gz
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>root@lcm-prod-01.corp.local:~# ls -lh /tmp/lcm-support-bundle*.tar.gz
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>-rw-r--r-- 1 root root 487M Jan 15 14:30 /tmp/lcm-support-bundle-20240115-143022.tar.gz
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>root@lcm-prod-01.corp.local:~# exit
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Connection to lcm-prod-01.corp.local closed.
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>$ scp root@lcm-prod-01.corp.local:/tmp/lcm-support-bundle-20240115-143022.tar.gz /tmp/
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>lcm-support-bundle-20240115-143022.tar.gz     100%  487MB   8.2MB/s   00:59
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>/usr/lib/vmware-vrlcm/bin/lcm-support.sh: No such file or directory</code></strong> — Verify the LCM appliance version and confirm the script path with <code>find / -name lcm-support.sh 2&gt;/dev/null</code>.
+<strong><code>scp: ambiguous target</code></strong> — Use the full bundle filename instead of the wildcard, or escape it properly: <code>scp root@&lt;lcm-fqdn&gt;:/tmp/lcm-support-bundle-*.tar.gz /tmp/</code> with quotes around the remote path.</p>
+</div>
 <p>The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.</p>
 <h3 id="4-collect-issue-specific-additional-data">4. Collect issue-specific additional data<a class="headerlink" href="#4-collect-issue-specific-additional-data" title="Permanent link">&para;</a></h3>
 <table>
@@ -9446,22 +9495,22 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 </tbody>
 </table>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM version: 8.14.0 build XXXXXXXX
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Environment: prod-aria-env (Aria Automation 8.16, Aria Operations 8.14, Aria Logs 8.14)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Issue first observed: 2026-06-14 11:00 UTC
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Last known good LCM state: 2026-06-14 10:00 UTC
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Changes in 24h before the issue:
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  - 10:00: Aria Automation upgrade (8.15 → 8.16) initiated from LCM UI
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - 10:45: LCM upgrade request showed 45% progress then stopped responding
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - 11:00: LCM UI became inaccessible; VAMI also timing out
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  - 11:10: SSH to LCM: systemctl status vrlcm shows &quot;activating&quot; — not running
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Request ID of failed operation: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Failed step: &quot;Triggering upgrade on vra-01 node&quot;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Steps already taken:
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  - Did NOT power off the LCM VM
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  - Did NOT retry the upgrade
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  - Did NOT delete any Locker entries
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Blast radius: Aria Automation upgrade incomplete; vRA UI may be in mixed-version state; LCM inaccessible
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>LCM version: 8.14.0 build XXXXXXXX
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Environment: prod-aria-env (Aria Automation 8.16, Aria Operations 8.14, Aria Logs 8.14)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Issue first observed: 2026-06-14 11:00 UTC
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Last known good LCM state: 2026-06-14 10:00 UTC
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Changes in 24h before the issue:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  - 10:00: Aria Automation upgrade (8.15 → 8.16) initiated from LCM UI
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - 10:45: LCM upgrade request showed 45% progress then stopped responding
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - 11:00: LCM UI became inaccessible; VAMI also timing out
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - 11:10: SSH to LCM: systemctl status vrlcm shows &quot;activating&quot; — not running
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Request ID of failed operation: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Failed step: &quot;Triggering upgrade on vra-01 node&quot;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Steps already taken:
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - Did NOT power off the LCM VM
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - Did NOT retry the upgrade
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - Did NOT delete any Locker entries
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Blast radius: Aria Automation upgrade incomplete; vRA UI may be in mixed-version state; LCM inaccessible
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportbroadcomcom">How to Open the SR on support.broadcom.com<a class="headerlink" href="#how-to-open-the-sr-on-supportbroadcomcom" title="Permanent link">&para;</a></h2>
@@ -9520,25 +9569,25 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 </ol>
 <hr />
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Step 1 — Open case at support.broadcom.com with logscraper bundle and request ID attached
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>         ↓
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Step 2 — T1 support engineer acknowledges (Sev1: &lt; 30 min; Sev2: &lt; 2 hr)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         ↓
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>         → Reply: &quot;Requesting escalation to Aria Suite Lifecycle Senior Engineer&quot;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>         → State: &quot;[LCM down / upgrade stuck / product in broken state]&quot;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>         ↓
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Step 4 — LCM T2 Senior Engineer is assigned
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>         → They will request SSH access to the LCM appliance for a live session
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>         → Have root SSH access to the LCM VM and all managed product VMs ready
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>         ↓
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Step 5 — If the issue affects a specific managed product (e.g. Aria Automation in broken state):
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>         → GSS may open a parallel case for that specific product
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>         → The LCM case and the product case are linked internally
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>         ↓
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Step 6 — For Sev1 with LCM down and multiple products affected, unresolved after 2 hours:
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>         → Request CritSit escalation; contact your Broadcom TAM
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>         → TAM convenes a bridge call with LCM and product engineering teams
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Step 1 — Open case at support.broadcom.com with logscraper bundle and request ID attached
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>         ↓
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Step 2 — T1 support engineer acknowledges (Sev1: &lt; 30 min; Sev2: &lt; 2 hr)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>         ↓
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>         → Reply: &quot;Requesting escalation to Aria Suite Lifecycle Senior Engineer&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         → State: &quot;[LCM down / upgrade stuck / product in broken state]&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         ↓
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Step 4 — LCM T2 Senior Engineer is assigned
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>         → They will request SSH access to the LCM appliance for a live session
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>         → Have root SSH access to the LCM VM and all managed product VMs ready
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>         ↓
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Step 5 — If the issue affects a specific managed product (e.g. Aria Automation in broken state):
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>         → GSS may open a parallel case for that specific product
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>         → The LCM case and the product case are linked internally
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>         ↓
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Step 6 — For Sev1 with LCM down and multiple products affected, unresolved after 2 hours:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>         → Request CritSit escalation; contact your Broadcom TAM
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>         → TAM convenes a bridge call with LCM and product engineering teams
 </code></pre></div>
 <hr />
 <h2 id="what-not-to-do">What NOT to Do<a class="headerlink" href="#what-not-to-do" title="Permanent link">&para;</a></h2>
@@ -9585,29 +9634,73 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to LCM appliance as root — paste these into every case update</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># LCM service status</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrlcm
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># LCM version via local API</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://localhost/lcm/apis/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># LCM application log — recent errors</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrlcm/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Upgrade log (if upgrade is in progress or recently failed)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrlcm/upgrade/upgrade.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Disk space (low disk can cause LCM to fail mid-operation)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>df<span class="w"> </span>-h
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Memory usage</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>free<span class="w"> </span>-h
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># VIDM connectivity check from LCM</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vidm-fqdn&gt;/SAAS/API/1.0/REST/system/health/heartbeat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to LCM appliance as root — paste these into every case update</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># LCM service status</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrlcm
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># LCM version via local API</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://localhost/lcm/apis/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># LCM application log — recent errors</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrlcm/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Upgrade log (if upgrade is in progress or recently failed)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vrlcm/upgrade/upgrade.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Disk space (low disk can cause LCM to fail mid-operation)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>df<span class="w"> </span>-h
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Memory usage</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>free<span class="w"> </span>-h
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># VIDM connectivity check from LCM</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vidm-fqdn&gt;/SAAS/API/1.0/REST/system/health/heartbeat
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>● vrlcm.service - VMware vRealize Lifecycle Manager
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>     Loaded: loaded (/etc/systemd/system/vrlcm.service; enabled; vendor preset: enabled)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>   Main PID: 4521 (java)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      Tasks: 87 (limit: 4915)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>     Memory: 2.8G
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        CPU: 18m
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>     CGroup: /system.slice/vrlcm.service
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java -Xmx6g...
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>{
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;version&quot;: &quot;8.13.1.0-23068078&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  &quot;buildNumber&quot;: &quot;23068078&quot;,
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;releaseDate&quot;: &quot;2024-01-10&quot;,
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>}
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>2024-01-18T14:45:22.891Z ERROR [lcm-task-executor-12] com.vmware.lcm.core.service.UpgradeService - Failed to validate product bundle: Invalid checksum detected
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>2024-01-18T14:46:01.234Z EXCEPTION [lcm-api-handler-5] java.io.IOException: Connection timeout to vIDM endpoint
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>/dev/sda1       50G   38G   9.2G  82% /
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>/dev/sda2      100G   45G   52G  46% /storage
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>tmpfs          7.8G     0  7.8G   0% /dev/shm
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>              total        used        free      shared  buff/cache   available
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>Mem:           15Gi       8.2Gi       2.1Gi       512Mi       4.7Gi       6.1Gi
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>Swap:          4.0Gi       1.2Gi       2.8Gi
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>{
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  &quot;status&quot;: &quot;UP&quot;,
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>  &quot;timestamp&quot;: &quot;2024-01-18T14:47:33Z&quot;,
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>  &quot;services&quot;: {
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>    &quot;authentication&quot;: &quot;OPERATIONAL&quot;,
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    &quot;directory&quot;: &quot;OPERATIONAL&quot;
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>  }
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the provided commands).
+<strong><code>Failed to validate product bundle: Invalid checksum detected</code></strong> — Re-download the product bundle from the VMware repository and verify the SHA checksum matches the release notes.
+<strong><code>Connection timeout to vIDM endpoint</code></strong> — Verify network connectivity to the vIDM FQDN, confirm the vIDM appliance is running, and check firewall rules allow HTTPS (port 443) from the LCM appliance.</p>
+</div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9680,7 +9773,7 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

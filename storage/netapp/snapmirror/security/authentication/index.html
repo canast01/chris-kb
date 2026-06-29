@@ -8275,25 +8275,78 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Expected: Auth-Status: ok, Availability: Available</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cluster peer create -generate-passphrase -offer-expiration 2days -peer-addrs 192.168.1.50
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Passphrase: XK9mL2pQ7vN4rT8wJ5bH6cF3dE1sA9gK
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cluster peer create -peer-addrs 192.168.1.40 -passphrase XK9mL2pQ7vN4rT8wJ5bH6cF3dE1sA9gK
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no output — command completes silently)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cluster peer show
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Peer Cluster Name         Cluster UUID                 Availability   Authentication Status
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>------------------------- ---------------------------- -------------- ----------------------
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>dst-cluster-02            4a3c5e8b-9f2d-11ed-a1eb-00505682f89e Available      ok
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50</code></strong> — Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster.
+<strong><code>Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase</code></strong> — Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster.</p>
+</div>
 <h3 id="establishing-an-svm-peer-relationship">Establishing an SVM Peer Relationship<a class="headerlink" href="#establishing-an-svm-peer-relationship" title="Permanent link">&para;</a></h3>
 <p>SVM peering is required before any volume-level relationship can be created. It uses the already-authenticated cluster peer channel and adds SVM-scope trust.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an SVM peer relationship (run on source cluster)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-peer-cluster<span class="w"> </span>dr-cluster<span class="w"> </span>-applications<span class="w"> </span>snapmirror
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Confirm the SVM peer is in the peered state</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vserver<span class="w"> </span>peer<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected: Peer State: peered</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an SVM peer relationship (run on source cluster)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-peer-vserver<span class="w"> </span>svm_dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-peer-cluster<span class="w"> </span>dr-cluster<span class="w"> </span>-applications<span class="w"> </span>snapmirror
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm the SVM peer is in the peered state</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vserver<span class="w"> </span>peer<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: Peer State: peered</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vserver Peer: svm_prod
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>           Peer Vserver: svm_dr
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>           Peer Cluster: dr-cluster
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>           Peer State: peered
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>           Peer Applications: snapmirror
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>           State Description: -
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>           First Seen: 2024-01-15 09:23:14 -05:00
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Vserver Peer: svm_prod
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>           Peer Vserver: svm_dr
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>           Peer Cluster: dr-cluster
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>           Peer State: peered
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>           Peer Applications: snapmirror
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>           State Description: -
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>           First Seen: 2024-01-15 09:23:14 -05:00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Vserver peer relationship already exists.</code></strong> — Check existing peer relationships with <code>vserver peer show</code> and remove the old one using <code>vserver peer delete</code> if needed.
+<strong><code>Error: command failed: Peer cluster dr-cluster is not reachable.</code></strong> — Verify cluster peering exists first with <code>cluster peer show</code> and ensure network connectivity between clusters on port 11104.
+<strong><code>Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.</code></strong> — Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist.</p>
+</div>
 <h3 id="reviewing-and-rotating-peer-authentication">Reviewing and Rotating Peer Authentication<a class="headerlink" href="#reviewing-and-rotating-peer-authentication" title="Permanent link">&para;</a></h3>
 <p>Stale or unused cluster peer relationships should be reviewed annually and removed. Peer relationships persist indefinitely; removing an unused peer eliminates unnecessary trust scope.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all cluster peer relationships and their authentication status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>peer-cluster-name,auth-status,availability
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Remove a stale cluster peer relationship</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cluster<span class="w"> </span>peer<span class="w"> </span>delete<span class="w"> </span>-cluster<span class="w"> </span>&lt;stale-peer-cluster&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Note: all SVM peers and SnapMirror relationships must be deleted first</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all cluster peer relationships and their authentication status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cluster<span class="w"> </span>peer<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>peer-cluster-name,auth-status,availability
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Remove a stale cluster peer relationship</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cluster<span class="w"> </span>peer<span class="w"> </span>delete<span class="w"> </span>-cluster<span class="w"> </span>&lt;stale-peer-cluster&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Note: all SVM peers and SnapMirror relationships must be deleted first</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Peer Cluster Name          Auth Status  Availability
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------------------------  -----------  ----------------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cluster-dr-01              ok           available
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cluster-dr-02              ok           available
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cluster-backup-legacy      expired      unavailable
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cluster-test-sandbox       ok           available
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>4 entries were displayed.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist</code></strong> — Delete all SVM peer relationships with <code>vserver peer delete -vserver &lt;local-svm&gt; -peer-vserver &lt;remote-svm&gt;</code> before removing the cluster peer.
+<strong><code>Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist</code></strong> — Delete all SnapMirror relationships referencing this peer with <code>snapmirror delete -destination-path &lt;dest-svm&gt;:&lt;vol&gt;</code> before removing the cluster peer.</p>
+</div>
 <hr />
 <h2 id="ontap-credential-security-for-replication-management">ONTAP Credential Security for Replication Management<a class="headerlink" href="#ontap-credential-security-for-replication-management" title="Permanent link">&para;</a></h2>
 <p>All SnapMirror management operations (create, update, break, resync) require an authenticated ONTAP session. Follow these controls for service accounts that manage replication:</p>
@@ -8303,80 +8356,117 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 <li>Credentials for service accounts must be stored in a secrets vault (HashiCorp Vault, CyberArk) or the automation platform's credential store — never in plaintext scripts or environment variables in source control</li>
 </ul>
 <h3 id="minimum-privilege-rbac-role-for-snapmirror-automation">Minimum-Privilege RBAC Role for SnapMirror Automation<a class="headerlink" href="#minimum-privilege-rbac-role-for-snapmirror-automation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a role that allows SnapMirror operations but nothing else</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror initialize&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror resync&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror abort&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="c1"># Create the service account using the custom role</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">    </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">    </span>-application<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="c1"># Verify role assignments</span>
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a role that allows SnapMirror operations but nothing else</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror initialize&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror resync&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror abort&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1"># Create the service account using the custom role</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">    </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span>-application<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="c1"># Verify role assignments</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(no output — command completes silently)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>(no output — command completes silently)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>(no output — command completes silently)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>(no output — command completes silently)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>(no output — command completes silently)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>(no output — command completes silently)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>(no output — command completes silently)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Please enter a password for user &quot;svc-snapmirror&quot;:
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Please confirm the password:
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Vserver       User Name              Application Authentication Method Role Name
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>------------- ---------------------- ----------- ---------------------- ----------------
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>prod-cluster  svc-snapmirror         http        password               snapmirror-ops
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: The role "snapmirror-ops" does not exist.</code></strong> — Create the role with the DEFAULT command first before assigning specific command permissions to it.
+<strong><code>Error: command failed: Invalid vserver name "&lt;cluster-name&gt;"</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-dr</code>).
+<strong><code>Error: command failed: User "svc-snapmirror" already exists.</code></strong> — Delete the existing user with <code>security login delete -username svc-snapmirror -vserver &lt;cluster-name&gt;</code> before recreating it.</p>
+</div>
 <h3 id="read-only-monitoring-role">Read-Only Monitoring Role<a class="headerlink" href="#read-only-monitoring-role" title="Permanent link">&para;</a></h3>
 <p>Separate monitoring-only access from operational access. Monitoring tools (Prometheus ONTAP exporter, Zabbix, Nagios) only need <code>snapmirror show</code> and related read-only commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a read-only monitoring role for SnapMirror</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show-history&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror list-destinations&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;event log show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Create the monitoring service account using public key auth (preferred)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>-username<span class="w"> </span>svc-sm-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># Add the monitoring host&#39;s public key</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span>-username<span class="w"> </span>svc-sm-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...monitoring-key&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a read-only monitoring role for SnapMirror</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show-history&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror list-destinations&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;network interface show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;event log show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Create the monitoring service account using public key auth (preferred)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span>-username<span class="w"> </span>svc-sm-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="c1"># Add the monitoring host&#39;s public key</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span>-username<span class="w"> </span>svc-sm-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...monitoring-key&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Role &quot;snapmirror-monitor&quot; created successfully.
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>User &quot;svc-sm-monitor&quot; created successfully.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Public key added for user &quot;svc-sm-monitor&quot;.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: entry already exists</code></strong> — Drop the existing role with <code>security login role delete -role snapmirror-monitor -vserver &lt;cluster-name&gt;</code> before recreating it.
+<strong><code>Error: Invalid public key format</code></strong> — Ensure the public key string is complete and valid; verify it starts with <code>ssh-ed25519</code> or <code>ssh-rsa</code> and contains no line breaks.
+<strong><code>Error: User "svc-sm-monitor" already exists</code></strong> — Delete the existing user with <code>security login delete -username svc-sm-monitor -vserver &lt;cluster-name&gt;</code> before creating a new one.</p>
+</div>
 <hr />
 <h2 id="rest-api-authentication">REST API Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
 <p>ONTAP REST API authentication for SnapMirror automation uses HTTP Basic or cluster-scoped API tokens. For production automation:</p>
@@ -8384,36 +8474,88 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 <li>Use API tokens rather than Basic auth — tokens can be scoped and revoked without changing the account password</li>
 <li>Tokens are created per user account and are cluster-scoped; they do not expire by default but can be manually revoked</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a REST API token (ONTAP 9.12+)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>security<span class="w"> </span>token<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span>-application<span class="w"> </span>http
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Use the token in API calls</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;cluster-mgmt&gt;/api/snapmirror/relationships&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api-token&gt;&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># List existing API tokens</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>security<span class="w"> </span>token<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Revoke a token</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>security<span class="w"> </span>token<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span>-token<span class="w"> </span>&lt;token-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Generate a REST API token (ONTAP 9.12+)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>security<span class="w"> </span>token<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span>-application<span class="w"> </span>http
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Use the token in API calls</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;cluster-mgmt&gt;/api/snapmirror/relationships&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;api-token&gt;&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># List existing API tokens</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>security<span class="w"> </span>token<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Revoke a token</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>security<span class="w"> </span>token<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>svc-snapmirror<span class="w"> </span>-token<span class="w"> </span>&lt;token-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>c83f7e2a-9b4c-4d12-8f3a-2e1b5c7d9a6f
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>100  2847  100  2847    0     0   8934      0 --:--:-- -- 0:00:00 --:--:-- 0:00:00
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>{
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;records&quot;: [
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    {
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>      &quot;uuid&quot;: &quot;550e8400-e29b-41d4-a716-446655440001&quot;,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>      &quot;source&quot;: {&quot;cluster&quot;: &quot;cluster-a&quot;, &quot;svm&quot;: &quot;svm-dr&quot;},
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>      &quot;destination&quot;: {&quot;cluster&quot;: &quot;cluster-b&quot;, &quot;svm&quot;: &quot;svm-dr&quot;},
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>      &quot;state&quot;: &quot;snapmirrored&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>      &quot;healthy&quot;: true
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    },
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    {
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>      &quot;uuid&quot;: &quot;550e8400-e29b-41d4-a716-446655440002&quot;,
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>      &quot;source&quot;: {&quot;cluster&quot;: &quot;cluster-a&quot;, &quot;svm&quot;: &quot;svm-prod&quot;},
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>      &quot;destination&quot;: {&quot;cluster&quot;: &quot;cluster-b&quot;, &quot;svm&quot;: &quot;svm-prod&quot;},
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>      &quot;state&quot;: &quot;snapmirrored&quot;,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>      &quot;healthy&quot;: true
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    }
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  ],
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  &quot;num_records&quot;: 2
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>}
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>Username: svc-snapmirror
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>Token ID                             Application  Expiration
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>------------------------------------ ------------ ----------
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>c83f7e2a-9b4c-4d12-8f3a-2e1b5c7d9a6f http         2025-01-15
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp</code></strong> — Use <code>http</code> (lowercase) or specify <code>ontapi</code> if using ZAPI instead of REST.
+<strong><code>Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0</code></strong> — Upgrade ONTAP to 9.12 or later, or use basic authentication with <code>-u username:password</code> in curl instead.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store.</p>
+</div>
 <hr />
 <h2 id="smbc-mediator-authentication">SMBC Mediator Authentication<a class="headerlink" href="#smbc-mediator-authentication" title="Permanent link">&para;</a></h2>
 <p>SnapMirror Business Continuity (SMBC / AutomatedFailOver) uses the ONTAP Mediator for out-of-band witness and automatic failover decisions. Mediator communication uses certificate-based mutual TLS authentication between the ONTAP clusters and the Mediator VM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Add the ONTAP Mediator to the cluster</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>add<span class="w"> </span>-mediator-address<span class="w"> </span>&lt;mediator-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-username<span class="w"> </span>mediatoradmin
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify mediator is reachable and authenticated from both clusters</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>show
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected output fields:</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Mediator Address  Peer Cluster  Connection Status  Quorum Status</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># &lt;ip&gt;              &lt;peer&gt;        connected           true</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Remove a mediator (e.g., before mediator upgrade)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>remove<span class="w"> </span>-mediator-address<span class="w"> </span>&lt;mediator-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Add the ONTAP Mediator to the cluster</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>add<span class="w"> </span>-mediator-address<span class="w"> </span>&lt;mediator-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-username<span class="w"> </span>mediatoradmin
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Verify mediator is reachable and authenticated from both clusters</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>show
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Expected output fields:</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Mediator Address  Peer Cluster  Connection Status  Quorum Status</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># &lt;ip&gt;              &lt;peer&gt;        connected           true</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Remove a mediator (e.g., before mediator upgrade)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>remove<span class="w"> </span>-mediator-address<span class="w"> </span>&lt;mediator-ip&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Please enter the password for user &quot;mediatoradmin&quot;:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Mediator &quot;192.168.1.45&quot; added successfully.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Mediator Address    Peer Cluster           Connection Status    Quorum Status
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>192.168.1.45        cluster2.example.com   connected            true
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>192.168.1.45        cluster1.example.com   connected            true
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Mediator &quot;192.168.1.45&quot; removed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Mediator address 192.168.1.45 is already configured</code></strong> — Remove the existing mediator entry first using <code>snapmirror mediator remove</code> before re-adding it.
+<strong><code>Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused</code></strong> — Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host.
+<strong><code>Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships</code></strong> — Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal.</p>
+</div>
 <p>Mediator credentials are configured during Mediator VM installation. The Mediator VM password should be stored in a secrets vault and rotated per the password policy. Certificate trust between ONTAP and the Mediator is established at <code>snapmirror mediator add</code> time — certificates are not manually managed.</p>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8444,7 +8586,7 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

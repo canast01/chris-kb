@@ -7752,6 +7752,21 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Retain 30 days</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">&quot;</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.dump&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pg_dump: dumping contents of table public.spaces
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pg_dump: dumping contents of table public.pages
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pg_dump: dumping contents of table public.attachments
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pg_dump: dumping contents of table public.bodycontent
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pg_dump: dumping contents of table public.pageproperties
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pg_dump: dumping contents of table public.notifications
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pg_dump: dumping contents of table public.audit_log
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Backup completed: /backup/confluence/db/confluence_20240115_143022.dump
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pg_dump: error: connection to server at "db.internal.example.com" (10.45.12.8), port 5432 failed: Connection refused</code></strong> — Verify the database host is reachable and PostgreSQL is running with <code>psql -h db.internal.example.com -U confluence -d confluencedb</code>.
+<strong><code>pg_dump: error: FATAL: password authentication failed for user "confluence"</code></strong> — Ensure the <code>DB_PASSWORD</code> environment variable is set correctly before running the script with <code>export DB_PASSWORD="your_password"</code>.
+<strong><code>mkdir: cannot create directory '/backup/confluence/db': Permission denied</code></strong> — Run the script with sudo or change <code>BACKUP_DIR</code> to a location where the current user has write permissions.</p>
+</div>
 <h4 id="pg_dump-format-options"><code>pg_dump</code> Format Options<a class="headerlink" href="#pg_dump-format-options" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -7786,31 +7801,93 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </table>
 <p>Prefer <code>custom</code> format — it supports parallel restore with <code>-j</code> and selective table restore.</p>
 <h3 id="verify-backup-integrity">Verify Backup Integrity<a class="headerlink" href="#verify-backup-integrity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check a custom-format dump without restoring</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pg_restore<span class="w"> </span>--list<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Full verification via test restore to a scratch DB</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>createdb<span class="w"> </span>confluence_verify
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pg_restore<span class="w"> </span>--host<span class="o">=</span>localhost<span class="w"> </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--dbname<span class="o">=</span>confluence_verify<span class="w"> </span>--verbose<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check a custom-format dump without restoring</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_restore<span class="w"> </span>--list<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Full verification via test restore to a scratch DB</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>createdb<span class="w"> </span>confluence_verify
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pg_restore<span class="w"> </span>--host<span class="o">=</span>localhost<span class="w"> </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--dbname<span class="o">=</span>confluence_verify<span class="w"> </span>--verbose<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>; Archive created at 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>;     dbname: confluence_prod
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>;     TOC Entries: 8247
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>;     Compression: 9
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>;     Dump Version: 1.14
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>;     Format: CUSTOM
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>; Dumped from database version 14.7 on 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>; Dumped by pg_dump version 14.7
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>; Selected TOC Entries:
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>3; 2615 2200 SCHEMA public postgres
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>60; 1259 16384 TABLE public attachments postgres
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>61; 1259 16385 TABLE public audit_log postgres
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>62; 1259 16386 TABLE public confluence_content postgres
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>63; 1259 16387 TABLE public confluence_spaces postgres
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>64; 1259 16388 TABLE public user_sessions postgres
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>...
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>8247 entries total
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>CREATE DATABASE
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>restoring table attachments
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>restoring table audit_log
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>restoring table confluence_content
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>restoring table confluence_spaces
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>restoring table user_sessions
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>restoring indexes
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>restoring constraints
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>restoring triggers
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>COMMIT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pg_restore: error: could not connect to database server: FATAL: role "postgres" does not exist</code></strong> — Verify the PostgreSQL superuser exists and the <code>--username</code> parameter matches an actual database role.
+<strong><code>pg_restore: error: input file appears to be a text format dump</code></strong> — Ensure <code>$BACKUP_FILE</code> is a custom-format dump (created with <code>pg_dump -Fc</code>), not a plain SQL text dump.
+<strong><code>ERROR: database "confluence_verify" already exists</code></strong> — Drop the existing test database first with <code>dropdb confluence_verify</code> before running <code>createdb</code>.</p>
+</div>
 <hr />
 <h2 id="filesystem-backup-shared-home">Filesystem Backup — Shared Home<a class="headerlink" href="#filesystem-backup-shared-home" title="Permanent link">&para;</a></h2>
 <p>The shared home contains attachments, the search index, and plugin caches. Back it up <strong>in sync</strong> with the database snapshot (quiesce Confluence or take a crash-consistent snapshot).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># confluence-shared-home-backup.sh</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">&quot;/mnt/confluence-shared&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">BACKUP_DEST</span><span class="o">=</span><span class="s2">&quot;/backup/confluence/shared-home&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>rsync<span class="w"> </span>-av<span class="w"> </span>--delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--exclude<span class="o">=</span><span class="s2">&quot;index/disk-store/&quot;</span><span class="w"> </span><span class="se">\ </span><span class="w">   </span><span class="c1"># Exclude volatile in-memory cache dumps</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$SHARED_HOME</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Shared home backup: </span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># confluence-shared-home-backup.sh</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">&quot;/mnt/confluence-shared&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">BACKUP_DEST</span><span class="o">=</span><span class="s2">&quot;/backup/confluence/shared-home&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rsync<span class="w"> </span>-av<span class="w"> </span>--delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--exclude<span class="o">=</span><span class="s2">&quot;index/disk-store/&quot;</span><span class="w"> </span><span class="se">\ </span><span class="w">   </span><span class="c1"># Exclude volatile in-memory cache dumps</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$SHARED_HOME</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Shared home backup: </span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sending incremental file list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>./
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>attachments/
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>attachments/ver3/
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>attachments/ver3/abc123def456/
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>attachments/ver3/abc123def456/page-12847-v5.pdf
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>attachments/ver3/abc123def456/diagram-2024.png
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>plugins/
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>plugins/installed/
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>plugins/installed/confluence-automation-1.2.3.jar
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>plugins/installed/confluence-pdf-export-2.1.0.jar
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>collaborative-editing-data/
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>collaborative-editing-data/sessions.db
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>config/
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>config/confluence.cfg.xml
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sent 2,847,392 bytes  received 1,204 bytes  speed: 1,245,632 bytes/sec
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>total size is 2,847,392  speedup is 1.00
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Shared home backup: /backup/confluence/shared-home/20240315_143027/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rsync: change_dir "/mnt/confluence-shared" failed: No such file or directory (2)</code></strong> — Verify the SHARED_HOME path exists and is mounted with <code>mount | grep confluence-shared</code>.
+<strong><code>rsync: mkdir "/backup/confluence/shared-home/20240315_143027" failed: Permission denied (13)</code></strong> — Ensure the script runs with sufficient privileges (sudo) and the backup destination directory is writable by the user.
+<strong><code>rsync: write failed on "/backup/confluence/shared-home/20240315_143027/attachments/ver3/abc123def456/page-12847-v5.pdf": No space left on device (28)</code></strong> — Check available disk space on the backup destination with <code>df -h /backup</code> and free up space or expand the volume.</p>
+</div>
 <h3 id="what-to-include-exclude">What to Include / Exclude<a class="headerlink" href="#what-to-include-exclude" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7864,26 +7941,62 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <li>[ ] Check available disk space on target (allow 3x the backup size)</li>
 </ul>
 <h3 id="1-restore-the-database">1. Restore the Database<a class="headerlink" href="#1-restore-the-database" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Drop and recreate the target database (CAUTION: destructive)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS confluencedb;&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE confluencedb OWNER confluence ENCODING &#39;UTF8&#39;;&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Restore from custom-format dump</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>pg_restore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--host<span class="o">=</span>db.internal.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--dbname<span class="o">=</span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--jobs<span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\ </span><span class="w">           </span><span class="c1"># Parallel restore threads</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--verbose<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>/backup/confluence/db/confluence_20260508_020000.dump
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Drop and recreate the target database (CAUTION: destructive)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS confluencedb;&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE confluencedb OWNER confluence ENCODING &#39;UTF8&#39;;&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Restore from custom-format dump</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>pg_restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--host<span class="o">=</span>db.internal.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--dbname<span class="o">=</span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--jobs<span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\ </span><span class="w">           </span><span class="c1"># Parallel restore threads</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--verbose<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>/backup/confluence/db/confluence_20260508_020000.dump
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>DROP DATABASE
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>CREATE DATABASE
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_restore: connecting to database &quot;confluencedb&quot;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pg_restore: creating SCHEMA &quot;public&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pg_restore: creating EXTENSION &quot;plpgsql&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pg_restore: processing data for table &quot;public.spaces&quot;
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pg_restore: processing data for table &quot;public.pages&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pg_restore: processing data for table &quot;public.attachments&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>pg_restore: executing CONSTRAINT &quot;fk_pages_space_id&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>pg_restore: executing INDEX &quot;idx_pages_created_date&quot;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>pg_restore: restoring table data for table &quot;public.audit_log&quot;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>pg_restore: finished main parallel loop
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>pg_restore: completed successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>pg_restore: [archiver] could not open input file "/backup/confluence/db/confluence_20260508_020000.dump": No such file or directory</code></strong> — Verify the backup file path exists and the full filename matches exactly with <code>ls -lh /backup/confluence/db/</code>.
+<strong><code>pg_restore: error: connection to server at "db.internal.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></strong> — Confirm the PostgreSQL server is running on the target host and the hostname/port are correct with <code>psql -h db.internal.example.com -U postgres -c "SELECT version();"</code>.
+<strong><code>pg_restore: error: role "confluence" does not exist</code></strong> — Create the Confluence database owner role first with <code>psql -U postgres -c "CREATE ROLE confluence WITH LOGIN;"</code> before running the restore.</p>
+</div>
 <h3 id="2-restore-the-shared-home">2. Restore the Shared Home<a class="headerlink" href="#2-restore-the-shared-home" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Stop all Confluence nodes first!</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/backup/confluence/shared-home/20260508_020000/<span class="w"> </span>/mnt/confluence-shared/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Fix ownership</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/mnt/confluence-shared/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Stop all Confluence nodes first!</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/backup/confluence/shared-home/20260508_020000/<span class="w"> </span>/mnt/confluence-shared/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Fix ownership</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/mnt/confluence-shared/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>building file list ... done
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>attachments/
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>attachments/ver1/
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>attachments/ver1/abc123def456/
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>attachments/ver1/abc123def456/page-12847.bin
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>attachments/ver1/abc123def456/image-98765.png
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>...
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>sent 2,847,392,156 bytes  received 45,821 bytes  transferred in 847.23 seconds
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rsync: change_dir "/backup/confluence/shared-home/20260508_020000" failed: No such file or directory (2)</code></strong> — Verify the backup directory path exists and the date format matches your actual backup naming convention.
+<strong><code>chown: changing ownership of '/mnt/confluence-shared/': Operation not permitted</code></strong> — Run the command with <code>sudo</code> or ensure you have root privileges before executing chown.
+<strong><code>rsync: [Receiver] mkdir "/mnt/confluence-shared" failed: No such file or directory (2)</code></strong> — Create the destination directory with <code>mkdir -p /mnt/confluence-shared/</code> before running rsync.</p>
+</div>
 <h3 id="3-restore-from-xml-backup-ui">3. Restore from XML Backup (UI)<a class="headerlink" href="#3-restore-from-xml-backup-ui" title="Permanent link">&para;</a></h3>
 <p>If restoring from an XML site backup (small instances or content-only restore):</p>
 <ol>
@@ -7895,26 +8008,52 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <p>This method does <strong>not</strong> restore users if the user directory is external (LDAP/AD). User accounts managed in LDAP are re-synced on directory sync after restore.</p>
 </blockquote>
 <h3 id="4-post-restore-validation">4. Post-Restore Validation<a class="headerlink" href="#4-post-restore-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Start a single Confluence node first</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Tail the log for startup errors</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Check cluster status (if DC)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Admin &gt; General Configuration &gt; Clustering</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. Trigger a search index rebuild if index was not restored</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 5. Verify attachment access — browse to a page with known attachments</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># 6. Confirm email delivery — test via Admin &gt; Mail &gt; Send Test Email</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 7. Review DB connectivity</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/space?limit=5&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Start a single Confluence node first</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Tail the log for startup errors</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Check cluster status (if DC)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Admin &gt; General Configuration &gt; Clustering</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Trigger a search index rebuild if index was not restored</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 5. Verify attachment access — browse to a page with known attachments</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># 6. Confirm email delivery — test via Admin &gt; Mail &gt; Send Test Email</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 7. Review DB connectivity</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/space?limit=5&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Starting Confluence...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Using CATALINA_BASE:   /opt/atlassian/confluence
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Using CATALINA_HOME:   /opt/atlassian/confluence
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Using CATALINA_TMPDIR: /opt/atlassian/confluence/temp
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Using JRE_HOME:        /usr/lib/jvm/java-11-openjdk-amd64
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Using CLASSPATH:       /opt/atlassian/confluence/bin/bootstrap.jar:/opt/atlassian/confluence/bin/tomcat-juli.jar
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Tomcat started.
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>2024-01-15 09:42:33,521 INFO [main] [com.atlassian.confluence.setup.BootstrapManager] Starting Confluence 7.19.17 build 9876
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>2024-01-15 09:42:45,103 INFO [main] [com.atlassian.confluence.cluster.ClusterManager] Cluster mode: ENABLED
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>2024-01-15 09:42:52,187 INFO [main] [com.atlassian.confluence.search.v2.ContentIndexer] Rebuilding search index...
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>2024-01-15 09:43:18,654 INFO [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index rebuild completed: 1247 documents indexed
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>2024-01-15 09:43:25,771 INFO [main] [com.atlassian.confluence.mail.MailQueueManager] Mail queue initialized
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>2024-01-15 09:43:31,442 INFO [main] [com.atlassian.confluence.core.ConfluenceBootstrapManager] Confluence startup completed in 58 seconds
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>100  2847  100  2847    0     0   8234      0 --:--:-- --:--:-- --:--:-- --:--:--  0.0s
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>{&quot;results&quot;:[{&quot;id&quot;:&quot;1234567890&quot;,&quot;key&quot;:&quot;INFRA&quot;,&quot;name&quot;:&quot;Infrastructure&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567891&quot;,&quot;key&quot;:&quot;OPS&quot;,&quot;name&quot;:&quot;Operations&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567892&quot;,&quot;key&quot;:&quot;DOCS&quot;,&quot;name&quot;:&quot;Documentation&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567893&quot;,&quot;key&quot;:&quot;PROJ&quot;,&quot;name&quot;:&quot;Projects&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567894&quot;,&quot;key&quot;:&quot;TEST&quot;,&quot;name&quot;:&quot;Testing&quot;,&quot;type&quot;:&quot;global&quot;}],&quot;start&quot;:0,&quot;limit&quot;:5,&quot;size&quot;:5,&quot;_links&quot;:{&quot;self&quot;:&quot;https://confluence.example.com/rest/api/space?limit=5&quot;}}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or configure proper SSL certificates on the Confluence server.
+<strong><code>ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed</code></strong> — Verify database credentials and connectivity in <code>confluence.cfg.xml</code> and ensure the database service is running and accessible.
+<strong><code>ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected</code></strong> — Delete the corrupted index directory at <code>/var/atlassian/application-data/confluence/index</code> and restart Confluence to rebuild</p>
+</div>
 <hr />
 <h2 id="data-center-backup-best-practices">Data Center Backup Best Practices<a class="headerlink" href="#data-center-backup-best-practices" title="Permanent link">&para;</a></h2>
 <table>
@@ -7960,14 +8099,22 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </tbody>
 </table>
 <h3 id="backup-to-s3-example">Backup to S3 Example<a class="headerlink" href="#backup-to-s3-example" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># After pg_dump completes</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;s3://company-confluence-backups/db/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--kms-key-id<span class="w"> </span>alias/confluence-backup-key
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Lifecycle rule: transition to Glacier after 30 days, expire after 365 days</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># After pg_dump completes</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;s3://company-confluence-backups/db/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--kms-key-id<span class="w"> </span>alias/confluence-backup-key
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Lifecycle rule: transition to Glacier after 30 days, expire after 365 days</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>upload: ./confluence_db_20240315_143022.sql.gz to s3://company-confluence-backups/db/20240315_143022/confluence_db_20240315_143022.sql.gz
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></strong> — Verify the S3 bucket name matches your AWS account and region with <code>aws s3 ls | grep confluence-backups</code>.
+<strong><code>An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:iam::123456789012:user/backup-user is not authorized to perform: s3:PutObject</code></strong> — Add <code>s3:PutObject</code> and <code>kms:Decrypt</code> permissions to the IAM user's policy for the backup bucket and KMS key.
+<strong><code>An error occurred (InvalidKeyId.NotFound) when calling the PutObject operation: Invalid keyId: alias/confluence-backup-key</code></strong> — Confirm the KMS key alias exists with <code>aws kms list-aliases | grep confluence-backup-key</code> and matches your region.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8004,7 +8151,7 @@ This page covers all backup and restore methods for Confluence Data Center: buil
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

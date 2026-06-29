@@ -7667,60 +7667,166 @@ Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify credentials</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vcert<span class="w"> </span>checkcred<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Successfully authenticated to Venafi as a Service
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Credentials saved to: /home/admin/.vcert/credentials.json
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Successfully authenticated to Trust Protection Platform
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Credentials saved to: /home/admin/.vcert/credentials.json
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Session established with tpp.example.com
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Token expires: 2025-02-15T14:32:00Z
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Credentials verified successfully
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Platform: Trust Protection Platform
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>User: admin@example.com
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Status: Valid
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Token expiration: 2025-02-15T14:32:00Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid API key format</code></strong> — Verify the API key is correctly copied from the Venafi console and contains no extra whitespace.
+<strong><code>Error: unable to connect to https://&lt;tpp_fqdn&gt;/vedsdk: connection refused</code></strong> — Confirm the TPP FQDN is correct, the server is running, and network connectivity exists from your client to the TPP instance.
+<strong><code>Error: authentication failed: invalid credentials</code></strong> — Verify the username and password are correct and the user account has not been locked or disabled in TPP.</p>
+</div>
 <hr />
 <h2 id="certificate-requests">Certificate Requests<a class="headerlink" href="#certificate-requests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Request a certificate (TPP)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vcert<span class="w"> </span>enroll<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--zone<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;policy_folder&gt;&quot;</span><span class="w">   </span>--cn<span class="w"> </span>&lt;common_name&gt;<span class="w">   </span>--san-dns<span class="w"> </span>&lt;san1&gt;<span class="w"> </span>--san-dns<span class="w"> </span>&lt;san2&gt;<span class="w">   </span>--key-type<span class="w"> </span>rsa<span class="w"> </span>--key-size<span class="w"> </span><span class="m">2048</span><span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem<span class="w"> </span>--chain-file<span class="w"> </span>chain.pem
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Request a certificate (VaaS)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vcert<span class="w"> </span>enroll<span class="w"> </span>--platform<span class="w"> </span>vaas<span class="w"> </span>--apiKey<span class="w"> </span>&lt;key&gt;<span class="w">   </span>--zone<span class="w"> </span><span class="s2">&quot;&lt;application&gt;\&lt;issuing_template&gt;&quot;</span><span class="w">   </span>--cn<span class="w"> </span>&lt;common_name&gt;<span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Request a certificate (TPP)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vcert<span class="w"> </span>enroll<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--zone<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;policy_folder&gt;&quot;</span><span class="w">   </span>--cn<span class="w"> </span>&lt;common_name&gt;<span class="w">   </span>--san-dns<span class="w"> </span>&lt;san1&gt;<span class="w"> </span>--san-dns<span class="w"> </span>&lt;san2&gt;<span class="w">   </span>--key-type<span class="w"> </span>rsa<span class="w"> </span>--key-size<span class="w"> </span><span class="m">2048</span><span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem<span class="w"> </span>--chain-file<span class="w"> </span>chain.pem
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Request a certificate (VaaS)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vcert<span class="w"> </span>enroll<span class="w"> </span>--platform<span class="w"> </span>vaas<span class="w"> </span>--apiKey<span class="w"> </span>&lt;key&gt;<span class="w">   </span>--zone<span class="w"> </span><span class="s2">&quot;&lt;application&gt;\&lt;issuing_template&gt;&quot;</span><span class="w">   </span>--cn<span class="w"> </span>&lt;common_name&gt;<span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Successfully enrolled certificate.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Certificate: cert.pem
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Private Key: key.pem
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Chain: chain.pem
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Request ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Status: ISSUED
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Common Name: example.com
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Subject Alternative Names: www.example.com, api.example.com
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Key Algorithm: RSA
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Key Size: 2048
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: failed to authenticate to TPP server: invalid token</code></strong> — Verify the token is valid and has not expired by checking TPP token management settings.
+<strong><code>Error: certificate request failed: policy path not found</code></strong> — Confirm the zone path exists in TPP and matches the exact folder structure with correct escaping (e.g., <code>\\VED\\Policy\\Certificates\\&lt;policy_folder&gt;</code>).
+<strong><code>Error: failed to write certificate file: permission denied</code></strong> — Ensure the user running vcert has write permissions to the target directory where cert.pem, key.pem, and chain.pem will be created.</p>
+</div>
 <hr />
 <h2 id="certificate-renewal">Certificate Renewal<a class="headerlink" href="#certificate-renewal" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Renew a certificate by thumbprint</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--thumbprint<span class="w"> </span>&lt;sha1_thumbprint&gt;<span class="w">   </span>--cert-file<span class="w"> </span>renewed.pem<span class="w"> </span>--key-file<span class="w"> </span>renewed-key.pem
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Renew by certificate DN (TPP path)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;policy_folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--cert-file<span class="w"> </span>renewed.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Renew a certificate by thumbprint</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--thumbprint<span class="w"> </span>&lt;sha1_thumbprint&gt;<span class="w">   </span>--cert-file<span class="w"> </span>renewed.pem<span class="w"> </span>--key-file<span class="w"> </span>renewed-key.pem
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Renew by certificate DN (TPP path)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;policy_folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--cert-file<span class="w"> </span>renewed.pem
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Renewing certificate...
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Successfully renewed certificate
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Certificate saved to: renewed.pem
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Private key saved to: renewed-key.pem
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Renewal completed at: 2024-01-15T14:32:18Z
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Certificate details:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Subject: CN=app.example.com,O=Acme Corp,C=US
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Issuer: CN=Venafi Test CA,O=Venafi,C=US
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Valid from: 2024-01-15 to 2025-01-15
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid thumbprint format</code></strong> — Ensure the thumbprint is a valid SHA-1 hash (40 hexadecimal characters) without spaces or special characters.
+<strong><code>Error: authentication failed: invalid token</code></strong> — Verify the token is current and has not expired by checking TPP token validity or regenerating a new authentication token.
+<strong><code>Error: certificate not found at specified DN path</code></strong> — Confirm the DN path exists in TPP by navigating to the policy folder in the Venafi console and verifying the exact certificate path.</p>
+</div>
 <hr />
 <h2 id="certificate-retrieval">Certificate Retrieval<a class="headerlink" href="#certificate-retrieval" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Retrieve an existing certificate</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vcert<span class="w"> </span>retrieve<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem<span class="w"> </span>--chain-file<span class="w"> </span>chain.pem
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Retrieve in PKCS#12 format</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vcert<span class="w"> </span>retrieve<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--format<span class="w"> </span>pkcs12<span class="w"> </span>--file<span class="w"> </span>cert.p12<span class="w"> </span>--password<span class="w"> </span>&lt;p12_pass&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Retrieve an existing certificate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vcert<span class="w"> </span>retrieve<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--cert-file<span class="w"> </span>cert.pem<span class="w"> </span>--key-file<span class="w"> </span>key.pem<span class="w"> </span>--chain-file<span class="w"> </span>chain.pem
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Retrieve in PKCS#12 format</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vcert<span class="w"> </span>retrieve<span class="w"> </span>--platform<span class="w"> </span>tpp<span class="w"> </span>--url<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk<span class="w">   </span>-t<span class="w"> </span>&lt;token&gt;<span class="w">   </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;</span><span class="w">   </span>--format<span class="w"> </span>pkcs12<span class="w"> </span>--file<span class="w"> </span>cert.p12<span class="w"> </span>--password<span class="w"> </span>&lt;p12_pass&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Successfully retrieved certificate.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Certificate: cert.pem
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Private Key: key.pem
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Chain: chain.pem
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Successfully retrieved certificate.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Certificate: cert.p12
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: invalid credentials</code></strong> — Verify the token is valid and has not expired by checking TPP token management or regenerating a new token.
+<strong><code>Error: certificate not found at path \VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;</code></strong> — Confirm the certificate path exists in TPP by navigating to the policy folder and checking the exact certificate object name.
+<strong><code>Error: permission denied writing to cert.pem</code></strong> — Ensure the output directory is writable and the user running vcert has write permissions to the target location.</p>
+</div>
 <hr />
 <h2 id="tpp-rest-api">TPP REST API<a class="headerlink" href="#tpp-rest-api" title="Permanent link">&para;</a></h2>
 <p>The TPP REST API base URL is <code>https://&lt;tpp_fqdn&gt;/vedsdk</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate and get token</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedauth/authorize/integrated<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;Username&quot;:&quot;&lt;user&gt;&quot;,&quot;Password&quot;:&quot;&lt;pass&gt;&quot;,&quot;client_id&quot;:&quot;vcert-cli&quot;,&quot;scope&quot;:&quot;certificate:manage,delete,discover&quot;}&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List certificates in a policy folder</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk/certificates/retrieve<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;}&#39;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Get certificate details</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;tpp_fqdn&gt;/vedsdk/certificates/&lt;cert_guid&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Request a new certificate</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk/certificates/request<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;,&quot;Subject&quot;:&quot;CN=&lt;cn&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedauth/authorize/integrated<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;Username&quot;:&quot;&lt;user&gt;&quot;,&quot;Password&quot;:&quot;&lt;pass&gt;&quot;,&quot;client_id&quot;:&quot;vcert-cli&quot;,&quot;scope&quot;:&quot;certificate:manage,delete,discover&quot;}&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List certificates in a policy folder</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk/certificates/retrieve<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;}&#39;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Get certificate details</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;tpp_fqdn&gt;/vedsdk/certificates/&lt;cert_guid&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Request a new certificate</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;tpp_fqdn&gt;/vedsdk/certificates/request<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;X-Venafi-Api-Key: &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;,&quot;Subject&quot;:&quot;CN=&lt;cn&gt;&quot;}&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{&quot;access_token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNjgwMH0.x7K9mN2pQ5vW8zL1&quot;,&quot;token_type&quot;:&quot;Bearer&quot;,&quot;expires_in&quot;:3600}
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>{&quot;Certificates&quot;:[{&quot;Guid&quot;:&quot;a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;,&quot;Name&quot;:&quot;web-prod-01.example.com&quot;,&quot;Subject&quot;:&quot;CN=web-prod-01.example.com&quot;,&quot;Issuer&quot;:&quot;CN=Internal CA&quot;,&quot;ValidFrom&quot;:&quot;2024-01-15T10:30:00Z&quot;,&quot;ValidUntil&quot;:&quot;2025-01-15T10:30:00Z&quot;},{&quot;Guid&quot;:&quot;b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7&quot;,&quot;Name&quot;:&quot;api-staging.example.com&quot;,&quot;Subject&quot;:&quot;CN=api-staging.example.com&quot;,&quot;Issuer&quot;:&quot;CN=Internal CA&quot;,&quot;ValidFrom&quot;:&quot;2024-02-01T14:22:00Z&quot;,&quot;ValidUntil&quot;:&quot;2025-02-01T14:22:00Z&quot;}],&quot;Count&quot;:2}
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>{&quot;Guid&quot;:&quot;a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6&quot;,&quot;Name&quot;:&quot;web-prod-01.example.com&quot;,&quot;Subject&quot;:&quot;CN=web-prod-01.example.com,O=Example Corp,C=US&quot;,&quot;Issuer&quot;:&quot;CN=Internal CA,O=Example Corp,C=US&quot;,&quot;ValidFrom&quot;:&quot;2024-01-15T10:30:00Z&quot;,&quot;ValidUntil&quot;:&quot;2025-01-15T10:30:00Z&quot;,&quot;Thumbprint&quot;:&quot;3F2504E0A27EA1D01D4F0368B0EE4B92E94C57D8&quot;,&quot;Status&quot;:&quot;Active&quot;}
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>{&quot;Guid&quot;:&quot;c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8&quot;,&quot;CertificateRequestId&quot;:&quot;req-2024-031847&quot;,&quot;Status&quot;:&quot;Pending&quot;,&quot;Subject&quot;:&quot;CN=newapp.example.com&quot;,&quot;CreatedDate&quot;:&quot;2024-03-18T09:45:22Z&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"Error":"Unauthorized","Code":401}</code></strong> — Verify credentials are correct and the user account has API access permissions in Venafi TPP.
+<strong><code>{"Error":"Invalid policy path","Code":400}</code></strong> — Ensure the PolicyDN path uses correct escaping (double backslashes) and the folder exists in the certificate policy tree.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl or configure proper CA certificates if using self-signed TPP certificates in non-production environments.</p>
+</div>
 <hr />
 <h2 id="certificate-inspection-openssl">Certificate Inspection (openssl)<a class="headerlink" href="#certificate-inspection-openssl" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify a retrieved certificate</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check certificate matches the private key</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>key.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Verify certificate chain</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>cert.pem
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Test TLS with the certificate</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;host&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify a retrieved certificate</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check certificate matches the private key</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>key.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Verify certificate chain</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>cert.pem
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Test TLS with the certificate</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;host&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Subject: CN = example.acme.com, O = ACME Corporation, C = US
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Issuer: CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Not After : Dec 15 10:30:45 2025 GMT
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>5d41402abc4b2a76b9719d911017c592
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>5d41402abc4b2a76b9719d911017c592
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>cert.pem: OK
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>depth=0 self signed certificate
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>verify return:1
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>---
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Certificate chain
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a> 0 s:CN = example.acme.com, O = ACME Corporation, C = US
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>   i:CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>-----BEGIN CERTIFICATE-----
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>MIIFWTCCBEGgAwIBAgIQD8CSqAc+TEwrlXuwMlqWDDANBgkqhkiG9w0BAQsFADB
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>...
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>-----END CERTIFICATE-----
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>subject=CN = example.acme.com, O = ACME Corporation, C = US
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>issuer=CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Verify the certificate file path is correct and the file contains valid PEM-formatted data.
+<strong><code>unable to load Private Key</code></strong> — Ensure the private key file exists, is readable, and matches the certificate's key pair.
+<strong><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Add the complete certificate chain (intermediate and root CA) to the chain.pem file in the correct order.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7759,7 +7865,7 @@ Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

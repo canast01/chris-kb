@@ -9130,64 +9130,193 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span>--organizational-unit<span class="w"> </span><span class="s2">&quot;OU=StorageServers,OU=Servers,DC=corp,DC=example,DC=com&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Creating AD domain join for zone &#39;ProdZone&#39;...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Successfully joined domain CORP.EXAMPLE.COM in zone ProdZone
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Domain: CORP.EXAMPLE.COM
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Zone: ProdZone
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Status: Online
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>NetBIOS Name: CORP
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Creating AD domain join for System zone...
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Successfully joined domain CORP.EXAMPLE.COM in zone System
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Domain: CORP.EXAMPLE.COM
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Zone: System
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Status: Online
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NetBIOS Name: CORP
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Creating AD domain join with organizational unit...
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Successfully joined domain CORP.EXAMPLE.COM in zone System
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Domain: CORP.EXAMPLE.COM
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Zone: System
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Organizational Unit: OU=StorageServers,OU=Servers,DC=corp,DC=example,DC=com
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Status: Online
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>NetBIOS Name: CORP
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials for user 'svc-isilon-join'</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
+<strong><code>Error: Cannot resolve domain name CORP.EXAMPLE.COM</code></strong> — Ensure DNS is properly configured on the PowerScale cluster and can resolve the AD domain name.
+<strong><code>Error: Zone 'ProdZone' does not exist</code></strong> — Confirm the access zone name exists by running <code>isi zones list</code> before attempting to join.</p>
+</div>
 <blockquote>
 <p>Use a dedicated service account for the AD join. The account only needs permissions to join computers to the specified OU. Revoke the password after the join is complete — the cluster uses the machine account for ongoing Kerberos operations.</p>
 </blockquote>
 <h3 id="managing-ad-providers">Managing AD Providers<a class="headerlink" href="#managing-ad-providers" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List AD providers (all zones)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List AD providers for a specific zone</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># View AD provider details (join status, domain controller, SPN)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check AD connectivity and Kerberos ticket status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>check<span class="w"> </span>CORP.EXAMPLE.COM
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Force re-authentication with the domain controller</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>update<span class="w"> </span>CORP.EXAMPLE.COM
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Remove an AD provider from a zone</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>delete<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-</code></pre></div>
-<h3 id="ad-provider-settings">AD Provider Settings<a class="headerlink" href="#ad-provider-settings" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current AD provider configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List AD providers (all zones)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Modify an AD provider — change DC lookup mode</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--domain-controller<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Configure AD to enumerate all trusted domains</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--lookup-groups<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--lookup-users<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Set a specific site for DC selection (useful in multi-site environments)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--site<span class="w"> </span>LondonDC<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List AD providers for a specific zone</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># View AD provider details (join status, domain controller, SPN)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check AD connectivity and Kerberos ticket status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>check<span class="w"> </span>CORP.EXAMPLE.COM
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Force re-authentication with the domain controller</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>update<span class="w"> </span>CORP.EXAMPLE.COM
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Remove an AD provider from a zone</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>delete<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
-<h3 id="ad-troubleshooting">AD Troubleshooting<a class="headerlink" href="#ad-troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test AD authentication for a specific user</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>CORP<span class="se">\\</span>testuser<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check group memberships resolve correctly</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span><span class="s2">&quot;CORP\\Domain Users&quot;</span><span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify the machine account is healthy in AD</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>check<span class="w"> </span>CORP.EXAMPLE.COM
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># isi auth ads list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CORP.EXAMPLE.COM
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SALES.EXAMPLE.COM
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>DEV.EXAMPLE.COM
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># isi auth ads list --zone ProdZone
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>CORP.EXAMPLE.COM
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SALES.EXAMPLE.COM
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check for Kerberos ticket issues</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>update<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--update-password<span class="w"> </span>yes
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Review auth provider events</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;auth\|kerberos\|AD&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># isi auth ads view CORP.EXAMPLE.COM --zone ProdZone
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Name: CORP.EXAMPLE.COM
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Zone: ProdZone
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Status: JOINED
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Domain Controller: dc01.corp.example.com (192.168.1.50)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>SPN: host/isi-cluster-01.corp.example.com@CORP.EXAMPLE.COM
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Kerberos Realm: CORP.EXAMPLE.COM
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Last Updated: 2024-01-15T09:42:31Z
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a># isi auth ads check CORP.EXAMPLE.COM
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Connectivity Status: OK
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Kerberos Ticket Status: VALID
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Ticket Expiration: 2024-01-22T14:30:00Z
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Domain Controller Response Time: 45ms
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a># isi auth ads update CORP.EXAMPLE.COM
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Re-authentication initiated for CORP.EXAMPLE.COM
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Status: SUCCESS
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a># isi auth ads delete CORP.EXAMPLE.COM --zone ProdZone
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>AD provider CORP.EXAMPLE.COM removed from zone ProdZone
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: AD provider CORP.EXAMPLE.COM not found in zone ProdZone</code></strong> — Verify the AD provider exists in the specified zone using <code>isi auth ads list --zone ProdZone</code>.
+<strong><code>Error: Cannot delete AD provider - still in use by authentication policies</code></strong> — Remove all authentication policies referencing this AD provider before deletion.
+<strong><code>Error: Domain controller unreachable - connection timeout</code></strong> — Verify network connectivity to the domain controller and confirm firewall rules allow LDAP/Kerberos traffic on ports 389/636 and 88.</p>
+</div>
+<h3 id="ad-provider-settings">AD Provider Settings<a class="headerlink" href="#ad-provider-settings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current AD provider configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>-v
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Modify an AD provider — change DC lookup mode</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--domain-controller<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Configure AD to enumerate all trusted domains</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>--lookup-groups<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>--lookup-users<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Set a specific site for DC selection (useful in multi-site environments)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>modify<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span>--site<span class="w"> </span>LondonDC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name: CORP.EXAMPLE.COM
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Domain: corp.example.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Realm: CORP.EXAMPLE.COM
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Domain Controllers: dc01.corp.example.com, dc02.corp.example.com
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Site: Default-First-Site-Name
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Lookup Groups: yes
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Lookup Users: yes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Check Online Status: yes
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Enumerate Trusted Domains: no
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Zone: System
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>AD provider CORP.EXAMPLE.COM modified successfully.
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Zone: ProdZone
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Domain Controller: dc01.corp.example.com
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>AD provider CORP.EXAMPLE.COM modified successfully.
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Lookup Groups: yes
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Lookup Users: yes
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Zone: ProdZone
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>AD provider CORP.EXAMPLE.COM modified successfully.
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Site: LondonDC
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Zone: ProdZone
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: AD provider 'CORP.EXAMPLE.COM' not found</code></strong> — Verify the AD provider name matches exactly (case-sensitive) using <code>isi auth ads list</code>.
+<strong><code>Error: Invalid zone 'ProdZone': zone does not exist</code></strong> — Create the zone first with <code>isi zone zones create --name ProdZone</code> or use an existing zone name.
+<strong><code>Error: Cannot resolve domain controller 'dc01.corp.example.com'</code></strong> — Ensure DNS resolution is working and the DC hostname is reachable from the cluster using <code>nslookup dc01.corp.example.com</code>.</p>
+</div>
+<h3 id="ad-troubleshooting">AD Troubleshooting<a class="headerlink" href="#ad-troubleshooting" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test AD authentication for a specific user</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>CORP<span class="se">\\</span>testuser<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check group memberships resolve correctly</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span><span class="s2">&quot;CORP\\Domain Users&quot;</span><span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify the machine account is healthy in AD</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>check<span class="w"> </span>CORP.EXAMPLE.COM
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check for Kerberos ticket issues</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>update<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--update-password<span class="w"> </span>yes
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Review auth provider events</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;auth\|kerberos\|AD&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>User: CORP\testuser
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  UID: 1001
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  GID: 1001
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Home Directory: /ifs/home/testuser
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Shell: /bin/bash
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Enabled: true
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Provider: CORP.EXAMPLE.COM
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Group: CORP\Domain Users
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  GID: 513
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Members: 2847
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Provider: CORP.EXAMPLE.COM
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>AD Domain Check: CORP.EXAMPLE.COM
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Status: HEALTHY
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  Machine Account: CORP-POWERSCALE-01$
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Last Password Sync: 2024-01-15T09:32:14Z
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Kerberos Realm: CORP.EXAMPLE.COM
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Password update initiated for CORP.EXAMPLE.COM
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  Status: SUCCESS
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  New password synced to domain controller
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  Next sync scheduled: 2024-02-15T09:32:14Z
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Event ID 12847 | 2024-01-15T10:22:33Z | AUTH_PROVIDER_SYNC | Success | Machine account password rotated
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Event ID 12831 | 2024-01-15T09:15:22Z | KERBEROS_TICKET | Success | User testuser obtained TGT
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>Event ID 12798 | 2024-01-14T14:47:09Z | AD_LOOKUP | Success | Group resolution completed for CORP\Domain Users
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to resolve user CORP\\testuser in zone ProdZone</code></strong> — Verify the user exists in Active Directory and that the AD provider is configured for the ProdZone using <code>isi auth providers view --zone ProdZone</code>.
+<strong><code>Error: AD domain check failed - UNHEALTHY status detected</code></strong> — Reset the machine account password with <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> and verify network connectivity to domain controllers.
+<strong><code>Error: Kerberos ticket not found for user</code></strong> — Ensure the user's password is synchronized and run <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> to refresh the machine account credentials.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -9222,129 +9351,294 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 <hr />
 <h2 id="ldap">LDAP<a class="headerlink" href="#ldap" title="Permanent link">&para;</a></h2>
 <h3 id="adding-an-ldap-provider">Adding an LDAP Provider<a class="headerlink" href="#adding-an-ldap-provider" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Basic LDAP provider (anonymous bind)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--server<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># LDAP with authenticated bind (recommended)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>--server<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span>--bind-dn<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span>--bind-password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># LDAPS (TLS-encrypted LDAP)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod-tls<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span>--server<span class="w"> </span>ldaps://ldap.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>--bind-dn<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span>--bind-password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span>--tls-revocation-check-level<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># Add a secondary LDAP server for failover</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">    </span>--add-server<span class="w"> </span>ldap://ldap2.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Basic LDAP provider (anonymous bind)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--server<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># LDAP with authenticated bind (recommended)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>--server<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>--bind-dn<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>--bind-password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># LDAPS (TLS-encrypted LDAP)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>--name<span class="w"> </span>ldap-prod-tls<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>--server<span class="w"> </span>ldaps://ldap.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span>--bind-dn<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span>--bind-password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span>--tls-revocation-check-level<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1"># Add a secondary LDAP server for failover</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">    </span>--add-server<span class="w"> </span>ldap://ldap2.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Created LDAP provider &#39;ldap-prod&#39;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Name: ldap-prod
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Server(s): ldap://ldap.example.com
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Base DN: dc=example,dc=com
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Zone: ProdZone
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Bind DN: cn=isilon-svc,ou=service-accounts,dc=example,dc=com
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Anonymous Bind: false
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Created LDAP provider &#39;ldap-prod-tls&#39;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Name: ldap-prod-tls
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  Server(s): ldaps://ldap.example.com:636
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Base DN: dc=example,dc=com
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  Zone: ProdZone
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Bind DN: cn=isilon-svc,ou=service-accounts,dc=example,dc=com
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  TLS Revocation Check: none
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Modified LDAP provider &#39;ldap-prod&#39;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  Name: ldap-prod
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  Server(s): ldap://ldap.example.com, ldap://ldap2.example.com
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  Base DN: dc=example,dc=com
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  Zone: ProdZone
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  Failover Enabled: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: LDAP server ldap.example.com is unreachable on port 389</code></strong> — Verify network connectivity to the LDAP server and confirm the hostname/IP and port are correct.
+<strong><code>Error: Invalid bind credentials for cn=isilon-svc,ou=service-accounts,dc=example,dc=com</code></strong> — Confirm the bind DN and password are correct and the service account has permission to query the LDAP directory.
+<strong><code>Error: Certificate verification failed for ldaps://ldap.example.com:636</code></strong> — Import the LDAP server's CA certificate into the PowerScale cluster trust store or set <code>--tls-revocation-check-level none</code> if appropriate for your environment.</p>
+</div>
 <h3 id="ldap-configuration-options">LDAP Configuration Options<a class="headerlink" href="#ldap-configuration-options" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View LDAP provider configuration</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>view<span class="w"> </span>ldap-prod<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Modify user and group search bases</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--user-search-dn<span class="w"> </span><span class="s2">&quot;ou=users,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--group-search-dn<span class="w"> </span><span class="s2">&quot;ou=groups,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Configure custom LDAP attribute mappings (if using non-standard schemas)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span>--user-uid-attribute<span class="w"> </span>sAMAccountName<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span>--user-gid-attribute<span class="w"> </span>gidNumber<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Set LDAP search scope</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span>--search-scope<span class="w"> </span>subtree<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Test LDAP provider connectivity and user lookup</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>ldap-prod<span class="se">\\</span>testuser<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View LDAP provider configuration</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>view<span class="w"> </span>ldap-prod<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Modify user and group search bases</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>--user-search-dn<span class="w"> </span><span class="s2">&quot;ou=users,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>--group-search-dn<span class="w"> </span><span class="s2">&quot;ou=groups,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Configure custom LDAP attribute mappings (if using non-standard schemas)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>--user-uid-attribute<span class="w"> </span>sAMAccountName<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>--user-gid-attribute<span class="w"> </span>gidNumber<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Set LDAP search scope</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>ldap<span class="w"> </span>modify<span class="w"> </span>ldap-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span>--search-scope<span class="w"> </span>subtree<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Test LDAP provider connectivity and user lookup</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>ldap-prod<span class="se">\\</span>testuser<span class="w"> </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>LDAP Provider: ldap-prod
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Server URI: ldap://ldap-prod.example.com:389
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Bind DN: cn=admin,dc=example,dc=com
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  User Search Base: ou=users,dc=example,dc=com
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Group Search Base: ou=groups,dc=example,dc=com
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Search Scope: subtree
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  TLS: disabled
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  Status: connected
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Modify operation completed successfully.
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Modify operation completed successfully.
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Modify operation completed successfully.
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>User: testuser
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  UID: 1005
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  GID: 1005
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  Full Name: Test User
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  Home Directory: /home/testuser
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Shell: /bin/bash
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>  Provider: ldap-prod
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  Status: active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: LDAP provider 'ldap-prod' not found in zone 'ProdZone'</code></strong> — Verify the LDAP provider name matches exactly and exists in the specified zone using <code>isi auth ldap list --zone ProdZone</code>.
+<strong><code>Error: User 'ldap-prod\testuser' not found</code></strong> — Confirm the user exists in LDAP, the search base is correct, and LDAP connectivity is working by checking <code>isi auth ldap view ldap-prod --zone ProdZone</code> for connection status.
+<strong><code>Error: Invalid search scope 'subtree': valid values are 'base', 'onelevel', 'subtree'</code></strong> — Use one of the valid search scope values; 'subtree' is typically correct for most LDAP configurations.</p>
+</div>
 <h3 id="ldap-troubleshooting">LDAP Troubleshooting<a class="headerlink" href="#ldap-troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check provider status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify LDAP server reachability from cluster</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># (run on any cluster node as root)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="s2">&quot;(uid=testuser)&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># View auth events for LDAP errors</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ldap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check provider status</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Verify LDAP server reachability from cluster</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># (run on any cluster node as root)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://ldap.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">&quot;cn=isilon-svc,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="s2">&quot;(uid=testuser)&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># View auth events for LDAP errors</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ldap
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Check provider status
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ID                  Name            Status   Zone
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>1                   local           active   ProdZone
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>2                   ldap-prod       active   ProdZone
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>3                   nis-legacy      inactive ProdZone
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a># Verify LDAP server reachability from cluster
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>dn: uid=testuser,ou=users,dc=example,dc=com
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>uid: testuser
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>cn: Test User
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>mail: testuser@example.com
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>objectClass: inetOrgPerson
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>objectClass: posixAccount
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a># View auth events for LDAP errors
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>2024-01-15T14:32:18Z  LDAP_BIND_SUCCESS    Provider=ldap-prod  User=isilon-svc
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>2024-01-15T14:15:42Z  LDAP_QUERY_SUCCESS   Provider=ldap-prod  Filter=(uid=testuser)
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>2024-01-15T13:48:09Z  LDAP_TIMEOUT_WARN    Provider=ldap-prod  Timeout=5000ms
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>2024-01-15T12:22:33Z  LDAP_BIND_SUCCESS    Provider=ldap-prod  User=isilon-svc
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ldapsearch: No such object</code></strong> — Verify the base DN (dc=example,dc=com) matches your directory structure and that the bind user has search permissions.
+<strong><code>ldapsearch: Can't contact LDAP server</code></strong> — Confirm the LDAP server hostname/IP is correct, the service is running on port 389 (or 636 for LDAPS), and cluster network connectivity is not blocked by firewall rules.
+<strong><code>isi: command not found</code></strong> — Run commands directly on a PowerScale cluster node (SSH as root); these commands are not available on external management stations.</p>
+</div>
 <hr />
 <h2 id="nis">NIS<a class="headerlink" href="#nis" title="Permanent link">&para;</a></h2>
 <p>NIS is supported for legacy Unix environments, typically alongside LDAP or AD for full user and group resolution.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Add a NIS provider</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--name<span class="w"> </span>nis-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--servers<span class="w"> </span>nis.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--domain<span class="w"> </span>example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># List NIS providers</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>list
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># View NIS provider details</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>view<span class="w"> </span>nis-prod
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Remove a NIS provider</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>delete<span class="w"> </span>nis-prod<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Add a NIS provider</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--name<span class="w"> </span>nis-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--servers<span class="w"> </span>nis.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--domain<span class="w"> </span>example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># List NIS providers</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>list
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># View NIS provider details</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>view<span class="w"> </span>nis-prod
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Remove a NIS provider</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>isi<span class="w"> </span>auth<span class="w"> </span>nis<span class="w"> </span>delete<span class="w"> </span>nis-prod<span class="w"> </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Created NIS provider &#39;nis-prod&#39;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Name                  Servers              Domain           Zone
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>nis-prod              nis.example.com      example.com      ProdZone
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Name: nis-prod
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Servers: nis.example.com
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Domain: example.com
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Zone: ProdZone
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Enabled: True
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Timeout: 5
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Retry: 2
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Deleted NIS provider &#39;nis-prod&#39;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: NIS provider 'nis-prod' already exists</code></strong> — Use <code>isi auth nis delete nis-prod --zone ProdZone</code> first, or choose a different provider name.
+<strong><code>Error: Server 'nis.example.com' is not reachable</code></strong> — Verify network connectivity to the NIS server and ensure the hostname resolves correctly with <code>nslookup nis.example.com</code>.
+<strong><code>Error: Zone 'ProdZone' does not exist</code></strong> — Confirm the zone name with <code>isi zone list</code> and use the correct zone identifier in the <code>--zone</code> parameter.</p>
+</div>
 <p>NIS is not recommended for new deployments. Use LDAP or Active Directory instead; maintain NIS only if existing Unix clients rely on it.</p>
 <hr />
 <h2 id="local-onefs-accounts">Local OneFS Accounts<a class="headerlink" href="#local-onefs-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts are stored in OneFS and are not tied to an external identity provider. Use local accounts for emergency administrative access and OneFS service accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all local users</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List local users in a specific zone</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View a local user</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>admin
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Create a local user</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>--name<span class="w"> </span>backupadmin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>--enabled<span class="w"> </span>yes
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Modify a local user — set password expiry</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>modify<span class="w"> </span>backupadmin<span class="w"> </span>--password-expires<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--password-expiry<span class="w"> </span>90D
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Disable a local user account (without deleting)</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>modify<span class="w"> </span>backupadmin<span class="w"> </span>--enabled<span class="w"> </span>no
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># Delete a local user</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>delete<span class="w"> </span>backupadmin
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="c1"># Local groups</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>list
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>create<span class="w"> </span>monitoring-group
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>modify<span class="w"> </span>monitoring-group<span class="w"> </span>--add-user<span class="w"> </span>backupadmin
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span>monitoring-group
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List all local users</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># List local users in a specific zone</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># View a local user</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>admin
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Create a local user</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span>--name<span class="w"> </span>backupadmin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">    </span>--enabled<span class="w"> </span>yes
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Modify a local user — set password expiry</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>modify<span class="w"> </span>backupadmin<span class="w"> </span>--password-expires<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--password-expiry<span class="w"> </span>90D
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="c1"># Disable a local user account (without deleting)</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>modify<span class="w"> </span>backupadmin<span class="w"> </span>--enabled<span class="w"> </span>no
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c1"># Delete a local user</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>delete<span class="w"> </span>backupadmin
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="c1"># Local groups</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>list
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>create<span class="w"> </span>monitoring-group
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>modify<span class="w"> </span>monitoring-group<span class="w"> </span>--add-user<span class="w"> </span>backupadmin
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span>monitoring-group
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># List all local users
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>uid=0(root) gid=0(root) groups=0(root)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>uid=1(daemon) gid=1(daemon) groups=1(daemon)
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>uid=33(www-data) gid=33(www-data) groups=33(www-data)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>uid=100(syslog) gid=101(syslog) groups=101(syslog)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>uid=101(admin) gid=0(root) groups=0(root)
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>uid=102(backup) gid=102(backup) groups=102(backup)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>...
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a># List local users in a specific zone
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>uid=101(admin) gid=0(root) groups=0(root)
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>uid=102(backup) gid=102(backup) groups=102(backup)
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>uid=103(monitor) gid=103(monitor) groups=103(monitor)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a># View a local user
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    uid: 101
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    gid: 0
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>    name: admin
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    enabled: true
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>    password_expires: false
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    home: /home/admin
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    shell: /bin/bash
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a># Create a local user
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>User &#39;backupadmin&#39; created successfully (uid: 104)
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a># Modify a local user — set password expiry
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>User &#39;backupadmin&#39; modified successfully
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>    password_expires: true
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>    password_expiry: 90 days
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a># Disable a local user account (without deleting)
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>User &#39;backupadmin&#39; modified successfully
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>    enabled: false
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a># Delete a local user
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>User &#39;backupadmin&#39; deleted successfully
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a># Local groups
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>monitoring-group (gid: 2001)
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>backup-group (gid: 2002)
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>admin-group (gid: 2003)
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>(no output — command completes silently)
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>(no output — command completes silently)
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>Group &#39;monitoring-group&#39; modified successfully
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>    members: backupadmin
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>Group &#39;monitoring-group&#39; view:
+<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>    gid: 2001
+<a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>    name: monitoring-group
+<a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>    members: backupadmin, monitor-user
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: User 'backupadmin' already exists</code></strong> — Use <code>isi auth users modify</code> instead of <code>create</code>, or delete the existing user first with <code>isi auth users delete backupadmin</code>.
+<strong><code>Error: Invalid zone 'ProdZone': zone not found</code></strong> — Verify the zone name exists by running <code>isi zones list</code> and use the correct zone name.
+<strong><code>Error: User 'backupadmin' is not found</code></strong> — Ensure the user was created successfully and check spelling; list all users with <code>isi auth users list</code> to confirm.</p>
+</div>
 <h3 id="local-account-security-practices">Local Account Security Practices<a class="headerlink" href="#local-account-security-practices" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9375,34 +9669,66 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 <hr />
 <h2 id="identity-mapping-multi-protocol">Identity Mapping (Multi-Protocol)<a class="headerlink" href="#identity-mapping-multi-protocol" title="Permanent link">&para;</a></h2>
 <p>In environments where both Windows (SMB/AD) and Unix (NFS/LDAP) clients access the same data, OneFS must map identities between Windows SIDs and Unix UIDs/GIDs. Identity mapping rules control how this translation occurs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List current identity mapping rules</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># View identity mapping rules for a zone</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># View identity mapping settings</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Create a bidirectional mapping rule (AD user → LDAP UID)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span>--type<span class="w"> </span>bidir<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span>--source-user<span class="w"> </span><span class="s2">&quot;CORP\\jsmith&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span>--target-user<span class="w"> </span><span class="s2">&quot;jsmith&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Create a range mapping (maps a range of UIDs to the equivalent GIDs)</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">    </span>--type<span class="w"> </span>uid-to-gid<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">    </span>--source-range<span class="w"> </span><span class="m">10000</span>-20000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span>--target-range<span class="w"> </span><span class="m">10000</span>-20000
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># View the resolved identity for a specific user (effective UID, GIDs, SID)</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>CORP<span class="se">\\</span>jsmith<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="c1"># Check how a UNIX UID maps to an AD SID</span>
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>--uid<span class="w"> </span><span class="m">1001</span><span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List current identity mapping rules</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>list
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># View identity mapping rules for a zone</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># View identity mapping settings</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Create a bidirectional mapping rule (AD user → LDAP UID)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">    </span>--type<span class="w"> </span>bidir<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">    </span>--source-user<span class="w"> </span><span class="s2">&quot;CORP\\jsmith&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">    </span>--target-user<span class="w"> </span><span class="s2">&quot;jsmith&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">    </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="c1"># Create a range mapping (maps a range of UIDs to the equivalent GIDs)</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="w">    </span>--type<span class="w"> </span>uid-to-gid<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="w">    </span>--source-range<span class="w"> </span><span class="m">10000</span>-20000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="w">    </span>--target-range<span class="w"> </span><span class="m">10000</span>-20000
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="c1"># View the resolved identity for a specific user (effective UID, GIDs, SID)</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>CORP<span class="se">\\</span>jsmith<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a><span class="c1"># Check how a UNIX UID maps to an AD SID</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>--uid<span class="w"> </span><span class="m">1001</span><span class="w"> </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ID  Type    Source User      Target User  Zone
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>1   bidir   CORP\jsmith      jsmith       ProdZone
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2   bidir   CORP\mchen       mchen        ProdZone
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>3   uid-to-gid 10000-20000   10000-20000  System
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>4   bidir   CORP\dwalker     dwalker      ProdZone
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Enable Mappings: true
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Check NIS: false
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Mapping Timeout: 3600
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>ID  Type    Source User      Target User  Zone
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>1   bidir   CORP\jsmith      jsmith       ProdZone
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Name: CORP\jsmith
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>UID: 1001
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>GID: 1001
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>SID: S-1-5-21-3623811015-3361044348-30300820-1103
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Zone: ProdZone
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>Enabled: true
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>Name: jsmith
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>UID: 1001
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>GID: 1001
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>SID: S-1-5-21-3623811015-3361044348-30300820-1103
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>Zone: ProdZone
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid zone 'ProdZone'. Valid zones are: System, Zone1, Zone2</code></strong> — Verify the zone name exists by running <code>isi auth zones list</code> and use the correct zone identifier.
+<strong><code>Error: User 'CORP\jsmith' not found in authentication provider</code></strong> — Ensure the user exists in the configured Active Directory or LDAP provider and that the domain prefix matches the authentication source configuration.
+<strong><code>Error: Mapping rule already exists for source 'CORP\jsmith'</code></strong> — Delete the existing rule with <code>isi auth mappings rules delete &lt;rule_id&gt;</code> before creating a duplicate mapping.</p>
+</div>
 <h3 id="identity-mapping-modes">Identity Mapping Modes<a class="headerlink" href="#identity-mapping-modes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9427,58 +9753,119 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </tbody>
 </table>
 <p>Configure the mapping mode per zone:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>ProdZone<span class="w"> </span>--default-unix-shell<span class="w"> </span>/bin/bash
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>ProdZone<span class="w"> </span>--default-unix-shell<span class="w"> </span>/bin/bash
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span>--zone<span class="w"> </span>ProdZone
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Modify operation completed successfully.
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Zone: ProdZone
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Default UNIX shell: /bin/bash
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Mapping rules enabled: true
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Case insensitive: false
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Translate Windows names: true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid zone name 'ProdZone'</code></strong> — Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.
+<strong><code>Error: Permission denied</code></strong> — Ensure your user account has administrative privileges or is part of the appropriate role group.</p>
+</div>
 <hr />
 <h2 id="kerberos-nfsv4-and-smb">Kerberos — NFSv4 and SMB<a class="headerlink" href="#kerberos-nfsv4-and-smb" title="Permanent link">&para;</a></h2>
 <h3 id="kerberos-for-nfsv4">Kerberos for NFSv4<a class="headerlink" href="#kerberos-for-nfsv4" title="Permanent link">&para;</a></h3>
 <p>NFSv4 Kerberos provides strong mutual authentication between NFS clients and the PowerScale cluster. The cluster must be joined to an AD domain (or have Kerberos KDC configured) and NFS clients must have valid Kerberos tickets.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify the cluster machine account has the correct SPNs for NFS</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SPN\|service&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Enable NFSv4 with Kerberos on an export</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5,krb5i,krb5p
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># View security flavors on an export</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Available security flavors</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># krb5  — Kerberos authentication only (identity verified, data not signed/encrypted)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># krb5i — Kerberos with integrity (signed packets — protection against replay)</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># krb5p — Kerberos with privacy (signed and encrypted — strongest; adds CPU overhead)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Verify the cluster machine account has the correct SPNs for NFS</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>view<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SPN\|service&quot;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Enable NFSv4 with Kerberos on an export</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span>--security-flavors<span class="w"> </span>krb5,krb5i,krb5p
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># View security flavors on an export</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1"># Available security flavors</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="c1"># krb5  — Kerberos authentication only (identity verified, data not signed/encrypted)</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># krb5i — Kerberos with integrity (signed packets — protection against replay)</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="c1"># krb5p — Kerberos with privacy (signed and encrypted — strongest; adds CPU overhead)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Name: CORP.EXAMPLE.COM
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Enabled: Yes
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Provider: ads
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>SPN: nfs/powerscale-node1.corp.example.com@CORP.EXAMPLE.COM
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>SPN: nfs/powerscale-node2.corp.example.com@CORP.EXAMPLE.COM
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>SPN: nfs/powerscale-node3.corp.example.com@CORP.EXAMPLE.COM
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>SPN: host/powerscale-node1.corp.example.com@CORP.EXAMPLE.COM
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Service Principal Name Count: 4
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>Export ID: 42
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Security Flavors: krb5,krb5i,krb5p
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>Allow Unmapped Identities: No
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>Kerberos Realm: CORP.EXAMPLE.COM
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Export &lt;export_id&gt; not found</code></strong> — Verify the export ID exists with <code>isi nfs exports list</code> and use the correct numeric ID.
+<strong><code>Error: Authentication provider CORP.EXAMPLE.COM is not configured</code></strong> — Ensure the Active Directory provider is joined and enabled with <code>isi auth ads view</code>.
+<strong><code>Error: Cannot modify export while it is in use</code></strong> — Unmount all clients from the export before applying security flavor changes.</p>
+</div>
 <p>NFS client requirements for Kerberos:
 - Client must have a valid Kerberos ticket (<code>kinit user@CORP.EXAMPLE.COM</code>).
 - The NFS client's hostname must resolve forward and reverse in DNS.
 - System time on NFS clients must be within 5 minutes of the cluster (configure NTP).</p>
 <h3 id="smb-signing-and-sealing">SMB Signing and Sealing<a class="headerlink" href="#smb-signing-and-sealing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Require SMB signing for all clients (recommended for security)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Enable SMB3 encryption (sealing) per share</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Enable SMB3 encryption for all shares in a zone</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>ProdZone<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># View current SMB signing settings</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Require SMB signing for all clients (recommended for security)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Enable SMB3 encryption (sealing) per share</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Enable SMB3 encryption for all shares in a zone</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>ProdZone<span class="w"> </span>--encrypt-data<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># View current SMB signing settings</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>SMB server signing has been set to required.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>SMB share encryption has been enabled for share &#39;data_prod&#39;.
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>SMB encryption settings for zone &#39;ProdZone&#39; have been modified.
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Signing: required
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Signing required: yes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid value for --server-signing. Valid values are: disabled, enabled, required</code></strong> — Use only <code>disabled</code>, <code>enabled</code>, or <code>required</code> as the signing parameter value.
+<strong><code>Error: Share '&lt;share_name&gt;' does not exist</code></strong> — Verify the exact share name with <code>isi smb shares list</code> before running the modify command.
+<strong><code>Error: Zone 'ProdZone' not found</code></strong> — Confirm the zone name exists by running <code>isi zones list</code> and use the correct zone identifier.</p>
+</div>
 <hr />
 <h2 id="authentication-provider-order">Authentication Provider Order<a class="headerlink" href="#authentication-provider-order" title="Permanent link">&para;</a></h2>
 <p>Each access zone has a priority-ordered list of authentication providers. When a user logs in, providers are consulted in order until the identity is resolved.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># View providers assigned to a zone and their order</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>ProdZone<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Auth Providers&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># List all providers assigned to a zone</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Modify provider order for a zone (AD first, LDAP second)</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>modify<span class="w"> </span>ProdZone<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span>--auth-providers<span class="w"> </span><span class="s2">&quot;lsa-activedirectory-provider:CORP.EXAMPLE.COM,lsa-ldap-provider:ldap-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># View providers assigned to a zone and their order</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>ProdZone<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Auth Providers&quot;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># List all providers assigned to a zone</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>ProdZone
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Modify provider order for a zone (AD first, LDAP second)</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>modify<span class="w"> </span>ProdZone<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">    </span>--auth-providers<span class="w"> </span><span class="s2">&quot;lsa-activedirectory-provider:CORP.EXAMPLE.COM,lsa-ldap-provider:ldap-prod&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Auth Providers
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    lsa-activedirectory-provider:CORP.EXAMPLE.COM
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>    lsa-ldap-provider:ldap-prod
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>    lsa-local-provider:local
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>Name                                    Zone        Enabled
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>lsa-activedirectory-provider:CORP.EXAMPLE.COM  ProdZone    Yes
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>lsa-ldap-provider:ldap-prod             ProdZone    Yes
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>lsa-local-provider:local                ProdZone    Yes
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid zone name 'ProdZone'</code></strong> — Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.
+<strong><code>Error: Provider 'lsa-activedirectory-provider:CORP.EXAMPLE.COM' not found</code></strong> — Ensure the provider is created and available before assigning it with <code>isi auth providers list</code>.</p>
+</div>
 <hr />
 <h2 id="multi-zone-authentication-reference">Multi-Zone Authentication Reference<a class="headerlink" href="#multi-zone-authentication-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -9514,18 +9901,44 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 <hr />
 <h2 id="ntp-required-for-kerberos">NTP — Required for Kerberos<a class="headerlink" href="#ntp-required-for-kerberos" title="Permanent link">&para;</a></h2>
 <p>Kerberos authentication fails if system clocks are out of sync by more than 5 minutes. Configure NTP on the cluster and verify synchronisation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View NTP configuration</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>isi<span class="w"> </span>ntp<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Add an NTP server</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>isi<span class="w"> </span>ntp<span class="w"> </span>servers<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>ntp.example.com
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># List configured NTP servers</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>isi<span class="w"> </span>ntp<span class="w"> </span>servers<span class="w"> </span>list
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Check NTP sync status (run on a cluster node)</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># View NTP configuration</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>isi<span class="w"> </span>ntp<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Add an NTP server</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>isi<span class="w"> </span>ntp<span class="w"> </span>servers<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>ntp.example.com
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># List configured NTP servers</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>isi<span class="w"> </span>ntp<span class="w"> </span>servers<span class="w"> </span>list
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Check NTP sync status (run on a cluster node)</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>NTP Settings:
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  Enabled: true
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  Servers: 3
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  Preferred Server: ntp.example.com
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>NTP server &#39;ntp.example.com&#39; created successfully.
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>NTP Servers:
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>  ID    Name                 Enabled
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>  ──────────────────────────────────
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>  1     ntp.example.com      true
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>  2     ntp.pool.org         true
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>  3     time.google.com      true
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>     remote           refid      st t when poll reach   delay   offset  jitter
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>==============================================================================
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>*ntp.example.com 10.0.0.1        2 u   64 1024  377   12.543    2.104   1.832
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>+ntp.pool.org    192.168.1.50    2 u   32 1024  377   18.921   -1.203   2.456
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>-time.google.com 8.8.8.8         3 u  128 1024  377   45.612    8.734   3.201
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: NTP server 'ntp.example.com' already exists</code></strong> — Use <code>isi ntp servers list</code> to verify the server isn't already configured, or use a different hostname.
+<strong><code>Error: ntpq: command not found</code></strong> — Install the ntp client package with <code>apt-get install ntp</code> or <code>yum install ntp</code> depending on your OS.
+<strong><code>Error: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user account has cluster administrator privileges.</p>
+</div>
 <h2 id="ensure-all-nfs-clients-with-kerberos-mounts-also-use-the-same-ntp-source-as-the-cluster-and-the-domain-controllers">Ensure all NFS clients with Kerberos mounts also use the same NTP source as the cluster and the domain controllers.<a class="headerlink" href="#ensure-all-nfs-clients-with-kerberos-mounts-also-use-the-same-ntp-source-as-the-cluster-and-the-domain-controllers" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9561,7 +9974,7 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:25:31 UTC"><span class="timeago" datetime="2026-06-29T04:25:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:25:31 UTC">2026-06-29</span>
   </span>
 
     

@@ -10795,45 +10795,115 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?display_name=&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;tags&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    &quot;results&quot;: [
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        {
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>            &quot;external_id&quot;: &quot;vm-42&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            &quot;display_name&quot;: &quot;web-server-01&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            &quot;tags&quot;: [
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                {
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                    &quot;scope&quot;: &quot;environment&quot;,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                    &quot;tag&quot;: &quot;production&quot;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                },
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                {
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                    &quot;scope&quot;: &quot;team&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                    &quot;tag&quot;: &quot;platform-eng&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                }
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            ],
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            &quot;resource_type&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        }
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    ],
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    &quot;result_count&quot;: 1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN).
+<strong><code>jq: command not found</code></strong> — Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead (as shown in the example).
+<strong><code>"results": []</code></strong> — Verify the VM display name matches exactly (case-sensitive) and the VM has been registered with NSX Manager.</p>
+</div>
 <p>Look for: a recently changed IP address on the source or destination VM will invalidate an IP-set-based group membership. Dynamic tag criteria are the most fragile — confirm the tag is still present and spelled correctly.</p>
 <hr />
 <h2 id="4-resolve-rule-group-or-tag-fix">4. Resolve: Rule, Group, or Tag Fix<a class="headerlink" href="#4-resolve-rule-group-or-tag-fix" title="Permanent link">&para;</a></h2>
 <p>Choose the fix based on the root cause identified in Step 3.</p>
 <p><strong>Option A — Add a targeted allow rule above the deny:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>New rule placement (most specific first):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Priority  Action  Source               Destination          Service
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  100       Allow   App-Server-Group     DB-Server-Group      TCP:5432
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  200       Drop    Any                  DB-Server-Group      Any          ← existing deny
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  999       Drop    Any                  Any                  Any          ← default deny
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>New rule placement (most specific first):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Priority  Action  Source               Destination          Service
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  100       Allow   App-Server-Group     DB-Server-Group      TCP:5432
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  200       Drop    Any                  DB-Server-Group      Any          ← existing deny
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  999       Drop    Any                  Any                  Any          ← default deny
 </code></pre></div>
 <p>The new allow rule must be placed at a higher priority (lower number) than the blocking rule. Rules are evaluated top to bottom; the first match wins.</p>
 <p><strong>Option B — Fix group membership:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>For static groups: add the VM directly to the group via NSX Manager UI
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>For dynamic groups: apply the correct NSX tag to the VM
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>For IP-set groups: update the IP set with the VM&#39;s current IP address
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>For static groups: add the VM directly to the group via NSX Manager UI
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>For dynamic groups: apply the correct NSX tag to the VM
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>For IP-set groups: update the IP set with the VM&#39;s current IP address
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Apply an NSX tag to a VM via API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;external_id&quot;:&quot;&lt;vm-moid&gt;&quot;,&quot;tags&quot;:[{&quot;scope&quot;:&quot;app&quot;,&quot;tag&quot;:&quot;web-tier&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Apply an NSX tag to a VM via API</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;external_id&quot;:&quot;&lt;vm-moid&gt;&quot;,&quot;tags&quot;:[{&quot;scope&quot;:&quot;app&quot;,&quot;tag&quot;:&quot;web-tier&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;result_count&quot;: 1,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;results&quot;: [
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    {
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;external_id&quot;: &quot;vm-42&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      &quot;tags&quot;: [
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        {
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>          &quot;scope&quot;: &quot;app&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>          &quot;tag&quot;: &quot;web-tier&quot;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        }
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      ],
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      &quot;display_name&quot;: &quot;web-server-01&quot;,
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      &quot;resource_type&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    }
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  ]
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX manager hostname matches certificate CN).
+<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify admin credentials are correct and URL-encoded (special characters like <code>@</code> or <code>#</code> in password must be percent-encoded).
+<strong><code>{"error_code":404,"error_message":"Virtual machine not found"}</code></strong> — Confirm the <code>&lt;vm-moid&gt;</code> value is the correct vSphere managed object ID (obtain via vCenter inventory or <code>govc vm.info</code> command).</p>
+</div>
 <p>After any rule or group change, re-run Traceflow to confirm the packet now shows <strong>Delivered</strong> at the destination.</p>
 <p>Look for: if Traceflow shows Delivered but the application still fails — the issue is now above Layer 4 (application layer, TLS, auth) rather than DFW.</p>
 <hr />
 <h2 id="5-packet-capture-at-vnic-level">5. Packet Capture at vNIC Level<a class="headerlink" href="#5-packet-capture-at-vnic-level" title="Permanent link">&para;</a></h2>
 <p>If Traceflow is inconclusive, capture at the ESXi vNIC level to see the raw traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to the ESXi host running the source VM</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># List VM vNIC interfaces to find the right port</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>port<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>&lt;WorldID&gt;
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Capture traffic on the vNIC (pktcap-uw)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;SwitchPort&gt;<span class="w"> </span>--proto<span class="w"> </span><span class="m">6</span><span class="w"> </span>--dstport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span>-o<span class="w"> </span>/tmp/cap.pcap
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Transfer and analyse in Wireshark</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Filter in Wireshark: tcp.port==5432 and tcp.flags.reset==1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to the ESXi host running the source VM</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># List VM vNIC interfaces to find the right port</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>port<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>&lt;WorldID&gt;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Capture traffic on the vNIC (pktcap-uw)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;SwitchPort&gt;<span class="w"> </span>--proto<span class="w"> </span><span class="m">6</span><span class="w"> </span>--dstport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span>-o<span class="w"> </span>/tmp/cap.pcap
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Transfer and analyse in Wireshark</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Filter in Wireshark: tcp.port==5432 and tcp.flags.reset==1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>World ID    Name                                          Num Ports
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>4           vm-123-web-server                            1
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>7           vm-456-db-primary                            2
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>12          vm-789-cache-node                            1
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Port ID  vNIC ID  Team Uplink  MAC Address        IP Address      Status
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>16777220 4000     vmnic0       00:0c:29:a4:5e:2b  192.168.1.45    ok
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>16777221 4001     vmnic1       00:0c:29:a4:5e:2c  192.168.1.46    ok
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Capturing on switchport 16777220, 200 packets, output to /tmp/cap.pcap
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>^C
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Packets captured: 187
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Packets dropped: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>World ID not found</code></strong> — Run <code>esxcli network vm list</code> first to identify the correct WorldID, then pass it with <code>-w &lt;WorldID&gt;</code> to the port list command.
+<strong><code>pktcap-uw: command not found</code></strong> — Enable SSH on the ESXi host and ensure you are connected directly to the ESXi shell (not vCenter); pktcap-uw is only available on ESXi hosts.
+<strong><code>Permission denied: /tmp/cap.pcap</code></strong> — Run the pktcap-uw command with root privileges or write to a world-writable directory like <code>/tmp</code> after verifying disk space with <code>df -h</code>.</p>
+</div>
 <p>Look for: TCP RST packets in the capture confirm the DFW is sending a reset (REJECT rule). No response at all confirms a DROP rule. If neither appears and traffic is flowing out the vNIC, the issue is downstream.</p>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
@@ -10922,7 +10992,7 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

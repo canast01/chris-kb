@@ -7755,48 +7755,222 @@ NetBackup operational procedures: creating and tuning backup policies, storage u
 <p><code>bpbackup -p &lt;policy&gt; -s &lt;schedule&gt; -c &lt;client&gt;</code> or Admin Console → Client Backups → Manual Backup.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;client&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bpbackup: initiating backup for policy &#39;weekly_full&#39; schedule &#39;full_backup&#39; client &#39;prod-db-01.corp.local&#39;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>backup session id: 20240115_093847_a7f2c1e9
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>connecting to master server: netbackup-master.corp.local (192.168.1.50)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>client authentication successful
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>starting backup job...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>job id: 12847
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>backup started at 2024-01-15 09:38:47
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>estimated completion time: 2 hours 15 minutes
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpbackup: policy '&lt;policy&gt;' not found</code></strong> — Verify the policy name exists in NetBackup Admin Console or use <code>bppllist</code> to list available policies.
+<strong><code>bpbackup: client '&lt;client&gt;' is not associated with policy '&lt;policy&gt;'</code></strong> — Add the client to the policy's client list in NetBackup Admin Console or verify the client hostname matches exactly (case-sensitive).
+<strong><code>bpbackup: cannot connect to master server</code></strong> — Ensure the NetBackup master server is running and reachable; check network connectivity and verify the master hostname in <code>/etc/netbackup/bp.conf</code>.</p>
+</div>
 <h2 id="restore-files-bprestore">Restore Files (bprestore)<a class="headerlink" href="#restore-files-bprestore" title="Permanent link">&para;</a></h2>
 <p><code>bprestore -C &lt;client&gt; -p &lt;policy&gt; -s &lt;schedule&gt; -t &lt;start-time&gt; -T &lt;end-time&gt; &lt;file-list&gt;</code> — restores to original path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;start-time&gt;<span class="w"> </span>-T<span class="w"> </span>&lt;end-time&gt;<span class="w"> </span>&lt;file-list&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;start-time&gt;<span class="w"> </span>-T<span class="w"> </span>&lt;end-time&gt;<span class="w"> </span>&lt;file-list&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>bprestore: restoring files from policy &#39;PROD_DAILY&#39; schedule &#39;Full&#39; for client &#39;web-srv-01.corp.local&#39;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bprestore: connecting to master server &#39;nbmaster.corp.local&#39;...
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>bprestore: session ID: 47a8c2f1-9d3e-4b21-8f6c-2e1a9b7d4c5f
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>bprestore: searching backup images between 2024-01-15 08:00:00 and 2024-01-15 20:00:00
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>bprestore: found 3 matching backup images
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>bprestore: restoring 247 files (18.4 GB) to /data/restore
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>bprestore: restore job 12847 submitted
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>bprestore: job status: ACTIVE
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>bprestore: 45% complete - 8.3 GB restored
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>bprestore: restore job 12847 completed successfully
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>bprestore: 247 files restored, 0 failed, 0 skipped
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bprestore: client '&lt;client&gt;' not found in policy '&lt;policy&gt;'</code></strong> — Verify the client name matches exactly in the NetBackup policy configuration and use the correct FQDN if required.
+<strong><code>bprestore: invalid time format '&lt;start-time&gt;'</code></strong> — Use the correct time format (typically <code>mm/dd/yyyy HH:MM:SS</code>) as specified in your NetBackup documentation.
+<strong><code>bprestore: no backup images found for the specified time range</code></strong> — Confirm that backups actually ran during the specified time window by checking the NetBackup Activity Monitor or job logs.</p>
+</div>
 <h2 id="check-job-status">Check Job Status<a class="headerlink" href="#check-job-status" title="Permanent link">&para;</a></h2>
 <p><code>bpdbjobs -summary</code> for counts; <code>bpdbjobs -jobid &lt;id&gt; -L</code> for detail; <code>bperror -backstat -hoursago 24</code> for errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bpdbjobs<span class="w"> </span>-summary
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;id&gt;<span class="w"> </span>-L
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>bpdbjobs<span class="w"> </span>-summary
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;id&gt;<span class="w"> </span>-L
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>bpdbjobs -summary
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Job ID    Policy Name          Client Name          Status    Elapsed Time
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>12345     PROD_DB_BACKUP       db-server-01.corp    COMPLETED 00:45:23
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>12346     PROD_DB_BACKUP       db-server-02.corp    COMPLETED 00:52:18
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>12347     FILE_BACKUP          file-srv-03.corp     COMPLETED 01:12:45
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>12348     PROD_DB_BACKUP       db-server-01.corp    FAILED    00:38:12
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>12349     INCREMENTAL_BACKUP   db-server-02.corp    ACTIVE    00:15:33
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>bpdbjobs -jobid 12348 -L
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Job ID: 12348
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Policy Name: PROD_DB_BACKUP
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Client Name: db-server-01.corp
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Status: FAILED
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Start Time: 2024-01-15 22:30:15
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>End Time: 2024-01-15 23:08:27
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Elapsed Time: 00:38:12
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Bytes Backed Up: 847362560
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Files Backed Up: 15847
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Error Code: 12
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Error Message: Cannot open file for reading
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>bperror -backstat -hoursago 24
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Backup Status Report - Last 24 Hours
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Host: netbackup-master-01
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Report Time: 2024-01-16 10:45:22 UTC
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Total Jobs: 18
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Successful: 15
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>Failed: 2
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>Incomplete: 1
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Warnings: 3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpdbjobs: command not found</code></strong> — Ensure the NetBackup client or master server is installed and /usr/openv/netbackup/bin is in your PATH.
+<strong><code>Error Code: 12 - Cannot open file for reading</code></strong> — Verify file permissions on the backup source and ensure the NetBackup client process has read access to all backup paths.
+<strong><code>bperror: invalid option -- 'b'</code></strong> — Use correct bperror syntax; try <code>bperror -backstat -hoursago 24</code> or check NetBackup version documentation for supported flags.</p>
+</div>
 <h2 id="expire-a-backup-image">Expire a Backup Image<a class="headerlink" href="#expire-a-backup-image" title="Permanent link">&para;</a></h2>
 <p><code>bpexpdate -backupid &lt;id&gt; -d 0</code> — marks image expired; storage reclaimed at next image cleanup.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>bpexpdate<span class="w"> </span>-backupid<span class="w"> </span>&lt;id&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>bpexpdate<span class="w"> </span>-backupid<span class="w"> </span>&lt;id&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Expiration date for backup ID 01a2b3c4d5e6f7g8h9i0j1k2 has been set to 0 days (immediate expiration).
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Backup will be eligible for deletion on the next retention cleanup cycle.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpexpdate: invalid backup ID format</code></strong> — Verify the backup ID exists and is in the correct format by running <code>bplist -backupid &lt;id&gt;</code> first.
+<strong><code>bpexpdate: insufficient permissions</code></strong> — Run the command as root or a user with NetBackup administrative privileges.</p>
+</div>
 <h2 id="import-a-backup-from-tape-catalog-recovery">Import a Backup from Tape (Catalog Recovery)<a class="headerlink" href="#import-a-backup-from-tape-catalog-recovery" title="Permanent link">&para;</a></h2>
 <p><code>bpimport -create_db_info -Bidfile &lt;bidfile&gt;</code> — imports catalog info from tape without restoring data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>bpimport<span class="w"> </span>-create_db_info<span class="w"> </span>-Bidfile<span class="w"> </span>&lt;bidfile&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>bpimport<span class="w"> </span>-create_db_info<span class="w"> </span>-Bidfile<span class="w"> </span>&lt;bidfile&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NetBackup Import Utility
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Version 10.2.1.5
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Copyright (c) 2023 Veritas Technologies LLC
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Processing bidfile: /opt/veritas/netbackup/bin/bidfile_prod_20240115.txt
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Reading database configuration...
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Importing 47 backup policies...
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Importing 12 storage units...
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Importing 8 media servers...
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Creating database schema...
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Validating policy definitions...
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Import completed successfully
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Total policies imported: 47
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Total storage units imported: 12
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Total media servers imported: 8
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Database initialization complete.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bpimport: ERR - Cannot open bidfile: No such file or directory</code></strong> — Verify the bidfile path is correct and the file exists with <code>ls -l &lt;bidfile&gt;</code>.
+<strong><code>bpimport: ERR - Invalid bidfile format at line 23</code></strong> — Check the bidfile syntax against the NetBackup documentation and ensure all required fields are present and properly formatted.
+<strong><code>bpimport: ERR - Database connection failed: Permission denied</code></strong> — Ensure the user running bpimport has root or nbadmin privileges and the NetBackup database service is running.</p>
+</div>
 <h2 id="manage-tape-media">Manage Tape Media<a class="headerlink" href="#manage-tape-media" title="Permanent link">&para;</a></h2>
 <p><code>vmupdate -rt TLD -rn &lt;drive&gt;</code> — update tape inventory; <code>vmchange -res &lt;media-id&gt;</code> — move media between pools.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Update tape inventory</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmupdate<span class="w"> </span>-rt<span class="w"> </span>TLD<span class="w"> </span>-rn<span class="w"> </span>&lt;drive&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Move media between pools</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vmchange<span class="w"> </span>-res<span class="w"> </span>&lt;media-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Update tape inventory</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vmupdate<span class="w"> </span>-rt<span class="w"> </span>TLD<span class="w"> </span>-rn<span class="w"> </span>&lt;drive&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Move media between pools</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vmchange<span class="w"> </span>-res<span class="w"> </span>&lt;media-id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vmupdate -rt TLD -rn drive01
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Updating tape inventory for drive01...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Drive Status: READY
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Media Count: 247
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Last Updated: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Inventory sync completed successfully.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>vmchange -res MED000847392
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Moving media MED000847392 to target pool...
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Source Pool: SCRATCH
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Destination Pool: PRODUCTION
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Media Status: AVAILABLE
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Move operation completed. Media now in PRODUCTION pool.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmupdate: error: Drive &lt;drive&gt; not found or offline</code></strong> — Verify the drive name with <code>vmquery -dr</code> and ensure the drive is online and accessible.
+<strong><code>vmchange: error: Media &lt;media-id&gt; is in use or locked</code></strong> — Wait for any active backup jobs to complete or check media status with <code>vmquery -m &lt;media-id&gt;</code> before attempting the move.</p>
+</div>
 <h2 id="configure-a-new-policy">Configure a New Policy<a class="headerlink" href="#configure-a-new-policy" title="Permanent link">&para;</a></h2>
 <p><code>bppolicynew &lt;policy-name&gt;</code> → <code>bpplclients -add &lt;client&gt; &lt;hardware&gt; &lt;OS&gt; &lt;policy&gt;</code> → <code>bpplsched -add &lt;policy&gt; &lt;sched-type&gt;</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>bppolicynew<span class="w"> </span>&lt;policy-name&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>bpplclients<span class="w"> </span>-add<span class="w"> </span>&lt;client&gt;<span class="w"> </span>&lt;hardware&gt;<span class="w"> </span>&lt;OS&gt;<span class="w"> </span>&lt;policy&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>bpplsched<span class="w"> </span>-add<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>&lt;sched-type&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>bppolicynew<span class="w"> </span>&lt;policy-name&gt;
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>bpplclients<span class="w"> </span>-add<span class="w"> </span>&lt;client&gt;<span class="w"> </span>&lt;hardware&gt;<span class="w"> </span>&lt;OS&gt;<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>bpplsched<span class="w"> </span>-add<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>&lt;sched-type&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Policy &lt;policy-name&gt; created successfully
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Client &lt;client&gt; added to policy &lt;policy-name&gt;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Schedule added to policy &lt;policy-name&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bppolicynew: policy &lt;policy-name&gt; already exists</code></strong> — Use a unique policy name or delete the existing policy with <code>bppolicynew -delete &lt;policy-name&gt;</code> first.
+<strong><code>bpplclients: client &lt;client&gt; not found in NetBackup client list</code></strong> — Verify the client hostname is registered in NetBackup and reachable via DNS or add it to the master server's hosts file.
+<strong><code>bpplsched: invalid schedule type &lt;sched-type&gt;</code></strong> — Use a valid schedule type such as <code>Full</code>, <code>Incremental</code>, or <code>Differential</code>.</p>
+</div>
 <h2 id="check-msdp-dedup-pool-health">Check MSDP Dedup Pool Health<a class="headerlink" href="#check-msdp-dedup-pool-health" title="Permanent link">&para;</a></h2>
 <p><code>nbdevquery -listdp -U</code> — check used/free capacity and dedup ratio; <code>crcontrol --dsstat</code> — dedup store detail.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-U
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>crcontrol<span class="w"> </span>--dsstat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-U
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>crcontrol<span class="w"> </span>--dsstat
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Device Type                    Device Name              Media Type
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-----------------------------  ----------------------  ----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>PureDisk                       pd-vault-01.corp.local  DISK
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>PureDisk                       pd-vault-02.corp.local  DISK
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Symantec Backup Exec           sbe-storage-01          DISK
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>TurboStore                      ts-primary-01           DISK
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Quantum DXi                     dxi-dedup-01            DISK
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Disaster Recovery Status Report
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>================================
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Cluster Name: netbackup-dr-cluster
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Status: HEALTHY
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Last Sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Replication Lag: 0.2 seconds
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Primary Node: nbmaster-01.internal (192.168.1.45)
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Secondary Node: nbmaster-02.internal (192.168.1.46)
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Failover Ready: YES
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nbdevquery: command not found</code></strong> — Ensure NetBackup client is installed and /usr/openv/netbackup/bin is in your PATH, or run with full path <code>/usr/openv/netbackup/bin/nbdevquery</code>.
+<strong><code>crcontrol: error: unable to connect to cluster daemon on localhost:13224</code></strong> — Verify the NetBackup cluster resource daemon is running with <code>crctl status</code> and restart it with <code>crctl start</code> if needed.</p>
+</div>
 <h2 id="collect-debug-logs-for-support">Collect Debug Logs for Support<a class="headerlink" href="#collect-debug-logs-for-support" title="Permanent link">&para;</a></h2>
 <p><code>vxlogcfg -a -p 51216 -o 6 &amp;&amp; nbpemreq -due</code> — enable verbose logging; <code>tar czf /tmp/nbu-logs.tgz /usr/openv/netbackup/logs/</code> — collect.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vxlogcfg<span class="w"> </span>-a<span class="w"> </span>-p<span class="w"> </span><span class="m">51216</span><span class="w"> </span>-o<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nbpemreq<span class="w"> </span>-due
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/nbu-logs.tgz<span class="w"> </span>/usr/openv/netbackup/logs/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>vxlogcfg<span class="w"> </span>-a<span class="w"> </span>-p<span class="w"> </span><span class="m">51216</span><span class="w"> </span>-o<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nbpemreq<span class="w"> </span>-due
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/nbu-logs.tgz<span class="w"> </span>/usr/openv/netbackup/logs/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Logging configured for port 51216 with verbosity level 6
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>EMM request processed successfully
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>tar: removing leading &#39;/&#39; from member names
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>./usr/openv/netbackup/logs/
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>./usr/openv/netbackup/logs/bprd/
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>./usr/openv/netbackup/logs/bprd/bprd.log
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>./usr/openv/netbackup/logs/bprd/bprd-20240115.log
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>./usr/openv/netbackup/logs/nbpem/
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>./usr/openv/netbackup/logs/nbpem/nbpem.log
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>./usr/openv/netbackup/logs/nbpem/nbpem-20240115.log
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>./usr/openv/netbackup/logs/bptm/
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>./usr/openv/netbackup/logs/bptm/bptm.log
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>...
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>/tmp/nbu-logs.tgz created successfully (287MB)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vxlogcfg: command not found</code></strong> — Ensure NetBackup is installed and /usr/openv/netbackup/bin is in your PATH, or use the full path <code>/usr/openv/netbackup/bin/vxlogcfg</code>.
+<strong><code>tar: /usr/openv/netbackup/logs/: Cannot open: Permission denied</code></strong> — Run the command with <code>sudo</code> or as the root user, since NetBackup log directories typically require elevated privileges.
+<strong><code>nbpemreq: command not found</code></strong> — Verify NetBackup EMM service is running with <code>nbpemreq -list</code> or check that <code>/usr/openv/netbackup/bin</code> is in PATH.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7833,7 +8007,7 @@ NetBackup operational procedures: creating and tuning backup policies, storage u
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

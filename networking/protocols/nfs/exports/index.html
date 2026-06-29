@@ -8140,6 +8140,14 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/srv/nfs4<span class="w">        </span>*<span class="o">(</span>rw,sync,fsid<span class="o">=</span><span class="m">0</span>,no_subtree_check<span class="o">)</span><span class="w">           </span><span class="c1"># NFSv4 pseudo-root</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>/srv/nfs4/data<span class="w">   </span>*<span class="o">(</span>rw,sync,bind<span class="o">=</span>/data/shared,no_subtree_check<span class="o">)</span><span class="w"> </span><span class="c1"># NFSv4 bind mount</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>exportfs: /data/shared: No such file or directory</code></strong> — Verify the export path exists on the NFS server with <code>ls -ld /data/shared</code> before adding it to /etc/exports.
+<strong><code>exportfs: /etc/exports:1: syntax error - unexpected character after line</code></strong> — Check for trailing whitespace, missing parentheses, or invalid characters; use <code>exportfs -v</code> to validate syntax after editing.
+<strong><code>mount.nfs: access denied by server while mounting 192.168.10.5:/data/shared</code></strong> — Run <code>exportfs -ra</code> on the server to reload /etc/exports after making changes, then retry the client mount.</p>
+</div>
 <h2 id="key-export-options">Key Export Options<a class="headerlink" href="#key-export-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8188,31 +8196,71 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
 </tbody>
 </table>
 <h2 id="applying-export-changes">Applying Export Changes<a class="headerlink" href="#applying-export-changes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reload exports without restarting NFS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>exportfs<span class="w"> </span>-ra
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List currently active exports</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>exportfs<span class="w"> </span>-v
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Export a directory immediately (without editing /etc/exports)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>exportfs<span class="w"> </span>-o<span class="w"> </span>rw,sync,no_subtree_check<span class="w"> </span><span class="m">192</span>.168.10.50:/data/tmp
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unexport a directory</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>exportfs<span class="w"> </span>-u<span class="w"> </span><span class="m">192</span>.168.10.50:/data/tmp
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Restart NFS server (last resort)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-server
-</code></pre></div>
-<h2 id="verifying-exports-from-client-side">Verifying Exports from Client Side<a class="headerlink" href="#verifying-exports-from-client-side" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List exports available from a server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">192</span>.168.10.10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Reload exports without restarting NFS</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>exportfs<span class="w"> </span>-ra
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check which clients have mounted each export</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>showmount<span class="w"> </span>-a<span class="w"> </span><span class="m">192</span>.168.10.10
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List currently active exports</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>exportfs<span class="w"> </span>-v
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify NFS service is listening</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>rpcinfo<span class="w"> </span>-p<span class="w"> </span><span class="m">192</span>.168.10.10<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Export a directory immediately (without editing /etc/exports)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>exportfs<span class="w"> </span>-o<span class="w"> </span>rw,sync,no_subtree_check<span class="w"> </span><span class="m">192</span>.168.10.50:/data/tmp
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Unexport a directory</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>exportfs<span class="w"> </span>-u<span class="w"> </span><span class="m">192</span>.168.10.50:/data/tmp
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Restart NFS server (last resort)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-server
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>exporting 192.168.1.100:/srv/nfs
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>exporting 192.168.1.101:/srv/nfs
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>exporting 192.168.1.102:/srv/nfs
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/srv/nfs        192.168.1.100(rw,sync,wdelay,hide,nocrossmnt,secure,root_squash,no_all_squash)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/srv/nfs        192.168.1.101(rw,sync,wdelay,hide,nocrossmnt,secure,root_squash,no_all_squash)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/srv/nfs        192.168.1.102(rw,sync,wdelay,hide,nocrossmnt,secure,root_squash,no_all_squash)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>/data/tmp       192.168.10.50(rw,sync,no_subtree_check)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>unexporting 192.168.10.50:/data/tmp
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Redirecting to /bin/systemctl restart nfs-server
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>exportfs: /data/tmp does not exist or access denied</code></strong> — Verify the directory exists and the nfs-server process has read permissions on the parent path.
+<strong><code>exportfs: No such file or directory</code></strong> — Ensure /etc/exports exists and contains valid export entries before running <code>exportfs -ra</code>.
+<strong><code>Job for nfs-server.service failed because the control process exited with error code</code></strong> — Check <code>/var/log/messages</code> or <code>journalctl -xe</code> for NFS daemon startup errors, often caused by invalid /etc/exports syntax.</p>
+</div>
+<h2 id="verifying-exports-from-client-side">Verifying Exports from Client Side<a class="headerlink" href="#verifying-exports-from-client-side" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List exports available from a server</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">192</span>.168.10.10
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check which clients have mounted each export</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>showmount<span class="w"> </span>-a<span class="w"> </span><span class="m">192</span>.168.10.10
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify NFS service is listening</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>rpcinfo<span class="w"> </span>-p<span class="w"> </span><span class="m">192</span>.168.10.10<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Export list for 192.168.10.10:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/export/home           192.168.1.0/24
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/export/data           10.0.0.0/8
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>/export/backups        192.168.10.5
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>/var/nfs/shared        (everyone)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>192.168.10.10:
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  192.168.1.15:/export/home
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  192.168.1.22:/export/data
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  10.5.3.8:/export/backups
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    100003  3   tcp                  2049  nfs
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    100003  4   tcp                  2049  nfs
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    100003  3   udp                  2049  nfs
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    100003  4   udp                  2049  nfs
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>clnt_create: RPC: Port mapper failure - Unable to receive</code></strong> — Verify the NFS server is running with <code>systemctl status nfs-server</code> and that port 111 (portmapper) is accessible.
+<strong><code>showmount: clnt_create error: RPC: Authentication error; why = Client authentication has failed</code></strong> — Check firewall rules allow NFS traffic (ports 111, 2049) from your client to the server using <code>sudo ufw allow from 192.168.1.0/24 to any port 2049</code>.</p>
+</div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>exportfs -ra</code> silently ignores malformed lines in <code>/etc/exports</code>. Check <code>journalctl -u nfs-server</code> or <code>exportfs -v</code> output to confirm an export actually loaded.</li>
@@ -8241,7 +8289,7 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

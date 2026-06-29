@@ -9190,22 +9190,66 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">class</span><span class="o">=</span>symmetrix
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">class</span><span class="o">=</span>vplex
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PowerPath for Linux Version 6.2.0.0 (build 247)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000297900123  Logical Device Count: 24
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Host: prod-storage-01  OS: Linux 5.10.0-8-generic #1 SMP Debian 5.10.60-1
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Fibre Channel: 4 Initiators, 8 Targets, 32 Paths
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Disk Devices: 24
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Enabled: 24  Dead: 0  Standby: 0  Failed: 0
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Name           Attr  Paths  Prio  Owner               Algo  State
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>emcpower0      -     4/4    0     prod-storage-01    LB    Alive
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>emcpower1      -     4/4    0     prod-storage-01    LB    Alive
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>emcpower2      -     4/4    0     prod-storage-01    LB    Alive
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>emcpower3      -     2/4    0     prod-storage-01    LB    Alive
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>...
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>PowerPath Version: 6.2.0.0 (build 247)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>License Status: Valid (expires 2025-12-31)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Symmetrix ID: 000297900123
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  Device: emcpower0  Paths: 4  State: Alive  Class: CLARIION
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  Device: emcpower1  Paths: 4  State: Alive  Class: SYMMETRIX
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Device: emcpower2  Paths: 4  State: Alive  Class: VPLEX
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Install PowerPath package with <code>apt-get install powerpath</code> or equivalent for your distribution.
+<strong><code>powermt: permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the powerpath group with <code>sudo usermod -aG powerpath $USER</code>.
+<strong><code>powermt display: No devices found</code></strong> — Verify PowerPath daemon is running with <code>sudo systemctl status powerpath</code> and rescan paths using <code>powermt config</code>.</p>
+</div>
 <hr />
 <h2 id="paths">Paths<a class="headerlink" href="#paths" title="Permanent link">&para;</a></h2>
 <p>A path is one physical route from the server's HBA port to a storage array port. PowerPath manages multiple paths per device — if one path fails, I/O automatically continues on surviving paths. These commands let you check, restore, and test paths.</p>
 <h3 id="path-status">Path Status<a class="headerlink" href="#path-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All devices with all path states</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Count alive paths (healthy multipath state)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;alive&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Count dead paths (should be zero)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dead&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show only dead paths</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All devices with all path states</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Count alive paths (healthy multipath state)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;alive&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Count dead paths (should be zero)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dead&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show only dead paths</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Logical device name=/dev/emcpowera
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Physical devices=4
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>--------PG---Dist------Sts------/Hy/Hlth/Att Capac-----Algo----Lun WWN
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>c4t5d0s2   SP A   5%   alive   E/S/O   -   -   -   -   -   -   -   -
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>c5t5d0s2   SP B   5%   alive   E/S/O   -   -   -   -   -   -   -   -
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>c6t6d0s2   SP A   45%  alive   E/S/O   -   -   -   -   -   -   -   -
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>c7t6d0s2   SP B   45%  alive   E/S/O   -   -   -   -   -   -   -   -
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>4
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>(no output — no dead paths to display)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Verify EMC PowerPath is installed with <code>rpm -qa | grep -i powerpath</code> and install the package if missing.
+<strong><code>powermt display: You do not have permission to run this command</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the powerpath group with <code>sudo usermod -a -G powerpath $USER</code>.</p>
+</div>
 <h3 id="path-state-values">Path State Values<a class="headerlink" href="#path-state-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9238,41 +9282,119 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 </tbody>
 </table>
 <h3 id="restore-and-recover-paths">Restore and Recover Paths<a class="headerlink" href="#restore-and-recover-paths" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Attempt to restore all dead paths</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Rescan for new devices or newly presented LUNs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>config
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove dead path records</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>powermt<span class="w"> </span>remove<span class="w"> </span>dead
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># After SAN maintenance — full recovery sequence</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>powermt<span class="w"> </span>config
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead<span class="w">   </span><span class="c1"># confirm zero dead paths</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>powermt<span class="w"> </span>save
-</code></pre></div>
-<h3 id="manual-path-failover-and-unblock">Manual Path Failover and Unblock<a class="headerlink" href="#manual-path-failover-and-unblock" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Fail a specific path (force I/O off a port — testing/maintenance)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>powermt<span class="w"> </span>fail<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="nv">path</span><span class="o">=</span>&lt;hba_port_id&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Unblock a path (re-enable after manual fail)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>powermt<span class="w"> </span>unblock<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="nv">path</span><span class="o">=</span>&lt;hba_port_id&gt;
-</code></pre></div>
-<h3 id="path-detail">Path Detail<a class="headerlink" href="#path-detail" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Full detail for one device including each path&#39;s I/O stats</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Attempt to restore all dead paths</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>powermt<span class="w"> </span>restore
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># With port info</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span>port
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Rescan for new devices or newly presented LUNs</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>powermt<span class="w"> </span>config
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Confirm ALUA active-optimized paths</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;State|ALUA&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Remove dead path records</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>powermt<span class="w"> </span>remove<span class="w"> </span>dead
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify expected number of paths per device</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/emcpower/{d=$1;c=0} /alive/{c++} /^$/{if(d) print d&quot; &quot;c; d=&quot;&quot;}&#39;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># After SAN maintenance — full recovery sequence</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>powermt<span class="w"> </span>config
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead<span class="w">   </span><span class="c1"># confirm zero dead paths</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>powermt<span class="w"> </span>save
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Logical device count=12
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Physical device count=24
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Symmetrix ID=000123456789
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Fibre Channel disk count=24
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VRAID disk count=0
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Disk group count=12
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Hot Spare count=2
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Reconfiguring the Symmetrix driver...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Symmetrix driver reconfigured successfully.
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Restoring all dead paths...
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>12 paths restored
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>0 paths failed to restore
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Removing dead path records...
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>0 dead paths removed
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Symmetrix ID=000123456789
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Logical device count=12
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Physical device count=24
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Fibre Channel disk count=24
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>VRAID disk count=0
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Disk group count=12
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Hot Spare count=2
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Configuration saved to /etc/powerpath/powerpath.conf
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/EMC/PowerPath/bin</code> is in your PATH.
+<strong><code>powermt: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root, as PowerPath operations require elevated privileges.
+<strong><code>Symmetrix driver not loaded</code></strong> — Load the PowerPath driver with <code>modprobe powerpath</code> or restart the PowerPath daemon with <code>systemctl restart PowerPath</code>.</p>
+</div>
+<h3 id="manual-path-failover-and-unblock">Manual Path Failover and Unblock<a class="headerlink" href="#manual-path-failover-and-unblock" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Fail a specific path (force I/O off a port — testing/maintenance)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>powermt<span class="w"> </span>fail<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="nv">path</span><span class="o">=</span>&lt;hba_port_id&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Unblock a path (re-enable after manual fail)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>powermt<span class="w"> </span>unblock<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="nv">path</span><span class="o">=</span>&lt;hba_port_id&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Logical device name: emcpower0
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Physical device name: /dev/sdab
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Symmetrix device number: 0001
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Device state: Failed
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Path state: Disabled
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>HBA port ID: 2b
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Timestamp: Wed Oct 11 14:32:18 UTC 2024
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: ERROR: Device emcpower0 not found</code></strong> — Verify the device name with <code>powermt display dev=all</code> and use the correct logical device identifier.
+<strong><code>powermt: ERROR: Invalid path specification &lt;hba_port_id&gt;</code></strong> — Replace <code>&lt;hba_port_id&gt;</code> with the actual HBA port ID (e.g., <code>2b</code> or <code>1a</code>) shown in <code>powermt display dev=emcpower0</code>.
+<strong><code>powermt: ERROR: Operation requires root privileges</code></strong> — Run the commands with <code>sudo</code> or as the root user.</p>
+</div>
+<h3 id="path-detail">Path Detail<a class="headerlink" href="#path-detail" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Full detail for one device including each path&#39;s I/O stats</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># With port info</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span>port
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Confirm ALUA active-optimized paths</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;State|ALUA&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify expected number of paths per device</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/emcpower/{d=$1;c=0} /alive/{c++} /^$/{if(d) print d&quot; &quot;c; d=&quot;&quot;}&#39;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Logical device name                    : emcpower0
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Physical device name                   : /dev/sdaa
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>State                                  : alive
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Symmetrix ID                           : 000297900001
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Logical device ID                      : 00001
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>device wwn                             : 60000970000029790001533030303031
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>--------- Host --------- - Stor - -- I/O Path -- -- Stats --
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a># At,Fa:0 Algo Addr State Q-IOs Errors
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>0 FA 10a:0 round-robin alive 256 0
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>1 FA 10b:0 round-robin alive 256 0
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>2 FA 11a:0 round-robin alive 256 0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>3 FA 11b:0 round-robin alive 256 0
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>State                                  : alive
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ALUA state                             : active optimized
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>ALUA group ID                          : 1
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>emcpower0 4
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>emcpower1 4
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>emcpower2 4
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>emcpower3 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and install the PowerPath agent package if missing.
+<strong><code>Device emcpower0 not found</code></strong> — Confirm the device exists with <code>powermt display dev=all</code> and verify the EMC array is properly zoned and discovered.
+<strong><code>ALUA state: not supported</code></strong> — Check that ALUA is enabled on the storage array and that the device firmware supports ALUA mode.</p>
+</div>
 <h3 id="common-path-issues">Common Path Issues<a class="headerlink" href="#common-path-issues" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9313,41 +9435,137 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 <hr />
 <h2 id="hba-ports">HBA Ports<a class="headerlink" href="#hba-ports" title="Permanent link">&para;</a></h2>
 <p>HBA (Host Bus Adapter) ports are the server-side physical connections into the SAN fabric. Each HBA port has a WWN (World Wide Name) — a unique address used for SAN zoning. These commands show which HBA ports are in use and their connection state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show all HBA ports and their status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>hba
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Detailed per-port info</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">hba</span><span class="o">=</span>&lt;hba_id&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show all paths (initiator → target → device)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>port
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Show paths for a specific device</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;<span class="w"> </span>port
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Show only failed/dead paths</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>powermt<span class="w"> </span>display<span class="w"> </span>hba<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dead
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>powermt<span class="w"> </span>display<span class="w"> </span>port<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dead
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show all HBA ports and their status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>hba
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Detailed per-port info</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">hba</span><span class="o">=</span>&lt;hba_id&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Show all paths (initiator → target → device)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>port
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Show paths for a specific device</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;<span class="w"> </span>port
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Show only failed/dead paths</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>powermt<span class="w"> </span>display<span class="w"> </span>hba<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dead
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>powermt<span class="w"> </span>display<span class="w"> </span>port<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dead
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>HBA Port Information
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>====================
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Hba ID    Vendor    Model         State    Paths
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>c0        QLogic    QLE2562       ALIVE    4
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>c1        QLogic    QLE2562       ALIVE    4
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>c2        Emulex    LPe16002      ALIVE    2
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>c3        Emulex    LPe16002      ALIVE    2
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Detailed Port Information for c0
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>================================
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Port ID: c0:0
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  State: ALIVE
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  Speed: 16 Gbps
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  Connected: Yes
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  Fabric: SAN-Fabric-A
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>Port ID: c0:1
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  State: ALIVE
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Speed: 16 Gbps
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>  Connected: Yes
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  Fabric: SAN-Fabric-B
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>All Paths Summary
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>=================
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>Initiator    Target    Device    State    I/O
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>c0:0         t0        emc0a     ALIVE    Yes
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>c0:1         t1        emc0a     ALIVE    Yes
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>c1:0         t2        emc0b     ALIVE    Yes
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>c1:1         t3        emc0b     ALIVE    Yes
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>c2:0         t4        emc0c     DEAD     No
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>c2:1         t5        emc0c     ALIVE    Yes
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>Paths for Device emc0a
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>======================
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>Path 1: c0:0 → t0 → emc0a [ALIVE]
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>Path 2: c0:1 → t1 → emc0a [ALIVE]
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>Dead/Failed Paths
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>=================
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>c2:0         t4        emc0c     DEAD     No
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install EMC PowerPath package with <code>apt-get install powerpath</code> or <code>yum install powerpath</code> depending on your distribution.
+<strong><code>powermt display: Permission denied</code></strong> — Run the command with sudo: <code>sudo powermt display hba</code> (PowerPath operations require root privileges).
+<strong><code>No paths found for device &lt;device_id&gt;</code></strong> — Verify the device ID exists with <code>powermt display dev</code> and use the correct format (e.g., <code>emc0a</code> not <code>EMC0A</code>).</p>
+</div>
 <h3 id="path-statistics">Path Statistics<a class="headerlink" href="#path-statistics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show I/O load per path</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span>stats
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Reset path statistics (after troubleshooting)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>powermt<span class="w"> </span>reset<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Show I/O load per path</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span>stats
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Reset path statistics (after troubleshooting)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>powermt<span class="w"> </span>reset<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Logical Device Name: emcpowera
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Symmetrix ID: 000123456789ABCD
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Director: 4e Port: 0 Device: 0001
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Avail: Yes Owner: SP A
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Logical Device Name: emcpowerb
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Symmetrix ID: 000123456789ABCD
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Director: 5e Port: 1 Device: 0002
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Avail: Yes Owner: SP B
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>I/O Statistics:
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Path 0: Read I/Os: 45821 Write I/Os: 128934 Errors: 0
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Path 1: Read I/Os: 46103 Write I/Os: 129456 Errors: 0
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Path 2: Read I/Os: 44956 Write I/Os: 127821 Errors: 0
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Path 3: Read I/Os: 46234 Write I/Os: 130102 Errors: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: ERROR: Device &lt;device_id&gt; not found</code></strong> — Verify the device ID exists with <code>powermt display dev=all</code> and use the correct logical device name.
+<strong><code>powermt: ERROR: Insufficient privileges</code></strong> — Run the command with <code>sudo</code> or as root user, as PowerPath operations require elevated permissions.</p>
+</div>
 <h3 id="hba-port-to-wwpn-mapping">HBA Port to WWPN Mapping<a class="headerlink" href="#hba-port-to-wwpn-mapping" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On Linux — map HBA port to WWPN via /sys</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_name
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># On Windows — list HBA WWPNs via WMI</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Get-WmiObject<span class="w"> </span>-Namespace<span class="w"> </span><span class="s2">&quot;root\WMI&quot;</span><span class="w"> </span>-Class<span class="w"> </span><span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>Select-Object<span class="w"> </span>NodeWWN,<span class="w"> </span>PortWWN
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Via hbanyware (Emulex/Broadcom HBA utility)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>hbacmd<span class="w"> </span>listhbas
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>hbacmd<span class="w"> </span>hbaattrib<span class="w"> </span>&lt;HBA_WWN&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># On Linux — map HBA port to WWPN via /sys</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_name
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># On Windows — list HBA WWPNs via WMI</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Get-WmiObject<span class="w"> </span>-Namespace<span class="w"> </span><span class="s2">&quot;root\WMI&quot;</span><span class="w"> </span>-Class<span class="w"> </span><span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>Select-Object<span class="w"> </span>NodeWWN,<span class="w"> </span>PortWWN
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Via hbanyware (Emulex/Broadcom HBA utility)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>hbacmd<span class="w"> </span>listhbas
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>hbacmd<span class="w"> </span>hbaattrib<span class="w"> </span>&lt;HBA_WWN&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>50:00:09:4b:1a:2c:3d:e1
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>50:00:09:4b:1a:2c:3d:e2
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>50:00:09:4b:1a:2c:3d:e3
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>NodeWWN                          PortWWN
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>-------                          -------
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>50:00:09:4b:1a:2c:3d:e1          50:00:09:4b:1a:2c:3d:e1
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>50:00:09:4b:1a:2c:3d:e2          50:00:09:4b:1a:2c:3d:e2
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>HBA List:
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  HBA 1
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    Vendor: Emulex
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    Model: LPe16002-M6
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    Serial: 00-11-22-33-44-55
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    Port WWPN: 50:00:09:4b:1a:2c:3d:e1
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    Port WWNN: 50:00:09:4b:1a:2c:3d:e0
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>HBA Attributes for 50:00:09:4b:1a:2c:3d:e1:
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>  Firmware: 12.8.340.0
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  Driver: 12.8.340.0
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  Port State: Online
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  Speed: 16 Gbps
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>cat: /sys/class/fc_host/host*/port_name: No such file or directory</code></strong> — Verify FC HBA is installed and recognized with <code>lspci | grep -i fibre</code> before querying sysfs.
+<strong><code>Get-WmiObject : Invalid namespace</code></strong> — Run PowerShell as Administrator and confirm WMI namespace exists with <code>Get-WmiObject -Namespace "root\WMI" -List | grep MSFC</code>.
+<strong><code>hbacmd: command not found</code></strong> — Install hbanyware package for your HBA vendor (e.g., <code>apt-get install hbanyware</code> on Linux or download from Emulex/Broadcom support portal) and ensure it is in PATH.</p>
+</div>
 <h3 id="powerpath-quick-reference">PowerPath Quick Reference<a class="headerlink" href="#powerpath-quick-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9392,15 +9610,39 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 </tbody>
 </table>
 <h3 id="troubleshooting-dead-paths">Troubleshooting Dead Paths<a class="headerlink" href="#troubleshooting-dead-paths" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Identify dead paths</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B<span class="w"> </span><span class="m">2</span><span class="w"> </span>dead
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Manually attempt path recovery</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>powermt<span class="w"> </span>check<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Restore all paths</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>powermt<span class="w"> </span>restore<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Identify dead paths</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B<span class="w"> </span><span class="m">2</span><span class="w"> </span>dead
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Manually attempt path recovery</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>powermt<span class="w"> </span>check<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Restore all paths</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>powermt<span class="w"> </span>restore<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device_id&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Logical device name=emcpowera
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Symmetrix ID=000123456789ABC
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Fibre Channel director port: 4g FA-7E port 0
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a> STL I/O [000123456789ABC-004e-000000] (dead)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a> STL I/O [000123456789ABC-004f-000000] (dead)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Logical device name=emcpowerb
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Symmetrix ID=000123456789ABC
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Fibre Channel director port: 4g FA-8E port 1
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a> STL I/O [000123456789ABC-0050-000000] (dead)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Checking paths for device emcpowera...
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Path check completed. 2 paths recovered, 1 path still unavailable.
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Restoring all paths for device emcpowera...
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Path restoration initiated. Waiting for fabric stabilization...
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>All available paths restored successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install EMC PowerPath package using <code>yum install PowerPath</code> or equivalent for your distribution.
+<strong><code>powermt check dev=emcpowera: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user since PowerPath operations require elevated privileges.
+<strong><code>No such device: emcpowera</code></strong> — Verify the device name exists by running <code>powermt display dev=all</code> first to list valid device identifiers.</p>
+</div>
 <hr />
 <h2 id="load-balancing-policies">Load Balancing &amp; Policies<a class="headerlink" href="#load-balancing-policies" title="Permanent link">&para;</a></h2>
 <p>PowerPath distributes I/O across available paths using a configurable load balancing policy. The right policy depends on the storage array type. For Dell EMC arrays, <code>co</code> (CLARiiON Optimized) is the default and recommended setting — it uses ALUA to prefer the owning storage processor's paths.</p>
@@ -9442,26 +9684,51 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 </tbody>
 </table>
 <h3 id="view-current-policy">View Current Policy<a class="headerlink" href="#view-current-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Policy for a specific device</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Policy for all devices</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Policy for a specific device</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Policy for all devices</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Policy: SymmOpt
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Policy: SymmOpt
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Policy: SymmOpt
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Policy: SymmOpt
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Install EMC PowerPath software or ensure the PowerPath bin directory is in your PATH environment variable.
+<strong><code>grep: (standard input) is empty</code></strong> — Verify the device name is correct with <code>powermt display dev=all</code> and confirm PowerPath is running with <code>powermt check</code>.</p>
+</div>
 <h3 id="set-policy">Set Policy<a class="headerlink" href="#set-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Set policy on a specific device</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Set policy across all devices of a specific class</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>clariion
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>rr<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>symmetrix
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Set policy globally</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Save after changing policy (persists across reboots)</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>powermt<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Set policy on a specific device</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Set policy across all devices of a specific class</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>clariion
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>rr<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>symmetrix
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Set policy globally</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># Save after changing policy (persists across reboots)</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>powermt<span class="w"> </span>save
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Logical device emcpower0: Policy set to co
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Logical device emcpower1: Policy set to co
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Logical device emcpower2: Policy set to co
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Logical device emcpower3: Policy set to co
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>4 Symmetrix devices: Policy set to rr
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>12 CLARiiON devices: Policy set to co
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Saving EMC PowerPath configuration...
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Configuration saved successfully to /etc/powerpath/powerpath.conf
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Ensure EMC PowerPath is installed and <code>/opt/PowerPath/bin</code> is in your PATH, or use the full path <code>/opt/PowerPath/bin/powermt</code>.
+<strong><code>powermt: You must be root to run this command</code></strong> — Run the command with <code>sudo</code> or switch to the root user before executing powermt commands.
+<strong><code>powermt set: Invalid device name 'emcpower0'</code></strong> — Verify the device exists by running <code>powermt display dev=all</code> and use the correct logical device name.</p>
+</div>
 <h3 id="recommended-policies-by-array">Recommended Policies by Array<a class="headerlink" href="#recommended-policies-by-array" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9490,148 +9757,299 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 </tbody>
 </table>
 <h3 id="verifying-load-distribution">Verifying Load Distribution<a class="headerlink" href="#verifying-load-distribution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check path I/O statistics</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Bytes|I/Os&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Full device detail with path stats</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span>port
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check path I/O statistics</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Bytes|I/Os&quot;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Full device detail with path stats</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span>port
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Bytes (MB):  1,234.5
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>I/Os (Reads):  45,892
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>I/Os (Writes):  78,341
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>I/Os (Total):  124,233
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Logical device name: emcpower0
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Physical device: /dev/sda
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Symmetrix ID: 000123456789
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Director Port: 5e
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>Bytes (MB):  1,234.5
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>I/Os (Reads):  45,892
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>I/Os (Writes):  78,341
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>I/Os (Total):  124,233
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Path 0: dev=sda port=5e:0 state=active
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Path 1: dev=sdb port=5e:1 state=active
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>Path 2: dev=sdc port=6e:0 state=active
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>Path 3: dev=sdd port=6e:1 state=active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install PowerPath package or verify the EMC PowerPath agent is installed and in your system PATH.
+<strong><code>powermt display: device emcpower0 not found</code></strong> — Verify the device exists with <code>powermt display</code> (no device argument) and confirm the correct device name.</p>
+</div>
 <h3 id="troubleshooting-uneven-load">Troubleshooting Uneven Load<a class="headerlink" href="#troubleshooting-uneven-load" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>policy
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>powermt<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>policy
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>powermt<span class="w"> </span>save
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Policy: SymmOID=000297500001, Symmetrix ID=000297500001, Director=4e, Port=0
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Policy: SymmOID=000297500002, Symmetrix ID=000297500002, Director=5e, Port=1
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Policy: SymmOID=000297500003, Symmetrix ID=000297500003, Director=6e, Port=2
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Policy: SymmOID=000297500004, Symmetrix ID=000297500004, Director=7e, Port=3
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Restoring PowerPath configuration from /etc/powerpath/powerpath.conf...
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>Configuration restored successfully. 12 devices updated.
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Saving PowerPath configuration to /etc/powerpath/powerpath.conf...
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>Configuration saved successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Ensure EMC PowerPath is installed and /opt/emc/powerpath/bin is in your PATH, or run with full path <code>/opt/emc/powerpath/bin/powermt</code>.
+<strong><code>Permission denied</code></strong> — Run powermt commands with sudo or as root user, as PowerPath configuration requires elevated privileges.
+<strong><code>No devices found</code></strong> — Verify that storage devices are properly zoned and visible to the host by running <code>powermt config</code> to rescan devices.</p>
+</div>
 <hr />
 <h2 id="configuration-checks">Configuration &amp; Checks<a class="headerlink" href="#configuration-checks" title="Permanent link">&para;</a></h2>
 <p>These commands manage the PowerPath configuration file, validate the current setup, and let you add or remove devices after SAN changes. Always save after making changes so they persist across reboots.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check all paths</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>powermt<span class="w"> </span>check
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Check specific device</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>powermt<span class="w"> </span>check<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower&lt;n&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Verify consistency</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Show configuration file</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>cat<span class="w"> </span>/etc/powermt.custom
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Save current configuration</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>powermt<span class="w"> </span>save
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>powermt<span class="w"> </span>save<span class="w"> </span>force
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># Load / restore config</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="c1"># Reconfig (after new device attachment)</span>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>powermt<span class="w"> </span>config
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1"># Remove stale devices</span>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>powermt<span class="w"> </span>remove<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower&lt;n&gt;
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>powermt<span class="w"> </span>remove<span class="w"> </span>dead
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Check all paths</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>powermt<span class="w"> </span>check
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Check specific device</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>powermt<span class="w"> </span>check<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower&lt;n&gt;
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Verify consistency</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Show configuration file</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>cat<span class="w"> </span>/etc/powermt.custom
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="c1"># Save current configuration</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>powermt<span class="w"> </span>save
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>powermt<span class="w"> </span>save<span class="w"> </span>force
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="c1"># Load / restore config</span>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a><span class="c1"># Reconfig (after new device attachment)</span>
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>powermt<span class="w"> </span>config
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a><span class="c1"># Remove stale devices</span>
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>powermt<span class="w"> </span>remove<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower&lt;n&gt;
+<a id="__codelineno-26-25" name="__codelineno-26-25" href="#__codelineno-26-25"></a>powermt<span class="w"> </span>remove<span class="w"> </span>dead
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Symmetrix ID: 000123456789ABC
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Logical Device: emcpower0
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Symmetrix Device: 000123
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Director Port: 4e
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Aport: SP A, Port 4
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>Bport: SP B, Port 4
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Path 0: ENABLED
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>Path 1: ENABLED
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>Path 2: ENABLED
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>Path 3: ENABLED
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>Symmetrix ID: 000123456789ABC
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>Logical Device: emcpower1
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>Symmetrix Device: 000124
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>Director Port: 5e
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>Aport: SP A, Port 5
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Bport: SP B, Port 5
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>Path 0: ENABLED
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>Path 1: ENABLED
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>Saved configuration to /etc/powermt.custom
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>Configuration restored successfully
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>Reconfiguring devices...
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>Device emcpower5 removed
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>Dead paths cleaned up
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install PowerPath package with <code>rpm -ivh PowerPath*.rpm</code> or verify <code>/opt/emc/powerpath/bin</code> is in your PATH.
+<strong><code>powermt: Unable to open /etc/powermt.custom: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>powermt check: No devices found</code></strong> — Verify EMC storage arrays are zoned and visible to the host with <code>powermt display dev=all</code>.</p>
+</div>
 <hr />
 <h2 id="windows-powerpath">Windows PowerPath<a class="headerlink" href="#windows-powerpath" title="Permanent link">&para;</a></h2>
 <p>On Windows, <code>powermt</code> runs from PowerShell or CMD after the PowerPath service and driver are installed. The commands are largely the same as Linux with some Windows-specific additions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Display all PowerPath devices and paths</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">powermt</span> <span class="n">display</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Display all devices with path detail</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c"># Filter by storage class</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">class</span><span class="p">=</span><span class="n">symmetrix</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c"># Count alive paths</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;alive&quot;</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c"># PowerPath self-check</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="n">powermt</span> <span class="n">check</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c"># Restore dead paths</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="n">powermt</span> <span class="n">restore</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c"># Dead paths</span>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dead</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="c"># Save configuration</span>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="n">powermt</span> <span class="n">save</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="c"># PowerPath service status</span>
-<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPower*&quot;</span>
-<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;PowerPath*&quot;</span>
-<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>
-<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="c"># Restart PowerPath (use only during maintenance)</span>
-<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPowerPath&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>
-<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="c"># Check if PowerPath driver is loaded</span>
-<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_SystemDriver</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;emcpower&quot;</span> <span class="p">}</span>
-<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>
-<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="c"># View current policy per device</span>
-<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;policy&quot;</span>
-<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>
-<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="c"># Set policy (CLARiiON Optimized for Dell EMC arrays)</span>
-<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="n">powermt</span> <span class="nb">set </span><span class="n">policy</span><span class="p">=</span><span class="n">co</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="n">class</span><span class="p">=</span><span class="n">clariion</span>
-<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a>
-<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="c"># PowerPath logs in Windows Event Log</span>
-<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;PowerPath&quot;</span> <span class="p">}</span>
-<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a>
-<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="c"># PowerPath devices — list disks via WMI</span>
-<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FriendlyName</span> <span class="o">-match</span> <span class="s2">&quot;DGC\|EMC&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">Size</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c"># Display all PowerPath devices and paths</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="n">powermt</span> <span class="n">display</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c"># Display all devices with path detail</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c"># Filter by storage class</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">class</span><span class="p">=</span><span class="n">symmetrix</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c"># Count alive paths</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;alive&quot;</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="c"># PowerPath self-check</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="n">powermt</span> <span class="n">check</span>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="c"># Restore dead paths</span>
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="n">powermt</span> <span class="n">restore</span>
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="c"># Dead paths</span>
+<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dead</span>
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="c"># Save configuration</span>
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="n">powermt</span> <span class="n">save</span>
+<a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a>
+<a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="c"># PowerPath service status</span>
+<a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPower*&quot;</span>
+<a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;PowerPath*&quot;</span>
+<a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a>
+<a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a><span class="c"># Restart PowerPath (use only during maintenance)</span>
+<a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;EMCPowerPath&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-28-31" name="__codelineno-28-31" href="#__codelineno-28-31"></a>
+<a id="__codelineno-28-32" name="__codelineno-28-32" href="#__codelineno-28-32"></a><span class="c"># Check if PowerPath driver is loaded</span>
+<a id="__codelineno-28-33" name="__codelineno-28-33" href="#__codelineno-28-33"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_SystemDriver</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;emcpower&quot;</span> <span class="p">}</span>
+<a id="__codelineno-28-34" name="__codelineno-28-34" href="#__codelineno-28-34"></a>
+<a id="__codelineno-28-35" name="__codelineno-28-35" href="#__codelineno-28-35"></a><span class="c"># View current policy per device</span>
+<a id="__codelineno-28-36" name="__codelineno-28-36" href="#__codelineno-28-36"></a><span class="n">powermt</span> <span class="n">display</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;policy&quot;</span>
+<a id="__codelineno-28-37" name="__codelineno-28-37" href="#__codelineno-28-37"></a>
+<a id="__codelineno-28-38" name="__codelineno-28-38" href="#__codelineno-28-38"></a><span class="c"># Set policy (CLARiiON Optimized for Dell EMC arrays)</span>
+<a id="__codelineno-28-39" name="__codelineno-28-39" href="#__codelineno-28-39"></a><span class="n">powermt</span> <span class="nb">set </span><span class="n">policy</span><span class="p">=</span><span class="n">co</span> <span class="n">dev</span><span class="p">=</span><span class="n">all</span> <span class="n">class</span><span class="p">=</span><span class="n">clariion</span>
+<a id="__codelineno-28-40" name="__codelineno-28-40" href="#__codelineno-28-40"></a>
+<a id="__codelineno-28-41" name="__codelineno-28-41" href="#__codelineno-28-41"></a><span class="c"># PowerPath logs in Windows Event Log</span>
+<a id="__codelineno-28-42" name="__codelineno-28-42" href="#__codelineno-28-42"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-match</span> <span class="s2">&quot;PowerPath&quot;</span> <span class="p">}</span>
+<a id="__codelineno-28-43" name="__codelineno-28-43" href="#__codelineno-28-43"></a>
+<a id="__codelineno-28-44" name="__codelineno-28-44" href="#__codelineno-28-44"></a><span class="c"># PowerPath devices — list disks via WMI</span>
+<a id="__codelineno-28-45" name="__codelineno-28-45" href="#__codelineno-28-45"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FriendlyName</span> <span class="o">-match</span> <span class="s2">&quot;DGC\|EMC&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">OperationalStatus</span><span class="p">,</span> <span class="n">Size</span>
 </code></pre></div>
 <hr />
 <h2 id="common-check-sequences">Common Check Sequences<a class="headerlink" href="#common-check-sequences" title="Permanent link">&para;</a></h2>
 <p>Runbooks for the most common PowerPath tasks. Use these as a checklist during troubleshooting or after SAN maintenance.</p>
 <h3 id="quick-health-check">Quick Health Check<a class="headerlink" href="#quick-health-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 1. Count alive paths</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;alive&quot;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># 2. Count dead paths (should be zero)</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dead&quot;</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># 3. Show dead paths directly</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># 4. PowerPath self-check</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>powermt<span class="w"> </span>check
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># 5. Attempt to restore dead paths</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>powermt<span class="w"> </span>restore
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># 1. Count alive paths</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;alive&quot;</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># 2. Count dead paths (should be zero)</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;dead&quot;</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># 3. Show dead paths directly</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="c1"># 4. PowerPath self-check</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>powermt<span class="w"> </span>check
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="c1"># 5. Attempt to restore dead paths</span>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>powermt<span class="w"> </span>restore
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>42
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>0
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>No dead paths found.
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>PowerPath driver version 6.2.1 (build 247)
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>Logical device count: 18
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>Physical device count: 24
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>All paths operational
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>Symmetrix ID: 000297900123
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>Host: storage-prod-01
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>PowerPath check completed successfully — no errors detected
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>Attempting to restore paths...
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>No dead paths to restore.
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>Restore operation completed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: command not found</code></strong> — Install PowerPath EMC software or add <code>/opt/emc/powerpath/bin</code> to your PATH environment variable.
+<strong><code>powermt display: insufficient privileges</code></strong> — Run the command with <code>sudo</code> or as root user; PowerPath requires elevated permissions.
+<strong><code>powermt check: No Symmetrix devices detected</code></strong> — Verify SAN connectivity and zoning; confirm Fibre Channel HBAs are properly configured and visible with <code>powermt display dev=all</code>.</p>
+</div>
 <h3 id="path-count-per-device">Path Count Per Device<a class="headerlink" href="#path-count-per-device" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Summary per device (alive vs dead)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="s1">    /emcpower/ { dev=$1; alive=0; dead=0 }</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s1">    /alive/    { alive++ }</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s1">    /dead/     { dead++ }</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="s1">    /^$/       { if (dev) printf &quot;%s  alive: %d  dead: %d\n&quot;, dev, alive, dead; dev=&quot;&quot; }</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="s1">&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Summary per device (alive vs dead)</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="s1">    /emcpower/ { dev=$1; alive=0; dead=0 }</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="s1">    /alive/    { alive++ }</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="s1">    /dead/     { dead++ }</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="s1">    /^$/       { if (dev) printf &quot;%s  alive: %d  dead: %d\n&quot;, dev, alive, dead; dev=&quot;&quot; }</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="s1">&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>emcpower0  alive: 4  dead: 0
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>emcpower1  alive: 4  dead: 0
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>emcpower2  alive: 3  dead: 1
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>emcpower3  alive: 4  dead: 0
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>emcpower4  alive: 2  dead: 2
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>emcpower5  alive: 4  dead: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: powermt</code></strong> — Install EMC PowerPath software or verify the installation with <code>rpm -qa | grep PowerPath</code> on the target system.
+<strong><code>awk: syntax error in pattern near line 1</code></strong> — Ensure the script uses single quotes and that no special characters are escaped incorrectly; test with <code>echo "test" | awk '/test/ { print }'</code> first.</p>
+</div>
 <h3 id="service-and-driver-status-linux">Service and Driver Status (Linux)<a class="headerlink" href="#service-and-driver-status-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># PowerPath daemon status</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>service<span class="w"> </span>PowerPath<span class="w"> </span>status
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Check loaded driver</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcpower
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># Kernel module version</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>modinfo<span class="w"> </span>emcpower<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># PowerPath daemon status</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>service<span class="w"> </span>PowerPath<span class="w"> </span>status
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="c1"># Check loaded driver</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcpower
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="c1"># Kernel module version</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>modinfo<span class="w"> </span>emcpower<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>version
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>● PowerPath.service - EMC PowerPath
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>     Loaded: loaded (/etc/systemd/system/PowerPath.service; enabled; vendor preset: disabled)
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>   Main PID: 3847 (powermt)
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>      Tasks: 12 (limit: 4915)
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>     Memory: 48.2M
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>        CPU: 2min 34s
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>     CGroup: /system.slice/PowerPath.service
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>             └─3847 /opt/PowerPath/bin/powermt
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>PowerPath for Linux (build 555.0.0.0) is running.
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>emcpower              245760  8 - Live 0xffffffffc0a00000
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>version:        555.0.0.0
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>version_date:   2023-12-15
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unit PowerPath.service could not be found.</code></strong> — Install PowerPath package or verify the service file exists at <code>/etc/systemd/system/PowerPath.service</code>.
+<strong><code>modinfo: ERROR: Module emcpower not found in directory /lib/modules/5.15.0-84-generic/kernel</code></strong> — Load the kernel module with <code>modprobe emcpower</code> or verify the driver is installed with <code>rpm -qa | grep PowerPath</code>.</p>
+</div>
 <h3 id="post-maintenance-validation">Post-Maintenance Validation<a class="headerlink" href="#post-maintenance-validation" title="Permanent link">&para;</a></h3>
 <p>After any SAN maintenance (zoning changes, LUN remapping, path reconfiguration):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Rescan for new devices</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>powermt<span class="w"> </span>config
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># 2. Verify all paths recovered</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># 3. Confirm path balance</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;emcpower|alive|dead&quot;</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># 4. Save new configuration</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>powermt<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># 1. Rescan for new devices</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>powermt<span class="w"> </span>config
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># 2. Verify all paths recovered</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># 3. Confirm path balance</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;emcpower|alive|dead&quot;</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="c1"># 4. Save new configuration</span>
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>powermt<span class="w"> </span>save
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Verifying EMC PowerPath configuration...
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>Reconfiguring all devices...
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>Number of Symmetrix(es): 1
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>Symmetrix ID: 000123456789ABCD
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>Fibre Channel director port: 4e:0
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>Host adapter: 0 SP: A PortID: 000000
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>Host adapter: 1 SP: B PortID: 000001
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>Host adapter: 2 SP: A PortID: 000002
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>Host adapter: 3 SP: B PortID: 000003
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>Dead Paths:
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>No dead paths detected.
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>emcpower0a (symmetrix-000123456789ABCD-0001): ALIVE [RR] 4 alive 0 dead
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a>emcpower0b (symmetrix-000123456789ABCD-0001): ALIVE [RR] 4 alive 0 dead
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>emcpower1a (symmetrix-000123456789ABCD-0002): ALIVE [RR] 4 alive 0 dead
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>emcpower1b (symmetrix-000123456789ABCD-0002): ALIVE [RR] 4 alive 0 dead
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a>
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a>Configuration saved to /etc/powerpath/powerpath.conf
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>powermt: Command not found</code></strong> — Install EMC PowerPath package or verify the installation with <code>rpm -qa | grep PowerPath</code>.
+<strong><code>powermt: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
+<strong><code>No dead paths detected</code> but paths still unavailable</strong> — Check physical SAN connectivity and zoning with <code>powermt display</code> and verify HBA status with <code>systool -c fc_host -v</code>.</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9668,7 +10086,7 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

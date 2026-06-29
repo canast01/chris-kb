@@ -8858,145 +8858,598 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-object-versions<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-lifecycle-configuration<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span>--lifecycle-configuration<span class="w"> </span>file://lifecycle.json
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2024-01-15 10:23:45 prod-app-backups
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-14 16:47:12 staging-logs
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-01-12 09:15:33 dev-scratch
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-01-10 14:22:01 archive-2023
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PRE logs/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>PRE config/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15T08:30:22.000Z       4521 app.log
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15T07:45:11.000Z     156234 metrics.json
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-14T23:12:05.000Z      89012 backup.tar.gz
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>upload: ./data.csv to s3://prod-app-backups/exports/data.csv
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>download: s3://prod-app-backups/exports/data.csv to ./data.csv
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>{
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;Status&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;MFADelete&quot;: &quot;Disabled&quot;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>}
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    &quot;Rules&quot;: [
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        {
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            &quot;ID&quot;: &quot;archive-old-logs&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>            &quot;Status&quot;: &quot;Enabled&quot;,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            &quot;Prefix&quot;: &quot;logs/&quot;,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            &quot;Transitions&quot;: [
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>                {
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>                    &quot;Days&quot;: 30,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>                    &quot;StorageClass&quot;: &quot;GLACIER&quot;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>                }
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            ]
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        }
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    ]
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist</code></strong> — Verify the bucket name is correct and exists in your AWS account with <code>aws s3 ls</code>.
+<strong><code>An error occurred (AccessDenied) when calling the PutObject operation: Access Denied</code></strong> — Ensure your IAM user/role has <code>s3:PutObject</code> permission for that bucket in the bucket policy or IAM policy.
+<strong><code>fatal error: An error occurred (InvalidArgument) when calling the PutBucketLifecycleConfiguration operation: Invalid lifecycle configuration</code></strong> — Validate the JSON syntax in your lifecycle.json file and ensure it contains required fields like <code>Rules</code> and <code>Status</code>.</p>
+</div>
 <hr />
 <h2 id="vpc-networking">VPC &amp; Networking<a class="headerlink" href="#vpc-networking" title="Permanent link">&para;</a></h2>
 <p>VPC (Virtual Private Cloud) is your private network in AWS. Subnets divide the VPC into segments. Route tables control where traffic goes. Internet gateways provide internet access. Elastic IPs are static public IP addresses.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># VPCs (your isolated private network in AWS)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-vpc<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Subnets (segments of a VPC — typically split by AZ and public/private)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=vpc-id,Values=&lt;vpc_id&gt;&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>--availability-zone<span class="w"> </span>us-east-1a
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Route tables (rules for where network traffic should go)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span>&lt;rt_id&gt;<span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--gateway-id<span class="w"> </span>&lt;igw_id&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Internet gateways (connects your VPC to the public internet)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>&lt;igw_id&gt;<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;vpc_id&gt;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Elastic IPs (static public IP addresses that persist independent of instances)</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-addresses
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-address<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VPCs (your isolated private network in AWS)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-vpc<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Subnets (segments of a VPC — typically split by AZ and public/private)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=vpc-id,Values=&lt;vpc_id&gt;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>--availability-zone<span class="w"> </span>us-east-1a
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Route tables (rules for where network traffic should go)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span>&lt;rt_id&gt;<span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--gateway-id<span class="w"> </span>&lt;igw_id&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Internet gateways (connects your VPC to the public internet)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>&lt;igw_id&gt;<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;vpc_id&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Elastic IPs (static public IP addresses that persist independent of instances)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-addresses
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-address<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
 </code></pre></div>
-<hr />
+<h2 id="expected-output-vpcs-vpcid-vpc-0a1b2c3d4e5f6g7h8-cidrblock-1000016-state-available-ownerid-123456789012-vpcid-vpc-1x2y3z4a5b6c7d8e9-cidrblock-172310016-state-available-ownerid-123456789012-vpc-vpcid-vpc-9f8e7d6c5b4a3z2y1-cidrblock-1000016-state-pending-ownerid-123456789012-subnets-subnetid-subnet-0a1b2c3d4e5f6g7h8-vpcid-vpc-0a1b2c3d4e5f6g7h8-cidrblock-1001024-availabilityzone-us-east-1a-state-available-routetables-routetableid-rtb-0a1b2c3d4e5f6g7h8-vpcid-vpc-0a1b2c3d4e5f6g7h8-routes-destinationcidrblock-1000016-gatewayid-local-state-active-internetgateways-internetgatewayid-igw-0a1b2c3d4e5f6g7h8-attachments-vpcid-vpc-0a1b2c3d4e5f6g7h8-state-available-addresses-instanceid-i-0a1b2c3d4e5f6g7h8-publicip-203011345-allocationid-eipalloc-0a1b2c3d4e5f6g7h8-domain-vpc-associationid-eipassoc-2bsum4arq-publicip-1985110072-allocationid-eipalloc-1x2y3z4a5b6c7d8e9"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    &quot;Vpcs&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>            &quot;VpcId&quot;: &quot;vpc-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            &quot;CidrBlock&quot;: &quot;10.0.0.0/16&quot;,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            &quot;State&quot;: &quot;available&quot;,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            &quot;OwnerId&quot;: &quot;123456789012&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        },
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        {
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            &quot;VpcId&quot;: &quot;vpc-1x2y3z4a5b6c7d8e9&quot;,
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            &quot;CidrBlock&quot;: &quot;172.31.0.0/16&quot;,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            &quot;State&quot;: &quot;available&quot;,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>            &quot;OwnerId&quot;: &quot;123456789012&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        }
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    ]
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>}
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>{
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    &quot;Vpc&quot;: {
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        &quot;VpcId&quot;: &quot;vpc-9f8e7d6c5b4a3z2y1&quot;,
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        &quot;CidrBlock&quot;: &quot;10.0.0.0/16&quot;,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        &quot;State&quot;: &quot;pending&quot;,
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        &quot;OwnerId&quot;: &quot;123456789012&quot;
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    }
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>}
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>{
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>    &quot;Subnets&quot;: [
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>        {
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>            &quot;SubnetId&quot;: &quot;subnet-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>            &quot;VpcId&quot;: &quot;vpc-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>            &quot;CidrBlock&quot;: &quot;10.0.1.0/24&quot;,
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>            &quot;AvailabilityZone&quot;: &quot;us-east-1a&quot;,
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>            &quot;State&quot;: &quot;available&quot;
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>        }
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>    ]
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>}
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>{
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>    &quot;RouteTables&quot;: [
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>        {
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>            &quot;RouteTableId&quot;: &quot;rtb-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>            &quot;VpcId&quot;: &quot;vpc-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>            &quot;Routes&quot;: [
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>                {
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>                    &quot;DestinationCidrBlock&quot;: &quot;10.0.0.0/16&quot;,
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>                    &quot;GatewayId&quot;: &quot;local&quot;,
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>                    &quot;State&quot;: &quot;active&quot;
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>                }
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>            ]
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>        }
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>    ]
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>}
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>{
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>    &quot;InternetGateways&quot;: [
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>        {
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>            &quot;InternetGatewayId&quot;: &quot;igw-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>            &quot;Attachments&quot;: [
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>                {
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>                    &quot;VpcId&quot;: &quot;vpc-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>                    &quot;State&quot;: &quot;available&quot;
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>                }
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>            ]
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>        }
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>    ]
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>}
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>{
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>    &quot;Addresses&quot;: [
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>        {
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a>            &quot;InstanceId&quot;: &quot;i-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a>            &quot;PublicIp&quot;: &quot;203.0.113.45&quot;,
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a>            &quot;AllocationId&quot;: &quot;eipalloc-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>            &quot;Domain&quot;: &quot;vpc&quot;,
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a>            &quot;AssociationId&quot;: &quot;eipassoc-2bsum4arq&quot;
+<a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a>        }
+<a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a>    ]
+<a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a>}
+<a id="__codelineno-3-80" name="__codelineno-3-80" href="#__codelineno-3-80"></a>
+<a id="__codelineno-3-81" name="__codelineno-3-81" href="#__codelineno-3-81"></a>{
+<a id="__codelineno-3-82" name="__codelineno-3-82" href="#__codelineno-3-82"></a>    &quot;PublicIp&quot;: &quot;198.51.100.72&quot;,
+<a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a>    &quot;AllocationId&quot;: &quot;eipalloc-1x2y3z4a5b6c7d8e9&quot;,
+</code></pre></div><a class="headerlink" href="#expected-output-vpcs-vpcid-vpc-0a1b2c3d4e5f6g7h8-cidrblock-1000016-state-available-ownerid-123456789012-vpcid-vpc-1x2y3z4a5b6c7d8e9-cidrblock-172310016-state-available-ownerid-123456789012-vpc-vpcid-vpc-9f8e7d6c5b4a3z2y1-cidrblock-1000016-state-pending-ownerid-123456789012-subnets-subnetid-subnet-0a1b2c3d4e5f6g7h8-vpcid-vpc-0a1b2c3d4e5f6g7h8-cidrblock-1001024-availabilityzone-us-east-1a-state-available-routetables-routetableid-rtb-0a1b2c3d4e5f6g7h8-vpcid-vpc-0a1b2c3d4e5f6g7h8-routes-destinationcidrblock-1000016-gatewayid-local-state-active-internetgateways-internetgatewayid-igw-0a1b2c3d4e5f6g7h8-attachments-vpcid-vpc-0a1b2c3d4e5f6g7h8-state-available-addresses-instanceid-i-0a1b2c3d4e5f6g7h8-publicip-203011345-allocationid-eipalloc-0a1b2c3d4e5f6g7h8-domain-vpc-associationid-eipassoc-2bsum4arq-publicip-1985110072-allocationid-eipalloc-1x2y3z4a5b6c7d8e9" title="Permanent link">&para;</a></h2>
 <h2 id="cloudwatch">CloudWatch<a class="headerlink" href="#cloudwatch" title="Permanent link">&para;</a></h2>
 <p>CloudWatch is AWS's monitoring and observability service. Metrics are numeric measurements (e.g., CPU %). Alarms trigger actions when metrics cross thresholds. Log groups store application and service logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Alarms (trigger notifications or auto-scaling when a metric threshold is breached)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span>--state-value<span class="w"> </span>ALARM
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>set-alarm-state<span class="w"> </span>--alarm-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--state-value<span class="w"> </span>OK<span class="w"> </span>--state-reason<span class="w"> </span><span class="s2">&quot;manual reset&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Metrics (numeric measurements for AWS services and custom apps)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>list-metrics<span class="w"> </span>--namespace<span class="w"> </span>AWS/EC2
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EC2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>InstanceId,Value<span class="o">=</span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Logs (centralized log storage for applications and AWS services)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-groups
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-streams<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--log-stream-name<span class="w"> </span>&lt;stream&gt;
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>&lt;log_group&gt;<span class="w"> </span>--follow<span class="w">             </span><span class="c1"># live tail (like tail -f for cloud logs)</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--filter-pattern<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Alarms (trigger notifications or auto-scaling when a metric threshold is breached)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span>--state-value<span class="w"> </span>ALARM
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>set-alarm-state<span class="w"> </span>--alarm-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--state-value<span class="w"> </span>OK<span class="w"> </span>--state-reason<span class="w"> </span><span class="s2">&quot;manual reset&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Metrics (numeric measurements for AWS services and custom apps)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>list-metrics<span class="w"> </span>--namespace<span class="w"> </span>AWS/EC2
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EC2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>InstanceId,Value<span class="o">=</span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Logs (centralized log storage for applications and AWS services)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-groups
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-streams<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--log-stream-name<span class="w"> </span>&lt;stream&gt;
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>&lt;log_group&gt;<span class="w"> </span>--follow<span class="w">             </span><span class="c1"># live tail (like tail -f for cloud logs)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--filter-pattern<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
 </code></pre></div>
-<hr />
+<h2 id="expected-output-metricalarms-alarmname-prod-api-cpu-high-metricname-cpuutilization-namespace-awsec2-statistic-average-period-300-evaluationperiods-2-threshold-800-comparisonoperator-greaterthanthreshold-statevalue-ok-stateupdatedtimestamp-2024-01-15t143210000z-alarmname-rds-connections-warning-metricname-databaseconnections-namespace-awsrds-statevalue-alarm-stateupdatedtimestamp-2024-01-15t134522000z-metricalarms-alarmname-rds-connections-warning-statevalue-alarm-statereason-threshold-crossed-1-out-of-1-datapoints-was-greater-than-the-threshold-850-no-output-command-completes-silently-metrics-namespace-awsec2-metricname-cpuutilization-dimensions-name-instanceid-value-i-0a1b2c3d4e5f6g7h8-namespace-awsec2-metricname-networkin-dimensions-name-instanceid-value-i-0a1b2c3d4e5f6g7h8-label-cpuutilization-datapoints-timestamp-2024-01-15t140000z-average-425-timestamp-2024-01-15t140500z-average-382-timestamp-2024-01-15t141000z-average-451-loggroups-loggroupname-awslambdaauth-service-creationtime-1705334400000-retentionindays-7-loggroupname-awsecsprod-api-creationtime-1705248000000-retentionindays-30-loggroupname-awsrdsmysql-prod-creationtime-1704988800000-logstreams-logstreamname-20240115latesta1b2c3d4e5f6g7h8-creationtime-1705334410000-firsteventtimestamp-1705334415000"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    &quot;MetricAlarms&quot;: [
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        {
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>            &quot;AlarmName&quot;: &quot;prod-api-cpu-high&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            &quot;MetricName&quot;: &quot;CPUUtilization&quot;,
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            &quot;Namespace&quot;: &quot;AWS/EC2&quot;,
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            &quot;Statistic&quot;: &quot;Average&quot;,
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            &quot;Period&quot;: 300,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            &quot;EvaluationPeriods&quot;: 2,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            &quot;Threshold&quot;: 80.0,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            &quot;ComparisonOperator&quot;: &quot;GreaterThanThreshold&quot;,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            &quot;StateValue&quot;: &quot;OK&quot;,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            &quot;StateUpdatedTimestamp&quot;: &quot;2024-01-15T14:32:10.000Z&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        },
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        {
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            &quot;AlarmName&quot;: &quot;rds-connections-warning&quot;,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>            &quot;MetricName&quot;: &quot;DatabaseConnections&quot;,
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            &quot;Namespace&quot;: &quot;AWS/RDS&quot;,
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            &quot;StateValue&quot;: &quot;ALARM&quot;,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            &quot;StateUpdatedTimestamp&quot;: &quot;2024-01-15T13:45:22.000Z&quot;
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        }
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    ]
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>}
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>{
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    &quot;MetricAlarms&quot;: [
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        {
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>            &quot;AlarmName&quot;: &quot;rds-connections-warning&quot;,
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>            &quot;StateValue&quot;: &quot;ALARM&quot;,
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>            &quot;StateReason&quot;: &quot;Threshold Crossed: 1 out of 1 datapoints was greater than the threshold (85.0).&quot;
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>        }
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    ]
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>}
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>(no output — command completes silently)
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>{
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    &quot;Metrics&quot;: [
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>        {
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>            &quot;Namespace&quot;: &quot;AWS/EC2&quot;,
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>            &quot;MetricName&quot;: &quot;CPUUtilization&quot;,
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>            &quot;Dimensions&quot;: [{&quot;Name&quot;: &quot;InstanceId&quot;, &quot;Value&quot;: &quot;i-0a1b2c3d4e5f6g7h8&quot;}]
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>        },
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>        {
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>            &quot;Namespace&quot;: &quot;AWS/EC2&quot;,
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>            &quot;MetricName&quot;: &quot;NetworkIn&quot;,
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>            &quot;Dimensions&quot;: [{&quot;Name&quot;: &quot;InstanceId&quot;, &quot;Value&quot;: &quot;i-0a1b2c3d4e5f6g7h8&quot;}]
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>        }
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>    ]
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>}
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>{
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>    &quot;Label&quot;: &quot;CPUUtilization&quot;,
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>    &quot;Datapoints&quot;: [
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>        {&quot;Timestamp&quot;: &quot;2024-01-15T14:00:00Z&quot;, &quot;Average&quot;: 42.5},
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>        {&quot;Timestamp&quot;: &quot;2024-01-15T14:05:00Z&quot;, &quot;Average&quot;: 38.2},
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>        {&quot;Timestamp&quot;: &quot;2024-01-15T14:10:00Z&quot;, &quot;Average&quot;: 45.1}
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>    ]
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>}
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>{
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>    &quot;logGroups&quot;: [
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>        {&quot;logGroupName&quot;: &quot;/aws/lambda/auth-service&quot;, &quot;creationTime&quot;: 1705334400000, &quot;retentionInDays&quot;: 7},
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>        {&quot;logGroupName&quot;: &quot;/aws/ecs/prod-api&quot;, &quot;creationTime&quot;: 1705248000000, &quot;retentionInDays&quot;: 30},
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>        {&quot;logGroupName&quot;: &quot;/aws/rds/mysql-prod&quot;, &quot;creationTime&quot;: 1704988800000}
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>    ]
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a>}
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>{
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a>    &quot;logStreams&quot;: [
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a>        {&quot;logStreamName&quot;: &quot;2024/01/15/[$LATEST]a1b2c3d4e5f6g7h8&quot;, &quot;creationTime&quot;: 1705334410000, &quot;firstEventTimestamp&quot;: 1705334415000, &quot;
+</code></pre></div><a class="headerlink" href="#expected-output-metricalarms-alarmname-prod-api-cpu-high-metricname-cpuutilization-namespace-awsec2-statistic-average-period-300-evaluationperiods-2-threshold-800-comparisonoperator-greaterthanthreshold-statevalue-ok-stateupdatedtimestamp-2024-01-15t143210000z-alarmname-rds-connections-warning-metricname-databaseconnections-namespace-awsrds-statevalue-alarm-stateupdatedtimestamp-2024-01-15t134522000z-metricalarms-alarmname-rds-connections-warning-statevalue-alarm-statereason-threshold-crossed-1-out-of-1-datapoints-was-greater-than-the-threshold-850-no-output-command-completes-silently-metrics-namespace-awsec2-metricname-cpuutilization-dimensions-name-instanceid-value-i-0a1b2c3d4e5f6g7h8-namespace-awsec2-metricname-networkin-dimensions-name-instanceid-value-i-0a1b2c3d4e5f6g7h8-label-cpuutilization-datapoints-timestamp-2024-01-15t140000z-average-425-timestamp-2024-01-15t140500z-average-382-timestamp-2024-01-15t141000z-average-451-loggroups-loggroupname-awslambdaauth-service-creationtime-1705334400000-retentionindays-7-loggroupname-awsecsprod-api-creationtime-1705248000000-retentionindays-30-loggroupname-awsrdsmysql-prod-creationtime-1704988800000-logstreams-logstreamname-20240115latesta1b2c3d4e5f6g7h8-creationtime-1705334410000-firsteventtimestamp-1705334415000" title="Permanent link">&para;</a></h2>
 <h2 id="cloudformation">CloudFormation<a class="headerlink" href="#cloudformation" title="Permanent link">&para;</a></h2>
 <p>CloudFormation is AWS's Infrastructure as Code service. You define your infrastructure in a YAML or JSON template, and CloudFormation creates, updates, or deletes the resources. A stack is one deployment of a template.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Stacks (a running deployment of a CloudFormation template)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>list-stacks
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stacks<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--template-body<span class="w"> </span>file://template.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">ParameterKey</span><span class="o">=</span>Env,ParameterValue<span class="o">=</span>prod
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>update-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>delete-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Stack status and events (useful for debugging failed deployments)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-events<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>stack-create-complete<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Validate a template before deploying (catches syntax errors)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>validate-template<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Stacks (a running deployment of a CloudFormation template)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>list-stacks
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stacks<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--template-body<span class="w"> </span>file://template.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">ParameterKey</span><span class="o">=</span>Env,ParameterValue<span class="o">=</span>prod
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>update-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>delete-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Stack status and events (useful for debugging failed deployments)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-events<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>stack-create-complete<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Validate a template before deploying (catches syntax errors)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>validate-template<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    &quot;StackSummaries&quot;: [
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        {
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>            &quot;StackName&quot;: &quot;prod-api-stack&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            &quot;StackId&quot;: &quot;arn:aws:cloudformation:us-east-1:123456789012:stack/prod-api-stack/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>            &quot;StackStatus&quot;: &quot;CREATE_COMPLETE&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>            &quot;CreationTime&quot;: &quot;2024-01-15T10:32:45.123Z&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        },
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        {
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            &quot;StackName&quot;: &quot;dev-database-stack&quot;,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            &quot;StackId&quot;: &quot;arn:aws:cloudformation:us-east-1:123456789012:stack/dev-database-stack/f9e8d7c6-b5a4-3210-fedc-ba9876543210&quot;,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            &quot;StackStatus&quot;: &quot;UPDATE_IN_PROGRESS&quot;,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>            &quot;CreationTime&quot;: &quot;2024-01-10T14:22:10.456Z&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        }
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    ]
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>}
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>{
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    &quot;Stacks&quot;: [
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        {
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>            &quot;StackName&quot;: &quot;prod-api-stack&quot;,
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>            &quot;StackStatus&quot;: &quot;CREATE_COMPLETE&quot;,
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>            &quot;Parameters&quot;: [
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>                {
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>                    &quot;ParameterKey&quot;: &quot;Env&quot;,
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>                    &quot;ParameterValue&quot;: &quot;prod&quot;
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>                }
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>            ],
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>            &quot;CreationTime&quot;: &quot;2024-01-15T10:32:45.123Z&quot;
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>        }
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    ]
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>}
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>{
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    &quot;StackId&quot;: &quot;arn:aws:cloudformation:us-east-1:123456789012:stack/prod-api-stack/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>}
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>{
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>    &quot;StackEvents&quot;: [
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>        {
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>            &quot;EventId&quot;: &quot;prod-api-stack-CREATE_COMPLETE-2024-01-15T10:35:22.123Z&quot;,
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>            &quot;StackName&quot;: &quot;prod-api-stack&quot;,
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>            &quot;LogicalResourceId&quot;: &quot;prod-api-stack&quot;,
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>            &quot;ResourceStatus&quot;: &quot;CREATE_COMPLETE&quot;,
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>            &quot;Timestamp&quot;: &quot;2024-01-15T10:35:22.123Z&quot;
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>        },
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>        {
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>            &quot;EventId&quot;: &quot;ApiGateway-CREATE_COMPLETE-2024-01-15T10:35:10.456Z&quot;,
+<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>            &quot;LogicalResourceId&quot;: &quot;ApiGateway&quot;,
+<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a>            &quot;ResourceStatus&quot;: &quot;CREATE_COMPLETE&quot;,
+<a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a>            &quot;Timestamp&quot;: &quot;2024-01-15T10:35:10.456Z&quot;
+<a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a>        }
+<a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a>    ]
+<a id="__codelineno-7-54" name="__codelineno-7-54" href="#__codelineno-7-54"></a>}
+<a id="__codelineno-7-55" name="__codelineno-7-55" href="#__codelineno-7-55"></a>
+<a id="__codelineno-7-56" name="__codelineno-7-56" href="#__codelineno-7-56"></a>{
+<a id="__codelineno-7-57" name="__codelineno-7-57" href="#__codelineno-7-57"></a>    &quot;Parameters&quot;: [
+<a id="__codelineno-7-58" name="__codelineno-7-58" href="#__codelineno-7-58"></a>        {
+<a id="__codelineno-7-59" name="__codelineno-7-59" href="#__codelineno-7-59"></a>            &quot;ParameterKey&quot;: &quot;Env&quot;,
+<a id="__codelineno-7-60" name="__codelineno-7-60" href="#__codelineno-7-60"></a>            &quot;DefaultValue&quot;: &quot;dev&quot;
+<a id="__codelineno-7-61" name="__codelineno-7-61" href="#__codelineno-7-61"></a>        }
+<a id="__codelineno-7-62" name="__codelineno-7-62" href="#__codelineno-7-62"></a>    ],
+<a id="__codelineno-7-63" name="__codelineno-7-63" href="#__codelineno-7-63"></a>    &quot;Description&quot;: &quot;API deployment stack&quot;
+<a id="__codelineno-7-64" name="__codelineno-7-64" href="#__codelineno-7-64"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Template format error: Every Mappings object member must contain a String key and an object value.</code></strong> — Validate your YAML syntax, especially in the Mappings section, using <code>aws cloudformation validate-template</code> before deployment.
+<strong><code>User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack</code></strong> — Ensure your IAM user or role has the `cloudformation:*</p>
+</div>
 <hr />
 <h2 id="rds">RDS<a class="headerlink" href="#rds" title="Permanent link">&para;</a></h2>
 <p>RDS (Relational Database Service) is AWS's managed database service. It runs PostgreSQL, MySQL, SQL Server, and other engines on instances that AWS manages — you get a database endpoint without managing the OS or database software.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Instances</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Start / stop / reboot</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>start-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>stop-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Snapshots (automated point-in-time backups)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-snapshots
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-snapshot<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>restore-db-instance-from-db-snapshot<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--db-instance-identifier<span class="w"> </span>&lt;new_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Instances</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Start / stop / reboot</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>start-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>stop-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Snapshots (automated point-in-time backups)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-snapshots
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-snapshot<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>restore-db-instance-from-db-snapshot<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>--db-instance-identifier<span class="w"> </span>&lt;new_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    &quot;DBInstances&quot;: [
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        {
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>            &quot;DBInstanceIdentifier&quot;: &quot;prod-mysql-01&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>            &quot;DBInstanceClass&quot;: &quot;db.t3.medium&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>            &quot;Engine&quot;: &quot;mysql&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>            &quot;DBInstanceStatus&quot;: &quot;available&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>            &quot;MasterUsername&quot;: &quot;admin&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>            &quot;AllocatedStorage&quot;: 100,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>            &quot;EngineVersion&quot;: &quot;8.0.35&quot;,
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>            &quot;DBInstanceArn&quot;: &quot;arn:aws:rds:us-east-1:123456789012:db:prod-mysql-01&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        },
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        {
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>            &quot;DBInstanceIdentifier&quot;: &quot;staging-postgres-02&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>            &quot;DBInstanceClass&quot;: &quot;db.t3.small&quot;,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>            &quot;Engine&quot;: &quot;postgres&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>            &quot;DBInstanceStatus&quot;: &quot;available&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>            &quot;MasterUsername&quot;: &quot;postgres&quot;,
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>            &quot;AllocatedStorage&quot;: 50,
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>            &quot;EngineVersion&quot;: &quot;15.3&quot;,
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>            &quot;DBInstanceArn&quot;: &quot;arn:aws:rds:us-east-1:123456789012:db:staging-postgres-02&quot;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>        }
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    ]
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>{
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    &quot;DBSnapshots&quot;: [
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>        {
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>            &quot;DBSnapshotIdentifier&quot;: &quot;prod-mysql-01-snap-20240115&quot;,
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>            &quot;DBInstanceIdentifier&quot;: &quot;prod-mysql-01&quot;,
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>            &quot;SnapshotCreateTime&quot;: &quot;2024-01-15T02:30:00.000Z&quot;,
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>            &quot;Engine&quot;: &quot;mysql&quot;,
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>            &quot;Status&quot;: &quot;available&quot;,
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>            &quot;AllocatedStorage&quot;: 100,
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>            &quot;DBSnapshotArn&quot;: &quot;arn:aws:rds:us-east-1:123456789012:snapshot:prod-mysql-01-snap-20240115&quot;
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>        }
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>    ]
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>}
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>{
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>    &quot;DBInstance&quot;: {
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>        &quot;DBInstanceIdentifier&quot;: &quot;prod-mysql-01&quot;,
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>        &quot;DBInstanceStatus&quot;: &quot;started&quot;
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>    }
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found</code></strong> — Verify the instance identifier is correct with <code>aws rds describe-db-instances</code> and check you're querying the correct AWS region.
+<strong><code>An error occurred (InvalidDBInstanceState) when calling the StartDBInstance operation: DB instance is not in stopped state</code></strong> — Confirm the instance is stopped before attempting to start it using <code>aws rds describe-db-instances --db-instance-identifier &lt;id&gt;</code>.
+<strong><code>An error occurred (DBSnapshotAlreadyExists) when calling the CreateDBSnapshot operation: DB Snapshot already exists</code></strong> — Use a unique snapshot identifier or delete the existing snapshot with <code>aws rds delete-db-snapshot --db-snapshot-identifier &lt;snap_name&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="eks">EKS<a class="headerlink" href="#eks" title="Permanent link">&para;</a></h2>
 <p>EKS (Elastic Kubernetes Service) is AWS's managed Kubernetes service. It runs the Kubernetes control plane for you. You interact with EKS using the AWS CLI to manage clusters and node groups, and <code>kubectl</code> to manage workloads.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Clusters</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-clusters
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Update kubeconfig (configures kubectl to point to your EKS cluster)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--region<span class="w"> </span>&lt;region&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Node groups (the EC2 instances that run your Kubernetes workloads)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-nodegroups<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-nodegroup<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--nodegroup-name<span class="w"> </span>&lt;ng&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Clusters</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-clusters
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Update kubeconfig (configures kubectl to point to your EKS cluster)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--region<span class="w"> </span>&lt;region&gt;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Node groups (the EC2 instances that run your Kubernetes workloads)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-nodegroups<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-nodegroup<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--nodegroup-name<span class="w"> </span>&lt;ng&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    &quot;clusters&quot;: [
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        &quot;production-cluster&quot;,
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        &quot;staging-cluster&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        &quot;dev-cluster&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    ]
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>}
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>{
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    &quot;cluster&quot;: {
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        &quot;name&quot;: &quot;production-cluster&quot;,
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        &quot;arn&quot;: &quot;arn:aws:eks:us-east-1:123456789012:cluster/production-cluster&quot;,
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        &quot;createdAt&quot;: &quot;2024-01-15T10:32:45.000000+00:00&quot;,
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        &quot;version&quot;: &quot;1.28.5&quot;,
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        &quot;endpoint&quot;: &quot;https://ABC123DEF456.eks.us-east-1.amazonaws.com&quot;,
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    }
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>}
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Added new context arn:aws:eks:us-east-1:123456789012:cluster/production-cluster to /home/user/.kube/config
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>{
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    &quot;nodegroups&quot;: [
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>        &quot;worker-nodes-1&quot;,
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>        &quot;worker-nodes-2&quot;,
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>        &quot;gpu-nodes&quot;
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    ]
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>}
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>{
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>    &quot;nodegroup&quot;: {
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>        &quot;nodegroupName&quot;: &quot;worker-nodes-1&quot;,
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>        &quot;nodegroupArn&quot;: &quot;arn:aws:eks:us-east-1:123456789012:nodegroup/production-cluster/worker-nodes-1/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>        &quot;clusterName&quot;: &quot;production-cluster&quot;,
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>        &quot;status&quot;: &quot;ACTIVE&quot;,
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>        &quot;scalingConfig&quot;: {
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>            &quot;minSize&quot;: 2,
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>            &quot;maxSize&quot;: 10,
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>            &quot;desiredSize&quot;: 5
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>        }
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>    }
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No cluster found</code></strong> — Verify the cluster exists in your current AWS region with <code>aws eks list-clusters --region &lt;region&gt;</code>.
+<strong><code>An error occurred (InvalidParameterException) when calling the UpdateKubeconfig operation: Cluster not found</code></strong> — Ensure the cluster name is correct and you have permissions; verify with <code>aws eks describe-cluster --name &lt;cluster&gt; --region &lt;region&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="systems-manager-ssm">Systems Manager (SSM)<a class="headerlink" href="#systems-manager-ssm" title="Permanent link">&para;</a></h2>
 <p>SSM lets you manage EC2 instances without SSH. Session Manager creates a shell session through the AWS API — no open ports needed. Run Command executes scripts on instances remotely. Parameter Store is a secure key-value store for configuration and secrets.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Session (interactive shell — no SSH, no open port 22 required)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;instance_id&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Run command (run a script on one or more instances)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;uptime&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>list-command-invocations<span class="w"> </span>--command-id<span class="w"> </span>&lt;cmd_id&gt;<span class="w"> </span>--details
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Parameter Store (secure key-value store for config and secrets)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--with-decryption
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>aws<span class="w"> </span>ssm<span class="w"> </span>put-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--value<span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span>--type<span class="w"> </span>SecureString
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameters-by-path<span class="w"> </span>--path<span class="w"> </span>/my/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Session (interactive shell — no SSH, no open port 22 required)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;instance_id&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Run command (run a script on one or more instances)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;uptime&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>list-command-invocations<span class="w"> </span>--command-id<span class="w"> </span>&lt;cmd_id&gt;<span class="w"> </span>--details
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Parameter Store (secure key-value store for config and secrets)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--with-decryption
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>aws<span class="w"> </span>ssm<span class="w"> </span>put-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--value<span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span>--type<span class="w"> </span>SecureString
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameters-by-path<span class="w"> </span>--path<span class="w"> </span>/my/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Starting session with i-0a7f2c9d4e1b5f3a2...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>[ssm-user@ip-10-0-42-17 ~]$ 
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Command ID is 12a34b56-78cd-90ef-ghij-1234567890ab
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>An error occurred (InvalidInstanceID.Malformed) when calling the SendCommand operation: The instance ID &#39;i-0a7f2c9d4e1b5f3a2&#39; does not exist
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>CommandId                                          Status      TargetCount  CompletedCount
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>----------------------------------------------------  ---------   -----------  ---------------
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>12a34b56-78cd-90ef-ghij-1234567890ab               Success     1            1
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>InvocationId                                       CommandId                                        InstanceId             PluginName  DocumentName           DocumentVersion  CommandStatus  ExecutionStartDateTime  ExecutionElapsedTime
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>----------------------------------------------------  ----------------------------------------------------  ---------------------  ----------  ---------------------  ----------------  -------  -----------------------  --------------------
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>12a34b56-78cd-90ef-ghij-1234567890ab               12a34b56-78cd-90ef-ghij-1234567890ab               i-0a7f2c9d4e1b5f3a2    aws:runShellScript  AWS-RunShellScript     1.2.2          Success  2024-01-15T09:42:31Z    0.847
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a> 10:42:31 up 18 days, 3:24, 2 users, load average: 0.12, 0.08, 0.05
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Name: /my/param
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Type: SecureString
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Value: ****
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Version: 3
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>LastModifiedDate: 2024-01-15T08:15:22.000000+00:00
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>ARN: arn:aws:ssm:us-east-1:123456789012:parameter/my/param
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>(no output — command completes silently)
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Parameters:
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>- Name: /my/param
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>  Type: SecureString
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>  Value: ****
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>  Version: 3
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>- Name: /my/param/db-host
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>  Type: String
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>  Value: db.internal.example.com
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>  Version: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>An error occurred (TargetNotConnected) when calling the SendCommand operation: The following instances are not connected: i-0a7f2c9d4e1b5f3a2</code></strong> — Verify the instance has the SSM agent running (<code>systemctl status amazon-ssm-agent</code>) and an IAM role with <code>AmazonSSMManagedInstanceCore</code> policy attached.
+<strong><code>An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.</code></strong> — Confirm the parameter name and path are correct with <code>aws ssm describe-parameters --filters "Key=Name,Values=/my/param"</code>.
+<strong><code>An error occurred (AccessDenied) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession</code></strong> — Add the <code>AmazonSSMFullAccess</code> policy or a custom policy with <code>ssm:StartSession</code> and <code>ssm:GetConnectionStatus</code> permissions to the IAM user/role.</p>
+</div>
 <hr />
 <h2 id="lambda">Lambda<a class="headerlink" href="#lambda" title="Permanent link">&para;</a></h2>
 <p>Lambda is AWS's serverless compute service. You upload code and Lambda runs it on demand without you managing any servers. Functions are invoked by events (HTTP requests, S3 events, schedules, etc.).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Functions</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aws<span class="w"> </span>lambda<span class="w"> </span>get-function<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Invoke a function (synchronous — waits for result)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--payload<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span>response.json
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Deploy updated code (zip your code and upload)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-code<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--zip-file<span class="w"> </span>fileb://function.zip
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Logs (CloudWatch logs for Lambda executions)</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>/aws/lambda/&lt;function_name&gt;<span class="w"> </span>--follow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Functions</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>aws<span class="w"> </span>lambda<span class="w"> </span>get-function<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Invoke a function (synchronous — waits for result)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--payload<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span>response.json
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Deploy updated code (zip your code and upload)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-code<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--zip-file<span class="w"> </span>fileb://function.zip
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Logs (CloudWatch logs for Lambda executions)</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>/aws/lambda/&lt;function_name&gt;<span class="w"> </span>--follow
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    &quot;Functions&quot;: [
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>        {
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>            &quot;FunctionName&quot;: &quot;process-orders&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>            &quot;FunctionArn&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:process-orders&quot;,
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>            &quot;Runtime&quot;: &quot;python3.11&quot;,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>            &quot;Handler&quot;: &quot;index.handler&quot;,
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>            &quot;CodeSize&quot;: 2048576,
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>            &quot;MemorySize&quot;: 256,
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>            &quot;Timeout&quot;: 60,
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>            &quot;LastModified&quot;: &quot;2024-01-15T10:32:45.000+0000&quot;
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>        },
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>        {
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>            &quot;FunctionName&quot;: &quot;send-notifications&quot;,
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>            &quot;FunctionArn&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:send-notifications&quot;,
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>            &quot;Runtime&quot;: &quot;nodejs18.x&quot;,
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>            &quot;Handler&quot;: &quot;app.handler&quot;,
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>            &quot;CodeSize&quot;: 1024000,
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>            &quot;MemorySize&quot;: 512,
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>            &quot;Timeout&quot;: 30,
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>            &quot;LastModified&quot;: &quot;2024-01-14T14:22:10.000+0000&quot;
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>        }
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    ]
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>}
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>{
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>    &quot;Configuration&quot;: {
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>        &quot;FunctionName&quot;: &quot;process-orders&quot;,
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>        &quot;FunctionArn&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:process-orders&quot;,
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>        &quot;Runtime&quot;: &quot;python3.11&quot;,
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>        &quot;Handler&quot;: &quot;index.handler&quot;,
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>        &quot;CodeSize&quot;: 2048576,
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>        &quot;MemorySize&quot;: 256,
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>        &quot;Timeout&quot;: 60,
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>        &quot;LastModified&quot;: &quot;2024-01-15T10:32:45.000+0000&quot;
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>    }
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>}
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>{
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>    &quot;StatusCode&quot;: 200,
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>    &quot;ExecutedVersion&quot;: &quot;$LATEST&quot;,
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>    &quot;LogResult&quot;: &quot;U1RBUlQgUmVxdWVzdElkOiBhYzNkNDU2Yi1mZjg5LTQxZTItOGZkYS1jZjQ3ZjhhYzQ1ZTAgRHVyYXRpb246IDI4LjM2IG1zIEJpbGxlZCBEdXJhdGlvbjogMjkgbXMgTWVtb3J5IFVzZWQ6IDEyOCBNQiBFTkQ=&quot;
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>}
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>{
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>    &quot;FunctionArn&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:process-orders&quot;,
+<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>    &quot;CodeSize&quot;: 2048576,
+<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>    &quot;FunctionName&quot;: &quot;process-orders&quot;,
+<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>    &quot;LastModified&quot;: &quot;2024-01-15T11:05:22.000+0000&quot;
+<a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>}
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>2024-01-15T11:05:45.123Z    ac3d456b-ff89-41e2-8fda-cf47f8ac45e0    INFO    Processing order #ORD-2024-001
+<a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>2024-01-15T11:05:46.456Z    ac3d456b-ff89-41e2-8fda-cf47f8ac45e0    INFO    Order processed successfully
+<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>2024-01-15T11:05:47.789Z    ac3d456b-ff89
 </code></pre></div>
 
 
@@ -9020,7 +9473,7 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:29:39 UTC"><span class="timeago" datetime="2026-06-29T06:29:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:29:39 UTC">2026-06-29</span>
   </span>
 
     

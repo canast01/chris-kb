@@ -7793,38 +7793,147 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Grafana datasource health</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:pass<span class="w"> </span>http://grafana:3000/api/datasources<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name:.name, type:.type, url:.url}&#39;</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSSD on Linux</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sssctl<span class="w"> </span>domain-status<span class="w"> </span>&lt;domain&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>id<span class="w"> </span>&lt;ad-user&gt;<span class="w">               </span><span class="c1"># should return AD UID + groups</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Winbind</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>wbinfo<span class="w"> </span>-t<span class="w">                  </span><span class="c1"># test trust to domain</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>wbinfo<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">        </span><span class="c1"># list domain users</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>net<span class="w"> </span>ads<span class="w"> </span>info<span class="w">               </span><span class="c1"># show DC and site info</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># LDAP reachability</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-hostname&gt;<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=example,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;job&quot;: &quot;prometheus&quot;,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;health&quot;: &quot;up&quot;,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;error&quot;: null
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;job&quot;: &quot;node-exporter&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;health&quot;: &quot;up&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;error&quot;: null
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>}
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>{
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;job&quot;: &quot;blackbox-exporter&quot;,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;health&quot;: &quot;down&quot;,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;error&quot;: &quot;connection refused&quot;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>}
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>{
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;alertname&quot;: &quot;HighCPUUsage&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;state&quot;: &quot;firing&quot;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>}
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;alertname&quot;: &quot;DiskSpaceLow&quot;,
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;state&quot;: &quot;resolved&quot;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>}
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>{
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;name&quot;: &quot;Prometheus&quot;,
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;type&quot;: &quot;prometheus&quot;,
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;url&quot;: &quot;http://prometheus:9090&quot;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>}
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>{
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  &quot;name&quot;: &quot;Loki&quot;,
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  &quot;type&quot;: &quot;loki&quot;,
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  &quot;url&quot;: &quot;http://loki:3100&quot;
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>}
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>{
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  &quot;name&quot;: &quot;TestData&quot;,
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  &quot;type&quot;: &quot;testdata&quot;,
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  &quot;url&quot;: &quot;&quot;
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PgBouncer status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW STATS;&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># ProxySQL (MySQL)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-P<span class="w"> </span><span class="m">6032</span><span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-padmin<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT hostgroup_id, hostname, status FROM mysql_servers;&quot;</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to prometheus port 9090: Connection refused</code></strong> — Verify Prometheus is running with <code>docker ps | grep prometheus</code> or check service status with <code>systemctl status prometheus</code>.
+<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the endpoint is responding with valid JSON by testing with <code>curl -s http://prometheus:9090/api/v1/targets | head -c 200</code> first.
+<strong><code>curl: (401) Unauthorized</code></strong> — Update the Grafana credentials in the curl command to match your actual admin password, or generate an API token with <code>-H "Authorization: Bearer &lt;token&gt;"</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSSD on Linux</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sssctl<span class="w"> </span>domain-status<span class="w"> </span>&lt;domain&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>id<span class="w"> </span>&lt;ad-user&gt;<span class="w">               </span><span class="c1"># should return AD UID + groups</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Winbind</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>wbinfo<span class="w"> </span>-t<span class="w">                  </span><span class="c1"># test trust to domain</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>wbinfo<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">        </span><span class="c1"># list domain users</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>net<span class="w"> </span>ads<span class="w"> </span>info<span class="w">               </span><span class="c1"># show DC and site info</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># LDAP reachability</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-hostname&gt;<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=example,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSSD (re-read AD group membership)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># rsyslog</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># PgBouncer</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>pgbouncer<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>● sssd.service - System Security Services Daemon
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>     Loaded: loaded (/usr/lib/systemd/system/sssd.service; enabled; vendor preset: enabled)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2 days ago
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Main PID: 2847 (sssd)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      Tasks: 12 (limit: 4915)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>     Memory: 45.2M
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        CPU: 2min 34s
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     CGroup: /system.slice/sssd.service
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Veeam agent</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>veeam
-</code></pre></div></p>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Domain name: corp.example.com
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Status: Online
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Online status last updated: 2024-01-15 11:42:18
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>uid=1105(testuser) gid=513(domain users) groups=513(domain users),512(domain admins),1050(engineering-team)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Trust is up and running.
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>BUILTIN\Administrators
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>BUILTIN\Users
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>corp\testuser
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>corp\admin-service
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>corp\jenkins-bot
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>...
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Forest            : corp.example.com
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>Domain            : corp.example.com
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Dc                : dc01.corp.example.com [2001:db8::42]
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Site              : US-EAST-1
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Kdc               : dc01.corp.example.com
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a># LDAP search output
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>dn: CN=testuser,CN=Users,DC=corp,DC=example,DC=com
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>cn: testuser
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>mail: testuser@corp.example.com
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Could not get domain status for &lt;domain&gt;: No such domain</code></strong> — Verify the domain name matches SSSD configuration in <code>/etc/sssd/sssd.conf</code> and restart sssd with <code>systemctl restart sssd</code>.
+<strong><code>wbinfo: error looking up domain users</code></strong> — Ensure Winbind is running with <code>systemctl start winbind</code> and the domain trust is established via <code>net ads join -U administrator</code>.
+<strong><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090400, comment: AcceptSecurityContext error, data 52e, v3839</code></strong> — Verify AD user credentials are correct and the account is not locked; use a service account with appropriate permissions for LDAP queries.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PgBouncer status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW STATS;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># ProxySQL (MySQL)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-P<span class="w"> </span><span class="m">6032</span><span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-padmin<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT hostgroup_id, hostname, status FROM mysql_servers;&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>database      |   user    | cl_active | cl_waiting | sv_active | sv_idle | sv_used | sv_tested | sv_login | maxwait | pool_mode
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------------------+-----------+-----------+------------+-----------+---------+---------+-----------+---------+---------+-----------
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> postgres         | postgres  |         2 |          0 |         5 |       3 |       8 |         0 |       0 |       0 | transaction
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> myapp_db         | appuser   |         1 |          0 |         2 |       1 |       3 |         0 |       0 |       0 | session
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a> template1        | postgres  |         0 |          0 |         0 |       0 |       0 |         0 |       0 |       0 | transaction
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> database      | total_xact_count | total_query_count | total_recv | total_sent | total_wait_time
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>------------------+-----------------+-------------------+------------+------------+-----------------
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a> postgres         |            1247 |             3891 |   524288 B |   786432 B |            1250
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a> myapp_db         |             892 |             2156 |   262144 B |   393216 B |             890
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>hostgroup_id | hostname          | status
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>-----------+-----------------+--------
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>           0 | db-primary.local  | ONLINE
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>           1 | db-replica-01.local | ONLINE
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>           1 | db-replica-02.local | ONLINE
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>psql: error: could not translate host name "/tmp" to address: Name or service not known</code></strong> — Verify PgBouncer is listening on the Unix socket path <code>/tmp</code> or use <code>-h 127.0.0.1</code> with the correct TCP port.
+<strong><code>ERROR 1045 (28000): Access denied for user 'admin'@'127.0.0.1' (using password: YES)</code></strong> — Confirm ProxySQL admin credentials in <code>/etc/proxysql.cnf</code> or reset them with <code>proxysql --initial</code>.
+<strong><code>psql: error: connection refused</code></strong> — Ensure PgBouncer is running with <code>systemctl status pgbouncer</code> and listening on port 6432.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSSD (re-read AD group membership)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># rsyslog</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># PgBouncer</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>pgbouncer<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Veeam agent</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>veeam
+</code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 
 
@@ -7848,7 +7957,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

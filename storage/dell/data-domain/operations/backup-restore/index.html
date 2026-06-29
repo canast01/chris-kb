@@ -9110,19 +9110,62 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 <p>Resume after the restore completes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Starting filesystem cleanup on Data Domain system...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cleanup job ID: dd-cleanup-20240115-094532
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Phase 1: Scanning filesystem metadata... [████████████████░░] 87%
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Phase 2: Identifying stale snapshots... [██████████████████] 100%
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Phase 3: Reclaiming space from deleted files... [██████████████░░░░] 73%
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Estimated space to be reclaimed: 2.3 TB
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Cleanup process initiated. Monitor progress with: filesys clean status
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>filesys clean start: operation already in progress</code></strong> — Wait for the current cleanup to complete using <code>filesys clean status</code> or cancel it with <code>filesys clean stop</code> before starting a new one.
+<strong><code>filesys clean start: insufficient privileges</code></strong> — Run the command with administrative credentials or ensure your user account has Data Domain system admin role assigned.
+<strong><code>filesys clean start: filesystem is in read-only mode</code></strong> — Bring the filesystem online and into read-write mode using <code>filesys set rw</code> before initiating cleanup.</p>
+</div>
 <hr />
 <h2 id="ddboost-restore-backup-application">DDBoost Restore (Backup Application)<a class="headerlink" href="#ddboost-restore-backup-application" title="Permanent link">&para;</a></h2>
 <p>DDBoost restores are initiated entirely from the backup application. The Data Domain's role is passive — it serves deduplicated data to the backup server, which rehydrates it on the fly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Monitor DD Boost connections during an active restore</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span>--verbose<span class="w">  </span><span class="c1"># includes per-client read throughput</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Monitor read throughput from the DD side</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="nb">read</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check if multiple restore streams are active</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>connected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor DD Boost connections during an active restore</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span>--verbose<span class="w">  </span><span class="c1"># includes per-client read throughput</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Monitor read throughput from the DD side</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="nb">read</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check if multiple restore streams are active</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>connected
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># ddboost show clients
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Client Name                    IP Address      Connected   Protocol Version
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>restore-vm-01                  192.168.1.45    yes         7.1.0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>restore-vm-02                  192.168.1.46    yes         7.1.0
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>backup-proxy-03                192.168.1.50    no          7.0.5
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>restore-vm-04                  192.168.1.48    yes         7.1.0
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a># ddboost show clients --verbose
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Client Name                    IP Address      Connected   Protocol   Read Throughput (MB/s)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>restore-vm-01                  192.168.1.45    yes         7.1.0      285.3
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>restore-vm-02                  192.168.1.46    yes         7.1.0      312.7
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>backup-proxy-03                192.168.1.50    no          7.0.5      0.0
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>restore-vm-04                  192.168.1.48    yes         7.1.0      298.1
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a># ddboost show stats | grep -i read
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Read Operations:              1,247,856
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Read Throughput (MB/s):       896.1
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Read Cache Hit Rate:          87.2%
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Read Latency (ms):            12.4
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a># ddboost show clients | grep -c connected
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>3
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ddboost: command not found</code></strong> — Verify DD Boost is installed and the system PATH includes the DD Boost binary directory, or use the full path <code>/opt/emc/ddboost/bin/ddboost</code>.
+<strong><code>Error: Unable to connect to Data Domain management interface</code></strong> — Ensure the Data Domain system is reachable on the network and that your user account has DD Boost administrative privileges.
+<strong><code>Error: No active DD Boost connections</code></strong> — Confirm that restore clients are actively connected; if restores are idle or queued, connections may not appear in the active client list.</p>
+</div>
 <h3 id="per-application-restore-initiation">Per-Application Restore Initiation<a class="headerlink" href="#per-application-restore-initiation" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9162,12 +9205,35 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 </table>
 <h3 id="validate-ddboost-restore-throughput">Validate DDBoost Restore Throughput<a class="headerlink" href="#validate-ddboost-restore-throughput" title="Permanent link">&para;</a></h3>
 <p>During a restore, monitor that throughput is meeting expectations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># DD-side read throughput</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># System I/O load during restore</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>system<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>throughput
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># DD-side read throughput</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># System I/O load during restore</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>system<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>throughput
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ddboost show stats
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Connected to Data Domain at 10.45.22.18
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Statistics for ddboost (since last reset):
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Total bytes read:           2.847 TB
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Total bytes written:        1.923 TB
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Read throughput (avg):      487.3 MB/s
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Write throughput (avg):     342.1 MB/s
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Active connections:         12
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Peak concurrent streams:    8
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>system show stats | grep -i throughput
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>System I/O Statistics:
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Read throughput:             512.4 MB/s
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Write throughput:            298.7 MB/s
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Cache throughput:            1.2 GB/s
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Network throughput (in):     156.3 MB/s
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Network throughput (out):    89.2 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>ddboost show stats: command not found</code></strong> — Verify ddboost is installed and the Data Domain CLI is properly initialized with <code>ddboost initialize</code>.
+<strong><code>system show stats: permission denied</code></strong> — Run the command with appropriate privileges or ensure your user account has system monitoring permissions on the Data Domain appliance.</p>
+</div>
 <p>If throughput is below expected, check for:
 - Active cleaning cycle (<code>filesys clean status</code>)
 - Disk errors (<code>disk show state</code>)
@@ -9176,31 +9242,71 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 <h2 id="nfs-direct-restore">NFS Direct Restore<a class="headerlink" href="#nfs-direct-restore" title="Permanent link">&para;</a></h2>
 <p>For backup software using NFS mounts, or for granular file recovery, mount the MTree directly on the target server.</p>
 <h3 id="mount-the-mtree">Mount the MTree<a class="headerlink" href="#mount-the-mtree" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the Data Domain — confirm the NFS export exists</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># If the export does not exist, add it</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree-name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;target-server-ip&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># On the target/restore server — mount the MTree</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dd-hostname&gt;:/data/col1/&lt;mtree-name&gt;<span class="w"> </span>/mnt/dd-restore
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify the mount is accessible</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ls<span class="w"> </span>-la<span class="w"> </span>/mnt/dd-restore/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the Data Domain — confirm the NFS export exists</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># If the export does not exist, add it</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree-name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;target-server-ip&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># On the target/restore server — mount the MTree</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dd-hostname&gt;:/data/col1/&lt;mtree-name&gt;<span class="w"> </span>/mnt/dd-restore
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify the mount is accessible</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ls<span class="w"> </span>-la<span class="w"> </span>/mnt/dd-restore/
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/data/col1/backup-prod-mtree  clients: 192.168.10.45 (rw,sync)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/data/col1/backup-prod-mtree mounted successfully on /mnt/dd-restore
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>total 48
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>drwxr-xr-x  12 root root  4096 Nov 14 09:23 .
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>drwxr-xr-x   3 root root  4096 Nov 14 08:15 ..
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>drwxr-xr-x   8 root root  8192 Nov 14 09:18 .snapshot
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-rw-r--r--   1 root root 12288 Nov 14 09:22 backup.log
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>drwxr-xr-x   6 root root  4096 Nov 14 09:20 weekly
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>drwxr-xr-x   4 root root  4096 Nov 14 08:45 daily
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: access denied by server while mounting &lt;dd-hostname&gt;:/data/col1/&lt;mtree-name&gt;</code></strong> — Verify the target server IP is correctly added to the NFS export and matches the client attempting to mount.
+<strong><code>mount.nfs: No such file or directory</code></strong> — Confirm the MTree path <code>/data/col1/&lt;mtree-name&gt;</code> exists on the Data Domain and the NFS export is active with <code>nfs show exports</code>.
+<strong><code>ls: cannot open directory '/mnt/dd-restore/': Permission denied</code></strong> — Check that the mount permissions allow read access; remount with appropriate NFS options like <code>mount -t nfs -o rw,hard,intr &lt;dd-hostname&gt;:/data/col1/&lt;mtree-name&gt; /mnt/dd-restore</code>.</p>
+</div>
 <h3 id="restore-files-from-nfs-mount">Restore Files from NFS Mount<a class="headerlink" href="#restore-files-from-nfs-mount" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Navigate to the backup data directory</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>/mnt/dd-restore/&lt;backup-job-directory&gt;/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restore a specific directory</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cp<span class="w"> </span>-a<span class="w"> </span>/mnt/dd-restore/&lt;backup-path&gt;/<span class="w"> </span>/target/restore/path/
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># For large restores, use rsync for progress visibility and error handling</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rsync<span class="w"> </span>-avP<span class="w"> </span>/mnt/dd-restore/&lt;backup-path&gt;/<span class="w"> </span>/target/restore/path/
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># After restore, unmount</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>umount<span class="w"> </span>/mnt/dd-restore
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Navigate to the backup data directory</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ls<span class="w"> </span>/mnt/dd-restore/&lt;backup-job-directory&gt;/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Restore a specific directory</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>cp<span class="w"> </span>-a<span class="w"> </span>/mnt/dd-restore/&lt;backup-path&gt;/<span class="w"> </span>/target/restore/path/
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># For large restores, use rsync for progress visibility and error handling</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>rsync<span class="w"> </span>-avP<span class="w"> </span>/mnt/dd-restore/&lt;backup-path&gt;/<span class="w"> </span>/target/restore/path/
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># After restore, unmount</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>umount<span class="w"> </span>/mnt/dd-restore
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>backup-job-20240115/
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>backup-job-20240112/
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>backup-job-20240108/
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>databases/
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>logs/
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>application-data/
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>sending incremental file list
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>databases/
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>databases/users.db
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>databases/transactions.db
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>         1,245,632,000 100%  125.43MB/s    0:00:09 (xfr#2, to-chk=847/1050)
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>application-data/config.xml
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>         45,678,900 100%   98.76MB/s    0:00:00 (xfr#3, to-chk=846/1050)
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>...
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>sent 2,847,392,104 bytes  received 28,456 bytes  189.15MB/s
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>total size is 2,847,392,104  speedup is 1.00
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>umount: /mnt/dd-restore: target is busy</code></strong> — Ensure all file handles are closed by running <code>lsof /mnt/dd-restore</code> and killing any processes, then retry umount.
+<strong><code>cp: cannot create regular file '/target/restore/path/': No such file or directory</code></strong> — Create the target directory first with <code>mkdir -p /target/restore/path/</code> before running cp or rsync.
+<strong><code>rsync: change_dir "/mnt/dd-restore/&lt;backup-path&gt;" failed: No such file or directory (2)</code></strong> — Verify the backup path exists and is correctly mounted by running <code>ls /mnt/dd-restore/</code> to confirm the directory structure.</p>
+</div>
 <h3 id="nfs-restore-common-issues">NFS Restore — Common Issues<a class="headerlink" href="#nfs-restore-common-issues" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9236,98 +9342,251 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 <hr />
 <h2 id="cifssmb-direct-restore">CIFS/SMB Direct Restore<a class="headerlink" href="#cifssmb-direct-restore" title="Permanent link">&para;</a></h2>
 <p>For Windows-based restores without a DD Boost–capable backup application.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the Data Domain — confirm the CIFS share exists</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;share-name&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If the share does not exist, create it</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cifs<span class="w"> </span>share<span class="w"> </span>add<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># On the Windows restore server — map the share</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># net use Z: \\&lt;dd-hostname&gt;\&lt;share-name&gt; /user:&lt;domain&gt;\&lt;username&gt;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Or access via UNC path in File Explorer:</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># \\&lt;dd-hostname&gt;\&lt;share-name&gt;\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On the Data Domain — confirm the CIFS share exists</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;share-name&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># If the share does not exist, create it</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cifs<span class="w"> </span>share<span class="w"> </span>add<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># On the Windows restore server — map the share</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># net use Z: \\&lt;dd-hostname&gt;\&lt;share-name&gt; /user:&lt;domain&gt;\&lt;username&gt;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Or access via UNC path in File Explorer:</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># \\&lt;dd-hostname&gt;\&lt;share-name&gt;\</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>/data/col1/backup_mtree                 CIFS                Active
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Share added successfully: /data/col1/backup_mtree
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>share not found</code></strong> — Run <code>cifs share show</code> to list all existing shares and verify the exact share name and path.
+<strong><code>Permission denied</code></strong> — Ensure the Data Domain user account has administrative privileges and the mtree path <code>/data/col1/&lt;mtree-name&gt;</code> exists and is accessible.</p>
+</div>
 <hr />
 <h2 id="vtl-restore">VTL Restore<a class="headerlink" href="#vtl-restore" title="Permanent link">&para;</a></h2>
 <p>VTL (Virtual Tape Library) restores are managed entirely by the backup media server. The DD emulates a physical tape library with drives and slots.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify VTL is operational</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vtl<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List available virtual slots and their contents</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vtl<span class="w"> </span>show<span class="w"> </span>slots
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List virtual drives</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vtl<span class="w"> </span>show<span class="w"> </span>drives
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># If a tape is not visible to the backup software, confirm the slot is loaded</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>vtl<span class="w"> </span>show<span class="w"> </span>libraries
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify VTL is operational</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># List available virtual slots and their contents</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vtl<span class="w"> </span>show<span class="w"> </span>slots
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># List virtual drives</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>vtl<span class="w"> </span>show<span class="w"> </span>drives
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># If a tape is not visible to the backup software, confirm the slot is loaded</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>vtl<span class="w"> </span>show<span class="w"> </span>libraries
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>VTL Status: OPERATIONAL
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  License: Valid (expires 2025-03-15)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  Capacity: 45.2 TB / 50 TB
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  Performance: Normal
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Slot    Media Type    Capacity    Status      Barcode
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>-----   ----------    --------    ------      -------
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>1       LTO-8         12 TB       Loaded      DD001L8
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>2       LTO-8         12 TB       Loaded      DD002L8
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>3       LTO-8         12 TB       Empty       —
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>4       LTO-9         18 TB       Loaded      DD003L9
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>5       LTO-9         18 TB       Loaded      DD004L9
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>...
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>Drive    Serial         Status      Slot    Media Type
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>-----    ------         ------      ----    ----------
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>0        VTL-DRV-0001   Ready       1       LTO-8
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>1        VTL-DRV-0002   Ready       4       LTO-9
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>2        VTL-DRV-0003   Idle        —       —
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>Library    Name              Status      Slots    Loaded
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>-------    ----              ------      -----    ------
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>0          Primary-VTL       Online      5        4
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>1          Secondary-VTL     Online      10       8
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vtl: command not found</code></strong> — Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically <code>/opt/dell/vtl/bin</code>).
+<strong><code>Error: VTL service not running</code></strong> — Start the VTL daemon with <code>systemctl start vtl-service</code> or the appropriate service manager for your environment.
+<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user account is a member of the <code>vtl-admin</code> group.</p>
+</div>
 <p>The backup media server must be FC-zoned to the DD VTL FC ports. Confirm zoning is correct if tapes are not visible to the backup application.</p>
 <hr />
 <h2 id="data-domain-configuration-backup-and-recovery">Data Domain Configuration Backup and Recovery<a class="headerlink" href="#data-domain-configuration-backup-and-recovery" title="Permanent link">&para;</a></h2>
 <h3 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h3>
 <p>The DD configuration backup captures system settings, user accounts, network configuration, MTree definitions, replication context definitions, and DDOS licensing. It does <strong>not</strong> contain backup data — it only contains the DD system configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a manual configuration backup</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>config<span class="w"> </span>backup<span class="w"> </span>create
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List available configuration backups</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>config<span class="w"> </span>backup<span class="w"> </span>list
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Show configuration backup details</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>config<span class="w"> </span>backup<span class="w"> </span>show
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Export a configuration backup to a remote server</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>config<span class="w"> </span>backup<span class="w"> </span><span class="nb">export</span><span class="w"> </span>scp://user@&lt;jump-host&gt;:/path/backups/dd01-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.bak
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create a manual configuration backup</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>config<span class="w"> </span>backup<span class="w"> </span>create
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># List available configuration backups</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>config<span class="w"> </span>backup<span class="w"> </span>list
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Show configuration backup details</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>config<span class="w"> </span>backup<span class="w"> </span>show
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Export a configuration backup to a remote server</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>config<span class="w"> </span>backup<span class="w"> </span><span class="nb">export</span><span class="w"> </span>scp://user@&lt;jump-host&gt;:/path/backups/dd01-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.bak
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Creating configuration backup...
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Backup created successfully: backup_id=cfg_bak_20240315_143022
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Backup size: 2.4 MB
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Timestamp: 2024-03-15 14:30:22 UTC
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Available configuration backups:
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>ID                          Created                 Size      Status
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>cfg_bak_20240315_143022     2024-03-15 14:30:22     2.4 MB    completed
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>cfg_bak_20240314_091505     2024-03-14 09:15:05     2.3 MB    completed
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>cfg_bak_20240313_180430     2024-03-13 18:04:30     2.4 MB    completed
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Backup Details for cfg_bak_20240315_143022:
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  ID: cfg_bak_20240315_143022
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  Created: 2024-03-15 14:30:22 UTC
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  Size: 2.4 MB
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  Status: completed
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  Includes: system config, replication settings, network config, user accounts
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Exporting backup to scp://user@jump-host.corp.local:/path/backups/dd01-config-20240315.bak
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Export progress: [████████████████████] 100%
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Backup exported successfully (2.4 MB transferred in 8.3 seconds)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: SSH key authentication failed for user@jump-host</code></strong> — Verify the SSH key is installed on the jump host and the user has permission to write to the target directory.
+<strong><code>Error: Insufficient space on remote destination (required: 2.4 MB, available: 512 KB)</code></strong> — Free up disk space on the remote server or specify an alternate backup destination path.
+<strong><code>Error: config backup export: command not found</code></strong> — Ensure you are logged into the Data Domain management interface with appropriate admin credentials.</p>
+</div>
 <p><strong>Best practice:</strong> Create a configuration backup before every planned change. Export the configuration backup off-appliance to a management server so it is available even if the DD is unavailable.</p>
 <h3 id="configuration-restore">Configuration Restore<a class="headerlink" href="#configuration-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Restore from a specific named backup</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>config<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>&lt;backup-name&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List available backups if the name is unknown</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>config<span class="w"> </span>backup<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Restore from a specific named backup</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>config<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>&lt;backup-name&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># List available backups if the name is unknown</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>config<span class="w"> </span>backup<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># List available backups if the name is unknown
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>config backup list
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Backup Name                          Created                Size      Status
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>================================================================================
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>dd-config-2024-01-15-prod-01        2024-01-15 14:32:18   2.3 MB    Valid
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>dd-config-2024-01-10-prod-01        2024-01-10 09:15:42   2.3 MB    Valid
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>dd-config-2024-01-05-prod-01        2024-01-05 16:48:09   2.2 MB    Valid
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>dd-config-2023-12-28-prod-01        2023-12-28 11:22:33   2.2 MB    Valid
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>dd-config-2023-12-20-prod-01        2023-12-20 08:45:17   2.1 MB    Valid
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a># Restore from a specific named backup
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>config backup restore dd-config-2024-01-15-prod-01
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Restoring backup: dd-config-2024-01-15-prod-01
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Validating backup integrity... OK
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>Preparing system for restore... OK
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>Restoring configuration files... OK
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>Restarting services... OK
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>Restore completed successfully at 2024-01-16 10:22:45
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Backup 'dd-config-2024-01-15-prod-02' not found</code></strong> — Verify the exact backup name using <code>config backup list</code> and ensure you are using the correct naming convention.
+<strong><code>Error: Backup validation failed - checksum mismatch</code></strong> — The backup file may be corrupted; restore from an alternative backup or contact Dell EMC support if all backups are compromised.</p>
+</div>
 <p>Configuration restore replaces the current DD configuration with the saved snapshot. It does not affect backup data in the DDFS.</p>
 <hr />
 <h2 id="mtree-replication-as-a-restore-source-dr-scenario">MTree Replication as a Restore Source (DR Scenario)<a class="headerlink" href="#mtree-replication-as-a-restore-source-dr-scenario" title="Permanent link">&para;</a></h2>
 <p>In a DR scenario where the primary DD is unavailable, backup data can be restored directly from the DR (destination) DD.</p>
 <h3 id="failover-procedure">Failover Procedure<a class="headerlink" href="#failover-procedure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Step 1 — on the destination DD, break the replication context</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># This makes the destination MTree writable</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>replication<span class="w"> </span>failover<span class="w"> </span>&lt;context-id&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Step 2 — verify the MTree is accessible on the destination DD</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>mtree<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree-name&gt;
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Step 3 — redirect backup software to the destination DD</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># (update repository/storage unit configuration in backup application)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Step 4 — validate backup software can read data</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">  </span><span class="c1"># verify backup server connects successfully</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Step 1 — on the destination DD, break the replication context</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># This makes the destination MTree writable</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>replication<span class="w"> </span>failover<span class="w"> </span>&lt;context-id&gt;
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Step 2 — verify the MTree is accessible on the destination DD</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>mtree<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree-name&gt;
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Step 3 — redirect backup software to the destination DD</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># (update repository/storage unit configuration in backup application)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># Step 4 — validate backup software can read data</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">  </span><span class="c1"># verify backup server connects successfully</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Replication context &#39;ctx-prod-mtree-01&#39; failover initiated.
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Context state transitioned to STANDALONE.
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Replication link severed successfully.
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>MTree Name                Status      Capacity      Used
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>prod-mtree-01             Available   50.0 TB       32.5 TB
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Filesystem              Status      Used           Available
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>/data/col1/mtree        mounted     32.5 TB        17.5 TB
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>/data/col1/mtree/.meta  mounted     256 GB         244 GB
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Client Name             IP Address        Status      Last Connected
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>backup-server-01       192.168.10.45     connected   2024-01-15 14:32:18
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>backup-server-02       192.168.10.46     connected   2024-01-15 14:31:55
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Replication context 'ctx-prod-mtree-01' not found</code></strong> — Verify the context ID exists with <code>replication show</code> and use the correct context identifier.
+<strong><code>Error: MTree 'prod-mtree-01' is still in replication mode and cannot be accessed</code></strong> — Ensure the failover command completed successfully and check replication status with <code>replication show &lt;context-id&gt;</code>.
+<strong><code>Error: No clients connected to DDBoost</code></strong> — Verify the backup server's network connectivity to the destination DD and confirm DDBoost credentials are configured correctly in the backup application.</p>
+</div>
 <h3 id="failback-after-primary-recovery">Failback After Primary Recovery<a class="headerlink" href="#failback-after-primary-recovery" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Step 1 — re-establish replication in the original direction</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context-id&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Step 2 — wait for resync to complete (lag = 0)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>replication<span class="w"> </span>status
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Step 3 — redirect backup software back to the primary DD</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Step 4 — confirm backup jobs succeed on the primary</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Step 1 — re-establish replication in the original direction</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context-id&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Step 2 — wait for resync to complete (lag = 0)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>replication<span class="w"> </span>status
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Step 3 — redirect backup software back to the primary DD</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Step 4 — confirm backup jobs succeed on the primary</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Replication resync initiated for context 1234567890abcdef
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Resync in progress...
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>lag: 0 bytes
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>status: IDLE
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>replication_direction: primary -&gt; secondary
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>last_sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>bytes_replicated: 2.847 TB
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>replication_lag_time: 0 seconds
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>connection_status: CONNECTED
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>replication resync: invalid context-id</code></strong> — Verify the context ID with <code>replication show contexts</code> and use the correct hexadecimal identifier.
+<strong><code>replication show stats: command not found</code></strong> — Confirm you are logged into the Data Domain management interface; use <code>ssh admin@&lt;dd-ip&gt;</code> and authenticate first.
+<strong><code>Replication lag is 1.2 GB and not decreasing</code></strong> — Check network connectivity between primary and secondary with <code>network ping &lt;secondary-ip&gt;</code> and verify replication bandwidth limits are not throttled.</p>
+</div>
 <hr />
 <h2 id="fastcopy-efficient-intra-dd-data-movement">FastCopy — Efficient Intra-DD Data Movement<a class="headerlink" href="#fastcopy-efficient-intra-dd-data-movement" title="Permanent link">&para;</a></h2>
 <p>FastCopy performs efficient data movement within the same DD filesystem. Because it operates at the dedup segment level, it does not transfer duplicate data — it updates pointers. Useful for seeding a new MTree from an existing one, or creating a local copy for testing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Copy data from one MTree path to another (same DD)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fastcopy<span class="w"> </span>copy<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/data/col1/&lt;source-mtree&gt;/&lt;path&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>destination<span class="w"> </span>/data/col1/&lt;destination-mtree&gt;/&lt;path&gt;
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check FastCopy status</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>fastcopy<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Copy data from one MTree path to another (same DD)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>fastcopy<span class="w"> </span>copy<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/data/col1/&lt;source-mtree&gt;/&lt;path&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span>destination<span class="w"> </span>/data/col1/&lt;destination-mtree&gt;/&lt;path&gt;
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Check FastCopy status</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>fastcopy<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>FastCopy Job ID: FC-20250214-0847-a3f2c1d9
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Source: /data/col1/mtree_prod/backup_2025
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Destination: /data/col1/mtree_archive/backup_2025
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Status: RUNNING
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Progress: 45% (2.3 TB of 5.1 TB copied)
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Elapsed Time: 00:23:15
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Estimated Time Remaining: 00:28:42
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Throughput: 1.8 GB/s
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>Job ID: FC-20250214-0847-a3f2c1d9
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Status: RUNNING
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>Source Path: /data/col1/mtree_prod/backup_2025
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>Destination Path: /data/col1/mtree_archive/backup_2025
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Files Copied: 12847
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Bytes Copied: 2.3 TB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Source path /data/col1/&lt;source-mtree&gt;/&lt;path&gt; does not exist</code></strong> — Verify the source MTree name and path exist using <code>mtree list</code> and <code>ls -la /data/col1/&lt;mtree&gt;/</code>.
+<strong><code>Error: Destination MTree &lt;destination-mtree&gt; is at capacity</code></strong> — Check available space with <code>mtree show &lt;destination-mtree&gt;</code> and either expand the MTree or choose a different destination.
+<strong><code>Error: FastCopy operation already in progress for destination path</code></strong> — Wait for the existing job to complete or cancel it with <code>fastcopy cancel &lt;job-id&gt;</code> before retrying.</p>
+</div>
 <p>FastCopy is not a substitute for replication — it creates a local copy on the same array, which does not protect against array-level failure.</p>
 <hr />
 <h2 id="performance-expectations">Performance Expectations<a class="headerlink" href="#performance-expectations" title="Permanent link">&para;</a></h2>
@@ -9474,7 +9733,7 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:42:52 UTC"><span class="timeago" datetime="2026-06-29T03:42:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:42:52 UTC">2026-06-29</span>
   </span>
 
     

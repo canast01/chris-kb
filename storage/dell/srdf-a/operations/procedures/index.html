@@ -9155,30 +9155,107 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm no unexpected devices still in Consistent/Transmitting</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Failed Over&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>R2 Devices Status:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Device Name       R1 Status        R2 Status        Link Status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  SymDev_001       Write Disabled   Failed Over      OK
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  SymDev_002       Write Disabled   Failed Over      OK
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  SymDev_003       Write Disabled   Failed Over      OK
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  SymDev_004       Write Disabled   Failed Over      OK
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  SymDev_005       Write Disabled   Failed Over      OK
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>10+0 records in
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>10+0 records out
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>10485760 bytes (10 MB, 10 MiB) copied, 0.847234 s, 12.4 MB/s
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>R2 Devices Status:
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  Device Name       R1 Status        R2 Status        Link Status
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  (no devices in Consistent or Transmitting state)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dd: failed to open '/dev/sdX': No such file or directory</code></strong> — Replace <code>/dev/sdX</code> with the actual device name (e.g., <code>/dev/sdb1</code>) discovered via <code>lsblk</code> or <code>fdisk -l</code> on the DR host.
+<strong><code>SYMAPI_C_DEVICE_NOT_FOUND: Device group 20 not found</code></strong> — Verify the device group number with <code>symcfg list -g</code> and use the correct group ID in the <code>-g</code> parameter.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or ensure the user has appropriate Symmetrix administrator privileges via <code>symacl</code> configuration.</p>
+</div>
 <h3 id="failback-and-replication-restoration">Failback and Replication Restoration<a class="headerlink" href="#failback-and-replication-restoration" title="Permanent link">&para;</a></h3>
 <p><img alt="Failback and Replication Restoration" src="../../../../../assets/srdf-a-proc-failback-and-replication-restoration.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UkFuwjAQvOcVK-5RC0cOlSJQ1UsFNSq95OImG7CU2K69oYqq_r3rBBIKgVOUsWfWMzu5cpiRMnoOTu32FEXWqUq6RqAn4zCfw2TdIbBRhHDCJ_Dj99Ii81hA6l2Jv1HuXownvyoKpr3VCn2GsBSQWFuqTIY5PtXvujK1JhAz2JqyrtBD4UwVLrb0UWnXzRVTVj6-AcS0I4pZqn1TubyAeAezR4ipsQgJHEkQa2P5oqVR6W-p6CjJ4h_8B4VxJ6ewYGKJhKl-NVoxNIfRYV81ckhxjiRVOTqIBeVnqfw-8Y3OWiNxj8FGLJ8fEh7bZ3XD1UC57-uAThXNgjNXnlATD9y2EAwYbEgGa7cdjS_a6JDV9ZP7fqRarFewdoa6fkHCnwOOql12DuInGKp01qpw0BdhqESAz5Z4vtBw9D_2iy2EC5dBXSXXPogtR3_M8yLq?" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Wait for restore to complete (R1 returns to RW)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Re-establish SRDF/A replication (R1 -&gt; R2)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>establish<span class="w"> </span>-noprompt
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Confirm Consistent state restored</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Wait for restore to complete (R1 returns to RW)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Re-establish SRDF/A replication (R1 -&gt; R2)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>establish<span class="w"> </span>-noprompt
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Confirm Consistent state restored</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Executing restore for group 20, type A...
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Restore completed successfully.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Group 20 is now in RW mode on R1.
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Group Number: 20
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>SRDF Mode: Synchronous
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>R1 (Local) State: RW
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>R2 (Remote) State: RW
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>R1 Link State: Ready
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>R2 Link State: Ready
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Last Update Time: 2024-01-15 14:32:18
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Restore Status: Completed
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Restore Completion Time: 2024-01-15 14:31:45
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>Executing establish for group 20, type A...
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Establish completed successfully.
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>Replication link established: R1 -&gt; R2
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>Group 20 SRDF/A Status:
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>Group Number: 20
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>SRDF Mode: Synchronous
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>R1 State: Consistent
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>R2 State: Consistent
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>Link State: Ready
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>Replication Status: Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF group 20 is not in a valid state for restore operation</code></strong> — Verify R1 is in RW state and R2 is in RO state before attempting restore using <code>symrdf -g 20 -type A query</code>.
+<strong><code>Restore operation timed out after 3600 seconds</code></strong> — Increase the timeout or check for I/O bottlenecks on the primary array; monitor with <code>symrdf -g 20 -type A query -detail</code> in a separate terminal.
+<strong><code>Cannot establish replication: R1 and R2 data is not synchronized</code></strong> — Ensure the restore operation completed fully and both sides report Consistent state before running establish.</p>
+</div>
 <h3 id="planned-failover-via-symcli">Planned Failover via SYMCLI<a class="headerlink" href="#planned-failover-via-symcli" title="Permanent link">&para;</a></h3>
 <p><img alt="Planned Failover via SYMCLI" src="../../../../../assets/srdf-a-proc-planned-failover-via-symcli.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm all R1 applications are quiesced or shut down</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Initiate planned failover:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Activate R2 volumes for host access at the DR site</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># When failing back, follow the failback procedure: resync R2 to R1, then swap direction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm all R1 applications are quiesced or shut down</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Initiate planned failover:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Activate R2 volumes for host access at the DR site</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># When failing back, follow the failback procedure: resync R2 to R1, then swap direction</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>RDF Group: 3
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>RDF Type: RDF/A
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Current R1 State: Ready
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Current R2 State: Ready
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Initiating planned failover...
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Failover in progress: 45%
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Failover in progress: 90%
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Failover completed successfully.
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>R1 volumes are now in the Failed Over state.
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>R2 volumes are now in the Ready state and available for host access.
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Failover completed at 2024-01-15 14:32:18 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR (1): RDF group &lt;rdf_group_number&gt; is not in a valid state for failover</code></strong> — Verify all R1 applications are fully quiesced using <code>symrdf query -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code> and check for pending I/O.
+<strong><code>SYMRDF ERROR (18): Symmetrix &lt;r1_sid&gt; is not reachable</code></strong> — Confirm network connectivity to the R1 array and verify the Symmetrix ID is correct with <code>symcfg list -v</code>.
+<strong><code>SYMRDF ERROR (28): RDF link is not synchronized</code></strong> — Wait for RDF synchronization to complete or force a full resync with <code>symrdf sync -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -full</code> before retrying failover.</p>
+</div>
 <h3 id="known-issues-failover">Known Issues — Failover<a class="headerlink" href="#known-issues-failover" title="Permanent link">&para;</a></h3>
 <p><img alt="Known Issues — Failover" src="../../../../../assets/srdf-a-proc-known-issues-failover.svg" /></p>
 <ul>
@@ -9240,42 +9317,173 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 <hr />
 <h2 id="query-srdfa-group-status">Query SRDF/A Group Status<a class="headerlink" href="#query-srdfa-group-status" title="Permanent link">&para;</a></h2>
 <p>Check the current state of all device pairs in an SRDF/A RDF group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Symmetrix ID: 000297123456789
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>RDF Group: 001
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Local Device: 000AB
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Remote Device: 000AB
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Remote Symmetrix ID: 000297987654321
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>RDF Mode: Synchronous
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Link Status: Ready
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Pair State: Synchronized
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Last Sync Time: 2024-01-15 14:32:18
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>Replication Rate: 2.5 MB/sec
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Pending Writes: 0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Error: Invalid Symmetrix ID &lt;sid&gt;</code></strong> — Verify the Symmetrix ID with <code>symcfg list</code> and ensure it matches your target array.
+<strong><code>symrdf: Error: RDF group &lt;group&gt; not found</code></strong> — Confirm the RDF group number exists on the array using <code>symrdf -sid &lt;sid&gt; list</code> to enumerate all configured groups.
+<strong><code>symrdf: Error: Symmetrix not responding</code></strong> — Check network connectivity to the array and verify the Symmetrix Management Console (SMC) service is running on the management station.</p>
+</div>
 <p>The output shows each device pair, the RDF state (Synchronized, Consistent, Transmitting, Suspended), and the delta track count. Review the state column to confirm all pairs are in <strong>Consistent</strong> state under normal operations. High delta track counts indicate replication is falling behind.</p>
 <hr />
 <h2 id="suspend-and-resume-replication">Suspend and Resume Replication<a class="headerlink" href="#suspend-and-resume-replication" title="Permanent link">&para;</a></h2>
 <p>Use suspend and resume during planned maintenance to prevent delta accumulation while work is in progress.</p>
 <p><strong>Suspend replication:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span><span class="nb">suspend</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span><span class="nb">suspend</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>RDF Group: 001
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>RDF Mode: Synchronous
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>RDF Status: Suspended
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Local Device: DEV001
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Remote Device: DEV001
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Suspend Time: 2024-01-15 14:32:47
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF ERROR: RDF group &lt;group&gt; is not configured</code></strong> — Verify the RDF group number exists with <code>symrdf -sid &lt;sid&gt; list</code> and use the correct group ID.
+<strong><code>SYMRDF ERROR: RDF group &lt;group&gt; is already suspended</code></strong> — Check current RDF status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> before attempting to suspend.
+<strong><code>SYMRDF ERROR: Cannot suspend RDF group - operation in progress</code></strong> — Wait for any ongoing RDF operations to complete and retry the suspend command.</p>
+</div>
 <p><strong>Resume replication after maintenance:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resume
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Resuming RDF group 1 on array 000123456789ABCD...
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>RDF group 1 resume completed successfully.
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Symmetrix ID: 000123456789ABCD
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>RDF Group: 1
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>RDF Mode: Synchronous
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Link Status: Ready
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Command not found</code></strong> — Ensure the EMC Solutions Enabler (SE) package is installed and the symcli binaries are in your PATH.
+<strong><code>SYMAPI_ERROR: The RDF group is not in a suspended state</code></strong> — Verify the RDF group status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> before attempting to resume.
+<strong><code>SYMAPI_ERROR: Insufficient privileges to perform operation</code></strong> — Run the command with appropriate sudo privileges or as a user with EMC Symmetrix administrator credentials.</p>
+</div>
 <p>After resuming, monitor the delta track count — it should decrease as R2 catches up. Confirm pairs return to <strong>Consistent</strong> state before closing the maintenance window.</p>
 <hr />
 <h2 id="perform-a-planned-failover">Perform a Planned Failover<a class="headerlink" href="#perform-a-planned-failover" title="Permanent link">&para;</a></h2>
 <p>Initiate a planned failover when the production site is available and a controlled switchover is required:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Executing Failover for SRDF/A group...
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Failover completed successfully.
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>RDF group 0 (sid: 000123456789ABCD) failover status: SUCCESS
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Symmetrix ID: 000123456789ABCD
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>RDF Group: 0
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Previous R1 (Local): FA-1E, FA-2E
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Previous R2 (Remote): FA-3E, FA-4E
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>New R1 (Local): FA-3E, FA-4E
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>New R2 (Remote): FA-1E, FA-2E
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>Failover Time: 47 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SYMRDF Error: RDF group &lt;group&gt; is not in a valid state for failover</code></strong> — Verify the RDF group is in Synchronized or Consistent state using <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> before attempting failover.
+<strong><code>SYMRDF Error: Invalid Symmetrix ID &lt;sid&gt;</code></strong> — Confirm the Symmetrix ID is correct and the array is accessible by running <code>symcfg list -v</code> to verify connectivity.
+<strong><code>SYMRDF Error: RDF group &lt;group&gt; not found</code></strong> — Check that the RDF group number exists for the specified Symmetrix ID using <code>symrdf -sid &lt;sid&gt; query</code>.</p>
+</div>
 <p>R2 becomes read/write; R1 I/O is suspended and hosts at the production site lose access to the devices. Confirm the failover completed successfully:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>RDF Group: 001
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Local Device: 000_000_00A
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Remote Device: 000_000_00A
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Remote Symmetrix ID: 000987654321098
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>RDF Mode: Synchronous
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>Link Status: Ready
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Pair State: Synchronized
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>Last Sync Time: 2024-01-15 14:32:18
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>Bytes Written: 1,234,567,890
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>Replication Lag: 0 ms
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: ERROR - Invalid SID &lt;sid&gt;</code></strong> — Replace <code>&lt;sid&gt;</code> with a valid Symmetrix ID (e.g., <code>000123456789012</code>).
+<strong><code>symrdf: ERROR - RDF group &lt;group&gt; not found</code></strong> — Verify the RDF group number exists on the array using <code>symrdf -sid &lt;sid&gt; list</code>.
+<strong><code>symrdf: ERROR - Symmetrix not responding</code></strong> — Ensure the Symmetrix array is reachable and the Solutions Enabler daemon is running with <code>symcfg list</code>.</p>
+</div>
 <p>Verify all pairs show <strong>Failed Over</strong> state before presenting R2 volumes to DR hosts.</p>
 <hr />
 <h2 id="fail-back-after-recovery">Fail Back After Recovery<a class="headerlink" href="#fail-back-after-recovery" title="Permanent link">&para;</a></h2>
 <p>After the production site is restored and the DR workload is ready to move back, re-establish normal R1→R2 async replication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Executing Failback for SRDF group 000147...
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Failback Operation Summary
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>==========================
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Source Symmetrix ID    : 000196047623
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Target Symmetrix ID    : 000196047624
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>RDF Group Number       : 47
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>RDF Mode               : Synchronous
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Current State          : Synchronized
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>Failback Direction     : Target to Source
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>Initiating failback...
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>Failback completed successfully.
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>New RDF State          : Synchronized
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>Elapsed Time           : 2 minutes 34 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>symrdf: Could not connect to the Symmetrix</code></strong> — Verify the Symmetrix ID is correct and the array is reachable via the SRDF network.
+<strong><code>symrdf: RDF group &lt;group&gt; is not in a valid state for failback</code></strong> — Ensure the RDF group is in Synchronized state before attempting failback using <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code>.
+<strong><code>symrdf: Invalid group number &lt;group&gt;</code></strong> — Confirm the RDF group number exists on the specified Symmetrix using <code>symrdf -sid &lt;sid&gt; list</code>.</p>
+</div>
 <p>This operation resynchronises R1 from R2 and restores the original replication direction. Monitor until all pairs return to <strong>Consistent</strong> state and confirm production applications resume normally on R1.</p>
 <hr />
 <h2 id="add-devices-to-an-existing-srdfa-group">Add Devices to an Existing SRDF/A Group<a class="headerlink" href="#add-devices-to-an-existing-srdfa-group" title="Permanent link">&para;</a></h2>
 <p>Add new R1/R2 device pairs to an established SRDF/A group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>symrdf<span class="w"> </span>addpair<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;R1-devs&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;R2-devs&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>symrdf<span class="w"> </span>addpair<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;R1-devs&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;R2-devs&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Symmetrix ID: 000123456789012
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>RDF Group: 3
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Local Device(s): 0001, 0002, 0003
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>Remote Device(s): 0101, 0102, 0103
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>RDF Mode: Synchronous
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>SRDF Link: SE-4E
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>Pair State: Ready
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>Consistency Group: CG_PROD_001
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>Operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF pair already exists for device &lt;dev&gt;</code></strong> — Verify the device is not already configured in an SRDF pair using <code>symrdf query -sid &lt;sid&gt; -dev &lt;dev&gt;</code> before adding.
+<strong><code>RDF group &lt;group&gt; does not exist</code></strong> — Create the RDF group first with <code>symrdf creategroup -sid &lt;sid&gt; -rdfg &lt;group&gt;</code> or verify the group number is correct.
+<strong><code>Remote device &lt;R2-dev&gt; not found on remote array</code></strong> — Confirm the remote device exists on the target Symmetrix array and that the SRDF link is active using <code>symrdf query -sid &lt;remote_sid&gt; -dev &lt;R2-dev&gt;</code>.</p>
+</div>
 <p>After adding the pairs, establish replication for the new devices:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>symrdf<span class="w"> </span>establish<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>symrdf<span class="w"> </span>establish<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Establishing SRDF link for SID 000123456789 RDF Group 1...
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Establishing SRDF link for SID 000123456789 RDF Group 1... (In Progress)
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Establishing SRDF link for SID 000123456789 RDF Group 1... (In Progress)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>SRDF link established successfully.
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>RDF Group 1 is now in Synchronized state.
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>Synchronization completed: 100%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>SRDF link is already established</code></strong> — Verify the current SRDF state with <code>symrdf query -sid &lt;sid&gt; -rdfg &lt;group&gt;</code> before attempting to establish.
+<strong><code>RDF Group &lt;group&gt; not found for SID &lt;sid&gt;</code></strong> — Confirm the SID and RDF group number are correct and exist in your Symmetrix configuration using <code>symcfg list -sid &lt;sid&gt;</code>.
+<strong><code>Insufficient cache resources available</code></strong> — Ensure adequate cache is available on both arrays and check array utilization with <code>symstat -sid &lt;sid&gt;</code> before retrying.</p>
+</div>
 <p>Monitor the establish operation until the new pairs reach <strong>Consistent</strong> state alongside the existing group members.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9313,7 +9521,7 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:42:48 UTC"><span class="timeago" datetime="2026-06-29T04:42:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:42:48 UTC">2026-06-29</span>
   </span>
 
     

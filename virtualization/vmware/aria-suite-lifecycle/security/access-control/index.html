@@ -9246,12 +9246,38 @@ Access Control reference covering Service Account for API Automation, Separation
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;upgrade\|deploy\|install&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;user\|request&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
-<p>For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a SIEM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure syslog forwarding from LCM appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Edit /etc/rsyslog.d/lcm-remote.conf (create if not present)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/lcm-remote.conf
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2024-01-15T09:23:47.123Z INFO [AuthenticationManager] User &#39;admin@vsphere.local&#39; authenticated successfully from 192.168.1.45
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15T09:24:12.456Z INFO [SessionManager] Login event for user &#39;svc-automation&#39; - Session ID: a7f3e9c2-1b4d-4e8f-9a2c-5d6e7f8g9h0i
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-01-15T09:45:33.789Z WARN [AuthenticationManager] Failed login attempt for user &#39;operator&#39; from 192.168.1.102 - Invalid credentials
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-01-15T10:12:05.234Z INFO [SessionManager] Logout event for user &#39;admin@vsphere.local&#39; - Session duration: 1847 seconds
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-01-15T10:33:22.567Z INFO [LockerService] Certificate import operation initiated by user &#39;admin@vsphere.local&#39; - Cert ID: vmware-root-ca-2024
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2024-01-15T10:33:45.891Z INFO [LockerService] Password update for credential &#39;vcenter-sso-bind&#39; completed successfully
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2024-01-15T10:34:12.123Z INFO [LockerService] Certificate delete operation for expired cert &#39;old-intermediate-ca&#39; by user &#39;admin@vsphere.local&#39;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2024-01-15T11:02:18.456Z INFO [DeploymentManager] Upgrade request submitted by user &#39;svc-automation&#39; - Target version: 8.12.1, Request ID: req-2024-001847
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2024-01-15T11:15:33.789Z INFO [DeploymentManager] Deploy operation for product &#39;vRealize Automation&#39; initiated - User: &#39;admin@vsphere.local&#39;, Environment: production
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2024-01-15T11:45:22.234Z INFO [InstallationService] Install request processed - Component: &#39;Identity Manager&#39;, User attribution: svc-automation, Status: in-progress
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2024-01-15T12:03:11.567Z WARN [DeploymentManager] Upgrade rollback initiated for failed deployment req-2024-001847 by user &#39;admin@vsphere.local&#39;
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/vmware/vrlcm/lcm-app.log: No such file or directory</code></strong> — Verify the log file path is correct and the vRealize Lifecycle Manager service is running with <code>systemctl status vrlcm</code>.
+<strong><code>grep: (standard input): line 1234 is too long (exceeding 32767 bytes)</code></strong> — Pipe the output through <code>sed 's/.\{32000\}/&amp;\n/g'</code> to handle extremely long log lines, or check for corrupted log entries.
+<strong><code>tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the appropriate group with <code>groups $USER</code>.</p>
+</div>
+<p>For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a SIEM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure syslog forwarding from LCM appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Edit /etc/rsyslog.d/lcm-remote.conf (create if not present)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/lcm-remote.conf
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to restart service rsyslog: Unit rsyslog.service not found.</code></strong> — Verify rsyslog is installed with <code>apt-get install rsyslog</code> or <code>yum install rsyslog</code> depending on your OS.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root user since <code>/etc/rsyslog.d/</code> requires elevated privileges.
+<strong><code>Name or service not known</code></strong> — Ensure the syslog server hostname <code>vrli-prod-01.example.local</code> is resolvable; test with <code>nslookup vrli-prod-01.example.local</code> or update <code>/etc/hosts</code>.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../authentication/">Aria Suite Lifecycle — Authentication</a></li>
@@ -9279,7 +9305,7 @@ Access Control reference covering Service Account for API Automation, Separation
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
   </span>
 
     

@@ -7765,229 +7765,456 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># network           → openshift-ovn-kubernetes</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># storage           → openshift-cluster-csi-drivers</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>authentication                                       True        False        False      2d
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dns                                                  True        True         False      2d
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>etcd                                                 True        False        False      2d
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ingress                                              True        False        False      2d
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>kube-apiserver                                       True        False        False      2d
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>machine-config                                       True        False        False      2d
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>monitoring                                           True        False        False      2d
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>network                                              True        False        False      2d
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>storage                                              True        False        False      2d
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Name:         authentication
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Namespace:    openshift-authentication
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Labels:       &lt;none&gt;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Annotations:  &lt;none&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>API Version:  config.openshift.io/v1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Kind:         ClusterOperator
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Status:
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  Conditions:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    Last Transition Time:  2024-01-15T08:32:14Z
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    Message:               OAuth server deployment has 3 replicas, all available, all updated
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    Reason:                AsExpected
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    Status:                True
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Type:                  Available
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>oauth-openshift-5d8c9f2b4-7k9m2        1/1     Running   0          2d
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>oauth-openshift-5d8c9f2b4-m3xp6        1/1     Running   0          2d
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>oauth-openshift-5d8c9f2b4-q2lw8        1/1     Running   0          2d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "co"</code></strong> — Ensure you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc login</code> and verify API availability.
+<strong><code>Error from server (NotFound): namespaces "openshift-authentication" not found</code></strong> — Confirm the operator namespace exists with <code>oc get ns | grep openshift</code> and check that the cluster operator is actually installed.
+<strong><code>error: expected 'logs' subcommand or flag</code></strong> — Use the correct syntax <code>oc logs -n &lt;namespace&gt; &lt;pod-name&gt;</code> or <code>oc logs -n &lt;namespace&gt; deployment/&lt;name&gt;</code> without extra flags before the resource type.</p>
+</div>
 <h2 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Overview: STATUS, ROLES, AGE, VERSION</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Healthy output: all STATUS=Ready, VERSION identical across nodes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Unhealthy indicators: NotReady, SchedulingDisabled (cordoned)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Detailed node conditions</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Watch for in &quot;Conditions:&quot; section:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">#   MemoryPressure=True   → node running low on memory; pods may be evicted</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">#   DiskPressure=True     → disk usage &gt; eviction threshold; clear logs/images</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">#   PIDPressure=True      → too many processes; check for runaway workloads</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">#   Ready=False           → kubelet not communicating; check kubelet service</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Resource usage per node</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Alert if CPU or MEMORY% &gt; 85% sustained</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Top pods across cluster</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Check MachineConfigPool — MCO-driven node config status</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># UPDATED=False or DEGRADED=True: node failed to apply MachineConfig</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>oc<span class="w"> </span>describe<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w">     </span><span class="c1"># See which node is blocking</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Overview: STATUS, ROLES, AGE, VERSION</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Healthy output: all STATUS=Ready, VERSION identical across nodes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Unhealthy indicators: NotReady, SchedulingDisabled (cordoned)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Detailed node conditions</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Watch for in &quot;Conditions:&quot; section:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   MemoryPressure=True   → node running low on memory; pods may be evicted</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">#   DiskPressure=True     → disk usage &gt; eviction threshold; clear logs/images</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">#   PIDPressure=True      → too many processes; check for runaway workloads</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   Ready=False           → kubelet not communicating; check kubelet service</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Resource usage per node</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Alert if CPU or MEMORY% &gt; 85% sustained</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Top pods across cluster</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Check MachineConfigPool — MCO-driven node config status</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># UPDATED=False or DEGRADED=True: node failed to apply MachineConfig</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>oc<span class="w"> </span>describe<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w">     </span><span class="c1"># See which node is blocking</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME                    STATUS   ROLES           AGE    VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>master-01.ocp.local     Ready    control-plane   45d    v1.27.6   10.0.1.10       &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.11
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>master-02.ocp.local     Ready    control-plane   45d    v1.27.6   10.0.1.11       &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.11
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>master-03.ocp.local     Ready    control-plane   45d    v1.27.6   10.0.1.12       &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.11
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>worker-01.ocp.local     Ready    worker          42d    v1.27.6   10.0.2.20       &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.11
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>worker-02.ocp.local     Ready    worker          42d    v1.27.6   10.0.2.21       &lt;none&gt;        Red Hat Enterprise Linux CoreOS 4.13.11
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Conditions:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Type                 Status  LastHeartbeatTime         Reason
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  MemoryPressure       False   Wed Jan 10 14:32:15 2024  KubeletHasSufficientMemory
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  DiskPressure         False   Wed Jan 10 14:32:15 2024  KubeletHasNoDiskPressure
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  PIDPressure          False   Wed Jan 10 14:32:15 2024  KubeletHasSufficientPID
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Ready                True    Wed Jan 10 14:32:15 2024  KubeletReady
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>NAME                    CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>master-01.ocp.local     1240m        31%    8192Mi          52%
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>master-02.ocp.local     1156m        29%    7840Mi          50%
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>master-03.ocp.local     1312m        33%    8512Mi          54%
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>worker-01.ocp.local     2840m        71%    14336Mi         91%
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>worker-02.ocp.local     1920m        48%    9216Mi          59%
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>NAMESPACE              NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>openshift-monitoring   prometheus-k8s-0                        892      2048
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>openshift-apiserver    apiserver-6d4f7c8b9e2a1f3g             645      1536
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>kube-system            etcd-master-01.ocp.local               512      768
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>openshift-etcd         etcd-member-master-02.ocp.local        478      704
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>monitoring             grafana-deployment-5f8c9d2e1a3b       234      512
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>NAME     CONFIG                                   UPDATED   UPDATING   DEGRADED   NODES-READY   NODES-UPDATED   NODES-AVAILABLE   NODES-DEGRADED
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>master   rendered-master-a1b2c3d4e5f6g7h8i9j0k   True      False      False      3             3                3                 0
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>worker   rendered-worker-x9y8z7w6v
 </code></pre></div>
 <h2 id="etcd-health">etcd Health<a class="headerlink" href="#etcd-health" title="Permanent link">&para;</a></h2>
 <p>etcd is the cluster database. A degraded etcd member or high write latency can cause API instability and failed writes across the cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get an etcd pod name</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Endpoint health (all 3 members must be healthy)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Expected output per member:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># https://192.168.100.10:2379 is healthy: successfully committed proposal</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Endpoint status — DB size, leader, raft index</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Columns: ENDPOINT | ID | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># DB SIZE: alert if &gt; 8 GB; defrag if so</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Defrag etcd (do on non-leader members first, then leader last)</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>etcdctl<span class="w"> </span>defrag<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://&lt;member-ip&gt;:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># P99 commit latency via Prometheus</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1"># histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Alert threshold: &gt; 0.01 (10 ms)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get an etcd pod name</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Endpoint health (all 3 members must be healthy)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected output per member:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># https://192.168.100.10:2379 is healthy: successfully committed proposal</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Endpoint status — DB size, leader, raft index</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>-w<span class="w"> </span>table<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Columns: ENDPOINT | ID | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># DB SIZE: alert if &gt; 8 GB; defrag if so</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Defrag etcd (do on non-leader members first, then leader last)</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>etcdctl<span class="w"> </span>defrag<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://&lt;member-ip&gt;:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># P99 commit latency via Prometheus</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="c1"># histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="c1"># Alert threshold: &gt; 0.01 (10 ms)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pod/etcd-ip-192-168-100-10.ec2.internal
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>https://192.168.100.10:2379 is healthy: successfully committed proposal
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>https://192.168.100.11:2379 is healthy: successfully committed proposal
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>https://192.168.100.12:2379 is healthy: successfully committed proposal
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>+------------------------+------------------+---------+---------+----------+-----------+-----------+-----------+
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>| ENDPOINT               | ID               | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX |
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>+------------------------+------------------+---------+---------+----------+-----------+-----------+-----------+
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>| https://192.168.100.10:2379 | 8e9c42a7b1d5f3c2 | 3.5.9   | 2.1 GB  | true      | false     | 847       | 18492156  |
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>| https://192.168.100.11:2379 | 7f2d8c1a9e4b6k9l | 3.5.9   | 2.0 GB  | false     | false     | 847       | 18492156  |
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>| https://192.168.100.12:2379 | 6a3e9d2b8f5c7m1n | 3.5.9   | 2.2 GB  | false     | false     | 847       | 18492156  |
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>+------------------------+------------------+---------+---------+----------+-----------+-----------+-----------+
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Finished defragmenting etcd member 8e9c42a7b1d5f3c2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to connect to etcd: context deadline exceeded</code></strong> — Verify the etcd pod is running with <code>oc get pod -n openshift-etcd</code> and check network connectivity to the endpoint IP.
+<strong><code>x509: certificate signed by unknown authority</code></strong> — Ensure the cacert, cert, and key paths are correct and the certificates have not expired with <code>oc get secret -n openshift-etcd etcd-all-certs -o yaml</code>.
+<strong><code>etcdctl: command not found</code></strong> — The etcdctl binary is not available in the etcd pod image; use <code>oc debug node/&lt;node-name&gt;</code> and mount the etcd container to access the binary directly.</p>
+</div>
 <h2 id="networking-health">Networking Health<a class="headerlink" href="#networking-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># OVN-Kubernetes pods (SDN data plane)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: ovnkube-master-* and ovnkube-node-* all Running</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># ovnkube-node runs as DaemonSet — one pod per node</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># CoreDNS (service DNS)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Expected: dns-default-* Running on every node (DaemonSet)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Test DNS resolution from inside a pod</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/myapp<span class="w"> </span>-n<span class="w"> </span>mynamespace<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: Server: 172.30.0.10 / Address: &lt;ClusterIP of kubernetes service&gt;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Test external DNS from pod</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/myapp<span class="w"> </span>-n<span class="w"> </span>mynamespace<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>registry.redhat.io
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Ingress (router) health</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ingress
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Expected: router-default-* Running</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Test ingress route</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://console-openshift-console.apps.&lt;cluster&gt;.&lt;base&gt;
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Expected: 200 or 302</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Check ingress operator</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>ingress
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># OVN-Kubernetes pods (SDN data plane)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: ovnkube-master-* and ovnkube-node-* all Running</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># ovnkube-node runs as DaemonSet — one pod per node</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># CoreDNS (service DNS)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected: dns-default-* Running on every node (DaemonSet)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Test DNS resolution from inside a pod</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/myapp<span class="w"> </span>-n<span class="w"> </span>mynamespace<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default.svc.cluster.local
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expected: Server: 172.30.0.10 / Address: &lt;ClusterIP of kubernetes service&gt;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Test external DNS from pod</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/myapp<span class="w"> </span>-n<span class="w"> </span>mynamespace<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>registry.redhat.io
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Ingress (router) health</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ingress
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Expected: router-default-* Running</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Test ingress route</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://console-openshift-console.apps.&lt;cluster&gt;.&lt;base&gt;
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># Expected: 200 or 302</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Check ingress operator</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>ingress
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME                                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ovnkube-master-7k9m2                      2/2     Running   0          8d
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ovnkube-master-b4lx8                      2/2     Running   0          8d
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ovnkube-master-c2p5q                      2/2     Running   0          8d
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ovnkube-node-4jnxk                        1/1     Running   0          7d
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ovnkube-node-8vqrs                        1/1     Running   0          7d
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ovnkube-node-d6m9p                        1/1     Running   0          7d
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>...
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>NAME                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>dns-default-7h2kl         1/1     Running   0          8d
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>dns-default-m8qpn         1/1     Running   0          8d
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>dns-default-x5r3j         1/1     Running   0          8d
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Server:     172.30.0.10
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Address:    172.30.0.10#53
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Name:   kubernetes.default.svc.cluster.local
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Address: 172.30.0.1
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Server:     172.30.0.10
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Address:    172.30.0.10#53
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Name:   registry.redhat.io
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Address: 52.204.18.75
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>NAME                              READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>router-default-5m7np              1/1     Running   0          8d
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>router-default-9k2lq              1/1     Running   0          8d
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>200
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>Name:                  ingress
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>Namespace:             openshift-ingress-operator
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>Labels:               
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>Annotations:          
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>Status:               Available
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>Message:              
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>Reason:               AsExpected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error from server (NotFound): deployments.apps "myapp" not found</code></strong> — Verify the deployment name and namespace with <code>oc get deployments -n mynamespace</code> before running debug.
+<strong><code>Server: [::1] / Address: ::1#53 (connection timeout)</code></strong> — Ensure CoreDNS pods are running with <code>oc get pods -n openshift-dns</code> and check pod logs with <code>oc logs -n openshift-dns &lt;pod-name&gt;</code>.
+<strong><code>curl: (7) Failed to connect to console-openshift-console.apps.&lt;cluster&gt;.&lt;base&gt; port 443: Name or address not known</code></strong> — Replace <code>&lt;cluster&gt;.&lt;base&gt;</code> with your actual cluster domain (e.g., <code>oc whoami --show-console</code> to verify the correct URL).</p>
+</div>
 <h2 id="storage-health">Storage Health<a class="headerlink" href="#storage-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PersistentVolume status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pv
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># STATUS column: Bound=in use, Available=free, Released=PVC deleted (data retained), Failed=error</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Any Released or Failed PVs → investigate; Released PVs with retain policy need manual cleanup</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># PersistentVolumeClaim status across all namespaces</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># STATUS: Bound=OK, Pending=provisioner cannot fulfill request → check CSI driver and StorageClass</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># CSI driver pods</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-cluster-csi-drivers
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># All pods Running; operator pods and node-level driver pods</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check default StorageClass</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>oc<span class="w"> </span>get<span class="w"> </span>sc
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># At least one (default) StorageClass required for dynamic provisioning</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Storage operator status</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>storage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># PersistentVolume status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pv
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># STATUS column: Bound=in use, Available=free, Released=PVC deleted (data retained), Failed=error</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Any Released or Failed PVs → investigate; Released PVs with retain policy need manual cleanup</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># PersistentVolumeClaim status across all namespaces</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># STATUS: Bound=OK, Pending=provisioner cannot fulfill request → check CSI driver and StorageClass</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># CSI driver pods</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-cluster-csi-drivers
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># All pods Running; operator pods and node-level driver pods</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Check default StorageClass</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>oc<span class="w"> </span>get<span class="w"> </span>sc
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># At least one (default) StorageClass required for dynamic provisioning</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Storage operator status</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>storage
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                    STORAGECLASS   REASON   AGE
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pvc-a1b2c3d4-e5f6-7890-abcd-ef1234567890   100Gi      RWO            Delete           Bound    openshift-monitoring/prometheus-k8s              gp3-csi                5d
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>pvc-b2c3d4e5-f6a7-8901-bcde-f12345678901   50Gi       RWO            Delete           Bound    openshift-logging/elasticsearch-cdm-xyz          gp3-csi                3d
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>pvc-c3d4e5f6-a7b8-9012-cdef-123456789012   20Gi       RWX            Retain           Released                                           gp3-csi                7d
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pvc-d4e5f6a7-b8c9-0123-defg-234567890123   10Gi       RWO            Delete           Failed                                             gp3-csi    ProvisioningFailed   2d
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>NAME                                    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>prometheus-k8s-db-0                     Bound    pvc-a1b2c3d4-e5f6-7890-abcd-ef1234567890   100Gi      RWO            gp3-csi        5d
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>elasticsearch-cdm-xyz-0                 Bound    pvc-b2c3d4e5-f6a7-8901-bcde-f12345678901   50Gi       RWO            gp3-csi        3d
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>test-app-pvc                            Pending                                                                        gp3-csi        12h
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>NAME                                              READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>aws-ebs-csi-driver-controller-5d8f7c9b4-xyz12    2/2     Running   0          8d
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>aws-ebs-csi-driver-node-2xk9m                    3/3     Running   1          8d
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>aws-ebs-csi-driver-node-4lp6n                    3/3     Running   0          8d
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>aws-ebs-csi-driver-node-7qr8s                    3/3     Running   2          8d
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>csi-snapshot-controller-0                        1/1     Running   0          8d
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>NAME                 PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>gp3-csi (default)    ebs.csi.aws.com         Delete          WaitForFirstConsumer   true                   45d
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>standard             kubernetes.io/aws-ebs   Delete          Immediate             false                  45d
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>Name:                  storage
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Namespace:             openshift-cluster-storage-operator
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>Labels:                &lt;none&gt;
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>Annotations:           &lt;none&gt;
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>API Version:           config.openshift.io/v1
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>Kind:                  ClusterOperator
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Status:
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>  Conditions:
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  - Last Transition Time:  2024-01-15T14:32:18Z
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>    Message:               
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>    Reason:                As
 </code></pre></div>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Run in order — each check gates the next.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># OpenShift Cluster Health Check</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Usage: KUBECONFIG=/path/to/kubeconfig bash ocp-health.sh</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">PASS</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">FAIL</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">result</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS  </span><span class="nv">$label</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="o">((</span>PASS++<span class="o">))</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="k">else</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL  </span><span class="nv">$label</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;      </span><span class="nv">$result</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="o">((</span>FAIL++<span class="o">))</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="k">fi</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="o">}</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===== OpenShift Health Check </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> =====&quot;</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># 1. Cluster Version</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="nv">CV</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].status.conditions[?(@.type==&quot;Degraded&quot;)].status}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>check<span class="w"> </span><span class="s2">&quot;ClusterVersion not Degraded&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CV</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ClusterVersion Degraded=True&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># 2. Cluster Operators</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nv">CO_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True\s*False\s*False&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>check<span class="w"> </span><span class="s2">&quot;All ClusterOperators healthy&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CO_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="c1"># 3. Nodes Ready</span>
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="nv">NODES_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>check<span class="w"> </span><span class="s2">&quot;All nodes Ready&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NODES_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="c1"># 4. MachineConfigPools not Degraded</span>
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="nv">MCP_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$4==&quot;True&quot;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>check<span class="w"> </span><span class="s2">&quot;MachineConfigPools not Degraded&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MCP_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="c1"># 5. Unhealthy pods (excluding Completed/Succeeded)</span>
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="nv">PODS_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">&quot;Running|Completed|Succeeded&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1&quot;/&quot;$2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="k">)</span>
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>check<span class="w"> </span><span class="s2">&quot;No unhealthy pods&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PODS_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="c1"># 6. etcd endpoint health</span>
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="nv">ETCD_OUT</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span>--cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="w">  </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;is healthy&quot;</span><span class="k">)</span>
-<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>check<span class="w"> </span><span class="s2">&quot;etcd all endpoints healthy&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_OUT</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>
-<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="c1"># 7. OVN-Kubernetes pods Running</span>
-<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="nv">OVN_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>check<span class="w"> </span><span class="s2">&quot;OVN-Kubernetes pods Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OVN_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>
-<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="c1"># 8. CoreDNS pods Running</span>
-<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="nv">DNS_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>check<span class="w"> </span><span class="s2">&quot;CoreDNS pods Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DNS_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>
-<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="c1"># 9. No Pending PVCs</span>
-<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="nv">PVC_PEND</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1&quot;/&quot;$2}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>check<span class="w"> </span><span class="s2">&quot;No Pending PVCs&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PVC_PEND</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>
-<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="c1"># 10. Monitoring stack Running</span>
-<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="nv">MON_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>check<span class="w"> </span><span class="s2">&quot;Monitoring stack Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MON_BAD</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>
-<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===== Result: </span><span class="nv">$PASS</span><span class="s2"> PASS / </span><span class="nv">$FAIL</span><span class="s2"> FAIL =====&quot;</span>
-<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a><span class="o">[</span><span class="w"> </span><span class="nv">$FAIL</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># OpenShift Cluster Health Check</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Usage: KUBECONFIG=/path/to/kubeconfig bash ocp-health.sh</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">PASS</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">FAIL</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">result</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS  </span><span class="nv">$label</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="o">((</span>PASS++<span class="o">))</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="k">else</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL  </span><span class="nv">$label</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;      </span><span class="nv">$result</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="o">((</span>FAIL++<span class="o">))</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="o">}</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===== OpenShift Health Check </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> =====&quot;</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># 1. Cluster Version</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="nv">CV</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].status.conditions[?(@.type==&quot;Degraded&quot;)].status}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>check<span class="w"> </span><span class="s2">&quot;ClusterVersion not Degraded&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CV</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ClusterVersion Degraded=True&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1"># 2. Cluster Operators</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="nv">CO_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True\s*False\s*False&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>check<span class="w"> </span><span class="s2">&quot;All ClusterOperators healthy&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CO_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="c1"># 3. Nodes Ready</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="nv">NODES_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>check<span class="w"> </span><span class="s2">&quot;All nodes Ready&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NODES_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="c1"># 4. MachineConfigPools not Degraded</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="nv">MCP_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$4==&quot;True&quot;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>check<span class="w"> </span><span class="s2">&quot;MachineConfigPools not Degraded&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MCP_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="c1"># 5. Unhealthy pods (excluding Completed/Succeeded)</span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="nv">PODS_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">&quot;Running|Completed|Succeeded&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1&quot;/&quot;$2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="k">)</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>check<span class="w"> </span><span class="s2">&quot;No unhealthy pods&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PODS_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="c1"># 6. etcd endpoint health</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="nv">ETCD_OUT</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>health<span class="w"> </span>--cluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a><span class="w">  </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;is healthy&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a>check<span class="w"> </span><span class="s2">&quot;etcd all endpoints healthy&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_OUT</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a>
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a><span class="c1"># 7. OVN-Kubernetes pods Running</span>
+<a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a><span class="nv">OVN_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a>check<span class="w"> </span><span class="s2">&quot;OVN-Kubernetes pods Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OVN_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a>
+<a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a><span class="c1"># 8. CoreDNS pods Running</span>
+<a id="__codelineno-10-59" name="__codelineno-10-59" href="#__codelineno-10-59"></a><span class="nv">DNS_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-60" name="__codelineno-10-60" href="#__codelineno-10-60"></a>check<span class="w"> </span><span class="s2">&quot;CoreDNS pods Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DNS_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-61" name="__codelineno-10-61" href="#__codelineno-10-61"></a>
+<a id="__codelineno-10-62" name="__codelineno-10-62" href="#__codelineno-10-62"></a><span class="c1"># 9. No Pending PVCs</span>
+<a id="__codelineno-10-63" name="__codelineno-10-63" href="#__codelineno-10-63"></a><span class="nv">PVC_PEND</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1&quot;/&quot;$2}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-64" name="__codelineno-10-64" href="#__codelineno-10-64"></a>check<span class="w"> </span><span class="s2">&quot;No Pending PVCs&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PVC_PEND</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-65" name="__codelineno-10-65" href="#__codelineno-10-65"></a>
+<a id="__codelineno-10-66" name="__codelineno-10-66" href="#__codelineno-10-66"></a><span class="c1"># 10. Monitoring stack Running</span>
+<a id="__codelineno-10-67" name="__codelineno-10-67" href="#__codelineno-10-67"></a><span class="nv">MON_BAD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-68" name="__codelineno-10-68" href="#__codelineno-10-68"></a>check<span class="w"> </span><span class="s2">&quot;Monitoring stack Running&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MON_BAD</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-69" name="__codelineno-10-69" href="#__codelineno-10-69"></a>
+<a id="__codelineno-10-70" name="__codelineno-10-70" href="#__codelineno-10-70"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-10-71" name="__codelineno-10-71" href="#__codelineno-10-71"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===== Result: </span><span class="nv">$PASS</span><span class="s2"> PASS / </span><span class="nv">$FAIL</span><span class="s2"> FAIL =====&quot;</span>
+<a id="__codelineno-10-72" name="__codelineno-10-72" href="#__codelineno-10-72"></a><span class="o">[</span><span class="w"> </span><span class="nv">$FAIL</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>===== OpenShift Health Check Thu Jan 16 14:32:18 UTC 2025 =====
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>PASS  ClusterVersion not Degraded
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>PASS  All ClusterOperators healthy
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>PASS  All nodes Ready
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>PASS  MachineConfigPools not Degraded
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>FAIL  No unhealthy pods
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>      openshift-apiserver/apiserver-5d7c9f2b1
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>      openshift-controller-manager/controller-manager-wx8kl
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>PASS  etcd all endpoints healthy
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>PASS  OVN-Kubernetes pods Running
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>PASS  CoreDNS pods Running
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>PASS  No Pending PVCs
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>FAIL  Monitoring stack Running
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>      prometheus-operator-6f4d8c2k9
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>      thanos-querier-7b2e1a9m3
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>===== Result: 8 PASS / 2 FAIL =====
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "clusterversion"</code></strong> — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc api-resources | grep clusterversion</code>.
+<strong><code>error: unable to upgrade connection: container not found</code></strong> — Ensure the etcd pod is running with <code>oc get pods -n openshift-etcd -l etcd=true</code> and verify pod name matches the rsh command.
+<strong><code>KUBECONFIG: command not found</code></strong> — Set the KUBECONFIG variable before running the script: <code>export KUBECONFIG=/path/to/kubeconfig &amp;&amp; bash ocp-health.sh</code>.</p>
+</div>
 <h2 id="etcd-performance-check">etcd Performance Check<a class="headerlink" href="#etcd-performance-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check P99 commit latency (should be &lt; 10ms = 0.010 s)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Via Prometheus (preferred):</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Via etcdctl check perf (generates load — do not run on production during peak)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>etcdctl<span class="w"> </span>check<span class="w"> </span>perf<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># If latency is high: check disk IOPS on master nodes</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># etcd requires SSD with &gt; 500 IOPS sustained write performance</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># VMware: ensure vSAN or NVMe-backed datastore; avoid spinning disk</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check P99 commit latency (should be &lt; 10ms = 0.010 s)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Via Prometheus (preferred):</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Via etcdctl check perf (generates load — do not run on production during peak)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="nv">$ETCD_POD</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>etcdctl<span class="w"> </span>check<span class="w"> </span>perf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/etcd-peer-<span class="k">$(</span>hostname<span class="k">)</span>.key
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># If latency is high: check disk IOPS on master nodes</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># etcd requires SSD with &gt; 500 IOPS sustained write performance</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># VMware: ensure vSAN or NVMe-backed datastore; avoid spinning disk</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Connecting to etcd pod etcd-master-01...
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>60 / 60 Booooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 </code></pre></div>
 <h2 id="node-resource-check">Node Resource Check<a class="headerlink" href="#node-resource-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Resource usage per node</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check node conditions (Pressure states)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>oc<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Watch for: MemoryPressure, DiskPressure, PIDPressure = True</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Check kubelet log on a specific node</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span>chroot<span class="w"> </span>/host<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Image disk usage on a node (can cause DiskPressure)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span>chroot<span class="w"> </span>/host<span class="w"> </span>crictl<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Remove unused images: crictl rmi --prune</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Resource usage per node</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Check node conditions (Pressure states)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>oc<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Watch for: MemoryPressure, DiskPressure, PIDPressure = True</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Check kubelet log on a specific node</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span>chroot<span class="w"> </span>/host<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Image disk usage on a node (can cause DiskPressure)</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span>chroot<span class="w"> </span>/host<span class="w"> </span>crictl<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Remove unused images: crictl rmi --prune</span>
 </code></pre></div>
-<hr />
+<h2 id="expected-outputname-cpucores-memorybytes-worker-01prodinternal-2847m-18432mi-worker-02prodinternal-1923m-12288mi-worker-03prodinternal-3156m-21504mi-master-01prodinternal-892m-8192mi-master-02prodinternal-756m-7680mi-namespace-name-cpucores-memorybytes-openshift-etcd-etcd-master-01prodinternal-287m-892mi-openshift-monitoring-prometheus-operator-5d8f4c7b9d-kx2m9-156m-512mi-openshift-apiserver-apiserver-5f7c9e2a1b-9qr3k-234m-1024mi-kube-system-coredns-558bd4d5db-7x9m2-89m-256mi-openshift-ingress-router-default-7c8f2e1a-5b6k-178m-768mi-namespace-name-memorybytes-openshift-etcd-etcd-master-02prodinternal-1456mi-openshift-monitoring-prometheus-k8s-0-2048mi-openshift-apiserver-apiserver-5f7c9e2a1b-9qr3k-1024mi-openshift-monitoring-alertmanager-main-0-512mi-kube-system-coredns-558bd4d5db-7x9m2-768mi-conditions-type-status-lastheartbeattime-lasttransitiontime-reason-message-ready-true-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubeletready-kubelet-is-posting-ready-status-memorypressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethassufficientmemory-kubelet-has-sufficient-memory-available-diskpressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethasnodiskpressure-kubelet-has-no-disk-pressure-pidpressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethassufficientpid-kubelet-has-sufficient-pid-available-entering-debug-shell-type-exit-to-return-sh-44-journalctl-u-kubelet-since-1-hour-ago-tail-50-jan-15-142834-worker-01prodinternal-kubelet2847-i0115-142834562891-2847-kubeletgo1234-starting-kubelet-v4125-jan-15-142912-worker-01prodinternal-kubelet"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAME                                    CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>worker-01.prod.internal                 2847m        18432Mi
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>worker-02.prod.internal                 1923m        12288Mi
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>worker-03.prod.internal                 3156m        21504Mi
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>master-01.prod.internal                 892m         8192Mi
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>master-02.prod.internal                 756m         7680Mi
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>NAMESPACE            NAME                                    CPU(cores)   MEMORY(bytes)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>openshift-etcd       etcd-master-01.prod.internal            287m         892Mi
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>openshift-monitoring prometheus-operator-5d8f4c7b9d-kx2m9    156m         512Mi
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>openshift-apiserver  apiserver-5f7c9e2a1b-9qr3k              234m         1024Mi
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>kube-system          coredns-558bd4d5db-7x9m2                89m          256Mi
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>openshift-ingress    router-default-7c8f2e1a-5b6k            178m         768Mi
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>...
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>NAMESPACE            NAME                                    MEMORY(bytes)
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>openshift-etcd       etcd-master-02.prod.internal            1456Mi
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>openshift-monitoring prometheus-k8s-0                        2048Mi
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>openshift-apiserver  apiserver-5f7c9e2a1b-9qr3k              1024Mi
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>openshift-monitoring alertmanager-main-0                     512Mi
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>kube-system          coredns-558bd4d5db-7x9m2                768Mi
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>...
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Conditions:
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  Type                 Status  LastHeartbeatTime         LastTransitionTime        Reason                       Message
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>  Ready                True    Wed, 15 Jan 2025 14:32:15 +0000   Wed, 15 Jan 2025 09:12:00 +0000   KubeletReady            kubelet is posting ready status
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>  MemoryPressure       False   Wed, 15 Jan 2025 14:32:15 +0000   Wed, 15 Jan 2025 09:12:00 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>  DiskPressure         False   Wed, 15 Jan 2025 14:32:15 +0000   Wed, 15 Jan 2025 09:12:00 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>  PIDPressure          False   Wed, 15 Jan 2025 14:32:15 +0000   Wed, 15 Jan 2025 09:12:00 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>Entering debug shell. Type &#39;exit&#39; to return.
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>sh-4.4# journalctl -u kubelet --since &quot;1 hour ago&quot; | tail -50
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Jan 15 14:28:34 worker-01.prod.internal kubelet[2847]: I0115 14:28:34.562891    2847 kubelet.go:1234] Starting kubelet v4.12.5
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>Jan 15 14:29:12 worker-01.prod.internal kubelet[
+</code></pre></div><a class="headerlink" href="#expected-outputname-cpucores-memorybytes-worker-01prodinternal-2847m-18432mi-worker-02prodinternal-1923m-12288mi-worker-03prodinternal-3156m-21504mi-master-01prodinternal-892m-8192mi-master-02prodinternal-756m-7680mi-namespace-name-cpucores-memorybytes-openshift-etcd-etcd-master-01prodinternal-287m-892mi-openshift-monitoring-prometheus-operator-5d8f4c7b9d-kx2m9-156m-512mi-openshift-apiserver-apiserver-5f7c9e2a1b-9qr3k-234m-1024mi-kube-system-coredns-558bd4d5db-7x9m2-89m-256mi-openshift-ingress-router-default-7c8f2e1a-5b6k-178m-768mi-namespace-name-memorybytes-openshift-etcd-etcd-master-02prodinternal-1456mi-openshift-monitoring-prometheus-k8s-0-2048mi-openshift-apiserver-apiserver-5f7c9e2a1b-9qr3k-1024mi-openshift-monitoring-alertmanager-main-0-512mi-kube-system-coredns-558bd4d5db-7x9m2-768mi-conditions-type-status-lastheartbeattime-lasttransitiontime-reason-message-ready-true-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubeletready-kubelet-is-posting-ready-status-memorypressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethassufficientmemory-kubelet-has-sufficient-memory-available-diskpressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethasnodiskpressure-kubelet-has-no-disk-pressure-pidpressure-false-wed-15-jan-2025-143215-0000-wed-15-jan-2025-091200-0000-kubelethassufficientpid-kubelet-has-sufficient-pid-available-entering-debug-shell-type-exit-to-return-sh-44-journalctl-u-kubelet-since-1-hour-ago-tail-50-jan-15-142834-worker-01prodinternal-kubelet2847-i0115-142834562891-2847-kubeletgo1234-starting-kubelet-v4125-jan-15-142912-worker-01prodinternal-kubelet" title="Permanent link">&para;</a></h2>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../troubleshooting/common-issues/">OpenShift — Common Issues</a></li>
@@ -8022,7 +8249,7 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8143,6 +8143,39 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show all portal addresses for a discovered target</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-o<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>portal
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Node [192.168.1.100:3260,1 iqn.2020-04.com.example:storage.disk1.sys1] {
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    iface.iscsi_ifacename = default
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    iface.net_ifacename = &lt;empty&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    iface.ipaddress = &lt;empty&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    iface.hwaddress = &lt;empty&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    iface.transport_name = tcp
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    iface.initiator_name = iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    iface.state = &lt;empty&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    node.name = iqn.2020-04.com.example:storage.disk1.sys1
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    node.tpgt = 1
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    node.startup = manual
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    node.leading_login = No
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    node.session.auth.authmethod = None
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    node.conn[0].address = 192.168.1.100
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    node.conn[0].port = 3260
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    node.conn[0].startup = manual
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>}
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Node [192.168.1.101:3260,2 iqn.2020-04.com.example:storage.disk2.sys1] {
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    node.conn[0].address = 192.168.1.101
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    node.conn[0].port = 3260
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    node.conn[0].startup = manual
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>}
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>portal.address = 192.168.1.100
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>portal.port = 3260
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>portal.address = 192.168.1.101
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>portal.port = 3260
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: No records found</code></strong> — Run <code>iscsiadm -m discovery -t st -p &lt;portal_ip&gt;</code> to discover targets before querying nodes.
+<strong><code>iscsiadm: Invalid IQN format</code></strong> — Verify the target IQN syntax matches <code>iqn.YYYY-MM.reverse.domain:identifier</code> and use quotes if it contains special characters.</p>
+</div>
 <h2 id="discovery-methods">Discovery Methods<a class="headerlink" href="#discovery-methods" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8170,15 +8203,36 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — SendTargets discovery</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Linux — list discovered targets</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Linux — remove stale target record</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>delete<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Linux — SendTargets discovery</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Linux — list discovered targets</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Linux — remove stale target record</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>delete<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Linux — SendTargets discovery
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>iscsiadm -m discovery -t sendtargets -p 192.168.1.50:3260
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk1
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk2
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a># Linux — list discovered targets
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>iscsiadm -m node
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk1
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk2
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>192.168.1.51:3260,1 iqn.2019-05.com.example:storage.disk3
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a># Linux — remove stale target record
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>iscsiadm -m node -o delete -T iqn.2019-05.com.example:storage.disk3 -p 192.168.1.51:3260
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>iscsiadm: cannot connect to discovery address 192.168.1.50:3260</code></strong> — Verify the target IP is reachable and the iSCSI daemon (iscsid) is running with <code>systemctl status iscsid</code>.
+<strong><code>iscsiadm: No records found</code></strong> — Run discovery first with the sendtargets command before attempting to list or delete nodes.
+<strong><code>iscsiadm: Error: cannot find record for node</code></strong> — Ensure the IQN and IP:port combination exactly match an existing record; verify with <code>iscsiadm -m node</code> first.</p>
+</div>
 <h2 id="host-initiator-group-mapping">Host / Initiator Group Mapping<a class="headerlink" href="#host-initiator-group-mapping" title="Permanent link">&para;</a></h2>
 <p>All storage arrays require the initiator IQN to be registered in a host or initiator group before a LUN is visible:</p>
 <table>
@@ -8208,15 +8262,35 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 </tbody>
 </table>
 <h2 id="verifying-target-connectivity">Verifying Target Connectivity<a class="headerlink" href="#verifying-target-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check target portal is reachable (TCP handshake)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span><span class="m">3260</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Discover targets</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show active sessions to a target</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>&lt;IQN&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check target portal is reachable (TCP handshake)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span><span class="m">3260</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Discover targets</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show active sessions to a target</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>&lt;IQN&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Connection to 192.168.1.50 3260 port [tcp/iscsi] succeeded!
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Target: iqn.2024-01.com.storage:target.disk1
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    Current Portal: 192.168.1.50:3260,1
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Persistent Portal: 192.168.1.50:3260,1
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iSCSI Transport: tcp
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Initiator Name: iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Initiator Alias: debian-host-01
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>...
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    Attached scsi disk sdb  State: running
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    Current Portal: 192.168.1.50:3260,1
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    Persistent Portal: 192.168.1.50:3260,1
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    Iface Name: default
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>nc: connect to 192.168.1.50 port 3260 (tcp) failed: Connection refused</code></strong> — Verify the iSCSI target service is running on the target server with <code>systemctl status iscsid</code> and check firewall rules allow port 3260.
+<strong><code>iscsiadm: No records found</code></strong> — Ensure the target IP is correct, the target portal is listening, and run <code>iscsiadm -m discovery -t sendtargets -p &lt;target-ip&gt;</code> to refresh discovery records.
+<strong><code>iscsiadm: No active sessions</code></strong> — Log in to the target first using <code>iscsiadm -m node -T &lt;IQN&gt; -p &lt;target-ip&gt; --login</code> before querying session details.</p>
+</div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8271,7 +8345,7 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

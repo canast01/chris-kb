@@ -7657,19 +7657,53 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nv">username</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nv">password</span><span class="o">=</span>&lt;pc-password&gt;
 </code></pre></div>
-<p><strong>Verify registration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ncli<span class="w"> </span>multicluster<span class="w"> </span>get-cluster-state
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Registering cluster to Prism Central...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cluster UUID: 00051234-1234-1234-1234-123456789abc
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Prism Central IP: 10.45.67.89
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Registration Status: SUCCEEDED
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Cluster Name: PHX-Cluster-01
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Multicluster UUID: 00051234-5678-9abc-def0-123456789abc
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Sync Status: IN_SYNC
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Last Sync Time: 2024-01-15 14:32:18
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused to Prism Central IP 10.45.67.89:9440</code></strong> — Verify Prism Central is running and accessible on the network, and confirm the IP address is correct.
+<strong><code>Error: Authentication failed for user 'admin'</code></strong> — Ensure the Prism Central admin password is correct and the user account has cluster registration permissions.
+<strong><code>Error: Cluster already registered to multicluster UUID 00051234-5678-9abc-def0-123456789abc</code></strong> — Unregister the cluster first using <code>ncli multicluster remove-from-multicluster</code> before re-registering.</p>
+</div>
+<p><strong>Verify registration:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ncli<span class="w"> </span>multicluster<span class="w"> </span>get-cluster-state
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster UUID                 : 00051234-1234-1234-1234-123456789abc
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Cluster Name                 : prod-cluster-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Cluster Incarnation ID       : 1702834567890123
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Cluster Version              : el7.9-5.20.4.1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Cluster Redundancy Factor    : 2
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Cluster Timezone             : UTC
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Cluster External Subnet Mask : 255.255.255.0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Cluster External Gateway     : 10.20.30.1
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>NTP Server List              : 10.20.30.50
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Domain Name Server List      : 8.8.8.8, 8.8.4.4
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Cluster Virtual IP           : 10.20.30.100
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Cluster Multicast Address    : 224.0.0.1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Cluster Multicast Mask       : 255.255.255.0
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (111)</code></strong> — Verify the Prism Central or cluster management service is running with <code>systemctl status nutanix_cluster_manager</code> and check network connectivity to the cluster IP.
+<strong><code>Error: Authentication failed: Invalid credentials</code></strong> — Ensure you are authenticated with valid Nutanix credentials using <code>ncli user whoami</code> or re-authenticate with <code>ncli -u admin -p &lt;password&gt;</code>.</p>
+</div>
 <p><strong>Expected output:</strong> <code>Cluster State: Connected</code></p>
 <hr />
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <h3 id="prism-central-ad-integration">Prism Central AD Integration<a class="headerlink" href="#prism-central-ad-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Prism Central → Settings → Authentication → Directory Services → Add Directory
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Type: Active Directory
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Domain: corp.local
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Directory URL: ldap://dc01.corp.local:389 (or ldaps://... port 636)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Domain search path: DC=corp,DC=local
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Service account: svc-nutanix@corp.local + password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Prism Central → Settings → Authentication → Directory Services → Add Directory
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Type: Active Directory
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Domain: corp.local
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Directory URL: ldap://dc01.corp.local:389 (or ldaps://... port 636)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Domain search path: DC=corp,DC=local
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Service account: svc-nutanix@corp.local + password
 </code></pre></div>
 <p><strong>Role mapping (Prism Central):</strong></p>
 <table>
@@ -7696,10 +7730,27 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
 </table>
 <p>Add role mappings: Prism Central → Settings → Role Mappings → Add Mapping</p>
 <p><strong>Verify AD auth:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From any CVM:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check: Status = Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From any CVM:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>authconfig<span class="w"> </span>get-directory-services
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check: Status = Connected</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Directory Services Configuration
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>=================================
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>   Directory Service Type: Active Directory
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>   Directory Service Name: corp.example.com
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>   Status: Connected
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   Domain: CORP.EXAMPLE.COM
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>   Base DN: cn=Users,dc=corp,dc=example,dc=com
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>   Admin User: administrator@corp.example.com
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>   Last Sync Time: 2024-01-15 14:32:18
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>   Connection Timeout (sec): 30
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Status: Disconnected</code></strong> — Verify network connectivity to the domain controller and confirm firewall rules allow port 389 (LDAP) or 636 (LDAPS) from the CVM.
+<strong><code>Error: Directory service configuration not found</code></strong> — Run <code>ncli authconfig add-directory-services</code> to configure directory services before attempting to query status.
+<strong><code>Connection timeout to LDAP server</code></strong> — Check DNS resolution for the domain controller hostname and ensure the CVM can reach it with <code>ping</code> or <code>nslookup</code>.</p>
+</div>
 <h3 id="ldap-integration-non-ad">LDAP Integration (non-AD)<a class="headerlink" href="#ldap-integration-non-ad" title="Permanent link">&para;</a></h3>
 <p>Supported for OpenLDAP, FreeIPA, and other LDAP-compliant directories. Use <code>ldaps://</code> (TLS) for production. Configure the same way as AD but set Type = OpenLDAP and provide the user/group search base DN.</p>
 <hr />
@@ -7748,14 +7799,29 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="prometheus-nutanix-exporter">Prometheus + Nutanix Exporter<a class="headerlink" href="#prometheus-nutanix-exporter" title="Permanent link">&para;</a></h3>
 <p>The Nutanix community Prometheus exporter exposes cluster metrics via <code>/metrics</code> endpoint.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run as a container or VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_HOST</span><span class="o">=</span>&lt;prism-central-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_USERNAME</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_PASSWORD</span><span class="o">=</span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9408</span>:9408<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>ghcr.io/nutanix/nutanix-exporter:latest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run as a container or VM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_HOST</span><span class="o">=</span>&lt;prism-central-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_USERNAME</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTANIX_PASSWORD</span><span class="o">=</span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9408</span>:9408<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>ghcr.io/nutanix/nutanix-exporter:latest
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Unable to find image &#39;ghcr.io/nutanix/nutanix-exporter:latest&#39; locally
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>latest: Pulling from nutanix/nutanix-exporter
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>a1d0c7532f0e: Pull complete
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>b3fd9c332a9b: Pull complete
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>e8614d09c7b7: Pull complete
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Digest: sha256:8f4c2a9b1e7d3c5f6a2b8e9c0d1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Status: Downloaded newer image for ghcr.io/nutanix/nutanix-exporter:latest
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>7f8e9d0c1b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7f
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error response from daemon: Get "https://ghcr.io/v2/": net/http: request canceled</code></strong> — Verify network connectivity and ensure your Docker daemon can reach ghcr.io, or use a private registry mirror.
+<strong><code>Error: No such image: ghcr.io/nutanix/nutanix-exporter:latest</code></strong> — Pull the image first with <code>docker pull ghcr.io/nutanix/nutanix-exporter:latest</code> before running the container.
+<strong><code>Error response from daemon: driver failed programming external connectivity on endpoint: Bind for 0.0.0.0:9408 failed: port is already allocated</code></strong> — Change the host port mapping to an available port (e.g., <code>-p 9409:9408</code>) or stop the container using port 9408.</p>
+</div>
 <p><strong>Key metrics exposed:</strong>
 - <code>nutanix_cluster_cpu_usage_ppm</code> — cluster CPU utilisation (ppm = parts per million)
 - <code>nutanix_cluster_memory_usage_bytes</code> — memory utilisation
@@ -7764,55 +7830,67 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
 - <code>nutanix_vm_cpu_ready_time_ppm</code> — VM CPU ready time (latency indicator)</p>
 <h3 id="snmp">SNMP<a class="headerlink" href="#snmp" title="Permanent link">&para;</a></h3>
 <p>Nutanix supports SNMP v2c and v3 for alert forwarding to existing NMS platforms.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Prism Element → Settings → SNMP → Enable SNMP
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Version: v3 (recommended)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Traps: configure trap receiver IP and community string
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  MIB: download from Prism Settings → SNMP → Download MIB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Element → Settings → SNMP → Enable SNMP
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Version: v3 (recommended)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Traps: configure trap receiver IP and community string
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  MIB: download from Prism Settings → SNMP → Download MIB
 </code></pre></div>
 <h3 id="email-alerts">Email Alerts<a class="headerlink" href="#email-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Prism Element → Settings → SMTP → Configure SMTP server
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Prism Element → Settings → Alert Email → Add recipient
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Alert severity: Critical / Warning / Info
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → SMTP → Configure SMTP server
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Prism Element → Settings → Alert Email → Add recipient
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Alert severity: Critical / Warning / Info
 </code></pre></div>
 <hr />
 <h2 id="nutanix-files-scale-out-nfssmb">Nutanix Files (Scale-Out NFS/SMB)<a class="headerlink" href="#nutanix-files-scale-out-nfssmb" title="Permanent link">&para;</a></h2>
 <p>Nutanix Files runs as a cluster of File Server VMs (FSVMs) on AHV, providing NFS v4 and SMB 2/3 shares using capacity from the AOS datastore.</p>
 <p><strong>Deploy from Prism Central:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Central → Files → Create File Server
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Name: nutanix-files
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Internal IPs: 3 IPs on storage network (one per FSVM)
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  External IPs: floating IPs on client network
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Storage: select container; allocate initial capacity
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prism Central → Files → Create File Server
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Name: nutanix-files
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Internal IPs: 3 IPs on storage network (one per FSVM)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  External IPs: floating IPs on client network
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Storage: select container; allocate initial capacity
 </code></pre></div></p>
 <p><strong>Create shares:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Element → Files → Shares → Create
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Type: SMB (Windows) or NFS (Linux)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Protocol: SMB 3 / NFSv4
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Authentication: AD passthrough (SMB), Kerberos or AUTH_SYS (NFS)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Prism Element → Files → Shares → Create
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Type: SMB (Windows) or NFS (Linux)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Protocol: SMB 3 / NFSv4
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Authentication: AD passthrough (SMB), Kerberos or AUTH_SYS (NFS)
 </code></pre></div></p>
 <hr />
 <h2 id="nutanix-objects-s3-compatible">Nutanix Objects (S3-Compatible)<a class="headerlink" href="#nutanix-objects-s3-compatible" title="Permanent link">&para;</a></h2>
 <p>Nutanix Objects provides S3-compatible object storage on AHV. Used for backup targets, media, analytics cold storage.</p>
 <p><strong>Deploy from Prism Central:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Central → Objects → Create Object Store
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Name: nutanix-objects
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Worker nodes: 3+ (scales horizontally)
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Storage: select container and initial capacity
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Domain: corp.local (for AD-integrated access)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Prism Central → Objects → Create Object Store
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  Name: nutanix-objects
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  Worker nodes: 3+ (scales horizontally)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  Storage: select container and initial capacity
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  Domain: corp.local (for AD-integrated access)
 </code></pre></div></p>
 <p><strong>Access:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># S3 CLI using standard AWS endpoint syntax</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://my-bucket/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;objects-ip&gt;:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--no-verify-ssl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># S3 CLI using standard AWS endpoint syntax</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://my-bucket/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;objects-ip&gt;:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--no-verify-ssl
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2024-01-15 09:23:14        0 PRE backups/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2024-01-15 09:18:47        0 PRE logs/
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2024-01-15 09:15:32   524288 config.tar.gz
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>2024-01-15 09:12:01  1048576 database-snapshot.sql
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>2024-01-15 08:45:22        0 PRE archives/
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials via <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
+<strong><code>SSL: CERTIFICATE_VERIFY_FAILED</code></strong> — Ensure the <code>--no-verify-ssl</code> flag is present, or add the Nutanix Objects certificate to your system's CA bundle.
+<strong><code>An error occurred (InvalidEndpointAddress) when calling the ListBucket operation: Could not connect to the endpoint URL</code></strong> — Verify the Objects IP is correct, reachable from your client, and that port 443 is open in firewall rules.</p>
+</div>
 <hr />
 <h2 id="vmware-vcenter-plugin-esxi-based-clusters">VMware vCenter Plugin (ESXi-Based Clusters)<a class="headerlink" href="#vmware-vcenter-plugin-esxi-based-clusters" title="Permanent link">&para;</a></h2>
 <p>If the Nutanix cluster runs ESXi (not AHV), the Nutanix vCenter Plugin extends vCenter with Nutanix management:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Install: Prism Element → Settings → vCenter Registration → Register vCenter
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  vCenter FQDN: vcenter.corp.local
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Username: svc-nutanix@corp.local
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Password: &lt;password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Install: Prism Element → Settings → vCenter Registration → Register vCenter
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  vCenter FQDN: vcenter.corp.local
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  Username: svc-nutanix@corp.local
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  Password: &lt;password&gt;
 </code></pre></div>
 <p>After registration:
 - vCenter Datastores panel shows Nutanix containers
@@ -7855,7 +7933,7 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

@@ -8641,103 +8641,396 @@ Dell VPLEX initial deployment: physical installation, backend array connection, 
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vplexcli<span class="w"> </span>-h<span class="w"> </span>&lt;director1_mgmt_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/*&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster: cluster-1
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Director: director-1a (10.50.12.45)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Director: director-1b (10.50.12.46)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Status: Online
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Version: 6.2.1.0-20231015
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Witness: witness-1 (10.50.12.50)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Cluster: cluster-2
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  Director: director-2a (10.50.13.45)
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  Director: director-2b (10.50.13.46)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  Status: Online
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  Version: 6.2.1.0-20231015
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  Witness: witness-2 (10.50.13.50)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused: Unable to connect to 10.50.12.45:443</code></strong> — Verify the director management IP is correct and the VPLEX management interface is reachable on port 443.
+<strong><code>Authentication failed: Invalid credentials for user 'admin'</code></strong> — Confirm the admin password is correct and the user account has not been locked after failed login attempts.
+<strong><code>Command not found: vplexcli</code></strong> — Ensure the VPLEX CLI tools are installed and the installation directory is in your system PATH.</p>
+</div>
 <p><strong>Connect VMS to VPLEX directors:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From VMS CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>management-server<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>&lt;director1_ip&gt;<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>management-server<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>&lt;director2_ip&gt;<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From VMS CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>management-server<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>&lt;director1_ip&gt;<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>management-server<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>&lt;director2_ip&gt;<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Connected to director1.vplex.local (192.168.1.50) as admin
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Cluster: vplex-cluster-01
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Build: 6.1.2.0-20231015
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Session ID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Connected to director2.vplex.local (192.168.1.51) as admin
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Cluster: vplex-cluster-01
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Build: 6.1.2.0-20231015
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Session ID: 550e8400-e29b-41d4-a716-446655440001
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused: Unable to reach &lt;director1_ip&gt;:443</code></strong> — Verify the director IP address is correct and the management network is reachable with <code>ping &lt;director1_ip&gt;</code>.
+<strong><code>Authentication failed: Invalid credentials for user admin</code></strong> — Confirm the password is correct and the admin account is not locked by checking director logs or resetting credentials via the local console.
+<strong><code>Build mismatch: director1 (6.1.2.0) does not match director2 (6.1.1.0)</code></strong> — Upgrade both directors to the same firmware version before establishing the cluster connection.</p>
+</div>
 <p>Verify both directors appear:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vplexcli<span class="w"> </span>-h<span class="w"> </span>&lt;director1_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vplexcli<span class="w"> </span>-h<span class="w"> </span>&lt;director1_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Director: director-1 (Active)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Engine: engine-0
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    director-1a: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456789
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    director-1b: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456790
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Engine: engine-1
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    director-1a: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456791
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    director-1b: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456792
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Director: director-2 (Standby)
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  Engine: engine-0
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    director-2a: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456793
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    director-2b: ONLINE, Build: 6.2.0.0.0-12345, Serial: VPX123456794
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused: Unable to connect to &lt;director1_ip&gt;:443</code></strong> — Verify the director IP is correct and reachable, and that the VPLEX management service is running with <code>systemctl status vplex-mgmt</code>.
+<strong><code>Authentication failed: Invalid credentials for user 'admin'</code></strong> — Confirm the admin password is correct and the user account is not locked; reset credentials via the VPLEX console if needed.
+<strong><code>Command not found: vplexcli</code></strong> — Ensure vplexcli is installed and in your PATH, or use the full path <code>/opt/vplex/bin/vplexcli</code>.</p>
+</div>
 <hr />
 <h2 id="connect-backend-storage-arrays">Connect Backend Storage Arrays<a class="headerlink" href="#connect-backend-storage-arrays" title="Permanent link">&para;</a></h2>
 <p>VPLEX discovers backend storage through FC. Confirm backend zoning is correct before registration.</p>
 <ol>
 <li>From the VMS CLI, list discovered backend targets:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/storage-elements/storage-arrays/*&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/storage-elements/storage-arrays/*&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/clusters/cluster-1/storage-elements/storage-arrays/SAN-ARRAY-01
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/clusters/cluster-1/storage-elements/storage-arrays/SAN-ARRAY-02
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/clusters/cluster-1/storage-elements/storage-arrays/EMC-VMAX-03
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>/clusters/cluster-1/storage-elements/storage-arrays/PURE-FA-04
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/clusters/cluster-1/storage-elements/storage-arrays/NETAPP-AFF-05
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused (111)</code></strong> — Verify the VPLEX management IP is reachable and vplexcli service is running with <code>systemctl status vplex-cli</code>.
+<strong><code>Error: Authentication failed for user 'admin'</code></strong> — Ensure your VPLEX credentials are correct and your user account has CLI access permissions in the VPLEX management console.</p>
+</div>
 <ol>
 <li>If the backend array does not appear, verify FC zoning between VPLEX BE ports and array FA/FC target ports.</li>
 <li>Register the backend array:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;array register --name powermax_prod --type SYMMETRIX --wwn &lt;array_wwn&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;array register --name powermax_prod --type SYMMETRIX --wwn &lt;array_wwn&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Array &#39;powermax_prod&#39; registered successfully
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Registration ID: reg-2847-5f9c-11eb
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Array Type: SYMMETRIX
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>WWN: 500009720a1b2c3d
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Status: READY
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Array with name 'powermax_prod' already exists</code></strong> — Use a unique array name or unregister the existing array first with <code>vplexcli -q "array unregister --name powermax_prod"</code>.
+<strong><code>Error: Invalid WWN format or array unreachable at &lt;array_wwn&gt;</code></strong> — Verify the WWN syntax matches the array's actual identifier and that network connectivity exists between VPLEX and the storage array.</p>
+</div>
 <ol>
 <li>Refresh storage discovery:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;storage-array rediscover-all&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;storage-array rediscover-all&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Rediscovering storage arrays...
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Array: EMC VMAX (SN: 000123456789)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Status: SUCCESS
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  LUNs discovered: 247
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  Capacity: 50.2 TB
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Array: Dell PowerVault (SN: 000987654321)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  Status: SUCCESS
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  LUNs discovered: 89
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  Capacity: 12.8 TB
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Rediscovery completed in 34 seconds
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Total arrays processed: 2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vplexcli: command not found</code></strong> — Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically <code>/opt/vplex/bin</code>).
+<strong><code>Error: Unable to connect to VPLEX cluster at localhost:443</code></strong> — Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443.
+<strong><code>Error: Invalid credentials for VPLEX authentication</code></strong> — Confirm your VPLEX user credentials are correct and have sufficient permissions to execute storage array commands.</p>
+</div>
 <ol>
 <li>Verify backend LUNs are visible as storage volumes:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/storage-elements/storage-volumes/*&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/storage-elements/storage-volumes/*&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-001
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-002
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-003
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-004
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-005
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-006
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-007
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>/clusters/cluster-1/storage-elements/storage-volumes/sv-008
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: cluster-1 not found</code></strong> — Verify the cluster name exists with <code>vplexcli -q "ll /clusters"</code> and correct the cluster identifier.
+<strong><code>Error: Invalid path /clusters/cluster-1/storage-elements/storage-volumes</code></strong> — Ensure VPLEX management console is accessible and the cluster is online; check connectivity with <code>vplexcli -q "ping"</code>.
+<strong><code>vplexcli: command not found</code></strong> — Add the VPLEX CLI installation directory to your PATH or use the full path to the vplexcli binary.</p>
+</div>
 <p>Each LUN on the backend array appears as a storage volume with its size and backend array identifier.</p>
 <hr />
 <h2 id="create-storage-volumes-and-extents">Create Storage Volumes and Extents<a class="headerlink" href="#create-storage-volumes-and-extents" title="Permanent link">&para;</a></h2>
 <p>VPLEX uses a layered model: storage volumes (from backend) → extents (claimed slices) → local devices → virtual volumes.</p>
 <p><strong>Claim a storage volume as an extent:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;extent create --name ext_powermax_01 --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/&lt;vol_name&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;extent create --name ext_powermax_01 --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/&lt;vol_name&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Created extent &#39;ext_powermax_01&#39;
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Extent URI: /clusters/cluster-1/extents/ext_powermax_01
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Storage Volume: /clusters/cluster-1/storage-elements/storage-volumes/pmax_vol_001
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Capacity: 1.0 TB
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Status: Available
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Storage volume not found: /clusters/cluster-1/storage-elements/storage-volumes/&lt;vol_name&gt;</code></strong> — Replace <code>&lt;vol_name&gt;</code> with the actual storage volume name (e.g., <code>pmax_vol_001</code>) and verify it exists with <code>vplexcli -q "storage-volume list"</code>.
+<strong><code>Error: Extent 'ext_powermax_01' already exists</code></strong> — Use a unique extent name or delete the existing extent with <code>vplexcli -q "extent delete --name ext_powermax_01"</code> before recreating it.</p>
+</div>
 <p><strong>Create a local device from the extent:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device create --name ldev_prod_01 --geometry raid-0 --extents /clusters/cluster-1/storage-elements/extents/ext_powermax_01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device create --name ldev_prod_01 --geometry raid-0 --extents /clusters/cluster-1/storage-elements/extents/ext_powermax_01&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Created local-device: ldev_prod_01
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  Device Name: ldev_prod_01
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  Geometry: raid-0
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>  Extents: /clusters/cluster-1/storage-elements/extents/ext_powermax_01
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  Status: operational
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  Capacity: 2.0 TB
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  Created: 2024-01-15T09:42:17Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: extent /clusters/cluster-1/storage-elements/extents/ext_powermax_01 not found</code></strong> — Verify the extent exists and the path is correct using <code>vplexcli -q "extent list"</code>.
+<strong><code>Error: local-device ldev_prod_01 already exists</code></strong> — Choose a unique device name or delete the existing device with <code>vplexcli -q "local-device delete --name ldev_prod_01"</code> first.
+<strong><code>Error: cluster-1 is not accessible</code></strong> — Ensure the cluster is online and reachable by running <code>vplexcli -q "cluster list"</code> to verify cluster status.</p>
+</div>
 <p>For RAID-1 (mirrored local device from two extents):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device create --name ldev_prod_01 --geometry raid-1 --extents /clusters/cluster-1/storage-elements/extents/ext_a,/clusters/cluster-1/storage-elements/extents/ext_b&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device create --name ldev_prod_01 --geometry raid-1 --extents /clusters/cluster-1/storage-elements/extents/ext_a,/clusters/cluster-1/storage-elements/extents/ext_b&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Created local device: ldev_prod_01
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  Device ID: 6a8f2c1e-4d92-11ed-b878-001a6b88c0a1
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  Geometry: raid-1
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  Extents: 2
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  Status: Online
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  Capacity: 2.0 TB
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  Thin Enabled: false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Extent /clusters/cluster-1/storage-elements/extents/ext_a not found</code></strong> — Verify extent names exist using <code>vplexcli -q "extent list"</code> and correct the path syntax.
+<strong><code>Error: Device ldev_prod_01 already exists</code></strong> — Use a unique device name or delete the existing device with <code>vplexcli -q "local-device delete --name ldev_prod_01"</code> first.
+<strong><code>Error: Extents must be from the same storage element</code></strong> — Ensure both extents are provisioned from the same storage array and cluster path.</p>
+</div>
 <hr />
 <h2 id="create-virtual-volumes">Create Virtual Volumes<a class="headerlink" href="#create-virtual-volumes" title="Permanent link">&para;</a></h2>
 <p>A virtual volume is the storage object presented to hosts. It is built on top of a local device.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;virtual-volume create --name vvol_sql01_data --local-device /clusters/cluster-1/local-devices/ldev_prod_01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;virtual-volume create --name vvol_sql01_data --local-device /clusters/cluster-1/local-devices/ldev_prod_01&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Virtual Volume vvol_sql01_data created successfully
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  Name: vvol_sql01_data
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  Cluster: cluster-1
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  Local Device: ldev_prod_01
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  Size: 500GB
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  Status: Available
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  Visibility: Local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found</code></strong> — Verify the local device exists and the path is correct using <code>vplexcli -q "local-device list"</code>.
+<strong><code>Error: Virtual volume name vvol_sql01_data already exists</code></strong> — Choose a unique virtual volume name or delete the existing volume before recreating it.</p>
+</div>
 <p>For Metro configurations, promote the virtual volume to a distributed device (mirrors the local device to the remote cluster):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;distributed-device create --name dd_sql01 --local-device-1 /clusters/cluster-1/local-devices/ldev_prod_01 --local-device-2 /clusters/cluster-2/local-devices/ldev_remote_01 --virtual-volume vvol_sql01_data&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;distributed-device create --name dd_sql01 --local-device-1 /clusters/cluster-1/local-devices/ldev_prod_01 --local-device-2 /clusters/cluster-2/local-devices/ldev_remote_01 --virtual-volume vvol_sql01_data&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Command: distributed-device create
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Status: SUCCESS
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Distributed Device Name: dd_sql01
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>Local Device 1: /clusters/cluster-1/local-devices/ldev_prod_01
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>Local Device 2: /clusters/cluster-2/local-devices/ldev_remote_01
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>Virtual Volume: vvol_sql01_data
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>Device ID: 5a3f8c2e-91b4-4d7a-b2c1-7e9f3a6d4b1c
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>Creation Time: 2024-01-15T14:32:47Z
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>Synchronization Status: IN_PROGRESS
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found</code></strong> — Verify the local device path exists using <code>vplexcli -q "local-device list"</code> and correct the path syntax.
+<strong><code>Error: Virtual volume vvol_sql01_data is already in use</code></strong> — Choose a different virtual volume name or remove the existing mapping with <code>vplexcli -q "virtual-volume delete --name vvol_sql01_data"</code>.
+<strong><code>Error: Cluster-2 is unreachable or not synchronized</code></strong> — Check cluster connectivity and witness status with <code>vplexcli -q "cluster status"</code> before retrying the command.</p>
+</div>
 <p>Verify virtual volume:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/virtual-volumes/vvol_sql01_data&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/virtual-volumes/vvol_sql01_data&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Name                           Size      Visibility  Cluster      Storage-Container
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>vvol_sql01_data                2.0TB     cluster-1   cluster-1    storage-container-01
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  Extents:
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>    extent-001                 1.0TB     local       cluster-1    storage-container-01
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    extent-002                 1.0TB     local       cluster-1    storage-container-01
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>  Attributes:
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>    thin_enabled               false
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>    replication_enabled        true
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>    consistency_group_id       cg-sql-prod-001
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Virtual volume 'vvol_sql01_data' not found</code></strong> — Verify the virtual volume name is correct and exists in the cluster using <code>vplexcli -q "ll /clusters/cluster-1/virtual-volumes"</code>.
+<strong><code>Error: Connection refused to management server</code></strong> — Ensure the VPLEX management console is running and accessible; check network connectivity and VPLEX service status with <code>systemctl status vplex-mgmt</code>.
+<strong><code>Error: Authentication failed for user</code></strong> — Verify your VPLEX credentials are valid and your user account has sufficient permissions to query virtual volumes.</p>
+</div>
 <hr />
 <h2 id="expose-to-host-clusters">Expose to Host Clusters<a class="headerlink" href="#expose-to-host-clusters" title="Permanent link">&para;</a></h2>
 <p>VPLEX uses storage views (analogous to masking views) to present virtual volumes to host initiators.</p>
 <p><strong>Register host initiators:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port register --name host_esxi01_a --wwn 10:00:00:90:fa:12:34:56&quot;</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port register --name host_esxi01_b --wwn 10:00:00:90:fa:12:34:57&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port register --name host_esxi01_a --wwn 10:00:00:90:fa:12:34:56&quot;</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port register --name host_esxi01_b --wwn 10:00:00:90:fa:12:34:57&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Initiator port &#39;host_esxi01_a&#39; registered successfully with WWN 10:00:00:90:fa:12:34:56
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>Initiator port &#39;host_esxi01_b&#39; registered successfully with WWN 10:00:00:90:fa:12:34:57
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Initiator port 'host_esxi01_a' already exists</code></strong> — Use <code>initiator-port unregister --name host_esxi01_a</code> first, or choose a unique initiator port name.
+<strong><code>Error: Invalid WWN format '10:00:00:90:fa:12:34:56'</code></strong> — Ensure WWN uses colons as separators and contains exactly 16 hexadecimal characters (8 pairs).
+<strong><code>Error: VPLEX cluster unreachable or vplexcli not authenticated</code></strong> — Verify VPLEX management IP is reachable and run <code>vplexcli --login</code> to authenticate before executing commands.</p>
+</div>
 <p><strong>Create an initiator group:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port create-tag --tag IG_ESX01 --initiators /clusters/cluster-1/exports/initiator-ports/host_esxi01_a,/clusters/cluster-1/exports/initiator-ports/host_esxi01_b&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;initiator-port create-tag --tag IG_ESX01 --initiators /clusters/cluster-1/exports/initiator-ports/host_esxi01_a,/clusters/cluster-1/exports/initiator-ports/host_esxi01_b&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Created initiator tag: IG_ESX01
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>  Initiators:
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    - /clusters/cluster-1/exports/initiator-ports/host_esxi01_a
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>    - /clusters/cluster-1/exports/initiator-ports/host_esxi01_b
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>  Created: 2024-01-15T09:42:33Z
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>  Status: active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a</code></strong> — Verify the initiator port paths exist by running <code>vplexcli -q "initiator-port list"</code> and use the correct URIs.
+<strong><code>Error: Tag 'IG_ESX01' already exists</code></strong> — Either delete the existing tag with <code>vplexcli -q "initiator-port delete-tag --tag IG_ESX01"</code> or use a unique tag name.
+<strong><code>Error: Invalid cluster reference: /clusters/cluster-1</code></strong> — Confirm the cluster name with <code>vplexcli -q "cluster list"</code> and update the path accordingly.</p>
+</div>
 <p><strong>Create a storage view:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;storage-view create --name SV_ESX01 --ports /clusters/cluster-1/exports/ports/&lt;FE_port_name&gt; --virtual-volumes /clusters/cluster-1/virtual-volumes/vvol_sql01_data --initiators /clusters/cluster-1/exports/initiator-ports/host_esxi01_a,/clusters/cluster-1/exports/initiator-ports/host_esxi01_b&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;storage-view create --name SV_ESX01 --ports /clusters/cluster-1/exports/ports/&lt;FE_port_name&gt; --virtual-volumes /clusters/cluster-1/virtual-volumes/vvol_sql01_data --initiators /clusters/cluster-1/exports/initiator-ports/host_esxi01_a,/clusters/cluster-1/exports/initiator-ports/host_esxi01_b&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Created storage view: SV_ESX01
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  Name: SV_ESX01
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>  Ports: /clusters/cluster-1/exports/ports/FE_port_0
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>  Virtual Volumes: /clusters/cluster-1/virtual-volumes/vvol_sql01_data
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>  Initiators: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>             /clusters/cluster-1/exports/initiator-ports/host_esxi01_b
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>  LUN: 0
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>  Status: online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid virtual volume path '/clusters/cluster-1/virtual-volumes/vvol_sql01_data'</code></strong> — Verify the virtual volume exists by running <code>vplexcli -q "virtual-volumes list"</code> and use the correct path.
+<strong><code>Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a</code></strong> — Confirm initiator ports are registered in VPLEX by running <code>vplexcli -q "initiator-ports list"</code> and correct the paths.
+<strong><code>Error: Storage view 'SV_ESX01' already exists</code></strong> — Use a unique storage view name or delete the existing view with <code>vplexcli -q "storage-view delete --name SV_ESX01"</code> first.</p>
+</div>
 <p>The virtual volume is now presented to the host. Rescan from the host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>rescan-scsi-bus.sh
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Should show the VPLEX virtual volume (device model: &quot;VPLEX&quot;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>rescan-scsi-bus.sh
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="c1"># Should show the VPLEX virtual volume (device model: &quot;VPLEX&quot;)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Scanning for new SCSI devices...
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>Scanning host 0...
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>Scanning host 1...
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>Scanning host 2...
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>Scanning host 3...
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>Done.
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>| `- 2:0:0:0 sdb 65:0  active ready running
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>  `- 3:0:0:0 sdc 65:32 active ready running
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>size=500G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>| `- 4:0:0:0 sdd 65:48 active ready running
+<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a>  `- 5:0:0:0 sde 65:80 active ready running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install sg3-utils package with <code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>.
+<strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath with <code>apt-get install multipath-tools</code> or <code>yum install device-mapper-multipath</code>.</p>
+</div>
 <hr />
 <h2 id="validate-metrolocal-configuration">Validate Metro/Local Configuration<a class="headerlink" href="#validate-metrolocal-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>Local configuration validation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;virtual-volume health --name vvol_sql01_data&quot;</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Operational state should show &quot;ok&quot;</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device health --name ldev_prod_01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;virtual-volume health --name vvol_sql01_data&quot;</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># Operational state should show &quot;ok&quot;</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;local-device health --name ldev_prod_01&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Virtual Volume: vvol_sql_data
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>  Operational State: ok
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>  Health State: ok
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>  Capacity: 2.0 TB
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>  Used Capacity: 1.8 TB
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>  Thin Provisioning: disabled
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>Local Device: ldev_prod_01
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>  Operational State: ok
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>  Health State: ok
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>  Device Type: VMAX
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>  Capacity: 1.0 TB
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>  Visibility: local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Virtual volume 'vvol_sql01_data' not found</code></strong> — Verify the virtual volume name with <code>vplexcli -q "virtual-volumes"</code> and correct any typos in the name parameter.
+<strong><code>Error: Connection refused to VPLEX management server</code></strong> — Ensure the VPLEX cluster is reachable and vplexcli is configured with the correct management IP address in <code>/etc/vplexcli.conf</code>.</p>
+</div>
 <p><strong>Metro configuration validation:</strong></p>
 <ol>
 <li>Verify the distributed device is synchronized between both clusters:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/dd_sql01&quot;</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Operational state: &quot;online&quot;, Rebuild status: &quot;done&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/dd_sql01&quot;</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1"># Operational state: &quot;online&quot;, Rebuild status: &quot;done&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Name                           State      Capacity    Rebuild Status
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>dd_sql01                       online     2.0 TB      done
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Operational state: &quot;online&quot;, Rebuild status: &quot;done&quot;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or insufficient permissions</code></strong> — Ensure your vplexcli session is authenticated with an account that has read access to the distributed-devices namespace.
+<strong><code>Error: Device 'dd_sql01' not found</code></strong> — Verify the device name is correct and exists in the VPLEX cluster by running <code>vplexcli -q "ll /distributed-storage/distributed-devices"</code> to list all devices.</p>
+</div>
 <ol>
 <li>Test Metro failover — disconnect the ICL link (simulate a site outage) and confirm the surviving cluster promotes to primary and hosts retain access.</li>
 <li>Reconnect the ICL and confirm the distributed device resynchronizes automatically.</li>
 </ol>
 <p><strong>Host I/O validation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># From a host with the virtual volume mounted:</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/mapper/&lt;vplex_mpath_dev&gt;<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">2048</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># No errors should occur</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># From a host with the virtual volume mounted:</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/mapper/&lt;vplex_mpath_dev&gt;<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">2048</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="c1"># No errors should occur</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>2048+0 records in
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>2048+0 records out
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>2147483648 bytes (2.1 GB, 2.0 GiB) copied, 8.342 s, 257 MB/s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dd: opening '/dev/mapper/&lt;vplex_mpath_dev&gt;': No such file or directory</code></strong> — Replace <code>&lt;vplex_mpath_dev&gt;</code> with the actual multipath device name from <code>multipath -ll</code> output.
+<strong><code>dd: writing to '/dev/mapper/&lt;vplex_mpath_dev&gt;': Read-only file system</code></strong> — Verify the VPLEX virtual volume is not in read-only mode and check array-side access permissions.
+<strong><code>dd: writing to '/dev/mapper/&lt;vplex_mpath_dev&gt;': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.</p>
+</div>
 <ol>
 <li>Verify the VPLEX Management Console shows no active alerts under <strong>Health Monitor &gt; System Alerts</strong>.</li>
 </ol>
@@ -8777,7 +9070,7 @@ Dell VPLEX initial deployment: physical installation, backend array connection, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

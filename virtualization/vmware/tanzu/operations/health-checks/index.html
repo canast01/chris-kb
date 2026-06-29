@@ -9402,122 +9402,328 @@ Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, 
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w">  </span><span class="c1"># Should return list of vSphere Namespaces</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Logged in successfully.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>The current context is &quot;supervisor.example.local&quot;.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>NAME                   STATUS   AGE
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>default                Active   45d
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>kube-node-lease        Active   45d
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>kube-public            Active   45d
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>kube-system            Active   45d
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vmware-system-auth     Active   45d
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>vmware-system-csi      Active   45d
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>workload-ns-prod       Active   12d
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>workload-ns-staging    Active   8d
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server has asked for the client to provide credentials</code></strong> — Verify the username and password are correct, and that the Supervisor API endpoint is accessible from your network.
+<strong><code>error: x509: certificate signed by unknown authority</code></strong> — Remove the <code>--insecure-skip-tls-verify</code> flag once you have installed the proper CA certificate in your system's trust store, or keep the flag if testing in a lab environment.
+<strong><code>error: unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host</code></strong> — Ensure the Supervisor Cluster FQDN is correct and resolvable via DNS from your client machine.</p>
+</div>
 <hr />
 <h2 id="tkg-cluster-health">TKG Cluster Health<a class="headerlink" href="#tkg-cluster-health" title="Permanent link">&para;</a></h2>
 <p><img alt="TKG Cluster Health" src="../../../../../assets/virtualization-vmware-tanzu-hc-tkg-cluster-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check all clusters and status</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span>--include-management-cluster
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check nodes in a workload cluster</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>&lt;cluster-context&gt;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># All nodes should show STATUS=Ready</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Check control plane health</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># All pods should be Running or Completed</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Check for CrashLoopBackOff or Error pods across all namespaces</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check all clusters and status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span>--include-management-cluster
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check nodes in a workload cluster</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>&lt;cluster-context&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># All nodes should show STATUS=Ready</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check control plane health</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># All pods should be Running or Completed</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check for CrashLoopBackOff or Error pods across all namespaces</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAME                      MGMT-CLUSTER  WORKERS  KUBERNETES-VERSION  STATUS
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>tkg-mgmt-prod-01          true          3        v1.27.5             running
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>tkg-workload-us-west     false          5        v1.27.5             running
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>tkg-workload-us-east     false          4        v1.27.5             running
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Switched to context &quot;tkg-workload-us-west&quot;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>NAME                                    STATUS   ROLES           AGE   VERSION
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>tkg-workload-us-west-md-0-7f4k2        Ready    &lt;none&gt;          45d   v1.27.5
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>tkg-workload-us-west-md-1-9x2m8        Ready    &lt;none&gt;          45d   v1.27.5
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>tkg-workload-us-west-control-plane-0   Ready    control-plane   46d   v1.27.5
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>tkg-workload-us-west-control-plane-1   Ready    control-plane   46d   v1.27.5
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>tkg-workload-us-west-control-plane-2   Ready    control-plane   46d   v1.27.5
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>kube-system   coredns-558bd4d5db-4k9lm                 1/1     Running   0          45d
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>kube-system   etcd-tkg-workload-us-west-cp-0           1/1     Running   2          46d
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>kube-system   kube-apiserver-tkg-workload-us-west-cp-0 1/1     Running   1          46d
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>kube-system   kube-controller-manager-tkg-wl-cp-0      1/1     Running   0          45d
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>kube-system   kube-proxy-8xk2l                         1/1     Running   0          44d
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>kube-system   kube-scheduler-tkg-workload-us-west-cp-0 1/1     Running   0          45d
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>NAMESPACE            NAME                                           READY   STATUS             RESTARTS   AGE
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>cert-manager         cert-manager-webhook-7f8c4d2b9-xk2p1          0/1     CrashLoopBackOff   12         3d
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>monitoring           prometheus-operator-5d8f7c9b2-lm4k9            0/1     ImagePullBackOff   0          2d
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>velero               velero-backup-job-1234-abcde                  0/1     Error              0          1d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "cluster"</code></strong> — Ensure the Tanzu CLI is properly installed and authenticated with <code>tanzu login</code> to the management cluster.
+<strong><code>Unable to connect to the server: dial tcp: lookup &lt;cluster-context&gt; on 8.8.8.8:53: no such host</code></strong> — Verify the kubeconfig context exists with <code>kubectl config get-contexts</code> and use the correct context name.
+<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Re-authenticate to the cluster using <code>tanzu cluster kubeconfig get &lt;cluster-name&gt; --admin</code> and merge it into your kubeconfig.</p>
+</div>
 <hr />
 <h2 id="node-resource-utilization">Node Resource Utilization<a class="headerlink" href="#node-resource-utilization" title="Permanent link">&para;</a></h2>
 <p><img alt="Node Resource Utilization" src="../../../../../assets/virtualization-vmware-tanzu-hc-node-resource-utilization.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Node-level CPU and memory (requires metrics-server)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Pod-level resource usage</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check for nodes with high resource pressure</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Look for: MemoryPressure=True, DiskPressure=True, PIDPressure=True</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Node-level CPU and memory (requires metrics-server)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Pod-level resource usage</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check for nodes with high resource pressure</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Look for: MemoryPressure=True, DiskPressure=True, PIDPressure=True</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NAME                                    CPU(cores)   CPU%     MEMORY(Mi)   MEMORY%
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>tanzu-worker-1.lab.local               1247m        62%      8192Mi       85%
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>tanzu-worker-2.lab.local               892m        44%       6144Mi       64%
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>tanzu-control-plane.lab.local          645m        32%       4096Mi       53%
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>tanzu-worker-3.lab.local               423m        21%       3072Mi       40%
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>NAMESPACE     NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>kube-system   coredns-558bd4d5db-9k2lx               125      156
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>monitoring    prometheus-operator-6d8f7c4b9-xmq8p    98       512
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>tanzu-system  antrea-agent-2xf9l                     87       384
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>kube-system   etcd-tanzu-control-plane               156      892
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>monitoring    grafana-5c8d9f2e1-lp4qr                64       298
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>...
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>NAMESPACE     NAME                                    CPU(m)   MEMORY(Mi)
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>kube-system   etcd-tanzu-control-plane               156      2048
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>kube-system   kube-apiserver-tanzu-control-plane     203      1856
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>monitoring    prometheus-operator-6d8f7c4b9-xmq8p    98       1024
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>tanzu-system  antrea-agent-2xf9l                     87       768
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>kube-system   coredns-558bd4d5db-9k2lx               125      256
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>...
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>Name:               tanzu-worker-1.lab.local
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Conditions:
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  Type                 Status  LastHeartbeatTime         LastTransitionTime        Reason
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  ----                 ------  -----------------         ------------------        ------
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>  Ready                True    Wed, 15 Jan 2025 14:32:10 +0000   Wed, 15 Jan 2025 10:15:22 +0000   KubeletReady
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>  MemoryPressure       False   Wed, 15 Jan 2025 14:32:10 +0000   Wed, 15 Jan 2025 10:15:22 +0000   KubeletHasSufficientMemory
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>  DiskPressure         False   Wed, 15 Jan 2025 14:32:10 +0000   Wed, 15 Jan 2025 10:15:22 +0000   KubeletHasNoDiskPressure
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>  PIDPressure          False   Wed, 15 Jan 2025 14:32:10 +0000   Wed, 15 Jan 2025 10:15:22 +0000   KubeletHasSufficientPID
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>  Ready                True    Wed, 15 Jan 2025 14:32:08 +0000   Wed, 15 Jan 2025 10:15:22 +0000   KubeletReady
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Metrics API not available</code></strong> — Install metrics-server with <code>kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</code> and wait 30 seconds for it to</p>
+</div>
 <hr />
 <h2 id="pvc-and-storage-health">PVC and Storage Health<a class="headerlink" href="#pvc-and-storage-health" title="Permanent link">&para;</a></h2>
 <p><img alt="PVC and Storage Health" src="../../../../../assets/virtualization-vmware-tanzu-hc-pvc-and-storage-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all PVCs and their status</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># All PVCs should show STATUS=Bound</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Any Pending PVC means storage class is not provisioning</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Check StorageClass</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Test PVC provisioning (create a test PVC)</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="s">apiVersion: v1</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="s">kind: PersistentVolumeClaim</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s">metadata:</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="s">  name: test-pvc</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="s">  namespace: default</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="s">spec:</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="s">  accessModes: [ReadWriteOnce]</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="s">  resources:</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="s">    requests:</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="s">      storage: 1Gi</span>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="s">  storageClassName: &lt;your-storage-class&gt;</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="s">EOF</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>test-pvc<span class="w">  </span><span class="c1"># Should become Bound within 30 seconds</span>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>test-pvc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all PVCs and their status</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># All PVCs should show STATUS=Bound</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Any Pending PVC means storage class is not provisioning</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Check StorageClass</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Test PVC provisioning (create a test PVC)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="s">kind: PersistentVolumeClaim</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="s">metadata:</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="s">  name: test-pvc</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="s">  namespace: default</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="s">spec:</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="s">  accessModes: [ReadWriteOnce]</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="s">  resources:</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="s">    requests:</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="s">      storage: 1Gi</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="s">  storageClassName: &lt;your-storage-class&gt;</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="s">EOF</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>test-pvc<span class="w">  </span><span class="c1"># Should become Bound within 30 seconds</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>test-pvc
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAMESPACE     NAME                                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>kube-system   etcd-backup-pvc                            Bound    pvc-a7f2c1e9-4b8d-11ec-81d4-005056b4e2f1   10Gi       RWO            vsphere-csi    45d
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>tanzu-system  prometheus-storage                         Bound    pvc-b3e8d2f4-5c9e-12ed-92e5-116167c5f3g2   50Gi       RWO            vsphere-csi    32d
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>default       logging-elasticsearch-data-0               Bound    pvc-c4f9e3g5-6d0f-13fe-a3f6-227278d6g4h3   100Gi      RWO            vsphere-csi    18d
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>cert-manager  cert-manager-webhook-ca                    Bound    pvc-d5g0f4h6-7e1g-14gf-b4g7-338389e7h5i4   1Gi        RWO            vsphere-csi    60d
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>monitoring    grafana-storage                            Pending  -                                          -           -              vsphere-csi    5m
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>NAME                PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE   AGE
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>vsphere-csi         csi.vsphere.vmware.com         Delete          WaitForFirstConsumer 89d
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>vsphere-csi-delete  csi.vsphere.vmware.com         Delete          Immediate            89d
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>persistentvolumeclaim/test-pvc created
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>test-pvc   Bound    pvc-e6h1g5i7-8f2h-15hg-c5h8-449490f8i6j5   1Gi        RWO            vsphere-csi    8s
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>persistentvolumeclaim &quot;test-pvc&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "storageclass"</code></strong> — Ensure the Kubernetes cluster is fully initialized and the storage provisioner (e.g., vSphere CSI driver) is installed with <code>kubectl apply -f vsphere-csi-driver.yaml</code>.
+<strong><code>Error from server (NotFound): storageclass.storage.k8s.io "&lt;your-storage-class&gt;" not found</code></strong> — Replace <code>&lt;your-storage-class&gt;</code> with an actual StorageClass name from the <code>kubectl get storageclass</code> output (e.g., <code>vsphere-csi</code>).</p>
+</div>
 <hr />
 <h2 id="load-balancer-service-health">Load Balancer / Service Health<a class="headerlink" href="#load-balancer-service-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Load Balancer / Service Health" src="../../../../../assets/virtualization-vmware-tanzu-hc-load-balancer-service-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List Services of type LoadBalancer — verify all have EXTERNAL-IP assigned</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>LoadBalancer
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># If EXTERNAL-IP is &lt;pending&gt; for &gt;2 minutes:</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check NSX/AVI load balancer IP pool capacity</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Check NSX-T or AVI load balancer controller logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List Services of type LoadBalancer — verify all have EXTERNAL-IP assigned</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>LoadBalancer
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># If EXTERNAL-IP is &lt;pending&gt; for &gt;2 minutes:</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Check NSX/AVI load balancer IP pool capacity</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Check NSX-T or AVI load balancer controller logs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAMESPACE            NAME                          TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)           AGE
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>tanzu-system-ingress tanzu-ingress-controller      LoadBalancer   10.96.45.12      192.168.1.50     80:30821/TCP      45d
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>tanzu-system-ingress tanzu-ingress-controller-2    LoadBalancer   10.96.45.13      192.168.1.51     443:30822/TCP     45d
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>vmware-system-tkg    tkg-metrics-service           LoadBalancer   10.96.200.5      &lt;pending&gt;         9090:31234/TCP    12d
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>tanzu-system-auth    dex-service                   LoadBalancer   10.96.88.22      192.168.1.52     5556:32100/TCP    30d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>No resources found</code></strong> — Verify the cluster is running and you have proper kubeconfig context set with <code>kubectl config current-context</code>.
+<strong><code>error: the server doesn't have a resource type "svc"</code></strong> — Ensure you are connected to a valid Kubernetes cluster; run <code>kubectl cluster-info</code> to verify connectivity.</p>
+</div>
 <hr />
 <h2 id="harbor-registry-health">Harbor Registry Health<a class="headerlink" href="#harbor-registry-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Harbor Registry Health" src="../../../../../assets/virtualization-vmware-tanzu-hc-harbor-registry-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Harbor health API (no auth required)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://harbor.example.local/api/v2.0/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># All components should show status: &quot;healthy&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Check Harbor pods if deployed on Kubernetes</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>harbor
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># All pods should be Running</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Test image push/pull</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.example.local<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>docker<span class="w"> </span>pull<span class="w"> </span>busybox<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>tag<span class="w"> </span>busybox<span class="w"> </span>harbor.example.local/library/busybox:test
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.example.local/library/busybox:test
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>docker<span class="w"> </span>pull<span class="w"> </span>harbor.example.local/library/busybox:test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Harbor health API (no auth required)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://harbor.example.local/api/v2.0/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># All components should show status: &quot;healthy&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check Harbor pods if deployed on Kubernetes</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>harbor
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># All pods should be Running</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Test image push/pull</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.example.local<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>docker<span class="w"> </span>pull<span class="w"> </span>busybox<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>tag<span class="w"> </span>busybox<span class="w"> </span>harbor.example.local/library/busybox:test
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.example.local/library/busybox:test
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>docker<span class="w"> </span>pull<span class="w"> </span>harbor.example.local/library/busybox:test
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;status&quot;: &quot;healthy&quot;,
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  &quot;components&quot;: [
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    {
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>      &quot;name&quot;: &quot;core&quot;,
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    },
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    {
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>      &quot;name&quot;: &quot;database&quot;,
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    },
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    {
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>      &quot;name&quot;: &quot;redis&quot;,
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    },
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    {
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>      &quot;name&quot;: &quot;registry&quot;,
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>      &quot;status&quot;: &quot;healthy&quot;
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    }
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>  ]
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>}
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>NAME                                 READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>harbor-core-5d8f7c9b4-2kxvj          1/1     Running   0          3d
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>harbor-database-0                    1/1     Running   0          3d
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>harbor-jobservice-7b4c8f2d9-lmn9p    1/1     Running   0          3d
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>harbor-portal-6c9d5e1a2-qrs3t        1/1     Running   0          3d
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>harbor-redis-0                       1/1     Running   0          3d
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>harbor-registry-5f2a8b9c1-uvwxy      1/1     Running   0          3d
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>Login Succeeded
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>latest: Pulling from library/busybox
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>e692418e3537: Pull complete
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>Digest: sha256:d2b53294f066d8e0b5b9e4701ec277ecd6f151ca74f16b0ff305ff0fca5f147e
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>Status: Downloaded newer image for busybox:latest
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>The push refers to repository [harbor.example.local/library/busybox]
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>test: digest: sha256:d2b53294f066d8e0b5b9e4701ec277ecd6f151ca74f16b0ff305ff0fca5f147e size: 528
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>test: Pulling from library/busybox
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>Digest: sha256:d2b53294f066d8e0b5b9e4701ec277ecd6f151ca74f16b0ff305ff0fca5f147e
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>Status: Downloaded newer image for harbor.example.local/library/busybox:test
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification, or install Harbor's CA certificate in your system trust store.
+<strong><code>Error response from daemon: Get "https://harbor.example.local/v2/": dial tcp: lookup harbor.example.local on [IP]: no such host</code></strong> — Verify Harbor's DNS name resolves correctly with <code>nslookup harbor.example.local</code> and check network connectivity to the Harbor registry endpoint.
+<strong><code>Error response from daemon: unauthorized: unauthorized to access repository: library/busybox, action: push</code></strong> — Ensure the admin user credentials are correct and the <code>library</code> project exists in Harbor; create it via the Harbor UI if missing.</p>
+</div>
 <hr />
 <h2 id="certificate-expiry">Certificate Expiry<a class="headerlink" href="#certificate-expiry" title="Permanent link">&para;</a></h2>
 <p><img alt="Certificate Expiry" src="../../../../../assets/virtualization-vmware-tanzu-hc-certificate-expiry.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check Supervisor API server cert</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>supervisor.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Check Harbor cert</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>harbor.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Check workload cluster API cert</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="nv">CLUSTER_API</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--minify<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.server}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s|https://||&#39;</span><span class="k">)</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$CLUSTER_API</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check Supervisor API server cert</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>supervisor.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Check Harbor cert</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>harbor.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Check workload cluster API cert</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nv">CLUSTER_API</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--minify<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.server}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s|https://||&#39;</span><span class="k">)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$CLUSTER_API</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>notBefore=Jan 15 08:23:47 2023 GMT
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>notAfter=Jan 15 08:23:47 2024 GMT
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>notBefore=Feb 20 14:56:12 2023 GMT
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>notAfter=Feb 20 14:56:12 2025 GMT
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>notBefore=Mar 10 10:15:33 2023 GMT
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>notAfter=Mar 10 10:15:33 2026 GMT
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>unable to load certificate</code></strong> — Ensure the openssl x509 command receives valid certificate data by checking that the s_client connection succeeded and the host is reachable.
+<strong><code>connect: Connection refused</code></strong> — Verify the hostname resolves correctly and the target service is running and listening on port 443 using <code>nslookup</code> and <code>nc -zv</code>.
+<strong><code>command not found: kubectl</code></strong> — Install kubectl or ensure it is in your PATH before attempting to extract the cluster API endpoint.</p>
+</div>
 <hr />
 <h2 id="csr-and-cert-manager-health">CSR and Cert Manager Health<a class="headerlink" href="#csr-and-cert-manager-health" title="Permanent link">&para;</a></h2>
 <p><img alt="CSR and Cert Manager Health" src="../../../../../assets/virtualization-vmware-tanzu-hc-csr-and-cert-manager-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check for pending CertificateSigningRequests in cluster</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>csr
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Approve any pending (if auto-approval is not configured)</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># If cert-manager is installed</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>cert-manager
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A<span class="w">   </span><span class="c1"># All should show READY=True</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequests<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check for pending CertificateSigningRequests in cluster</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>csr
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Approve any pending (if auto-approval is not configured)</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># If cert-manager is installed</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>cert-manager
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A<span class="w">   </span><span class="c1"># All should show READY=True</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequests<span class="w"> </span>-A
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>NAME                                                   AGE   SIGNERNAME                                    REQUESTOR                                           CONDITION
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>capi-webhook-signer-jvxf7                             2d    kubernetes.io/kube-apiserver-client          system:serviceaccount:capi-system:capi-webhook    Pending
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>system:node:worker-node-01                            1d    kubernetes.io/kubelet-serving                 kubelet                                             Approved,Issued
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>system:node:worker-node-02                            1d    kubernetes.io/kubelet-serving                 kubelet                                             Approved,Issued
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>NAMESPACE      NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>cert-manager   cert-manager-5d8f7c4b9-kx2m9           1/1     Running   0          3d
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>cert-manager   cert-manager-cainjector-7f4d6b2-9qrst  1/1     Running   1          3d
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>cert-manager   cert-manager-webhook-8c9d2e1-lmnop     1/1     Running   0          3d
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>NAMESPACE              NAME                                       READY   SECRET                                 AGE
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>cert-manager           cert-manager-webhook-ca                   True    cert-manager-webhook-ca-tls            3d
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>kube-system            kube-apiserver-client-cert                True    kube-apiserver-client-cert-tls         5d
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>tanzu-system           tanzu-webhook-cert                        True    tanzu-webhook-cert-tls                 2d
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>NAMESPACE              NAME                                       APPROVED   DENIED   READY   STATUS
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>cert-manager           cert-manager-webhook-selfsigned-5x8y9     True       False    True    Issued
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>kube-system            kube-apiserver-client-req-abc123           True       False    True    Issued
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>tanzu-system           tanzu-webhook-req-xyz789                  True       False    True    Issued
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "csr"</code></strong> — Ensure you're connected to the correct cluster with <code>kubectl cluster-info</code> and that the API server is responding.
+<strong><code>No resources found in cert-manager namespace.</code></strong> — Install cert-manager with <code>helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace</code> or verify the namespace name is correct.
+<strong><code>READY False</code> on certificates</strong> — Check the certificate status with <code>kubectl describe certificate &lt;name&gt; -n &lt;namespace&gt;</code> to see if the issuer is misconfigured or the secret is missing.</p>
+</div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9553,7 +9759,7 @@ Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

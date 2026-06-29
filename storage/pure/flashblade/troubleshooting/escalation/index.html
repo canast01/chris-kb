@@ -8165,6 +8165,24 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 <p>Ensure phonehome is active at all times. To verify from the array:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>--status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Phone Home Status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>=================
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Status: Enabled
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Last successful phone home: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Next scheduled phone home: 2024-01-22 14:32:18 UTC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Phone home server: https://phonehome.purestorage.com
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Connection status: Connected
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Last error: None
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Proxy configured: No
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Data collected: 7.2 MB
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Last collection timestamp: 2024-01-15 14:30:45 UTC
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purearray: command not found</code></strong> — Ensure you are logged into the FlashBlade management interface or have the Pure Storage CLI tools installed and in your PATH.
+<strong><code>Error: Unable to connect to phone home server</code></strong> — Verify network connectivity and firewall rules allow outbound HTTPS to phonehome.purestorage.com on port 443.
+<strong><code>Error: Authentication failed</code></strong> — Confirm your array credentials are valid and you have administrative privileges to query phone home status.</p>
+</div>
 <h2 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h2>
 <p>When opening a case manually, provide the following information to reduce time to resolution:</p>
 <table>
@@ -8200,33 +8218,80 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 <p>Severity classification at case open determines SLA response time — set severity accurately to receive appropriate response.</p>
 <h2 id="information-to-collect">Information to Collect<a class="headerlink" href="#information-to-collect" title="Permanent link">&para;</a></h2>
 <p>Run the following commands and attach output to the support case before or immediately after opening:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Array identity and software version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># All active alerts with severity and description</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Full diagnostic bundle (generates a support file on the array)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purediag
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Drive health and status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Capacity usage across filesystems and object store</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Recent system message log</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>puremsg<span class="w"> </span>list
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Filesystem list with provisioned and used capacity</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Blade health and status</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Replication link health and lag</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Array identity and software version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># All active alerts with severity and description</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Full diagnostic bundle (generates a support file on the array)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purediag
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Drive health and status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Capacity usage across filesystems and object store</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Recent system message log</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>puremsg<span class="w"> </span>list
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Filesystem list with provisioned and used capacity</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Blade health and status</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Replication link health and lag</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$ purearray list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Name                          Version           Model
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>flashblade-prod-01            4.2.1.0           FB15K
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>$ purealert list
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Name                          Severity          Description
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>drive_failed                  critical          Drive 3.4 failed in enclosure 2
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>thermal_warning               warning           Chassis temperature elevated
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>$ purediag
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Diagnostic bundle generation started
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Bundle ID: diag-2024-01-15-fb15k-prod-01-a7f3e2c1
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Estimated time: 5-10 minutes
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>$ puredrive list
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Name                          Status            Capacity
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>3.1                           healthy           1.92TB
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>3.2                           healthy           1.92TB
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>3.3                           healthy           1.92TB
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>3.4                           failed            1.92TB
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>...
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>$ purearray list --space
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Name                          Total             Used              Available
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>flashblade-prod-01            100TB             67.3TB            32.7TB
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>$ puremsg list
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Timestamp                     Severity          Message
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>2024-01-15T14:32:18Z          info              Replication sync completed for fs-backup
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>2024-01-15T13:45:02Z          warning           High latency detected on link-02
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>2024-01-15T12:11:55Z          info              Snapshot created: fs-data.snap-20240115
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>$ purefb filesystem list
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Name                          Provisioned       Used              Status
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>fs-data                       50TB              38.2TB            healthy
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>fs-backup                     30TB              22.1TB            healthy
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>fs-logs                       20TB              8.9TB             healthy
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>$ purefb blade list
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Name                          Status            Model             IP
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>blade-1                       healthy           FB15K             10.20.1.11
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>blade-2                       healthy           FB15K             10.20.1.12
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>blade-3                       healthy           FB15K             10.20.1.13
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>$ purefb replication list
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>Name                          Status            Lag               Remote Array
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>fs-data-to-dr                 synced            0s                flashblade-dr-01
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>fs-backup-to-dr               synced            2.3s              flashblade-dr-01
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Unable to connect to array management interface</code></strong> — Verify network connectivity to the array management IP and confirm firewall rules allow port 443.
+<strong><code>Error: Authentication failed - invalid credentials</code></strong> — Ensure your Pure Storage API token is valid and has not expired; regenerate credentials in the management console if needed.
+<strong><code>Error: Drive 3.4 failed in enclosure 2 - immediate replacement required</code></strong> — Schedule a maintenance window and replace the failed drive using the Pure Storage support portal to obtain the correct replacement part.</p>
+</div>
 <p>The <code>purediag</code> command generates a diagnostic bundle that Pure Support can pull directly via phonehome if the support tunnel is active. If phonehome is offline, download the diagnostic output and attach it to the case via the support portal.</p>
 <h2 id="sla-tiers">SLA Tiers<a class="headerlink" href="#sla-tiers" title="Permanent link">&para;</a></h2>
 <table>
@@ -8305,7 +8370,7 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

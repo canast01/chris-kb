@@ -7200,6 +7200,40 @@ What to do in your first hour with a new ONTAP cluster. Covers cluster orientati
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Aggregate layout</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggregate,node,state,size,used-size,percent-used
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster: cluster1
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>UUID: 4a1b2c3d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Serial Number: 4082368-50-147258
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>System ID: 0537269999
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Cluster Security Style: mixed
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Cluster FIPS Mode: false
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Node              Model       Serial Number  Uptime
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>----------------- ----------- -------------- ---------------
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>node1             A400        321654987      98 days 14:32
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>node2             A400        321654988      98 days 14:28
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Node     Version
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>-------- -------
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>node1    ONTAP 9.13.1
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>node2    ONTAP 9.13.1
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Vserver     Type       State    Allowed Protocols
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>----------- ---------- -------- ------------------
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>cluster1    admin      running  rsh, ssh, http, https, ontapi, snmp
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>svm-prod    data       running  cifs, nfs, iscsi, fcp
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>svm-backup  data       running  nfs, iscsi
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Aggregate    Node   State   Size       Used Size  Percent Used
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>------------ ------ ------- ---------- ---------- -----------
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>aggr1        node1  online  10.00 TB   6.50 TB    65%
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>aggr2        node2  online  10.00 TB   4.20 TB    42%
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>aggr3        node1  online  5.00 TB    2.10 TB    42%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster show</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or console and have admin-level privileges.
+<strong><code>Error: This command requires a Data ONTAP Cluster Administrator or higher privilege level.</code></strong> — Log in with a user account that has cluster admin role or higher.</p>
+</div>
 <p>Record these facts:</p>
 <table>
 <thead>
@@ -7241,32 +7275,130 @@ What to do in your first hour with a new ONTAP cluster. Covers cluster orientati
 <h2 id="2-first-health-checks">2. First Health Checks<a class="headerlink" href="#2-first-health-checks" title="Permanent link">&para;</a></h2>
 <p>Run these checks in sequence. A failure at any step should be investigated before continuing.</p>
 <h3 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cluster<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cluster<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                 Node Health Status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>--------------------- ---- ------
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ontap-node-01.lab.local true online
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ontap-node-02.lab.local true online
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2 entries were displayed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: cluster</code></strong> — Ensure you are connected to an ONTAP cluster via SSH or the ONTAP CLI, not a generic Linux shell.
+<strong><code>Error: This command requires cluster administrator privileges</code></strong> — Log in with a user account that has cluster admin role permissions.</p>
+</div>
 <p>The <code>Health</code> column should show <code>true</code> for all nodes. Any <code>false</code> indicates an active problem.</p>
 <h3 id="system-health">System Health<a class="headerlink" href="#system-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>System Health Status
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Node                  Health Status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>--------------------- -------
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cluster1-01           healthy
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cluster1-02           healthy
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Cluster Health Status
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Status              Healthy
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>System Health       true
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Filesystem Health   true
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>SAN Health          true
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>NAS Health          true
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Alert ID     Severity Node          Alert Name
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>------------ -------- ------------- ----------------------------------------
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>alert-001    minor    cluster1-01   NTP Server Unreachable
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>alert-002    warning  cluster1-02   Disk Utilization Above 80%
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>alert-003    info     cluster1-01   Configuration Backup Completed Successfully
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: This command is not supported on this platform</code></strong> — Verify you are connected to an ONTAP cluster (not a single-node system) and have appropriate admin privileges.
+<strong><code>Error: Access denied for user 'admin' performing operation 'show' on object 'health'</code></strong> — Ensure your user account has the 'admin' or 'readonly' role assigned via <code>security login show</code>.</p>
+</div>
 <p><code>Status: ok</code> is the target. Review any open alerts — they map to specific subsystems (SAS, network, RAID).</p>
 <h3 id="aggregate-space">Aggregate Space<a class="headerlink" href="#aggregate-space" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-fields<span class="w"> </span>aggregate,size,used,available,percent-used
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-fields<span class="w"> </span>aggregate,size,used,available,percent-used
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Aggregate                Size Available Used%
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------- ----------- --------- ----------- -----
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aggr0                 2.0TB      1.2TB      40%
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>aggr1                 5.0TB      2.1TB      58%
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>aggr2                 3.5TB      0.9TB      74%
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>data_ssd              8.0TB      1.5TB      81%
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>backup_tier          10.0TB      4.2TB      58%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are connected to a NetApp ONTAP cluster via SSH or the ONTAP CLI, not a generic Linux shell.
+<strong><code>Error: invalid field name "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) or omit it and use the default output format.</p>
+</div>
 <p>Flag aggregates above <strong>80% used</strong>. Above <strong>90%</strong> is a hard risk for volume guarantee failures and snapshot deletion cascades.</p>
 <h3 id="volume-space">Volume Space<a class="headerlink" href="#volume-space" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,state,size,used,available,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k6<span class="w"> </span>-n
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,state,size,used,available,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k6<span class="w"> </span>-n
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Vserver   Volume       State      Size       Used       Available  Percent-Used
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>--------- ------------ ---------- ---------- ---------- ---------- ------------
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>svm_prod  vol_data_01  online     500.0GB    287.3GB    212.7GB    57%
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>svm_prod  vol_logs     online     100.0GB    78.5GB     21.5GB     79%
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>svm_prod  vol_backup   online     2.0TB      1.8TB      234.5GB    89%
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>svm_dev   vol_test     online     250.0GB    45.2GB     204.8GB    18%
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>svm_dev   vol_scratch  online     1.0TB      12.3GB     987.7GB    1%
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
+<strong><code>Error: invalid field name "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) for your ONTAP version.</p>
+</div>
 <p>Note any volumes approaching their size limit or with autogrow disabled.</p>
 <h3 id="snapmirror-lag">SnapMirror Lag<a class="headerlink" href="#snapmirror-lag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,mirror-state,relationship-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,mirror-state,relationship-status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Source Path                Destination Path           Lag Time Status
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>========================== ========================== ======== ====================
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>svm1:vol_prod              svm2:vol_prod_mirror       00:15:23 snapmirrored
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>svm1:vol_data              svm2:vol_data_mirror       00:08:47 snapmirrored
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>svm1:vol_logs              svm3:vol_logs_dr           02:34:12 snapmirrored
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>svm1:vol_archive           svm2:vol_archive_mirror    12:45:33 snapmirrored
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>svm1:vol_temp              svm3:vol_temp_mirror       00:22:05 snapmirrored
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the ONTAP cluster CLI (use <code>ssh admin@&lt;cluster-ip&gt;</code>) rather than the local shell.
+<strong><code>Error: This command requires cluster administrator privileges</code></strong> — Log in with a user account that has cluster admin role or request elevated permissions.</p>
+</div>
 <p>Expected lag depends on schedule — for hourly replication, anything over 2 hours is worth flagging. Broken relationships show <code>relationship-status: broken-off</code>.</p>
 <h3 id="autosupport-last-sent">AutoSupport Last Sent<a class="headerlink" href="#autosupport-last-sent" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Node                              Type          Severity      Sequence Number   Timestamp
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>--------------------------------- ------------- ------------- ----------------- ------------------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>cluster1-01                       periodic      normal        42857             Wed Oct 18 14:32:15 UTC 2023
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>cluster1-02                       periodic      normal        42856             Wed Oct 18 14:31:48 UTC 2023
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>cluster1-01                       test          normal        42855             Wed Oct 18 13:15:22 UTC 2023
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: system</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell.
+<strong><code>Error: No matching resource found</code></strong> — Verify the cluster has at least one node online by running <code>cluster show</code> first.</p>
+</div>
 <p>If the last AutoSupport is more than 24 hours old, check connectivity and SMTP/HTTPS transport:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>transport,mail-hosts,state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>transport,mail-hosts,state
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Node                    Transport Mail Hosts                          State
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-----------             --------- ----------------------------------- -------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>cluster1-01             smtp      mail.example.com,mail2.example.com  enabled
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>cluster1-02             smtp      mail.example.com,mail2.example.com  enabled
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>cluster1-03             https     support.netapp.com                  enabled
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>cluster1-04             https     support.netapp.com                  enabled
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: system</code></strong> — Ensure you are connected to the ONTAP cluster CLI (SSH to the management LIF), not the local shell.
+<strong><code>Error: Invalid field name "mail-hosts"</code></strong> — Use the correct field name <code>mail-hosts</code> (with hyphen); verify field availability with <code>system node autosupport show -fields ?</code>.</p>
+</div>
 <hr />
 <h2 id="3-know-the-numbers">3. Know the Numbers<a class="headerlink" href="#3-know-the-numbers" title="Permanent link">&para;</a></h2>
 <p>Capture these metrics in a site record or handoff document.</p>
@@ -7314,39 +7446,102 @@ What to do in your first hour with a new ONTAP cluster. Covers cluster orientati
 <hr />
 <h2 id="4-common-first-tasks">4. Common First Tasks<a class="headerlink" href="#4-common-first-tasks" title="Permanent link">&para;</a></h2>
 <h3 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-aggregate<span class="w"> </span>&lt;aggr-name&gt;<span class="w"> </span>-size<span class="w"> </span>100G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-junction-path<span class="w"> </span>/&lt;vol-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-space-guarantee<span class="w"> </span>none
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>-aggregate<span class="w"> </span>&lt;aggr-name&gt;<span class="w"> </span>-size<span class="w"> </span>100G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>-junction-path<span class="w"> </span>/&lt;vol-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-space-guarantee<span class="w"> </span>none
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Volume &lt;vol-name&gt; created successfully on Vserver &lt;svm-name&gt;.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Volume UUID: 550e8400-e29b-41d4-a716-446655440000
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Aggregate: aggr1
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Size: 100GB
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Space Guarantee: none
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Junction Path: /&lt;vol-name&gt;
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Snapshot Policy: default
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>State: online
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: No space left on device</code></strong> — Verify the aggregate has sufficient free space with <code>storage aggregate show -aggregate &lt;aggr-name&gt;</code> and increase aggregate capacity or reduce volume size.
+<strong><code>Error: command failed: Vserver &lt;svm-name&gt; does not exist</code></strong> — Confirm the SVM name is correct and exists by running <code>vserver show</code> to list available SVMs.
+<strong><code>Error: command failed: Aggregate &lt;aggr-name&gt; does not exist</code></strong> — List available aggregates with <code>storage aggregate show</code> and use a valid aggregate name in the command.</p>
+</div>
 <p>Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,size,junction-path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,size,junction-path
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Vserver   Volume       State      Size       Junction Path
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>--------- ------------ ---------- ---------- ---------------------
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>svm-prod  data_vol_01  online     500GB      /data/prod
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>svm-prod  logs_vol_02  online     250GB      /logs
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>svm-dev   test_vol_03  online     100GB      /test
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>svm-prod  archive_vol  online     2TB        /archive
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command not found: volume</code></strong> — Run this command from the ONTAP CLI (SSH to your cluster management IP) rather than a Linux/Windows shell.
+<strong><code>Error: There is no entry with this name.</code></strong> — Verify the volume name is correct and exists on the cluster using <code>volume show</code> without filters first.</p>
+</div>
 <h3 id="create-a-lif">Create a LIF<a class="headerlink" href="#create-a-lif" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-lif<span class="w"> </span>&lt;lif-name&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-data-protocol<span class="w"> </span>nfs,cifs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;e0c&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-lif<span class="w"> </span>&lt;lif-name&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-data-protocol<span class="w"> </span>nfs,cifs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;e0c&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: command failed: Invalid vserver name</code></strong> — Verify the SVM exists with <code>vserver show</code> and use the correct name in the <code>-vserver</code> parameter.
+<strong><code>Error: command failed: Invalid home-node or home-port</code></strong> — Confirm the node name and port exist by running <code>network port show</code> and ensure the port is available (not already in use).
+<strong><code>Error: command failed: Invalid IP address or netmask</code></strong> — Validate the IP address format and netmask are correct, and ensure the IP is not already assigned to another LIF with <code>network interface show</code>.</p>
+</div>
 <p>Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,address,status-oper,is-home
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,address,status-oper,is-home
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Vserver     LIF                  Address             Status-Oper  Is-Home
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>----------- -------------------- ------------------- ------------ --------
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>svm-prod    svm-prod_mgmt        192.168.1.50        up           true
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>svm-prod    svm-prod_data01      10.0.1.100          up           true
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>svm-prod    svm-prod_data02      10.0.1.101          up           false
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>svm-prod    svm-prod_nfs         10.0.2.50           up           true
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>svm-prod    svm-prod_iscsi       10.0.3.75           down         false
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: "svm-prod" is not a valid value for "-vserver"</code></strong> — Verify the SVM name exists with <code>vserver show</code> and use the exact name from the Vserver column.
+<strong><code>Error: unknown field "status-oper"</code></strong> — Use the correct field name <code>status-admin</code> or <code>status-oper</code> depending on ONTAP version; check available fields with <code>network interface show -fields ?</code>.</p>
+</div>
 <h3 id="set-up-a-snapshot-policy">Set Up a Snapshot Policy<a class="headerlink" href="#set-up-a-snapshot-policy" title="Permanent link">&para;</a></h3>
 <p>Create or assign a policy to a volume:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List existing policies</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Assign an existing policy to a volume</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span>-snapshot-policy<span class="w"> </span>&lt;policy-name&gt;
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Create a new policy</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-policy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>-schedule1<span class="w"> </span>hourly<span class="w"> </span>-count1<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>-schedule2<span class="w"> </span>daily<span class="w"> </span>-count2<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>-schedule3<span class="w"> </span>weekly<span class="w"> </span>-count3<span class="w"> </span><span class="m">4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># List existing policies</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>show
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Assign an existing policy to a volume</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm-name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol-name&gt;<span class="w"> </span>-snapshot-policy<span class="w"> </span>&lt;policy-name&gt;
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Create a new policy</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-policy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span>-schedule1<span class="w"> </span>hourly<span class="w"> </span>-count1<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span>-schedule2<span class="w"> </span>daily<span class="w"> </span>-count2<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">  </span>-schedule3<span class="w"> </span>weekly<span class="w"> </span>-count3<span class="w"> </span><span class="m">4</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Policy                                   Enabled  Schedules
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>---------------------------------------- -------- ---------
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>default                                  true     hourly, daily, weekly
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>hourly                                   true     hourly
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>daily                                    true     daily
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>weekly                                   true     weekly
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>(no output — command completes silently)
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>Policy &quot;backup-policy&quot; created successfully with 3 schedules.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Vserver "svm-prod" does not exist.</code></strong> — Verify the SVM name with <code>vserver show</code> and use the correct name in the <code>-vserver</code> parameter.
+<strong><code>Error: Volume "vol_data" does not exist on Vserver "svm-prod".</code></strong> — Confirm the volume exists on the specified SVM using <code>volume show -vserver &lt;svm-name&gt;</code> before modifying it.
+<strong><code>Error: Snapshot policy "backup-policy" already exists.</code></strong> — Use a unique policy name or delete the existing policy with <code>volume snapshot policy delete -policy &lt;policy-name&gt;</code> before creating a new one.</p>
+</div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7377,7 +7572,7 @@ What to do in your first hour with a new ONTAP cluster. Covers cluster orientati
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

@@ -8150,13 +8150,38 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Force unmount (use only if server is unreachable)</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>umount<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span>/mnt/shared
 </code></pre></div>
-<h2 id="etcfstab-options">/etc/fstab Options<a class="headerlink" href="#etcfstab-options" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># NFSv4 persistent mount</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="m">192</span>.168.10.10:/data/shared<span class="w">  </span>/mnt/shared<span class="w">  </span>nfs4<span class="w">  </span>rw,hard,timeo<span class="o">=</span><span class="m">600</span>,retrans<span class="o">=</span><span class="m">3</span>,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># NFSv3 with soft mount (returns error after timeout instead of hanging)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="m">192</span>.168.10.10:/data/logs<span class="w">  </span>/mnt/logs<span class="w">  </span>nfs<span class="w">  </span>ro,soft,timeo<span class="o">=</span><span class="m">30</span>,retrans<span class="o">=</span><span class="m">2</span>,vers<span class="o">=</span><span class="m">3</span>,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>(no output — command completes silently)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>(no output — command completes silently)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no output — command completes silently)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>(no output — command completes silently)
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused</code></strong> — Verify the NFS server is running (<code>systemctl status nfs-server</code> on the server) and the firewall allows port 2049/tcp and 111/udp.
+<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Check the NFS server's <code>/etc/exports</code> file to ensure the client IP is listed with appropriate permissions (e.g., <code>192.168.1.0/24(rw,sync,no_subtree_check)</code>).
+<strong><code>umount: /mnt/shared: target is busy</code></strong> — Close all open files on the mount point with <code>lsof /mnt/shared</code> and kill the processes, or use <code>umount -f -l</code> to force lazy unmount.</p>
+</div>
+<h2 id="etcfstab-options">/etc/fstab Options<a class="headerlink" href="#etcfstab-options" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># NFSv4 persistent mount</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="m">192</span>.168.10.10:/data/shared<span class="w">  </span>/mnt/shared<span class="w">  </span>nfs4<span class="w">  </span>rw,hard,timeo<span class="o">=</span><span class="m">600</span>,retrans<span class="o">=</span><span class="m">3</span>,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># NFSv3 with soft mount (returns error after timeout instead of hanging)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="m">192</span>.168.10.10:/data/logs<span class="w">  </span>/mnt/logs<span class="w">  </span>nfs<span class="w">  </span>ro,soft,timeo<span class="o">=</span><span class="m">30</span>,retrans<span class="o">=</span><span class="m">2</span>,vers<span class="o">=</span><span class="m">3</span>,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — these are /etc/fstab entries that are parsed at boot or when mount -a is run)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>If executed with `mount -a`:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/data/shared on /mnt/shared type nfs4 (rw,relatime,vers=4.2,rsize=131072,wsize=131072,namlen=255,hard,timeo=600,retrans=3,sec=sys,clientaddr=192.168.10.50,local_lock=none,addr=192.168.10.10)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/data/logs on /mnt/logs type nfs (ro,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,soft,timeo=30,retrans=2,addr=192.168.10.10)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs: mount to NFS server '192.168.10.10' failed: server is down</code></strong> — Verify NFS server is running with <code>systemctl status nfs-server</code> on the server and check network connectivity with <code>ping 192.168.10.10</code>.
+<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Ensure the client IP is listed in the NFS server's <code>/etc/exports</code> file and reload exports with <code>exportfs -ra</code>.
+<strong><code>mount.nfs: No such file or directory</code></strong> — Create the mount point directories with <code>mkdir -p /mnt/shared /mnt/logs</code> before running <code>mount -a</code>.</p>
+</div>
 <h2 id="mount-option-reference">Mount Option Reference<a class="headerlink" href="#mount-option-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8201,23 +8226,59 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 </tbody>
 </table>
 <h2 id="automount-with-autofs">Automount with autofs<a class="headerlink" href="#automount-with-autofs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install autofs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>autofs<span class="w">   </span><span class="c1"># RHEL/CentOS</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>apt<span class="w"> </span>install<span class="w"> </span>autofs<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># /etc/auto.master — add a map</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>/mnt/nfs<span class="w">  </span>/etc/auto.nfs<span class="w">  </span>--timeout<span class="o">=</span><span class="m">300</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># /etc/auto.nfs — define mounts</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>shared<span class="w">  </span>-rw,hard,timeo<span class="o">=</span><span class="m">600</span><span class="w">  </span><span class="m">192</span>.168.10.10:/data/shared
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>logs<span class="w">    </span>-ro,soft,timeo<span class="o">=</span><span class="m">30</span><span class="w">   </span><span class="m">192</span>.168.10.10:/data/logs
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Enable and start autofs</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>autofs
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Force autofs to re-read maps</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>autofs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install autofs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>autofs<span class="w">   </span><span class="c1"># RHEL/CentOS</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>apt<span class="w"> </span>install<span class="w"> </span>autofs<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># /etc/auto.master — add a map</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/mnt/nfs<span class="w">  </span>/etc/auto.nfs<span class="w">  </span>--timeout<span class="o">=</span><span class="m">300</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># /etc/auto.nfs — define mounts</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>shared<span class="w">  </span>-rw,hard,timeo<span class="o">=</span><span class="m">600</span><span class="w">  </span><span class="m">192</span>.168.10.10:/data/shared
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>logs<span class="w">    </span>-ro,soft,timeo<span class="o">=</span><span class="m">30</span><span class="w">   </span><span class="m">192</span>.168.10.10:/data/logs
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Enable and start autofs</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>autofs
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Force autofs to re-read maps</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>autofs
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Dependencies resolved.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>================================================================================
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> Package            Arch         Version              Repository         Size
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>================================================================================
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Installing:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> autofs             x86_64       5.1.7-35.el9         baseos            188 k
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Transaction Summary
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>================================================================================
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Install  1 Package
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Total download size: 188 k
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Installed size: 542 k
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Is this ok? [y/N]: y
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Downloading Packages:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>autofs-5.1.7-35.el9.x86_64.rpm                    1.2 MB/s | 188 kB     00:00
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Running transaction
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Preparing        :                                                        1/1
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Installing       : autofs-5.1.7-35.el9.x86_64                            1/1
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Running scriptlet: autofs-5.1.7-35.el9.x86_64                            1/1
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Verifying        : autofs-5.1.7-35.el9.x86_64                            1/1
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Installed:
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  autofs-5.1.7-35.el9.x86_64
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Complete!
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>Created symlink /etc/systemd/system/multi-user.target.wants/autofs.service → /usr/lib/systemd/system/autofs.service.
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>automount[1234]: lookup(file): lookup for shared failed</code></strong> — Verify the NFS server IP and export paths are correct in <code>/etc/auto.nfs</code>, and confirm the NFS server is reachable with <code>ping 192.168.10.10</code>.
+<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Check NFS server export permissions in <code>/etc/exports</code> and ensure the client IP is listed with appropriate read/write flags, then run <code>exportfs -ra</code> on the server.
+<strong><code>systemctl: Unit autofs.service not found</code></strong> — Install autofs first with <code>dnf install autofs</code> or <code>apt install autofs</code> before attempting to enable the service.</p>
+</div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>hard</code> mounts can cause processes to hang indefinitely if the NFS server goes offline. For non-critical mounts, use <code>soft</code> with a short <code>timeo</code> and handle errors in the application layer.</li>
@@ -8246,7 +8307,7 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     

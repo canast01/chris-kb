@@ -9167,96 +9167,224 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nsx-manager.example.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all imported certificates</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">for c in d.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">    cid   = c.get(&#39;id&#39;, &#39;?&#39;)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">    name  = c.get(&#39;display_name&#39;, &#39;?&#39;)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">    expiry = c.get(&#39;not_after&#39;, &#39;?&#39;)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">    print(f&#39;  {cid:&lt;40} {name:&lt;30} expires={expiry}&#39;)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Thumbprint of the API certificate (used for vCenter trust)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>nsxcli
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CONNECTED(00000000)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>139701234567890:error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsext alert fatal:../ssl/statem/statem_clnt.c:239:
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>connect:errno=1
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>---
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>CONNECTED(00000000)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>139701234567890:error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsext alert fatal:../ssl/statem/statem_clnt.c:239:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>connect:errno=1
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>---
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>CONNECTED(00000000)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>depth=0 CN = nsx-manager.example.local, O = VMware, C = US
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>verify return:1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>---
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Certificate chain
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a> 0 s:CN = nsx-manager.example.local, O = VMware, C = US
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   i:CN = NSX-Manager-CA, O = VMware, C = US
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>---
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CONNECTED(00000000)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>depth=0 CN = nsx-manager.example.local, O = VMware, C = US
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>verify return:1
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>---
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>notBefore=Jan 15 08:32:14 2024 GMT
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>notAfter=Jan 14 08:32:14 2026 GMT
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>subject=CN = nsx-manager.example.local, O = VMware, C = US
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>issuer=CN = NSX-Manager-CA, O = VMware, C = US
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Generate a CSR on NSX Manager</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>connect:errno=111</code></strong> — Verify NSX Manager is running and listening on port 443 with <code>curl -k https://nsx-manager.example.local/api/v1/node</code>.
+<strong><code>verify return:1 (self signed certificate)</code></strong> — This is expected for self-signed NSX certs; use <code>-CAfile</code> with your NSX CA bundle or ignore with <code>-showcerts</code> for validation purposes only.
+<strong><code>error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsext alert fatal</code></strong> — Confirm the hostname resolves correctly and matches the certificate CN with <code>nslookup nsx-manager.example.local</code> and <code>openssl x509 -in cert.pem -noout -text</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all imported certificates</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;resource_type&quot;: &quot;CsrProperties&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;display_name&quot;: &quot;nsx-api-cert&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;subject&quot;: {</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">      &quot;attributes&quot;: [</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">        {&quot;key&quot;: &quot;CN&quot;, &quot;value&quot;: &quot;nsx-manager.example.local&quot;},</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">        {&quot;key&quot;: &quot;O&quot;,  &quot;value&quot;: &quot;Corp Inc&quot;},</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">        {&quot;key&quot;: &quot;C&quot;,  &quot;value&quot;: &quot;GB&quot;}</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">      ]</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">    },</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s1">    &quot;key_size&quot;: &quot;2048&quot;,</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">    &quot;algorithm&quot;: &quot;RSA&quot;,</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">    &quot;extensions&quot;: {</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s1">      &quot;dns_names&quot;: [&quot;nsx-manager.example.local&quot;],</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s1">      &quot;ip_addresses&quot;: [&quot;10.0.0.50&quot;]</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s1">    }</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/csrs&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">for c in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">    cid   = c.get(&#39;id&#39;, &#39;?&#39;)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">    name  = c.get(&#39;display_name&#39;, &#39;?&#39;)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">    expiry = c.get(&#39;not_after&#39;, &#39;?&#39;)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    print(f&#39;  {cid:&lt;40} {name:&lt;30} expires={expiry}&#39;)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Thumbprint of the API certificate (used for vCenter trust)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>nsxcli
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 2 — Import the signed certificate</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">CERT_PEM</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>nsx-api-signed.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">KEY_PEM</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>nsx-api.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">    \&quot;pem_encoded\&quot;: \&quot;</span><span class="si">${</span><span class="nv">CERT_PEM</span><span class="si">}</span><span class="s2">\&quot;,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">    \&quot;private_key\&quot;: \&quot;</span><span class="si">${</span><span class="nv">KEY_PEM</span><span class="si">}</span><span class="s2">\&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?action=import&quot;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Returns the certificate ID</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aebc1234-5678-90ab-cdef-1234567890ab   nsx-manager-cert                expires=2026-03-15T14:22:00Z
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  b2cd5678-90ab-cdef-1234-567890abcdef   vcenter-integration-cert        expires=2025-11-20T08:45:30Z
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  c3de9012-34ab-cdef-1234-567890abcdef   backup-cert-old                 expires=2024-08-10T16:33:15Z
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  d4ef3456-78cd-ef01-2345-67890abcdef1   edge-cluster-cert               expires=2027-01-05T09:18:42Z
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>nsx&gt; get certificate api thumbprint
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nsx&gt; exit
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 3 — Apply the certificate to the API endpoint</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
+<strong><code>jq: command not found</code></strong> — Install <code>python3-json</code> or use the built-in <code>python3 -c</code> JSON parser as shown in the example instead of piping to <code>jq</code>.
+<strong><code>error: unauthorized (401)</code></strong> — Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — Generate a CSR on NSX Manager</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/services/http?action=apply_certificate&amp;certificate_id=&lt;cert-id&gt;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;resource_type&quot;: &quot;CsrProperties&quot;,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;display_name&quot;: &quot;nsx-api-cert&quot;,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;subject&quot;: {</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;attributes&quot;: [</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">        {&quot;key&quot;: &quot;CN&quot;, &quot;value&quot;: &quot;nsx-manager.example.local&quot;},</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">        {&quot;key&quot;: &quot;O&quot;,  &quot;value&quot;: &quot;Corp Inc&quot;},</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">        {&quot;key&quot;: &quot;C&quot;,  &quot;value&quot;: &quot;GB&quot;}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">      ]</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">    },</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    &quot;key_size&quot;: &quot;2048&quot;,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">    &quot;algorithm&quot;: &quot;RSA&quot;,</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">    &quot;extensions&quot;: {</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">      &quot;dns_names&quot;: [&quot;nsx-manager.example.local&quot;],</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">      &quot;ip_addresses&quot;: [&quot;10.0.0.50&quot;]</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">    }</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/csrs&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check expiry of all NSX-managed certificates</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?details=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">from datetime import datetime, timezone</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">now = datetime.now(timezone.utc)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">for c in d.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">    name   = c.get(&#39;display_name&#39;, c.get(&#39;id&#39;,&#39;?&#39;))</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">    expiry = c.get(&#39;not_after&#39;,&#39;&#39;)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">    if expiry:</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">        exp_dt = datetime.fromisoformat(expiry.replace(&#39;Z&#39;,&#39;+00:00&#39;))</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">        days   = (exp_dt - now).days</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">        flag   = &#39;&#39; if days &gt; 60 else &#39;  *** EXPIRING SOON&#39; if days &gt; 14 else &#39;  *** EXPIRED/CRITICAL&#39;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">        print(f&#39;  {name:&lt;40} expires={expiry[:10]}  days_remaining={days}{flag}&#39;)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">&quot;</span>
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;resource_type&quot;: &quot;CsrProperties&quot;,
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;id&quot;: &quot;a7f3c2e1-9b4d-4f8a-b2c5-d8e9f1a3b5c7&quot;,
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;display_name&quot;: &quot;nsx-api-cert&quot;,
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;pem&quot;: &quot;-----BEGIN CERTIFICATE REQUEST-----\nMIICljCCAX4CAQAwQDELMAkGA1UEBhMCR0IxEDAOBgNVBAoTB0NvcnAgSW5jMRsw\nGQYDVQQDExJuc3gtbWFuYWdlci5leGFtcGxlLmxvY2FsMIIBIjANBgkqhkiG9w0B\nAQEFAAOCAQ8AMIIBCgKCAQEAyZ4k2vL8n9pQ5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2\nxL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5m\nK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ\n9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2\nmJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8q\nR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL\n9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4\npQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8v\nK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL5mK3vZ9xL2mJ8qR7vL9mN4pQ8vK2xL\n5mK3vZ
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On NSX Manager node</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-tls<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 2 — Import the signed certificate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">CERT_PEM</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>nsx-api-signed.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">KEY_PEM</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>nsx-api.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;pem_encoded\&quot;: \&quot;</span><span class="k">$(</span>cat<span class="w"> </span>siem-ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?action=import&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">    \&quot;pem_encoded\&quot;: \&quot;</span><span class="si">${</span><span class="nv">CERT_PEM</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">    \&quot;private_key\&quot;: \&quot;</span><span class="si">${</span><span class="nv">KEY_PEM</span><span class="si">}</span><span class="s2">\&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?action=import&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Returns the certificate ID</span>
 </code></pre></div></p>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;certificate_id&quot;: &quot;91a2c4e8-7f3b-4d2a-9e1c-5b6a3f8d2e4c&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;pem_encoded&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKp8Z7vN4mK5MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV\n...&quot;,
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;subject&quot;: &quot;CN=nsx-manager.lab.local,O=Infrastructure,C=US&quot;,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;issuer&quot;: &quot;CN=Lab-Root-CA,O=Infrastructure,C=US&quot;,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;valid_from&quot;: &quot;2024-01-15T10:30:00Z&quot;,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;valid_until&quot;: &quot;2026-01-14T10:30:00Z&quot;,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;key_size&quot;: 2048,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;signature_algorithm&quot;: &quot;sha256WithRSAEncryption&quot;,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;resource_type&quot;: &quot;Certificate&quot;,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;self_link&quot;: &quot;https://nsx-manager.lab.local/api/v1/trust-management/certificates/91a2c4e8-7f3b-4d2a-9e1c-5b6a3f8d2e4c&quot;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>{"error_code":400,"error_message":"Invalid PEM encoding in request body"}</code></strong> — Verify certificate and key files are not corrupted and contain proper BEGIN/END markers by running <code>head -1 nsx-api-signed.crt</code> and <code>head -1 nsx-api.key</code>.
+<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Confirm NSX Manager credentials are correct and the admin user has certificate management permissions.
+<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or import the NSX Manager's CA certificate into your system trust store.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 3 — Apply the certificate to the API endpoint</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/services/http?action=apply_certificate&amp;certificate_id=&lt;cert-id&gt;&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;service&quot;: &quot;http&quot;,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;status&quot;: &quot;success&quot;,
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;certificate_id&quot;: &quot;urn:uuid:a4f2c8e1-9b3d-47e2-8c1f-6d5a2e9f4b1c&quot;,
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;applied_at&quot;: &quot;2024-01-15T14:32:18.456Z&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  &quot;thumbprint&quot;: &quot;3d:a4:f2:c8:e1:9b:3d:47:e2:8c:1f:6d:5a:2e:9f:4b&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;expires&quot;: &quot;2025-01-15T14:32:18Z&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
+<strong><code>{"error_code":400,"error_message":"Certificate ID not found or invalid"}</code></strong> — Verify the certificate exists on the NSX Manager by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/certificates</code> and confirm the certificate_id value.
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and the API service is running with <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/node/services/http</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check expiry of all NSX-managed certificates</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?details=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">from datetime import datetime, timezone</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s2">now = datetime.now(timezone.utc)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s2">for c in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s2">    name   = c.get(&#39;display_name&#39;, c.get(&#39;id&#39;,&#39;?&#39;))</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s2">    expiry = c.get(&#39;not_after&#39;,&#39;&#39;)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s2">    if expiry:</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">        exp_dt = datetime.fromisoformat(expiry.replace(&#39;Z&#39;,&#39;+00:00&#39;))</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">        days   = (exp_dt - now).days</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="s2">        flag   = &#39;&#39; if days &gt; 60 else &#39;  *** EXPIRING SOON&#39; if days &gt; 14 else &#39;  *** EXPIRED/CRITICAL&#39;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="s2">        print(f&#39;  {name:&lt;40} expires={expiry[:10]}  days_remaining={days}{flag}&#39;)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>nsx-manager.corp.local              expires=2025-08-14  days_remaining=187
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  nsx-edge-01.corp.local              expires=2025-06-22  days_remaining=125
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  nsx-controller-01.corp.local        expires=2025-03-10  days_remaining=42  *** EXPIRING SOON
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  nsx-controller-02.corp.local        expires=2024-12-18  days_remaining=-28  *** EXPIRED/CRITICAL
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  api-cert-internal                   expires=2025-09-30  days_remaining=234
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  backup-cert-old                     expires=2024-11-05  days_remaining=-72  *** EXPIRED/CRITICAL
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store.
+<strong><code>jq: command not found</code></strong> — Ensure Python 3 is installed and the JSON parsing script is correctly formatted; alternatively, pipe to <code>jq '.results[] | {display_name, not_after}'</code> if jq is available.
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct, the API service is running (<code>systemctl status nsx-manager</code>), and the management network is reachable.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># On NSX Manager node</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nsxcli
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-tls<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NSX CLI (version 3.2.1.0.0)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>&gt; set service syslog exporter siem-tls level info protocol TLS server 10.0.0.100 port 6514
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Syslog exporter &#39;siem-tls&#39; configured successfully.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&gt; get service syslog exporters
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Exporter Name    Protocol  Server         Port  Level  Status
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>siem-tls         TLS       10.0.0.100     6514  info   connected
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>syslog-default   UDP       127.0.0.1      514   warn   connected
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Exporter name 'siem-tls' already exists</code></strong> — Use a unique exporter name or delete the existing exporter with <code>delete service syslog exporter siem-tls</code> first.
+<strong><code>Error: Unable to connect to server 10.0.0.100:6514 - connection timeout</code></strong> — Verify the SIEM server is reachable and listening on port 6514 by running <code>nc -zv 10.0.0.100 6514</code> from the NSX Manager node.
+<strong><code>Error: TLS certificate validation failed for server 10.0.0.100</code></strong> — Import the SIEM server's CA certificate into NSX Manager using <code>set service syslog exporter siem-tls ca-cert &lt;cert-path&gt;</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;pem_encoded\&quot;: \&quot;</span><span class="k">$(</span>cat<span class="w"> </span>siem-ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="k">)</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?action=import&quot;</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;certificate_id&quot;: &quot;d8f4c2a1-9e7b-4f3c-b1d6-2a5e8c9f0b3d&quot;,
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;pem_encoded&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKp8Z7c5Q9mNMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV\nBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX\naWRnaXRzIFB0eSBMdGQwHhcNMjMwNzE1MDkzMDAwWhcNMjQwNzE0MDkzMDAwWjBF\nMQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50\nZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB\nCgKCAQEA2x5Z...\n-----END CERTIFICATE-----\n&quot;,
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  &quot;resource_type&quot;: &quot;TrustedCertificate&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  &quot;system_owned&quot;: false
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the NSX manager's own certificate first.
+<strong><code>{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid PEM format"}</code></strong> — Ensure the certificate file is valid PEM format and the awk command properly escapes newlines; test with <code>cat siem-ca.crt | head -2</code>.
+<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and the API service is running with <code>curl -sk https://&lt;nsx-manager&gt;/api/v1/cluster/status</code>.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9292,7 +9420,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

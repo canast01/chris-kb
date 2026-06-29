@@ -9895,13 +9895,65 @@ vSAN Quick Reference reference covering Fast Health Checks, Common Commands, Pin
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check vSAN resync summary</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<h2 id="ping-vsan-vmkernel-between-hosts">Ping vSAN VMkernel Between Hosts<a class="headerlink" href="#ping-vsan-vmkernel-between-hosts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From ESXi host, ping another host&#39;s vSAN VMkernel</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test jumbo frames if MTU is 9000</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster UUID                : 52d4a8f0-1234-5678-abcd-ef1234567890
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cluster Dominance           : 1
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Node UUID                   : a1b2c3d4-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Subcluster Master           : true
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Current Master              : a1b2c3d4-5678-90ab-cdef-1234567890ab
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Cluster Size                : 3
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Health State                : healthy
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Interface vmk0              : 192.168.1.100
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Interface vmk1              : 192.168.1.101
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Multicast Address           : 224.1.1.1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Multicast Port              : 23451
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Network Mode                : unicast
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Disk Group 0
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   Physical Disk 0          : naa.5001405a1b2c3d4e
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>   Physical Disk 1          : naa.5001405a1b2c3d4f
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Disk Group 1
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   Physical Disk 0          : naa.5001405a1b2c3d50
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Resync Objects              : 12
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Resync Data (MB)            : 2048
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Estimated Time (seconds)    : 180
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vsan cluster get: Unknown command or namespace</code></strong> — Ensure vSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster list</code> to verify vSAN is active.
+<strong><code>Error: Unable to connect to vSAN cluster</code></strong> — Verify the ESXi host is part of a vSAN cluster and network connectivity exists between cluster nodes on the vSAN network.
+<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate vSAN administrator privileges on the ESXi host.</p>
+</div>
+<h2 id="ping-vsan-vmkernel-between-hosts">Ping vSAN VMkernel Between Hosts<a class="headerlink" href="#ping-vsan-vmkernel-between-hosts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From ESXi host, ping another host&#39;s vSAN VMkernel</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test jumbo frames if MTU is 9000</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PING 192.168.100.45 (192.168.100.45): 56 data bytes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>64 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=0.542 ms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>64 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=0.518 ms
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>64 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=0.531 ms
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>64 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=0.525 ms
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>--- 192.168.100.45 statistics ---
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>round-trip min/avg/max = 0.518/0.529/0.542 ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>PING 192.168.100.45 (192.168.100.45): 8972 data bytes
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>8972 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=1.203 ms
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>8972 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=1.187 ms
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>8972 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=1.195 ms
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>--- 192.168.100.45 statistics ---
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>3 packets transmitted, 3 packets received, 0% packet loss
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unknown interface vmk2</code></strong> — Verify the correct VMkernel interface name with <code>esxcli network ip interface list</code> and use the correct interface (e.g., vmk1, vmk3).
+<strong><code>100% packet loss</code></strong> — Check that the target vSAN VMkernel IP is reachable and that vSAN network connectivity is established between hosts.
+<strong><code>Packet size too large for link MTU</code></strong> — Reduce the packet size with <code>-s</code> flag or verify that jumbo frames (MTU 9000) are configured on both the ESXi host and physical switch.</p>
+</div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9955,7 +10007,7 @@ vSAN Quick Reference reference covering Fast Health Checks, Common Commands, Pin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

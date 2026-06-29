@@ -8199,98 +8199,249 @@ FlashBlade diagnostic commands: check array health and active alerts with purefb
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Audit log (admin actions — useful if a config change caused the issue)</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--audit<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connected to 10.20.50.15.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purity-fb-01&gt; purefb array list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Name            Version          Status    Space.Used  Space.Total
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>purity-fb-01    4.10.2           online    18.2TB      102.4TB
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purity-fb-01&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>purity-fb-01&gt; purefb alert list
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ID      Severity  Code                    Message                          Time
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1847    info      BLADE_TEMP_WARNING      Blade-3 temperature nominal      2024-01-15 14:32:10
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1846    warning   DRIVE_PREDICTIVE_FAIL   Drive SSD-7-2 predictive failure 2024-01-15 13:18:45
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>1845    error     REPLICATION_LAG         Replication lag &gt; 1 hour         2024-01-15 12:05:22
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purity-fb-01&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>purity-fb-01&gt; purefb alert list --filter &quot;time&gt;=&#39;7 days ago&#39;&quot; | head -50
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ID      Severity  Code                    Message                          Time
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>1847    info      BLADE_TEMP_WARNING      Blade-3 temperature nominal      2024-01-15 14:32:10
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>1846    warning   DRIVE_PREDICTIVE_FAIL   Drive SSD-7-2 predictive failure 2024-01-15 13:18:45
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>1845    error     REPLICATION_LAG         Replication lag &gt; 1 hour         2024-01-15 12:05:22
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>1844    info      CAPACITY_THRESHOLD      Capacity utilization 82%         2024-01-14 09:47:33
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>1843    warning   BLADE_DEGRADED          Blade-5 operating in degraded    2024-01-13 16:22:11
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>purity-fb-01&gt;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purity-fb-01&gt; purefb admin list --audit | tail -50
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Time                    Admin           Action          Resource        Details
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>2024-01-15 15:42:18     pureuser        modify          nfs-export-01   Changed access_list
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>2024-01-15 14:28:05     automation      create          snapshot-daily  Scheduled snapshot created
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>2024-01-15 13:15:33     pureuser        delete          old-vol-backup  Volume deleted
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>2024-01-15 12:01:22     sysadmin        modify          replication-01  Target changed to dr-site-02
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>2024-01-14 10:33:44     pureuser        create          nfs-export-02   New export created
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>purity-fb-01&gt;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Connection refused</code></strong> — Verify the FlashBlade management IP is correct and SSH is enabled; check firewall rules allowing port 22 to the management interface.
+<strong><code>purefb: command not found</code></strong> — Ensure you are logged into the FlashBlade CLI (after <code>ssh</code> connection succeeds); if using a jump host, SSH directly to the management IP instead.
+<strong><code>Alert severity=error or severity=warning present</code></strong> — Cross-reference the alert code and timestamp with the audit log to identify recent config changes, then consult Pure Storage support matrix for the specific alert remediation steps.</p>
+</div>
 <hr />
 <h2 id="step-2-check-blade-and-hardware-health">Step 2 — Check blade and hardware health<a class="headerlink" href="#step-2-check-blade-and-hardware-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Blade health and capacity contribution</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Each blade shows: Name, Status, Capacity, RawCapacity</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Expected: Status = healthy for all blades</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Problem: Status = unhealthy or failed → open Pure SR immediately</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Full chassis hardware status (power supplies, fans, chassis modules)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Each component shows: Name, Status, Temperature</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Expected: Status = ok for all hardware</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Problem: any Status = failed or warning → open Pure SR</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Network interface status (data and management VIPs)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Shows: name, address, enabled, speed, services (management/replication/data)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Expected: Enabled = True and Speed &gt; 0 for all active interfaces</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Blade health and capacity contribution</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Each blade shows: Name, Status, Capacity, RawCapacity</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected: Status = healthy for all blades</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Problem: Status = unhealthy or failed → open Pure SR immediately</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Full chassis hardware status (power supplies, fans, chassis modules)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Each component shows: Name, Status, Temperature</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Expected: Status = ok for all hardware</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Problem: any Status = failed or warning → open Pure SR</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Network interface status (data and management VIPs)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Shows: name, address, enabled, speed, services (management/replication/data)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Expected: Enabled = True and Speed &gt; 0 for all active interfaces</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                Status      Capacity        RawCapacity
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>blade-1             healthy     51.2TB          102.4TB
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>blade-2             healthy     51.2TB          102.4TB
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>blade-3             healthy     51.2TB          102.4TB
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>blade-4             healthy     51.2TB          102.4TB
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Name                    Status      Temperature
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>psu-1                   ok          32C
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>psu-2                   ok          31C
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>fan-module-1            ok          28C
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>fan-module-2            ok          29C
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>chassis-controller      ok          45C
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Name                Address             Enabled     Speed       Services
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>management-vip      10.20.1.100         True        1000Mbps    management
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>replication-vip     10.20.2.50          True        10000Mbps   replication
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>data-vip-1          10.20.3.100         True        10000Mbps   data
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>data-vip-2          10.20.3.101         True        10000Mbps   data
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Invalid credentials or unable to connect to array</code></strong> — Verify the Pure FlashBlade management IP is reachable and your API token is valid with <code>purefb --version</code> and check network connectivity.
+<strong><code>blade-X status: unhealthy</code></strong> — Contact Pure Storage support immediately and check blade logs with <code>purefb blade list --verbose</code> to identify the specific hardware failure.
+<strong><code>network interface list: command not found</code></strong> — Ensure you are running the correct Pure FlashBlade CLI version; use <code>purefb network interface list</code> instead of <code>purefb network list</code>.</p>
+</div>
 <hr />
 <h2 id="step-3-check-filesystem-and-bucket-state">Step 3 — Check filesystem and bucket state<a class="headerlink" href="#step-3-check-filesystem-and-bucket-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all filesystems with provisioned and used capacity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Columns: Name, Provisioned, Space Used, % Used, NFS/SMB/HTTP enabled</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Alert: % Used &gt; 80% = approaching full; provisioned size may need increasing</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List S3 buckets with usage</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Columns: Name, Object Count, Space Used, Account</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check NFS export policies</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purefb<span class="w"> </span>policy<span class="w"> </span>list
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>purefb<span class="w"> </span>policy<span class="w"> </span>list<span class="w"> </span>&lt;policy-name&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Shows which filesystem the policy applies to and the NFS rules</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check directory services (AD / LDAP) for authentication</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>purefb<span class="w"> </span>directoryservice<span class="w"> </span>list
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Expected: Enabled = True and Status = connected for configured AD/LDAP</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Check SMB shares (if using SMB protocol)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>purefb<span class="w"> </span>share<span class="w"> </span>list
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Check object store accounts and users</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>purefb<span class="w"> </span>objectstoreaccount<span class="w"> </span>list
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>purefb<span class="w"> </span>objectstoreuser<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all filesystems with provisioned and used capacity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Columns: Name, Provisioned, Space Used, % Used, NFS/SMB/HTTP enabled</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Alert: % Used &gt; 80% = approaching full; provisioned size may need increasing</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List S3 buckets with usage</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Columns: Name, Object Count, Space Used, Account</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check NFS export policies</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>purefb<span class="w"> </span>policy<span class="w"> </span>list
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>purefb<span class="w"> </span>policy<span class="w"> </span>list<span class="w"> </span>&lt;policy-name&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Shows which filesystem the policy applies to and the NFS rules</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Check directory services (AD / LDAP) for authentication</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>purefb<span class="w"> </span>directoryservice<span class="w"> </span>list
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Expected: Enabled = True and Status = connected for configured AD/LDAP</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Check SMB shares (if using SMB protocol)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>purefb<span class="w"> </span>share<span class="w"> </span>list
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Check object store accounts and users</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>purefb<span class="w"> </span>objectstoreaccount<span class="w"> </span>list
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>purefb<span class="w"> </span>objectstoreuser<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name             Provisioned    Space Used    % Used    NFS    SMB    HTTP
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>data-prod        10.0 TB        8.2 TB        82%       Yes    Yes    No
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>backup-archive   50.0 TB        12.5 TB       25%       Yes    No     No
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>dev-scratch      5.0 TB         4.8 TB        96%       Yes    Yes    Yes
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Name             Object Count    Space Used    Account
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>archive-2024     1,247,856       45.3 GB       prod-storage
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>logs-retention   892,341         28.7 GB       ops-team
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Name                    Filesystem        NFS Rules
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>nfs-prod-policy         data-prod         rw,no_root_squash,192.168.1.0/24
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>nfs-backup-policy       backup-archive    ro,root_squash,10.0.0.0/8
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Name              Enabled    Status        Type
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>corp-ad           True       connected     Active Directory
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ldap-secondary    True       connected     LDAP
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Name              Filesystem        Protocol    Enabled
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>smb-data          data-prod         SMB3        Yes
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>smb-archive       backup-archive    SMB3        Yes
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Name                  Created
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>prod-storage          2024-01-15T09:22:11Z
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>ops-team              2024-02-03T14:55:42Z
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Name                  Account           Access Type
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>admin-user            prod-storage      Full
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>backup-svc            ops-team          Read-Only
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Policy 'nfs-invalid-policy' not found</code></strong> — Verify the policy name exists with <code>purefb policy list</code> and check for typos.
+<strong><code>Error: Directory service connection failed: LDAP server unreachable</code></strong> — Confirm LDAP/AD server IP and port are correct, and network connectivity exists from the FlashBlade management interface.
+<strong><code>Error: Filesystem 'data-prod' is 96% full</code></strong> — Increase provisioned capacity immediately with <code>purefb filesystem update --name data-prod --provisioned &lt;new-size&gt;</code> to prevent write failures.</p>
+</div>
 <hr />
 <h2 id="step-4-check-replication-health">Step 4 — Check replication health<a class="headerlink" href="#step-4-check-replication-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Replication link status and lag (ActiveDR or async replication)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Shows: Name, Status, Lag, Bytes Transferred, Paused</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Expected: Status = replicating; Lag = low (seconds to minutes for async)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Problem: Status = broken or Paused = True</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Remote array connection details</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purefb<span class="w"> </span>replication<span class="w"> </span>arrayconnection<span class="w"> </span>list
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Shows: remote array name, management IP, replication IPs, connection status</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check network interface used for replication</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>replication
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Replication VIPs must be able to reach the remote array&#39;s replication VIPs</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Snapshot list (source of replication)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Shows: name, source filesystem/bucket, created time, size</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Replication link status and lag (ActiveDR or async replication)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Shows: Name, Status, Lag, Bytes Transferred, Paused</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Expected: Status = replicating; Lag = low (seconds to minutes for async)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Problem: Status = broken or Paused = True</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Remote array connection details</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purefb<span class="w"> </span>replication<span class="w"> </span>arrayconnection<span class="w"> </span>list
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Shows: remote array name, management IP, replication IPs, connection status</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check network interface used for replication</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>replication
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Replication VIPs must be able to reach the remote array&#39;s replication VIPs</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Snapshot list (source of replication)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Shows: name, source filesystem/bucket, created time, size</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                          Status      Lag         Bytes Transferred  Paused
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>prod-to-dr-fs1               replicating 45s         2.3TB              False
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>prod-to-dr-fs2               replicating 2m 12s      5.7TB              False
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>prod-to-dr-bucket-analytics  replicating 1m 8s       892GB              False
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Name                    Management IP      Replication IPs              Status
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>flashblade-dr-01        203.0.113.42       203.0.113.100-103           connected
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>flashblade-dr-02        203.0.113.43       203.0.113.104-107           connected
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Name              MTU    Enabled  Services
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>eth2              1500   True     replication
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>eth3              1500   True     replication
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Name                    Source              Created                Size
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>fs1.1704067200          fs1                 2024-01-01 12:00:00  450GB
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>fs1.1704153600          fs1                 2024-01-02 12:00:00  455GB
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>bucket-daily.1704067200 analytics-bucket    2024-01-01 12:00:00  125GB
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>bucket-daily.1704153600 analytics-bucket    2024-01-02 12:00:00  128GB
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>replication link status: broken</code></strong> — Verify network connectivity between replication VIPs using <code>ping</code> and check firewall rules allow port 443 bidirectionally.
+<strong><code>command not found: purefb</code></strong> — Install the Pure Storage Python SDK with <code>pip install purestorage</code> or ensure the FlashBlade CLI tools are in your PATH.
+<strong><code>connection refused on remote array</code></strong> — Confirm the remote array's replication VIPs are reachable and that the replication link was accepted on the destination array using <code>purefb replication arrayconnection approve</code>.</p>
+</div>
 <hr />
 <h2 id="step-5-diagnose-performance-issues">Step 5 — Diagnose performance issues<a class="headerlink" href="#step-5-diagnose-performance-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Array-level throughput, IOPS, and latency</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>--performance
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Key metrics:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   read_bytes_per_sec / write_bytes_per_sec  → throughput</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#   reads_per_sec / writes_per_sec           → IOPS</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#   usec_per_read_op / usec_per_write_op     → latency in microseconds</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Filesystem-level performance (shows per-filesystem breakdown)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purefb<span class="w"> </span>fs<span class="w"> </span>list<span class="w"> </span>--performance
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Sort filesystems by write throughput to find hot spots</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>purefb<span class="w"> </span>fs<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Performance targets for FlashBlade:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1">#   NFS sequential I/O:   &lt; 1 ms latency expected for large I/O</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1">#   NFS small random I/O: &lt; 5 ms latency</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1">#   S3 object GET/PUT:    &lt; 5 ms latency</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># S3 bucket performance</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--performance
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Network interface utilization (check if NICs are saturated)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Check Speed vs. actual throughput from purefb array --performance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Array-level throughput, IOPS, and latency</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>--performance
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Key metrics:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">#   read_bytes_per_sec / write_bytes_per_sec  → throughput</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1">#   reads_per_sec / writes_per_sec           → IOPS</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">#   usec_per_read_op / usec_per_write_op     → latency in microseconds</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Filesystem-level performance (shows per-filesystem breakdown)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purefb<span class="w"> </span>fs<span class="w"> </span>list<span class="w"> </span>--performance
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Sort filesystems by write throughput to find hot spots</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>purefb<span class="w"> </span>fs<span class="w"> </span>list<span class="w"> </span>--performance<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Performance targets for FlashBlade:</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1">#   NFS sequential I/O:   &lt; 1 ms latency expected for large I/O</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">#   NFS small random I/O: &lt; 5 ms latency</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">#   S3 object GET/PUT:    &lt; 5 ms latency</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># S3 bucket performance</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--performance
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Network interface utilization (check if NICs are saturated)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Check Speed vs. actual throughput from purefb array --performance</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>=== Array Performance ===
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Name              Read(B/s)      Write(B/s)     Reads/s    Writes/s   Read_Lat(us)  Write_Lat(us)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>flashblade-prod   8.2GB          3.1GB          125000     45000      487           612
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>=== Filesystem Performance ===
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Name              Throughput(B/s) IOPS           Latency(us)
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>data-warehouse    2.8GB           98000          521
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>archive-nfs       1.2GB           42000          687
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>backup-tier2      890MB           31000          743
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>temp-scratch      456MB           18000          892
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>...
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>=== S3 Bucket Performance ===
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Bucket            Read(B/s)      Write(B/s)     GET_Lat(us)  PUT_Lat(us)
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ml-training       1.5GB          780MB          2100         2800
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>logs-archive      340MB          120MB          3400         4200
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>=== Network Interfaces ===
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Name              Speed          Status         Throughput(B/s)
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>eth0              100Gbps        up             8.9GB
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>eth1              100Gbps        up             7.2GB
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>eth2              100Gbps        up             6.8GB
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>eth3              100Gbps        up             5.1GB
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>purefb: command not found</code></strong> — Ensure the Pure Storage CLI is installed and the <code>purefb</code> binary is in your PATH, or source the Pure SDK environment setup script.
+<strong><code>Error: Authentication failed</code></strong> — Verify your Pure FlashBlade credentials are configured via <code>purefb login</code> or check that your API token environment variable is set correctly.
+<strong><code>Error: No filesystems found</code></strong> — Confirm that filesystems exist on the array and your user account has read permissions; use <code>purefb fs list</code> without filters to verify connectivity.</p>
+</div>
 <p><strong>Common performance root causes:</strong></p>
 <table>
 <thead>
@@ -8325,24 +8476,44 @@ FlashBlade diagnostic commands: check array health and active alerts with purefb
 </table>
 <hr />
 <h2 id="step-6-generate-diagnostic-bundle-for-pure-support">Step 6 — Generate diagnostic bundle for Pure support<a class="headerlink" href="#step-6-generate-diagnostic-bundle-for-pure-support" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate and upload diagnostic bundle (requires phone-home to be active)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>support<span class="w"> </span>diag
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># This sends the diagnostic bundle to Pure Storage automatically via phone-home</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirmation: &quot;Diagnostic information sent to Pure Storage support&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># If phone-home is not active, the bundle is saved locally</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Contact Pure Support to get the bundle download path</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># What to include in the Pure Support case:</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># - Array name and serial number: purefb array list</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># - Purity//FB version: purefb array list (Version field)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># - Blade health: purefb blade list (full output)</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># - Hardware health: purefb hardware list (full output)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># - Active alerts: purefb alert list (full output)</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># - Filesystem or bucket details (if data-access related)</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># - NFS mount options from affected clients: mount | grep nfs</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># - Symptom description, start time, and business impact</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Generate and upload diagnostic bundle (requires phone-home to be active)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>support<span class="w"> </span>diag
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># This sends the diagnostic bundle to Pure Storage automatically via phone-home</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Confirmation: &quot;Diagnostic information sent to Pure Storage support&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># If phone-home is not active, the bundle is saved locally</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Contact Pure Support to get the bundle download path</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># What to include in the Pure Support case:</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># - Array name and serial number: purefb array list</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># - Purity//FB version: purefb array list (Version field)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># - Blade health: purefb blade list (full output)</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># - Hardware health: purefb hardware list (full output)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># - Active alerts: purefb alert list (full output)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># - Filesystem or bucket details (if data-access related)</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># - NFS mount options from affected clients: mount | grep nfs</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># - Symptom description, start time, and business impact</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Diagnostic bundle generation initiated...
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Gathering system information from array fb-prod-01...
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Collecting blade health data...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Collecting hardware telemetry...
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Collecting alert logs...
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Bundle size: 247.3 MB
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Diagnostic information sent to Pure Storage support
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Case reference: CS-2024-0847291
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Phone-home delivery confirmed at 2024-01-15T14:32:18Z
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Array Name: fb-prod-01
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Serial Number: FB-7M2K9X4R1Q8V
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Purity//FB Version: 4.3.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Phone-home is not active on this array</code></strong> — Enable phone-home with <code>purefb phonehome --enable</code> or manually download the bundle from <code>/var/log/pure/diag/</code> and contact Pure Support with the file path.
+<strong><code>Error: Insufficient disk space for diagnostic bundle</code></strong> — Free at least 500 MB on the management network by removing old logs with <code>purefb support diag --clear-old</code> before retrying.
+<strong><code>Error: Connection timeout to Pure Storage support servers</code></strong> — Verify network connectivity and firewall rules allow HTTPS outbound on port 443 to <code>support.purestorage.com</code>, then retry the command.</p>
+</div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
@@ -8423,7 +8594,7 @@ FlashBlade diagnostic commands: check array health and active alerts with purefb
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:14:25 UTC"><span class="timeago" datetime="2026-06-29T06:14:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:14:25 UTC">2026-06-29</span>
   </span>
 
     

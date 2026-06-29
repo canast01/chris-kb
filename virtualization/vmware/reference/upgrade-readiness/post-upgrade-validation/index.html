@@ -9737,20 +9737,58 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w">                   </span><span class="c1"># Should show no active resync</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">    </span><span class="c1"># Should return nothing</span>
 </code></pre></div>
-<h2 id="nsx-validation-if-nsx-was-upgraded-or-touched">NSX Validation (if NSX was upgraded or touched)<a class="headerlink" href="#nsx-validation-if-nsx-was-upgraded-or-touched" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to NSX Manager</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w">        </span><span class="c1"># STABLE</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>services<span class="w">              </span><span class="c1"># All core services running</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>edge-clusters<span class="w">         </span><span class="c1"># All edge clusters healthy</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify edge BGP sessions</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">  </span><span class="c1"># All peers Established</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Resync Operations: 0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Object Health Status: All objects healthy
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VSAN Health: UNKNOWN</code></strong> — Ensure vSAN is enabled on the cluster and the host is connected to vCenter with proper licensing.
+<strong><code>Error: Unknown command or namespace</code></strong> — Verify the host is running ESXi 6.5 or later with vSAN enabled; older versions lack the <code>vsan debug</code> command set.</p>
+</div>
+<h2 id="nsx-validation-if-nsx-was-upgraded-or-touched">NSX Validation (if NSX was upgraded or touched)<a class="headerlink" href="#nsx-validation-if-nsx-was-upgraded-or-touched" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to NSX Manager</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w">        </span><span class="c1"># STABLE</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>services<span class="w">              </span><span class="c1"># All core services running</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>get<span class="w"> </span>edge-clusters<span class="w">         </span><span class="c1"># All edge clusters healthy</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify edge BGP sessions</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">  </span><span class="c1"># All peers Established</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cluster status: STABLE
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  cluster_id: 5a8c2e91-b3f4-4d2a-9e1c-7f3b6a2d8c1e
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  node_count: 3
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  leader: nsx-mgr-01.lab.local
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  health: GREEN
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>services:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  nsx-manager: running (uptime: 45d 12h)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  policy-engine: running (uptime: 45d 12h)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  messaging: running (uptime: 45d 12h)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  persistence: running (uptime: 45d 12h)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>edge-clusters:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  edge-cluster-01: HEALTHY (2/2 nodes active)
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  edge-cluster-02: HEALTHY (2/2 nodes active)
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>bgp neighbor summary:
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  Neighbor          State       Uptime
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  10.50.1.1         Established 42d 18h
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  10.50.1.2         Established 42d 18h
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  10.60.1.1         Established 41d 22h
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  10.60.1.2         Established 41d 22h
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: get</code></strong> — Ensure you are logged into NSX Manager CLI (ssh admin@<nsx-ip>) and not a standard Linux shell.
+<strong><code>cluster status: UNSTABLE</code></strong> — Investigate failed nodes with <code>get cluster nodes detail</code> and resolve node connectivity or service issues before upgrading.
+<strong><code>bgp neighbor summary: State DOWN or Idle</code></strong> — Verify BGP peer IP addresses and routing configuration with <code>get bgp neighbor &lt;peer-ip&gt; detail</code> before proceeding with upgrade.</p>
+</div>
 <h2 id="vxrail-validation-if-applicable">VxRail Validation (if applicable)<a class="headerlink" href="#vxrail-validation-if-applicable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VxRail Manager</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Log in to VxRail Manager → Cluster → Health</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># All nodes should show &quot;Healthy&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># VxRail version should reflect the upgrade target</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># VxRail Manager</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Log in to VxRail Manager → Cluster → Health</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># All nodes should show &quot;Healthy&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># VxRail version should reflect the upgrade target</span>
 </code></pre></div>
 <h2 id="aria-suite-validation-if-lcm-managed">Aria Suite Validation (if LCM-managed)<a class="headerlink" href="#aria-suite-validation-if-lcm-managed" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9759,8 +9797,8 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 <li>[ ] Log in to Aria Automation: service health page shows all services running</li>
 </ul>
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check if backup jobs can still enumerate VMs (Veeam example)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Run a &quot;Quick Backup&quot; on a non-critical VM to confirm backup proxy connectivity is intact</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check if backup jobs can still enumerate VMs (Veeam example)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Run a &quot;Quick Backup&quot; on a non-critical VM to confirm backup proxy connectivity is intact</span>
 </code></pre></div>
 <ul>
 <li>[ ] Trigger a test backup of one non-critical VM — confirm it completes successfully</li>
@@ -9768,14 +9806,14 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 </ul>
 <h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
 <p>Capture post-upgrade versions for CMDB update and future reference:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Capture all component versions</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">host_versions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># vCenter version</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">About</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># NSX version (SSH to NSX Manager)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># get version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Capture all component versions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">host_versions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># vCenter version</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">About</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># NSX version (SSH to NSX Manager)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># get version</span>
 </code></pre></div>
 <h2 id="change-record-closure">Change Record Closure<a class="headerlink" href="#change-record-closure" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9812,7 +9850,7 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 03:02:12 UTC"><span class="timeago" datetime="2026-06-28T03:02:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 03:02:12 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

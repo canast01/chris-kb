@@ -9074,6 +9074,31 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># View configured role mappings</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user/role<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The operation completed successfully.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ID                          | Name                                                    | Protocol | Port | Base DN
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>--------------------------- | ------------------------------------------------------- | -------- | ---- | -------------------------
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ldap_1                      | 10.10.10.10                                             | ldaps    | 636  | DC=corp,DC=local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>LDAP Verification Result: SUCCESS
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Server: 10.10.10.10:636
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Bind DN: CN=unity-bind,OU=Service Accounts,DC=corp,DC=local
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Connection Status: Connected
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Response Time: 142ms
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>The operation completed successfully.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ID      | Name                                        | Role           | Type
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>------- | ------------------------------------------- | -------------- | ---------
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>role_1  | CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local | storageadmin   | ldap_group
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>---OUTPUT---
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: LDAP server is not reachable at 10.10.10.10:636</code></strong> — Verify the LDAP server IP address and port are correct, and that network connectivity exists from the Unity array to the LDAP server.
+<strong><code>Error: Failed to bind with DN 'CN=unity-bind,OU=Service Accounts,DC=corp,DC=local': Invalid credentials</code></strong> — Confirm the bind account password is correct and the account has permission to query the directory.
+<strong><code>Error: Base DN 'DC=corp,DC=local' does not exist on LDAP server</code></strong> — Verify the Base DN matches your Active Directory structure by querying the LDAP server directly with ldapsearch.</p>
+</div>
 <h3 id="protocol-recommendations">Protocol Recommendations<a class="headerlink" href="#protocol-recommendations" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9104,23 +9129,52 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 <p>Use LDAPS (LDAP over TLS, port 636) or StartTLS for all directory service connections. Plain LDAP transmits bind credentials unencrypted and must not be used on shared networks.</p>
 <h2 id="nas-server-active-directory-domain-join">NAS Server — Active Directory Domain Join<a class="headerlink" href="#nas-server-active-directory-domain-join" title="Permanent link">&para;</a></h2>
 <p>Each NAS server on Unity must be individually joined to the Active Directory domain to enable CIFS/SMB authentication (Kerberos and NTLM). The NAS server creates a computer account in AD at the specified OU.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Join a NAS server to Active Directory</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-domain<span class="w"> </span>corp.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-username<span class="w"> </span>&lt;domain_admin_or_delegated_user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;DomainPassword1!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-organizationalUnit<span class="w"> </span><span class="s2">&quot;OU=Storage Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify current AD join status for a NAS server</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>show
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Show detailed AD configuration for a specific NAS server</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>-id<span class="w"> </span>&lt;ad_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Unjoin from Active Directory (before decommissioning a NAS server)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>-id<span class="w"> </span>&lt;ad_id&gt;<span class="w"> </span>delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Join a NAS server to Active Directory</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-domain<span class="w"> </span>corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-username<span class="w"> </span>&lt;domain_admin_or_delegated_user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;DomainPassword1!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-organizationalUnit<span class="w"> </span><span class="s2">&quot;OU=Storage Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Verify current AD join status for a NAS server</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>show
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Show detailed AD configuration for a specific NAS server</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>-id<span class="w"> </span>&lt;ad_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Unjoin from Active Directory (before decommissioning a NAS server)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ad<span class="w"> </span>-id<span class="w"> </span>&lt;ad_id&gt;<span class="w"> </span>delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Creating Active Directory configuration...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>The operation completed successfully.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ID: ad_1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Domain: corp.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Server: nas_1
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Status: Joined
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Join Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ID    | Domain      | Server | Status | Join Time
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>------|-------------|--------|--------|------------------------
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ad_1  | corp.local  | nas_1  | Joined | 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ID: ad_1
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Domain: corp.local
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Server: nas_1
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Status: Joined
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Join Time: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Organizational Unit: OU=Storage Servers,DC=corp,DC=local
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Last Sync: 2024-01-15 15:45:22 UTC
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Trust Account: NAS_1$
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>The operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The specified domain controller is unreachable</code></strong> — Verify network connectivity to the domain controller and ensure the NAS server can resolve the domain name via DNS.
+<strong><code>Error: Authentication failed for user &lt;domain_admin_or_delegated_user&gt;</code></strong> — Confirm the domain admin credentials are correct and the account has sufficient permissions to join computers to the specified organizational unit.
+<strong><code>Error: The organizational unit does not exist</code></strong> — Verify the OU path syntax is correct (use <code>dsquery ou</code> on a domain controller to confirm the OU exists).</p>
+</div>
 <h3 id="pre-requisites-for-ad-domain-join">Pre-requisites for AD Domain Join<a class="headerlink" href="#pre-requisites-for-ad-domain-join" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The NAS server must have a file interface IP configured and reachable.</li>
@@ -9128,67 +9182,153 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 <li>The bind account must have permission to create computer objects in the specified OU. A dedicated delegated account with only <code>Create Computer Objects</code> in the target OU is preferred over using a Domain Admin account.</li>
 <li>Time synchronisation: the NAS server must have NTP configured and synchronised. Kerberos requires clock skew to be under 5 minutes between the NAS server and domain controllers.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm NTP is configured on the array</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/ntp<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm DNS resolves the AD domain from the NAS server perspective</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># (done via NAS server network configuration — check DNS settings on the NAS server)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/net/nas/if<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dns
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm NTP is configured on the array</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/ntp<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm DNS resolves the AD domain from the NAS server perspective</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># (done via NAS server network configuration — check DNS settings on the NAS server)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/net/nas/if<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dns
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NTP Server:             ntp.company.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>NTP Server IP:          10.20.30.40
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>NTP Status:             SYNCHRONIZED
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Last Update:            2024-01-15 14:32:18
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Stratum:                2
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Offset (ms):            0.234
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>DNS Server 1:           10.20.1.10
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>DNS Server 2:           10.20.1.11
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>DNS Domain:             corp.internal
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>DNS Search Domains:     corp.internal, subsidiary.local
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused</code></strong> — Verify the Unity array IP address is correct and the management interface is reachable with <code>ping &lt;ip&gt;</code>.
+<strong><code>Error: Authentication failed for user 'admin'</code></strong> — Confirm the admin credentials are correct and the user has sufficient privileges to query system settings.</p>
+</div>
 <h2 id="nas-server-nfs-with-kerberos">NAS Server — NFS with Kerberos<a class="headerlink" href="#nas-server-nfs-with-kerberos" title="Permanent link">&para;</a></h2>
 <p>NFS v4 with Kerberos provides strong identity verification for NFS mounts — the NFS client is authenticated by the KDC (AD domain controller) before access is granted. This is required for environments where NFS traffic crosses untrusted networks or where NFS root squash alone is insufficient.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure Kerberos on an NFS export</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># First: ensure the NAS server is joined to AD (see above)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Then create the NFS export with Kerberos security</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i<span class="w">    </span><span class="c1"># Options: sys, krb5, krb5i, krb5p</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Security flavour reference:</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># sys    — AUTH_SYS (UID/GID mapping, no Kerberos)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># krb5   — Kerberos authentication only (no integrity or privacy)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># krb5i  — Kerberos authentication + data integrity (recommended)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># krb5p  — Kerberos authentication + integrity + encryption (highest security)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure Kerberos on an NFS export</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># First: ensure the NAS server is joined to AD (see above)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Then create the NFS export with Kerberos security</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/nfs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-fs<span class="w"> </span>&lt;fs_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-path<span class="w"> </span>/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-securityFlavors<span class="w"> </span>krb5i<span class="w">    </span><span class="c1"># Options: sys, krb5, krb5i, krb5p</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Security flavour reference:</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># sys    — AUTH_SYS (UID/GID mapping, no Kerberos)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># krb5   — Kerberos authentication only (no integrity or privacy)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># krb5i  — Kerberos authentication + data integrity (recommended)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># krb5p  — Kerberos authentication + integrity + encryption (highest security)</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Creation of NFS export started.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>NFS export created successfully.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Export path: /
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Security flavors: krb5i
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>NAS Server ID: nas_001
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>File System ID: fs_pool_01
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Export ID: nfs_export_12847
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Status: Ready
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Kerberos realm: CORP.LOCAL
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: NAS server &lt;nas_id&gt; is not joined to Active Directory</code></strong> — Verify the NAS server is domain-joined by running <code>uemcli -d &lt;ip&gt; -u admin /sys/domain show</code> and join to AD if needed before creating the export.</p>
+<p><strong><code>Error: File system &lt;fs_id&gt; does not exist or is not accessible</code></strong> — Confirm the file system exists and is online using <code>uemcli -d &lt;ip&gt; -u admin /stor/pool show -pool &lt;pool_id&gt;</code> before attempting export creation.</p>
+<p><strong><code>Error: Kerberos keytab not configured on NAS server</code></strong> — Generate and import the Kerberos keytab on the NAS server using <code>uemcli -d &lt;ip&gt; -u admin /prot/nfs/krb5 create -server &lt;nas_id&gt; -realm &lt;realm_name&gt;</code> before creating the export.</p>
+</div>
 <p>On the Linux NFS client side, install <code>krb5-user</code> and <code>nfs-common</code>, configure <code>/etc/krb5.conf</code> to point to the AD domain controllers, and obtain a Kerberos TGT (<code>kinit</code>) before mounting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux client — mount NFS export with Kerberos integrity</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span><span class="nv">sec</span><span class="o">=</span>krb5i<span class="w"> </span>&lt;nas-ip&gt;:/export/path<span class="w"> </span>/mnt/target
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux client — mount NFS export with Kerberos integrity</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span><span class="nv">sec</span><span class="o">=</span>krb5i<span class="w"> </span>&lt;nas-ip&gt;:/export/path<span class="w"> </span>/mnt/target
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount.nfs4: access denied by server while mounting &lt;nas-ip&gt;:/export/path</code></strong> — Verify the NFS export permissions on the Dell Unity array and ensure the client's Kerberos principal is listed in the export ACL.
+<strong><code>mount.nfs4: No such file or directory</code></strong> — Confirm the export path exists on the NAS and the mount target directory (<code>/mnt/target</code>) exists on the client with <code>mkdir -p /mnt/target</code>.
+<strong><code>GSSAPI: Credentials have expired</code></strong> — Renew the Kerberos ticket on the client using <code>kinit &lt;username&gt;</code> before attempting the mount.</p>
+</div>
 <h2 id="ldap-for-nfs-uidgid-mapping">LDAP for NFS UID/GID Mapping<a class="headerlink" href="#ldap-for-nfs-uidgid-mapping" title="Permanent link">&para;</a></h2>
 <p>For NFS environments without Active Directory, Unity NAS servers can use LDAP for UID/GID resolution. This maps NFS client UIDs and GIDs to directory service identities.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure LDAP on a NAS server for UID/GID mapping</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;ldap_server_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">389</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-baseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>-bindDN<span class="w"> </span><span class="s2">&quot;CN=nfs-bind,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>-bindPasswd<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Show NAS LDAP configuration</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ldap<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure LDAP on a NAS server for UID/GID mapping</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-server<span class="w"> </span>&lt;nas_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;ldap_server_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">389</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-baseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>-bindDN<span class="w"> </span><span class="s2">&quot;CN=nfs-bind,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>-bindPasswd<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Show NAS LDAP configuration</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/ldap<span class="w"> </span>show
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>The operation completed successfully.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>LDAP Server Configuration:
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Server ID: nas-01
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Address: 192.168.10.50
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Port: 389
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Base DN: DC=corp,DC=local
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  Bind DN: CN=nfs-bind,OU=Service Accounts,DC=corp,DC=local
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  Status: Connected
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  Last Sync: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  User Search Filter: (objectClass=user)
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  Group Search Filter: (objectClass=group)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: LDAP connection failed - Invalid credentials for bind DN</code></strong> — Verify the bind account password is correct and the account has not been locked out in Active Directory.
+<strong><code>Error: Cannot resolve LDAP server hostname &lt;ldap_server_ip&gt;</code></strong> — Confirm the LDAP server IP is reachable from the NAS and DNS/network routing is properly configured.
+<strong><code>Error: Base DN "DC=corp,DC=local" does not exist on LDAP server</code></strong> — Validate the Base DN path matches your Active Directory structure by querying LDAP directly or checking AD Sites and Services.</p>
+</div>
 <h2 id="local-authentication">Local Authentication<a class="headerlink" href="#local-authentication" title="Permanent link">&para;</a></h2>
 <p>For environments without LDAP or AD, Unity management uses local accounts. Local authentication is always available as a fallback even when directory services are configured.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all local users</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Create a local user</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-name<span class="w"> </span>operator01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-role<span class="w"> </span>operator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;InitialPassword1!&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Change a user&#39;s password</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>-name<span class="w"> </span>operator01<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;NewPassword2@&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># View configured roles</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List all local users</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>show
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Create a local user</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>-name<span class="w"> </span>operator01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>-role<span class="w"> </span>operator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;InitialPassword1!&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Change a user&#39;s password</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>-name<span class="w"> </span>operator01<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span>-passwd<span class="w"> </span><span class="s2">&quot;NewPassword2@&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># View configured roles</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>User Name                          Role
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>==================================================
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>admin                              administrator
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>service                            service
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>operator01                         operator
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>guest                              guest
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>User Name:                         operator01
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Role:                              operator
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Password Expiration Days:          90
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Account Locked:                    No
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Last Password Change:              2024-01-15 14:32:18
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Created:                           2024-01-15 14:31:45
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>User Name:                         admin
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Role:                              administrator
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Password Expiration Days:          90
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Account Locked:                    No
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Last Password Change:              2023-12-20 09:15:22
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Created:                           2023-06-10 11:22:33
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Authentication failed</code></strong> — Verify the management IP address is correct and the admin account credentials are valid.
+<strong><code>User 'operator01' already exists</code></strong> — Use a different username or delete the existing user with <code>/user -name operator01 delete</code> before recreating it.
+<strong><code>Password does not meet complexity requirements</code></strong> — Ensure the password contains at least 8 characters with uppercase, lowercase, numbers, and special characters.</p>
+</div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>Unity OE records all administrative actions — login, logout, configuration changes, and alert acknowledgements — in an audit log available in the Unisphere event viewer and via syslog.</p>
 <h3 id="viewing-the-audit-log-unisphere">Viewing the Audit Log (Unisphere)<a class="headerlink" href="#viewing-the-audit-log-unisphere" title="Permanent link">&para;</a></h3>
@@ -9197,37 +9337,101 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 - <strong>Time range</strong>: narrow to the window of interest.
 - <strong>User</strong>: filter by a specific user account to review their actions.</p>
 <h3 id="audit-log-via-uemcli">Audit Log via UEMCLI<a class="headerlink" href="#audit-log-via-uemcli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View recent audit events</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/audit<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># View all system events including authentication</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/syslog<span class="w"> </span>show
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Filter alerts by severity for security events</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prac/alert<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;auth\|login\|fail&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View recent audit events</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/audit<span class="w"> </span>show
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># View all system events including authentication</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/event/syslog<span class="w"> </span>show
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Filter alerts by severity for security events</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prac/alert<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;auth\|login\|fail&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Event ID: 12847
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Timestamp: 2024-01-15 14:32:18
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>User: admin
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Action: Login
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Source IP: 192.168.1.105
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Status: Success
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Event ID: 12846
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Timestamp: 2024-01-15 14:28:52
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>User: service_account
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Action: Configuration Change
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Source IP: 10.0.50.22
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Status: Success
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Event ID: 12845
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Timestamp: 2024-01-15 13:45:10
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>User: readonly_user
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Action: Login
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Source IP: 192.168.1.110
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Status: Success
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>---
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Alert ID: SEC-4521
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>Severity: Warning
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>Message: Failed login attempt detected
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Timestamp: 2024-01-15 12:15:33
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Source: 192.168.1.200
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>Alert ID: SEC-4519
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>Severity: Critical
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>Message: Authentication service restart
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Timestamp: 2024-01-15 11:02:47
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>Source: Local
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>Alert ID: SEC-4518
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>Severity: Warning
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>Message: Login timeout threshold exceeded
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>Timestamp: 2024-01-15 10:30:15
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>Source: 192.168.1.205
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: Connection refused on &lt;ip&gt;:443</code></strong> — Verify the storage array IP is reachable and the management interface is responding with <code>ping &lt;ip&gt;</code> and check firewall rules.
+<strong><code>Error: Authentication failed for user admin</code></strong> — Confirm the admin credentials are correct and the account is not locked by running <code>uemcli -d &lt;ip&gt; -u admin /user show</code>.
+<strong><code>Error: Command not found: uemcli</code></strong> — Install the EMC CLI tools or verify the installation path is in your system PATH environment variable.</p>
+</div>
 <h3 id="syslog-forwarding-for-siem-integration">Syslog Forwarding for SIEM Integration<a class="headerlink" href="#syslog-forwarding-for-siem-integration" title="Permanent link">&para;</a></h3>
 <p>Forward Unity audit events to a central SIEM for long-term retention, correlation, and alerting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a syslog destination</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;syslog_server_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-protocol<span class="w"> </span>udp<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-facility<span class="w"> </span>local0
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Create a TLS-encrypted syslog destination (recommended)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;syslog_server_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>-protocol<span class="w"> </span>tls<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">6514</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>-facility<span class="w"> </span>local0
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># List configured syslog destinations</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>show
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Delete a syslog destination</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>-id<span class="w"> </span>&lt;syslog_id&gt;<span class="w"> </span>delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Create a syslog destination</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;syslog_server_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span>-protocol<span class="w"> </span>udp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span>-facility<span class="w"> </span>local0
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Create a TLS-encrypted syslog destination (recommended)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span>-addr<span class="w"> </span>&lt;syslog_server_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span>-protocol<span class="w"> </span>tls<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span>-port<span class="w"> </span><span class="m">6514</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span>-facility<span class="w"> </span>local0
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># List configured syslog destinations</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>show
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># Delete a syslog destination</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/syslog<span class="w"> </span>-id<span class="w"> </span>&lt;syslog_id&gt;<span class="w"> </span>delete
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>You are required to enter a password for admin:
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Creating syslog destination...
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>The operation completed successfully.
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Creating syslog destination...
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>The operation completed successfully.
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>ID    Address          Protocol    Port    Facility    Status
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>1     192.168.50.10    udp         514     local0      OK
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>2     192.168.50.11    tls         6514    local0      OK
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Deleting syslog destination ID 1...
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>The operation completed successfully.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: The syslog server address is invalid or unreachable</code></strong> — Verify the syslog server IP address is correct and reachable from the storage array's management network.
+<strong><code>Error: Authentication failed for user admin</code></strong> — Ensure the admin password is correct and the user account has sufficient privileges to modify syslog settings.
+<strong><code>Error: Syslog ID &lt;syslog_id&gt; not found</code></strong> — Run <code>uemcli -d &lt;ip&gt; -u admin /sys/syslog show</code> to list valid syslog destination IDs before attempting deletion.</p>
+</div>
 <h3 id="audit-retention-requirements">Audit Retention Requirements<a class="headerlink" href="#audit-retention-requirements" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9259,26 +9463,101 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 <h2 id="rest-api-authentication">REST API Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
 <p>The Unisphere REST API supports two authentication methods:</p>
 <p><strong>Basic Authentication</strong> — Suitable for single requests:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># GET with Basic auth (authenticate on every request)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/system/instances&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># GET with Basic auth (authenticate on every request)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/system/instances&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;content&quot;: [
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    {
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>      &quot;id&quot;: &quot;0&quot;,
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>      &quot;name&quot;: &quot;UNITY-SP-001&quot;,
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>      &quot;model&quot;: &quot;Unity 380&quot;,
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>      &quot;serialNumber&quot;: &quot;APM00123456789&quot;,
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>      &quot;softwareVersion&quot;: &quot;5.1.0.0.5.007&quot;,
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>      &quot;health&quot;: {
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>        &quot;value&quot;: 0,
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>        &quot;descriptionIds&quot;: [
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>          &quot;ALRT_SYSTEM_OK&quot;
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>        ]
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>      },
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>      &quot;currentPower&quot;: 2847,
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>      &quot;avgPower&quot;: 2756,
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>      &quot;isEULAAccepted&quot;: true,
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>      &quot;isUpgradeComplete&quot;: true
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    }
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>  ]
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's not removed).
+<strong><code>curl: (401) Unauthorized</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; use <code>-u admin:$(echo -n 'password' | jq -sRr @uri)</code> for special chars.
+<strong><code>curl: (7) Failed to connect to &lt;sp-ip&gt; port 443: Connection refused</code></strong> — Confirm the Storage Processor IP is correct and reachable; test with <code>ping &lt;sp-ip&gt;</code> or verify the management network is configured.</p>
+</div>
 <p><strong>Session Authentication</strong> — Recommended for scripts making multiple requests:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Step 1 — authenticate and save session cookie</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-c<span class="w"> </span>cookie.txt<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/loginSessionInfo/instances&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Step 2 — extract CSRF token from cookie and use for subsequent requests</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">CSRF</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s2">&quot;EMC-CSRF-TOKEN&quot;</span><span class="w"> </span>cookie.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $7}&#39;</span><span class="k">)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>curl<span class="w"> </span>-b<span class="w"> </span>cookie.txt<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;EMC-CSRF-TOKEN: </span><span class="nv">$CSRF</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/pool/instances?fields=name,sizeTotal,health&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Step 1 — authenticate and save session cookie</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-c<span class="w"> </span>cookie.txt<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/loginSessionInfo/instances&quot;</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Step 2 — extract CSRF token from cookie and use for subsequent requests</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nv">CSRF</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s2">&quot;EMC-CSRF-TOKEN&quot;</span><span class="w"> </span>cookie.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $7}&#39;</span><span class="k">)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>curl<span class="w"> </span>-b<span class="w"> </span>cookie.txt<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;X-EMC-REST-CLIENT: true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;EMC-CSRF-TOKEN: </span><span class="nv">$CSRF</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">    </span><span class="s2">&quot;https://&lt;sp-ip&gt;/api/types/pool/instances?fields=name,sizeTotal,health&quot;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;content&quot;: [
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    {
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>      &quot;id&quot;: &quot;0&quot;,
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      &quot;username&quot;: &quot;admin&quot;,
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>      &quot;isPasswordChangeRequired&quot;: false,
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>      &quot;sessionId&quot;: &quot;5f8c3a2b-9e1d-47f6-8b2c-1a4d6e9f3c5b&quot;,
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>      &quot;creationTime&quot;: 1699564823000,
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>      &quot;expirationTime&quot;: 1699568423000
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    }
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  ]
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>}
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>{
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;content&quot;: [
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    {
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>      &quot;id&quot;: &quot;pool_1&quot;,
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>      &quot;name&quot;: &quot;SAS_Pool_01&quot;,
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>      &quot;sizeTotal&quot;: 109951162777600,
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>      &quot;health&quot;: {
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>        &quot;value&quot;: 0
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>      }
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    },
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>    {
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>      &quot;id&quot;: &quot;pool_2&quot;,
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>      &quot;name&quot;: &quot;NL_SAS_Pool_02&quot;,
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>      &quot;sizeTotal&quot;: 219902325555200,
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>      &quot;health&quot;: {
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>        &quot;value&quot;: 0
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>      }
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>    },
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>    {
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>      &quot;id&quot;: &quot;pool_3&quot;,
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>      &quot;name&quot;: &quot;SSD_Pool_03&quot;,
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>      &quot;sizeTotal&quot;: 54975581388800,
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>      &quot;health&quot;: {
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>        &quot;value&quot;: 0
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>      }
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>    }
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>  ]
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
+<strong><code>grep: EMC-CSRF-TOKEN: No such file or directory</code></strong> — Verify the cookie.txt file was created successfully in Step 1 by checking <code>cat cookie.txt</code> and confirm the login credentials are correct.
+<strong><code>"error": "The CSRF token is invalid or expired"</code></strong> — Ensure the CSRF token extraction uses the correct field position with <code>awk '{print $7}'</code> and re-run Step 1 to obtain a fresh token if the session has expired.</p>
+</div>
 <h2 id="rest-api-sessions-expire-after-the-configured-session-timeout-default-30-minutes-of-inactivity-service-accounts-used-for-automation-should-use-session-authentication-to-avoid-repeated-credential-transmission">REST API sessions expire after the configured session timeout (default 30 minutes of inactivity). Service accounts used for automation should use session authentication to avoid repeated credential transmission.<a class="headerlink" href="#rest-api-sessions-expire-after-the-configured-session-timeout-default-30-minutes-of-inactivity-service-accounts-used-for-automation-should-use-session-authentication-to-avoid-repeated-credential-transmission" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9313,7 +9592,7 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:59:39 UTC"><span class="timeago" datetime="2026-06-29T04:59:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:59:39 UTC">2026-06-29</span>
   </span>
 
     

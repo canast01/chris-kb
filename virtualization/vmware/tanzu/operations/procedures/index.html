@@ -9626,192 +9626,325 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s">  name: team-alpha</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s">EOF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Logged in successfully to https://supervisor.example.local as administrator@vsphere.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Current context: supervisor.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>namespace/team-alpha created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host</code></strong> — Verify the Supervisor Cluster hostname/IP is correct and resolvable from your network, or add it to <code>/etc/hosts</code>.
+<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Confirm the vSphere credentials are correct and the user has appropriate permissions on the Supervisor Cluster.
+<strong><code>error: namespaces "team-alpha" is forbidden: User "administrator@vsphere.local" cannot create resource "namespaces"</code></strong> — Grant the user the required vSphere role (e.g., Namespace Creator) on the Supervisor Cluster via vCenter.</p>
+</div>
 <p>Configure namespace in vCenter UI:
 - Storage: assign storage policy
 - VM Class: assign allowed VM classes for TKG clusters
 - Resource Limits: CPU, memory, storage quotas</p>
 <hr />
 <h2 id="deploy-a-tkg-workload-cluster-in-a-namespace">Deploy a TKG Workload Cluster in a Namespace<a class="headerlink" href="#deploy-a-tkg-workload-cluster-in-a-namespace" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Switch to Supervisor namespace context</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Apply TanzuKubernetesCluster manifest</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">apiVersion: run.tanzu.vmware.com/v1alpha3</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">kind: TanzuKubernetesCluster</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">metadata:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">  name: team-alpha-cluster</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">  namespace: team-alpha</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">spec:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">  topology:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">    controlPlane:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">      replicas: 3</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">      vmClass: best-effort-medium</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">      storageClass: vsan-default</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">    nodePools:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s">    - name: worker-pool</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s">      replicas: 3</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s">      vmClass: best-effort-large</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s">      storageClass: vsan-default</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s">  distribution:</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s">    version: v1.26.5</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="s">EOF</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Watch cluster provisioning</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>team-alpha<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Switch to Supervisor namespace context</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Apply TanzuKubernetesCluster manifest</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">apiVersion: run.tanzu.vmware.com/v1alpha3</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">kind: TanzuKubernetesCluster</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">metadata:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">  name: team-alpha-cluster</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">  namespace: team-alpha</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">spec:</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">  topology:</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">    controlPlane:</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">      replicas: 3</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">      vmClass: best-effort-medium</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">      storageClass: vsan-default</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">    nodePools:</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s">    - name: worker-pool</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">      replicas: 3</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s">      vmClass: best-effort-large</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s">      storageClass: vsan-default</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s">  distribution:</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s">    version: v1.26.5</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="s">EOF</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1"># Watch cluster provisioning</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>team-alpha<span class="w"> </span>-w
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Switched to context &quot;team-alpha&quot;.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tanzukubernetescluster.run.tanzu.vmware.com/team-alpha-cluster created
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>NAME                   STATUS   READY   REPLICAS   UPDATED   UNAVAILABLE   AGE
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>team-alpha-cluster     Pending  0/3     0          0         3             0s
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>team-alpha-cluster     Pending  0/3     0          0         3             5s
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>team-alpha-cluster     Provisioning  1/3     1          1         2             15s
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>team-alpha-cluster     Provisioning  2/3     2          2         1             45s
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>team-alpha-cluster     Running  3/3     3          3         0             2m18s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: context "team-alpha" does not exist</code></strong> — Verify the context name with <code>kubectl config get-contexts</code> and ensure the Supervisor cluster is configured.
+<strong><code>error: resource mapping not found for name: "team-alpha-cluster" namespace: "team-alpha" with kind TanzuKubernetesCluster</code></strong> — Confirm Tanzu Kubernetes Grid is installed on the Supervisor cluster and the CRD is available via <code>kubectl get crd | grep tanzukubernetescluster</code>.
+<strong><code>error: namespaces "team-alpha" not found</code></strong> — Create the namespace first with <code>kubectl create namespace team-alpha</code> before applying the TanzuKubernetesCluster manifest.</p>
+</div>
 <hr />
 <h2 id="grant-namespace-access-to-a-team">Grant Namespace Access to a Team<a class="headerlink" href="#grant-namespace-access-to-a-team" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get kubeconfig for the workload cluster</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>https://supervisor.example.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>team-alpha-cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>team-alpha
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Switch to workload cluster context</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha-cluster
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Create RBAC for team</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">kind: RoleBinding</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">metadata:</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">  name: team-alpha-developers</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">  namespace: default</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">roleRef:</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s">  apiGroup: rbac.authorization.k8s.io</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">  kind: ClusterRole</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s">  name: edit</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s">subjects:</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s">- kind: Group</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s">  name: team-alpha-devs  # OIDC group from Pinniped</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="s">  apiGroup: rbac.authorization.k8s.io</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get kubeconfig for the workload cluster</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>https://supervisor.example.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>team-alpha-cluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>team-alpha
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Switch to workload cluster context</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha-cluster
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Create RBAC for team</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s">kind: RoleBinding</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s">metadata:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s">  name: team-alpha-developers</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s">  namespace: default</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s">roleRef:</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s">  apiGroup: rbac.authorization.k8s.io</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s">  kind: ClusterRole</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s">  name: edit</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s">subjects:</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s">- kind: Group</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s">  name: team-alpha-devs  # OIDC group from Pinniped</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s">  apiGroup: rbac.authorization.k8s.io</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s">EOF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Logged in successfully to supervisor.example.local as administrator@vsphere.local
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Switched to context &quot;team-alpha-cluster&quot;.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>rolebinding.rbac.authorization.k8s.io/team-alpha-developers created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Unable to connect to the supervisor cluster at https://supervisor.example.local</code></strong> — Verify the supervisor endpoint is reachable and the hostname resolves correctly with <code>nslookup supervisor.example.local</code>.
+<strong><code>error: invalid credentials provided</code></strong> — Confirm the vSphere credentials are correct and the user has permission to access the Tanzu Kubernetes cluster in that namespace.
+<strong><code>error: the server doesn't have a resource type "tanzukubernetesclusters"</code></strong> — Ensure the Tanzu Kubernetes Grid extension is installed on the vSphere Supervisor Cluster and the workload cluster exists in the specified namespace.</p>
+</div>
 <hr />
 <h2 id="configure-harbor-project-with-vulnerability-scanning">Configure Harbor Project with Vulnerability Scanning<a class="headerlink" href="#configure-harbor-project-with-vulnerability-scanning" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create project via Harbor API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;project_name&quot;: &quot;team-alpha&quot;,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;public&quot;: false,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;metadata&quot;: {</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;auto_scan&quot;: &quot;true&quot;,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">      &quot;prevent_vul&quot;: &quot;true&quot;,</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      &quot;severity&quot;: &quot;high&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">    }</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Create user membership in project</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects/team-alpha/members&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">    &quot;role_id&quot;: 2,</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">    &quot;member_group&quot;: {&quot;group_name&quot;: &quot;team-alpha-devs&quot;, &quot;group_type&quot;: 1}</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create project via Harbor API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;project_name&quot;: &quot;team-alpha&quot;,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">    &quot;public&quot;: false,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">    &quot;metadata&quot;: {</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">      &quot;auto_scan&quot;: &quot;true&quot;,</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">      &quot;prevent_vul&quot;: &quot;true&quot;,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">      &quot;severity&quot;: &quot;high&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s1">    }</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Create user membership in project</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects/team-alpha/members&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s1">    &quot;role_id&quot;: 2,</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s1">    &quot;member_group&quot;: {&quot;group_name&quot;: &quot;team-alpha-devs&quot;, &quot;group_type&quot;: 1}</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{&quot;project_id&quot;:123,&quot;project_name&quot;:&quot;team-alpha&quot;,&quot;public&quot;:false,&quot;creation_time&quot;:&quot;2024-01-15T09:42:33.456Z&quot;,&quot;update_time&quot;:&quot;2024-01-15T09:42:33.456Z&quot;,&quot;current_user_role_id&quot;:1,&quot;current_user_role_name&quot;:&quot;projectAdmin&quot;,&quot;repo_count&quot;:0,&quot;metadata&quot;:{&quot;auto_scan&quot;:&quot;true&quot;,&quot;prevent_vul&quot;:&quot;true&quot;,&quot;severity&quot;:&quot;high&quot;}}
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>{&quot;id&quot;:456,&quot;project_id&quot;:123,&quot;entity_name&quot;:&quot;team-alpha-devs&quot;,&quot;entity_type&quot;:&quot;group&quot;,&quot;role_id&quot;:2,&quot;access_level&quot;:&quot;developer&quot;,&quot;creation_time&quot;:&quot;2024-01-15T09:42:45.123Z&quot;,&quot;update_time&quot;:&quot;2024-01-15T09:42:45.123Z&quot;}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the Harbor CA certificate into your system trust store.
+<strong><code>{"errors":[{"code":"CONFLICT","message":"project team-alpha already exists"}]}</code></strong> — The project name already exists in Harbor; use a different project name or delete the existing project first.
+<strong><code>{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}</code></strong> — Ensure the admin user credentials are correct and the user has project admin role permissions.</p>
+</div>
 <hr />
 <h2 id="configure-pull-through-cache-in-harbor">Configure Pull-Through Cache in Harbor<a class="headerlink" href="#configure-pull-through-cache-in-harbor" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="l l-Scalar l-Scalar-Plain">Harbor UI → Administration → Registries → New Endpoint</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Provider</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Docker Hub</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-hub-proxy</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">URL</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hub.docker.com</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Verify SSL</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="l l-Scalar l-Scalar-Plain">Projects → New Project</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dockerhub-cache</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Access Level</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Public (or Private if restricting)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enable</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pull-through cache → Docker Hub endpoint</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="l l-Scalar l-Scalar-Plain">Harbor UI → Administration → Registries → New Endpoint</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Provider</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Docker Hub</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-hub-proxy</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">URL</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hub.docker.com</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Verify SSL</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="l l-Scalar l-Scalar-Plain">Projects → New Project</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dockerhub-cache</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Access Level</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Public (or Private if restricting)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enable</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pull-through cache → Docker Hub endpoint</span>
 </code></pre></div>
 <p>Configure nodes to pull from Harbor instead of Docker Hub directly by setting imagePullPolicy and image names to use <code>harbor.example.local/dockerhub-cache/</code> prefix.</p>
 <hr />
 <h2 id="deploy-application-via-helm">Deploy Application via Helm<a class="headerlink" href="#deploy-application-via-helm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha-cluster
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Add Helm repo</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>bitnami<span class="w"> </span>https://charts.bitnami.com/bitnami
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>helm<span class="w"> </span>repo<span class="w"> </span>update
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Deploy with values override</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>helm<span class="w"> </span>install<span class="w"> </span>my-postgres<span class="w"> </span>bitnami/postgresql<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--namespace<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--set<span class="w"> </span>auth.postgresPassword<span class="o">=</span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--set<span class="w"> </span>primary.persistence.storageClass<span class="o">=</span>vsan-default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--set<span class="w"> </span>primary.persistence.size<span class="o">=</span>50Gi
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Verify</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>helm<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span>production
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>production
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>team-alpha-cluster
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Add Helm repo</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>bitnami<span class="w"> </span>https://charts.bitnami.com/bitnami
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>helm<span class="w"> </span>repo<span class="w"> </span>update
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Deploy with values override</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>helm<span class="w"> </span>install<span class="w"> </span>my-postgres<span class="w"> </span>bitnami/postgresql<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--namespace<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--set<span class="w"> </span>auth.postgresPassword<span class="o">=</span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>--set<span class="w"> </span>primary.persistence.storageClass<span class="o">=</span>vsan-default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>--set<span class="w"> </span>primary.persistence.size<span class="o">=</span>50Gi
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Verify</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>helm<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span>production
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>production
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Switched to context &quot;team-alpha-cluster&quot;.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>&quot;bitnami&quot; has been added to your repositories
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Hang tight while we grab the latest from your chart repositories...
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>...Successfully got an update from the &quot;bitnami&quot; chart repository
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Update Complete. ⎈ Happy Helming!
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>my-postgres     production      1               2024-01-15 14:32:18.456789012 +0000 UTC deployed       postgresql-13.2.24      15.6
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>my-postgres-0                            1/1     Running   0          2m14s
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>my-postgres-read-0                       1/1     Running   0          2m8s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: release name "my-postgres" already exists</code></strong> — Use <code>helm upgrade</code> instead of <code>helm install</code>, or delete the existing release with <code>helm uninstall my-postgres -n production</code> first.
+<strong><code>Error: namespace "production" not found</code></strong> — Remove the <code>--create-namespace</code> flag if the namespace must be pre-created, or ensure your RBAC permissions allow namespace creation.
+<strong><code>Error: failed to create resource: storageclass.storage.k8s.io "vsan-default" not found</code></strong> — Verify the storage class exists with <code>kubectl get storageclass</code> and update the <code>--set primary.persistence.storageClass</code> value accordingly.</p>
+</div>
 <hr />
 <h2 id="configure-ingress-contour-httpproxy">Configure Ingress (Contour / HTTPProxy)<a class="headerlink" href="#configure-ingress-contour-httpproxy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create HTTPProxy for an application</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s">apiVersion: projectcontour.io/v1</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">kind: HTTPProxy</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s">metadata:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s">  name: myapp</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s">  namespace: production</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s">spec:</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s">  virtualhost:</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s">    fqdn: myapp.example.local</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s">    tls:</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s">      secretName: myapp-tls  # cert-manager managed TLS secret</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s">  routes:</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s">  - services:</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s">    - name: myapp-svc</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s">      port: 80</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create HTTPProxy for an application</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s">apiVersion: projectcontour.io/v1</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">kind: HTTPProxy</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">metadata:</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">  name: myapp</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">  namespace: production</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">spec:</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s">  virtualhost:</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">    fqdn: myapp.example.local</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">    tls:</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s">      secretName: myapp-tls  # cert-manager managed TLS secret</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s">  routes:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="s">  - services:</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="s">    - name: myapp-svc</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="s">      port: 80</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="s">EOF</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>httpproxy.projectcontour.io/myapp created
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: resource mapping not found for kind "HTTPProxy"... ensure CRDs are installed first</code></strong> — Install Contour CRDs with <code>kubectl apply -f https://projectcontour.io/quickstart/contour.yaml</code> or verify the projectcontour.io API group is registered via <code>kubectl api-resources | grep httpproxy</code>.
+<strong><code>The HTTPProxy "myapp" is invalid: spec.virtualhost.tls.secretName: Invalid value: "myapp-tls": secret not found</code></strong> — Create the TLS secret in the production namespace using <code>kubectl create secret tls myapp-tls --cert=cert.pem --key=key.pem -n production</code> or verify cert-manager has issued the certificate.
+<strong><code>error: unable to recognize stdin: no matches for kind "HTTPProxy" in version "projectcontour.io/v1"</code></strong> — Confirm Contour is installed in the cluster with <code>kubectl get deployment -n projectcontour</code> and that the API version matches your Contour version via <code>kubectl api-versions | grep projectcontour</code>.</p>
+</div>
 <hr />
 <h2 id="scale-worker-nodes">Scale Worker Nodes<a class="headerlink" href="#scale-worker-nodes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># For vSphere with Tanzu (TanzuKubernetesCluster):</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>team-alpha-cluster<span class="w"> </span>-n<span class="w"> </span>team-alpha
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Change: spec.topology.nodePools[0].replicas: 5 → 7</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># For standalone TKG:</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>scale<span class="w"> </span>team-alpha-cluster<span class="w"> </span>--worker-machine-count<span class="w"> </span><span class="m">7</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># For vSphere with Tanzu (TanzuKubernetesCluster):</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>team-alpha-cluster<span class="w"> </span>-n<span class="w"> </span>team-alpha
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Change: spec.topology.nodePools[0].replicas: 5 → 7</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># For standalone TKG:</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>scale<span class="w"> </span>team-alpha-cluster<span class="w"> </span>--worker-machine-count<span class="w"> </span><span class="m">7</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># kubectl edit tanzukubernetescluster team-alpha-cluster -n team-alpha
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>tanzukubernetescluster.run.tanzu.vmware.com/team-alpha-cluster edited
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a># tanzu cluster scale team-alpha-cluster --worker-machine-count 7
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Scaling cluster &#39;team-alpha-cluster&#39; to 7 worker nodes...
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Validating configuration...
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Updating cluster spec...
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Cluster scaling initiated. Current worker count: 5 → Target: 7
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Monitor progress with: tanzu cluster get team-alpha-cluster
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: tanzukubernetescluster.run.tanzu.vmware.com "team-alpha-cluster" not found</code></strong> — Verify the cluster name and namespace with <code>kubectl get tanzukubernetescluster -A</code>.
+<strong><code>Error: cluster 'team-alpha-cluster' not found in current management cluster context</code></strong> — Ensure you are logged into the correct management cluster context with <code>tanzu context list</code> and <code>tanzu context use &lt;context-name&gt;</code>.</p>
+</div>
 <hr />
 <h2 id="rotate-cluster-kubeconfig">Rotate Cluster Kubeconfig<a class="headerlink" href="#rotate-cluster-kubeconfig" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Get fresh kubeconfig for a TKG cluster</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>kubeconfig<span class="w"> </span>get<span class="w"> </span>my-cluster<span class="w"> </span>--admin
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or for Supervisor-managed cluster:</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>https://supervisor.example.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>--username<span class="w"> </span>user@corp.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>my-cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>my-namespace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Get fresh kubeconfig for a TKG cluster</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>kubeconfig<span class="w"> </span>get<span class="w"> </span>my-cluster<span class="w"> </span>--admin
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Or for Supervisor-managed cluster:</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span>--server<span class="w"> </span>https://supervisor.example.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>--username<span class="w"> </span>user@corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>--tanzu-kubernetes-cluster-name<span class="w"> </span>my-cluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span>--tanzu-kubernetes-cluster-namespace<span class="w"> </span>my-namespace
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Credentials of workload cluster &#39;my-cluster&#39; have been saved
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>You can now access the cluster by running &#39;kubectl cluster-info&#39;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Logged in successfully.
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>You have access to the following contexts:
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>   supervisor.example.local
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>   my-cluster
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>The current context is now &quot;my-cluster&quot;.
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>To view your current context, run: kubectl config current-context
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: cluster 'my-cluster' not found</code></strong> — Verify the cluster name matches output from <code>tanzu cluster list</code> and you have permissions to access it.
+<strong><code>Error: invalid credentials provided</code></strong> — Ensure your vSphere SSO credentials are correct and your user account has cluster admin role assigned in the Supervisor namespace.
+<strong><code>Unable to connect to supervisor.example.local</code></strong> — Confirm the Supervisor hostname/IP is correct, network connectivity exists, and the Supervisor cluster API is accessible on port 443.</p>
+</div>
 <p>Kubeconfigs embed a token with a limited TTL — users need to re-login after expiry.</p>
 <h2 id="upgrade-a-tkg-workload-cluster">Upgrade a TKG Workload Cluster<a class="headerlink" href="#upgrade-a-tkg-workload-cluster" title="Permanent link">&para;</a></h2>
 <p>Upgrading a TKG cluster updates the Kubernetes version on control plane and worker nodes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. List available Kubernetes versions in the Supervisor</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetesrelease
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Check current cluster version</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.distribution.version}&#39;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Edit the TKC to the new version</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Change: spec.distribution.version: v1.27.x+vmware.y-tkg.z</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># 4. Monitor the upgrade — control plane upgrades first, then workers</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-w
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Phase progresses: updating → running</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># 5. Verify all nodes are upgraded and Ready</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># All nodes should show the new Kubernetes version</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># 6. Verify system workloads are healthy</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>vmware-system-csi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. List available Kubernetes versions in the Supervisor</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetesrelease
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># 2. Check current cluster version</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.distribution.version}&#39;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># 3. Edit the TKC to the new version</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Change: spec.distribution.version: v1.27.x+vmware.y-tkg.z</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># 4. Monitor the upgrade — control plane upgrades first, then workers</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-w
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Phase progresses: updating → running</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="c1"># 5. Verify all nodes are upgraded and Ready</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="c1"># All nodes should show the new Kubernetes version</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="c1"># 6. Verify system workloads are healthy</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>kubectl<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;cluster-kubeconfig&gt;<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>vmware-system-csi
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>NAME                                           VERSION
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>v1.27.11+vmware.1-tkg.1                        True
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>v1.27.10+vmware.2-tkg.2                        True
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>v1.26.13+vmware.3-tkg.1                        True
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>v1.27.10+vmware.2-tkg.2
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>NAME       READY   UP-TO-DATE   UPDATED   UNAVAILABLE   PROGRESSING   AGE
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>my-cluster 3/3     3            3         0              0             45d
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>NAME                                STATUS   ROLES           AGE    VERSION
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>tkc-control-plane-7xk9m             Ready    control-plane   45d    v1.27.11+vmware.1-tkg.1
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>tkc-worker-pool-1-5d4c2-8xjqp       Ready    &lt;none&gt;          45d    v1.27.11+vmware.1-tkg.1
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>tkc-worker-pool-1-5d4c2-m2kpx       Ready    &lt;none&gt;          45d    v1.27.11+vmware.1-tkg.1
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>tkc-worker-pool-1-5d4c2-q7nlr       Ready    &lt;none&gt;          45d    v1.27.11+vmware.1-tkg.1
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>NAMESPACE           NAME                                      READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>kube-system         coredns-558bd4d5db-2xk8l                  1/1     Running   0          8m
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>kube-system         etcd-tkc-control-plane-7xk9m              1/1     Running   0          7m
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>kube-system         kube-apiserver-tkc-control-plane-7xk9m    1/1     Running   0          6m
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>kube-system         kube-controller-manager-tkc-cp-7xk9m      1/1     Running   0          5m
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>vmware-system-csi   vsphere-csi-controller-0                  7/7     Running   0          4m
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>vmware-system-csi   vsphere-csi-node-5d4c2                    3/3     Running   0          3m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "tanzukubernetesrelease"</code></strong> — Verify the Supervisor cluster is properly initialized and the Tanzu Kubernetes Grid extension is installed with <code>kubectl get crd | grep tanzukubernetesrelease</code>.
+<strong><code>error: the server doesn't have a resource type "tkc"</code></strong> — Ensure you are connected to the Supervisor cluster (not a workload cluster) and the TKC CRD is available with <code>kubectl api-resources | grep tanzukubernetescluster</code>.
+<strong><code>error: timed out waiting for the condition</code></strong> — Check node resource availability and vSphere storage capacity; monitor upgrade progress with <code>kubectl describe tkc my-cluster -n my-namespace</code> to identify stuck phases.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Do not skip Kubernetes minor versions</p>
 <p>TKG upgrade validation enforces sequential minor version upgrades. Skipping a version (e.g., 1.26 → 1.28) is unsupported and will leave the cluster in a broken state that requires VMware GSS to recover. If you are multiple versions behind, plan multiple sequential upgrade windows.</p>
@@ -9822,146 +9955,298 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 <p class="admonition-title">Irreversible — all cluster VMs and workloads are permanently destroyed</p>
 <p>Deleting the TanzuKubernetesCluster object triggers the Supervisor to remove all control plane and worker VMs from vCenter inventory. Any workloads still running in the cluster will be terminated. Any PVCs bound to CNS volumes will be deleted. If PVs were created with <code>reclaimPolicy: Delete</code>, the underlying vSAN volumes are also deleted. Confirm all workloads are migrated and all data is backed up before proceeding.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Drain workloads off the cluster first — notify application teams</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># 2. Delete the TanzuKubernetesCluster object</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># 3. Monitor deletion — Supervisor removes VMs from vCenter</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-w
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Cluster moves to Deleting phase; VMs removed from vCenter inventory</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># 4. Confirm namespace storage claims are released</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>my-namespace
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># All PVCs should be gone; verify no orphaned volumes in vSAN</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># 5. Clean up namespace if no longer needed</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>my-namespace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># 1. Drain workloads off the cluster first — notify application teams</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># 2. Delete the TanzuKubernetesCluster object</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>tkc<span class="w"> </span>my-cluster<span class="w"> </span>-n<span class="w"> </span>my-namespace
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># 3. Monitor deletion — Supervisor removes VMs from vCenter</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-w
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Cluster moves to Deleting phase; VMs removed from vCenter inventory</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># 4. Confirm namespace storage claims are released</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>my-namespace
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># All PVCs should be gone; verify no orphaned volumes in vSAN</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># 5. Clean up namespace if no longer needed</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>my-namespace
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>tkc.run.tanzu.vmware.com &quot;my-cluster&quot; deleted
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>NAME         PHASE      READY   TKR                    AGE
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>my-cluster   Deleting   False   v1.24.9---vmware.1-tkg.1   12m
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>my-cluster   Deleting   False   v1.24.9---vmware.1-tkg.1   12m
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>my-cluster   Deleting   False   v1.24.9---vmware.1-tkg.1   13m
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>(watch terminated after cluster removed from output)
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>No resources found in my-namespace namespace.
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>namespace &quot;my-namespace&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "tkc"</code></strong> — Verify the Tanzu Kubernetes Grid extension is installed on the Supervisor cluster with <code>kubectl get crds | grep tanzu</code>.
+<strong><code>Error from server (Conflict): Operation cannot be fulfilled on namespace "my-namespace": namespace has a finalizer [kubernetes]</code></strong> — Wait for all workloads and PVCs to fully drain before deleting the namespace, or manually remove the finalizer with <code>kubectl patch namespace my-namespace -p '{"metadata":{"finalizers":null}}'</code>.</p>
+</div>
 <p>Deletion is irreversible — confirm data backup and workload migration before deleting.</p>
 <h2 id="configure-resource-quotas-on-a-namespace">Configure Resource Quotas on a Namespace<a class="headerlink" href="#configure-resource-quotas-on-a-namespace" title="Permanent link">&para;</a></h2>
 <p>vSphere Namespaces support CPU, memory, and storage quotas enforced by the Supervisor.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Set resource quotas via kubectl (requires Supervisor admin)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>namespace<span class="w"> </span>my-namespace
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Or apply a patch:</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kubectl<span class="w"> </span>patch<span class="w"> </span>namespace<span class="w"> </span>my-namespace<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s1">  &quot;spec&quot;: {</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;resourceQuotas&quot;: [</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">      {</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">        &quot;requests&quot;: {&quot;memory&quot;: &quot;64Gi&quot;, &quot;cpu&quot;: &quot;16&quot;},</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">        &quot;limits&quot;: {&quot;memory&quot;: &quot;128Gi&quot;, &quot;cpu&quot;: &quot;32&quot;}</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">      }</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">    ],</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s1">    &quot;storagePolicies&quot;: [</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s1">      {&quot;policy&quot;: &quot;vSAN Default Storage Policy&quot;, &quot;limit&quot;: &quot;2Ti&quot;}</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="s1">    ]</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="s1">  }</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="s1">}&#39;</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># View current quota usage</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>namespace<span class="w"> </span>my-namespace
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># ResourceQuotaStatus shows used vs hard limits</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># Grant namespace-scoped storage quota override (vSphere UI)</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1"># Workload Management → Namespaces → [namespace] → Storage → Edit Limits</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Set resource quotas via kubectl (requires Supervisor admin)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>kubectl<span class="w"> </span>edit<span class="w"> </span>namespace<span class="w"> </span>my-namespace
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Or apply a patch:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>kubectl<span class="w"> </span>patch<span class="w"> </span>namespace<span class="w"> </span>my-namespace<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="s1">  &quot;spec&quot;: {</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="s1">    &quot;resourceQuotas&quot;: [</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="s1">      {</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="s1">        &quot;requests&quot;: {&quot;memory&quot;: &quot;64Gi&quot;, &quot;cpu&quot;: &quot;16&quot;},</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="s1">        &quot;limits&quot;: {&quot;memory&quot;: &quot;128Gi&quot;, &quot;cpu&quot;: &quot;32&quot;}</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="s1">      }</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="s1">    ],</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="s1">    &quot;storagePolicies&quot;: [</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="s1">      {&quot;policy&quot;: &quot;vSAN Default Storage Policy&quot;, &quot;limit&quot;: &quot;2Ti&quot;}</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="s1">    ]</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="s1">  }</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="s1">}&#39;</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="c1"># View current quota usage</span>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>namespace<span class="w"> </span>my-namespace
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="c1"># ResourceQuotaStatus shows used vs hard limits</span>
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1"># Grant namespace-scoped storage quota override (vSphere UI)</span>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="c1"># Workload Management → Namespaces → [namespace] → Storage → Edit Limits</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>namespace/my-namespace patched
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>NAME            STATUS   AGE
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>my-namespace    Active   45d
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Name:         my-namespace
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>Labels:       &lt;none&gt;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Annotations:  &lt;none&gt;
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>Status:       Active
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>ResourceQuotas:
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  Name:                   my-namespace-quota
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>  Resource                Requests          Limits
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>  --------                --------          ------
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>  memory                  32Gi/64Gi         96Gi/128Gi
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>  cpu                     8/16              24/32
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>StoragePolicies:
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>  Name:                   vSAN Default Storage Policy
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>  Used                    1.2Ti/2Ti
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>  Status:                 Active
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to recognize "": no matches for kind "ResourceQuota" in version "v1"</code></strong> — Ensure you're patching the namespace object directly with <code>spec.resourceQuotas</code> syntax supported by your Tanzu version; verify with <code>kubectl api-resources | grep quota</code>.
+<strong><code>Error from server (Forbidden): namespaces "my-namespace" is forbidden: User "user@example.com" does not have permission to patch namespaces</code></strong> — Request Supervisor cluster admin privileges or have an admin apply the patch on your behalf.
+<strong><code>error: the server doesn't have a resource type "storagePolicies"</code></strong> — Storage policy limits are managed through the vSphere UI under Workload Management → Namespaces, not via kubectl patch; remove the <code>storagePolicies</code> section from the patch command.</p>
+</div>
 <h2 id="backup-and-restore-a-tkg-cluster-with-velero">Backup and Restore a TKG Cluster with Velero<a class="headerlink" href="#backup-and-restore-a-tkg-cluster-with-velero" title="Permanent link">&para;</a></h2>
 <p>Velero backs up Kubernetes resources and persistent volumes to object storage.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Install Velero with vSphere plugin (run once per cluster)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>velero<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--provider<span class="w"> </span>aws<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--plugins<span class="w"> </span>velero/velero-plugin-for-aws:v1.8.0,vspheresaas/velero-plugin-for-vsphere:v1.5.0<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>--bucket<span class="w"> </span>velero-backups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>--secret-file<span class="w"> </span>./credentials-velero<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>--backup-location-config<span class="w"> </span><span class="nv">region</span><span class="o">=</span>minio,s3ForcePathStyle<span class="o">=</span>true,s3Url<span class="o">=</span>http://minio.example.local:9000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>--use-volume-snapshots<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>--features<span class="o">=</span>EnableCSIVolumeSnapshots
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># 2. Create a backup</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>velero<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span>my-cluster-backup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span>--include-namespaces<span class="w"> </span>app-namespace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span>--wait
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># 3. Verify backup status</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>velero<span class="w"> </span>backup<span class="w"> </span>describe<span class="w"> </span>my-cluster-backup
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>velero<span class="w"> </span>backup<span class="w"> </span>logs<span class="w"> </span>my-cluster-backup
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="c1"># 4. Restore to same or new cluster</span>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>velero<span class="w"> </span>restore<span class="w"> </span>create<span class="w"> </span>--from-backup<span class="w"> </span>my-cluster-backup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">  </span>--include-namespaces<span class="w"> </span>app-namespace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">  </span>--wait
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="c1"># 5. Verify restore</span>
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>velero<span class="w"> </span>restore<span class="w"> </span>describe<span class="w"> </span>&lt;restore-name&gt;
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>app-namespace
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>app-namespace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Install Velero with vSphere plugin (run once per cluster)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>velero<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>--provider<span class="w"> </span>aws<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span>--plugins<span class="w"> </span>velero/velero-plugin-for-aws:v1.8.0,vspheresaas/velero-plugin-for-vsphere:v1.5.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span>--bucket<span class="w"> </span>velero-backups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span>--secret-file<span class="w"> </span>./credentials-velero<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">  </span>--backup-location-config<span class="w"> </span><span class="nv">region</span><span class="o">=</span>minio,s3ForcePathStyle<span class="o">=</span>true,s3Url<span class="o">=</span>http://minio.example.local:9000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">  </span>--use-volume-snapshots<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span>--features<span class="o">=</span>EnableCSIVolumeSnapshots
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># 2. Create a backup</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>velero<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span>my-cluster-backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">  </span>--include-namespaces<span class="w"> </span>app-namespace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">  </span>--wait
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="c1"># 3. Verify backup status</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>velero<span class="w"> </span>backup<span class="w"> </span>describe<span class="w"> </span>my-cluster-backup
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>velero<span class="w"> </span>backup<span class="w"> </span>logs<span class="w"> </span>my-cluster-backup
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="c1"># 4. Restore to same or new cluster</span>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>velero<span class="w"> </span>restore<span class="w"> </span>create<span class="w"> </span>--from-backup<span class="w"> </span>my-cluster-backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">  </span>--include-namespaces<span class="w"> </span>app-namespace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">  </span>--wait
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="c1"># 5. Verify restore</span>
+<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>velero<span class="w"> </span>restore<span class="w"> </span>describe<span class="w"> </span>&lt;restore-name&gt;
+<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>app-namespace
+<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>app-namespace
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Velero is installed and ready to be tested. See https://velero.io/docs/quickstart for next steps.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>velero                                  1/1     Running   0          45s
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>node-agent-abc12                        1/1     Running   0          42s
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>node-agent-def45                        1/1     Running   0          41s
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Backup request &quot;my-cluster-backup&quot; submitted successfully.
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>Waiting for backup to complete...
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>Backup completed with status: Completed
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>Name:         my-cluster-backup
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>Namespace:    velero
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>Status:       Completed
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>Started:      2024-01-15 14:32:10 +0000 UTC
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>Completed:    2024-01-15 14:35:22 +0000 UTC
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>Expiration:   2024-02-14 14:32:10 +0000 UTC
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>Total items backed up:  47
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>Items backed up:  47
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>Velero version:  v1.12.0
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>Restore request &quot;my-cluster-backup-20240115143532&quot; submitted successfully.
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>Waiting for restore to complete...
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>Restore completed with status: Completed
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>NAME                                    READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>app-deployment-5d8f9c2b4-7x9kl         1/1     Running   0          8s
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>app-deployment-5d8f9c2b4-m2pqr         1/1     Running   0           7s
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>cache-pod-8b4c6f1a9-9lmn2              1/1     Running   0          6s
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>NAME                    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>app-data-pvc            Bound    pvc-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6   50Gi       RWO            vsphere-sc     5s
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>backup-pvc              Bound    pvc-x9y8z7w6-v5u4-43t2-s1r0-q9p8o7n6m5l4   100Gi      RWO            vsphere-sc     4s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: error getting backup location: BackupStorageLocation default is not available</code></strong> — Verify the S3/MinIO credentials in the secret file and ensure the backup location is accessible with <code>velero backup-location get</code>.
+<strong><code>error: timed out waiting for backup to complete</code></strong> — Check cluster resources with <code>kubectl top nodes</code> and increase the wait timeout, or review Velero logs with <code>kubectl logs -n velero deployment/velero</code> for plugin failures.
+<strong><code>Error: error restoring PersistentVolumeClaim: error creating PersistentVolumeClaim: PersistentVolumeClaim "app-data-pvc" is invalid: spec.storageClassName: Invalid value</code></strong> — Ensure the storage class referenced in the backup exists on the target cluster, or use <code>velero restore create --modify-namespace-mappings</code> to remap storage classes.</p>
+</div>
 <h2 id="troubleshoot-node-notready">Troubleshoot Node NotReady<a class="headerlink" href="#troubleshoot-node-notready" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Identify NotReady node</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Look for: conditions, events, kubelet status</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># 2. SSH to the node (via jumpbox or kubectl debug)</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>kubectl<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>-it<span class="w"> </span>--image<span class="o">=</span>busybox
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># On node:</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Check kubelet service</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Check container runtime</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>systemctl<span class="w"> </span>status<span class="w"> </span>containerd
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>crictl<span class="w"> </span>ps
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Check disk pressure (common cause)</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>df<span class="w"> </span>-h
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># If disk pressure: remove unused images</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>crictl<span class="w"> </span>rmi<span class="w"> </span>--prune
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># 3. Check vSphere — confirm VM is powered on and has network</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Supervisor: kubectl get virtualmachine -n my-namespace</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Identify NotReady node</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Look for: conditions, events, kubelet status</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1"># 2. SSH to the node (via jumpbox or kubectl debug)</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>kubectl<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>-it<span class="w"> </span>--image<span class="o">=</span>busybox
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="c1"># On node:</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Check kubelet service</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>kubelet<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="c1"># Check container runtime</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>systemctl<span class="w"> </span>status<span class="w"> </span>containerd
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>crictl<span class="w"> </span>ps
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="c1"># Check disk pressure (common cause)</span>
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>df<span class="w"> </span>-h
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a><span class="c1"># If disk pressure: remove unused images</span>
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>crictl<span class="w"> </span>rmi<span class="w"> </span>--prune
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a><span class="c1"># 3. Check vSphere — confirm VM is powered on and has network</span>
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a><span class="c1"># Supervisor: kubectl get virtualmachine -n my-namespace</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>NAME                          STATUS   ROLES           AGE     VERSION
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>supervisor-control-plane-1    Ready    control-plane   45d     v1.27.5
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>worker-node-01                NotReady worker          12d     v1.27.5
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>worker-node-02                Ready    worker          12d     v1.27.5
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>● kubelet.service - kubelet: The Kubernetes Node Agent
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>     Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: enabled)
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>     Active: inactive (dead) since Thu 2024-01-18 14:32:15 UTC; 8min ago
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>     Process: 2847 ExecStart=/usr/bin/kubelet (code=exited, status=1/255)
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>Jan 18 14:32:14 worker-node-01 kubelet[2847]: E0118 14:32:14.521847    2847 server.go:302] &quot;Failed to load kubelet config file&quot; err=&quot;open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory&quot;
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>● containerd.service - containerd container runtime
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>     Loaded: loaded (/etc/systemd/system/containerd.service; enabled; vendor preset: enabled)
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>     Active: active (running) since Thu 2024-01-18 13:45:22 UTC; 27min ago
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>CONTAINER ID        IMAGE                                    STATE
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>a7f2c3e1b9d4       registry.tanzu.vmware.com/pause:3.6     Running
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>c2e8f1a3d5b7       registry.tanzu.vmware.com/coredns:1.9.3  Running
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>/dev/sda1       50G   48G  1.2G  98% /
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>/dev/sdb1      100G   45G   55G  45% /var/lib/containerd
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>Deleted 12 unused images
+<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>
+<a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a>NAME                    STATUS   POWERSTATE   AGE
+<a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>tanzu-worker-node-01    True     poweredOn    12d
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Failed to load kubelet config file: open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory</code></strong> — Restore the kubelet config from a backup or redeploy the node using the Tanzu CLI with <code>tanzu machine delete</code> and <code>tanzu machine create</code>.
+<strong><code>disk pressure detected: 98% used</code></strong> — Run <code>crictl rmi --prune</code> to remove unused images, or expand the root volume in vSphere and resize the filesystem with <code>growpart /dev/sda 1 &amp;&amp; resize2fs /dev/sda1</code>.
+<strong><code>Unable to connect to the server: dial tcp: lookup supervisor-control-plane-1: no such host</code></strong> — Verify DNS resolution on the node with <code>nslookup supervisor-control-plane-1</code> and check <code>/etc/resolv.conf</code> points to the correct cluster DNS server.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">--delete-emptydir-data causes data loss for pods using emptyDir volumes</p>
 <p>The <code>--delete-emptydir-data</code> flag silently deletes any data stored in emptyDir volumes on this node — including caches, temporary files, or any workload that incorrectly uses emptyDir for persistent state. Confirm no running pods rely on emptyDir before draining. This flag is only safe to use when you have confirmed all pods are stateless or all stateful pods have been rescheduled.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 4. Force node drain and delete if unrecoverable</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data<span class="w"> </span>--force
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># TKC controller will provision a replacement node automatically</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># 4. Force node drain and delete if unrecoverable</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data<span class="w"> </span>--force
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># TKC controller will provision a replacement node automatically</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>node/worker-node-03 cordoned
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>pod/nginx-deployment-7d4f8c6b9-2xk9l evicted
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>pod/redis-cache-5f8b9c2d-4m7p1 evicted
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>pod/logging-agent-ds-9k2m1 skipped
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Removed taint node.kubernetes.io/unschedulable:NoSchedule from node worker-node-03
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>node &quot;worker-node-03&quot; drained
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>node &quot;worker-node-03&quot; deleted
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>INFO: TKC controller detected node deletion, initiating replacement provisioning
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>INFO: New node worker-node-03-replacement provisioned with UUID: 550e8400-e29b-41d4-a716-446655440000
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to drain node "worker-node-03", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore)</code></strong> — Add the <code>--ignore-daemonsets</code> flag to the drain command to skip system pods.
+<strong><code>error: node "worker-node-03" not found</code></strong> — Verify the exact node name with <code>kubectl get nodes</code> before attempting deletion.
+<strong><code>error: timed out waiting for pod eviction after 5m0s</code></strong> — Increase the timeout with <code>--timeout=10m</code> or use <code>--force</code> to forcefully terminate stubborn pods.</p>
+</div>
 <h2 id="configure-persistent-storage-vsan-cnscsi">Configure Persistent Storage (vSAN CNS/CSI)<a class="headerlink" href="#configure-persistent-storage-vsan-cnscsi" title="Permanent link">&para;</a></h2>
 <p>TKG uses the vSphere CSI driver to provision persistent volumes backed by vSAN datastores.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Verify CSI driver is running</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>vmware-system-csi
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># All pods should be Running</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># 2. List available storage classes</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># vSAN storage classes are provisioned by Supervisor automatically</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># 3. Create a PVC using a vSAN storage class</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="s">apiVersion: v1</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="s">kind: PersistentVolumeClaim</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s">metadata:</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="s">  name: app-data</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="s">  namespace: app-namespace</span>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="s">spec:</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="s">  accessModes: [ReadWriteOnce]</span>
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="s">  resources:</span>
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="s">    requests:</span>
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="s">      storage: 50Gi</span>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="s">  storageClassName: wcpglobal-storage-profile</span>
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="s">EOF</span>
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="c1"># 4. Verify PVC is bound</span>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>app-data<span class="w"> </span>-n<span class="w"> </span>app-namespace
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="c1"># STATUS should be Bound; VOLUME shows the CNS volume ID</span>
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="c1"># 5. Check volume in vSAN (vCenter UI)</span>
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="c1"># vSAN → Container Volumes → confirm CNS volume listed with correct size and policy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># 1. Verify CSI driver is running</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>vmware-system-csi
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="c1"># All pods should be Running</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># 2. List available storage classes</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># vSAN storage classes are provisioned by Supervisor automatically</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># 3. Create a PVC using a vSAN storage class</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="s">kind: PersistentVolumeClaim</span>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="s">metadata:</span>
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="s">  name: app-data</span>
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a><span class="s">  namespace: app-namespace</span>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a><span class="s">spec:</span>
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a><span class="s">  accessModes: [ReadWriteOnce]</span>
+<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a><span class="s">  resources:</span>
+<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a><span class="s">    requests:</span>
+<a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a><span class="s">      storage: 50Gi</span>
+<a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a><span class="s">  storageClassName: wcpglobal-storage-profile</span>
+<a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a><span class="s">EOF</span>
+<a id="__codelineno-30-23" name="__codelineno-30-23" href="#__codelineno-30-23"></a>
+<a id="__codelineno-30-24" name="__codelineno-30-24" href="#__codelineno-30-24"></a><span class="c1"># 4. Verify PVC is bound</span>
+<a id="__codelineno-30-25" name="__codelineno-30-25" href="#__codelineno-30-25"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>app-data<span class="w"> </span>-n<span class="w"> </span>app-namespace
+<a id="__codelineno-30-26" name="__codelineno-30-26" href="#__codelineno-30-26"></a><span class="c1"># STATUS should be Bound; VOLUME shows the CNS volume ID</span>
+<a id="__codelineno-30-27" name="__codelineno-30-27" href="#__codelineno-30-27"></a>
+<a id="__codelineno-30-28" name="__codelineno-30-28" href="#__codelineno-30-28"></a><span class="c1"># 5. Check volume in vSAN (vCenter UI)</span>
+<a id="__codelineno-30-29" name="__codelineno-30-29" href="#__codelineno-30-29"></a><span class="c1"># vSAN → Container Volumes → confirm CNS volume listed with correct size and policy</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>NAME                                             READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>vsphere-csi-controller-6d8f4c7b9-2kxlm          3/3     Running   0          8d
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>vsphere-csi-node-4j5nm                          3/3     Running   0          8d
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>vsphere-csi-node-7p2qr                          3/3     Running   0          8d
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>vsphere-csi-node-9m8ks                          3/3     Running   0          8d
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>NAME                                PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE   AGE
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>wcpglobal-storage-profile           csi.vsphere.vmware.com  Delete          WaitForFirstConsumer 45d
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>vsan-default-storage-policy         csi.vsphere.vmware.com  Delete          WaitForFirstConsumer 45d
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>persistentvolumeclaim/app-data created
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                AGE
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>app-data   Bound    pvc-a7f2e1c9-3b44-11ed-9c4a-005056a12345   50Gi       RWO            wcpglobal-storage-profile   12s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "storageclass"</code></strong> — Verify you are connected to a Tanzu Supervisor cluster (not a guest cluster) with <code>kubectl cluster-info</code>.
+<strong><code>PersistentVolumeClaim does not exist</code></strong> — Ensure the namespace <code>app-namespace</code> exists by running <code>kubectl create namespace app-namespace</code> before applying the PVC.
+<strong><code>ProvisioningFailed: error getting credentials</code></strong> — Confirm the vSAN cluster has network connectivity to the Supervisor control plane and CSI driver credentials are valid in the <code>vmware-system-csi</code> namespace.</p>
+</div>
 <hr />
 <h2 id="enable-vsphere-with-tanzu-on-a-cluster-supervisor">Enable vSphere with Tanzu on a Cluster (Supervisor)<a class="headerlink" href="#enable-vsphere-with-tanzu-on-a-cluster-supervisor" title="Permanent link">&para;</a></h2>
 <p>This procedure activates the Tanzu Supervisor on a vSphere cluster, enabling it to host vSphere Namespaces and TKG workload clusters. This is the initial setup step — run once per cluster.</p>
@@ -9994,21 +10279,46 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </ol>
 <h3 id="step-2-monitor-enablement">Step 2 — Monitor Enablement<a class="headerlink" href="#step-2-monitor-enablement" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Monitor Enablement" src="../../../../../assets/tanzu-proc-step-2-monitor-enablement.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Monitor from vCenter → Workload Management → Supervisor</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Status progresses: Configuring → Running (typically 10–20 min)</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Or check via kubectl after the supervisor IP is reachable</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;supervisor-kubeconfig&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Monitor from vCenter → Workload Management → Supervisor</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># Status progresses: Configuring → Running (typically 10–20 min)</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Or check via kubectl after the supervisor IP is reachable</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>--kubeconfig<span class="w"> </span>&lt;supervisor-kubeconfig&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                  AGE
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>kube-dns                            ClusterIP      10.96.0.10       &lt;none&gt;        53/UDP,53/TCP            18m
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>kube-apiserver                      ClusterIP      10.96.0.1        &lt;none&gt;        443/TCP                  18m
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>etcd                                ClusterIP      10.96.0.13       &lt;none&gt;        2379/TCP                 18m
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>metrics-server                      ClusterIP      10.96.0.100      &lt;none&gt;        443/TCP                  17m
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>vmware-system-csi                   ClusterIP      10.96.1.50       &lt;none&gt;        443/TCP                  16m
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>wcp-webhook-service                 ClusterIP      10.96.2.75       &lt;none&gt;        443/TCP                  15m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Unable to connect to the server: dial tcp 192.168.1.200:6443: i/o timeout</code></strong> — Verify the supervisor cluster IP is reachable and the kubeconfig points to the correct supervisor endpoint; check network connectivity and firewall rules.
+<strong><code>error: the server doesn't have a resource type "svc"</code></strong> — Ensure you are using a valid kubeconfig for the supervisor cluster, not a guest cluster kubeconfig.
+<strong><code>error: open &lt;supervisor-kubeconfig&gt;: no such file or directory</code></strong> — Replace <code>&lt;supervisor-kubeconfig&gt;</code> with the actual path to your downloaded supervisor kubeconfig file from vCenter.</p>
+</div>
 <h3 id="step-3-download-the-supervisor-kubeconfig">Step 3 — Download the Supervisor kubeconfig<a class="headerlink" href="#step-3-download-the-supervisor-kubeconfig" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Download the Supervisor kubeconfig" src="../../../../../assets/tanzu-proc-step-3-download-the-supervisor-kubeconfig.svg" /></p>
 <ol>
 <li>vCenter → <strong>Workload Management → Supervisors → select the supervisor → Configure → Namespace → Download kubeconfig</strong></li>
 <li>Save as <code>supervisor.kubeconfig</code></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>--kubeconfig<span class="o">=</span>supervisor.kubeconfig<span class="w"> </span>get<span class="w"> </span>nodes
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Expect 3 Supervisor Control Plane nodes in Ready state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>kubectl<span class="w"> </span>--kubeconfig<span class="o">=</span>supervisor.kubeconfig<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1"># Expect 3 Supervisor Control Plane nodes in Ready state</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>NAME                                    STATUS   ROLES                  AGE   VERSION
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>supervisor-node-01.vmware.local         Ready    control-plane,master   45d   v1.27.11+vmware.2-fips.1
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>supervisor-node-02.vmware.local         Ready    control-plane,master   45d   v1.27.11+vmware.2-fips.1
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>supervisor-node-03.vmware.local         Ready    control-plane,master   45d   v1.27.11+vmware.2-fips.1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to access the server: dial tcp: lookup supervisor-node-01.vmware.local: no such host</code></strong> — Verify the kubeconfig file points to a valid Supervisor Cluster endpoint and DNS resolution is working from your admin machine.
+<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Re-authenticate to the Supervisor Cluster using <code>kubectl vsphere login</code> with valid vSphere credentials.
+<strong><code>NotReady</code></strong> — Check node health with <code>kubectl describe node &lt;node-name&gt;</code> and review kubelet logs on the affected Supervisor node for resource or networking issues.</p>
+</div>
 <h3 id="step-4-post-enablement-validation">Step 4 — Post-Enablement Validation<a class="headerlink" href="#step-4-post-enablement-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Post-Enablement Validation" src="../../../../../assets/tanzu-proc-step-4-post-enablement-validation.svg" /></p>
 <ul>
@@ -10023,64 +10333,110 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 <h3 id="kubernetes-networkpolicy-standard">Kubernetes NetworkPolicy (Standard)<a class="headerlink" href="#kubernetes-networkpolicy-standard" title="Permanent link">&para;</a></h3>
 <p><img alt="Kubernetes NetworkPolicy (Standard)" src="../../../../../assets/tanzu-proc-kubernetes-networkpolicy-standard.svg" /></p>
 <p>Kubernetes NetworkPolicy objects are namespace-scoped and select pods by label. They define allowed ingress and egress:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Allow only pods with app=backend to receive traffic from app=frontend on port 8080</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow-frontend-to-backend</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="w">        </span><span class="nt">matchLabels</span><span class="p">:</span>
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="w">          </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a><span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Allow only pods with app=backend to receive traffic from app=frontend on port 8080</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow-frontend-to-backend</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span>
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="w">        </span><span class="nt">matchLabels</span><span class="p">:</span>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a><span class="w">          </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>network-policy.yaml
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>network-policy.yaml
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>networkpolicy.networking.k8s.io/allow-ingress created
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>networkpolicy.networking.k8s.io/deny-egress created
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>NAME              POD-SELECTOR       AGE
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>allow-ingress     app=web            2m
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>deny-egress       app=database       2m
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>restrict-traffic  tier=backend       5m
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: error validating "network-policy.yaml": error validating data: ValidationError(NetworkPolicy.spec.ingress[0].from[0]): invalid type for io.k8s.api.networking.v1.NetworkPolicyPeer: got "string", expected "object"</code></strong> — Verify the YAML indentation and structure of the <code>from</code> field, ensuring it contains objects not strings.
+<strong><code>Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies" in API group "networking.k8s.io" in the namespace "prod"</code></strong> — Grant the service account or user the <code>create</code> permission for networkpolicies using a ClusterRole or Role binding.</p>
+</div>
 <h3 id="antrea-clusternetworkpolicy-cluster-wide-higher-priority">Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)<a class="headerlink" href="#antrea-clusternetworkpolicy-cluster-wide-higher-priority" title="Permanent link">&para;</a></h3>
 <p><img alt="Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)" src="../../../../../assets/tanzu-proc-antrea-clusternetworkpolicy-cluster-wide-higher-priority.svg" /></p>
 <p>Antrea ClusterNetworkPolicy (ACNP) applies cluster-wide and takes priority over namespace-scoped NetworkPolicy. Use for enforcing baseline security rules that namespace owners cannot override:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Deny all east-west traffic between namespaces unless explicitly allowed</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crd.antrea.io/v1alpha1</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterNetworkPolicy</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deny-cross-namespace-default</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nt">appliedTo</span><span class="p">:</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Drop</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">    </span><span class="nt">from</span><span class="p">:</span>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/metadata.name</span>
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NotIn</span>
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;kube-system&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;vmware-system-csi&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">    </span><span class="c1"># All cross-namespace traffic denied unless a lower-priority NetworkPolicy allows it</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Deny all east-west traffic between namespaces unless explicitly allowed</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crd.antrea.io/v1alpha1</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterNetworkPolicy</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deny-cross-namespace-default</span>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="w">  </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="w">  </span><span class="nt">appliedTo</span><span class="p">:</span>
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a><span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Drop</span>
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a><span class="w">    </span><span class="nt">from</span><span class="p">:</span>
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a><span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/metadata.name</span>
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NotIn</span>
+<a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;kube-system&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;vmware-system-csi&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a><span class="w">    </span><span class="c1"># All cross-namespace traffic denied unless a lower-priority NetworkPolicy allows it</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>cluster-network-policy.yaml
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>clusternetworkpolicy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>cluster-network-policy.yaml
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>clusternetworkpolicy
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>clusternetworkpolicy.networking.tanzu.vmware.com/default-deny created
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>NAME           AGE
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>default-deny   2s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: resource mapping not found for name: "clusternetworkpolicy" namespace: "" from "cluster-network-policy.yaml": no matches for kind "ClusterNetworkPolicy" in version "networking.tanzu.vmware.com/v1alpha1"</code></strong> — Ensure the Tanzu networking extension is installed on the cluster with <code>kubectl apply -f https://...tanzu-networking-extension.yaml</code>.
+<strong><code>The ClusterNetworkPolicy "default-deny" is invalid: spec.rules: Invalid value: []uint8(nil): rules must be specified</code></strong> — Add at least one ingress or egress rule to the spec.rules field in your YAML manifest.</p>
+</div>
 <h3 id="test-policy-enforcement">Test Policy Enforcement<a class="headerlink" href="#test-policy-enforcement" title="Permanent link">&para;</a></h3>
 <p><img alt="Test Policy Enforcement" src="../../../../../assets/tanzu-proc-test-policy-enforcement.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Verify policy is enforced: exec into the frontend pod and test connectivity</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prod<span class="w"> </span>-it<span class="w"> </span>&lt;frontend-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://backend-svc:8080<span class="w">   </span><span class="c1"># should succeed</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prod<span class="w"> </span>-it<span class="w"> </span>&lt;frontend-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://database-svc:5432<span class="w">  </span><span class="c1"># should fail if not allowed</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># Antrea provides a traceflow tool for debugging policy drops</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>kubectl<span class="w"> </span>antctl<span class="w"> </span>traceflow<span class="w"> </span>-S<span class="w"> </span>frontend-pod<span class="w"> </span>-D<span class="w"> </span>backend-pod<span class="w"> </span>-n<span class="w"> </span>prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Verify policy is enforced: exec into the frontend pod and test connectivity</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prod<span class="w"> </span>-it<span class="w"> </span>&lt;frontend-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://backend-svc:8080<span class="w">   </span><span class="c1"># should succeed</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prod<span class="w"> </span>-it<span class="w"> </span>&lt;frontend-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://database-svc:5432<span class="w">  </span><span class="c1"># should fail if not allowed</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="c1"># Antrea provides a traceflow tool for debugging policy drops</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>kubectl<span class="w"> </span>antctl<span class="w"> </span>traceflow<span class="w"> </span>-S<span class="w"> </span>frontend-pod<span class="w"> </span>-D<span class="w"> </span>backend-pod<span class="w"> </span>-n<span class="w"> </span>prod
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Defaulting container name to frontend-app.
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>pod/frontend-7d4c9f2b exec session started
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>&lt;!DOCTYPE html&gt;
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>&lt;html&gt;
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>&lt;head&gt;&lt;title&gt;200 OK&lt;/title&gt;&lt;/head&gt;
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>&lt;body&gt;Backend service responding&lt;/body&gt;
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>&lt;/html&gt;
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>command terminated with exit code 1
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>Defaulting container name to frontend-app.
+<a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a>pod/frontend-7d4c9f2b exec session started
+<a id="__codelineno-43-11" name="__codelineno-43-11" href="#__codelineno-43-11"></a>curl: (7) Failed to connect to database-svc port 5432: Connection refused
+<a id="__codelineno-43-12" name="__codelineno-43-12" href="#__codelineno-43-12"></a>
+<a id="__codelineno-43-13" name="__codelineno-43-13" href="#__codelineno-43-13"></a>Traceflow for frontend-pod -&gt; backend-pod (prod namespace):
+<a id="__codelineno-43-14" name="__codelineno-43-14" href="#__codelineno-43-14"></a>  Src: 10.244.1.15 (frontend-pod)
+<a id="__codelineno-43-15" name="__codelineno-43-15" href="#__codelineno-43-15"></a>  Dst: 10.244.2.8 (backend-pod)
+<a id="__codelineno-43-16" name="__codelineno-43-16" href="#__codelineno-43-16"></a>  Protocol: TCP/6
+<a id="__codelineno-43-17" name="__codelineno-43-17" href="#__codelineno-43-17"></a>  Phase: Forwarded
+<a id="__codelineno-43-18" name="__codelineno-43-18" href="#__codelineno-43-18"></a>  Action: ALLOWED
+<a id="__codelineno-43-19" name="__codelineno-43-19" href="#__codelineno-43-19"></a>  Timestamp: 2024-01-15T14:32:18Z
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: unable to upgrade connection: container not found ("frontend-app")</code></strong> — Specify the correct container name with <code>-c &lt;container-name&gt;</code> flag or verify the pod exists with <code>kubectl get pods -n prod</code>.
+<strong><code>error: unable to find "frontend-pod" in namespace "prod"</code></strong> — Use the full pod name from <code>kubectl get pods -n prod</code> instead of a partial name; traceflow requires exact pod identifiers.</p>
+</div>
 <hr />
 <h2 id="decommission-a-vsphere-namespace">Decommission a vSphere Namespace<a class="headerlink" href="#decommission-a-vsphere-namespace" title="Permanent link">&para;</a></h2>
 <p>Decommissioning a namespace removes all TKG clusters, PVCs, and Kubernetes objects within it. This is the correct method to fully clean up a namespace and release its IP/storage allocations.</p>
@@ -10091,24 +10447,57 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 <h3 id="step-1-delete-tkg-workload-clusters-first">Step 1 — Delete TKG Workload Clusters First<a class="headerlink" href="#step-1-delete-tkg-workload-clusters-first" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 1 — Delete TKG Workload Clusters First" src="../../../../../assets/tanzu-proc-step-1-delete-tkg-workload-clusters-first.svg" /></p>
 <p>Before deleting the namespace, explicitly delete all TKG clusters it contains:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># List clusters in the namespace</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Delete each cluster</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Wait for cluster deletion to complete (control plane VMs are deleted from vCenter)</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># When the namespace returns empty, clusters are gone</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># List clusters in the namespace</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Delete each cluster</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="c1"># Wait for cluster deletion to complete (control plane VMs are deleted from vCenter)</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tanzukubernetescluster<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="c1"># When the namespace returns empty, clusters are gone</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>NAME                    STATUS   READY   SEVERITY   REASON
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>prod-cluster-01         Ready    True    Normal     
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>staging-cluster-02      Ready    True    Normal     
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>dev-cluster-03          Ready    True    Normal     
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>tanzukubernetescluster.run.tanzu.vmware.com &quot;prod-cluster-01&quot; deleted
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>tanzukubernetescluster.run.tanzu.vmware.com &quot;staging-cluster-02&quot; deleted
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>tanzukubernetescluster.run.tanzu.vmware.com &quot;dev-cluster-03&quot; deleted
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>NAME                    STATUS           READY   SEVERITY   REASON
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>prod-cluster-01         Deleting         False   Warning    DeletionInProgress
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>staging-cluster-02      Deleting         False   Warning    DeletionInProgress
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>dev-cluster-03          Deleting         False   Warning    DeletionInProgress
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>(After 2-3 minutes)
+<a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>No resources found in default namespace.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "tanzukubernetescluster"</code></strong> — Verify the Tanzu operator is installed with <code>kubectl get deployment -n tanzu-system</code> and check your cluster has the correct API extensions.
+<strong><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></strong> — Confirm the namespace exists with <code>kubectl get ns</code> and use the correct namespace name in the <code>-n</code> flag.
+<strong><code>error: timed out waiting for the condition</code></strong> — If deletion hangs beyond 5 minutes, check vCenter for orphaned VMs and manually remove them, then retry the delete command.</p>
+</div>
 <h3 id="step-2-release-persistent-volumes">Step 2 — Release Persistent Volumes<a class="headerlink" href="#step-2-release-persistent-volumes" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Release Persistent Volumes" src="../../../../../assets/tanzu-proc-step-2-release-persistent-volumes.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># List PVCs in the namespace</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Delete PVCs — this triggers vSAN CNS volume deletion</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1"># List PVCs in the namespace</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="c1"># Delete PVCs — this triggers vSAN CNS volume deletion</span>
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>NAME                                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>tanzu-mysql-data-pvc                       Bound    pvc-a7f3c2e1-9b4d-4f8a-b2c9-1d5e8f9a0b1c   50Gi       RWO            vsan-default   45d
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>tanzu-etcd-backup-pvc                      Bound    pvc-b8g4d3f2-0c5e-5g9b-c3d0-2e6f9g0b1c2d   100Gi      RWO            vsan-default   32d
+<a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>tanzu-logging-pvc                          Bound    pvc-c9h5e4g3-1d6f-6h0c-d4e1-3f7g0h1c2d3e   20Gi       RWO            vsan-default   18d
+<a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>persistentvolumeclaim &quot;tanzu-mysql-data-pvc&quot; deleted
+<a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>persistentvolumeclaim &quot;tanzu-etcd-backup-pvc&quot; deleted
+<a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>persistentvolumeclaim &quot;tanzu-logging-pvc&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "pvc" in API group ""</code></strong> — Verify the cluster is running and <code>kubectl</code> is configured correctly with <code>kubectl cluster-info</code>.
+<strong><code>Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot delete resource "persistentvolumeclaims"</code></strong> — Ensure your service account or user has RBAC permissions to delete PVCs in the target namespace.</p>
+</div>
 <h3 id="step-3-delete-the-namespace-via-vcenter">Step 3 — Delete the Namespace via vCenter<a class="headerlink" href="#step-3-delete-the-namespace-via-vcenter" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Delete the Namespace via vCenter" src="../../../../../assets/tanzu-proc-step-3-delete-the-namespace-via-vcenter.svg" /></p>
 <ol>
@@ -10116,9 +10505,17 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 <li>vCenter deregisters the namespace from the Supervisor, removes network and storage allocations</li>
 <li>The namespace disappears from the Supervisor's namespace list</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Or via kubectl against the Supervisor</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>kubectl<span class="w"> </span>--kubeconfig<span class="o">=</span>supervisor.kubeconfig<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>&lt;namespace&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="c1"># Or via kubectl against the Supervisor</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>kubectl<span class="w"> </span>--kubeconfig<span class="o">=</span>supervisor.kubeconfig<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>namespace &quot;workload-prod&quot; deleted
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: the server doesn't have a resource type "namespace"</code></strong> — Verify the kubeconfig points to a valid Supervisor cluster and that your user has API server access.
+<strong><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></strong> — Confirm the namespace name is spelled correctly and exists before attempting deletion.
+<strong><code>error: unable to read client certificate ... (no such file or directory)</code></strong> — Ensure the supervisor.kubeconfig file path is correct and the certificate files it references are accessible.</p>
+</div>
 <h3 id="step-4-post-deletion-validation">Step 4 — Post-Deletion Validation<a class="headerlink" href="#step-4-post-deletion-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Post-Deletion Validation" src="../../../../../assets/tanzu-proc-step-4-post-deletion-validation.svg" /></p>
 <ul>
@@ -10163,7 +10560,7 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

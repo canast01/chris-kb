@@ -7863,123 +7863,458 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>dcnm-pm<span class="w">        </span><span class="c1"># performance manager only</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-events
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test SSH connectivity to a managed switch</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test SNMP v3 connectivity to a switch</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snmpget<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr.0
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Test if DCNM is receiving traps (capture for 30 seconds)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Starting DCNM services...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dcnm-server: starting...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dcnm-server started successfully (PID: 4827)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>dcnm-pm started (PID: 4831)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dcnm-events started (PID: 4835)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>dcnm-server: stopping...
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>dcnm-server stopped successfully
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dcnm-pm stopped
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dcnm-events stopped
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Restarting DCNM services...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dcnm-server: restarting...
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>dcnm-server restarted successfully (PID: 4901)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>dcnm-pm restarted (PID: 4905)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dcnm-events restarted (PID: 4909)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>DCNM Service Status:
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>dcnm-server          RUNNING    (PID: 4901, uptime: 2m 34s)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>dcnm-pm              RUNNING    (PID: 4905, uptime: 2m 32s)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>dcnm-events          RUNNING    (PID: 4909, uptime: 2m 30s)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>dcnm-db              RUNNING    (PID: 4913, uptime: 2m 28s)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>dcnm-server.service - Cisco DCNM Server
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>   Loaded: loaded (/etc/systemd/system/dcnm-server.service; enabled; vendor preset: disabled)
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>   Active: active (running) since Mon 2024-01-15 14:22:18 UTC; 45s ago
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>dcnm-pm.service - Cisco DCNM Performance Manager
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>   Loaded: loaded (/etc/systemd/system/dcnm-pm.service; enabled; vendor preset: disabled)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>   Active: inactive (dead) since Mon 2024-01-15 14:23:02 UTC; 2s ago
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>dcnm-events.service - Cisco DCNM Events Service
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>   Loaded: loaded (/etc/systemd/system/dcnm-events.service; enabled; vendor preset: disabled)
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>   Active: active (running) since Mon 2024-01-15 14:23:05 UTC; 1s ago
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check HA status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>dcnm-server: command not found</code></strong> — Verify the DCNM installation path is correct and add <code>/usr/local/cisco/dcm/dcnm/sbin</code> to your PATH or use the full path.
+<strong><code>Failed to start dcnm-pm: Unit dcnm-pm.service not found</code></strong> — Ensure systemd service files are installed in <code>/etc/systemd/system/</code> by running <code>systemctl daemon-reload</code> after DCNM installation.
+<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or ensure your user account is in the <code>dcnm</code> group with <code>sudo usermod -aG dcnm $USER</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test SSH connectivity to a managed switch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Initiate manual failover (from active node — forces standby to become active)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-failover.sh
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check VIP status</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vip-address&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test SNMP v3 connectivity to a switch</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snmpget<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Test if DCNM is receiving traps (capture for 30 seconds)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Login with Basic Auth — returns session cookie</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logon<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;expirationTime&quot;: 86400}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;svc-automation:&lt;password&gt;&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># All subsequent calls use the session cookie</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DCNM</span><span class="o">=</span><span class="s2">&quot;https://dcnm-dc1.corp.example.com&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Logout</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/logout&quot;</span>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cisco Nexus Operating System (NX-OS) Software
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>TAC support: http://www.cisco.com/tac
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Copyright (c) 2002-2023, Cisco and/or its affiliates.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>All rights reserved.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Version 9.3(8), RELEASE SOFTWARE
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Build ID: 9.3.8.20230615_GEXE
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Compiled: 6/15/2023 14:22:15 UTC
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>SNMPv3 User-based Security Model (USM) authenticated and encrypted
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>sysDescr.0 = STRING: &quot;Cisco NX-OS Software, Nexus 9000 Series&quot;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>12:34:56.789012 IP 10.48.12.45.38291 &gt; 10.48.1.10.162: SNMP, length 156
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>12:34:57.234567 IP 10.48.12.46.39402 &gt; 10.48.1.10.162: SNMP, length 142
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>12:34:58.567890 IP 10.48.12.47.40513 &gt; 10.48.1.10.162: SNMP, length 178
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>12:34:59.901234 IP 10.48.12.48.41624 &gt; 10.48.1.10.162: SNMP, length 165
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>12:35:00.345678 IP 10.48.12.49.42735 &gt; 10.48.1.10.162: SNMP, length 151
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>20 packets captured, 20 packets received by filter, 0 packets dropped by kernel
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all switches</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Get switch detail by serial number</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches/&lt;serialNumber&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List all fabrics</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/fabric&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># List all VSANs</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/vsan&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the dcnm_mgmt user exists on the switch and SSH key or password is configured correctly in DCNM credentials.
+<strong><code>Timeout: No Response from &lt;switch-ip&gt;</code></strong> — Check network connectivity to the switch IP, verify SNMP v3 user credentials match the switch configuration, and confirm firewall allows UDP 161 outbound.
+<strong><code>tcpdump: eth0: No such device</code></strong> — Replace eth0 with the correct management interface name (use <code>ip link show</code> to list available interfaces).</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check HA status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Initiate manual failover (from active node — forces standby to become active)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-failover.sh
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check VIP status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vip-address&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get zone database for a fabric</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/zoning?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Get active zone set</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/zoning/activezonesets?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Get device aliases</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/devicealias?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>HA Cluster Status:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Active Node: dcnm-prod-01.example.com (192.168.100.45)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Standby Node: dcnm-prod-02.example.com (192.168.100.46)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Virtual IP (VIP): 192.168.100.50
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  HA Status: HEALTHY
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Last Heartbeat: 2024-01-15 14:32:18 UTC
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Replication Lag: 0.2 seconds
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Initiating failover from active node dcnm-prod-01...
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Stopping DCNM services on active node...
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Promoting standby node dcnm-prod-02 to active...
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Failover completed successfully in 8.3 seconds
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>New Active Node: dcnm-prod-02.example.com (192.168.100.46)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    inet 192.168.100.50/32 scope global secondary eth0
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>       valid_lft forever preferred_lft forever
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get all active alarms</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/alarms/activealarms&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Get events (last 100)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/events/allevents?size=100&amp;sortby=eventtime&amp;orderby=desc&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>HA Status: UNHEALTHY — Replication lag exceeds threshold</code></strong> — Check network connectivity between nodes and verify DCNM services are running on both nodes with <code>systemctl status dcnm</code>.
+<strong><code>ERROR: Cannot connect to standby node — Connection refused</code></strong> — Ensure the standby node is reachable and DCNM HA daemon is running; verify firewall rules allow port 7777 between cluster nodes.
+<strong><code>inet 192.168.100.50 not found</code></strong> — Confirm the VIP address is correct and the active node has successfully claimed the virtual IP after failover.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Login with Basic Auth — returns session cookie</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;expirationTime&quot;: 86400}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;svc-automation:&lt;password&gt;&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># All subsequent calls use the session cookie</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DCNM</span><span class="o">=</span><span class="s2">&quot;https://dcnm-dc1.corp.example.com&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Logout</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/logout&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List firmware images in DCNM repository</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/fm/image&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Initiate firmware upgrade on a switch</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/fm/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">    &quot;switchList&quot;: [&quot;&lt;serialNumber&gt;&quot;],</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">    &quot;imageName&quot;: &quot;m9200-s2ek9-mz.8.4.2a.bin&quot;,</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">    &quot;installMode&quot;: &quot;non-disruptive&quot;</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{&quot;StatusCode&quot;:200,&quot;StatusMessage&quot;:&quot;OK&quot;}
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>{&quot;StatusCode&quot;:200,&quot;StatusMessage&quot;:&quot;OK&quot;}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Count switches by management state</span>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
+<strong><code>{"StatusCode":401,"StatusMessage":"Unauthorized"}</code></strong> — Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use <code>curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"</code> if needed.
+<strong><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused</code></strong> — Confirm the DCNM hostname/IP is reachable and the REST API service is running with <code>curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all switches</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">import sys, json, collections</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">states = collections.Counter(s.get(&#39;managementState&#39;,&#39;unknown&#39;) for s in data)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">print(dict(states))</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Find all ISLs with errors</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/isl&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s2">for isl in data:</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s2">    if isl.get(&#39;crcErrors&#39;, 0) &gt; 0 or isl.get(&#39;lossOfSignal&#39;, 0) &gt; 0:</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s2">        print(isl.get(&#39;switchName&#39;), isl.get(&#39;port&#39;), </span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s2">              &#39;CRC:&#39;, isl.get(&#39;crcErrors&#39;), &#39;LOS:&#39;, isl.get(&#39;lossOfSignal&#39;))</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s2">&quot;</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Export switch inventory to CSV</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="s2">import sys, json, csv</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="s2">fields = [&#39;switchName&#39;,&#39;ipAddress&#39;,&#39;model&#39;,&#39;release&#39;,&#39;managementState&#39;,&#39;fabricName&#39;]</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="s2">w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction=&#39;ignore&#39;)</span>
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="s2">w.writeheader()</span>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="s2">for s in data: w.writerow(s)</span>
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>switches-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
-</code></pre></div></p>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Get switch detail by serial number</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches/&lt;serialNumber&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># List all fabrics</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/fabric&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># List all VSANs</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/vsan&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  {
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    &quot;switches&quot;: [
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      {
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        &quot;serialNumber&quot;: &quot;FOX2521ABCD&quot;,
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        &quot;switchName&quot;: &quot;switch-01&quot;,
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        &quot;switchRole&quot;: &quot;core&quot;,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        &quot;ipAddress&quot;: &quot;192.168.1.10&quot;,
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        &quot;fabricName&quot;: &quot;fabric-prod&quot;,
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        &quot;status&quot;: &quot;ok&quot;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      },
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      {
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        &quot;serialNumber&quot;: &quot;FOX2521WXYZ&quot;,
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        &quot;switchName&quot;: &quot;switch-02&quot;,
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        &quot;switchRole&quot;: &quot;leaf&quot;,
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        &quot;ipAddress&quot;: &quot;192.168.1.11&quot;,
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        &quot;fabricName&quot;: &quot;fabric-prod&quot;,
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        &quot;status&quot;: &quot;ok&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      }
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    ]
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  }
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>]
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>{
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>  &quot;serialNumber&quot;: &quot;FOX2521ABCD&quot;,
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>  &quot;switchName&quot;: &quot;switch-01&quot;,
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  &quot;model&quot;: &quot;Nexus 5696Q&quot;,
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>  &quot;firmware&quot;: &quot;8.4(2.55)&quot;,
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>  &quot;ipAddress&quot;: &quot;192.168.1.10&quot;,
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>  &quot;fabricName&quot;: &quot;fabric-prod&quot;,
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  &quot;switchRole&quot;: &quot;core&quot;,
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  &quot;status&quot;: &quot;ok&quot;,
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>  &quot;lastUpdated&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>}
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>[
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>  {
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>    &quot;fabricName&quot;: &quot;fabric-prod&quot;,
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>    &quot;fabricId&quot;: 1,
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>    &quot;fabricType&quot;: &quot;SAN&quot;,
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>    &quot;status&quot;: &quot;healthy&quot;,
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>    &quot;switchCount&quot;: 4
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>  },
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>  {
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>    &quot;fabricName&quot;: &quot;fabric-dr&quot;,
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>    &quot;fabricId&quot;: 2,
+<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a>    &quot;fabricType&quot;: &quot;SAN&quot;,
+<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a>    &quot;status&quot;: &quot;healthy&quot;,
+<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a>    &quot;switchCount&quot;: 2
+<a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a>  }
+<a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a>]
+<a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>
+<a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a>[
+<a id="__codelineno-9-54" name="__codelineno-9-54" href="#__codelineno-9-54"></a>  {
+<a id="__codelineno-9-55" name="__codelineno-9-55" href="#__codelineno-9-55"></a>    &quot;vsanId&quot;: 10,
+<a id="__codelineno-9-56" name="__codelineno-9-56" href="#__codelineno-9-56"></a>    &quot;vsanName&quot;: &quot;prod-vsan&quot;,
+<a id="__codelineno-9-57" name="__codelineno-9-57" href="#__codelineno-9-57"></a>    &quot;fabricName&quot;: &quot;fabric-prod&quot;,
+<a id="__codelineno-9-58" name="__codelineno-9-58" href="#__codelineno-9-58"></a>    &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-9-59" name="__codelineno-9-59" href="#__codelineno-9-59"></a>    &quot;memberCount&quot;: 4
+<a id="__codelineno-9-60" name="__codelineno-9-60" href="#__codelineno-9-60"></a>  },
+<a id="__codelineno-9-61" name="__codelineno-9-61" href="#__codelineno-9-61"></a>  {
+<a id="__codelineno-9-62" name="__codelineno-9-62" href="#__codelineno-9-62"></a>    &quot;vsanId&quot;: 20,
+<a id="__codelineno-9-63" name="__codelineno-9-63" href="#__codelineno-9-63"></a>    &quot;vsanName&quot;: &quot;dr-vsan&quot;,
+<a id="__codelineno-9-64" name="__codelineno-9-64" href="#__codelineno-9-64"></a>    &quot;fabricName&quot;: &quot;fabric-dr&quot;,
+<a id="__codelineno-9-65" name="__codelineno-9-65" href="#__codelineno-9-65"></a>    &quot;status&quot;: &quot;active&quot;,
+<a id="__codelineno-9-66" name="__codelineno-9-66" href="#__codelineno-9-66"></a>    &quot;memberCount&quot;: 2
+<a id="__codelineno-9-67" name="__codelineno-9-67" href="#__codelineno-9-67"></a>  }
+<a id="__codelineno-9-68" name="__codelineno-9-68" href="#__codelineno-9-68"></a>]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification or import the DCNM certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to &lt;host&gt;: Connection refused</code></strong> — Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.
+<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get zone database for a fabric</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/zoning?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Get active zone set</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/zoning/activezonesets?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Get device aliases</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/devicealias?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;DATA&quot;: [
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    {
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>      &quot;zoneDbName&quot;: &quot;vsan100_zonedb&quot;,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>      &quot;vsanId&quot;: 100,
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>      &quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;,
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>      &quot;zoneCount&quot;: 12,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>      &quot;memberCount&quot;: 48,
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>      &quot;status&quot;: &quot;Active&quot;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    }
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  ]
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>}
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>{
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;DATA&quot;: [
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    {
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>      &quot;vsanId&quot;: 100,
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>      &quot;activeZoneSetName&quot;: &quot;prod_zoneset_v2&quot;,
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>      &quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;,
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>      &quot;activationTime&quot;: &quot;2024-01-15T09:42:33Z&quot;,
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>      &quot;zoneCount&quot;: 12
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    }
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>  ]
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>}
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>{
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>  &quot;DATA&quot;: [
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    {
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>      &quot;deviceAliasName&quot;: &quot;storage_array_01&quot;,
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>      &quot;wwn&quot;: &quot;50:00:14:40:5a:2b:c1:e0&quot;,
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>      &quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;,
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>      &quot;vsanId&quot;: 100
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>    },
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>    {
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>      &quot;deviceAliasName&quot;: &quot;host_server_04&quot;,
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>      &quot;wwn&quot;: &quot;50:00:09:73:1a:8f:d2:c5&quot;,
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>      &quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;,
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>      &quot;vsanId&quot;: 100
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>    }
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>  ]
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the DCNM certificate into your system CA bundle; verify <code>${DCNM}</code> variable is set correctly.
+<strong><code>curl: (7) Failed to connect to &lt;IP&gt;: Connection refused</code></strong> — Verify DCNM server is running and accessible at the <code>${DCNM}</code> endpoint, and check firewall rules allow port 443 access.
+<strong><code>jq: parse error: Invalid JSON</code></strong> — Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get all active alarms</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/alarms/activealarms&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Get events (last 100)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/events/allevents?size=100&amp;sortby=eventtime&amp;orderby=desc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;DATA&quot;: [
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    {
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>      &quot;alarmId&quot;: &quot;ALARM-2024-001847&quot;,
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>      &quot;severity&quot;: &quot;critical&quot;,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>      &quot;alarmType&quot;: &quot;LinkDown&quot;,
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>      &quot;description&quot;: &quot;Interface Ethernet1/1 on switch leaf-02.dc1.local is down&quot;,
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      &quot;affectedObject&quot;: &quot;leaf-02.dc1.local&quot;,
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>      &quot;status&quot;: &quot;active&quot;
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    },
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    {
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>      &quot;alarmId&quot;: &quot;ALARM-2024-001846&quot;,
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>      &quot;severity&quot;: &quot;warning&quot;,
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>      &quot;alarmType&quot;: &quot;HighCPU&quot;,
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>      &quot;description&quot;: &quot;CPU utilization on spine-01 exceeded 85%&quot;,
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>      &quot;affectedObject&quot;: &quot;spine-01.dc1.local&quot;,
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>      &quot;timestamp&quot;: &quot;2024-01-15T13:47:52Z&quot;,
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>      &quot;status&quot;: &quot;active&quot;
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>    }
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>  ],
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>  &quot;TOTAL_RECORDS&quot;: 2
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>}
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>{
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  &quot;DATA&quot;: [
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>    {
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>      &quot;eventId&quot;: &quot;EVT-2024-009234&quot;,
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>      &quot;eventType&quot;: &quot;ConfigChange&quot;,
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>      &quot;source&quot;: &quot;admin-user&quot;,
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>      &quot;description&quot;: &quot;VLAN 2050 created on fabric DC1-PROD&quot;,
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:58:33Z&quot;,
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>      &quot;severity&quot;: &quot;info&quot;
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>    },
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>    {
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>      &quot;eventId&quot;: &quot;EVT-2024-009233&quot;,
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>      &quot;eventType&quot;: &quot;DeviceDiscovery&quot;,
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>      &quot;source&quot;: &quot;system&quot;,
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>      &quot;description&quot;: &quot;New device spine-03.dc1.local discovered&quot;,
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:45:12Z&quot;,
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>      &quot;severity&quot;: &quot;info&quot;
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>    },
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>    {
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>      &quot;eventId&quot;: &quot;EVT-2024-009232&quot;,
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>      &quot;eventType&quot;: &quot;PolicyViolation&quot;,
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>      &quot;source&quot;: &quot;policy-engine&quot;,
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>      &quot;description&quot;: &quot;QoS policy mismatch detected on leaf-04&quot;,
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:12:47Z&quot;,
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>      &quot;severity&quot;: &quot;warning&quot;
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>    }
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>  ],
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>  &quot;TOTAL_RECORDS&quot;: 87
+<a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.
+<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt;: Connection refused</code></strong> — Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.
+<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure you are authenticated by running the login curl command first and that <code>dcnm-cookie.txt</code> contains a valid session cookie.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List firmware images in DCNM repository</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/fm/image&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Initiate firmware upgrade on a switch</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/fm/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="s1">    &quot;switchList&quot;: [&quot;&lt;serialNumber&gt;&quot;],</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="s1">    &quot;imageName&quot;: &quot;m9200-s2ek9-mz.8.4.2a.bin&quot;,</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="s1">    &quot;installMode&quot;: &quot;non-disruptive&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;imageList&quot;: [
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    {
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>      &quot;imageName&quot;: &quot;m9200-s2ek9-mz.8.4.2a.bin&quot;,
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      &quot;imageSize&quot;: 536870912,
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>      &quot;uploadedDate&quot;: &quot;2024-01-15T09:23:45Z&quot;,
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>      &quot;checksum&quot;: &quot;a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6&quot;,
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>      &quot;version&quot;: &quot;8.4.2a&quot;
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    },
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    {
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>      &quot;imageName&quot;: &quot;m9200-s2ek9-mz.8.3.1.bin&quot;,
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>      &quot;imageSize&quot;: 512000000,
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>      &quot;uploadedDate&quot;: &quot;2023-11-22T14:15:30Z&quot;,
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>      &quot;checksum&quot;: &quot;f6g7h8i9j0k1l2m3n4o5p6a1b2c3d4e5&quot;,
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>      &quot;version&quot;: &quot;8.3.1&quot;
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    }
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  ]
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>}
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>{
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  &quot;upgradeId&quot;: &quot;upgrade-2024-01-15-001&quot;,
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  &quot;status&quot;: &quot;INITIATED&quot;,
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  &quot;switchList&quot;: [
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    {
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>      &quot;serialNumber&quot;: &quot;FOX2425A1B2C&quot;,
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>      &quot;hostname&quot;: &quot;switch-prod-01&quot;,
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>      &quot;currentVersion&quot;: &quot;8.3.1&quot;,
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>      &quot;targetVersion&quot;: &quot;8.4.2a&quot;,
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>      &quot;upgradeStatus&quot;: &quot;IN_PROGRESS&quot;,
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>      &quot;percentComplete&quot;: 0
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>    }
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>  ],
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>  &quot;installMode&quot;: &quot;non-disruptive&quot;,
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>  &quot;estimatedDuration&quot;: 1800
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>}
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the DCNM certificate into your system trust store.
+<strong><code>{"error": "Invalid image name", "code": 400}</code></strong> — Verify the exact image filename exists in the repository by running the first curl command to list available images.
+<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></strong> — Confirm the DCNM server is running and accessible; check that <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Count switches by management state</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s2">import sys, json, collections</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="s2">states = collections.Counter(s.get(&#39;managementState&#39;,&#39;unknown&#39;) for s in data)</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="s2">print(dict(states))</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="s2">&quot;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Find all ISLs with errors</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/san/isl&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="s2">for isl in data:</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="s2">    if isl.get(&#39;crcErrors&#39;, 0) &gt; 0 or isl.get(&#39;lossOfSignal&#39;, 0) &gt; 0:</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="s2">        print(isl.get(&#39;switchName&#39;), isl.get(&#39;port&#39;), </span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="s2">              &#39;CRC:&#39;, isl.get(&#39;crcErrors&#39;), &#39;LOS:&#39;, isl.get(&#39;lossOfSignal&#39;))</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="s2">&quot;</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1"># Export switch inventory to CSV</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="s2">import sys, json, csv</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="s2">fields = [&#39;switchName&#39;,&#39;ipAddress&#39;,&#39;model&#39;,&#39;release&#39;,&#39;managementState&#39;,&#39;fabricName&#39;]</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="s2">w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction=&#39;ignore&#39;)</span>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="s2">w.writeheader()</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="s2">for s in data: w.writerow(s)</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>switches-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{&#39;MANAGED&#39;: 47, &#39;UNMANAGED&#39;: 3, &#39;OUT_OF_SERVICE&#39;: 1}
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>switch-core-01 fc1/1 CRC: 127 LOS: 0
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>switch-core-02 fc2/3 CRC: 0 LOS: 5
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>switch-edge-04 fc1/48 CRC: 312 LOS: 2
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>switchName,ipAddress,model,release,managementState,fabricName
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>switch-core-01,192.168.1.10,MDS 9710,9.2(1),MANAGED,prod-fabric
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>switch-core-02,192.168.1.11,MDS 9710,9.2(1),MANAGED,prod-fabric
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>switch-edge-01,192.168.1.20,MDS 9148S,9.2(1),MANAGED,prod-fabric
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>switch-edge-02,192.168.1.21,MDS 9148S,9.2(1),MANAGED,prod-fabric
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>switch-edge-03,192.168.1.22,MDS 9148S,9.2(1),UNMANAGED,prod-fabric
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>switch-edge-04,192.168.1.23,MDS 9148S,9.1(2),OUT_OF_SERVICE,legacy-fabric
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>...
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl or import the DCNM certificate into your system CA bundle.
+<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the DCNM cookie is valid by checking <code>dcnm-cookie.txt</code> exists and re-authenticate if expired.
+<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></strong> — Confirm the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</p>
+</div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8024,7 +8359,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
   </span>
 
     

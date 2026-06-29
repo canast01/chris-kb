@@ -8086,109 +8086,433 @@ Commands, syntax, and quick reference. Commonly used Linux administration comman
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nohup<span class="w"> </span>&lt;command&gt;<span class="w"> </span><span class="p">&amp;</span><span class="w">                   </span><span class="c1"># Run detached</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">jobs</span><span class="w">                                </span><span class="c1"># List background jobs</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>root         1  0.0  0.2  19232  9140 ?        Ss   08:14   0:02 /sbin/init
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>root       412  0.1  0.8  55280 32456 ?        Ss   08:14   0:15 /lib/systemd/systemd-journald
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>postgres   2847  2.3  5.6 892456 228904 ?       Ss   09:22   1:47 /usr/lib/postgresql/13/bin/postgres
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nginx      3102  0.4  1.2 145680 48920 ?        S    09:45   0:08 nginx: worker process
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>root       4521  8.7  12.1 2456780 492560 ?     Sl   10:01   3:42 java -Xmx2g -jar app.jar
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ubuntu     5634  0.0  0.1  21544  4128 pts/0    Ss   10:15   0:00 -bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ubuntu     6789  1.2  0.3  98765  12340 pts/0   S+   10:22   0:05 python3 data_processor.py
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>nohup: ignoring input and appending output to &#39;nohup.out&#39;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>[1] 7234
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>[1]+  Running                 nohup long_running_task.sh &amp;
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>bash: kill: (12345): No such process</code></strong> — Verify the PID exists with <code>ps aux | grep &lt;PID&gt;</code> before attempting to kill it.
+<strong><code>pkill: invalid option -- 'f'</code></strong> — Use <code>pkill -f</code> on Linux systems; on some BSD variants use <code>pgrep -f</code> to find processes first.
+<strong><code>nohup: failed to run command '&lt;command&gt;': No such file or directory</code></strong> — Ensure the command path is correct and the executable exists in your PATH or provide the full absolute path.</p>
+</div>
 <h2 id="disk-and-filesystem">Disk and Filesystem<a class="headerlink" href="#disk-and-filesystem" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>df<span class="w"> </span>-h<span class="w">                               </span><span class="c1"># Filesystem usage</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>df<span class="w"> </span>-i<span class="w">                               </span><span class="c1"># Inode usage</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>du<span class="w"> </span>-sh<span class="w"> </span>&lt;path&gt;<span class="w">                       </span><span class="c1"># Directory size</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w">     </span><span class="c1"># Find large directories</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>fdisk<span class="w"> </span>-l<span class="w"> </span>/dev/sdb<span class="w">                   </span><span class="c1"># Partition table</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>parted<span class="w"> </span>/dev/sdb<span class="w"> </span>print
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mount<span class="w"> </span>/dev/vg/lv<span class="w"> </span>/mnt/point
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>umount<span class="w"> </span>/mnt/point
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h<span class="w">                               </span><span class="c1"># Filesystem usage</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>df<span class="w"> </span>-i<span class="w">                               </span><span class="c1"># Inode usage</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>du<span class="w"> </span>-sh<span class="w"> </span>&lt;path&gt;<span class="w">                       </span><span class="c1"># Directory size</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w">     </span><span class="c1"># Find large directories</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>fdisk<span class="w"> </span>-l<span class="w"> </span>/dev/sdb<span class="w">                   </span><span class="c1"># Partition table</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>parted<span class="w"> </span>/dev/sdb<span class="w"> </span>print
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>mount<span class="w"> </span>/dev/vg/lv<span class="w"> </span>/mnt/point
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>umount<span class="w"> </span>/mnt/point
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME    SIZE TYPE MOUNTPOINT FSTYPE
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sda     200G disk            
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├─sda1  512M part /boot      ext4
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├─sda2  199G part /          ext4
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>└─sda3  512M part [SWAP]     swap
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sdb     1.8T disk            
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>└─sdb1  1.8T part /data      ext4
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>nvme0n1 500G disk            
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>└─nvme0n1p1 500G part /var   ext4
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Filesystem     Size  Used Avail Use% Mounted on
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>/dev/sda2      199G  145G   54G  73% /
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>/dev/sda1      512M  128M  384M  25% /boot
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>/dev/sdb1      1.8T  1.2T  600G  67% /data
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>tmpfs          7.8G     0  7.8G   0% /dev/shm
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Filesystem     Inodes IUsed IFree IUse% Mounted on
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>/dev/sda2      12M    2.1M  9.9M   18% /
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>/dev/sda1      32K    312   31K    1% /boot
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>/dev/sdb1      120M   45M   75M   38% /data
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>4.2G    /var
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>3.8G    /home
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>2.1G    /opt
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>1.5G    /usr
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>892M    /tmp
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Disk /dev/sdb: 1863.0 GiB, 2000398934016 bytes, 3907029168 sectors
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Disk model: QEMU HARDDISK
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Units: sectors of 1 * 512 = 512 bytes
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Sector size (logical/physical): 512 bytes / 512 bytes
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>I/O size (minimum/optimal): 512 bytes / 512 bytes
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Disklabel type: dos
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>Disk identifier: 0x5a3c2e1f
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>Device     Boot Start        End    Sectors Size Id Type
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>/dev/sdb1        2048 3907029167 3907027120 1.8T 83 Linux
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>Model: /dev/sdb
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>Disk /dev/sdb: 1863GB
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>Sector size (logical/physical): 512B/512B
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>Partition Table: msdos
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>Number  Start   End     Size    Type     File system  Flags
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a> 1      1049kB 1863GB  1863GB  primary  ext4
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>(no output — command completes silently)
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>mount: /mnt/point: mount point does not exist.</code></strong> — Create the mount point directory with <code>mkdir -p /mnt/point</code> before mounting.
+<strong><code>umount: /mnt/point: target is busy.</code></strong> — Close all open files or processes accessing the mount point with <code>lsof /mnt/point</code> and kill them, then retry umount.
+<strong><code>fdisk: cannot open /dev/sdb: Permission denied</code></strong> — Run the command with <code>sudo</code> or as the root user.</p>
+</div>
 <h2 id="lvm">LVM<a class="headerlink" href="#lvm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pvs<span class="w"> </span>/<span class="w"> </span>pvdisplay<span class="w">                     </span><span class="c1"># Physical volumes</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vgs<span class="w"> </span>/<span class="w"> </span>vgdisplay<span class="w">                     </span><span class="c1"># Volume groups</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>lvs<span class="w"> </span>/<span class="w"> </span>lvdisplay<span class="w">                     </span><span class="c1"># Logical volumes</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>pvcreate<span class="w"> </span>/dev/sdb
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vgcreate<span class="w"> </span>vg_name<span class="w"> </span>/dev/sdb
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>lvcreate<span class="w"> </span>-L<span class="w"> </span>50G<span class="w"> </span>-n<span class="w"> </span>lv_name<span class="w"> </span>vg_name
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg/lv
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>xfs_growfs<span class="w"> </span>/dev/vg/lv<span class="w">               </span><span class="c1"># Grow XFS online</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>resize2fs<span class="w"> </span>/dev/vg/lv<span class="w">                </span><span class="c1"># Grow ext4 online</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pvs<span class="w"> </span>/<span class="w"> </span>pvdisplay<span class="w">                     </span><span class="c1"># Physical volumes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vgs<span class="w"> </span>/<span class="w"> </span>vgdisplay<span class="w">                     </span><span class="c1"># Volume groups</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lvs<span class="w"> </span>/<span class="w"> </span>lvdisplay<span class="w">                     </span><span class="c1"># Logical volumes</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pvcreate<span class="w"> </span>/dev/sdb
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vgcreate<span class="w"> </span>vg_name<span class="w"> </span>/dev/sdb
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>lvcreate<span class="w"> </span>-L<span class="w"> </span>50G<span class="w"> </span>-n<span class="w"> </span>lv_name<span class="w"> </span>vg_name
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg/lv
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>xfs_growfs<span class="w"> </span>/dev/vg/lv<span class="w">               </span><span class="c1"># Grow XFS online</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>resize2fs<span class="w"> </span>/dev/vg/lv<span class="w">                </span><span class="c1"># Grow ext4 online</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PV         VG      Fmt  Attr PSize   PFree
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  /dev/sda2  vg0     lvm2 a--  279.00g 4.00g
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  /dev/sdb           lvm2 ---  500.00g 500.00g
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VG Name               #PV #LV #SN Attr   VSize   VFree
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  vg0                   1   3   0 wz--n- 279.00g 4.00g
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  vg_name               1   0   0 wz--n- 500.00g 500.00g
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>LV         VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  lv_data    vg0     -wi-ao---- 100.00g
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  lv_swap    vg0     -wi-ao----   8.00g
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  lv_name    vg_name -wi-a-----  50.00g
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Physical volume &quot;/dev/sdb&quot; successfully created with id 8f4a2c91-7d3e-4a5b-9c2e-1b5f8a3d6e9c
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Volume group &quot;vg_name&quot; successfully created
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Logical volume &quot;lv_name&quot; created.
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Size of logical volume vg_name/lv_name changed from 50.00 GiB (12800 extents) to 70.00 GiB (17920 extents).
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>meta-data=/dev/mapper/vg-lv isize=512 agcount=4, agsize=3276800 blks
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>data blocks changed from 13107200 to 18350080
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Device /dev/sdb not found</code></strong> — Verify the device exists with <code>lsblk</code> and use the correct device path.
+<strong><code>Physical volume "/dev/sdb" already in use</code></strong> — Run <code>pvremove /dev/sdb</code> first or use a different device.
+<strong><code>No space left on device</code></strong> — Ensure the volume group has sufficient free extents with <code>vgdisplay vg_name</code>.</p>
+</div>
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w">                         </span><span class="c1"># Interface summary</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;iface&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;iface&gt;<span class="w"> </span>up/down
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ss<span class="w"> </span>-tulnp<span class="w">                           </span><span class="c1"># Listening ports</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ss<span class="w"> </span>-tnp<span class="w"> </span>state<span class="w"> </span>established<span class="w">           </span><span class="c1"># Active connections</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ss<span class="w"> </span>-s<span class="w">                               </span><span class="c1"># Connection summary</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ethtool<span class="w"> </span>&lt;iface&gt;<span class="w">                     </span><span class="c1"># Physical link info</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nmcli<span class="w"> </span>connection<span class="w"> </span>show
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nmcli<span class="w"> </span>device<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w">                         </span><span class="c1"># Interface summary</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;iface&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;iface&gt;<span class="w"> </span>up/down
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ss<span class="w"> </span>-tulnp<span class="w">                           </span><span class="c1"># Listening ports</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ss<span class="w"> </span>-tnp<span class="w"> </span>state<span class="w"> </span>established<span class="w">           </span><span class="c1"># Active connections</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ss<span class="w"> </span>-s<span class="w">                               </span><span class="c1"># Connection summary</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ethtool<span class="w"> </span>&lt;iface&gt;<span class="w">                     </span><span class="c1"># Physical link info</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nmcli<span class="w"> </span>connection<span class="w"> </span>show
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>nmcli<span class="w"> </span>device<span class="w"> </span>status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>lo               UNKNOWN        127.0.0.1/8 ::1/128
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eth0             UP             192.168.1.45/24 fe80::a00:27ff:fe4e:66a1/64
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eth1             DOWN           10.0.0.0/24
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>docker0          UP             172.17.0.1/24
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>default via 192.168.1.1 dev eth0 proto kernel scope link src 192.168.1.45
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>10.0.0.0/24 dev eth1 proto kernel scope link src 10.0.0.1
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>PROT RECV-Q SEND-Q LOCAL ADDRESS           FOREIGN ADDRESS         STATE       PID/PROGRAM NAME
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1247/sshd
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      2891/postgres
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      3045/nginx
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>tcp        0      0 192.168.1.45:22         192.168.1.100:54321     ESTABLISHED 1247/sshd
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Total: 247 (estab 1, closed 0, orphaned 0, synrecv 0, timewait 0)
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Settings for eth0:
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    Supported ports: [ TP ]
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    Supported link modes:   1000baseT/Full
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    Speed: 1000Mb/s
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    Duplex: Full
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>NAME                UUID                                  TYPE      DEVICE
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>System eth0         5fb06bd0-0c45-7ffe-45f5-3c010d123456  ethernet  eth0
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>Wired connection 1  87f344a2-fd0e-46de-91f5-8d4ac6789abc  ethernet  eth1
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>DEVICE  TYPE      STATE      CONNECTION
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>eth0    ethernet  connected  System eth0
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>eth1    ethernet  disconnected  --
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>docker0 bridge    unmanaged  --
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>lo      loopback  unmanaged  --
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Cannot open network namespace "": No such file or directory</code></strong> — Ensure you are running the command with appropriate privileges; use <code>sudo ip -br addr</code> if needed.
+<strong><code>Device "eth99" does not exist.</code></strong> — Verify the interface name with <code>ip link show</code> before attempting to configure it.
+<strong><code>Error: unknown or ambiguous command 'eth0 up'.</code></strong> — Use the correct syntax <code>ip link set eth0 up</code> (not <code>ip link eth0 up</code>).</p>
+</div>
 <h2 id="logging-journalctl">Logging (journalctl)<a class="headerlink" href="#logging-journalctl" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-f<span class="w">          </span><span class="c1"># Follow</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w">      </span><span class="c1"># Last 100 lines</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>journalctl<span class="w"> </span>-b<span class="w">                       </span><span class="c1"># This boot</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w">                    </span><span class="c1"># Previous boot</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>journalctl<span class="w"> </span>-k<span class="w">                       </span><span class="c1"># Kernel messages only</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>journalctl<span class="w"> </span>--disk-usage
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>7d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-f<span class="w">          </span><span class="c1"># Follow</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w">      </span><span class="c1"># Last 100 lines</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>journalctl<span class="w"> </span>-b<span class="w">                       </span><span class="c1"># This boot</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w">                    </span><span class="c1"># Previous boot</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>journalctl<span class="w"> </span>-k<span class="w">                       </span><span class="c1"># Kernel messages only</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>journalctl<span class="w"> </span>--disk-usage
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>7d
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>-- Logs begin at Mon 2024-01-15 09:23:44 UTC, end at Mon 2024-01-15 14:47:12 UTC. --
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Jan 15 14:32:18 prod-app-01 systemd[1]: Starting PostgreSQL Database Server...
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Jan 15 14:32:19 prod-app-01 postgres[2847]: FATAL: could not open configuration file &quot;/etc/postgresql/15/main/postgresql.conf&quot;: Permission denied
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Jan 15 14:35:42 prod-app-01 kernel: Out of memory: Kill process 3421 (java) score 892 or sacrifice child
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Jan 15 14:41:05 prod-app-01 systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Jan 15 14:45:33 prod-app-01 dbus-daemon[1156]: [system] Activating via systemd: service name=&#39;org.freedesktop.Accounts&#39; unit=&#39;accounts-daemon.service&#39;
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>-- Following logs for ssh.service --
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Jan 15 14:47:08 prod-app-01 sshd[8934]: Invalid user admin from 203.0.113.45 port 54321
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Jan 15 14:47:09 prod-app-01 sshd[8934]: Disconnected from invalid user admin 203.0.113.45 port 54321 [preauth]
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Jan 15 14:47:11 prod-app-01 sshd[8945]: Accepted publickey for deploy from 10.0.1.22 port 52847 ssh2: RSA SHA1:a7f3e9c2b1d4f6a8e5c3b9d2f1a4e7c0
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Last 100 lines of nginx.service:
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>Jan 15 13:22:44 prod-app-01 nginx[2156]: 10.0.2.15 - - [15/Jan/2024:13:22:44 +0000] &quot;GET /health HTTP/1.1&quot; 200 45 &quot;-&quot; &quot;curl/7.68.0&quot;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Jan 15 13:23:01 prod-app-01 nginx[2156]: 10.0.2.16 - - [15/Jan/2024:13:23:01 +0000] &quot;GET /api/v1/status HTTP/1.1&quot; 200 1247 &quot;-&quot; &quot;python-requests/2.28.1&quot;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>...
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Logs from this boot (since Jan 15 09:23:44 UTC):
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Jan 15 09:24:12 prod-app-01 systemd[1]: Started User Manager for UID 1000.
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Jan 15 09:25:33 prod-app-01 kernel: audit: type=1130 audit(1705324333.445:8): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=&#39;unit=systemd-logind comm=&quot;systemd&quot; exe=&quot;/lib/systemd/systemd&quot; hostname=? addr=? terminal=? res=success&#39;
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>...
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>Logs from previous boot (Jan 14 22:15:09 UTC):
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Jan 14 22:16:44 prod-app-01
 </code></pre></div>
 <h2 id="user-and-session-management">User and Session Management<a class="headerlink" href="#user-and-session-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>last<span class="w">                                </span><span class="c1"># Login history</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>lastb<span class="w">                               </span><span class="c1"># Failed login attempts</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>who<span class="w">                                 </span><span class="c1"># Currently logged in</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>w<span class="w">                                   </span><span class="c1"># Who and what they&#39;re doing</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>id<span class="w"> </span>&lt;user&gt;<span class="w">                           </span><span class="c1"># UID/GID/groups</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span>&lt;user&gt;<span class="w">                </span><span class="c1"># User entry</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>&lt;user&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>sudo<span class="w"> </span>&lt;user&gt;<span class="w">             </span><span class="c1"># Add to sudo (Ubuntu)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel<span class="w"> </span>&lt;user&gt;<span class="w">            </span><span class="c1"># Add to wheel (RHEL)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>passwd<span class="w"> </span>-l<span class="w"> </span>&lt;user&gt;<span class="w">                    </span><span class="c1"># Lock account</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>passwd<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w">                    </span><span class="c1"># Unlock account</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>last<span class="w">                                </span><span class="c1"># Login history</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>lastb<span class="w">                               </span><span class="c1"># Failed login attempts</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>who<span class="w">                                 </span><span class="c1"># Currently logged in</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>w<span class="w">                                   </span><span class="c1"># Who and what they&#39;re doing</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>id<span class="w"> </span>&lt;user&gt;<span class="w">                           </span><span class="c1"># UID/GID/groups</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span>&lt;user&gt;<span class="w">                </span><span class="c1"># User entry</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>&lt;user&gt;
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>sudo<span class="w"> </span>&lt;user&gt;<span class="w">             </span><span class="c1"># Add to sudo (Ubuntu)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel<span class="w"> </span>&lt;user&gt;<span class="w">            </span><span class="c1"># Add to wheel (RHEL)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>passwd<span class="w"> </span>-l<span class="w"> </span>&lt;user&gt;<span class="w">                    </span><span class="c1"># Lock account</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>passwd<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w">                    </span><span class="c1"># Unlock account</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>last
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>wtmp begins Fri Jan 10 14:22:15 2025
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>admin    pts/0        192.168.1.105    Fri Jan 10 14:22   still logged in
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>jenkins  pts/1        10.0.50.42       Fri Jan 10 13:45 - 14:10  (00:25)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>root     pts/0        console          Fri Jan 10 12:30 - 13:15  (00:45)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>deploy   pts/2        172.16.8.201     Thu Jan  9 23:50 - 00:15  (00:25)
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>lastb
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>btmp begins Thu Jan  9 18:00:00 2025
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>admin    ssh:notty    203.0.113.45     Thu Jan  9 18:15 - 18:15  (00:00)
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>testuser ssh:notty    198.51.100.12    Thu Jan  9 17:42 - 17:42  (00:00)
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>who
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>admin    pts/0        2025-01-10 14:22 (192.168.1.105)
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>jenkins  pts/1        2025-01-10 13:45 (10.0.50.42)
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>w
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a> 14:35:22 up 18 days,  3:22,  2 users,  load average: 0.45, 0.38, 0.41
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>admin    pts/0    192.168.1.105    14:22    2.00s  0.15s  0.02s w
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>jenkins  pts/1    10.0.50.42       13:45    5m     0.42s  0.08s bash
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>id appuser
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>uid=1002(appuser) gid=1002(appuser) groups=1002(appuser),27(sudo),4(adm)
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>getent passwd appuser
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>appuser:x:1002:1002:Application User:/home/appuser:/bin/bash
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>useradd -m -s /bin/bash newuser
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>(no output — command completes silently)
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>usermod -aG sudo newuser
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>(no output — command completes silently)
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>passwd -l newuser
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>passwd: password expiry information changed.
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>passwd -u newuser
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>passwd: password expiry information changed.
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>useradd: user 'newuser' already exists</code></strong> — Check if the user exists with <code>id newuser</code> or <code>getent passwd newuser</code> before creating.
+<strong><code>usermod: user 'nonexistent' does not exist</code></strong> — Verify the username is spelled correctly and exists with <code>getent passwd &lt;user&gt;</code>.
+<strong><code>Permission denied</code></strong> — Run these commands with <code>sudo</code> or as root; standard users cannot modify user accounts.</p>
+</div>
 <h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># RHEL — firewalld</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>firewall-cmd<span class="w"> </span>--list-all
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">8080</span>/tcp
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>https
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>firewall-cmd<span class="w"> </span>--reload
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>firewall-cmd<span class="w"> </span>--query-port<span class="o">=</span><span class="m">443</span>/tcp
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Ubuntu — ufw</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">443</span>/tcp
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ufw<span class="w"> </span>allow<span class="w"> </span>from<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span>to<span class="w"> </span>any<span class="w"> </span>port<span class="w"> </span><span class="m">22</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ufw<span class="w"> </span>deny<span class="w"> </span><span class="m">23</span>/tcp
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>ufw<span class="w"> </span><span class="nb">enable</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># RHEL — firewalld</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>firewall-cmd<span class="w"> </span>--list-all
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">8080</span>/tcp
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>https
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>firewall-cmd<span class="w"> </span>--reload
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>firewall-cmd<span class="w"> </span>--query-port<span class="o">=</span><span class="m">443</span>/tcp
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Ubuntu — ufw</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">443</span>/tcp
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ufw<span class="w"> </span>allow<span class="w"> </span>from<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span>to<span class="w"> </span>any<span class="w"> </span>port<span class="w"> </span><span class="m">22</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ufw<span class="w"> </span>deny<span class="w"> </span><span class="m">23</span>/tcp
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>ufw<span class="w"> </span><span class="nb">enable</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>public (active)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  target: default
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  icmp-block-inversion: no
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  interfaces: eth0
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  sources: 
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  services: ssh dhcpv6-client
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  ports: 
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  protocols: 
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  masquerade: no
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  forward-ports: 
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  source-ports: 
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  icmp-blocks: 
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  rich rules: 
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>success
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>success
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>success
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>yes
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Status: inactive
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>Rules updated
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>Rules updated (v6)
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Rules updated (v6)
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>Rules updated (v6)
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Firewall is active and enabled on system startup
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Error: INVALID_PORT: 8080/tcp</code></strong> — Verify the port number is between 1-65535 and use lowercase protocol names.
+<strong><code>ERROR: Could not find a matching rule</code></strong> — Ensure the rule exists before querying; use <code>firewall-cmd --list-ports</code> to verify active rules first.
+<strong><code>Command 'ufw' not found</code></strong> — Install ufw with <code>sudo apt-get install ufw</code> on Ubuntu systems.</p>
+</div>
 <h2 id="performance-diagnostics">Performance / Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>uptime<span class="w">                              </span><span class="c1"># Load average</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-25<span class="w">               </span><span class="c1"># CPU/memory snapshot</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>htop<span class="w">                                </span><span class="c1"># Interactive process viewer</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">                          </span><span class="c1"># VM stats (CPU, swap, I/O)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">                      </span><span class="c1"># Disk I/O per device</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>mpstat<span class="w"> </span>-P<span class="w"> </span>ALL<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w">                   </span><span class="c1"># Per-CPU usage</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>free<span class="w"> </span>-h<span class="w">                             </span><span class="c1"># Memory summary</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>iotop<span class="w"> </span>-o<span class="w"> </span>-P<span class="w">                         </span><span class="c1"># Processes doing I/O</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w">                     </span><span class="c1"># Syscall trace</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>lsof<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w">                       </span><span class="c1"># Open files for a process</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>lsof<span class="w"> </span>&lt;file&gt;<span class="w">                         </span><span class="c1"># Which process has a file open</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>uptime<span class="w">                              </span><span class="c1"># Load average</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-25<span class="w">               </span><span class="c1"># CPU/memory snapshot</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>htop<span class="w">                                </span><span class="c1"># Interactive process viewer</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">                          </span><span class="c1"># VM stats (CPU, swap, I/O)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">                      </span><span class="c1"># Disk I/O per device</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>mpstat<span class="w"> </span>-P<span class="w"> </span>ALL<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w">                   </span><span class="c1"># Per-CPU usage</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>free<span class="w"> </span>-h<span class="w">                             </span><span class="c1"># Memory summary</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>iotop<span class="w"> </span>-o<span class="w"> </span>-P<span class="w">                         </span><span class="c1"># Processes doing I/O</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w">                     </span><span class="c1"># Syscall trace</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>lsof<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w">                       </span><span class="c1"># Open files for a process</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>lsof<span class="w"> </span>&lt;file&gt;<span class="w">                         </span><span class="c1"># Which process has a file open</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>10:42:15 up 45 days, 3:22, 2 users, load average: 2.34, 1.89, 1.56
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>top - 10:42:15 up 45 days, 3:22, 2 users, load average: 2.34, 1.89, 1.56
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Tasks: 287 total, 3 running, 284 sleeping, 0 stopped, 0 zombie
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>%Cpu(s): 18.2 us, 4.1 sy, 0.0 ni, 77.1 id, 0.4 wa, 0.1 hi, 0.1 si, 0.0 st
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>MiB Mem : 64000.0 total, 52341.2 free, 8234.5 used, 3424.3 buff/cache
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>MiB Swap: 16384.0 total, 16384.0 free, 0.0 used. 54123.4 avail Mem
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a> 4521 root 20 0 892456 234567 45678 S 12.3 0.4 125:34 java
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a> 2847 appuser 20 0 456789 123456 34567 S 8.9 0.2 89:12 python3
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a> 1234 syslog 20 0 234567 45678 23456 S 2.1 0.1 45:23 rsyslogd
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>...
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a> 2  0      0 52341  2341  3424    0    0    12    45 1234 5678 18  4 77  1  0
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a> 1  0      0 52340  2341  3424    0    0     8    32 1198 5432 16  3 80  1  0
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a> 0  0      0 52339  2341  3424    0    0     5    18 1087 4956 14  2 83  1  0
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a> 0  0      0 52338  2341  3424    0    0     3    12  956 4321 12  2 85  1  0
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a> 0  0      0 52337  2341  3424    0    0     2     8  834 3789 10  1 88  1  0
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Linux 5.15.0-84-generic (prod-web-01)   01/15/2025  _x86_64_    (16 CPU)
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Device            r/s     w/s     rMB/s     wMB/s rrqm/s wrqm/s %rrqm %wrqm r_await w_await aqu-sz %util
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>sda               45.2    23.1     2.34      1.12   0.5    1.2    1.1   4.9   2.3     4.5    0.18   8.2
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>sdb               12.3
 </code></pre></div>
 <h2 id="file-operations">File Operations<a class="headerlink" href="#file-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>find<span class="w"> </span>/path<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w">         </span><span class="c1"># Files older than 30 days</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>find<span class="w"> </span>/path<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w">  </span><span class="c1"># Files larger than 100 MB</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/passwd<span class="w"> </span>-type<span class="w"> </span>f<span class="w">        </span><span class="c1"># Recently modified in /etc</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>tar<span class="w"> </span>-czf<span class="w"> </span>archive.tar.gz<span class="w"> </span>/path/to/dir<span class="w">        </span><span class="c1"># Create archive</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>archive.tar.gz<span class="w"> </span>-C<span class="w"> </span>/dest/<span class="w">           </span><span class="c1"># Extract archive</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>/src/<span class="w"> </span>user@host:/dest/<span class="w">           </span><span class="c1"># Sync files remotely</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/path
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>chown<span class="w"> </span>user:group<span class="w"> </span>/path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>find<span class="w"> </span>/path<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w">         </span><span class="c1"># Files older than 30 days</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>find<span class="w"> </span>/path<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w">  </span><span class="c1"># Files larger than 100 MB</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/passwd<span class="w"> </span>-type<span class="w"> </span>f<span class="w">        </span><span class="c1"># Recently modified in /etc</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>tar<span class="w"> </span>-czf<span class="w"> </span>archive.tar.gz<span class="w"> </span>/path/to/dir<span class="w">        </span><span class="c1"># Create archive</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>archive.tar.gz<span class="w"> </span>-C<span class="w"> </span>/dest/<span class="w">           </span><span class="c1"># Extract archive</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>/src/<span class="w"> </span>user@host:/dest/<span class="w">           </span><span class="c1"># Sync files remotely</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/path
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>chown<span class="w"> </span>user:group<span class="w"> </span>/path
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>/path/var/log/syslog.1
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>/path/var/log/auth.log.2
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>/path/var/log/kernel.log.3
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>/path/var/log/apache2/access.log.old
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>/path/var/log/mysql/error.log.1
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>/var/cache/large-backup.iso
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>/var/lib/vm-image.qcow2
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>/etc/shadow
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>/etc/sudoers
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>/etc/ssh/sshd_config
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>/etc/systemd/system/custom.service
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>/etc/default/grub
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>tar: Removing leading `/&#39; from member names
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>archive.tar.gz created successfully
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>x var/log/syslog.1
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>x var/log/auth.log.2
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>x var/log/kernel.log.3
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>x var/log/apache2/access.log.old
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>sending incremental file list
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>src/config.yaml
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>src/data/users.csv
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>src/scripts/deploy.sh
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>sent 2,847,392 bytes  received 12,584 bytes  transferred in 3.24s
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>find: '/path': No such file or directory</code></strong> — Replace <code>/path</code> with an actual directory path like <code>/var/log</code> or <code>/home</code>.
+<strong><code>rsync: command not found</code></strong> — Install rsync with <code>apt install rsync</code> (Debian/Ubuntu) or <code>yum install rsync</code> (RHEL/CentOS).
+<strong><code>chown: changing ownership of '/path': Operation not permitted</code></strong> — Run the command with <code>sudo</code> or ensure you have write permissions on the target path.</p>
+</div>
 <h2 id="ntp-time">NTP / Time<a class="headerlink" href="#ntp-time" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>Europe/Athens
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>chronyc<span class="w"> </span>makestep<span class="w">                    </span><span class="c1"># Force immediate sync</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>Europe/Athens
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>chronyc<span class="w"> </span>makestep<span class="w">                    </span><span class="c1"># Force immediate sync</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Local time: Wed 2024-01-17 14:32:45 EET
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>           Universal time: Wed 2024-01-17 12:32:45 UTC
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>                 RTC time: Wed 2024-01-17 12:32:46
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>                Time zone: Europe/Athens (EET, +0200)
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>System clock synchronized: yes
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>              NTP service: active
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>           RTC in local TZ: no
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Reference ID    : 91F20D08 (ntp.ubuntu.com)
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Stratum         : 2
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Ref time (UTC)  : Wed 2024-01-17 12:32:31
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>System time offset : 0.000234567 seconds
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Last update     : 45.2 seconds ago
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Estimated error : 0.000012 seconds
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>MS Name/IP address         Stratum Poll Reach LastRx Last sample
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>===============================================================
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>^* ntp1.ubuntu.com           1      6   377    42   -234us[ -198us] +/-   18ms
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>^- ntp2.ubuntu.com           1      7   377    68   +1.2ms[+1.2ms] +/-   22ms
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>^+ time.google.com           1      6   377    35   -456us[ -420us] +/-   15ms
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>^- ntp.nist.gov              1      8   377   103   +2.1ms[+2.1ms] +/-   28ms
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>(no output — command completes silently)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>timedatectl: command not found</code></strong> — Install systemd-container or systemd package with <code>apt install systemd</code> or <code>yum install systemd</code>.
+<strong><code>chronyc: command not found</code></strong> — Install chrony daemon with <code>apt install chrony</code> or <code>yum install chrony</code>, then start it with <code>systemctl start chronyd</code>.
+<strong><code>Error: NTP service is not active</code></strong> — Enable and start the NTP service with <code>systemctl enable --now chronyd</code> (or <code>ntpd</code> if using ntpd instead of chrony).</p>
+</div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8225,7 +8549,7 @@ Commands, syntax, and quick reference. Commonly used Linux administration comman
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
   </span>
 
     

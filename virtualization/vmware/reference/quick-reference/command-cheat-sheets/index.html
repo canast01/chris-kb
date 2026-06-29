@@ -9894,42 +9894,133 @@ Command Cheat Sheet reference covering ESXi Host Commands, vSAN Commands, Networ
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># List mounted filesystems</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VMware ESXi 7.0.3 build-19482429
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> 10:42:33 up 187 days, 14:23, 0 users, load average: 0.45, 0.38, 0.41
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Running (/etc/init.d/hostd): hostd
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Running (/etc/init.d/vpxa): vpxa
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Running (/etc/init.d/hostd): hostd
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Running (/etc/init.d/vpxa): vpxa
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Services restarted.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Name    PCI Driver      Admin Status  Runtime Status  MTU  Enabled
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vmnic0  0000:02:00.0   up            up               1500 true
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vmnic1  0000:02:00.1   up            up               1500 true
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vmnic2  0000:03:00.0   down          down             1500 false
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vmnic3  0000:03:00.1   down          down             1500 false
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Name           IPV4 Address      IPV4 Netmask      IPV6 Address  Enabled
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vmk0           192.168.1.50      255.255.255.0     ::1/128        true
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vmk1           10.0.0.50         255.255.255.0     -              true
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Adapter  Driver     State  UID
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vmhba0   lpfc       link-n/a urn:esx:nic:vmhba0
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vmhba1   megaraid_sas link-n/a urn:esx:nic:vmhba1
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>vmhba2   ahci       link-n/a urn:esx:nic:vmhba2
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Name                   Runtime Name  Device  Adapter  Channel  Target  LUN  State
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>vmhba0:C0:T0:L0        naa.50001fe1  /dev/sda vmhba0   0        0       0    active
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>vmhba0:C0:T1:L0        naa.50001fe2  /dev/sdb vmhba0   0        1       0    active
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>vmhba1:C0:T0:L0        naa.50001fe3  /dev/sdc vmhba1   0        0       0    active
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Name                          Type  Size      Free Space  Accessible
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>VMFS-6 (datastore1)           VMFS  2.0 TB    1.2 TB      true
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>NFS (nfs-backup)              NFS   5.0 TB    3.8 TB      true
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>VFFS (LOCKER)                 VFFS  4.0 GB    2.1 GB      true
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>services.sh: command not found</code></strong> — Use the full path <code>/sbin/services.sh status</code> or verify the script exists in the current ESXi version.
+<strong><code>Unable to connect to the local hostd agent</code></strong> — Wait 30 seconds after restart before running commands, as hostd takes time to fully initialize.
+<strong><code>Permission denied</code></strong> — Run all commands as root or with appropriate sudo privileges; standard users cannot access ESXi management commands.</p>
+</div>
 <h2 id="vsan-commands">vSAN Commands<a class="headerlink" href="#vsan-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check vSAN cluster info</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check vSAN network</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check vSAN disks</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check resync summary</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
-</code></pre></div>
-<h2 id="network-checks">Network Checks<a class="headerlink" href="#network-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ping from ESXi</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>&lt;target-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check vSAN cluster info</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Ping using a specific VMkernel adapter</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check vSAN network</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test jumbo frames</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check vSAN disks</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List physical NICs</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List standard switches</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check resync summary</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster UUID: 52d4a8f1-7c2e-4a9b-b1d2-8e3f9c5a2b7d
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Cluster Dominance: 1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Node UUID: 4f8c9a2b-3d1e-5f7a-9c4b-2e6d8f1a3c5b
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Subcluster Master UUID: 52d4a8f1-7c2e-4a9b-b1d2-8e3f9c5a2b7d
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Subcluster Master Mode: ELECTED
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Health State: HEALTHY
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Interface vmk1 is used for vSAN traffic
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Interface vmk2 is used for vSAN traffic
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Multicast: enabled
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Unicast: enabled
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Disk Group 1:
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Cache Tier: naa.5001405a1b2c3d4e (SSD, 400GB)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Capacity Tier: naa.5001405a1b2c3d4f (HDD, 2TB)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Status: HEALTHY
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Disk Group 2:
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  Cache Tier: naa.5001405a1b2c3d50 (SSD, 400GB)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  Capacity Tier: naa.5001405a1b2c3d51 (HDD, 2TB)
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  Status: HEALTHY
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>Resync Summary:
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  Objects pending resync: 0
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  Bytes pending resync: 0
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  Estimated time to completion: 0 seconds
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vSAN cluster is not enabled on this host</code></strong> — Enable vSAN on the host through vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.
+<strong><code>Unable to connect to vSAN cluster</code></strong> — Verify vSAN network connectivity on vmk interfaces and ensure all hosts have matching cluster UUIDs with <code>esxcli vsan cluster get</code>.
+<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate vSAN administrator privileges on the ESXi host.</p>
+</div>
+<h2 id="network-checks">Network Checks<a class="headerlink" href="#network-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ping from ESXi</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vmkping<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Ping using a specific VMkernel adapter</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test jumbo frames</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List physical NICs</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># List standard switches</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PING 192.168.1.100 (192.168.1.100): 56 data bytes
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>64 bytes from 192.168.1.100: icmp_seq=0 time=2.345 ms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>64 bytes from 192.168.1.100: icmp_seq=1 time=2.156 ms
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>64 bytes from 192.168.1.100: icmp_seq=2 time=2.289 ms
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>--- 192.168.1.100 statistics ---
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>3 packets transmitted, 3 packets received, 0% packet loss
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>round-trip min/avg/max = 2.156/2.263/2.345 ms
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Name    PCI Driver    Link Speed Duplex MAC Address         MTU Description
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vmnic0  0000:02:00.0 e1000  Up   1000  Full   00:50:56:c0:00:08 1500 Intel Corporation 82545EM Gigabit Ethernet Controller
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vmnic1  0000:02:01.0 e1000  Up   1000  Full   00:50:56:c0:00:09 1500 Intel Corporation 82545EM Gigabit Ethernet Controller
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Name            Portgroups Uplinks
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vSwitch0        Management Network,VM Network vmnic0,vmnic1
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>vSwitch1        iSCSI vmnic2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>vmkping: Unknown host &lt;target-ip&gt;</code></strong> — Verify the target IP address is reachable and correctly formatted (e.g., 192.168.1.100).
+<strong><code>Network adapter vmk1 not found</code></strong> — Confirm the VMkernel adapter exists by running <code>esxcli network ip interface list</code> and use the correct interface name.
+<strong><code>PING 192.168.1.100 (192.168.1.100): 56 data bytes ... 100% packet loss</code></strong> — Check physical network connectivity, verify the target host is online, and confirm firewall rules allow ICMP traffic.</p>
+</div>
 <h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/var/log/hostd.log
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/var/log/vpxa.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/var/log/vmkernel.log
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/var/log/vobd.log
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/var/log/syslog.log
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/var/log/auth.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/var/log/hostd.log
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/var/log/vpxa.log
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/var/log/vmkernel.log
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>/var/log/vobd.log
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>/var/log/syslog.log
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>/var/log/auth.log
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — these are file paths listed for reference, not commands to execute)
 </code></pre></div>
 
 
@@ -9953,7 +10044,7 @@ Command Cheat Sheet reference covering ESXi Host Commands, vSAN Commands, Networ
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:16:02 UTC"><span class="timeago" datetime="2026-06-29T03:16:02+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:16:02 UTC">2026-06-29</span>
   </span>
 
     

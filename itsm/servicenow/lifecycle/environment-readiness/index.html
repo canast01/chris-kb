@@ -8206,6 +8206,40 @@ Validates that infrastructure is prepared to receive a new workload, application
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^*&quot;</span><span class="w">        </span><span class="c1"># confirm preferred source</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ntpdate<span class="w"> </span>-q<span class="w"> </span>ntp.example.com
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VLAN ID 2048 Status: active
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Name: PROD-APP-TIER
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Ports: Gi0/1, Gi0/2, Gi0/3, Gi0/48
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Type: enet
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Name                           Num Portgroups Used Ports Configured Ports
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vDS-Prod                       47  128              256
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>IP IN USE
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Nmap scan report for 10.42.15.87
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Host is up (0.0032s latency).
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>10.42.15.87 (prod-app-01.example.com) is up
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>;; ANSWER SECTION:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>prod-app-01.example.com. 300 IN A 10.42.15.87
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>prod-app-01.example.com. 300 IN A 10.42.15.87
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Connection to 10.42.15.87 port 443 [tcp/https] succeeded!
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>HTTP/1.1 200 OK
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Server: nginx/1.24.0
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Content-Length: 4521
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>     Remote refid      St t When Poll Reach   Delay   Offset   Jitter
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>^*    ntp.example.com  .POOL. 16 p    -   64    0    0.000    0.000    0.000
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>     ntpdate[12847]: adjust time server 10.20.5.10 offset 0.002345 sec
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>VLAN &lt;vlan_id&gt; does not exist</code></strong> — Verify the VLAN ID is correct and exists on the target switch using <code>show vlan brief</code>.
+<strong><code>nslookup: can't resolve '&lt;planned-hostname&gt;.example.com': No address associated with hostname</code></strong> — Create the DNS A record in your DNS management system before proceeding with environment readiness.
+<strong><code>Connection refused</code></strong> — Confirm the firewall rule exists in your security policy and the destination service is listening on the specified port using <code>netstat -tlnp</code> on the target host.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8249,22 +8283,44 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="3-security-readiness">3. Security Readiness<a class="headerlink" href="#3-security-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm CyberArk PAM account created for server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># CyberArk: Accounts → Add Account → Managed System: &lt;hostname&gt;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SSH hardening baseline</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PermitRootLogin|PasswordAuthentication|MaxAuthTries|Protocol&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># SELinux / AppArmor enforcing</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>getenforce<span class="w">                         </span><span class="c1"># should return &quot;Enforcing&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aa-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;profiles in enforce&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check OS baseline applied</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oscap<span class="w"> </span>xccdf<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--profile<span class="w"> </span>xccdf_org.ssgproject.content_profile_cis_server_l1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--results<span class="w"> </span>/tmp/oscap-results.xml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>/usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm CyberArk PAM account created for server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CyberArk: Accounts → Add Account → Managed System: &lt;hostname&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SSH hardening baseline</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PermitRootLogin|PasswordAuthentication|MaxAuthTries|Protocol&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># SELinux / AppArmor enforcing</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>getenforce<span class="w">                         </span><span class="c1"># should return &quot;Enforcing&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aa-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;profiles in enforce&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check OS baseline applied</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oscap<span class="w"> </span>xccdf<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--profile<span class="w"> </span>xccdf_org.ssgproject.content_profile_cis_server_l1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--results<span class="w"> </span>/tmp/oscap-results.xml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>/usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PermitRootLogin no
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>PasswordAuthentication no
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>MaxAuthTries 3
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Protocol 2
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Enforcing
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   profiles in enforce mode.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>       /etc/apparmor.d/usr.sbin.rsyslogd
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       /etc/apparmor.d/usr.lib.snapd.snap-confine.classic
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       /etc/apparmor.d/usr.sbin.cupsd
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Benchmarks:
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  xccdf_org.ssgproject.content_profile_cis_server_l1: 142/156 rules passed
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Rule xccdf_org.ssgproject.content_rule_service_auditd_enabled: pass
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Rule xccdf_org.ssgproject.content_rule_kernel_module_dccp_disabled: fail
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Rule xccdf_org.ssgproject.content_rule_file_permissions_etc_shadow: pass
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Results written to /tmp/oscap-results.xml
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>command not found: oscap</code></strong> — Install openscap-scanner package with <code>sudo yum install openscap-scanner</code> or <code>sudo apt install libopenscap8</code>.
+<strong><code>No such file or directory: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml</code></strong> — Install scap-security-guide package with <code>sudo yum install scap-security-guide</code> to populate SCAP content files.
+<strong><code>aa-status: command not found</code></strong> — Install apparmor-utils with <code>sudo apt install apparmor-utils</code> on Debian/Ubuntu systems, or use <code>getenforce</code> alone on SELinux-only systems.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8304,19 +8360,32 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="4-monitoring-readiness">4. Monitoring Readiness<a class="headerlink" href="#4-monitoring-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install and verify Prometheus node_exporter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>node_exporter
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_uname_info&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm host visible in Prometheus/Grafana</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;host&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;])&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Windows — confirm monitoring agent</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Prometheus Windows Exporter&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># or for Zabbix / SCOM</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Zabbix Agent&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install and verify Prometheus node_exporter</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>node_exporter
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_uname_info&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm host visible in Prometheus/Grafana</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;host&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;])&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Windows — confirm monitoring agent</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Prometheus Windows Exporter&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># or for Zabbix / SCOM</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Zabbix Agent&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>active
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>node_uname_info{domainname=&quot;corp.local&quot;,machine=&quot;x86_64&quot;,nodename=&quot;app-srv-prod-01&quot;,release=&quot;5.10.0-28-generic&quot;,sysname=&quot;Linux&quot;,version=&quot;#1 SMP Debian 5.10.209-2 (2024-01-31)&quot;} 1.0
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[{&#39;metric&#39;: {&#39;__name__&#39;: &#39;up&#39;, &#39;instance&#39;: &#39;app-srv-prod-01:9100&#39;, &#39;job&#39;: &#39;node&#39;}, &#39;value&#39;: [1707312845.123, &#39;1&#39;]}]
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Status
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>------
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Running
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>curl: (7) Failed to connect to localhost port 9100: Connection refused</code></strong> — Verify node_exporter is installed and running with <code>systemctl start node_exporter &amp;&amp; systemctl enable node_exporter</code>.
+<strong><code>'data' KeyError</code></strong> — Confirm the Prometheus instance is accessible and the target host has been scraped at least once by checking <code>http://prometheus:9090/targets</code> in the UI.
+<strong><code>Get-Service : Cannot find any service with service name 'Prometheus Windows Exporter'</code></strong> — Install the Windows exporter MSI or verify the exact service name with <code>Get-Service | findstr -i prometheus</code>.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8352,16 +8421,38 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="5-backup-readiness">5. Backup Readiness<a class="headerlink" href="#5-backup-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Veeam — confirm backup job exists and targets new VM</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-VBRJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GetObjectsInJob<span class="o">()</span>.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*HOSTNAME*&quot;</span><span class="o">}</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Commvault — confirm client registered</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>HOSTNAME
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Run first backup and verify</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Get-VBRSession<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>JobName<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*Production VMs*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Veeam — confirm backup job exists and targets new VM</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Get-VBRJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GetObjectsInJob<span class="o">()</span>.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*HOSTNAME*&quot;</span><span class="o">}</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Commvault — confirm client registered</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>HOSTNAME
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Run first backup and verify</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Get-VBRSession<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>JobName<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*Production VMs*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Name                           Type            TargetRepository
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>----                           ----            ----------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>HOSTNAME-Daily-Backup          Backup          RepoA-LUN02
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>HOSTNAME-Weekly-Full           Backup          RepoB-LUN03
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Client Name                    OS              Status
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>-----------                    --              ------
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>HOSTNAME                       Windows 2019    Active
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Backup job started successfully.
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>JobId                 : 00000000-1111-2222-3333-444444444444
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>JobName               : Production VMs
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>State                 : Working
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Progress              : 45%
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>StartTime             : 2024-01-15 14:32:18
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>Get-VBRJob : The term 'Get-VBRJob' is not recognized</code></strong> — Import the Veeam PowerShell snapin with <code>Add-PSSnapin VeeamPSSnapin</code> before running the command.
+<strong><code>qlist: command not found</code></strong> — Ensure the Commvault client is installed and the <code>qlogin</code> command has been executed to authenticate the session.
+<strong><code>Get-VBRSession : No matching jobs found for filter</code></strong> — Verify the job name matches exactly (case-sensitive) and wait 10-15 seconds after <code>Start-VBRJob</code> for the session to appear in the list.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -8393,11 +8484,11 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="6-documentation-and-cmdb">6. Documentation and CMDB<a class="headerlink" href="#6-documentation-and-cmdb" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Items to complete before handover</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># → CMDB entry created with: hostname, IP, owner, location, specs, environment</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># → Run book / system overview doc drafted</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># → Support contact assigned</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># → Patch schedule assigned</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Items to complete before handover</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># → CMDB entry created with: hostname, IP, owner, location, specs, environment</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># → Run book / system overview doc drafted</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># → Support contact assigned</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># → Patch schedule assigned</span>
 </code></pre></div>
 <table>
 <thead>
@@ -8498,7 +8589,7 @@ Validates that infrastructure is prepared to receive a new workload, application
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
   </span>
 
     
